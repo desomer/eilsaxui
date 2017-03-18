@@ -8,34 +8,37 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 
-public class XUILaucher	extends AbstractHandler
-	{
-		@Override
-	    public void handle(String target,
-	                       Request baseRequest,
-	                       HttpServletRequest request,
-	                       HttpServletResponse response)
-	        throws IOException, ServletException
-	    {
-			
-			
-			
-	        response.setContentType("text/html;charset=utf-8");
-	        response.setStatus(HttpServletResponse.SC_OK);
-	        baseRequest.setHandled(true);
-	        response.getWriter().println("<h1>Hello World</h1>");
-	    }
+public class XUILaucher {
 
-	    public static void main(String[] args) throws Exception
-	    {
-	        Server server = new Server(8080);
-	        server.setHandler(new XUILaucher());
+	public static void main(String[] args) throws Exception {
+		Server server = new Server(8080);
 
-	        server.start();
-	        server.join();
-	    }
+		HandlerCollection myhandlers = new HandlerCollection(true);
+		
+		ServletContextHandler restHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
+		restHandler.setContextPath("/rest");
 
+		ServletHolder jerseyServlet = restHandler.addServlet(org.glassfish.jersey.servlet.ServletContainer.class, "/*");
+		jerseyServlet.setInitOrder(0);
+		jerseyServlet.setInitParameter("jersey.config.server.provider.classnames", XUIFactoryScene.class.getCanonicalName());
+		myhandlers.addHandler(restHandler);
+		
+		ContextHandler basicHandler = new ContextHandler();
+		basicHandler.setContextPath("/basic");
+		//basicHandler.setResourceBase(".");
+		basicHandler.setHandler(new XUIFactoryBasic());
+	//	basicHandler.setClassLoader(Thread.currentThread().getContextClassLoader());
+		myhandlers.addHandler(basicHandler);
 
+		server.setHandler(myhandlers);
+		
+		server.start();
+		server.join();
+	}
 
 }

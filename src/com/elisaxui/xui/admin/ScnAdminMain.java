@@ -1,14 +1,18 @@
 package com.elisaxui.xui.admin;
 
-import com.elisaxui.core.xui.view.XUIViewPage;
-import com.elisaxui.core.xui.view.annotation.Page;
+import com.elisaxui.core.xui.xhtml.XUIViewXHtml;
+import com.elisaxui.core.xui.xml.XMLFile;
+import com.elisaxui.core.xui.xml.XMLBuilder.Tag;
+import com.elisaxui.core.xui.xml.annotation.File;
 
-@Page(id="admin")
-public class ScnAdminMain extends XUIViewPage {
+@File(id="admin")
+public class ScnAdminMain extends XUIViewXHtml {
 
-	
 	@Override
-	public void doView() {
-		vBody("trop cool\n");
+	public void doContent(XMLFile file) {
+		
+		Tag tag = xTag("div", xTag("h1", xAttr("id", "'test'"), "toto"));
+
+		vBody(tag);
 	}
 }

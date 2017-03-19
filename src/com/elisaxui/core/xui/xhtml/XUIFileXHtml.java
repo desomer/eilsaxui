@@ -1,10 +1,11 @@
-package com.elisaxui.core.xui;
+package com.elisaxui.core.xui.xhtml;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.elisaxui.core.xui.xml.XMLFile;
 
-public class XUIPageBuilder {
+public class XUIFileXHtml extends XMLFile {
 
 	public enum HtmlPart {
 		LANG, HEADER, BODY, SCRIPT_AFTER_BODY
@@ -41,8 +42,8 @@ public class XUIPageBuilder {
 				buf.append(object.toString());
 			}
 			if (buf.length() > 0)
-				return (tag != null ? tabstr + "<" + tag + " " + attr + ">\n" : "") + buf
-						+ (tag != null ? "" + tabstr + "</" + tag + ">" : "");
+				return (tag != null ? tabstr + "<" + tag + " " + attr + ">" : "") + buf
+						+ (tag != null ? "" + tabstr + "\n</" + tag + ">" : "");
 			else
 				return "";
 		} else
@@ -63,7 +64,7 @@ public class XUIPageBuilder {
 				// " <script
 				// src=\"http://html5shiv.googlecode.com/svn/trunk/html5.js\"></script>\n"+
 				// "<![endif]-->\n"+
-				"</head>\n" + getPart("body", "", 0, HtmlPart.BODY) + "\n"
+				"</head>\n" + getPart("body", "", -1, HtmlPart.BODY) + "\n"
 				+ getPart("script", "type=\"text/javascript\"", 0, HtmlPart.SCRIPT_AFTER_BODY) + "</html>";
 
 		return new StringBuilder(template);

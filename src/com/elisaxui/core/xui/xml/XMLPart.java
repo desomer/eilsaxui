@@ -1,27 +1,27 @@
-package com.elisaxui.core.xui.view;
+package com.elisaxui.core.xui.xml;
 
-import com.elisaxui.core.xui.XUIFactoryScene;
-import com.elisaxui.core.xui.XUIHtmlBuilder;
-import com.elisaxui.core.xui.XUIHtmlBuilder.Tag;
-import com.elisaxui.core.xui.XUIPageBuilder;
+import com.elisaxui.core.xui.xml.XMLBuilder.Attr;
+import com.elisaxui.core.xui.xml.XMLBuilder.Tag;
 
-public abstract class XUIView {
+public class XMLPart {
 
-	public abstract void doView();
+	public void doContent(XMLFile file) {}
+	public void doRessource(XMLFile file) {}
 	
-	XUIHtmlBuilder htmlBuilder = new XUIHtmlBuilder(null);
+	XMLBuilder xmlBuilder = new XMLBuilder("main", null);
 	
 	
-	public Tag xTag(String tag, Object...objects )
+	public Tag xTag(String name, Object...inner )
 	{
-		Tag t = htmlBuilder.getTag();
-		t.name = tag;
-		return t;
+		Tag tag = xmlBuilder.getTag(name, inner);
+		return tag;
 	}
 	
-	public XUIView vBody(Object body)
+	
+	public Attr xAttr(String name, Object value )
 	{
-		XUIFactoryScene.getXUIPageBuilder().addPart(XUIPageBuilder.HtmlPart.BODY, body);
-		return this;
+		Attr attr = xmlBuilder.getAttr(name, value);
+		return attr;
 	}
+	
 }

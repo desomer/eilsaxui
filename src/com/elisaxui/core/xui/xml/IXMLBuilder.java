@@ -1,7 +1,6 @@
-package com.elisaxui.core.xui;
+package com.elisaxui.core.xui.xml;
 
+public interface IXMLBuilder {
 
-public interface IHtmlBuilder {
-
-	public XUIHtmlBuilder toHtml(XUIHtmlBuilder buf);
+	public XMLBuilder toHtml(XMLBuilder buf);
 }

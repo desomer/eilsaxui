@@ -1,6 +1,5 @@
 package com.elisaxui.core.xui;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +18,7 @@ import javax.ws.rs.core.Response.Status;
 
 import com.elisaxui.core.xui.xhtml.XUIFileXHtml;
 import com.elisaxui.core.xui.xhtml.XUIViewXHtml;
-import com.elisaxui.core.xui.xml.XMLFile;
+import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.annotation.File;
 
 import javax.ws.rs.core.UriInfo;
@@ -29,9 +28,9 @@ import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 @Path("/page")
 public class XUIFactoryXML {
 
-	private static final ThreadLocal<XUIFileXHtml> ThreadLocalXUIFactoryPage = new ThreadLocal<XUIFileXHtml>();
+	private static final ThreadLocal<XMLPart> ThreadLocalXUIFactoryPage = new ThreadLocal<XMLPart>();
 	
-	public static final XUIFileXHtml getXUIPageBuilder()
+	public static final XMLPart getXMLRoot()
 	{
 		return ThreadLocalXUIFactoryPage.get();
 	}
@@ -59,28 +58,27 @@ public class XUIFactoryXML {
 		
 		Class<? extends XUIViewXHtml> pageClass = mapClass.get(id);
 		
-		XUIFileXHtml pageFactory = new XUIFileXHtml();
-		ThreadLocalXUIFactoryPage.set(pageFactory);
+		XUIFileXHtml root = new XUIFileXHtml();
+		ThreadLocalXUIFactoryPage.set(root);
 
 		List<Locale> languages = headers.getAcceptableLanguages();
 		Locale loc = languages.get(0);
 		
-		pageFactory.addPart(XUIFileXHtml.HtmlPart.LANG, loc.toLanguageTag());
-		pageFactory.addPart(XUIFileXHtml.HtmlPart.HEADER,"<meta charset=\"utf-8\">\n");
-		pageFactory.addPart(XUIFileXHtml.HtmlPart.HEADER,"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, shrink-to-fit=no\">\n");
+		root.addPart(XUIFileXHtml.HtmlPart.LANG, loc.toLanguageTag());
+		root.addPart(XUIFileXHtml.HtmlPart.HEADER,"<meta charset=\"utf-8\">\n");
+		root.addPart(XUIFileXHtml.HtmlPart.HEADER,"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, shrink-to-fit=no\">\n");
 	
 		if (pageClass!=null)
 		{
 			try {
 				XUIViewXHtml page = pageClass.newInstance();
-				XMLFile file = new XMLFile();
-				page.doContent(file);
+				page.doContent(root);
 				
 			} catch (InstantiationException | IllegalAccessException e) {
 				return Response.status(Status.INTERNAL_SERVER_ERROR)   //.type(MediaType.TEXT_HTML)
 						.entity(e.toString()).build();
 			}
-			String html = pageFactory.getPage().toString();
+			String html = root.getPage().toString();
 			return Response.status(Status.OK)   //.type(MediaType.TEXT_HTML)
 					.entity(html).header("XUI", "ok").build();
 		}

@@ -3,9 +3,10 @@ package com.elisaxui.core.xui.xhtml;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.elisaxui.core.xui.xml.XMLFile;
+import com.elisaxui.core.xui.xml.XMLPart;
 
-public class XUIFileXHtml extends XMLFile {
+/**todo a supprimer et remplacer par XUIViewXHtml*/
+public class XUIFileXHtml extends XMLPart {
 
 	public enum HtmlPart {
 		LANG, HEADER, BODY, SCRIPT_AFTER_BODY
@@ -64,8 +65,8 @@ public class XUIFileXHtml extends XMLFile {
 				// " <script
 				// src=\"http://html5shiv.googlecode.com/svn/trunk/html5.js\"></script>\n"+
 				// "<![endif]-->\n"+
-				"</head>\n" + getPart("body", "", -1, HtmlPart.BODY) + "\n"
-				+ getPart("script", "type=\"text/javascript\"", 0, HtmlPart.SCRIPT_AFTER_BODY) + "</html>";
+				"</head>\n" + getPart("body", "", -1, HtmlPart.BODY)
+				+ getPart(null, null,-1, HtmlPart.SCRIPT_AFTER_BODY)+ "\n</html>";
 
 		return new StringBuilder(template);
 	}

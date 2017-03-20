@@ -16,7 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.elisaxui.core.xui.xhtml.XUIFileXHtml;
+import com.elisaxui.core.xui.xhtml.XUIPageXHtml;
 import com.elisaxui.core.xui.xhtml.XUIViewXHtml;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.annotation.File;
@@ -26,7 +26,7 @@ import javax.ws.rs.core.UriInfo;
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 
 @Path("/page")
-public class XUIFactoryXML {
+public class XUIFactoryXHtml {
 
 	private static final ThreadLocal<XMLPart> ThreadLocalXUIFactoryPage = new ThreadLocal<XMLPart>();
 	
@@ -58,21 +58,20 @@ public class XUIFactoryXML {
 		
 		Class<? extends XUIViewXHtml> pageClass = mapClass.get(id);
 		
-		XUIFileXHtml root = new XUIFileXHtml();
+		XUIPageXHtml root = new XUIPageXHtml();
 		ThreadLocalXUIFactoryPage.set(root);
 
 		List<Locale> languages = headers.getAcceptableLanguages();
 		Locale loc = languages.get(0);
 		
-		root.addPart(XUIFileXHtml.HtmlPart.LANG, loc.toLanguageTag());
-		root.addPart(XUIFileXHtml.HtmlPart.HEADER,"<meta charset=\"utf-8\">\n");
-		root.addPart(XUIFileXHtml.HtmlPart.HEADER,"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, shrink-to-fit=no\">\n");
+		root.addPart(XUIPageXHtml.HtmlPart.LANG, loc.toLanguageTag());
 	
 		if (pageClass!=null)
 		{
 			try {
 				XUIViewXHtml page = pageClass.newInstance();
 				page.doContent(root);
+				page.vBody(page.getContent());
 				
 			} catch (InstantiationException | IllegalAccessException e) {
 				return Response.status(Status.INTERNAL_SERVER_ERROR)   //.type(MediaType.TEXT_HTML)

@@ -7,10 +7,12 @@ public class ActListPage extends XUIViewXHtml {
 
 	@Override
 	public void doContent(XMLPart root) {
-		xContent( xSpan( "ok", 	
-				  xUl( this.getChildren()) ));
+		vContent( xSpan( "ok", 	
+				  xUl( this.getChildren()) ).setComment("ActListPage") );
 		
-		xAfter ( xScriptJS("console.debug('ok')"));
+		vBody(xSpan("super"));
+		
+		vAfter ( xScriptJS("console.debug('ok')").setComment("ActListPage"));
 	}
 
 }

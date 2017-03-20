@@ -1,9 +1,10 @@
 package com.elisaxui.core.xui.xhtml;
 
-import com.elisaxui.core.xui.XUIFactoryXML;
+import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xml.XMLBuilder;
 import com.elisaxui.core.xui.xml.XMLBuilder.Attr;
 import com.elisaxui.core.xui.xml.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.XMLBuilder.Part;
 import com.elisaxui.core.xui.xml.XMLPart;
 
 public abstract class XUIViewXHtml extends XMLPart {
@@ -14,10 +15,21 @@ public abstract class XUIViewXHtml extends XMLPart {
 		StringBuilder content = new StringBuilder(1000);
 		StringBuilder after = new StringBuilder(1000);
 		XMLBuilder xml = new XMLBuilder(null, content, after);
-		body.setNbInitialTab(1);
-		body.toXML(xml);
-		((XUIFileXHtml)XUIFactoryXML.getXMLRoot()).addPart(XUIFileXHtml.HtmlPart.BODY, content);
-		((XUIFileXHtml)XUIFactoryXML.getXMLRoot()).addPart(XUIFileXHtml.HtmlPart.SCRIPT_AFTER_BODY, after);
+		
+		
+		Part part = xPart( new XMLPart() {
+
+			@Override
+			public void doContent(XMLPart root) {
+				vContent(body);
+			}
+
+		} );
+		
+		body.setNbInitialTab(2);
+		part.toXML(xml);
+		((XUIPageXHtml)XUIFactoryXHtml.getXMLRoot()).addPart(XUIPageXHtml.HtmlPart.BODY, content);
+		((XUIPageXHtml)XUIFactoryXHtml.getXMLRoot()).addPart(XUIPageXHtml.HtmlPart.SCRIPT_AFTER_BODY, after);
 		
 		
 		return this;

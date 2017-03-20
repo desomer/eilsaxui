@@ -16,6 +16,9 @@ public class ScnAdminMain extends XUIViewXHtml {
 						xLi("ligne1"), 
 						xLi("ligne2"))));
 
-		vBody(tag);
+		vContent(tag);
+		
+		vAfter ( xScriptJS("console.debug('admin')").setComment("ScnAdminMain"));
+
 	}
 }

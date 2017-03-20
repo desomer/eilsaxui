@@ -25,7 +25,7 @@ public class XUILaucher {
 
 		ServletHolder jerseyServlet = restHandler.addServlet(org.glassfish.jersey.servlet.ServletContainer.class, "/*");
 		jerseyServlet.setInitOrder(0);
-		jerseyServlet.setInitParameter("jersey.config.server.provider.classnames", XUIFactoryXML.class.getCanonicalName());
+		jerseyServlet.setInitParameter("jersey.config.server.provider.classnames", XUIFactoryXHtml.class.getCanonicalName());
 		myhandlers.addHandler(restHandler);
 		
 		ContextHandler basicHandler = new ContextHandler();

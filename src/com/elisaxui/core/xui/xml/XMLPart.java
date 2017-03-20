@@ -28,13 +28,14 @@ public class XMLPart {
 	public List<Object> getChildren() {
 		return children;
 	}
-	public final void xContent(Element part)
+	public final void vContent(Element part)
 	{
 		content=part;
 	}
 	
-	public final void xAfter(Element part)
+	public final void vAfter(Element part)
 	{
+		part.setNbInitialTab(1);
 		after=part;
 	}
 	
@@ -50,7 +51,6 @@ public class XMLPart {
 		return tag;
 	}
 	
-	
 	public final Attr xAttr(String name, Object value )
 	{
 		Attr attr = xmlBuilder.getAttr(name, value);
@@ -58,4 +58,8 @@ public class XMLPart {
 	}
 	
 	
+	public final Object xTxt(Object text)
+	{
+		return "\""+ text +"\"";
+	}
 }

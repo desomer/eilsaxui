@@ -18,6 +18,7 @@ import javax.ws.rs.core.Response.Status;
 
 import com.elisaxui.core.xui.xhtml.XUIPageXHtml;
 import com.elisaxui.core.xui.xhtml.XUIViewXHtml;
+import com.elisaxui.core.xui.xml.XMLBuilder;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.annotation.File;
 
@@ -38,7 +39,7 @@ public class XUIFactoryXHtml {
 	@GET
 	@Path("/{pays}/{lang}/id/{id}")
     @Produces(MediaType.TEXT_HTML)
-	public Response getXUIScene(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("pays") String pays,
+	public Response getHtml(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("pays") String pays,
 			@PathParam("lang") String lang, @PathParam("id") String id) {
 
 		
@@ -63,23 +64,29 @@ public class XUIFactoryXHtml {
 
 		List<Locale> languages = headers.getAcceptableLanguages();
 		Locale loc = languages.get(0);
-		
-		root.addPart(XUIPageXHtml.HtmlPart.LANG, loc.toLanguageTag());
 	
 		if (pageClass!=null)
 		{
 			try {
 				XUIViewXHtml page = pageClass.newInstance();
-				page.doContent(root);
+				page.initContent(root);
 				page.vBody(page.getContent());
+				page.vAfterBody(page.getAfter());
 				
 			} catch (InstantiationException | IllegalAccessException e) {
 				return Response.status(Status.INTERNAL_SERVER_ERROR)   //.type(MediaType.TEXT_HTML)
 						.entity(e.toString()).build();
 			}
-			String html = root.getPage().toString();
+			
+			StringBuilder buf = new StringBuilder(1000);
+			buf.append("<!doctype html>");
+			root.setLang(loc.toLanguageTag());
+			root.initContent(null);
+			root.getContent().toXML(new XMLBuilder("page", buf, null));
+			
+			
 			return Response.status(Status.OK)   //.type(MediaType.TEXT_HTML)
-					.entity(html).header("XUI", "ok").build();
+					.entity(buf.toString()).header("XUI", "ok").build();
 		}
 		else
 		{

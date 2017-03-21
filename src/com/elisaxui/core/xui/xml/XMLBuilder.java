@@ -20,26 +20,35 @@ public class XMLBuilder {
 		this.id = id;
 	}
 
-	public Element getElement(Object name, Object... inner) {
+	public Element createElement(Object name, Object... inner) {
 		Element t = new Element(name, inner);
 		return t;
 	}
 
-	public Attr getAttr(Object name, Object value) {
+	public Attr createAttr(Object name, Object value) {
 		Attr t = new Attr(name, value);
 		return t;
 	}
 
-	public Part getPart(XMLPart part, Object... inner) {
+	public Part createPart(XMLPart part, Object... inner) {
 		Part t = new Part(part, inner);
-		part.doContent(XUIFactoryXHtml.getXMLRoot());
+		part.initContent(XUIFactoryXHtml.getXMLRoot());
 		return t;
 	}
 
+	/**
+	 * ajoute dans le flux : ici une chaine
+	 * @param v
+	 */
 	private void addContent(Object v) {
 		(after ? afterContent : content).append(v);
 	}
 
+	/**
+	 * un element XML
+	 * @author Bureau
+	 *
+	 */
 	public static class Element implements IXMLBuilder {
 		private Object name;
 		private Object comment;
@@ -48,6 +57,7 @@ public class XMLBuilder {
 			return comment;
 		}
 
+		/** commentaire **/
 		public Element setComment(Object comment) {
 			this.comment = comment;
 			return this;
@@ -60,8 +70,9 @@ public class XMLBuilder {
 			return nbInitialTab;
 		}
 
-		public void setNbInitialTab(int nbInitialTab) {
+		public Element setNbInitialTab(int nbInitialTab) {
 			this.nbInitialTab = nbInitialTab;
+			return this;
 		}
 
 		private List<Attr> listAttr = new ArrayList<>();
@@ -95,13 +106,13 @@ public class XMLBuilder {
 
 		@Override
 		public XMLBuilder toXML(XMLBuilder buf) {
-			
+
 			if (comment != null) {
 				newLine(buf);
 				newTabulation(buf);
-				buf.addContent("<!--" + comment +"-->");
+				buf.addContent("<!--" + comment + "-->");
 			}
-			
+
 			if (name != null) {
 				newLine(buf);
 			}
@@ -118,7 +129,8 @@ public class XMLBuilder {
 			}
 			int nbChild = 0;
 			for (Object inner : listInner) {
-				nbChild = doChild(buf, nbChild, inner);
+				if (inner != null)
+					nbChild = doChild(buf, nbChild, inner);
 			}
 			if (nbChild > 0) {
 				newLine(buf);
@@ -131,9 +143,9 @@ public class XMLBuilder {
 			if (comment != null) {
 				newLine(buf);
 				newTabulation(buf);
-				buf.addContent("<!-- end of " + comment +"-->");
+				buf.addContent("<!--end of " + comment + "-->");
 			}
-			
+
 			nbTab = 0;
 			nbInitialTab = 0;
 
@@ -149,7 +161,6 @@ public class XMLBuilder {
 				tag.toXML(buf);
 			} else if (inner instanceof Part) {
 				Part part = ((Part) inner);
-				// Element tag = part.part.getContent();
 				if (part != null) {
 					nbChild++;
 					part.part.getContent().nbTab = this.nbTab + 1;
@@ -157,7 +168,7 @@ public class XMLBuilder {
 					part.toXML(buf);
 				}
 			} else if (inner instanceof List) {
-				List listChild = (List) inner;
+				List<?> listChild = (List<?>) inner;
 				for (Object object : listChild) {
 					nbChild = doChild(buf, nbChild, object);
 				}
@@ -168,6 +179,11 @@ public class XMLBuilder {
 
 	}
 
+	/**
+	 * un attribut XML
+	 * @author Bureau
+	 *
+	 */
 	public static class Attr implements IXMLBuilder {
 		private Object name;
 		private Object value;

@@ -34,8 +34,10 @@ public class XMLPart {
 	};
 
 	protected HashMap<Class<? extends XMLTarget>, ArrayList<Element>> listPart = new HashMap<Class<? extends XMLTarget>, ArrayList<Element>>();
-
 	private final XMLBuilder xmlBuilder = new XMLBuilder("main", null, null);
+	
+	
+	@Deprecated
 	private final List<Object> children = new ArrayList<>();
 
 	public void addElement(Class<? extends XMLTarget> target, Element value) {
@@ -76,7 +78,7 @@ public class XMLPart {
 		xTarget target = method.getAnnotation(xTarget.class);
 		if (target != null) {
 			try {
-				Element elem = ((Element) method.invoke(this, null));
+				Element elem = ((Element) method.invoke(this, new Object[] {}));
 				Class<? extends XMLTarget> targetClass = target.value();
 		
 				if (elem != null && targetClass!=null) {
@@ -132,6 +134,11 @@ public class XMLPart {
 	}
 
 	/**************************************************************/
+	@Deprecated  
+	/**
+	 * gerer par properties
+	 * @return
+	 */
 	public final List<Object> getChildren() {
 		return children;
 	}

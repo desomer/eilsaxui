@@ -2,12 +2,10 @@ package com.elisaxui.xui.admin.page;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPage.HEADER;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.XMLBuilder.Element;
-import com.elisaxui.core.xui.xml.XMLPart.CONTENT;
 import com.elisaxui.core.xui.xml.annotation.xComment;
-import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.annotation.xFile;
+import com.elisaxui.core.xui.xml.annotation.xTarget;
 
 @xFile(id = "admin.html")
 @xComment("activite d'admin")

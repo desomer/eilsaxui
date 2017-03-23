@@ -1,19 +1,21 @@
 package com.elisaxui.core.xui.xhtml;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.xhtml.XHTMLPage.BODY;
+import com.elisaxui.core.xui.xhtml.XHTMLPage.SCRIPT_AFTER_BODY;
 import com.elisaxui.core.xui.xml.XMLBuilder.Attr;
 import com.elisaxui.core.xui.xml.XMLBuilder.Element;
 import com.elisaxui.core.xui.xml.XMLPart;
 
-public abstract class XUIViewXHtml extends XMLPart {
+public abstract class XHTMLPart extends XMLPart {
 
 	public final XMLPart vBody(Element body) {
-		((XUIPageXHtml) XUIFactoryXHtml.getXMLRoot()).addPart(XUIPageXHtml.HtmlPart.BODY, body);
+		XUIFactoryXHtml.getXMLRoot().addElement(BODY.class, body);
 		return this;
 	}
 
 	public final XMLPart vAfterBody(Element elem) {
-		((XUIPageXHtml) XUIFactoryXHtml.getXMLRoot()).addPart(XUIPageXHtml.HtmlPart.SCRIPT_AFTER_BODY, elem);
+		XUIFactoryXHtml.getXMLRoot().addElement(SCRIPT_AFTER_BODY.class, elem);
 		return this;
 	}
 

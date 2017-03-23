@@ -16,11 +16,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.elisaxui.core.xui.xhtml.XUIPageXHtml;
-import com.elisaxui.core.xui.xhtml.XUIViewXHtml;
+import com.elisaxui.core.xui.xhtml.XHTMLPage;
+import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xml.XMLBuilder;
+import com.elisaxui.core.xui.xml.XMLBuilder.Element;
 import com.elisaxui.core.xui.xml.XMLPart;
-import com.elisaxui.core.xui.xml.annotation.File;
+import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
+import com.elisaxui.core.xui.xml.XMLPart.CONTENT;
+import com.elisaxui.core.xui.xml.annotation.xFile;
 
 import javax.ws.rs.core.UriInfo;
 
@@ -43,23 +46,23 @@ public class XUIFactoryXHtml {
 			@PathParam("lang") String lang, @PathParam("id") String id) {
 
 		
-		List<Class<? extends XUIViewXHtml>> listClass = new ArrayList<>(100);
+		List<Class<? extends XHTMLPart>> listClass = new ArrayList<>(100);
 		new FastClasspathScanner("com.elisaxui.xui.admin")
-		    .matchSubclassesOf(XUIViewXHtml.class, listClass::add)
+		    .matchSubclassesOf(XHTMLPart.class, listClass::add)
 		    .scan();
 		
-		Map<String, Class<? extends XUIViewXHtml>> mapClass = new HashMap<String, Class<? extends XUIViewXHtml>>(100);
-		for (Class<? extends XUIViewXHtml> pageClass : listClass) {
-			File annPage = pageClass.getAnnotation(File.class);
+		Map<String, Class<? extends XHTMLPart>> mapClass = new HashMap<String, Class<? extends XHTMLPart>>(100);
+		for (Class<? extends XHTMLPart> pageClass : listClass) {
+			xFile annPage = pageClass.getAnnotation(xFile.class);
 			if (annPage!=null)
 			{
 				mapClass.put(annPage.id(), pageClass);
 			}
 		}
 		
-		Class<? extends XUIViewXHtml> pageClass = mapClass.get(id);
+		Class<? extends XHTMLPart> pageClass = mapClass.get(id);
 		
-		XUIPageXHtml root = new XUIPageXHtml();
+		XHTMLPage root = new XHTMLPage();
 		ThreadLocalXUIFactoryPage.set(root);
 
 		List<Locale> languages = headers.getAcceptableLanguages();
@@ -68,10 +71,16 @@ public class XUIFactoryXHtml {
 		if (pageClass!=null)
 		{
 			try {
-				XUIViewXHtml page = pageClass.newInstance();
+				XHTMLPart page = pageClass.newInstance();
 				page.initContent(root);
-				page.vBody(page.getContent());
-				page.vAfterBody(page.getAfter());
+				for (Element elem : page.getListElement(CONTENT.class)) {
+					page.vBody(elem);
+				}
+				for (Element elem : page.getListElement(AFTER_CONTENT.class)) {
+					page.vAfterBody(elem);
+				}
+//				page.vBody(page.getContent());
+//				page.vAfterBody(page.getAfter());
 				
 			} catch (InstantiationException | IllegalAccessException e) {
 				return Response.status(Status.INTERNAL_SERVER_ERROR)   //.type(MediaType.TEXT_HTML)
@@ -82,8 +91,9 @@ public class XUIFactoryXHtml {
 			buf.append("<!doctype html>");
 			root.setLang(loc.toLanguageTag());
 			root.initContent(null);
-			root.getContent().toXML(new XMLBuilder("page", buf, null));
-			
+			for (Element elem : root.getListElement(CONTENT.class)) {
+				elem.toXML(new XMLBuilder("page", buf, null));
+			}
 			
 			return Response.status(Status.OK)   //.type(MediaType.TEXT_HTML)
 					.entity(buf.toString()).header("XUI", "ok").build();

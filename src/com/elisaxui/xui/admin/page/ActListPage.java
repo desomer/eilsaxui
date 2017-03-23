@@ -1,20 +1,28 @@
 package com.elisaxui.xui.admin.page;
 
-import com.elisaxui.core.xui.xhtml.XUIViewXHtml;
+import com.elisaxui.core.xui.xhtml.XHTMLPage.BODY;
+import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xml.XMLBuilder.Element;
-import com.elisaxui.core.xui.xml.annotation.AfterContent;
-import com.elisaxui.core.xui.xml.annotation.Comment;
-import com.elisaxui.core.xui.xml.annotation.Content;
+import com.elisaxui.core.xui.xml.annotation.xComment;
+import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xTarget;
 
-@Comment("activite liste des pages")
-public class ActListPage extends XUIViewXHtml {
+@xComment("activite liste des pages")
+public class ActListPage extends XHTMLPart {
 
-	@Content
+	@xTarget(BODY.class)
+	@xRessource
+	public Element xAddBody() {
+		return xSpan("ca marche");
+	}
+	
+	@xTarget(CONTENT.class)
 	public Element xListe() {
 		return xSpan("ok", xUl(this.getChildren()));
 	}
 
-	@AfterContent
+	@xTarget(AFTER_CONTENT.class)
+	@xRessource
 	public Element xAddJS() {
 		return xScriptJS("console.debug('ok super')");
 	}

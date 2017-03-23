@@ -1,17 +1,25 @@
 package com.elisaxui.xui.admin.page;
 
-import com.elisaxui.core.xui.xhtml.XUIViewXHtml;
+import com.elisaxui.core.xui.xhtml.XHTMLPage.HEADER;
+import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.XMLBuilder.Element;
-import com.elisaxui.core.xui.xml.annotation.AfterContent;
-import com.elisaxui.core.xui.xml.annotation.Comment;
-import com.elisaxui.core.xui.xml.annotation.Content;
-import com.elisaxui.core.xui.xml.annotation.File;
+import com.elisaxui.core.xui.xml.XMLPart.CONTENT;
+import com.elisaxui.core.xui.xml.annotation.xComment;
+import com.elisaxui.core.xui.xml.annotation.xTarget;
+import com.elisaxui.core.xui.xml.annotation.xFile;
 
-@File(id = "admin.html")
-@Comment("activite d'admin")
-public class ScnAdminMain extends XUIViewXHtml {
+@xFile(id = "admin.html")
+@xComment("activite d'admin")
+public class ScnAdminMain extends XHTMLPart {
 
-	@Content
+	@xTarget(HEADER.class)
+	public Element xTitle()
+	{
+		return xElement("title", "un titre");
+	}
+	
+	@xTarget(CONTENT.class)
 	public Element xContenu()
 	{
 		return xDiv( xH1( xID("'test'"), "toto",
@@ -20,7 +28,25 @@ public class ScnAdminMain extends XUIViewXHtml {
 						xLi("ligne2"))));
 	}
 	
-	@AfterContent
+	@xTarget(CONTENT.class)
+	public Element xContenu2()
+	{
+		return xDiv( xH1( xID("'test'"), "sdsdsd",
+				xPart(new ActListPage(), 
+						xLi("ligne5"), 
+						xLi("ligne5"))));
+	}
+	
+	@xTarget()
+	public void xContent()
+	{
+		vBody(xElement(null, "<!--vBody-->"));
+		vAfterBody(xElement(null,"<!--vAfterBody-->"));
+		vContent(xElement(null,"<!--vContent-->"));
+		vAfterContent(xElement(null,"<!--vAfterContent-->"));
+	}
+	
+	@xTarget(AFTER_CONTENT.class)
 	public Element xAddJS()
 	{
 		return  xScriptJS("console.debug('admin')");

@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.elisaxui.core.xui.xhtml.XUIPageXHtml.HtmlPart;
+import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.xml.XMLTarget.ITargetRoot;
 import com.elisaxui.core.xui.xml.XMLBuilder.Attr;
-import com.elisaxui.core.xui.xml.XMLBuilder.Part;
-import com.elisaxui.core.xui.xml.annotation.AfterContent;
-import com.elisaxui.core.xui.xml.annotation.Comment;
-import com.elisaxui.core.xui.xml.annotation.Content;
 import com.elisaxui.core.xui.xml.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.XMLBuilder.Part;
+import com.elisaxui.core.xui.xml.annotation.xComment;
+import com.elisaxui.core.xui.xml.annotation.xTarget;
 
 /**
  * un bloc xml representant une vue
@@ -21,39 +21,39 @@ import com.elisaxui.core.xui.xml.XMLBuilder.Element;
  *
  */
 public class XMLPart {
+
+	public static final class CONTENT extends XMLTarget {
+	};
+
+	public static final class AFTER_CONTENT extends XMLTarget {
+		@Override
+		public int getInitialNbTab() {
+			return 1;
+		}
 		
-	public enum XmlTarget implements ITarget {
-		CONTENT, AFTER_CONTENT
-	}
-	protected HashMap<ITarget, ArrayList<Element>> listPart = new HashMap<ITarget, ArrayList<Element>>();
-	
+	};
+
+	protected HashMap<Class<? extends XMLTarget>, ArrayList<Element>> listPart = new HashMap<Class<? extends XMLTarget>, ArrayList<Element>>();
+
 	private final XMLBuilder xmlBuilder = new XMLBuilder("main", null, null);
 	private final List<Object> children = new ArrayList<>();
-	
-	public void addPart(ITarget part, Element value) {
-		ArrayList<Element> partData = listPart.get(part);
+
+	public void addElement(Class<? extends XMLTarget> target, Element value) {
+		ArrayList<Element> partData = listPart.get(target);
 		if (partData == null) {
 			partData = new ArrayList<>(100);
-			listPart.put(part, partData);
+			listPart.put(target, partData);
 		}
 		partData.add(value);
 
 	}
-	protected ArrayList<Element> getPart(ITarget part) {
-		return  listPart.get(part);
+
+	public ArrayList<Element> getListElement(Class<? extends XMLTarget> part) {
+		return listPart.get(part);
 	}
-	
-	
-	protected Element getFirstPart(ITarget part) {
-		ArrayList<Element> lp =  listPart.get(part);
-		if (lp!=null && lp.size()>0)
-			return lp.get(0);
-		else
-			return null;
-	}
-	
+
 	/**************************************************************/
-	
+
 	public void doContent(XMLPart root) {
 	}
 
@@ -63,37 +63,35 @@ public class XMLPart {
 	/**************************************************************/
 	public final void initContent(XMLPart root) {
 		doContent(root);
-	
+
 		Method[] listMth = this.getClass().getDeclaredMethods();
 		for (Method method : listMth) {
 			initAnnotation(method);
 		}
-	
+
 		initComment();
 	}
 
 	private void initAnnotation(Method method) {
-		if (method.getAnnotation(Content.class)!=null)
-		{
+		xTarget target = method.getAnnotation(xTarget.class);
+		if (target != null) {
 			try {
-				vContent((Element)method.invoke(this, null));
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
+				Element elem = ((Element) method.invoke(this, null));
+				Class<? extends XMLTarget> targetClass = target.value();
+		
+				if (elem != null && targetClass!=null) {
+					int nbTab = targetClass.newInstance().getInitialNbTab();
+					if (ITargetRoot.class.isAssignableFrom(targetClass))
+						XUIFactoryXHtml.getXMLRoot().addElement(targetClass, elem.setNbInitialTab(nbTab));
+					else
+						addElement(targetClass, elem.setNbInitialTab(nbTab));
+				}
+			} 
+			catch (InstantiationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
-		
-		if (method.getAnnotation(AfterContent.class)!=null)
-		{
-			try {
-				vAfterContent((Element)method.invoke(this, null));
-			} catch (IllegalAccessException e) {
+			catch (IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalArgumentException e) {
@@ -108,7 +106,7 @@ public class XMLPart {
 
 	/**************************************************************/
 	private String getComment() {
-		Comment comment = this.getClass().getAnnotation(Comment.class);
+		xComment comment = this.getClass().getAnnotation(xComment.class);
 		if (comment != null) {
 			String v = comment.value();
 			return (v == null ? "" : v) + " [" + this.getClass().getSimpleName() + "]";
@@ -119,37 +117,31 @@ public class XMLPart {
 	private void initComment() {
 		String comment = getComment();
 		if (comment != null) {
-			if (this.getContent() != null) {
-				this.getContent().setComment(comment);
+			for (Element elem : getListElement(CONTENT.class)) {
+				if (elem != null) {
+					elem.setComment(comment);
+				}
 			}
-			if (this.getAfter() != null) {
-				this.getAfter().setComment("after " + comment);
+
+			for (Element elem : getListElement(AFTER_CONTENT.class)) {
+				if (elem != null) {
+					elem.setComment("after " + comment);
+				}
 			}
 		}
 	}
 
 	/**************************************************************/
-	@Deprecated
-	public final Element getContent() {
-		return getFirstPart(XmlTarget.CONTENT);
-	}
-
-	@Deprecated
-	public final Element getAfter() {
-		return getFirstPart(XmlTarget.AFTER_CONTENT);
-	}
-
 	public final List<Object> getChildren() {
 		return children;
 	}
 
 	public final void vContent(Element part) {
-		addPart(XmlTarget.CONTENT, part);
+		addElement(CONTENT.class, part);
 	}
 
 	public final void vAfterContent(Element part) {
-		part.setNbInitialTab(1);
-		addPart(XmlTarget.AFTER_CONTENT, part);
+		addElement(AFTER_CONTENT.class, part);
 	}
 
 	public final Part xPart(XMLPart part, Object... inner) {

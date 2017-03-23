@@ -1,16 +1,17 @@
 package com.elisaxui.core.xui.xhtml;
 
-import com.elisaxui.core.xui.xml.ITarget;
+import com.elisaxui.core.xui.xml.XMLTarget;
+import com.elisaxui.core.xui.xml.XMLTarget.ITargetRoot;
 import com.elisaxui.core.xui.xml.XMLBuilder;
 import com.elisaxui.core.xui.xml.XMLBuilder.Element;
 import com.elisaxui.core.xui.xml.XMLPart;
-import com.elisaxui.core.xui.xml.annotation.Content;
+import com.elisaxui.core.xui.xml.annotation.xTarget;
 
-public class XUIPageXHtml extends XMLPart {
-
-	public enum HtmlPart implements ITarget  {
-		HEADER, BODY, SCRIPT_AFTER_BODY
-	}
+public class XHTMLPage extends XMLPart {
+	
+	public static final class HEADER extends XMLTarget implements ITargetRoot {};
+	public static final class BODY extends XMLTarget implements ITargetRoot {};
+	public static final class SCRIPT_AFTER_BODY extends XMLTarget implements ITargetRoot {};
 
 	private Object lang;
 	public Object getLang() {
@@ -21,17 +22,17 @@ public class XUIPageXHtml extends XMLPart {
 		this.lang = lang;
 	}
 		
-	@Content
+	@xTarget(XMLPart.CONTENT.class)
 	public Element xGetContent() {
 		
 		StringBuilder textbody = new StringBuilder(1000);
 		StringBuilder textAfterbody = new StringBuilder(1000);
 		
-		xListElement(getPart(HtmlPart.BODY))
+		xListElement(getListElement(BODY.class))
 			.setNbInitialTab(1)
 			.toXML(new XMLBuilder("page", textbody, textAfterbody));
 		
-		xListElement(getPart(HtmlPart.SCRIPT_AFTER_BODY))
+		xListElement(getListElement(SCRIPT_AFTER_BODY.class))
 			.setNbInitialTab(0)
 			.toXML(new XMLBuilder("page", textAfterbody, null));
 		
@@ -39,7 +40,7 @@ public class XUIPageXHtml extends XMLPart {
 				xElement("head", 
 						xElement("meta", xAttr("charset", xTxt("utf-8"))),
 						xElement("meta", xAttr("name", xTxt("viewport")), xAttr("content", xTxt("width=device-width, initial-scale=1.0, shrink-to-fit=no"))),
-						getPart(HtmlPart.HEADER)),
+						getListElement(HEADER.class)),
 				xElement("body", textbody),
 				xListElement(textAfterbody)  /* pas de xTxt car on veut bloc d'une tabulation */
 				);

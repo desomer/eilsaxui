@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
+import com.elisaxui.core.xui.xml.XMLPart.CONTENT;
 
 public class XMLBuilder {
 
@@ -45,6 +47,17 @@ public class XMLBuilder {
 	}
 
 	/**
+	 * interface toXML 
+	 * @author Bureau
+	 *
+	 */
+	public interface IXMLBuilder {
+
+		public XMLBuilder toXML(XMLBuilder buf);
+	}
+	
+	
+	/**
 	 * un element XML
 	 * @author Bureau
 	 *
@@ -63,7 +76,7 @@ public class XMLBuilder {
 			return this;
 		}
 
-		private int nbTab = 0;
+		private int nbTabInternal = 0;
 		private int nbInitialTab = 0;
 
 		public int getNbInitialTab() {
@@ -99,7 +112,7 @@ public class XMLBuilder {
 		}
 
 		private void newTabulation(XMLBuilder buf) {
-			for (int i = 0; i < nbTab; i++) {
+			for (int i = 0; i < nbTabInternal; i++) {
 				buf.addContent("\t");
 			}
 		}
@@ -146,7 +159,7 @@ public class XMLBuilder {
 				buf.addContent("<!--end of " + comment + "-->");
 			}
 
-			nbTab = 0;
+			nbTabInternal = 0;
 			nbInitialTab = 0;
 
 			return buf;
@@ -156,15 +169,17 @@ public class XMLBuilder {
 			if (inner instanceof Element) {
 				nbChild++;
 				Element tag = ((Element) inner);
-				tag.nbTab = this.nbTab + 1;
+				tag.nbTabInternal = this.nbTabInternal + 1;
 				tag.nbInitialTab = this.nbInitialTab;
 				tag.toXML(buf);
 			} else if (inner instanceof Part) {
 				Part part = ((Part) inner);
 				if (part != null) {
 					nbChild++;
-					part.part.getContent().nbTab = this.nbTab + 1;
-					part.part.getContent().nbInitialTab = this.nbInitialTab;
+					for (Element elem : part.part.getListElement(CONTENT.class)) {
+						elem.nbTabInternal = this.nbTabInternal + 1;
+						elem.nbInitialTab = this.nbInitialTab;
+					}
 					part.toXML(buf);
 				}
 			} else if (inner instanceof List) {
@@ -214,11 +229,13 @@ public class XMLBuilder {
 		@Override
 		public XMLBuilder toXML(XMLBuilder buf) {
 			buf.after = false;
-			if (part.getContent() != null)
-				part.getContent().toXML(buf);
+			for (Element elem : part.getListElement(CONTENT.class)) {
+				elem.toXML(buf);
+			}
 			buf.after = true;
-			if (part.getAfter() != null)
-				part.getAfter().toXML(buf);
+			for (Element elem : part.getListElement(AFTER_CONTENT.class)) {
+				elem.toXML(buf);
+			}
 			buf.after = false;
 			return buf;
 		}

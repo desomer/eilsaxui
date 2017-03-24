@@ -1,4 +1,4 @@
-package com.elisaxui.core.xui.xml;
+package com.elisaxui.core.xui.xml.builder;
 
 public class XMLTarget {
 	

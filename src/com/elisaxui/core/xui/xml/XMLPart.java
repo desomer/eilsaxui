@@ -5,14 +5,18 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
-import com.elisaxui.core.xui.xml.XMLTarget.ITargetRoot;
-import com.elisaxui.core.xui.xml.XMLBuilder.Attr;
-import com.elisaxui.core.xui.xml.XMLBuilder.Element;
-import com.elisaxui.core.xui.xml.XMLBuilder.Part;
 import com.elisaxui.core.xui.xml.annotation.xComment;
+import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder;
+import com.elisaxui.core.xui.xml.builder.XMLTarget;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.Attr;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.Part;
+import com.elisaxui.core.xui.xml.builder.XMLTarget.ITargetRoot;
 
 /**
  * un bloc xml representant une vue
@@ -50,8 +54,13 @@ public class XMLPart {
 
 	}
 
+	private ArrayList<Element> none = new ArrayList<>();
 	public ArrayList<Element> getListElement(Class<? extends XMLTarget> part) {
-		return listPart.get(part);
+		ArrayList<Element> list =  listPart.get(part);
+		if (list!=null)
+			return list;
+		else
+			return none;
 	}
 
 	/**************************************************************/
@@ -65,23 +74,30 @@ public class XMLPart {
 	/**************************************************************/
 	public final void initContent(XMLPart root) {
 		doContent(root);
-
+		
+		XMLFile file = XUIFactoryXHtml.getXMLFile();
+		boolean isfirstInit = !file.isXMLPartAlreadyInFile(this);
 		Method[] listMth = this.getClass().getDeclaredMethods();
 		for (Method method : listMth) {
-			initAnnotation(method);
+			boolean isResource = method.getAnnotation(xRessource.class)!=null;
+			if (isfirstInit || !isResource)
+			{
+				initMethod(method);
+			}
 		}
 
 		initComment();
 	}
 
-	private void initAnnotation(Method method) {
+	private void initMethod(Method method) {
 		xTarget target = method.getAnnotation(xTarget.class);
 		if (target != null) {
 			try {
+
 				Element elem = ((Element) method.invoke(this, new Object[] {}));
 				Class<? extends XMLTarget> targetClass = target.value();
-		
-				if (elem != null && targetClass!=null) {
+				System.out.println(this.getClass().getSimpleName() + "#" + method.getName() );
+				if (elem != null && targetClass!=null ) {
 					int nbTab = targetClass.newInstance().getInitialNbTab();
 					if (ITargetRoot.class.isAssignableFrom(targetClass))
 						XUIFactoryXHtml.getXMLRoot().addElement(targetClass, elem.setNbInitialTab(nbTab));
@@ -119,17 +135,30 @@ public class XMLPart {
 	private void initComment() {
 		String comment = getComment();
 		if (comment != null) {
-			for (Element elem : getListElement(CONTENT.class)) {
-				if (elem != null) {
-					elem.setComment(comment);
+			
+			for (Entry<Class<? extends XMLTarget>, ArrayList<Element>> entryListElem : listPart.entrySet()) {
+				entryListElem.getKey();
+				/**todo get prefixe block */
+				for (ArrayList<Element> listElem : listPart.values()) {
+					for (Element elem : listElem) {
+						if (elem != null) {
+							elem.setComment(comment);
+						}
+					}
 				}
 			}
-
-			for (Element elem : getListElement(AFTER_CONTENT.class)) {
-				if (elem != null) {
-					elem.setComment("after " + comment);
-				}
-			}
+			
+//			for (Element elem : getListElement(CONTENT.class)) {
+//				if (elem != null) {
+//					elem.setComment(comment);
+//				}
+//			}
+//
+//			for (Element elem : getListElement(AFTER_CONTENT.class)) {
+//				if (elem != null) {
+//					elem.setComment("after " + comment);
+//				}
+//			}
 		}
 	}
 

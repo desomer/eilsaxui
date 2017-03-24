@@ -1,13 +1,13 @@
 package com.elisaxui.core.xui.xhtml;
 
-import com.elisaxui.core.xui.xml.XMLTarget;
-import com.elisaxui.core.xui.xml.XMLTarget.ITargetRoot;
-import com.elisaxui.core.xui.xml.XMLBuilder;
-import com.elisaxui.core.xui.xml.XMLBuilder.Element;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder;
+import com.elisaxui.core.xui.xml.builder.XMLTarget;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.XMLTarget.ITargetRoot;
 
-public class XHTMLPage extends XMLPart {
+public class XHTMLFile extends XMLPart {
 	
 	public static final class HEADER extends XMLTarget implements ITargetRoot {};
 	public static final class BODY extends XMLTarget implements ITargetRoot {};
@@ -17,7 +17,8 @@ public class XHTMLPage extends XMLPart {
 	public Object getLang() {
 		return lang;
 	}
-
+	@Deprecated
+	/** gerer par properties */
 	public void setLang(Object lang) {
 		this.lang = lang;
 	}

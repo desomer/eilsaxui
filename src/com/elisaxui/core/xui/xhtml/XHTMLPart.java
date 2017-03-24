@@ -1,11 +1,11 @@
 package com.elisaxui.core.xui.xhtml;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
-import com.elisaxui.core.xui.xhtml.XHTMLPage.BODY;
-import com.elisaxui.core.xui.xhtml.XHTMLPage.SCRIPT_AFTER_BODY;
-import com.elisaxui.core.xui.xml.XMLBuilder.Attr;
-import com.elisaxui.core.xui.xml.XMLBuilder.Element;
+import com.elisaxui.core.xui.xhtml.XHTMLFile.BODY;
+import com.elisaxui.core.xui.xhtml.XHTMLFile.SCRIPT_AFTER_BODY;
 import com.elisaxui.core.xui.xml.XMLPart;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.Attr;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 
 public abstract class XHTMLPart extends XMLPart {
 

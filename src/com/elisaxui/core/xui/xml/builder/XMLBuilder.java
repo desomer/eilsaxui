@@ -1,10 +1,11 @@
-package com.elisaxui.core.xui.xml;
+package com.elisaxui.core.xui.xml.builder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.XMLPart.CONTENT;
 

@@ -1,11 +1,11 @@
 package com.elisaxui.xui.admin.page;
 
-import com.elisaxui.core.xui.xhtml.XHTMLPage.HEADER;
+import com.elisaxui.core.xui.xhtml.XHTMLFile.HEADER;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xml.XMLBuilder.Element;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 
 @xFile(id = "admin.html")
 @xComment("activite d'admin")
@@ -32,7 +32,7 @@ public class ScnAdminMain extends XHTMLPart {
 		return xDiv( xH1( xID("'test'"), "sdsdsd",
 				xPart(new ActListPage(), 
 						xLi("ligne5"), 
-						xLi("ligne5"))));
+						xLi("ligne6"))));
 	}
 	
 	@xTarget()

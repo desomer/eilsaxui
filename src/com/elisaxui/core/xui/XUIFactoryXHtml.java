@@ -16,7 +16,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.elisaxui.core.xui.xhtml.XHTMLFile;
+import com.elisaxui.core.xui.xhtml.XHTMLRoot;
+import com.elisaxui.core.notification.MgrErrorNotificafion;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xml.XMLFile;
 import com.elisaxui.core.xui.xml.XMLPart;
@@ -33,86 +34,92 @@ import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 @Path("/page")
 public class XUIFactoryXHtml {
 
-	private static final ThreadLocal<XMLFile> ThreadLocalXUIFactoryPage = new ThreadLocal<XMLFile>();	
-	public static final XMLPart getXMLRoot()
-	{
+	private static final ThreadLocal<XMLFile> ThreadLocalXUIFactoryPage = new ThreadLocal<XMLFile>();
+
+	public static final XMLPart getXMLRoot() {
 		return ThreadLocalXUIFactoryPage.get().getRoot();
 	}
-	
-	public static final XMLFile getXMLFile()
-	{
+
+	public static final XMLFile getXMLFile() {
 		return ThreadLocalXUIFactoryPage.get();
 	}
-	
+
 	@GET
 	@Path("/{pays}/{lang}/id/{id}")
-    @Produces(MediaType.TEXT_HTML)
+	@Produces(MediaType.TEXT_HTML)
 	public Response getHtml(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("pays") String pays,
 			@PathParam("lang") String lang, @PathParam("id") String id) {
 
-		
-		List<Class<? extends XHTMLPart>> listClass = new ArrayList<>(100);
-		new FastClasspathScanner("com.elisaxui.xui.admin")
-		    .matchSubclassesOf(XHTMLPart.class, listClass::add)
-		    .scan();
-		
-		Map<String, Class<? extends XHTMLPart>> mapClass = new HashMap<String, Class<? extends XHTMLPart>>(100);
-		for (Class<? extends XHTMLPart> pageClass : listClass) {
-			xFile annPage = pageClass.getAnnotation(xFile.class);
-			if (annPage!=null)
-			{
-				mapClass.put(annPage.id(), pageClass);
-			}
-		}
-		
-		Class<? extends XHTMLPart> pageClass = mapClass.get(id);
-		XMLFile file = new XMLFile();
-		file.setRoot( new XHTMLFile());
-		ThreadLocalXUIFactoryPage.set(file);
+		Map<String, Class<? extends XHTMLPart>> mapClass = getMapXHTMLPart();
 
-		List<Locale> languages = headers.getAcceptableLanguages();
-		Locale loc = languages.get(0);
-	
-		if (pageClass!=null)
-		{
+		Class<? extends XHTMLPart> pageClass = mapClass.get(id);
+		if (pageClass != null) {
+			XMLFile file = createXMLFile();
+
+			file.setRoot(new XHTMLRoot());
+			List<Locale> languages = headers.getAcceptableLanguages();
+			Locale loc = languages.get(0);
+
 			// premier passe
-			try {
-				XHTMLPart page = pageClass.newInstance();
-				page.initContent(file.getRoot());
-				for (Element elem : page.getListElement(CONTENT.class)) {
-					page.vBody(elem);
-				}
-				for (Element elem : page.getListElement(AFTER_CONTENT.class)) {
-					page.vAfterBody(elem);
-				}				
-			} catch (InstantiationException | IllegalAccessException e) {
-				return Response.status(Status.INTERNAL_SERVER_ERROR)   //.type(MediaType.TEXT_HTML)
-						.entity(e.toString()).build();
+			initXMLFile(pageClass, file);
+			if (MgrErrorNotificafion.hasErrorMessage()) {
+				return Response.status(Status.INTERNAL_SERVER_ERROR) // .type(MediaType.TEXT_HTML)
+						.entity(MgrErrorNotificafion.getBufferErrorMessage().toString()).build();
 			}
-			
+
 			// generation page
 			StringBuilder buf = new StringBuilder(1000);
 			buf.append("<!doctype html>");
-			((XHTMLFile)file.getRoot()).setLang(loc.toLanguageTag());
+			((XHTMLRoot) file.getRoot()).setLang(loc.toLanguageTag());
 			file.getRoot().initContent(null);
 			ArrayList<Element> rootContent = file.getRoot().getListElement(CONTENT.class);
-			
+
 			for (Element elem : rootContent) {
 				elem.toXML(new XMLBuilder("page", buf, null));
 			}
-			
+
 			System.out.println("------------------------------------------");
-			
-			return Response.status(Status.OK)   //.type(MediaType.TEXT_HTML)
+
+			return Response.status(Status.OK) // .type(MediaType.TEXT_HTML)
 					.entity(buf.toString()).header("XUI", "ok").build();
+		} else {
+			return Response.status(Status.NOT_FOUND).entity("no found " + id).header("a", "b").build();
 		}
-		else
-		{
-			return Response.status(Status.NOT_FOUND)
-					.entity("no found "+id).header("a", "b").build();
+
+	}
+
+	private void initXMLFile(Class<? extends XHTMLPart> pageClass, XMLFile file) {
+		try {
+			XHTMLPart page = pageClass.newInstance();
+			page.initContent(file.getRoot());
+			for (Element elem : page.getListElement(CONTENT.class)) {
+				page.vBody(elem);
+			}
+			for (Element elem : page.getListElement(AFTER_CONTENT.class)) {
+				page.vAfterBody(elem);
+			}
+		} catch (InstantiationException | IllegalAccessException e) {
+			MgrErrorNotificafion.doError("Pb instanciation " + pageClass.getName(), e);
 		}
-		
+	}
 
+	private XMLFile createXMLFile() {
+		XMLFile file = new XMLFile();
+		ThreadLocalXUIFactoryPage.set(file);
+		return file;
+	}
 
+	private Map<String, Class<? extends XHTMLPart>> getMapXHTMLPart() {
+		List<Class<? extends XHTMLPart>> listClass = new ArrayList<>(100);
+		new FastClasspathScanner("com.elisaxui.xui.admin").matchSubclassesOf(XHTMLPart.class, listClass::add).scan();
+
+		Map<String, Class<? extends XHTMLPart>> mapClass = new HashMap<String, Class<? extends XHTMLPart>>(100);
+		for (Class<? extends XHTMLPart> pageClass : listClass) {
+			xFile annPage = pageClass.getAnnotation(xFile.class);
+			if (annPage != null) {
+				mapClass.put(annPage.id(), pageClass);
+			}
+		}
+		return mapClass;
 	}
 }

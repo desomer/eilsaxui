@@ -2,12 +2,16 @@ package com.elisaxui.core.xui.xml.builder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
+import com.elisaxui.core.notification.MgrErrorNotificafion;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.XMLPart.CONTENT;
+import com.elisaxui.core.xui.xml.builder.JSBuilder.JSContent;
 
 public class XMLBuilder {
 
@@ -15,6 +19,16 @@ public class XMLBuilder {
 	StringBuilder content;
 	StringBuilder afterContent;
 	boolean after = false;
+	boolean isJS = false;
+
+	public boolean isJS() {
+		return isJS;
+	}
+
+	public XMLBuilder setJS(boolean isJS) {
+		this.isJS = isJS;
+		return this;
+	}
 
 	public XMLBuilder(String id, StringBuilder content, StringBuilder afterContent) {
 		super();
@@ -39,16 +53,23 @@ public class XMLBuilder {
 		return t;
 	}
 
+	public Handle createHandle(String name) {
+		Handle t = new Handle(name);
+		return t;
+	}
+
 	/**
 	 * ajoute dans le flux : ici une chaine
+	 * 
 	 * @param v
 	 */
-	private void addContent(Object v) {
+	protected void addContent(Object v) {
 		(after ? afterContent : content).append(v);
 	}
 
 	/**
-	 * interface toXML 
+	 * interface toXML
+	 * 
 	 * @author Bureau
 	 *
 	 */
@@ -56,10 +77,10 @@ public class XMLBuilder {
 
 		public XMLBuilder toXML(XMLBuilder buf);
 	}
-	
-	
+
 	/**
 	 * un element XML
+	 * 
 	 * @author Bureau
 	 *
 	 */
@@ -77,8 +98,8 @@ public class XMLBuilder {
 			return this;
 		}
 
-		private int nbTabInternal = 0;
-		private int nbInitialTab = 0;
+		protected int nbTabInternal = 0;
+		protected int nbInitialTab = 0;
 
 		public int getNbInitialTab() {
 			return nbInitialTab;
@@ -105,14 +126,16 @@ public class XMLBuilder {
 
 		}
 
-		private void newLine(XMLBuilder buf) {
+		protected void newLine(XMLBuilder buf) {
+			if (buf.isJS()) return;
 			buf.addContent("\n");
 			for (int i = 0; i < nbInitialTab; i++) {
 				buf.addContent("\t");
 			}
 		}
 
-		private void newTabulation(XMLBuilder buf) {
+		protected void newTabulation(XMLBuilder buf) {
+			if (buf.isJS()) return;
 			for (int i = 0; i < nbTabInternal; i++) {
 				buf.addContent("\t");
 			}
@@ -121,7 +144,9 @@ public class XMLBuilder {
 		@Override
 		public XMLBuilder toXML(XMLBuilder buf) {
 
-			if (comment != null) {
+			XUIFactoryXHtml.getXMLFile().listParent.add(this);
+
+			if (comment != null && !buf.isJS()) {
 				newLine(buf);
 				newTabulation(buf);
 				buf.addContent("<!--" + comment + "-->");
@@ -154,7 +179,7 @@ public class XMLBuilder {
 				buf.addContent("</" + name + ">");
 			}
 
-			if (comment != null) {
+			if (comment != null && !buf.isJS()) {
 				newLine(buf);
 				newTabulation(buf);
 				buf.addContent("<!--end of " + comment + "-->");
@@ -162,11 +187,12 @@ public class XMLBuilder {
 
 			nbTabInternal = 0;
 			nbInitialTab = 0;
-
+			XUIFactoryXHtml.getXMLFile().listParent.removeLast();
 			return buf;
 		}
 
 		private int doChild(XMLBuilder buf, int nbChild, Object inner) {
+
 			if (inner instanceof Element) {
 				nbChild++;
 				Element tag = ((Element) inner);
@@ -175,21 +201,48 @@ public class XMLBuilder {
 				tag.toXML(buf);
 			} else if (inner instanceof Part) {
 				Part part = ((Part) inner);
-				if (part != null) {
-					nbChild++;
-					for (Element elem : part.part.getListElement(CONTENT.class)) {
-						elem.nbTabInternal = this.nbTabInternal + 1;
-						elem.nbInitialTab = this.nbInitialTab;
-					}
-					part.toXML(buf);
+				nbChild++;
+				for (Element elem : part.part.getListElement(CONTENT.class)) {
+					elem.nbTabInternal = this.nbTabInternal + 1;
+					elem.nbInitialTab = this.nbInitialTab;
 				}
+				part.toXML(buf);
 			} else if (inner instanceof List) {
 				List<?> listChild = (List<?>) inner;
 				for (Object object : listChild) {
 					nbChild = doChild(buf, nbChild, object);
 				}
+			} else if (inner instanceof Handle) {
+				Handle h = (Handle) inner;
+				String nameHandle = h.getName();
+				LinkedList<Object> listParent = XUIFactoryXHtml.getXMLFile().listParent;
+				Object handledObject = null;
+				for (Iterator<Object> it = listParent.descendingIterator(); it.hasNext();) {
+					Object elm = it.next();
+					if (elm instanceof Element) {
+						//MgrErrorNotificafion.doError("Handle on Element", null);
+					} else if (elm instanceof Part) {
+						Object elem = ((Part) elm).part.getProperty(nameHandle);
+						if (elem != null) {
+							handledObject = elem;
+						}
+					}
+				}
+				if (handledObject != null) {
+					nbChild = doChild(buf, nbChild, handledObject);
+				}
+			} else if (inner instanceof JSContent) {
+				{
+					JSContent part = ((JSContent) inner);
+					JSBuilder jsBuilder = part.getJSBuilder();
+					jsBuilder.nbTabInternal = this.nbTabInternal + 1;
+					jsBuilder.nbInitialTab = this.nbInitialTab;
+					part.toXML(buf);
+					nbChild++;
+				}
 			} else
 				buf.addContent(inner);
+
 			return nbChild;
 		}
 
@@ -197,6 +250,7 @@ public class XMLBuilder {
 
 	/**
 	 * un attribut XML
+	 * 
 	 * @author Bureau
 	 *
 	 */
@@ -229,6 +283,7 @@ public class XMLBuilder {
 
 		@Override
 		public XMLBuilder toXML(XMLBuilder buf) {
+			XUIFactoryXHtml.getXMLFile().listParent.add(this);
 			buf.after = false;
 			for (Element elem : part.getListElement(CONTENT.class)) {
 				elem.toXML(buf);
@@ -238,8 +293,23 @@ public class XMLBuilder {
 				elem.toXML(buf);
 			}
 			buf.after = false;
+			XUIFactoryXHtml.getXMLFile().listParent.removeLast();
 			return buf;
 		}
+	}
+
+	public static class Handle {
+		private String name;
+
+		public Handle(String name) {
+			super();
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+
 	}
 
 }

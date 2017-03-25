@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import com.elisaxui.core.notification.MgrErrorNotificafion;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -15,6 +16,7 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Attr;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.Handle;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Part;
 import com.elisaxui.core.xui.xml.builder.XMLTarget.ITargetRoot;
 
@@ -39,7 +41,25 @@ public class XMLPart {
 
 	protected HashMap<Class<? extends XMLTarget>, ArrayList<Element>> listPart = new HashMap<Class<? extends XMLTarget>, ArrayList<Element>>();
 	private final XMLBuilder xmlBuilder = new XMLBuilder("main", null, null);
+	protected HashMap<Object, Object> listProperties = new HashMap<Object, Object>(); 
 	
+	
+	public XMLPart addProperty(Object key, Object value)
+	{
+		listProperties.put(key, value);
+		return this;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <E extends Object> E  getProperty(Object key)
+	{
+		return (E) listProperties.get(key);
+	}
+	
+	public Element getPropertyElement(Object key)
+	{
+		return (Element)listProperties.get(key);
+	}
 	
 	@Deprecated
 	private final List<Object> children = new ArrayList<>();
@@ -86,7 +106,7 @@ public class XMLPart {
 			}
 		}
 
-		initComment();
+		//initComment();
 	}
 
 	private void initMethod(Method method) {
@@ -95,8 +115,9 @@ public class XMLPart {
 			try {
 
 				Element elem = ((Element) method.invoke(this, new Object[] {}));
+				elem.setComment(getComment(method));
 				Class<? extends XMLTarget> targetClass = target.value();
-				System.out.println(this.getClass().getSimpleName() + "#" + method.getName() );
+				//System.out.println(this.getClass().getSimpleName() + "#" + method.getName() );
 				if (elem != null && targetClass!=null ) {
 					int nbTab = targetClass.newInstance().getInitialNbTab();
 					if (ITargetRoot.class.isAssignableFrom(targetClass))
@@ -105,62 +126,39 @@ public class XMLPart {
 						addElement(targetClass, elem.setNbInitialTab(nbTab));
 				}
 			} 
-			catch (InstantiationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				MgrErrorNotificafion.doError("pb initMethod "+method.getName(), e);
 			}
 		}
 	}
 
 	/**************************************************************/
-	private String getComment() {
+	private String getComment(Method mth) {
 		xComment comment = this.getClass().getAnnotation(xComment.class);
 		if (comment != null) {
 			String v = comment.value();
-			return (v == null ? "" : v) + " [" + this.getClass().getSimpleName() + "]";
+			return (v == null ? "" : v) + " [" + this.getClass().getSimpleName()+"."+ mth.getName() +"]";
 		}
 		return null;
 	}
 
-	private void initComment() {
-		String comment = getComment();
-		if (comment != null) {
-			
-			for (Entry<Class<? extends XMLTarget>, ArrayList<Element>> entryListElem : listPart.entrySet()) {
-				entryListElem.getKey();
-				/**todo get prefixe block */
-				for (ArrayList<Element> listElem : listPart.values()) {
-					for (Element elem : listElem) {
-						if (elem != null) {
-							elem.setComment(comment);
-						}
-					}
-				}
-			}
-			
-//			for (Element elem : getListElement(CONTENT.class)) {
-//				if (elem != null) {
-//					elem.setComment(comment);
+//	private void initComment() {
+//		String comment = getComment();
+//		if (comment != null) {
+//			
+//			for (Entry<Class<? extends XMLTarget>, ArrayList<Element>> entryListElem : listPart.entrySet()) {
+//				entryListElem.getKey();
+//				/**todo get prefixe block */
+//				for (ArrayList<Element> listElem : listPart.values()) {
+//					for (Element elem : listElem) {
+//						if (elem != null) {
+//							elem.setComment(comment);
+//						}
+//					}
 //				}
 //			}
-//
-//			for (Element elem : getListElement(AFTER_CONTENT.class)) {
-//				if (elem != null) {
-//					elem.setComment("after " + comment);
-//				}
-//			}
-		}
-	}
+//		}
+//	}
 
 	/**************************************************************/
 	@Deprecated  
@@ -195,6 +193,11 @@ public class XMLPart {
 
 	public final Attr xAttr(String name, Object value) {
 		Attr attr = xmlBuilder.createAttr(name, value);
+		return attr;
+	}
+	
+	public final Handle vHandle(String name) {
+		Handle attr = xmlBuilder.createHandle(name);
 		return attr;
 	}
 

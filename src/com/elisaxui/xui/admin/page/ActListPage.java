@@ -1,6 +1,6 @@
 package com.elisaxui.xui.admin.page;
 
-import com.elisaxui.core.xui.xhtml.XHTMLFile.BODY;
+import com.elisaxui.core.xui.xhtml.XHTMLRoot.BODY;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -15,16 +15,16 @@ public class ActListPage extends XHTMLPart {
 	@xRessource
 	@xVersion("1.2")
 	public Element xAddBody() {
-		return xSpan("ca marche");
+		return xSpan("ca marche", this.getPropertyElement("name"));
 	}
 	
 	@xTarget(CONTENT.class)
 	public Element xListe() {
-		return xSpan("ok", xUl(this.getChildren()));
+		return xSpan("ok", xPart(new ViewItem()), xUl(this.getChildren()));
 	}
 
 	@xTarget(AFTER_CONTENT.class)
-	@xRessource
+//	@xRessource
 	public Element xAddJS() {
 		return xScriptJS("console.debug('ok super')");
 	}

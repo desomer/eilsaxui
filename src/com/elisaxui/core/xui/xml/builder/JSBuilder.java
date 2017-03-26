@@ -38,14 +38,17 @@ public class JSBuilder extends Element {
 				{
 					StringBuilder txtXML = new StringBuilder(1000);
 					StringBuilder txtXMLAfter = new StringBuilder(1000);
-					((Element)object).toXML(new XMLBuilder("js", txtXML, txtXMLAfter));
-					buf.addContent("[(function () {/*");
+					((Element)object).toXML(new XMLBuilder("js", txtXML, txtXMLAfter).setJS(true));
+					
+				//	buf.addContent("[(function () {/*");
+					buf.addContent("['");
 					buf.addContent(txtXML);
-					buf.addContent("\n*/}).toString().match(/[^]*\\/\\*([^]*)\\*\\/\\}$/)[1]");
-					buf.addContent(", (function () {/*");
+					buf.addContent("',\n'");
+				//	buf.addContent("\n*/}).toString().match(/[^]*\\/\\*([^]*)\\*\\/\\}$/)[1]");
+				//	buf.addContent(", (function () {/*");
 					buf.addContent(txtXMLAfter.toString().replace("</script>", "<\\/script>"));
-					buf.addContent("\n*/}).toString().replace('<\\\\/script>','</'+'script>').match(/[^]*\\/\\*([^]*)\\*\\/\\}$/)[1]");
-					buf.addContent("]");
+				//	buf.addContent("\n*/}).toString().replace('<\\\\/script>','</'+'script>').match(/[^]*\\/\\*([^]*)\\*\\/\\}$/)[1]");
+					buf.addContent("']");
 					
 //					var myString = (function () {/*
 //						   <div id="someId">
@@ -55,7 +58,12 @@ public class JSBuilder extends Element {
 //						*/}).toString().match(/[^]*\/\*([^]*)\*\/\}$/)[1];
 				}
 				else
-					buf.addContent(object);
+				{
+					if (buf.isJS())
+						buf.addContent(object.toString().replaceAll("'", "\\\\'"));
+					else
+						buf.addContent(object);
+				}
 			}
 			return buf;
 		}

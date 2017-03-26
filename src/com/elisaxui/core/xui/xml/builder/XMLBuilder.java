@@ -127,15 +127,22 @@ public class XMLBuilder {
 		}
 
 		protected void newLine(XMLBuilder buf) {
-			if (buf.isJS()) return;
-			buf.addContent("\n");
+			
+			if (buf.isJS())
+			{
+				buf.addContent("'+\n'");		
+			}
+			else
+				buf.addContent("\n");
+			
+			
 			for (int i = 0; i < nbInitialTab; i++) {
 				buf.addContent("\t");
 			}
 		}
 
 		protected void newTabulation(XMLBuilder buf) {
-			if (buf.isJS()) return;
+			//if (buf.isJS()) return;
 			for (int i = 0; i < nbTabInternal; i++) {
 				buf.addContent("\t");
 			}
@@ -146,7 +153,7 @@ public class XMLBuilder {
 
 			XUIFactoryXHtml.getXMLFile().listParent.add(this);
 
-			if (comment != null && !buf.isJS()) {
+			if (comment != null /*&& !buf.isJS()*/) {
 				newLine(buf);
 				newTabulation(buf);
 				buf.addContent("<!--" + comment + "-->");
@@ -179,7 +186,7 @@ public class XMLBuilder {
 				buf.addContent("</" + name + ">");
 			}
 
-			if (comment != null && !buf.isJS()) {
+			if (comment != null /*&& !buf.isJS()*/) {
 				newLine(buf);
 				newTabulation(buf);
 				buf.addContent("<!--end of " + comment + "-->");

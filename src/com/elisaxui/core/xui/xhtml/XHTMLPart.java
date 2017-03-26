@@ -59,10 +59,17 @@ public abstract class XHTMLPart extends XMLPart {
 		return new JSBuilder(null, new Object[]{}).createJSContent();
 	}
 	
+	public String txtVar(Object var)
+	{
+		return "'+"+var+"+'";
+	}
+	
 	public final Element xScriptJS(Object js) {
-		Element t = xElement("script", xAttr("type", "'text/javascript'"), js);
+		Element t = xElement("script", xAttr("type", "\"text/javascript\""), js);
 		return t;
 	}
+	
+	
 
 	/**************************************************************************/
 	

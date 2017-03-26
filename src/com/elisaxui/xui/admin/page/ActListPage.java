@@ -26,7 +26,7 @@ public class ActListPage extends XHTMLPart {
 	@xTarget(AFTER_CONTENT.class)
 //	@xRessource
 	public Element xAddJS() {
-		return xScriptJS("console.debug('ok super')");
+		return xScriptJS(js().__("console.debug('ActListPage.xAddJS')"));
 	}
 
 }

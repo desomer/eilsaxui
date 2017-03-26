@@ -59,13 +59,12 @@ public class ScnAdminMain extends XHTMLPart {
 				 		+ "crossorigin='anonymous'></script>")	
 				,xScriptJS(js()
 					.var("a", 12)
-					//.__("console.debug('a')")
-					.var("b", xDiv( xPart(new ActListPage(), xLi("ligne " + "\n*/}).toString().match(/[^]*\\/\\*([^]*)\\*\\/\\}$/)[1] + a + (function () {/*") )))
+					.var("b", xDiv(xPart(new ActListPage(), xLi("ligne ", txtVar("a")) )))
 					.__("$('body').append($(b[0]))")
 					.var("c", "$(b[1])")
 					.__("$.each( c, function( i, el ) {\n  if (el.nodeName=='SCRIPT') eval(el.text)\n })")
 				))
 				; 
 	}
-	
+	// (function () {/* text + cr +lf */}).toString().match(/[^]*\\/\\*([^]*)\\*\\/\\}$/)[1]
 }

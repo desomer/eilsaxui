@@ -40,7 +40,6 @@ public class XMLPart {
 	};
 
 	protected HashMap<Class<? extends XMLTarget>, ArrayList<Element>> listPart = new HashMap<Class<? extends XMLTarget>, ArrayList<Element>>();
-	private final XMLBuilder xmlBuilder = new XMLBuilder("main", null, null);
 	protected HashMap<Object, Object> listProperties = new HashMap<Object, Object>(); 
 	
 	
@@ -179,11 +178,11 @@ public class XMLPart {
 	}
 
 	public final Part xPart(XMLPart part, Object... inner) {
-		return xmlBuilder.createPart(part, inner);
+		return XMLBuilder.createPart(part, inner);
 	}
 
 	public final Element xElement(String name, Object... inner) {
-		Element tag = xmlBuilder.createElement(name, inner);
+		Element tag = XMLBuilder.createElement(name, inner);
 		return tag;
 	}
 
@@ -192,12 +191,12 @@ public class XMLPart {
 	}
 
 	public final Attr xAttr(String name, Object value) {
-		Attr attr = xmlBuilder.createAttr(name, value);
+		Attr attr = XMLBuilder.createAttr(name, value);
 		return attr;
 	}
 	
 	public final Handle vHandle(String name) {
-		Handle attr = xmlBuilder.createHandle(name);
+		Handle attr = XMLBuilder.createHandle(name);
 		return attr;
 	}
 

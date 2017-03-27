@@ -7,10 +7,11 @@ import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.BODY;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.SCRIPT_AFTER_BODY;
 import com.elisaxui.core.xui.xml.XMLPart;
-import com.elisaxui.core.xui.xml.builder.JSBuilder;
-import com.elisaxui.core.xui.xml.builder.JSBuilder.JSContent;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Attr;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.javascript.JSBuilder;
+import com.elisaxui.core.xui.xml.builder.javascript.JSClass;
+import com.elisaxui.core.xui.xml.builder.javascript.JSContent;
 
 public abstract class XHTMLPart extends XMLPart {
 
@@ -55,8 +56,13 @@ public abstract class XHTMLPart extends XMLPart {
 	}
 	
 	
-	public final JSContent js() {
+	public final static JSContent js() {
 		return new JSBuilder(null, new Object[]{}).createJSContent();
+	}
+	
+	@Deprecated
+	public final JSClass _class(Object name, Object... inner) {
+		return new JSBuilder(null, new Object[]{}).createJSClass();
 	}
 	
 	public String txtVar(Object var)

@@ -6,11 +6,25 @@ import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.javascript.JSClass;
 
 @xFile(id = "admin.html")
 @xComment("activite d'admin")
 public class ScnAdminMain extends XHTMLPart {
-
+	
+//	_Construc("a","b")
+//	_hMthToto("a","b")
+//	_hMthToto("a","b")
+//	
+//	JSClass aCls = _Class("name",
+//			_constructor(_Construc),
+//			_fct(_hMthToto),
+//			_fct("titi", "b")
+//		)
+//	
+//	.__(inst("a")._new(aCls.class) )   
+//	.__(inst("a")._hMthToto.call(12, 13) )	
+	
 	@xTarget(HEADER.class)
 	public Element xTitle()
 	{
@@ -53,16 +67,19 @@ public class ScnAdminMain extends XHTMLPart {
 	@xTarget(AFTER_CONTENT.class)
 	public Element xaAddJS()
 	{
+		
 		return xListElement(
 				 xListElement("\n<script src='https://code.jquery.com/jquery-3.1.1.slim.min.js' "
 				 		+ "integrity='sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n' "
 				 		+ "crossorigin='anonymous'></script>")	
 				,xScriptJS(js()
-					.var("a", 12)
-					.var("b", xDiv(xPart(new ActListPage(), xLi("ligne ", txtVar("a")) )))
+					._var("a", 12)
+					._var("b", xDiv(xPart(new ActListPage(), xLi("ligne ", txtVar("a")) )))
 					.__("$('body').append($(b[0]))")
-					.var("c", "$(b[1])")
+					._var("c", "$(b[1])")
 					.__("$.each( c, function( i, el ) {\n  if (el.nodeName=='SCRIPT') eval(el.text)\n })")
+//					.var("a", a._new())
+//					.__(a.doTest(12))
 				))
 				; 
 	}

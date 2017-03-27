@@ -11,7 +11,8 @@ import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.XMLPart.CONTENT;
-import com.elisaxui.core.xui.xml.builder.JSBuilder.JSContent;
+import com.elisaxui.core.xui.xml.builder.javascript.JSBuilder;
+import com.elisaxui.core.xui.xml.builder.javascript.JSContent;
 
 public class XMLBuilder {
 
@@ -36,24 +37,26 @@ public class XMLBuilder {
 		this.afterContent = afterContent;
 		this.id = id;
 	}
+	
+	
 
-	public Element createElement(Object name, Object... inner) {
+	public static Element createElement(Object name, Object... inner) {
 		Element t = new Element(name, inner);
 		return t;
 	}
 
-	public Attr createAttr(Object name, Object value) {
+	public static Attr createAttr(Object name, Object value) {
 		Attr t = new Attr(name, value);
 		return t;
 	}
 
-	public Part createPart(XMLPart part, Object... inner) {
+	public static Part createPart(XMLPart part, Object... inner) {
 		Part t = new Part(part, inner);
 		part.initContent(XUIFactoryXHtml.getXMLRoot());
 		return t;
 	}
 
-	public Handle createHandle(String name) {
+	public static Handle createHandle(String name) {
 		Handle t = new Handle(name);
 		return t;
 	}
@@ -63,7 +66,7 @@ public class XMLBuilder {
 	 * 
 	 * @param v
 	 */
-	protected void addContent(Object v) {
+	public void addContent(Object v) {
 		(after ? afterContent : content).append(v);
 	}
 
@@ -126,22 +129,25 @@ public class XMLBuilder {
 
 		}
 
-		protected void newLine(XMLBuilder buf) {
+		public void newLine(XMLBuilder buf) {
 			
 			if (buf.isJS())
 			{
-				buf.addContent("'+\n'");		
+				if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCrXMLinJS())
+					buf.addContent("'+\n'");		
 			}
 			else
-				buf.addContent("\n");
-			
+			{
+				if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCrXML())
+					buf.addContent("\n");
+			}
 			
 			for (int i = 0; i < nbInitialTab; i++) {
 				buf.addContent("\t");
 			}
 		}
 
-		protected void newTabulation(XMLBuilder buf) {
+		public void newTabulation(XMLBuilder buf) {
 			//if (buf.isJS()) return;
 			for (int i = 0; i < nbTabInternal; i++) {
 				buf.addContent("\t");

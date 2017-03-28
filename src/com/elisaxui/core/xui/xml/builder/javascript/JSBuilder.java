@@ -9,15 +9,15 @@ public class JSBuilder extends Element {
 		super(name, inner);
 	}
 
+	
+	public JSFunction createJSFunction()
+	{
+		return new JSFunction(this);
+	}
 
 	public JSContent createJSContent()
 	{
 		return new JSContent(this);
-	}
-	
-	public JSClass createJSClass()
-	{
-		return new JSClass(this);
 	}
 	
 	public static final class JSNewLine {};

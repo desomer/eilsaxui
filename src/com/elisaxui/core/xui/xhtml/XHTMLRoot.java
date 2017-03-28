@@ -58,7 +58,7 @@ public class XHTMLRoot extends XHTMLPart {
 			for (FileEntry fileEntry : list) {
 				long lm = fileEntry.file.lastModified();
 				Date d = new Date();
-				System.out.println(fileEntry.file.getName() + " " + d);
+				//System.out.println(fileEntry.file.getName() + " " + d);
 				if (lm > olderFile)
 					olderFile = lm;
 			}

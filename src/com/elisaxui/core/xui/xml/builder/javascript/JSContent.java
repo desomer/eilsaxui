@@ -93,4 +93,9 @@ public class JSContent implements XMLBuilder.IXMLBuilder
 		return this;
 	}
 	
+	public Object call(Object ...content)
+	{
+		return null;
+	}
+	
 }

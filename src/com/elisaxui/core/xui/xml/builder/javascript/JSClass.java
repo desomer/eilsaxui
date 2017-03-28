@@ -1,14 +1,15 @@
 package com.elisaxui.core.xui.xml.builder.javascript;
 
-public class JSClass extends JSContent {
+public interface JSClass  {
 
-	JSClass(JSBuilder jsBuilder) {
-		super(jsBuilder);
-		// TODO Auto-generated constructor stub
-	}
-
+	public StringBuilder name = new StringBuilder();
 	
-	public JSClass() {
-		super(null);
+	JSContent js();
+	default <E> E setName(Object n)
+	{
+		name.append(n);
+		return (E) this;
+		
 	}
+	
 }

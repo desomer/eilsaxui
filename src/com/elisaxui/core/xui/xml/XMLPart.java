@@ -1,24 +1,31 @@
 package com.elisaxui.core.xui.xml;
 
+import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 
 import com.elisaxui.core.notification.MgrErrorNotificafion;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.XUILaucher;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
-import com.elisaxui.core.xui.xml.builder.XMLTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Attr;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Handle;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Part;
+import com.elisaxui.core.xui.xml.builder.XMLTarget;
 import com.elisaxui.core.xui.xml.builder.XMLTarget.ITargetRoot;
+import com.elisaxui.core.xui.xml.builder.javascript.JSClass;
 
 /**
  * un bloc xml representant une vue
@@ -105,6 +112,32 @@ public class XMLPart {
 			}
 		}
 
+		// https://github.com/paul-hammant/paranamer
+//		Class<?>[] listClass = this.getClass().getDeclaredClasses();
+//		for (Class<?> class1 : listClass) {
+//			//if (JSClass.class.isAssignableFrom(class1))
+//			//{
+//				System.out.println("cls="+class1.getSimpleName());
+//				Field[] fields = class1.getDeclaredFields();
+//				for (Field field : fields) {
+//					System.out.println("cls="+class1.getSimpleName());
+//				}
+//				
+//				Method[] mths = class1.getDeclaredMethods();
+//				for (Method mth : mths) {
+//					System.out.println("mth="+mth.getName());
+//					Parameter[] params = mth.getParameters();
+//					for (Parameter parameter : params) {
+//						System.out.println("param="+parameter.getName());
+//					}
+//				}
+//				
+//			//}
+//		}
+		
+
+				
+				
 		//initComment();
 	}
 

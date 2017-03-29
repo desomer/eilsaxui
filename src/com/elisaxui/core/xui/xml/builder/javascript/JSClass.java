@@ -12,4 +12,9 @@ public interface JSClass  {
 		
 	}
 	
+	static Object _new(Class<? extends JSClass> cl) {
+		return "new "+cl.getSimpleName() +"()" ;
+	}
+	
+	
 }

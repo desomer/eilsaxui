@@ -12,7 +12,7 @@ public class JSContent implements XMLBuilder.IXMLBuilder
 	/**
 	 * 
 	 */
-	private final JSBuilder jsBuilder;
+	protected final JSBuilder jsBuilder;
 
 	/**
 	 * @param jsBuilder
@@ -93,9 +93,9 @@ public class JSContent implements XMLBuilder.IXMLBuilder
 		return this;
 	}
 	
-	public Object call(Object ...content)
-	{
-		return null;
-	}
+//	public Object call(Object ...content)
+//	{
+//		return null;
+//	}
 	
 }

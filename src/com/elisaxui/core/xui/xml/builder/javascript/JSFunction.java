@@ -4,11 +4,25 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
 public class JSFunction extends JSContent
 {
+	//"use strict"
+	
 	JSFunction(JSBuilder jsBuilder) {
 		super(jsBuilder);
 	}
 
 	Object name = null;
+	Object[] param = null; 
+	JSContent code;
+	
+	public JSContent getCode() {
+		return code;
+	}
+
+	public JSFunction setCode(JSContent code) {
+		this.code = code;
+		return this;
+	}
+
 	public Object getName() {
 		return name;
 	}
@@ -27,14 +41,28 @@ public class JSFunction extends JSContent
 		return this;
 	}
 
-	Object[] param = null;  
-	
-
 
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
-		// TODO Auto-generated method stub
-		return null;
+//		jsBuilder.newLine(buf);
+		jsBuilder.newTabulation(buf);
+		buf.addContent(name);
+		buf.addContent("(");
+
+		for (int i = 0; i < param.length; i++) {
+			if (i > 0)
+				buf.addContent(", ");
+			buf.addContent(param[i]);
+		}
+		buf.addContent(") {");
+		jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab()+1);
+		code.toXML(buf);
+		jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab()-1);
+		jsBuilder.newLine(buf);
+		jsBuilder.newTabulation(buf);
+		buf.addContent("}");
+		jsBuilder.newLine(buf);
+		return buf;
 	}
 
 }

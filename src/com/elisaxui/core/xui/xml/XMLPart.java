@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import com.elisaxui.core.notification.MgrErrorNotificafion;
+import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.XUILaucher;
 import com.elisaxui.core.xui.xml.annotation.xComment;
@@ -159,7 +159,7 @@ public class XMLPart {
 				}
 			} 
 			catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				MgrErrorNotificafion.doError("pb initMethod "+method.getName(), e);
+				ErrorNotificafionMgr.doError("pb initMethod "+method.getName(), e);
 			}
 		}
 	}

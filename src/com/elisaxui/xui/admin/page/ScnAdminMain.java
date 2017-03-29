@@ -49,20 +49,28 @@ public class ScnAdminMain extends XHTMLPart {
 	@xTarget(AFTER_CONTENT.class)
 	public Element xaAddJS() {
 
-		JSTestClass ab = xImport(JSTestClass.class);
-		ab.setName("ab");
+		JSTestClass ab = varOfType("ab", JSTestClass.class);
 		
 		return xListElement(
-				xListElement("\n<script src='https://code.jquery.com/jquery-3.1.1.slim.min.js' "
+				xImport(JSTestClass.class),
+				xElement("/","<script src='https://code.jquery.com/jquery-3.1.1.slim.min.js' "
 						+ "integrity='sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n' "
 						+ "crossorigin='anonymous'></script>"),
-				xScriptJS(js()._var("a", 12)._var("b", xDiv(xPart(new ActListPage(), xLi("ligne ", txtVar("a")))))
-						.__("$('body').append($(b[0]))")._var("c", "$(b[1])")
-						._var(ab, _new())
-						.__(ab.console("a", "b"))
+				
+				xScriptJS(js()
+						._var("a", 12)
+						._var("b", xDiv(xPart(new ActListPage(), xLi("ligne ", txtVar("a")))))
+						
+						.__("$('body').append($(b[0]))")
+						._var("c", "$(b[1])")
 						.__("$.each( c, function( i, el ) {\n  if (el.nodeName=='SCRIPT') eval(el.text)\n })")
+						
+						._var(ab, JSTestClass._new())
+						.__(ab.console("a", "b"))
+						.__(ab.test())
+
 				));
 	}
-	// (function () {/* text + cr +lf
-	// */}).toString().match(/[^]*\\/\\*([^]*)\\*\\/\\}$/)[1]
+	
+	// (function () {/* text + cr +lf */}).toString().match(/[^]*\\/\\*([^]*)\\*\\/\\}$/)[1]
 }

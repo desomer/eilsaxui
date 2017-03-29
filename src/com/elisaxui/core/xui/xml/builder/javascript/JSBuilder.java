@@ -1,7 +1,6 @@
 package com.elisaxui.core.xui.xml.builder.javascript;
 
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.IXMLBuilder;
 
 public class JSBuilder extends Element {
 	
@@ -9,6 +8,10 @@ public class JSBuilder extends Element {
 		super(name, inner);
 	}
 
+	public JSClassImpl createJSClass()
+	{
+		return new JSClassImpl(this);
+	}
 	
 	public JSFunction createJSFunction()
 	{

@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.elisaxui.core.xui.xhtml.XHTMLRoot;
-import com.elisaxui.core.notification.MgrErrorNotificafion;
+import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xml.XMLFile;
 import com.elisaxui.core.xui.xml.XMLPart;
@@ -62,9 +62,9 @@ public class XUIFactoryXHtml {
 
 			// premier passe
 			initXMLFile(pageClass, file);
-			if (MgrErrorNotificafion.hasErrorMessage()) {
+			if (ErrorNotificafionMgr.hasErrorMessage()) {
 				return Response.status(Status.INTERNAL_SERVER_ERROR) // .type(MediaType.TEXT_HTML)
-						.entity(MgrErrorNotificafion.getBufferErrorMessage().toString()).build();
+						.entity(ErrorNotificafionMgr.getBufferErrorMessage().toString()).build();
 			}
 
 			// generation page
@@ -99,7 +99,7 @@ public class XUIFactoryXHtml {
 				page.vAfterBody(elem);
 			}
 		} catch (InstantiationException | IllegalAccessException e) {
-			MgrErrorNotificafion.doError("Pb instanciation " + pageClass.getName(), e);
+			ErrorNotificafionMgr.doError("Pb instanciation " + pageClass.getName(), e);
 		}
 	}
 

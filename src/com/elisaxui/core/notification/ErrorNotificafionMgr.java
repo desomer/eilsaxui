@@ -1,12 +1,12 @@
 package com.elisaxui.core.notification;
 
-public class MgrErrorNotificafion {
+public class ErrorNotificafionMgr {
 
-	private static final ThreadLocal<MgrErrorNotificafion> threadLocalMgrErrorNotificafion = new ThreadLocal<MgrErrorNotificafion>();
+	private static final ThreadLocal<ErrorNotificafionMgr> threadLocalMgrErrorNotificafion = new ThreadLocal<ErrorNotificafionMgr>();
 	StringBuilder bufError = new StringBuilder();
 
 	public static void doError(CharSequence msg, Throwable ex) {
-		MgrErrorNotificafion mgrError = getMgrError();	
+		ErrorNotificafionMgr mgrError = getMgrError();	
 
 		System.out.println(msg);
 		if (ex!=null)
@@ -14,10 +14,10 @@ public class MgrErrorNotificafion {
 		mgrError.bufError.append(msg+"\n");
 	}
 
-	private static MgrErrorNotificafion getMgrError() {
-		MgrErrorNotificafion mgrError = threadLocalMgrErrorNotificafion.get();
+	private static ErrorNotificafionMgr getMgrError() {
+		ErrorNotificafionMgr mgrError = threadLocalMgrErrorNotificafion.get();
 		if (mgrError == null) {
-			mgrError = new MgrErrorNotificafion();
+			mgrError = new ErrorNotificafionMgr();
 			threadLocalMgrErrorNotificafion.set(mgrError);
 		}
 		return mgrError;

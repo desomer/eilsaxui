@@ -6,12 +6,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.elisaxui.core.notification.MgrErrorNotificafion;
+import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.XMLPart.CONTENT;
 import com.elisaxui.core.xui.xml.builder.javascript.JSBuilder;
+import com.elisaxui.core.xui.xml.builder.javascript.JSClassImpl;
 import com.elisaxui.core.xui.xml.builder.javascript.JSContent;
 
 public class XMLBuilder {
@@ -37,8 +38,6 @@ public class XMLBuilder {
 		this.afterContent = afterContent;
 		this.id = id;
 	}
-	
-	
 
 	public static Element createElement(Object name, Object... inner) {
 		Element t = new Element(name, inner);
@@ -130,25 +129,22 @@ public class XMLBuilder {
 		}
 
 		public void newLine(XMLBuilder buf) {
-			
-			if (buf.isJS())
-			{
+
+			if (buf.isJS()) {
 				if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCrXMLinJS())
-					buf.addContent("'+\n'");		
-			}
-			else
-			{
+					buf.addContent("'+\n'");
+			} else {
 				if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCrXML())
 					buf.addContent("\n");
 			}
-			
+
 			for (int i = 0; i < nbInitialTab; i++) {
 				buf.addContent("\t");
 			}
 		}
 
 		public void newTabulation(XMLBuilder buf) {
-			//if (buf.isJS()) return;
+			// if (buf.isJS()) return;
 			for (int i = 0; i < nbTabInternal; i++) {
 				buf.addContent("\t");
 			}
@@ -159,7 +155,7 @@ public class XMLBuilder {
 
 			XUIFactoryXHtml.getXMLFile().listParent.add(this);
 
-			if (comment != null /*&& !buf.isJS()*/) {
+			if (comment != null /* && !buf.isJS() */) {
 				newLine(buf);
 				newTabulation(buf);
 				buf.addContent("<!--" + comment + "-->");
@@ -192,7 +188,7 @@ public class XMLBuilder {
 				buf.addContent("</" + name + ">");
 			}
 
-			if (comment != null /*&& !buf.isJS()*/) {
+			if (comment != null /* && !buf.isJS() */) {
 				newLine(buf);
 				newTabulation(buf);
 				buf.addContent("<!--end of " + comment + "-->");
@@ -233,7 +229,8 @@ public class XMLBuilder {
 				for (Iterator<Object> it = listParent.descendingIterator(); it.hasNext();) {
 					Object elm = it.next();
 					if (elm instanceof Element) {
-						//MgrErrorNotificafion.doError("Handle on Element", null);
+						// MgrErrorNotificafion.doError("Handle on Element",
+						// null);
 					} else if (elm instanceof Part) {
 						Object elem = ((Part) elm).part.getProperty(nameHandle);
 						if (elem != null) {
@@ -244,6 +241,14 @@ public class XMLBuilder {
 				if (handledObject != null) {
 					nbChild = doChild(buf, nbChild, handledObject);
 				}
+
+			} else if (inner instanceof JSClassImpl) {
+				 JSClassImpl part = ((JSClassImpl) inner);
+				 JSBuilder jsBuilder = part.getJSBuilder();
+				 jsBuilder.nbTabInternal = this.nbTabInternal + 1;
+				 jsBuilder.nbInitialTab = this.nbInitialTab;
+				 part.toXML(buf);
+				 nbChild++;
 			} else if (inner instanceof JSContent) {
 				{
 					JSContent part = ((JSContent) inner);

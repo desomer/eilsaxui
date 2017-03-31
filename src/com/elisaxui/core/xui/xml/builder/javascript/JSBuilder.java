@@ -4,6 +4,12 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 
 public class JSBuilder extends Element {
 	
+	public static final <E> E initVar(Object val)
+	{
+		return (E) val;
+		
+	}
+	
 	public JSBuilder(Object name, Object[] inner) {
 		super(name, inner);
 	}

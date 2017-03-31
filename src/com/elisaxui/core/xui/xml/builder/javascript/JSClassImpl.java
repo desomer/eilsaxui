@@ -7,12 +7,20 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 public class JSClassImpl extends JSContent {
 	JSClassImpl(JSBuilder jsBuilder) {
 		super(jsBuilder);
-		// TODO Auto-generated constructor stub
 	}
 
 	LinkedList<JSFunction> listFuntion = new LinkedList<>();
 	Object name;
+	boolean isInitialized = false;
 	
+	public boolean isInitialized() {
+		return isInitialized;
+	}
+
+	public void setInitialized(boolean isInitialized) {
+		this.isInitialized = isInitialized;
+	}
+
 	public Object getName() {
 		return name;
 	}

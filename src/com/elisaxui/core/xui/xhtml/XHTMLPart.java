@@ -2,20 +2,18 @@ package com.elisaxui.core.xui.xhtml;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.Iterator;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.BODY;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.SCRIPT_AFTER_BODY;
 import com.elisaxui.core.xui.xml.XMLPart;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Attr;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 import com.elisaxui.core.xui.xml.builder.javascript.JSBuilder;
@@ -89,9 +87,10 @@ public abstract class XHTMLPart extends XMLPart {
 		return null;
 	}
 
-	static abstract class  aInvocationHandler implements InvocationHandler {
-		public Object inst;
-		private Object impl;
+    abstract class  aInvocationHandler implements InvocationHandler {
+		public Object proxy;  
+		public Object name;  
+		private Object impl;  // pas utiliser => la class qui implemente par defaut l'interface
 	}
 	
 	public final Element xImport(Class<? extends JSClass> cl) {
@@ -107,27 +106,30 @@ public abstract class XHTMLPart extends XMLPart {
 				super.impl = obj;
 			}
 
+			@SuppressWarnings("static-access")
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 				if (method.getName().equals("js"))
 					return js();
 
 				if (method.getName().equals("toString"))
-					return ((JSClass) inst).name.toString();
+					return name.toString();
 				
-				if (method.getName().equals("setName")) {
-					final Class<?> declaringClass = method.getDeclaringClass();
-					Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class
-							.getDeclaredConstructor(Class.class, int.class);
-					constructor.setAccessible(true);
-					return constructor.newInstance(declaringClass, MethodHandles.Lookup.PRIVATE)
-							.unreflectSpecial(method, declaringClass).bindTo(proxy).invokeWithArguments(args); // args
-				}
+//				if (method.getName().equals("setName")) {
+//					final Class<?> declaringClass = method.getDeclaringClass();
+//					Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class
+//							.getDeclaredConstructor(Class.class, int.class);
+//					constructor.setAccessible(true);
+//					return constructor.newInstance(declaringClass, MethodHandles.Lookup.PRIVATE)
+//							.unreflectSpecial(method, declaringClass).bindTo(proxy).invokeWithArguments(args); // args
+//				}
 
 				if (method.isDefault()) {
 					final Class<?> declaringClass = method.getDeclaringClass();
+					
 					Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class
 							.getDeclaredConstructor(Class.class, int.class);
 					constructor.setAccessible(true);
+					
 					Parameter[] param = method.getParameters();
 					Object[] p = new Object[param.length];
 
@@ -141,25 +143,38 @@ public abstract class XHTMLPart extends XMLPart {
 							.unreflectSpecial(method, declaringClass).bindTo(proxy).invokeWithArguments(p); // args
 
 					if (ret instanceof JSContent) {
-
+						// ajout de la function durant l'appel
 						JSFunction fct = jsBuilder.createJSFunction().setName(method.getName())
 						.setParam(p)
 						.setCode(((JSContent) ret))
 						;
 						
-						XUIFactoryXHtml.getXMLFile().getClassImpl(jsBuilder,cl.getSimpleName()).addFunction(fct);
+						JSClassImpl ImplClass = XUIFactoryXHtml.getXMLFile().getClassImpl(jsBuilder,cl.getSimpleName());
+						if (!ImplClass.isInitialized())
+						{
+							Field[] listField = cl.getDeclaredFields();
+							if (listField!=null)
+							{
+								for (Field field : listField) {
+									//field.set(proxy, field.getName());
+								}
+							}
+							
+							ImplClass.setInitialized(true);
+						}
+						ImplClass.addFunction(fct);
+						
 					} else
 						System.out.println("ret =" + ret);
 				}
 
 				StringBuilder buf = new StringBuilder();
-				buf.append(((JSClass) inst).name);
+				buf.append(name);
 				buf.append(".");
 				buf.append(method.getName());
 				buf.append("(");
 
 				int i = 0;
-
 				if (args != null) {
 					for (Object p : args) {
 						if (i > 0)
@@ -178,17 +193,18 @@ public abstract class XHTMLPart extends XMLPart {
 
 		MyInvocationHandler ih = new MyInvocationHandler(null);
 
-		Object a = Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[] { cl }, ih);
-		ih.inst = a;
-		Method[] m = a.getClass().getDeclaredMethods();
-		return (E) a;
+		Object proxy = Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[] { cl }, ih);
+		ih.proxy = proxy;
+		Method[] m = proxy.getClass().getDeclaredMethods();
+		return (E) proxy;
 	}
 
 	@SuppressWarnings("unchecked")
 	public final <E extends JSClass> E varOfType(Object name, Class<? extends JSClass> cl) {
 
 		JSClass inst = getProxy(cl);
-		inst.setName(name);
+		aInvocationHandler mh = (aInvocationHandler)Proxy.getInvocationHandler(inst);
+		mh.name = name;
 		return (E) inst;
 	}
 

@@ -92,10 +92,4 @@ public class JSContent implements XMLBuilder.IXMLBuilder
 		listElem.add(";");
 		return this;
 	}
-	
-//	public Object call(Object ...content)
-//	{
-//		return null;
-//	}
-	
 }

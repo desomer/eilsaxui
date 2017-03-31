@@ -19,10 +19,10 @@ public class ScnAdminMain extends XHTMLPart {
 
 	@xTarget(CONTENT.class)
 	public Element xContenu2() {
-
-		
 		return xDiv(xH1(xID("'test'"), "un contenu",
-				xPart(new ActListPage().addProperty("name", xDiv("property")).addProperty("test", xDiv("handle")),
+				xPart(new ActListPage()
+						.addProperty("name", xDiv("property"))
+						.addProperty("test", xDiv("handle")),
 						xLi("ligne5"), xLi("ligne6"))));
 	}
 
@@ -50,6 +50,7 @@ public class ScnAdminMain extends XHTMLPart {
 	public Element xaAddJS() {
 
 		JSTestClass ab = varOfType("ab", JSTestClass.class);
+		JSTestClass abc = varOfType("abc", JSTestClass.class);
 		
 		return xListElement(
 				xImport(JSTestClass.class),
@@ -66,7 +67,9 @@ public class ScnAdminMain extends XHTMLPart {
 						.__("$.each( c, function( i, el ) {\n  if (el.nodeName=='SCRIPT') eval(el.text)\n })")
 						
 						._var(ab, JSTestClass._new())
+						._var(abc, JSTestClass._new())
 						.__(ab.console("a", "b"))
+						.__(abc.console("b", "a"))
 						.__(ab.test())
 
 				));

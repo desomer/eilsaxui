@@ -5,11 +5,14 @@ import com.elisaxui.core.xui.xml.builder.javascript.JSClass;
 
 public interface JSTestClass extends JSClass {
 
-	Object a = JSBuilder.initVar("a");
-	JSTest2Class b = JSBuilder.initVar(null);
+	Object a = "a";
+	JSTest2Class b = JSBuilder.initVar(JSTest2Class.class);
 
 	default Object console(Object p1, Object p2) {
-		return js().__(a, "=", p1).__("console.debug(" + p1 + ", " + p2 + ")");
+		return js()
+				.__(a, "=", p1)
+				.__(b, "=", JSTest2Class._new())
+				.__("console.debug(" + p1 + ", " + p2 + ")");
 	}
 
 	default Object test() {

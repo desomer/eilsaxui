@@ -23,6 +23,25 @@ public class JSBuilder extends Element {
 		mh.name = name;
 	}
 
+	public JSClassImpl createClass(Class<? extends JSClass> cl, Object proxy) throws IllegalAccessException {
+		JSClassImpl ImplClass = XUIFactoryXHtml.getXMLFile().getClassImpl(JSBuilder.this,	cl.getSimpleName());
+		if (!ImplClass.isInitialized()) {
+			Field[] listField = cl.getDeclaredFields();
+			if (listField != null) {
+				for (Field field : listField) {
+					if (JSClass.class.isAssignableFrom(field.getType()))
+					{
+						Object f = field.get(proxy);
+						setNameOfProxy(f, field.getName());
+					}
+				}
+			}
+
+			ImplClass.setInitialized(true);
+		}
+		return ImplClass;
+	}
+	
 	abstract class aInvocationHandler implements InvocationHandler {
 		public Object proxy;
 		public Object name;
@@ -87,22 +106,7 @@ public class JSBuilder extends Element {
 						JSFunction fct = createJSFunction().setName(method.getName()).setParam(p)
 								.setCode(((JSContent) ret));
 
-						JSClassImpl ImplClass = XUIFactoryXHtml.getXMLFile().getClassImpl(JSBuilder.this,
-								cl.getSimpleName());
-						if (!ImplClass.isInitialized()) {
-							Field[] listField = cl.getDeclaredFields();
-							if (listField != null) {
-								for (Field field : listField) {
-									if (JSClass.class.isAssignableFrom(field.getType()))
-									{
-										Object f = field.get(proxy);
-										setNameOfProxy(f, field.getName());
-									}
-								}
-							}
-
-							ImplClass.setInitialized(true);
-						}
+						JSClassImpl ImplClass = createClass(cl, proxy);
 						ImplClass.addFunction(fct);
 
 					} else
@@ -136,7 +140,7 @@ public class JSBuilder extends Element {
 
 		Object proxy = Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[] { cl }, ih);
 		ih.proxy = proxy;
-		Method[] m = proxy.getClass().getDeclaredMethods();
+//		Method[] m = proxy.getClass().getDeclaredMethods();
 		return (E) proxy;
 	}
 

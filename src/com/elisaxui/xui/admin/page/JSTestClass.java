@@ -8,10 +8,18 @@ public interface JSTestClass extends JSClass {
 	Object a = "a";
 	JSTest2Class b = JSBuilder.initVar(JSTest2Class.class);
 
+	default Object constructor()
+	{
+		return js().__("this.a= null")
+				.__("this.b =",  JSTest2Class._new())
+				;
+	}
+	
 	default Object console(Object p1, Object p2) {
+		constructor();
 		return js()
 				.__(a, "=", p1)
-				.__(b, "=", JSTest2Class._new())
+			//	.__(b, "=", JSTest2Class._new())
 				.__("console.debug(" + p1 + ", " + p2 + ")");
 	}
 
@@ -23,6 +31,8 @@ public interface JSTestClass extends JSClass {
 		return js().__("console.debug(a)");
 	}
 
+	
+	
 	static Object _new() {
 		return JSClass._new(JSTestClass.class);
 	}

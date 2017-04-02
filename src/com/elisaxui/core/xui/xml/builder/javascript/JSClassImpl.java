@@ -5,13 +5,15 @@ import java.util.LinkedList;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
 public class JSClassImpl extends JSContent {
+	
+	Object name;
+	boolean isInitialized = false;
+	LinkedList<JSFunction> listFuntion = new LinkedList<>();
+	LinkedList<JSFunction> listVariable = new LinkedList<>();
+	
 	JSClassImpl(JSBuilder jsBuilder) {
 		super(jsBuilder);
 	}
-
-	LinkedList<JSFunction> listFuntion = new LinkedList<>();
-	Object name;
-	boolean isInitialized = false;
 	
 	public boolean isInitialized() {
 		return isInitialized;

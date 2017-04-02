@@ -89,7 +89,7 @@ public abstract class XHTMLPart extends XMLPart {
 	public final <E extends JSClass> E varOfType(Object name, Class<? extends JSClass> cl) {
 
 		JSClass inst = jsBuilder.getProxy(cl);
-		jsBuilder.setNameOfProxy(inst, name);
+		jsBuilder.setNameOfProxy("",inst, name);
 		return (E) inst;
 	}
 

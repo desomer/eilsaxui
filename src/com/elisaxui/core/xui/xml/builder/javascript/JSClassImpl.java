@@ -1,6 +1,8 @@
 package com.elisaxui.core.xui.xml.builder.javascript;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
@@ -9,6 +11,7 @@ public class JSClassImpl extends JSContent {
 	Object name;
 	boolean isInitialized = false;
 	LinkedList<JSFunction> listFuntion = new LinkedList<>();
+	Map<String, String> listDistinctFct = new HashMap<String, String>();
 	LinkedList<JSFunction> listVariable = new LinkedList<>();
 	
 	JSClassImpl(JSBuilder jsBuilder) {
@@ -30,7 +33,7 @@ public class JSClassImpl extends JSContent {
 	public void setName(Object name) {
 		this.name = name;
 	}
-
+	
 	public JSClassImpl addFunction(JSFunction fct) {
 		listFuntion.add(fct);
 		return this;

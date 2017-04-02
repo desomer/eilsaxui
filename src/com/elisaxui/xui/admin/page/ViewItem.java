@@ -10,6 +10,6 @@ public class ViewItem extends XHTMLPart {
 	
 	@xTarget(CONTENT.class)
 	public Element xListe() {
-		return xDiv("ViewItem", vHandle("test"));
+		return xDiv("ViewItem", vHandle("testHandle"));
 	}
 }

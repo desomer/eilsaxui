@@ -7,8 +7,7 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 import com.elisaxui.core.xui.xml.builder.javascript.JSBuilder.JSNewLine;
 
-public class JSContent implements XMLBuilder.IXMLBuilder
-{
+public class JSContent implements XMLBuilder.IXMLBuilder {
 	/**
 	 * 
 	 */
@@ -23,30 +22,24 @@ public class JSContent implements XMLBuilder.IXMLBuilder
 
 	LinkedList<Object> listElem = new LinkedList<Object>();
 
-	public JSBuilder getJSBuilder()
-	{
+	public JSBuilder getJSBuilder() {
 		return this.jsBuilder;
 	}
-	
+
 	protected void newLine(XMLBuilder buf) {
-			if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCrJS())
-				buf.addContent("\n");		
+		if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCrJS())
+			buf.addContent("\n");
 	}
-		
+
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
 		for (Object object : listElem) {
-			if (object == JSNewLine.class)
-			{
+			if (object == JSNewLine.class) {
 				this.jsBuilder.newLine(buf);
 				this.jsBuilder.newTabulation(buf);
-			}
-			else if (object instanceof Element)
-			{
-				doXMLElement(buf, ((Element)object));
-			}
-			else
-			{
+			} else if (object instanceof Element) {
+				doXMLElement(buf, ((Element) object));
+			} else {
 				if (buf.isJS())
 					buf.addContent(object.toString().replaceAll("'", "\\\\'"));
 				else
@@ -60,7 +53,7 @@ public class JSContent implements XMLBuilder.IXMLBuilder
 		StringBuilder txtXML = new StringBuilder(1000);
 		StringBuilder txtXMLAfter = new StringBuilder(1000);
 		elem.toXML(new XMLBuilder("js", txtXML, txtXMLAfter).setJS(true));
-		
+
 		buf.addContent("['");
 		buf.addContent(txtXML);
 		buf.addContent("',");
@@ -69,9 +62,8 @@ public class JSContent implements XMLBuilder.IXMLBuilder
 		buf.addContent(txtXMLAfter.toString().replace("</script>", "<\\/script>"));
 		buf.addContent("']");
 	}
-	
-	public JSContent __(Object...content)
-	{
+
+	public JSContent __(Object... content) {
 		listElem.add(JSNewLine.class);
 		for (Object object : content) {
 			listElem.add(object);
@@ -79,9 +71,23 @@ public class JSContent implements XMLBuilder.IXMLBuilder
 		listElem.add(";");
 		return this;
 	}
-	
-	public JSContent _var(Object name, Object ...content)
-	{
+
+	public JSContent set(Object name, Object... content) {
+		listElem.add(JSNewLine.class);
+		listElem.add(name);
+		listElem.add("=");
+		if (content != null) {
+			for (Object object : content) {
+				listElem.add(object);
+			}
+		}
+		else
+			listElem.add("null");
+		listElem.add(";");
+		return this;
+	}
+
+	public JSContent var(Object name, Object... content) {
 		listElem.add(JSNewLine.class);
 		listElem.add("var ");
 		listElem.add(name);

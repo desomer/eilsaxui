@@ -18,9 +18,9 @@ public class JSBuilder extends Element {
 		return XHTMLPart.jsBuilder.getProxy(cl);
 	}
 
-	public void setNameOfProxy(Object inst, Object name) {
+	public void setNameOfProxy(String prefix, Object inst, Object name) {
 		aInvocationHandler mh = (aInvocationHandler) Proxy.getInvocationHandler(inst);
-		mh.name = name;
+		mh.name = prefix+name;
 	}
 
 	public JSClassImpl createClass(Class<? extends JSClass> cl, Object proxy) throws IllegalAccessException {
@@ -32,7 +32,7 @@ public class JSBuilder extends Element {
 					if (JSClass.class.isAssignableFrom(field.getType()))
 					{
 						Object f = field.get(proxy);
-						setNameOfProxy(f, field.getName());
+						setNameOfProxy("this.",f, field.getName());
 					}
 				}
 			}
@@ -49,6 +49,15 @@ public class JSBuilder extends Element {
 								// defaut l'interface
 	}
 
+	public String getId(Method method, Object[] args)
+	{
+		StringBuilder buf = new StringBuilder(); 
+		buf.append(method.getName());
+		buf.append(".");
+		buf.append(args==null?0:args.length);
+		return buf.toString();
+	}
+	
 	public final <E extends JSClass> E getProxy(Class<? extends JSClass> cl) {
 
 		class MyInvocationHandler extends aInvocationHandler {
@@ -69,20 +78,12 @@ public class JSBuilder extends Element {
 					return name.toString();
 				}
 
-				// if (method.getName().equals("setName")) {
-				// final Class<?> declaringClass = method.getDeclaringClass();
-				// Constructor<MethodHandles.Lookup> constructor =
-				// MethodHandles.Lookup.class
-				// .getDeclaredConstructor(Class.class, int.class);
-				// constructor.setAccessible(true);
-				// return constructor.newInstance(declaringClass,
-				// MethodHandles.Lookup.PRIVATE)
-				// .unreflectSpecial(method,
-				// declaringClass).bindTo(proxy).invokeWithArguments(args); //
-				// args
-				// }
-
-				if (method.isDefault()) {
+				String id = getId(method, args);
+				JSClassImpl implcl = XUIFactoryXHtml.getXMLFile().getClassImpl(JSBuilder.this, cl.getSimpleName());
+				boolean isMthInClass = implcl.listDistinctFct.containsKey(id);
+				
+				if (!isMthInClass && method.isDefault()) {
+					implcl.listDistinctFct.put(id, id);
 					final Class<?> declaringClass = method.getDeclaringClass();
 
 					Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class
@@ -98,8 +99,9 @@ public class JSBuilder extends Element {
 						}
 					}
 
+					//appel la fct par defaut de l'interface
 					Object ret = constructor.newInstance(declaringClass, MethodHandles.Lookup.PRIVATE)
-							.unreflectSpecial(method, declaringClass).bindTo(proxy).invokeWithArguments(p); // args
+							.unreflectSpecial(method, declaringClass).bindTo(proxy).invokeWithArguments(p);
 
 					if (ret instanceof JSContent) {
 						// ajout de la function durant l'appel
@@ -112,7 +114,10 @@ public class JSBuilder extends Element {
 					} else
 						System.out.println("ret =" + ret);
 				}
+				return toStringFctCall(method, args);
+			}
 
+			private String toStringFctCall(Method method, Object[] args) {
 				StringBuilder buf = new StringBuilder();
 				buf.append(name);
 				buf.append(".");
@@ -129,9 +134,6 @@ public class JSBuilder extends Element {
 					}
 				}
 				buf.append(")");
-
-				// System.out.println("txt call = <" + buf + ">");
-
 				return buf.toString();
 			}
 		}

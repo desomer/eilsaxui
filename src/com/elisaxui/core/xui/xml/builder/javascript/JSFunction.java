@@ -41,7 +41,6 @@ public class JSFunction extends JSContent
 		return this;
 	}
 
-
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
 //		jsBuilder.newLine(buf);
@@ -54,7 +53,8 @@ public class JSFunction extends JSContent
 				buf.addContent(", ");
 			buf.addContent(param[i]);
 		}
-		buf.addContent(") {");
+		buf.addContent(")");
+		buf.addContent(" {");
 		jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab()+1);
 		code.toXML(buf);
 		jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab()-1);

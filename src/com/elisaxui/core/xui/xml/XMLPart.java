@@ -193,9 +193,8 @@ public class XMLPart {
 //	}
 
 	/**************************************************************/
-	@Deprecated  
 	/**
-	 * gerer par properties
+	 * gerer par properties ?????????????
 	 * @return
 	 */
 	public final List<Object> getChildren() {

@@ -45,7 +45,7 @@ public class ScnAdminMain extends XHTMLPart {
 		JSTestClass ab = varOfType("ab", JSTestClass.class);
 		JSTestClass abc = varOfType("abc", JSTestClass.class);
 		JSXHTMLPart template = varOfType("template", JSXHTMLPart.class);
-		template.constructor(null, null);
+
 		return xListElement(
 				xElement("/","<script src='https://code.jquery.com/jquery-3.1.1.slim.min.js' "
 						+ "integrity='sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n' "
@@ -56,12 +56,14 @@ public class ScnAdminMain extends XHTMLPart {
 						.var("c", txt("ok"))
 						// creation d'un template
 						.var(template, xDiv(xPart(new ActListPage()
-								, xLi("ligne ", txtVar("a"))
-								, xLi("ligne ", txtVar("c"))
+								, xLi("ligne ", xVar("a"))
+								, xLi("ligne ", xVar("c"))
 								)))
-						.__(template.append("$('body')"))						
+						.__(template.append("$('body')"))	
+						
 						.var(ab, JSTestClass._new(15))
 						.var(abc, JSTestClass._new())
+						
 						.__(ab.console("a", "c"))
 						.__(abc.console("c", "a"))
 						.__(ab.test())

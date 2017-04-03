@@ -64,7 +64,7 @@ public abstract class XHTMLPart extends XMLPart {
 //		return jsBuilder.createJSFunction().setParam(param);
 //	}
 
-	public String txtVar(Object var) {
+	public String xVar(Object var) {
 		return "'+" + var + "+'";
 	}
 

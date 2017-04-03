@@ -52,15 +52,16 @@ public class JSContent implements XMLBuilder.IXMLBuilder {
 	private void doXMLElement(XMLBuilder buf, Element elem) {
 		StringBuilder txtXML = new StringBuilder(1000);
 		StringBuilder txtXMLAfter = new StringBuilder(1000);
+		
 		elem.toXML(new XMLBuilder("js", txtXML, txtXMLAfter).setJS(true));
 
-		buf.addContent("['");
+		buf.addContent("new JSXHTMLPart('");
 		buf.addContent(txtXML);
 		buf.addContent("',");
 		newLine(buf);
 		buf.addContent("'");
 		buf.addContent(txtXMLAfter.toString().replace("</script>", "<\\/script>"));
-		buf.addContent("']");
+		buf.addContent("')");
 	}
 
 	public JSContent __(Object... content) {

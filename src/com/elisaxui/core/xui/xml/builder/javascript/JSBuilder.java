@@ -24,7 +24,7 @@ public class JSBuilder extends Element {
 	}
 
 	public JSClassImpl createClass(Class<? extends JSClass> cl, Object proxy) throws IllegalAccessException {
-		JSClassImpl ImplClass = XUIFactoryXHtml.getXMLFile().getClassImpl(JSBuilder.this,	cl.getSimpleName());
+		JSClassImpl ImplClass = XUIFactoryXHtml.getXMLFile().getClassImpl(JSBuilder.this,	cl);
 		if (!ImplClass.isInitialized()) {
 			Field[] listField = cl.getDeclaredFields();
 			if (listField != null) {
@@ -79,7 +79,7 @@ public class JSBuilder extends Element {
 				}
 
 				String id = getId(method, args);
-				JSClassImpl implcl = XUIFactoryXHtml.getXMLFile().getClassImpl(JSBuilder.this, cl.getSimpleName());
+				JSClassImpl implcl = XUIFactoryXHtml.getXMLFile().getClassImpl(JSBuilder.this, cl);
 				boolean isMthInClass = implcl.listDistinctFct.containsKey(id);
 				
 				if (!isMthInClass && method.isDefault()) {

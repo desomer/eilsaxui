@@ -68,6 +68,10 @@ public abstract class XHTMLPart extends XMLPart {
 		return "'+" + var + "+'";
 	}
 
+	public String txt(Object var) {
+		return "'"+ var + "'";
+	}
+	
 	public final Element xScriptJS(Object js) {
 		Element t = xElement("script", xAttr("type", "\"text/javascript\""), js);
 		return t;
@@ -79,7 +83,7 @@ public abstract class XHTMLPart extends XMLPart {
 
 	
 	public final Element xImport(Class<? extends JSClass> cl) {
-		Element t = xElement("script", xAttr("type", "\"text/javascript\""), XUIFactoryXHtml.getXMLFile().getClassImpl(jsBuilder, cl.getSimpleName()));
+		Element t = xElement("script", xAttr("type", "\"text/javascript\""), XUIFactoryXHtml.getXMLFile().getClassImpl(jsBuilder, cl));
 		return t;
 	}
 	

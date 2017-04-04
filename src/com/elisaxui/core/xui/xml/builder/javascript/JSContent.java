@@ -7,7 +7,7 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 import com.elisaxui.core.xui.xml.builder.javascript.JSBuilder.JSNewLine;
 
-public class JSContent implements XMLBuilder.IXMLBuilder {
+public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 	/**
 	 * 
 	 */
@@ -64,7 +64,11 @@ public class JSContent implements XMLBuilder.IXMLBuilder {
 		buf.addContent("')");
 	}
 
-	public JSContent __(Object... content) {
+	/* (non-Javadoc)
+	 * @see com.elisaxui.core.xui.xml.builder.javascript.JSInterface#__(java.lang.Object)
+	 */
+	@Override
+	public JSInterface __(Object... content) {
 		listElem.add(JSNewLine.class);
 		for (Object object : content) {
 			listElem.add(object);
@@ -73,7 +77,11 @@ public class JSContent implements XMLBuilder.IXMLBuilder {
 		return this;
 	}
 
-	public JSContent set(Object name, Object... content) {
+	/* (non-Javadoc)
+	 * @see com.elisaxui.core.xui.xml.builder.javascript.JSInterface#set(java.lang.Object, java.lang.Object)
+	 */
+	@Override
+	public JSInterface set(Object name, Object... content) {
 		listElem.add(JSNewLine.class);
 		listElem.add(name);
 		listElem.add("=");
@@ -88,7 +96,11 @@ public class JSContent implements XMLBuilder.IXMLBuilder {
 		return this;
 	}
 
-	public JSContent var(Object name, Object... content) {
+	/* (non-Javadoc)
+	 * @see com.elisaxui.core.xui.xml.builder.javascript.JSInterface#var(java.lang.Object, java.lang.Object)
+	 */
+	@Override
+	public JSInterface var(Object name, Object... content) {
 		listElem.add(JSNewLine.class);
 		listElem.add("var ");
 		listElem.add(name);

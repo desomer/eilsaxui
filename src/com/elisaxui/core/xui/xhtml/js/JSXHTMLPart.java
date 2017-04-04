@@ -15,15 +15,15 @@ public interface JSXHTMLPart extends JSClass {
 	Object js = "this.js";
 	
 	default Object constructor(Object h, Object j) {
-		return js().set(html, h)
-				.set(js, j)
+		return set(html, h)
+			  .set(js, j)
 				;
 	}
 	
 	default Object append(Object parent)
 	{
-		return js()
-		.__(parent,".append($(this.html))")
+		return 
+		__(parent,".append($(this.html))")
 		.var("c", "$(this.js)")
 		.__("$.each( c, function( i, el ) {\n  if (el.nodeName=='SCRIPT') eval(el.text)\n })")
 		;

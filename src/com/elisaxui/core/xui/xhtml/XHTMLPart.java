@@ -10,7 +10,7 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder.Attr;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 import com.elisaxui.core.xui.xml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xml.builder.javascript.JSClass;
-import com.elisaxui.core.xui.xml.builder.javascript.JSContent;
+import com.elisaxui.core.xui.xml.builder.javascript.JSInterface;
 
 public abstract class XHTMLPart extends XMLPart {
 
@@ -56,7 +56,7 @@ public abstract class XHTMLPart extends XMLPart {
 		return xElement(null, elem.toArray());
 	}
 
-	public final static JSContent js() {
+	public final static JSInterface js() {
 		return jsBuilder.createJSContent();
 	}
 

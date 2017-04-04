@@ -14,7 +14,7 @@ public class JSFunction extends JSContent
 	Object[] param = null; 
 	JSContent code;
 	
-	public JSContent getCode() {
+	public JSInterface getCode() {
 		return code;
 	}
 

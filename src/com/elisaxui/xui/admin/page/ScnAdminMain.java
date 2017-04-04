@@ -20,10 +20,10 @@ public class ScnAdminMain extends XHTMLPart {
 
 	@xTarget(CONTENT.class)
 	public Element xContenu2() {
-		return xDiv(xH1(xID("'test'"), "un contenu",
+		return xDiv(xH1(xID("'test'"), "un ActListPage :",
 				xPart(new ActListPage()
-						.addProperty("name", xDiv("property"))
-						.addProperty("testHandle", xDiv("un example d'handle "))
+						.addProperty("name", xDiv("property name ok"))
+						.addProperty("testHandle", xSpan("un example d'handle "))
 						,xLi("ligne5"), xLi("ligne6"))
 				   )
 				);
@@ -52,11 +52,12 @@ public class ScnAdminMain extends XHTMLPart {
 						+ "crossorigin='anonymous'></script>"),
 				
 				xScriptJS(js()
-						.var("a", 12)
+						.var("a", txt("dyna"))
 						.var("c", txt("ok"))
+						.var("t1", txt("bizaroid"))
 						// creation d'un template
-						.var(template, xDiv(xPart(new ActListPage()
-								, xLi("ligne ", xVar("a"))
+						.var(template, xDiv(xPart(new ActListPage().addProperty("testHandle", xSpan(xVar("t1")))
+								, xLi(xAttr("data-d", "d"), "ligne ",  xVar("a"))
 								, xLi("ligne ", xVar("c"))
 								)))
 						.__(template.append("$('body')"))	
@@ -67,8 +68,33 @@ public class ScnAdminMain extends XHTMLPart {
 						.__(ab.console("a", "c"))
 						.__(abc.console("c", "a"))
 						.__(ab.test())
+						.__(ab.test("'eer'"))
 
-				));
+				),
+				xScriptJS(js().var("v", " [ {a:1, b:'12'},{a:2, b:'22'} ]")
+						
+						.__("var changeHandler = {\n"+
+								" get: function(target, property) {\n"+
+								" console.log(\'getting \' , property , \' for \' , target);\n"+
+								" // property is index in this case\n"+
+								" return target[property];\n"+
+								" },\n"+
+								" set: function(target, property, value, receiver) {\n"+
+								" console.log(\'setting \' , property , \' for \' , target , \' with value \' , value);\n"+
+								" target[property] = value;\n"+
+								" // you have to return true to accept the changes\n"+
+								" return true;\n"+
+								" }\n"+
+								"};")
+						.var("arrayToObserve", "new Proxy(v, changeHandler)")
+						.var("objs", "new Proxy({a:3, b:'23'}, changeHandler)")
+						.__("arrayToObserve.push( objs )")
+						.__("objs.a=55")
+						)
+				
+				);
+		
+		
 	}
 	
 	// (function () {/* text + cr +lf */}).toString().match(/[^]*\\/\\*([^]*)\\*\\/\\}$/)[1]

@@ -20,19 +20,18 @@ public class JSBuilder extends Element {
 
 	public void setNameOfProxy(String prefix, Object inst, Object name) {
 		aInvocationHandler mh = (aInvocationHandler) Proxy.getInvocationHandler(inst);
-		mh.name = prefix+name;
+		mh.name = prefix + name;
 	}
 
 	public JSClassImpl createClass(Class<? extends JSClass> cl, Object proxy) throws IllegalAccessException {
-		JSClassImpl ImplClass = XUIFactoryXHtml.getXMLFile().getClassImpl(JSBuilder.this,	cl);
+		JSClassImpl ImplClass = XUIFactoryXHtml.getXMLFile().getClassImpl(JSBuilder.this, cl);
 		if (!ImplClass.isInitialized()) {
 			Field[] listField = cl.getDeclaredFields();
 			if (listField != null) {
 				for (Field field : listField) {
-					if (JSClass.class.isAssignableFrom(field.getType()))
-					{
+					if (JSClass.class.isAssignableFrom(field.getType())) {
 						Object f = field.get(proxy);
-						setNameOfProxy("this.",f, field.getName());
+						setNameOfProxy("this.", f, field.getName());
 					}
 				}
 			}
@@ -41,39 +40,34 @@ public class JSBuilder extends Element {
 		}
 		return ImplClass;
 	}
-	
+
 	abstract class aInvocationHandler implements InvocationHandler {
 		public Object proxy;
 		public Object name;
-		private Object impl; // pas utiliser => la class qui implemente par
-								// defaut l'interface
+		public JSContent content; // pas utiliser => la class qui implemente par
+							// defaut l'interface
 	}
 
-	public String getId(Method method, Object[] args)
-	{
-		StringBuilder buf = new StringBuilder(); 
+	public String getId(Method method, Object[] args) {
+		StringBuilder buf = new StringBuilder();
 		buf.append(method.getName());
 		buf.append(".");
-		buf.append(args==null?0:args.length);
+		buf.append(args == null ? 0 : args.length);
 		return buf.toString();
 	}
-	
+
 	public final <E extends JSClass> E getProxy(Class<? extends JSClass> cl) {
 
 		class MyInvocationHandler extends aInvocationHandler {
 
-			public MyInvocationHandler(Object obj) {
-				super.impl = obj;
+			public MyInvocationHandler() {
 			}
 
 			@SuppressWarnings("static-access")
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-				if (method.getName().equals("js"))
-					return createJSContent();
 
-				if (method.getName().equals("toString"))
-				{
-					if (name==null)
+				if (method.getName().equals("toString")) {
+					if (name == null)
 						return "???";
 					return name.toString();
 				}
@@ -81,39 +75,50 @@ public class JSBuilder extends Element {
 				String id = getId(method, args);
 				JSClassImpl implcl = XUIFactoryXHtml.getXMLFile().getClassImpl(JSBuilder.this, cl);
 				boolean isMthInClass = implcl.listDistinctFct.containsKey(id);
-				
-				if (!isMthInClass && method.isDefault()) {
-					implcl.listDistinctFct.put(id, id);
-					final Class<?> declaringClass = method.getDeclaringClass();
 
-					Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class
-							.getDeclaredConstructor(Class.class, int.class);
-					constructor.setAccessible(true);
+				if (!isMthInClass) {
+					if (method.isDefault()) {
+						content=null;  // creation d'un 
+						implcl.listDistinctFct.put(id, id);
+						final Class<?> declaringClass = method.getDeclaringClass();
 
-					Parameter[] param = method.getParameters();
-					Object[] p = new Object[param.length];
+						Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class
+								.getDeclaredConstructor(Class.class, int.class);
+						constructor.setAccessible(true);
 
-					if (args != null) {
-						for (int i = 0; i < args.length; i++) {
-							p[i] = param[i].getName();
+						Parameter[] param = method.getParameters();
+						Object[] p = new Object[param.length];
+
+						if (args != null) {
+							for (int i = 0; i < args.length; i++) {
+								p[i] = param[i].getName();
+							}
 						}
+
+						// appel la fct par defaut de l'interface
+						Object ret = constructor.newInstance(declaringClass, MethodHandles.Lookup.PRIVATE)
+								.unreflectSpecial(method, declaringClass).bindTo(proxy).invokeWithArguments(p);
+
+						if (ret instanceof JSContent) {
+							// ajout de la function durant l'appel
+							JSFunction fct = createJSFunction().setName(method.getName()).setParam(p)
+									.setCode(((JSContent) ret));
+
+							JSClassImpl ImplClass = createClass(cl, proxy);
+							ImplClass.addFunction(fct);
+
+						} else
+							System.out.println("ret =" + ret);
 					}
+					else {
+						if (content == null)
+							content = createJSContent();  // creer le contenu
+						
+						// appel l'implementation si JSInterface
+						return method.invoke(content, args);
+					}
+				} 
 
-					//appel la fct par defaut de l'interface
-					Object ret = constructor.newInstance(declaringClass, MethodHandles.Lookup.PRIVATE)
-							.unreflectSpecial(method, declaringClass).bindTo(proxy).invokeWithArguments(p);
-
-					if (ret instanceof JSContent) {
-						// ajout de la function durant l'appel
-						JSFunction fct = createJSFunction().setName(method.getName()).setParam(p)
-								.setCode(((JSContent) ret));
-
-						JSClassImpl ImplClass = createClass(cl, proxy);
-						ImplClass.addFunction(fct);
-
-					} else
-						System.out.println("ret =" + ret);
-				}
 				return toStringFctCall(method, args);
 			}
 
@@ -138,11 +143,11 @@ public class JSBuilder extends Element {
 			}
 		}
 
-		MyInvocationHandler ih = new MyInvocationHandler(null);
+		MyInvocationHandler ih = new MyInvocationHandler();
 
 		Object proxy = Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[] { cl }, ih);
 		ih.proxy = proxy;
-//		Method[] m = proxy.getClass().getDeclaredMethods();
+		// Method[] m = proxy.getClass().getDeclaredMethods();
 		return (E) proxy;
 	}
 

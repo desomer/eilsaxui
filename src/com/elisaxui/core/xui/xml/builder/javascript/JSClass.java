@@ -1,8 +1,6 @@
 package com.elisaxui.core.xui.xml.builder.javascript;
 
-public interface JSClass  {
-	
-	JSContent js();
+public interface JSClass extends JSInterface  {
 	
 	static Object _new(Class<? extends JSClass> cl, Object...param ) {
 		StringBuilder buf = new StringBuilder();

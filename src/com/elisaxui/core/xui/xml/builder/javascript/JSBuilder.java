@@ -44,6 +44,7 @@ public class JSBuilder extends Element {
 	abstract class aInvocationHandler implements InvocationHandler {
 		public Object proxy;
 		public Object name;
+		public Class<? extends JSClass> interfac;
 		public JSContent content; // pas utiliser => la class qui implemente par
 							// defaut l'interface
 	}
@@ -56,11 +57,12 @@ public class JSBuilder extends Element {
 		return buf.toString();
 	}
 
-	public final <E extends JSClass> E getProxy(Class<? extends JSClass> cl) {
+	public final <E extends JSClass> E getProxy(final Class<? extends JSClass> cl) {
 
 		class MyInvocationHandler extends aInvocationHandler {
 
-			public MyInvocationHandler() {
+			public MyInvocationHandler(Class<? extends JSClass> interfac) {
+				this.interfac=interfac;
 			}
 
 			@SuppressWarnings("static-access")
@@ -143,7 +145,7 @@ public class JSBuilder extends Element {
 			}
 		}
 
-		MyInvocationHandler ih = new MyInvocationHandler();
+		MyInvocationHandler ih = new MyInvocationHandler(cl);
 
 		Object proxy = Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[] { cl }, ih);
 		ih.proxy = proxy;

@@ -15,6 +15,7 @@ import java.util.List;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.XUILaucher;
+import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -99,6 +100,26 @@ public class XMLPart {
 
 	/**************************************************************/
 	public final void initContent(XMLPart root) {
+		
+		Field[] lf = this.getClass().getDeclaredFields();
+		if (lf!=null)
+		{
+			for (Field field : lf) {
+				if (JSClass.class.isAssignableFrom(field.getType()))
+				{
+					field.setAccessible(true);
+					JSClass inst = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) field.getType());
+					XHTMLPart.jsBuilder.setNameOfProxy("", inst, field.getName());
+					try {
+						field.set(this, inst);
+					} catch (IllegalArgumentException | IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		
 		doContent(root);
 		
 		XMLFile file = XUIFactoryXHtml.getXMLFile();
@@ -111,7 +132,7 @@ public class XMLPart {
 				initMethod(method);
 			}
 		}
-
+		
 		// https://github.com/paul-hammant/paranamer
 //		Class<?>[] listClass = this.getClass().getDeclaredClasses();
 //		for (Class<?> class1 : listClass) {

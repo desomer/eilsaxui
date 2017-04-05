@@ -11,6 +11,7 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 import com.elisaxui.core.xui.xml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xml.builder.javascript.JSClass;
 import com.elisaxui.core.xui.xml.builder.javascript.JSInterface;
+import com.elisaxui.core.xui.xml.builder.javascript.JSVariable;
 
 public abstract class XHTMLPart extends XMLPart {
 
@@ -66,6 +67,10 @@ public abstract class XHTMLPart extends XMLPart {
 
 	public String xVar(Object var) {
 		return "'+" + var + "+'";
+	}
+	
+	public Object _new(Object... param) {
+		return new JSVariable(param);
 	}
 
 	public String txt(Object var) {

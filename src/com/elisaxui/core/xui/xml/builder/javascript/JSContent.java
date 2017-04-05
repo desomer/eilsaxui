@@ -1,11 +1,15 @@
 package com.elisaxui.core.xui.xml.builder.javascript;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
 import java.util.LinkedList;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 import com.elisaxui.core.xui.xml.builder.javascript.JSBuilder.JSNewLine;
+import com.elisaxui.core.xui.xml.builder.javascript.JSBuilder.aInvocationHandler;
+import com.elisaxui.xui.admin.page.JSTestClass;
 
 public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 	/**
@@ -99,6 +103,7 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 	/* (non-Javadoc)
 	 * @see com.elisaxui.core.xui.xml.builder.javascript.JSInterface#var(java.lang.Object, java.lang.Object)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public JSInterface var(Object name, Object... content) {
 		listElem.add(JSNewLine.class);
@@ -106,7 +111,13 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 		listElem.add(name);
 		listElem.add("=");
 		for (Object object : content) {
-			listElem.add(object);
+			if (object instanceof JSVariable && name instanceof JSClass)
+			{
+				aInvocationHandler inv = (aInvocationHandler) Proxy.getInvocationHandler(name);
+				listElem.add(JSClass._new( inv.interfac, ((JSVariable)object).param));
+			}
+			else
+			 listElem.add(object);
 		}
 		listElem.add(";");
 		return this;

@@ -39,13 +39,14 @@ public class ScnAdminMain extends XHTMLPart {
 				);
 	}
 	
+	
+	
+	JSTestClass ab;   
+	JSTestClass abc; 
+	JSXHTMLPart template; 
+	
 	@xTarget(AFTER_CONTENT.class)
 	public Element xaAddJS() {
-
-		JSTestClass ab = varOfType("ab", JSTestClass.class);
-		JSTestClass abc = varOfType("abc", JSTestClass.class);
-		JSXHTMLPart template = varOfType("template", JSXHTMLPart.class);
-
 		return xListElement(
 				xElement("/","<script src='https://code.jquery.com/jquery-3.1.1.slim.min.js' "
 						+ "integrity='sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n' "
@@ -62,8 +63,8 @@ public class ScnAdminMain extends XHTMLPart {
 								)))
 						.__(template.append("$('body')"))	
 						
-						.var(ab, JSTestClass._new(15))
-						.var(abc, JSTestClass._new())
+						.var(ab , _new(15))
+						.var(abc, _new())
 						
 						.__(ab.console("a", "c"))
 						.__(abc.console("c", "a"))
@@ -71,6 +72,7 @@ public class ScnAdminMain extends XHTMLPart {
 						.__(ab.test("'eer'"))
 
 				),
+				
 				xScriptJS(js().var("v", " [ {a:1, b:'12'},{a:2, b:'22'} ]")
 						
 						.__("var changeHandler = {\n"+
@@ -86,6 +88,7 @@ public class ScnAdminMain extends XHTMLPart {
 								" return true;\n"+
 								" }\n"+
 								"};")
+						
 						.var("arrayToObserve", "new Proxy(v, changeHandler)")
 						.var("objs", "new Proxy({a:3, b:'23'}, changeHandler)")
 						.__("arrayToObserve.push( objs )")

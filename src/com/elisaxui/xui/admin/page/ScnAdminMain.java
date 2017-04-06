@@ -14,12 +14,31 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 public class ScnAdminMain extends XHTMLPart {
 
 	@xTarget(HEADER.class)
+	@xRessource
 	public Element xTitle() {
 		return xElement("title", "un titre");
 	}
 
+	@xTarget(HEADER.class)
+	@xRessource
+	public Element xImportJQUERY() {
+		return		xElement("/","<script src='https://code.jquery.com/jquery-3.1.1.slim.min.js' "
+						+ "integrity='sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n' "
+						+ "crossorigin='anonymous'></script>");
+	}
+	
+	@xTarget(HEADER.class)
+	@xRessource
+	public Element xImportAllClass() {
+		return xListElement(
+				xImport(JSTestClass.class),
+				xImport(JSTest2Class.class),
+				xImport(JSXHTMLPart.class)
+				);
+	}
+	
 	@xTarget(CONTENT.class)
-	public Element xContenu2() {
+	public Element xContenu() {
 		return xDiv(xH1(xID("'test'"), "un ActListPage :",
 				xPart(new ActListPage()
 						.addProperty("name", xDiv("property name ok"))
@@ -28,33 +47,19 @@ public class ScnAdminMain extends XHTMLPart {
 				   )
 				);
 	}
-
-	@xTarget(CONTENT.class)
-	@xRessource
-	public Element xResource() {
-		return xListElement(
-				xImport(JSTestClass.class),
-				xImport(JSTest2Class.class),
-				xImport(JSXHTMLPart.class)
-				);
-	}
-	
 	
 	
 	JSTestClass ab;   
 	JSTestClass abc; 
 	JSXHTMLPart template; 
 	
+	
 	@xTarget(AFTER_CONTENT.class)
-	public Element xaAddJS() {
-		return xListElement(
-				xElement("/","<script src='https://code.jquery.com/jquery-3.1.1.slim.min.js' "
-						+ "integrity='sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n' "
-						+ "crossorigin='anonymous'></script>"),
-				
+	public Element xAddJS() {
+		return xListElement(				
 				xScriptJS(js()
-						.var("a", txt("dyna"))
-						.var("c", txt("ok"))
+						.var("a", txt("dyna 1"))
+						.var("c", txt("dyna 2"))
 						.var("t1", txt("bizaroid que ca marche"))
 						// creation d'un template
 						.var(template, xDiv(xPart(new ActListPage().addProperty("testHandle", xSpan(xVar("t1")))

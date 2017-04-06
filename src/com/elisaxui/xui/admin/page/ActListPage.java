@@ -15,7 +15,7 @@ public class ActListPage extends XHTMLPart {
 	@xRessource
 	@xVersion("1.2")
 	public Element xAddBody() {
-		return xSpan("ca marche", this.getPropertyElement("name"));
+		return xSpan("ca marche target body ", this.getPropertyElement("name"));
 	}
 	
 	@xTarget(CONTENT.class)

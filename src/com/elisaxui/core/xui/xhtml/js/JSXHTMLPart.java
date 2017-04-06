@@ -11,8 +11,8 @@ import com.elisaxui.core.xui.xml.builder.javascript.JSClass;
  */
 public interface JSXHTMLPart extends JSClass {
 
-	Object html = "this.html";
-	Object js = "this.js";
+	Object html=null;
+	Object js=null;
 	
 	default Object constructor(Object h, Object j) {
 		return set(html, h)
@@ -29,7 +29,7 @@ public interface JSXHTMLPart extends JSClass {
 		;
 	}
 	
-	static Object _new() {
-		return JSClass._new(JSXHTMLPart.class);
-	}
+//	static Object _new() {
+//		return JSClass._new(JSXHTMLPart.class);
+//	}
 }

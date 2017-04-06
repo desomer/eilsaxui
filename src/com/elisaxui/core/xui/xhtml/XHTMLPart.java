@@ -34,6 +34,10 @@ public abstract class XHTMLPart extends XMLPart {
 	public final Element xSpan(Object... inner) {
 		return xElement("span", inner);
 	}
+	
+	public final Element xButton(Object... inner) {
+		return xElement("button", inner);
+	}
 
 	public final Element xH1(Object... inner) {
 		return xElement("h1", inner);
@@ -93,7 +97,7 @@ public abstract class XHTMLPart extends XMLPart {
 	}
 	
  
-
+	@Deprecated
 	@SuppressWarnings("unchecked")
 	public final <E extends JSClass> E varOfType(Object name, Class<? extends JSClass> cl) {
 

@@ -55,7 +55,7 @@ public class ScnAdminMain extends XHTMLPart {
 				xScriptJS(js()
 						.var("a", txt("dyna"))
 						.var("c", txt("ok"))
-						.var("t1", txt("bizaroid"))
+						.var("t1", txt("bizaroid que ca marche"))
 						// creation d'un template
 						.var(template, xDiv(xPart(new ActListPage().addProperty("testHandle", xSpan(xVar("t1")))
 								, xLi(xAttr("data-d", "d"), "ligne ",  xVar("a"))
@@ -68,7 +68,6 @@ public class ScnAdminMain extends XHTMLPart {
 						
 						.__(ab.console("a", "c"))
 						.__(abc.console("c", "a"))
-						.__(ab.test())
 						.__(ab.test("'eer'"))
 
 				),

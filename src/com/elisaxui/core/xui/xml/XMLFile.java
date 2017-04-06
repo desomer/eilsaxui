@@ -1,5 +1,6 @@
 package com.elisaxui.core.xui.xml;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xml.builder.javascript.JSClass;
 import com.elisaxui.core.xui.xml.builder.javascript.JSClassImpl;
+import com.elisaxui.helper.ReflectionHelper;
 
 public class XMLFile {
 
@@ -28,6 +30,30 @@ public class XMLFile {
 			impl.setName(cl.getSimpleName());
 
 			listClass.put(name, impl);
+			
+			// initfield
+			Field[] listField = cl.getDeclaredFields();
+			if (listField != null) {
+				for (Field field : listField) {
+					if (JSClass.class.isAssignableFrom(field.getType())) {
+						JSClass prox = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) field.getType());
+						XHTMLPart.jsBuilder.setNameOfProxy("this.", prox, field.getName());
+						try {
+							ReflectionHelper.setFinalStatic(field, prox);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					} else
+						try {
+							ReflectionHelper.setFinalStatic(field, "this."+field.getName());
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+				}
+			}
+			
 			// init constructor
 			JSClass inst = XHTMLPart.jsBuilder.getProxy(cl);
 			Method[] lism = cl.getDeclaredMethods();
@@ -43,7 +69,6 @@ public class XMLFile {
 					}
 				}
 			}
-
 		}
 		return impl;
 	}

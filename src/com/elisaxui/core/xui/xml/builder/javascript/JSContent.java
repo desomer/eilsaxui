@@ -52,7 +52,7 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 		}
 		return buf;
 	}
-
+	
 	private void doXMLElement(XMLBuilder buf, Element elem) {
 		StringBuilder txtXML = new StringBuilder(1000);
 		StringBuilder txtXMLAfter = new StringBuilder(1000);
@@ -91,7 +91,7 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 		listElem.add("=");
 		if (content != null) {
 			for (Object object : content) {
-				listElem.add(object);
+				addElem(name, object);
 			}
 		}
 		else
@@ -111,15 +111,27 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 		listElem.add(name);
 		listElem.add("=");
 		for (Object object : content) {
-			if (object instanceof JSVariable && name instanceof JSClass)
-			{
-				aInvocationHandler inv = (aInvocationHandler) Proxy.getInvocationHandler(name);
-				listElem.add(JSClass._new( inv.interfac, ((JSVariable)object).param));
-			}
-			else
-			 listElem.add(object);
+			addElem(name, object);
 		}
 		listElem.add(";");
 		return this;
+	}
+
+	private void addElem(Object name, Object object) {
+		if (object instanceof JSVariable && name instanceof JSClass)
+		{
+			aInvocationHandler inv = (aInvocationHandler) Proxy.getInvocationHandler(name);
+			listElem.add(JSClass._new( inv.interfac, ((JSVariable)object).param));
+		}
+		else
+		 listElem.add(object);
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.elisaxui.core.xui.xml.builder.javascript.JSInterface#_new(java.lang.Object)
+	 */
+	@Override
+	public Object _new(Object... param) {
+		return new JSVariable(param);
 	}
 }

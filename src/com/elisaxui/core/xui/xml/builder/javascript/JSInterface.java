@@ -8,4 +8,5 @@ public interface JSInterface {
 
 	JSInterface var(Object name, Object... content);
 
+	Object _new(Object... param);
 }

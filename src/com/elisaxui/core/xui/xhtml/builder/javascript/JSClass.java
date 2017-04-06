@@ -1,4 +1,4 @@
-package com.elisaxui.core.xui.xml.builder.javascript;
+package com.elisaxui.core.xui.xhtml.builder.javascript;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 

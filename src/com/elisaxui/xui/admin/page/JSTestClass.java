@@ -1,6 +1,6 @@
 package com.elisaxui.xui.admin.page;
 
-import com.elisaxui.core.xui.xml.builder.javascript.JSClass;	
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;	
 
 public interface JSTestClass extends JSClass {
 

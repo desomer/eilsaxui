@@ -1,14 +1,14 @@
-package com.elisaxui.core.xui.xml.builder.javascript;
+package com.elisaxui.core.xui.xhtml.builder.javascript;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.LinkedList;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder.JSNewLine;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder.aInvocationHandler;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
-import com.elisaxui.core.xui.xml.builder.javascript.JSBuilder.JSNewLine;
-import com.elisaxui.core.xui.xml.builder.javascript.JSBuilder.aInvocationHandler;
 import com.elisaxui.xui.admin.page.JSTestClass;
 
 public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {

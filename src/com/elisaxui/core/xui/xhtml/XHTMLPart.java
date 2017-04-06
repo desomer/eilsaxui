@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.BODY;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.SCRIPT_AFTER_BODY;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Attr;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
-import com.elisaxui.core.xui.xml.builder.javascript.JSBuilder;
-import com.elisaxui.core.xui.xml.builder.javascript.JSClass;
-import com.elisaxui.core.xui.xml.builder.javascript.JSInterface;
-import com.elisaxui.core.xui.xml.builder.javascript.JSVariable;
 
 public abstract class XHTMLPart extends XMLPart {
 

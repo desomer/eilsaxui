@@ -8,12 +8,12 @@ import java.util.List;
 
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassImpl;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.XMLPart.CONTENT;
-import com.elisaxui.core.xui.xml.builder.javascript.JSBuilder;
-import com.elisaxui.core.xui.xml.builder.javascript.JSClassImpl;
-import com.elisaxui.core.xui.xml.builder.javascript.JSContent;
 
 public class XMLBuilder {
 

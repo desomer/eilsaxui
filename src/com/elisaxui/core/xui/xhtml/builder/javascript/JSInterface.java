@@ -7,6 +7,14 @@ public interface JSInterface {
 	JSInterface set(Object name, Object... content);
 
 	JSInterface var(Object name, Object... content);
+	
+	JSInterface consoleDebug(Object... content);
+	
+	JSInterface _for(Object... content);
+	
+	JSInterface endfor(Object... content);
 
 	Object _new(Object... param);
+	
+	Object txt(Object... param);
 }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.BODY;
-import com.elisaxui.core.xui.xhtml.XHTMLRoot.SCRIPT_AFTER_BODY;
+import com.elisaxui.core.xui.xhtml.XHTMLRoot.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSInterface;
@@ -23,7 +23,7 @@ public abstract class XHTMLPart extends XMLPart {
 	}
 
 	public final XMLPart vAfterBody(Element elem) {
-		XUIFactoryXHtml.getXMLRoot().addElement(SCRIPT_AFTER_BODY.class, elem);
+		XUIFactoryXHtml.getXMLRoot().addElement(AFTER_BODY.class, elem);
 		return this;
 	}
 
@@ -78,7 +78,7 @@ public abstract class XHTMLPart extends XMLPart {
 	}
 
 	public String txt(Object var) {
-		return "'"+ var + "'";
+		return "\""+ var + "\"";
 	}
 	
 	public final Element xScriptJS(Object js) {

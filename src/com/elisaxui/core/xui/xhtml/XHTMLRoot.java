@@ -2,7 +2,6 @@ package com.elisaxui.core.xui.xhtml;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -11,11 +10,10 @@ import java.util.Date;
 
 import com.elisaxui.core.xui.XUILaucher;
 import com.elisaxui.core.xui.xml.XMLPart;
-import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
-import com.elisaxui.core.xui.xml.builder.XMLTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.XMLTarget;
 import com.elisaxui.core.xui.xml.builder.XMLTarget.ITargetRoot;
 import com.elisaxui.helper.ClassLoaderHelper;
 import com.elisaxui.helper.ClassLoaderHelper.FileEntry;
@@ -28,7 +26,7 @@ public class XHTMLRoot extends XHTMLPart {
 	public static final class BODY extends XMLTarget implements ITargetRoot {
 	};
 
-	public static final class SCRIPT_AFTER_BODY extends XMLTarget implements ITargetRoot {
+	public static final class AFTER_BODY extends XMLTarget implements ITargetRoot {
 	};
 
 	private Object lang;
@@ -86,7 +84,7 @@ public class XHTMLRoot extends XHTMLPart {
 		xListElement(getListElement(BODY.class)).setNbInitialTab(1)
 				.toXML(new XMLBuilder("page", textbody, textAfterbody));
 
-		xListElement(getListElement(SCRIPT_AFTER_BODY.class)).setNbInitialTab(0)
+		xListElement(getListElement(AFTER_BODY.class)).setNbInitialTab(0)
 				.toXML(new XMLBuilder("page", textAfterbody, null));
 
 		return xElement("html", xAttr("lang", xTxt(lang)),

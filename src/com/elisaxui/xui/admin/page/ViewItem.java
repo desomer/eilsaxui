@@ -8,8 +8,10 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 @xComment("un item")
 public class ViewItem extends XHTMLPart {
 	
+	public static final String TEST_HANDLE = "testHandle";
+
 	@xTarget(CONTENT.class)
 	public Element xListe() {
-		return xDiv("ViewItem handle = ", vHandle("testHandle"));
+		return xDiv("ViewItem handle = ", vHandle(TEST_HANDLE));
 	}
 }

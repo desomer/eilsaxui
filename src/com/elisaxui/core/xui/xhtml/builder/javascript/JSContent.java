@@ -1,6 +1,5 @@
 package com.elisaxui.core.xui.xhtml.builder.javascript;
 
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.LinkedList;
 
@@ -9,7 +8,6 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder.JSNewLine;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder.aInvocationHandler;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
-import com.elisaxui.xui.admin.page.JSTestClass;
 
 public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 	/**
@@ -133,5 +131,39 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 	@Override
 	public Object _new(Object... param) {
 		return new JSVariable(param);
+	}
+
+	@Override
+	public JSInterface consoleDebug(Object... content) {
+		listElem.add(JSNewLine.class);
+		listElem.add("console.debug(");
+		for (Object object : content) {
+			listElem.add(object);
+		}
+		listElem.add(");");
+		return this;
+	}
+
+	@Override
+	public JSInterface _for(Object... content) {
+		listElem.add(JSNewLine.class);
+		listElem.add("for (");
+		for (Object object : content) {
+			listElem.add(object);
+		}
+		listElem.add(") {");
+		return this;
+	}
+
+	@Override
+	public JSInterface endfor(Object... content) {
+		listElem.add(JSNewLine.class);
+		listElem.add("}");
+		return this;
+	}
+
+	@Override
+	public Object txt(Object... param) {
+			return "\""+ param[0] + "\"";
 	}
 }

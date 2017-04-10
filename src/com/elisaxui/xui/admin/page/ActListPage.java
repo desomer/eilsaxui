@@ -11,11 +11,13 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 @xComment("activite liste des pages")
 public class ActListPage extends XHTMLPart {
 
+	public static final String PROPERTY_NAME = "name";
+
 	@xTarget(BODY.class)
 	@xRessource
 	@xVersion("1.2")
 	public Element xAddBody() {
-		return xSpan("ca marche target body ", this.getPropertyElement("name"));
+		return xSpan("ca marche target body ", this.getPropertyElement(PROPERTY_NAME));
 	}
 	
 	@xTarget(CONTENT.class)

@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import com.elisaxui.core.config.ConfigMgr;
+import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
@@ -63,6 +64,7 @@ public class XMLFile {
 						try {
 							method.invoke(inst, new Object[method.getParameterCount()]);
 						} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException| SecurityException e) {
+							 ErrorNotificafionMgr.doError("pb constructor sur " + cl.getSimpleName() , e);
 							 e.printStackTrace();
 						}
 

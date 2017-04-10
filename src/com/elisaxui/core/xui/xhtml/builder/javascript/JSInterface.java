@@ -17,4 +17,6 @@ public interface JSInterface {
 	Object _new(Object... param);
 	
 	Object txt(Object... param);
+
+	JSFunction fct(Object... param);
 }

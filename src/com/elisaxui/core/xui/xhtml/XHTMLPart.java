@@ -27,31 +27,32 @@ public abstract class XHTMLPart extends XMLPart {
 		return this;
 	}
 
-	public final Element xDiv(Object... inner) {
+	/******************************************************************************/
+	public final static Element xDiv(Object... inner) {
 		return xElement("div", inner);
 	}
 
-	public final Element xSpan(Object... inner) {
+	public final static Element xSpan(Object... inner) {
 		return xElement("span", inner);
 	}
 	
-	public final Element xButton(Object... inner) {
+	public final static Element xButton(Object... inner) {
 		return xElement("button", inner);
 	}
 
-	public final Element xH1(Object... inner) {
+	public final static Element xH1(Object... inner) {
 		return xElement("h1", inner);
 	}
 
-	public final Element xUl(Object... inner) {
+	public final static Element xUl(Object... inner) {
 		return xElement("ul", inner);
 	}
 
-	public final Element xLi(Object... inner) {
+	public final static Element xLi(Object... inner) {
 		return xElement("li", inner);
 	}
 
-	public final Element xComment(Object... comment) {
+	public final static Element xComment(Object... comment) {
 		ArrayList<Object> elem = new ArrayList<>();
 		elem.add("<!--\n");
 		for (Object c : comment) {
@@ -69,29 +70,19 @@ public abstract class XHTMLPart extends XMLPart {
 //		return jsBuilder.createJSFunction().setParam(param);
 //	}
 
-	public String xVar(Object var) {
+	public static final String xVar(Object var) {
 		return "'+" + var + "+'";
 	}
 	
-	public Object _new(Object... param) {
-		return new JSVariable(param);
-	}
-
-	public String txt(Object var) {
-		return "\""+ var + "\"";
-	}
 	
-	public final Element xScriptJS(Object js) {
+	public final static Element xScriptJS(Object js) {
 		Element t = xElement("script", xAttr("type", "\"text/javascript\""), js);
 		return t;
 	}
 
-//	public final JSClass _new() {
-//		return null;
-//	}
 
 	
-	public final Element xImport(Class<? extends JSClass> cl) {
+	public final static Element xImport(Class<? extends JSClass> cl) {
 		Element t = xElement("script", xAttr("type", "\"text/javascript\""), XUIFactoryXHtml.getXMLFile().getClassImpl(jsBuilder, cl));
 		return t;
 	}
@@ -113,4 +104,12 @@ public abstract class XHTMLPart extends XMLPart {
 		return attr;
 	}
 
+	/****************************************************************************/
+	public Object _new(Object... param) {
+		return new JSVariable(param);
+	}
+
+	public String txt(Object var) {
+		return "\""+ var + "\"";
+	}
 }

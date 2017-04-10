@@ -3,6 +3,7 @@ package com.elisaxui.xui.admin.page;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
 import com.elisaxui.core.xui.xhtml.js.JSXHTMLPart;
+import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataCtx;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataDriven;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xml.annotation.xComment;
@@ -43,8 +44,10 @@ public class ScnAdminMain extends XHTMLPart {
 				xImport(JSTestClass.class),
 				xImport(JSTest2Class.class),
 				xImport(JSXHTMLPart.class),
+				xImport(JSTestDataDriven.class),
 				xImport(JSDataDriven.class),
-				xImport(JSDataSet.class)
+				xImport(JSDataSet.class),
+				xImport(JSDataCtx.class)
 				);
 	}
 	
@@ -63,9 +66,13 @@ public class ScnAdminMain extends XHTMLPart {
 	JSTestClass ab;   
 	JSTestClass abc; 
 	JSXHTMLPart template; 
+	JSTestDataDriven testDataDriven;
 	
-	JSDataDriven aDataDriven; 
-	JSDataSet aDataSet; 
+	
+	public static Element xTemplateDataDriven(Object value, Object value2)
+	{
+		return 	xDiv(xVar(value), xSpan("-"), xVar(value2) );	
+	}
 	
 	@xTarget(AFTER_CONTENT.class)
 	public Element xAddJS() {
@@ -88,11 +95,8 @@ public class ScnAdminMain extends XHTMLPart {
 						.__(abc.console("c", "a"))
 						.__(ab.test("'eer'"))
 						
-						.var("v", " [ {a:1, b:'12'},{a:2, b:'22'} ]")
-						.var(aDataSet, _new("v"))
-						.var(aDataDriven, _new(aDataSet))
-						.__(aDataDriven.onEnter("function( value ) { console.debug('on entre', value) }"))
-						.__(aDataDriven.start())
+						.var(testDataDriven, _new())
+						.__(testDataDriven.startTest())
 						
 						
 						.var(template, xElement("input",xAttr("id", "\"test\""), xAttr("type","\"text\"")))

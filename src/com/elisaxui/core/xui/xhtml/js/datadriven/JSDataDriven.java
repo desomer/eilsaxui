@@ -47,7 +47,6 @@ public interface JSDataDriven extends JSClass {
 		return var("data", dataSet.get())
 				._for("var i in data")
 					.__(callBackEnter, ".fire(data[i])")
-					.consoleDebug("'start'")
 			    .endfor();
 	}
 	

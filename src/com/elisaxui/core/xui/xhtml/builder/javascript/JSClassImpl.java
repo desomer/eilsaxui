@@ -49,10 +49,15 @@ public class JSClassImpl extends JSContent {
 	
 		jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab()+1);
 		jsBuilder.newLine(buf);
+		int i=0;
 		for (JSFunction jsFunction : listFuntion) {
+			i++;
 			jsFunction.toXML(buf);
+			if (i<listFuntion.size())
+				jsBuilder.newLine(buf);
 		}
 		jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab()-1);
+		jsBuilder.newLine(buf);
 		jsBuilder.newTabulation(buf);
 		buf.addContent("}");
 		return null;

@@ -19,7 +19,7 @@ public interface JSXHTMLPart extends JSClass {
 			  .set(js, j)
 				;
 	}
-	
+	/** TODO creer le template en script type = "text/template"   */
 	default Object append(Object parent)
 	{
 		return 

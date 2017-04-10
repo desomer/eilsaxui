@@ -6,6 +6,8 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
@@ -106,27 +108,24 @@ public class JSBuilder extends Element {
 					}
 				}
 
-				return toStringFctCall(method, args);
+				return toCall(method, args);
 			}
 
-			private String toStringFctCall(Method method, Object[] args) {
-				StringBuilder buf = new StringBuilder();
-				buf.append(name);
-				buf.append(".");
-				buf.append(method.getName());
-				buf.append("(");
+			private List toCall(Method method, Object[] args) {
+				List<Object> buf = new ArrayList<Object>();
+				buf.add(name+"."+method.getName()+"(");
 
 				int i = 0;
 				if (args != null) {
 					for (Object p : args) {
 						if (i > 0)
-							buf.append(", ");
-						buf.append(p);
+							buf.add(", ");
+						buf.add(p);
 						i++;
 					}
 				}
-				buf.append(")");
-				return buf.toString();
+				buf.add(")");
+				return buf;
 			}
 		}
 

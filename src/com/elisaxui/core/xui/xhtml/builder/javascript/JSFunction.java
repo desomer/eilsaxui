@@ -43,9 +43,15 @@ public class JSFunction extends JSContent
 
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
-//		jsBuilder.newLine(buf);
-		jsBuilder.newTabulation(buf);
-		buf.addContent(name);
+
+		if (name==null)
+			buf.addContent("function");
+		else
+		{
+			//jsBuilder.newLine(buf);
+			jsBuilder.newTabulation(buf);
+			buf.addContent(name);
+		}
 		buf.addContent("(");
 
 		for (int i = 0; i < param.length; i++) {
@@ -56,12 +62,15 @@ public class JSFunction extends JSContent
 		buf.addContent(")");
 		buf.addContent(" {");
 		jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab()+1);
-		code.toXML(buf);
+		if (code!=null)
+			code.toXML(buf);
+		else
+			super.toXML(buf);
+		
 		jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab()-1);
 		jsBuilder.newLine(buf);
 		jsBuilder.newTabulation(buf);
 		buf.addContent("}");
-		jsBuilder.newLine(buf);
 		return buf;
 	}
 

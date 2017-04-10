@@ -234,16 +234,16 @@ public class XMLPart {
 		return XMLBuilder.createPart(part, inner);
 	}
 
-	public final Element xElement(String name, Object... inner) {
+	public final static Element xElement(String name, Object... inner) {
 		Element tag = XMLBuilder.createElement(name, inner);
 		return tag;
 	}
 
-	public final Element xListElement(Object... array) {
+	public final static Element xListElement(Object... array) {
 		return xElement(null, array);
 	}
 
-	public final Attr xAttr(String name, Object value) {
+	public final static Attr xAttr(String name, Object value) {
 		Attr attr = XMLBuilder.createAttr(name, value);
 		return attr;
 	}

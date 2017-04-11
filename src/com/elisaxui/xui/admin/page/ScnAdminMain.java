@@ -68,7 +68,6 @@ public class ScnAdminMain extends XHTMLPart {
 	JSXHTMLPart template; 
 	JSTestDataDriven testDataDriven;
 	
-	
 	public static Element xTemplateDataDriven(Object value, Object value2)
 	{
 		return 	xDiv(xVar(value), xSpan("-"), xVar(value2) );	
@@ -78,6 +77,17 @@ public class ScnAdminMain extends XHTMLPart {
 	public Element xAddJS() {
 		return 			
 				xScriptJS(js()
+						
+						.__(" (function customSwipe(element) {\n"+
+							" element\n"+
+							" .animate({\"margin-left\" : \"150px\"}, 1000)\n"+
+							" .animate({\"margin-left\" : \"50px\"}, 1000, function(){\n"+
+							" setTimeout(function(){\n"+
+							" customSwipe(element);\n"+
+							" }, 1);\n"+
+							" });\n"+
+							" })($(\'#test\'))")
+						
 						.var("a", txt("dyna 1"))
 						.var("c", txt("dyna 2"))
 						.var("t1", txt("bizaroid que ca marche"))
@@ -102,32 +112,32 @@ public class ScnAdminMain extends XHTMLPart {
 						.var(template, xElement("input",xAttr("id", "\"test\""), xAttr("type","\"text\"")))
 						.__(template.append("$('body')"))	
 
-						.__( "// select the target node\n"+
-								"var target = document.getElementById(\'test\');\n"+
-								" \n"+
-								"// create an observer instance\n"+
-								"var observer = new MutationObserver(function(mutations) {\n"+
-								" mutations.forEach(function(mutation) {\n"+
-								" console.log(mutation.type);\n"+
-								" }); \n"+
-								"});\n"+
-								" \n"+
-								"// configuration of the observer:\n"+
-								"var config = { attributes: true, childList: true, characterData: true };\n"+
-								" \n"+
-								"// pass in the target node, as well as the observer options\n"+
-								"observer.observe(target, config);\n"+
-								" \n"+
-								"// later, you can stop observing\n"
-								//+"observer.disconnect()"
-								)
+//						.__( "// select the target node\n"+
+//								"var target = document.getElementById(\'test\');\n"+
+//								" \n"+
+//								"// create an observer instance\n"+
+//								"var observer = new MutationObserver(function(mutations) {\n"+
+//								" mutations.forEach(function(mutation) {\n"+
+//								" console.log(mutation.type);\n"+
+//								" }); \n"+
+//								"});\n"+
+//								" \n"+
+//								"// configuration of the observer:\n"+
+//								"var config = { attributes: true, childList: true, characterData: true };\n"+
+//								" \n"+
+//								"// pass in the target node, as well as the observer options\n"+
+//								"observer.observe(target, config);\n"+
+//								" \n"+
+//								"// later, you can stop observing\n"
+//								//+"observer.disconnect()"
+//								)
 						
 				);
 				
 	}
 	
 	
-	@xTarget(AFTER_CONTENT.class)
+//	@xTarget(AFTER_CONTENT.class)
 	public Element xTest()
 	{
 		

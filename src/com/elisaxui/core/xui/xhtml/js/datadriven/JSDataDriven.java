@@ -22,6 +22,7 @@ public interface JSDataDriven extends JSClass {
 	String callBackEnter = null;
 	String callBackExit = null;
 	String callBackChange = null;
+	JSDataDriven _this = null;
 	
 	default Object constructor(Object data)
 	{
@@ -42,12 +43,25 @@ public interface JSDataDriven extends JSClass {
 		return __(callBackExit,".add(", callback ,")");
 	}
 	
+	
+	default Object doEnter(Object row)
+	{
+		return __(callBackEnter, ".fire(row)");
+	}
+	
 	default Object start()
 	{
-		return var("data", dataSet.get())
+		return var("data", dataSet.getData())
 				._for("var i in data")
-					.__(callBackEnter, ".fire(data[i])")
-			    .endfor();
+				    ._if("typeof data[i] != 'function'")
+						.__(_this.doEnter("data[i]"))
+					.endif()
+			    .endfor()
+			    .var("self", "this")
+			    .var("fct", fct("value")
+			    		.__("self.doEnter(value);"))
+			    .__(dataSet.onChange("fct"))
+			    ;
 	}
 	
 }

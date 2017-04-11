@@ -23,7 +23,7 @@ public class XMLFile {
 
 	public Map<String, JSClassImpl> listClass = new HashMap<String, JSClassImpl>();
 
-	public JSClassImpl getClassImpl(JSBuilder jsBuilder, Class cl) {
+	public JSClassImpl getClassImpl(JSBuilder jsBuilder, Class<? extends JSClass> cl) {
 		String name = cl.getSimpleName();
 		JSClassImpl impl = listClass.get(name);
 		if (impl == null) {
@@ -37,8 +37,14 @@ public class XMLFile {
 			if (listField != null) {
 				for (Field field : listField) {
 					if (JSClass.class.isAssignableFrom(field.getType())) {
+						@SuppressWarnings("unchecked")
 						JSClass prox = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) field.getType());
-						XHTMLPart.jsBuilder.setNameOfProxy("this.", prox, field.getName());
+						if ( field.getName().equals("_this"))
+						{
+							XHTMLPart.jsBuilder.setNameOfProxy("", prox, "this");
+						}
+						else
+							XHTMLPart.jsBuilder.setNameOfProxy("this.", prox, field.getName());
 						try {
 							ReflectionHelper.setFinalStatic(field, prox);
 						} catch (Exception e) {

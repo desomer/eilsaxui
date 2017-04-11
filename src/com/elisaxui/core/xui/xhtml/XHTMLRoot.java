@@ -55,7 +55,7 @@ public class XHTMLRoot extends XHTMLPart {
 			Iterable<FileEntry> list = ClassLoaderHelper.listFilesRelativeToClass(XUILaucher.class,	"com"); ///elisaxui/core/xui/xml
 			for (FileEntry fileEntry : list) {
 				long lm = fileEntry.file.lastModified();
-				Date d = new Date();
+				//Date d = new Date();
 				//System.out.println(fileEntry.file.getName() + " " + d);
 				if (lm > olderFile)
 					olderFile = lm;
@@ -79,7 +79,7 @@ public class XHTMLRoot extends XHTMLPart {
 
 		StringBuilder textbody = new StringBuilder(1000);
 		StringBuilder textAfterbody = new StringBuilder(1000);
-		StringBuilder textAfterbody2 = new StringBuilder(1000);
+		//StringBuilder textAfterbody2 = new StringBuilder(1000);
 		
 		xListElement(getListElement(BODY.class)).setNbInitialTab(1)
 				.toXML(new XMLBuilder("page", textbody, textAfterbody));

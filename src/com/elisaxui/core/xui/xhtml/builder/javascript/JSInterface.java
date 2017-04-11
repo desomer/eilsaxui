@@ -12,11 +12,15 @@ public interface JSInterface {
 	
 	JSInterface _for(Object... content);
 	
-	JSInterface endfor(Object... content);
+	JSInterface endfor();
 
 	Object _new(Object... param);
 	
 	Object txt(Object... param);
 
 	JSFunction fct(Object... param);
+
+	JSInterface _if(Object... content);
+
+	JSInterface endif();
 }

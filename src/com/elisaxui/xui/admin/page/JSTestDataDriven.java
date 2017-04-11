@@ -30,15 +30,23 @@ public interface JSTestDataDriven extends JSClass {
 	{
 		return var("v", " [ {a:15, b:'12'},{a:21, b:'22'} ]")
 				
-				.set(aDataSet, _new("v"))
+				.set(aDataSet, _new())
+				.__(aDataSet.setData("v"))
 				.set(aDataDriven, _new(aDataSet))
-				//.__(aDataDriven.onEnter("function( value ) { console.debug('on entre', value) }"))
-				//.__(aDataDriven.onEnter(createRow()))
 				.__(aDataDriven.onEnter(fct("value")
 			            .set(template, ScnAdminMain.xTemplateDataDriven("value.a", "value.b"))
 			            .__(template.append("$('body')"))
 	            ))
 				.__(aDataDriven.start())
+				
+				.set("v", aDataSet.getData())
+				.__("v.push( {a:45, b:'test'} )")
+				
+				.__("setTimeout(", fct()
+						._for("var i=0; i<1000; i++")
+							.__("v.push( {a:55+i, b:'test5'} )") 
+						.endfor()	
+							, ", 1000)")
 				;
 	}
 }

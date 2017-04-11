@@ -45,6 +45,7 @@ public class JSBuilder extends Element {
 		return buf.toString();
 	}
 
+	@SuppressWarnings("unchecked")
 	public final <E extends JSClass> E getProxy(final Class<? extends JSClass> cl) {
 
 		class MyInvocationHandler extends aInvocationHandler {
@@ -53,7 +54,6 @@ public class JSBuilder extends Element {
 				this.interfac = interfac;
 			}
 
-			@SuppressWarnings("static-access")
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
 				if (method.getName().equals("toString")) {
@@ -111,7 +111,7 @@ public class JSBuilder extends Element {
 				return toCall(method, args);
 			}
 
-			private List toCall(Method method, Object[] args) {
+			private List<Object> toCall(Method method, Object[] args) {
 				List<Object> buf = new ArrayList<Object>();
 				buf.add(name+"."+method.getName()+"(");
 

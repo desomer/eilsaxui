@@ -11,8 +11,8 @@ public interface JSDataCtx extends JSClass {
 	
 	default Object initCurrent (Object idx, Object row )
 	{
-		return set(this.currentIdx, idx)
-				.set(this.currentRow, row)
+		return set(currentIdx, idx)
+				.set(currentRow, row)
 				;
 		
 	}

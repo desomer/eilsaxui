@@ -85,7 +85,8 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 	private void addElem(Object object) {
 		if (object instanceof List)
 		{
-			List list = (List)object;
+			@SuppressWarnings("unchecked")
+			List<Object> list = (List<Object>)object;
 			for (Object object2 : list) {
 				listElem.add(object2);
 			}
@@ -142,7 +143,6 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 	 * com.elisaxui.core.xui.xml.builder.javascript.JSInterface#var(java.lang.
 	 * Object, java.lang.Object)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public JSInterface var(Object name, Object... content) {
 		listElem.add(JSNewLine.class);
@@ -161,8 +161,12 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 	public JSInterface consoleDebug(Object... content) {
 		listElem.add(JSNewLine.class);
 		listElem.add("console.debug(");
+		int i=0;
 		for (Object object : content) {
 			addElem(object);
+			i++;
+			if (i<content.length)
+				listElem.add(",");
 		}
 		listElem.add(");");
 		return this;
@@ -180,12 +184,30 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 	}
 
 	@Override
-	public JSInterface endfor(Object... content) {
+	public JSInterface endfor() {
 		listElem.add(JSNewLine.class);
 		listElem.add("}");
 		return this;
 	}
 
+	@Override
+	public JSInterface _if(Object... content) {
+		listElem.add(JSNewLine.class);
+		listElem.add("if (");
+		for (Object object : content) {
+			addElem(object);
+		}
+		listElem.add(") {");
+		return this;
+	}
+
+	@Override
+	public JSInterface endif() {
+		listElem.add(JSNewLine.class);
+		listElem.add("}");
+		return this;
+	}
+	
 	/********************************************************************************************/
 
 	/*

@@ -88,6 +88,17 @@ public class ScnAdminMain extends XHTMLPart {
 							" });\n"+
 							" })($(\'#test\'))")
 						
+						.__("$.fn.insertAt = function(elements, index){\n"+
+							"\tvar children = this.children();\n"+
+							"\tif(index >= children.length){\n"+
+							"\t\tthis.append(elements);\n"+
+							"\t\treturn this;\n"+
+							"\t}\n"+
+							"\tvar before = children.eq(index);\n"+
+							"\t$(elements).insertBefore(before);\n"+
+							"\treturn this;\n"+
+							"};")
+						
 						.var("a", txt("dyna 1"))
 						.var("c", txt("dyna 2"))
 						.var("t1", txt("bizaroid que ca marche"))
@@ -95,7 +106,7 @@ public class ScnAdminMain extends XHTMLPart {
 						.var(template, xDiv(xPart(new ActListPage().addProperty(ViewItem.TEST_HANDLE, xSpan(xVar("t1")))
 								, xLi(xAttr("data-d", "d"), "ligne ",  xVar("a"))
 								, xLi("ligne ", xVar("c"))
-								)))
+								), xDiv(xAttr("style", txt("height: 280px;")),xAttr("id",txt("content")))))
 						.__(template.append("$('body')"))	
 						
 						.var(ab , _new(15))

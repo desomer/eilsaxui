@@ -22,5 +22,7 @@ public interface JSInterface {
 
 	JSInterface _if(Object... content);
 
+	JSInterface _else();
+	
 	JSInterface endif();
 }

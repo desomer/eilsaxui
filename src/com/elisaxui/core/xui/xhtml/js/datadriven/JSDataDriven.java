@@ -49,18 +49,31 @@ public interface JSDataDriven extends JSClass {
 		return __(callBackEnter, ".fire(row)");
 	}
 	
+	default Object doExit(Object row)
+	{
+		return __(callBackExit, ".fire(row)");
+	}
+	
 	default Object start()
 	{
 		return var("data", dataSet.getData())
 				._for("var i in data")
 				    ._if("typeof data[i] != 'function'")
-						.__(_this.doEnter("data[i]"))
+				   		.var("row", "{ ope:'enter', row:data[i], idx:i }")
+						.__(_this.doEnter("row"))
 					.endif()
 			    .endfor()
 			    .var("self", "this")
-			    .var("fct", fct("value")
-			    		.__("self.doEnter(value);"))
-			    .__(dataSet.onChange("fct"))
+			    .__(_this.doExit(null))
+			    .var("fctChange", fct("value")
+			    		._if("value.ope=='enter'")
+			    			.__("self.doEnter(value)")
+			    		.endif()
+			    		._if("value.ope=='exit'")
+		    				.__("self.doExit(value)")
+		    			.endif()
+		    		)
+			    .__(dataSet.onChange("fctChange"))
 			    ;
 	}
 	

@@ -43,12 +43,15 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 			} else if (object instanceof Element) {
 				doXMLElement(buf, ((Element) object));
 			} else if (object instanceof JSFunction) {
-				JSFunction fct = (JSFunction)object;
-				jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab()+1);
+				JSFunction fct = (JSFunction) object;
+				jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab() + 1);
 				fct.toXML(buf);
-				jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab()-1);
+				jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab() - 1);
 				jsBuilder.newLine(buf);
 				this.jsBuilder.newTabulation(buf);
+//			} else if (object instanceof JSContent && (this != object)) {
+//				JSContent c = (JSContent) object;
+//				c.toXML(buf);
 			} else {
 				if (buf.isJS())
 					buf.addContent(object.toString().replaceAll("'", "\\\\'"));
@@ -81,21 +84,18 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 		} else
 			addElem(object);
 	}
-	
+
 	private void addElem(Object object) {
-		if (object instanceof List)
-		{
+		if (object instanceof List) {
 			@SuppressWarnings("unchecked")
-			List<Object> list = (List<Object>)object;
+			List<Object> list = (List<Object>) object;
 			for (Object object2 : list) {
 				listElem.add(object2);
 			}
-		}
-		else
+		} else
 			listElem.add(object);
 	}
-	
-	
+
 	/**************************************************************************************/
 	/*
 	 * (non-Javadoc)
@@ -156,16 +156,15 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 		return this;
 	}
 
-
 	@Override
 	public JSInterface consoleDebug(Object... content) {
 		listElem.add(JSNewLine.class);
 		listElem.add("console.debug(");
-		int i=0;
+		int i = 0;
 		for (Object object : content) {
 			addElem(object);
 			i++;
-			if (i<content.length)
+			if (i < content.length)
 				listElem.add(",");
 		}
 		listElem.add(");");
@@ -202,12 +201,19 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 	}
 
 	@Override
+	public JSInterface _else() {
+		listElem.add(JSNewLine.class);
+		listElem.add("} else {");
+		return this;
+	}
+
+	@Override
 	public JSInterface endif() {
 		listElem.add(JSNewLine.class);
 		listElem.add("}");
 		return this;
 	}
-	
+
 	/********************************************************************************************/
 
 	/*
@@ -231,4 +237,5 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 	public JSFunction fct(Object... param) {
 		return jsBuilder.createJSFunction().setParam(param);
 	}
+
 }

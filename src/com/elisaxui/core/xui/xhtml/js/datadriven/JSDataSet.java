@@ -7,18 +7,30 @@ public interface JSDataSet extends JSClass {
 	Object data = null;
 	String callBackChange = null;
 	Object delayEvent = null;
-	
+	Object myProxySet = null;
+	JSDataSet _that = null;
 
 	default Object constructor(Object d) {
 		return set(data, d)
 				.set(callBackChange, "$.Callbacks()")
 				.set(delayEvent, 0)
+				.set(myProxySet, "new WeakSet()")
 				;
 	}
 
 	default Object onChange(Object callback) {
 		return __(callBackChange,".add(", callback ,")");
 				
+	}
+	
+	default Object isProxy(Object myObj)
+	{
+		return __("return ",myProxySet,".has(",myObj,")");
+	}
+	
+	default Object addProxy(Object myObj)
+	{
+		return __(myProxySet,".add(",myObj,")");
 	}
 	
 	default Object setData(Object d) {
@@ -40,7 +52,10 @@ public interface JSDataSet extends JSClass {
 				"set:", fct("target", "property", "value", "receiver")
 
 				       ._if("property!='_dom_' && target[property]!==value")
-				       		.consoleDebug("'setting'", "property" , "' for '" , "target" , "' with value '" , "value")
+				       		//.consoleDebug("'setting'", "property" , "' for '" , "target" , "' with value '" , "value")
+							.var("row", "{ ope:'change', row:target, idx:target.idx, property:property, value: value, old: target[property] }")
+							.var("fct"," function() {\nfastdom.mutate(function() {\nthat.callBackChange.fire(row); })}")
+							.__("setTimeout(fct, 1)")
 				       .endif()
 			       	   .set("target[property]", "value")
 				       .__("return true")
@@ -58,6 +73,7 @@ public interface JSDataSet extends JSClass {
 				// observe le push du tableau
 				.set("d.push", fct()
 						.__("arguments[0]=new Proxy(arguments[0], changeHandler)")
+						.__(_that.addProxy("arguments[0]"))
 						.__("Array.prototype.push.apply(this, arguments)")		
 						.var("row", "{ ope:'enter', row:arguments[0], idx:this.length-1 }")
 						.var("fct"," function() {\nfastdom.mutate(function() {\nthat.callBackChange.fire(row); })}")
@@ -80,7 +96,14 @@ public interface JSDataSet extends JSClass {
 						.__("setTimeout(fct, t)")
 						.__("return ret")
 				)
-				.set("d.splice", fct().var("ret","Array.prototype.splice.apply(this, arguments)")
+				.set("d.splice", fct()
+						
+						._if("arguments.length>2 && !", _that.isProxy("arguments[2]") )
+							.__("arguments[2]=new Proxy(arguments[2], changeHandler)")
+							.__(_that.addProxy("arguments[2]"))
+						.endif()
+						
+						.var("ret","Array.prototype.splice.apply(this, arguments)")
 						.var("row", "null")
 						._if("arguments.length>2")
 							.set("row", "{ ope:'enter', row:arguments[2], idx:arguments[0] }")

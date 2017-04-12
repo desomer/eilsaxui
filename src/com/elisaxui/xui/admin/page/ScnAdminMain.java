@@ -34,6 +34,7 @@ public class ScnAdminMain extends XHTMLPart {
 		return	xElement("/","<script  src='http://code.jquery.com/jquery-3.2.1.min.js'"
 				+ "  integrity='sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4='  crossorigin='anonymous'></script>"
 				+"<script  src='https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js'></script>"
+				+"<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css'>"
 				);
 	}
 	
@@ -53,7 +54,7 @@ public class ScnAdminMain extends XHTMLPart {
 	
 	@xTarget(CONTENT.class)
 	public Element xContenu() {
-		return xDiv(xH1(xID("'test'"), "un ActListPage :",
+		return xDiv(xDiv(xID("'test'"), xAttr("style", "'display:inline-block'"), "un ActListPage :",
 				xPart(new ActListPage()
 						.addProperty(ActListPage.PROPERTY_NAME, xDiv("property name ok"))
 						.addProperty(ViewItem.TEST_HANDLE, xSpan("un example d'handle "))
@@ -78,15 +79,7 @@ public class ScnAdminMain extends XHTMLPart {
 		return 			
 				xScriptJS(js()
 						
-						.__(" (function customSwipe(element) {\n"+
-							" element\n"+
-							" .animate({\"margin-left\" : \"150px\"}, 1000)\n"+
-							" .animate({\"margin-left\" : \"50px\"}, 1000, function(){\n"+
-							" setTimeout(function(){\n"+
-							" customSwipe(element);\n"+
-							" }, 1);\n"+
-							" });\n"+
-							" })($(\'#test\'))")
+						.__(" $(\'#test\').addClass('animated flipInX infinite')")
 						
 						.__("$.fn.insertAt = function(elements, index){\n"+
 							"\tvar children = this.children();\n"+
@@ -106,7 +99,7 @@ public class ScnAdminMain extends XHTMLPart {
 						.var(template, xDiv(xPart(new ActListPage().addProperty(ViewItem.TEST_HANDLE, xSpan(xVar("t1")))
 								, xLi(xAttr("data-d", "d"), "ligne ",  xVar("a"))
 								, xLi("ligne ", xVar("c"))
-								), xDiv(xAttr("style", txt("height: 280px;")),xAttr("id",txt("content")))))
+								), xDiv(xAttr("style", txt("height: 280px; width:400px")),xAttr("id",txt("content")))))
 						.__(template.append("$('body')"))	
 						
 						.var(ab , _new(15))

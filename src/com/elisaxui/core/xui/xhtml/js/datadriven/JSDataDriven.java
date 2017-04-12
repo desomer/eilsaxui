@@ -22,7 +22,7 @@ public interface JSDataDriven extends JSClass {
 	String callBackEnter = null;
 	String callBackExit = null;
 	String callBackChange = null;
-	JSDataDriven _this = null;
+	JSDataDriven _self = null;
 	
 	default Object constructor(Object data)
 	{
@@ -43,6 +43,10 @@ public interface JSDataDriven extends JSClass {
 		return __(callBackExit,".add(", callback ,")");
 	}
 	
+	default Object onChange(Object callback)
+	{
+		return __(callBackChange,".add(", callback ,")");
+	}
 	
 	default Object doEnter(Object row)
 	{
@@ -54,24 +58,33 @@ public interface JSDataDriven extends JSClass {
 		return __(callBackExit, ".fire(row)");
 	}
 	
+	default Object doChange(Object row)
+	{
+		return __(callBackChange, ".fire(row)");
+	}
+	
 	default Object start()
 	{
 		return var("data", dataSet.getData())
-				._for("var i in data")
-				    ._if("typeof data[i] != 'function'")
-				   		.var("row", "{ ope:'enter', row:data[i], idx:i }")
-						.__(_this.doEnter("row"))
-					.endif()
-			    .endfor()
 			    .var("self", "this")
-			    .__(_this.doExit(null))
+				
+//				._for("var i in data")
+//				    ._if("typeof data[i] != 'function'")
+//				   		.var("row", "{ ope:'enter', row:data[i], idx:i }")
+//						.__(_self.doEnter("row"))
+//					.endif()
+//			    .endfor()
+
 			    .var("fctChange", fct("value")
 			    		._if("value.ope=='enter'")
-			    			.__("self.doEnter(value)")
+			    			.__(_self.doEnter("value"))
 			    		.endif()
 			    		._if("value.ope=='exit'")
-		    				.__("self.doExit(value)")
+		    				.__(_self.doExit("value"))
 		    			.endif()
+		    			._if("value.ope=='change'")
+	    					.__(_self.doChange("value"))
+	    				.endif()
 		    		)
 			    .__(dataSet.onChange("fctChange"))
 			    ;

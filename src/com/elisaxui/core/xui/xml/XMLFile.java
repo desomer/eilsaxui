@@ -39,9 +39,9 @@ public class XMLFile {
 					if (JSClass.class.isAssignableFrom(field.getType())) {
 						@SuppressWarnings("unchecked")
 						JSClass prox = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) field.getType());
-						if ( field.getName().equals("_this"))
+						if ( field.getName().startsWith("_"))
 						{
-							XHTMLPart.jsBuilder.setNameOfProxy("", prox, "this");
+							XHTMLPart.jsBuilder.setNameOfProxy("", prox, field.getName().substring(1));
 						}
 						else
 							XHTMLPart.jsBuilder.setNameOfProxy("this.", prox, field.getName());

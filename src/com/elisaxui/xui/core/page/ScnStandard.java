@@ -34,7 +34,7 @@ public class ScnStandard extends XHTMLPart {
 				.add(".navbar","background-color: #ee6e73;height: "+heightNavBar+"px;width: 100%; color:white; "
 						+ "box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);")
 				
-				.add(".content", "padding: 8px; margin-top: "+heightNavBar+"px")
+				.add(".content", "padding: 8px; padding-top: "+(heightNavBar+8)+"px")
 				.add(".center", "height:100%; display: flex; align-items: center;justify-content: center")
 				.add(".logo", "color: inherit; font-size: 2.1rem;")
 				
@@ -50,6 +50,10 @@ public class ScnStandard extends XHTMLPart {
 						+ ".hamburger .hamburger-inner:after, "
 						+ ".hamburger .hamburger-inner:before","background-color: #fff;")
 				.add(".nooutline", "outline:0 !important")
+				
+				.add(".activity", "transform: translate3d(0px,0px,0px);")
+				
+				.add(".absolute","position: absolute;")
 				;
 	}
 
@@ -67,7 +71,7 @@ public class ScnStandard extends XHTMLPart {
 	
 	public Element xBurgerBtn()
 	{
-		return xElement("button", xAttr("type","'button'"), xAttr("class", "'nooutline hamburger hamburger--elastic'"), xSpan(xAttr("class", "'hamburger-box'"), xSpan(xAttr("class", "'hamburger-inner'"))));
+		return xElement("button", xAttr("type","'button'"), xAttr("class", "'absolute nooutline hamburger hamburger--elastic'"), xSpan(xAttr("class", "'hamburger-box'"), xSpan(xAttr("class", "'hamburger-inner'"))));
 	}
 	
 	public Element xTest() {
@@ -77,7 +81,11 @@ public class ScnStandard extends XHTMLPart {
 	
 	@xTarget(CONTENT.class)
 	public Element xContenu() {
-		return xDiv(xDiv(xAttr("class", "'navbar fixedTop'"), xBurgerBtn(),  xDiv(xAttr("class", "'center'"),xDiv(xAttr("class", "'logo'"),"le header"))), xDiv(xAttr("class", "'content'"), xTest(),xTest(),xTest(),xTest(),xTest()));	
+		return xDiv(//xAttr("class", "'activity'"),  
+				xDiv(xAttr("class", "'navbar fixedTop'"), 
+						xBurgerBtn(),  
+						xDiv(xAttr("class", "'center'"),xDiv(xAttr("class", "'logo'"),"le header")))
+				, xDiv(xAttr("class", "'content'"), xTest(),xTest(),xTest(),xTest(),xTest()));	
 			}
 
 	

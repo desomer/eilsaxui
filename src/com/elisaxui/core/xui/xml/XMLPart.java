@@ -228,7 +228,7 @@ public class XMLPart {
 	public final Part xPart(XMLPart part, Object... inner) {
 		return XMLBuilder.createPart(part, inner);
 	}
-
+	
 	public final static Element xElement(String name, Object... inner) {
 		Element tag = XMLBuilder.createElement(name, inner);
 		return tag;

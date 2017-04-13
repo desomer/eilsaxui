@@ -14,6 +14,13 @@ import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.XMLPart.CONTENT;
 
+/**
+ * 
+ * sortir la gestion des tabulations (utiliser par le JSBuilder)
+ * 
+ * @author Bureau
+ *
+ */
 public class XMLBuilder {
 
 	String id; // identifiant du bloc
@@ -111,17 +118,19 @@ public class XMLBuilder {
 			return this;
 		}
 
-		private List<Attr> listAttr = new ArrayList<>();
-		private List<Object> listInner = new ArrayList<>();
+		protected List<Attr> listAttr = new ArrayList<>();
+		protected List<Object> listInner = new ArrayList<>();
 
 		public Element(Object name, Object... inner) {
 			super();
 			this.name = name;
-			for (Object object : inner) {
-				if (object instanceof Attr) {
-					listAttr.add((Attr) object);
-				} else {
-					listInner.add(object);
+			if (inner != null) {
+				for (Object object : inner) {
+					if (object instanceof Attr) {
+						listAttr.add((Attr) object);
+					} else {
+						listInner.add(object);
+					}
 				}
 			}
 
@@ -242,12 +251,12 @@ public class XMLBuilder {
 				}
 
 			} else if (inner instanceof JSClassImpl) {
-				 JSClassImpl part = ((JSClassImpl) inner);
-				 JSBuilder jsBuilder = part.getJSBuilder();
-				 jsBuilder.nbTabInternal = this.nbTabInternal + 1;
-				 jsBuilder.nbInitialTab = this.nbInitialTab;
-				 part.toXML(buf);
-				 nbChild++;
+				JSClassImpl part = ((JSClassImpl) inner);
+				JSBuilder jsBuilder = part.getJSBuilder();
+				jsBuilder.nbTabInternal = this.nbTabInternal + 1;
+				jsBuilder.nbInitialTab = this.nbInitialTab;
+				part.toXML(buf);
+				nbChild++;
 			} else if (inner instanceof JSContent) {
 				{
 					JSContent part = ((JSContent) inner);

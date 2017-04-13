@@ -2,6 +2,7 @@ package com.elisaxui.core.xui.xhtml.builder.javascript;
 
 public interface JSInterface {
 
+	
 	JSInterface __(Object... content);
 
 	JSInterface set(Object name, Object... content);
@@ -25,4 +26,7 @@ public interface JSInterface {
 	JSInterface _else();
 	
 	JSInterface endif();
+
+
+
 }

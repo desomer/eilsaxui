@@ -78,7 +78,7 @@ public class XUIFactoryXHtml {
 				elem.toXML(new XMLBuilder("page", buf, null));
 			}
 
-			System.out.println("------------------------------------------");
+//			System.out.println("------------------------------------------");
 
 			return Response.status(Status.OK) // .type(MediaType.TEXT_HTML)
 					.entity(buf.toString()).header("XUI", "ok").build();
@@ -111,7 +111,7 @@ public class XUIFactoryXHtml {
 
 	private Map<String, Class<? extends XHTMLPart>> getMapXHTMLPart() {
 		List<Class<? extends XHTMLPart>> listClass = new ArrayList<>(100);
-		new FastClasspathScanner("com.elisaxui.xui.admin").matchSubclassesOf(XHTMLPart.class, listClass::add).scan();
+		new FastClasspathScanner("com.elisaxui.xui").matchSubclassesOf(XHTMLPart.class, listClass::add).scan();
 
 		Map<String, Class<? extends XHTMLPart>> mapClass = new HashMap<String, Class<? extends XHTMLPart>>(100);
 		for (Class<? extends XHTMLPart> pageClass : listClass) {

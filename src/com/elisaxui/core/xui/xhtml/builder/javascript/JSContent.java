@@ -1,8 +1,11 @@
 package com.elisaxui.core.xui.xhtml.builder.javascript;
 
 import java.lang.reflect.Proxy;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder.JSNewLine;
@@ -80,13 +83,13 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 	private void addElem(Object name, Object object) {
 		if (object instanceof JSVariable && name instanceof JSClass) {
 			aInvocationHandler inv = (aInvocationHandler) Proxy.getInvocationHandler(name);
-			listElem.add(JSClass._new(inv.interfac, ((JSVariable) object).param));
+			listElem.add(JSClass._new(inv.implementClass, ((JSVariable) object).param));
 		} else
 			addElem(object);
 	}
 
 	private void addElem(Object object) {
-		if (object instanceof List) {
+		if (object instanceof List && ! (object instanceof JSInterface)) {
 			@SuppressWarnings("unchecked")
 			List<Object> list = (List<Object>) object;
 			for (Object object2 : list) {
@@ -237,5 +240,7 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 	public JSFunction fct(Object... param) {
 		return jsBuilder.createJSFunction().setParam(param);
 	}
+
+	
 
 }

@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.BODY;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.AFTER_BODY;
+import com.elisaxui.core.xui.xhtml.builder.css.CSSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xml.XMLPart;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Attr;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 
@@ -81,6 +83,9 @@ public abstract class XHTMLPart extends XMLPart {
 	}
 
 
+	public final static CSSBuilder xCss() {
+		return new CSSBuilder();
+	}
 	
 	public final static Element xImport(Class<? extends JSClass> cl) {
 		Element t = xElement("script", xAttr("type", "\"text/javascript\""), XUIFactoryXHtml.getXMLFile().getClassImpl(jsBuilder, cl));
@@ -99,7 +104,7 @@ public abstract class XHTMLPart extends XMLPart {
 
 	/**************************************************************************/
 
-	public final Attr xID(Object id) {
+	public final Attr xId(Object id) {
 		Attr attr = xAttr("id", id);
 		return attr;
 	}

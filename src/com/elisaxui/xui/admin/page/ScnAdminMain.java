@@ -54,7 +54,7 @@ public class ScnAdminMain extends XHTMLPart {
 	
 	@xTarget(CONTENT.class)
 	public Element xContenu() {
-		return xDiv(xDiv(xID("'test'"), xAttr("style", "'display:inline-block'"), "un ActListPage :",
+		return xDiv(xH1(xId("'test'"), xAttr("style", "'display:inline-block'"), "un ActListPage :",
 				xPart(new ActListPage()
 						.addProperty(ActListPage.PROPERTY_NAME, xDiv("property name ok"))
 						.addProperty(ViewItem.TEST_HANDLE, xSpan("un example d'handle "))
@@ -69,17 +69,12 @@ public class ScnAdminMain extends XHTMLPart {
 	JSXHTMLPart template; 
 	JSTestDataDriven testDataDriven;
 	
-	public static Element xTemplateDataDriven(Object value, Object value2)
-	{
-		return 	xDiv(xVar(value), xSpan("-"), xVar(value2) );	
-	}
-	
 	@xTarget(AFTER_CONTENT.class)
 	public Element xAddJS() {
 		return 			
 				xScriptJS(js()
 						
-						.__(" $(\'#test\').addClass('animated flipInX infinite')")
+						.__(" $(\'#test\').addClass('animated pulse infinite')")
 						
 						.__("$.fn.insertAt = function(elements, index){\n"+
 							"\tvar children = this.children();\n"+
@@ -95,11 +90,12 @@ public class ScnAdminMain extends XHTMLPart {
 						.var("a", txt("dyna 1"))
 						.var("c", txt("dyna 2"))
 						.var("t1", txt("bizaroid que ca marche"))
+						
 						// creation d'un template
 						.var(template, xDiv(xPart(new ActListPage().addProperty(ViewItem.TEST_HANDLE, xSpan(xVar("t1")))
 								, xLi(xAttr("data-d", "d"), "ligne ",  xVar("a"))
 								, xLi("ligne ", xVar("c"))
-								), xDiv(xAttr("style", txt("height: 280px; width:400px")),xAttr("id",txt("content")))))
+								), xDiv(xAttr("style", txt("height: 800px; width:400px")),xAttr("id",txt("content")))))
 						.__(template.append("$('body')"))	
 						
 						.var(ab , _new(15))
@@ -113,62 +109,17 @@ public class ScnAdminMain extends XHTMLPart {
 						.__(testDataDriven.startTest())
 						
 						
-						.var(template, xElement("input",xAttr("id", "\"test\""), xAttr("type","\"text\"")))
+						.var(template, xElement("input", xId("\"test\""), xAttr("type","\"text\"")))
 						.__(template.append("$('body')"))	
-
-//						.__( "// select the target node\n"+
-//								"var target = document.getElementById(\'test\');\n"+
-//								" \n"+
-//								"// create an observer instance\n"+
-//								"var observer = new MutationObserver(function(mutations) {\n"+
-//								" mutations.forEach(function(mutation) {\n"+
-//								" console.log(mutation.type);\n"+
-//								" }); \n"+
-//								"});\n"+
-//								" \n"+
-//								"// configuration of the observer:\n"+
-//								"var config = { attributes: true, childList: true, characterData: true };\n"+
-//								" \n"+
-//								"// pass in the target node, as well as the observer options\n"+
-//								"observer.observe(target, config);\n"+
-//								" \n"+
-//								"// later, you can stop observing\n"
-//								//+"observer.disconnect()"
-//								)
 						
-				);
-				
+				);		
 	}
 	
 	
-//	@xTarget(AFTER_CONTENT.class)
-	public Element xTest()
+	static String panel="\"padding: 5px;margin-bottom: 20px;border-radius: 0;background-color: #FFF;box-shadow: 0 2px 2px 0 rgba(0,0,0,.16), 0 0 2px 0 rgba(0,0,0,.12);\"";
+	
+	public static Element xTemplateDataDriven(Object value, Object value2)
 	{
-		
-		return 	xScriptJS(js().var("v", " [ {a:1, b:'12'},{a:2, b:'22'} ]")
-				
-				.__("var changeHandler = {\n"+
-						" get: function(target, property) {\n"+
-						" console.log(\'getting \' , property , \' for \' , target);\n"+
-						" // property is index in this case\n"+
-						" return target[property];\n"+
-						" },\n"+
-						" set: function(target, property, value, receiver) {\n"+
-						" console.log(\'setting \' , property , \' for \' , target , \' with value \' , value);\n"+
-						" target[property] = value;\n"+
-						" // you have to return true to accept the changes\n"+
-						" return true;\n"+
-						" }\n"+
-						"};")
-				
-				.var("arrayToObserve", "new Proxy(v, changeHandler)")
-				.var("objs", "new Proxy({a:3, b:'23'}, changeHandler)")
-				.__("arrayToObserve.push( objs )")
-				.__("objs.a=55")
-				);
+		return 	xDiv(xAttr("style", panel), xVar(value), xSpan("-"), xSpan(xVar(value2)) );	
 	}
-	
-	
-	
-	// (function () {/* text + cr +lf */}).toString().match(/[^]*\\/\\*([^]*)\\*\\/\\}$/)[1]
 }

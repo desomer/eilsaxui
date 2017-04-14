@@ -6,7 +6,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import com.elisaxui.core.xui.XUILaucher;
 import com.elisaxui.core.xui.xml.XMLPart;
@@ -86,6 +89,9 @@ public class XHTMLRoot extends XHTMLPart {
 
 		xListElement(getListElement(AFTER_BODY.class)).setNbInitialTab(0)
 				.toXML(new XMLBuilder("page", textAfterbody, null));
+		
+		ArrayList<Element> header = getListElement(HEADER.class);
+		Collections.reverse(header);
 
 		return xElement("html", xAttr("lang", xTxt(lang)),
 				xListElement("\n"),
@@ -93,7 +99,8 @@ public class XHTMLRoot extends XHTMLPart {
 				xElement("head", xElement("meta", xAttr("charset", xTxt("utf-8"))),
 						xElement("meta", xAttr("name", xTxt("viewport")),
 								xAttr("content", xTxt("width=device-width, initial-scale=1.0, shrink-to-fit=no"))),
-						getListElement(HEADER.class)),
+						header
+						),
 				xElement("body", textbody),
 				xListElement(textAfterbody)
 				);

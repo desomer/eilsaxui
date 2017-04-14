@@ -40,8 +40,10 @@ public interface JSTestDataDriven extends JSClass {
 				            .set(template, ScnAdminMain.xTemplateDataDriven("value.row.a", "value.row.b"))
 				            .var("jqdom", template.insertAt("$('#content')", "value.idx"))
 				            .__("value.row['_dom_']=jqdom[0]")
-		            		.__("jqdom.css('position','absolute')"
-		            		+" .css('transition','transform 500ms ease-out')"
+		            		.__("jqdom.css('position','absolute')")
+		            		.__("jqdom.css('right','0px')")
+		            		.__("jqdom.css('left','0px')")
+		            		.__("jqdom.css('transition','transform 500ms ease-out')"
 		            		+" .css('transform','translate3d(0px, ' + value.idx*35 + 'px,0px)')"
 		            		)
 			            .endif()
@@ -93,7 +95,7 @@ public interface JSTestDataDriven extends JSClass {
 							//.__("setTimeout(function(idx) {v.splice(0,0, {a:idx, b:'test5'} )}, i*10, i)") 
 							.__("setTimeout(function(idx) {v.push({a:idx, b:'test5'})} , i*10, i)") 
 						.endfor()	
-							, ", 1000)")
+							, ", 1)")
 				
 				.__("setTimeout(", fct()
 						._for("var i=0; i<1000; i++")

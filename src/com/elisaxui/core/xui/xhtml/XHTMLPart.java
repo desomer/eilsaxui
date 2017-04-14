@@ -8,6 +8,7 @@ import com.elisaxui.core.xui.xhtml.XHTMLRoot.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xml.XMLPart;
@@ -67,6 +68,11 @@ public abstract class XHTMLPart extends XMLPart {
 	public final static JSInterface js() {
 		return jsBuilder.createJSContent();
 	}
+	
+	public final static JSFunction fct(Object...param)
+	{
+		return jsBuilder.createJSFunction().setParam(param);
+	}
 
 //	public final static JSFunction _fct(Object... param) {
 //		return jsBuilder.createJSFunction().setParam(param);
@@ -86,6 +92,7 @@ public abstract class XHTMLPart extends XMLPart {
 	public final static CSSBuilder xCss() {
 		return new CSSBuilder();
 	}
+	
 	
 	public final static Element xImport(Class<? extends JSClass> cl) {
 		Element t = xElement("script", xAttr("type", "\"text/javascript\""), XUIFactoryXHtml.getXMLFile().getClassImpl(jsBuilder, cl));

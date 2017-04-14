@@ -53,7 +53,7 @@ public class CSSBuilder  extends Element {
 
 		@Override
 		public String toString() {
-			return  path + "{" +content +"}";
+			return  path + " {" +content +"}\n";
 		}
 
 		public CSSStyle(Object path, Object content) {

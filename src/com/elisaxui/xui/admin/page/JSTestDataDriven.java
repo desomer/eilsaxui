@@ -43,7 +43,7 @@ public interface JSTestDataDriven extends JSClass {
 		            		.__("jqdom.css('position','absolute')")
 		            		.__("jqdom.css('right','0px')")
 		            		.__("jqdom.css('left','0px')")
-		            		.__("jqdom.css('transition','transform 500ms ease-out')"
+		            		.__("jqdom.css('transition','transform 500ms ease-out')"   // last idx pour vitesse de deplacement en fct de la distance
 		            		+" .css('transform','translate3d(0px, ' + value.idx*35 + 'px,0px)')"
 		            		)
 			            .endif()

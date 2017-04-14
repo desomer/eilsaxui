@@ -15,6 +15,7 @@ import com.elisaxui.xui.admin.page.JSTest2Class;
 import com.elisaxui.xui.admin.page.JSTestClass;
 import com.elisaxui.xui.admin.page.JSTestDataDriven;
 import com.elisaxui.xui.core.widget.ViewBtnBurger;
+import com.elisaxui.xui.core.widget.ViewMenu;
 import com.elisaxui.xui.core.widget.ViewNavBar;
 import com.elisaxui.xui.core.widget.ViewOverlay;
 
@@ -97,7 +98,8 @@ public class ScnStandard extends XHTMLPart {
 								//, xTest(), xTest(), xTest(), xTest(), xTest()
 								, xPart(new ViewOverlay()))
 						
-				)
+				        )
+					,xPart(new ViewMenu())
 
 		);
 	}

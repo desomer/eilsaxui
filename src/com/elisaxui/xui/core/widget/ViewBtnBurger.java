@@ -28,17 +28,19 @@ public class ViewBtnBurger extends XHTMLPart {
 		
 				.add(".hamburger .hamburger-inner, "
 						+ ".hamburger .hamburger-inner:after, "
-						+ ".hamburger .hamburger-inner:before", "background-color: #fff;")
+						+ ".hamburger .hamburger-inner:before", "background-color: #fff; transition-property:all !important; transition-duration:500ms !important;")
+				.add(".hamburger.hmenu .hamburger-inner, "
+						+ ".hamburger.hmenu .hamburger-inner:after, "
+						+ ".hamburger.hmenu .hamburger-inner:before", "background-color: #000; transition-property:all !important; transition-duration:500ms !important;")
 
-				
-				.add(".absolute","position: absolute; outline:0 !important")  // pas de bord bleu au click
+				.add(".leftBtn","position: absolute;top: 0px; left: 0px; z-index: 3; outline:0 !important")  // pas de bord bleu au click
 				;
 	}
 
 	@xTarget(CONTENT.class)
 	public Element xBurgerBtn() {
 		return xElement("button", xAttr("type", "'button'"),
-				xAttr("class", "'absolute hamburger hamburger--elastic'"),
+				xAttr("class", "'leftBtn hamburger hamburger--elastic'"),
 				xSpan(xAttr("class", "'hamburger-box'"), xSpan(xAttr("class", "'hamburger-inner'"))));
 	}
 
@@ -46,26 +48,50 @@ public class ViewBtnBurger extends XHTMLPart {
 	public Element xAddJS() {
 		return xScriptJS(js()
 				.__("$('.hamburger').on('click',", fct()
-						.__("$(this).toggleClass('is-active')")						
+					
 						._if("$('.fixedTop2').hasClass('fixedTop2')")
+							.__("$(this).toggleClass('is-active hmenu')")	
 						    // ferme le menu
 							.__("$('.black_overlay').css('opacity','0')")
+							.__("$('.menu').css('transform', 'translate3d(-100px,'+$('body').scrollTop()+'px,0px)' )")
+							.__("$('.hamburger').css('transition','all 300ms ease-out').css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px) scale(1)' )")
+							//.__("$('.hamburger').css('transform', 'translate3d(100px,'+$('body').scrollTop()+'px,0px)' )")
 						    .__("setTimeout(", fct()
 								.__("$('.fixedTop').css('transform', 'translate3d(0px,0px,0px)' )")
 								.__("$('body').css('overflow','auto')")  // remet le scroll
 								.__("$('.navbar').removeClass('fixedTop2')")
+								.var("hamburger", "$('.hamburger').detach()")
+								.__("$('.navbar').append(hamburger)")
+								.__("hamburger.css('transition','none 300ms ease-out').css('transform', 'translate3d(0px,0px,0px) scale(1)' )")
 								//.__("$('.black_overlay').css('display','none')")
-								, ",300)")
+								, ",500)")
+//						    .__("setTimeout(", fct()
+//								.__("$('.hamburger').css('transition','all 300ms ease-out').css('transform', 'translate3d(0px,0px,0px) scale(1)' )")
+//								//.__("$('.black_overlay').css('display','none')")
+//								, ",600)")
 						._else()
 						     // ouvre le menu
+						    
+							.__("$(this).toggleClass('is-active')")	
+							.__("$(this).toggleClass('hmenu')")	
 							.__("$('.fixedTop').css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px)' )")
 							.__("$('body').css('overflow','hidden')")   // plus de scroll
 							.__("$('.navbar').addClass('fixedTop2')")
+							.__("$('.menu').css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px)' )")
 							.__("$('.black_overlay').css('display','block')")
-							.__("setTimeout(", fct()
+							.__("setTimeout(", fct()	
 								.__("$('.black_overlay').css('transition','opacity 300ms ease-out')")
 								.__("$('.black_overlay').css('opacity','0.3')")
 							  , ",100)")
+							.__("setTimeout(", fct()	
+								    .var("hamburger", "$('.hamburger').detach()")
+								    .__("hamburger.css('transform', 'translate3d(100px,'+$('body').scrollTop()+'px,0px)' )")
+								    .__("$('.scene').append(hamburger)")
+								    .__("$('.hamburger').css('transition','all 300ms ease-out').css('transform', 'translate3d(-15px,'+(-5+$('body').scrollTop())+'px,0px) scale(0.5)' )")
+
+							  , ",200)")
+//							.__("setTimeout(", fct()	
+//							  , ",1500)")
 						.endif()
 						,")"
 

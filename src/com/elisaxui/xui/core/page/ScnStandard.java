@@ -24,6 +24,7 @@ import com.elisaxui.xui.core.widget.ViewOverlay;
 public class ScnStandard extends XHTMLPart {
 
 	public static final int heightNavBar = 53;
+	public static final int widthMenu = 250;
 	
 	@xTarget(HEADER.class)
 	@xRessource
@@ -55,7 +56,7 @@ public class ScnStandard extends XHTMLPart {
 
 				.add(".content", "position:relative; padding: 8px; padding-top: " + (heightNavBar + 8) + "px")
 				.add(".center", "height:100%; display: flex; align-items: center;justify-content: center")
-				.add(".logo", "color: inherit; font-size: 2.1rem;")
+				.add(".logo", "color: inherit; font-size: 2.1rem; animation-duration: 700ms;")
 
 				.add(".panel", "padding: 15px;"
 						+ "margin-bottom: 15px;"
@@ -68,7 +69,7 @@ public class ScnStandard extends XHTMLPart {
 				.add(".scene","overflow-x: hidden; background-color: black;")
 				
 				.add(".activity", "background-color: white; transition:transform 200ms ease-out;")
-				.add(".activityLeftMenu", "transform: translate3d(100px,0px,0px);")
+				.add(".activityLeftMenu", "transform: translate3d(150px,0px,0px);")
 				.add("#content", "height:3000px; position:relative")
 				;
 	}
@@ -126,12 +127,10 @@ public class ScnStandard extends XHTMLPart {
 				.var(testDataDriven, _new())
 				.__(testDataDriven.startTest())
 				
-				.__("$('.hamburger').on('click',", 
-						fct().__("$('.activity').toggleClass('activityLeftMenu')")
-						.__("$('.logo').toggleClass('animated shake')")
-						
-						
-						, ")")
+//				.__("$('.hamburger').on('click',", 
+//						fct()
+//						.__("$('.logo').toggleClass('animated shake')")				
+//						, ")")
 				
 			);
 	}

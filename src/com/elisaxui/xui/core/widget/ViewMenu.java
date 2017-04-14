@@ -9,6 +9,7 @@ import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.xui.core.page.ScnStandard;
 
 /**
  * @author Bureau
@@ -22,9 +23,9 @@ public class ViewMenu extends XHTMLPart {
 	public Element xStyle() {
 
 		return xCss()
-				.add(".menu", "z-index: 3;background-color: #ffffff;height: 120%;width: 100px; color:black; transition:transform 100ms ease-out;"
+				.add(".menu", "z-index: 3;background-color: #ffffff;height: 120%;width: "+ScnStandard.widthMenu+"px; color:black;"
 						+ "box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);")
-				.add(".fixedLeft", "position:absolute; top:0px; transform:translate3d(-100px,0px,0px)")
+				.add(".fixedLeft", "position:absolute; top:0px; transform:translate3d(-"+ScnStandard.widthMenu+"px,0px,0px)")
 				;
 	}
 

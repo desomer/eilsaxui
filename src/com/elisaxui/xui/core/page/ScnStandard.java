@@ -14,8 +14,12 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 import com.elisaxui.xui.admin.page.JSTest2Class;
 import com.elisaxui.xui.admin.page.JSTestClass;
 import com.elisaxui.xui.admin.page.JSTestDataDriven;
+import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.widget.ViewBtnBurger;
+import com.elisaxui.xui.core.widget.ViewBtnCircle;
 import com.elisaxui.xui.core.widget.ViewMenu;
+import com.elisaxui.xui.core.widget.ViewMenuDivider;
+import com.elisaxui.xui.core.widget.ViewMenuItems;
 import com.elisaxui.xui.core.widget.ViewNavBar;
 import com.elisaxui.xui.core.widget.ViewOverlay;
 
@@ -36,6 +40,7 @@ public class ScnStandard extends XHTMLPart {
 	@xRessource
 	public Element xImportAllClass() {
 		return xListElement(
+				xPart(new TKQueue()),
 				xImport(JSXHTMLPart.class),
 				xImport(JSTestDataDriven.class),
 				xImport(JSDataDriven.class),
@@ -49,16 +54,16 @@ public class ScnStandard extends XHTMLPart {
 	public Element xStyle() {
 
 		return xCss()
-				.add("html", "font-size: 14px;line-height: 1.5;"
+				.on("html", "font-size: 14px;line-height: 1.5;"
 						+ "font-family: 'Roboto', sans-serif;font-weight: normal; color: rgba(0,0,0,0.87);")
-				.add("body", "background-color: white;margin: 0")
+				.on("body", "background-color: white;margin: 0")
 				// .add("div", "color: black;")
 
-				.add(".content", "position:relative; padding: 8px; padding-top: " + (heightNavBar + 8) + "px")
-				.add(".center", "height:100%; display: flex; align-items: center;justify-content: center")
-				.add(".logo", "color: inherit; font-size: 2.1rem; animation-duration: 700ms;")
+				.on(".content", "position:relative; padding: 8px; padding-top: " + (heightNavBar + 8) + "px")
+				.on(".center", "height:100%; display: flex; align-items: center;justify-content: center")
+				.on(".logo", "color: inherit; font-size: 2.1rem; animation-duration: 700ms;")
 
-				.add(".panel", "padding: 15px;"
+				.on(".panel", "padding: 15px;"
 						+ "margin-bottom: 15px;"
 						+ "border-radius: 0;"
 						+ "background-color: #FFF;"
@@ -66,11 +71,13 @@ public class ScnStandard extends XHTMLPart {
 
 //				.add(".scene",
 //						"position: absolute; width: 100%; height: 100%; overflow-x: hidden; background-color: black;")
-				.add(".scene","overflow-x: hidden; background-color: black;")
+				.on(".scene","overflow-x: hidden; background-color: black;")
 				
-				.add(".activity", "background-color: white; transition:transform 200ms ease-out;")
-				.add(".activityLeftMenu", "transform: translate3d(150px,0px,0px);")
-				.add("#content", "height:3000px; position:relative")
+				.on(".activity", "background-color: white; transition:transform 200ms ease-out;")
+				.on(".activityLeftMenu", "transform: translate3d(150px,0px,0px);")
+				.on("#content", "height:3000px; position:relative")
+				
+				.on(".action", "z-index:1; position: fixed; right: 15px; bottom: 15px;  transform: translate3d(0px,0px,0px);")
 				;
 	}
 
@@ -80,7 +87,9 @@ public class ScnStandard extends XHTMLPart {
 		return xElement("/", "<script  src='http://code.jquery.com/jquery-3.2.1.min.js'></script>"
 				+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js'></script>"
 				+ "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css'>"
-				+ "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css'>");
+				+ "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css'>"
+				+ "<link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet'>"
+				);
 	}
 
 	public Element xTest() {
@@ -95,12 +104,26 @@ public class ScnStandard extends XHTMLPart {
 						xPart(new ViewNavBar(),
 								xPart(new ViewBtnBurger()),
 								xDiv(xAttr("class", "'center'"), xDiv(xAttr("class", "'logo'"), "Elisa"))),
-						xDiv(xAttr("class", "'content'"), xDiv(xAttr("id",txt("content")))
-								//, xTest(), xTest(), xTest(), xTest(), xTest()
-								, xPart(new ViewOverlay()))
+						xDiv(xAttr("class", "'content'") 
+								, xDiv(xAttr("class", "'action'"),	xPart(new ViewBtnCircle().addProperty(ViewBtnCircle.PROPERTY_ICON, "history")))
+								, xDiv(xAttr("id",txt("content")))
+						, xPart(new ViewOverlay()))
 						
 				        )
-					,xPart(new ViewMenu())
+					,xPart(new ViewMenu(), xPart(new ViewMenuItems()
+												.addProperty(ViewMenuItems.PROPERTY_NAME, "Paramètres")
+												.addProperty(ViewMenuItems.PROPERTY_ICON, "settings")
+												) 
+										, xPart(new ViewMenuItems()
+												.addProperty(ViewMenuItems.PROPERTY_NAME, "Configuration")
+												.addProperty(ViewMenuItems.PROPERTY_ICON, "build")
+												)
+										, xPart(new ViewMenuDivider())	
+										, xPart(new ViewMenuItems()
+												.addProperty(ViewMenuItems.PROPERTY_NAME, "Aide")
+												.addProperty(ViewMenuItems.PROPERTY_ICON, "help_outline")
+												)
+							)
 
 		);
 	}

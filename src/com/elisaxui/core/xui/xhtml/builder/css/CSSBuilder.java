@@ -40,7 +40,7 @@ public class CSSBuilder  extends Element {
 		return super.toXML(buf);
 	}
 	
-	public CSSBuilder add(Object path, Object content)
+	public CSSBuilder on(Object path, Object content)
 	{
 		listStyle.add(new CSSStyle(path, content));
 		return this;
@@ -53,7 +53,10 @@ public class CSSBuilder  extends Element {
 
 		@Override
 		public String toString() {
-			return  path + " {" +content +"}\n";
+			if (path instanceof CSSClass)
+				return  "."+((CSSClass)path).getId() + " { " +content +" }\n";
+			else
+				return  path + " {" +content +"}\n";
 		}
 
 		public CSSStyle(Object path, Object content) {

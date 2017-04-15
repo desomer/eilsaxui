@@ -39,6 +39,10 @@ public abstract class XHTMLPart extends XMLPart {
 		return xElement("span", inner);
 	}
 	
+	public final static Element xA(Object... inner) {
+		return xElement("a", inner);
+	}
+	
 	public final static Element xButton(Object... inner) {
 		return xElement("button", inner);
 	}

@@ -10,6 +10,7 @@ import java.util.List;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -112,6 +113,23 @@ public class XMLPart {
 						e.printStackTrace();
 					}
 				}
+				else if (CSSClass.class.isAssignableFrom(field.getType()))
+				{
+					CSSClass classCss = new CSSClass();
+					String name = field.getName();
+					xComment comment = field.getAnnotation(xComment.class);
+					if (comment != null) {
+						name = comment.value();
+					}
+					classCss.setId(name);
+					field.setAccessible(true);
+					try {
+						field.set(this,classCss);
+					} catch (IllegalArgumentException | IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} 
+				}
 			}
 		}
 		
@@ -128,35 +146,12 @@ public class XMLPart {
 			}
 		}
 		
-		// https://github.com/paul-hammant/paranamer
-//		Class<?>[] listClass = this.getClass().getDeclaredClasses();
-//		for (Class<?> class1 : listClass) {
-//			//if (JSClass.class.isAssignableFrom(class1))
-//			//{
-//				System.out.println("cls="+class1.getSimpleName());
-//				Field[] fields = class1.getDeclaredFields();
-//				for (Field field : fields) {
-//					System.out.println("cls="+class1.getSimpleName());
-//				}
-//				
-//				Method[] mths = class1.getDeclaredMethods();
-//				for (Method mth : mths) {
-//					System.out.println("mth="+mth.getName());
-//					Parameter[] params = mth.getParameters();
-//					for (Parameter parameter : params) {
-//						System.out.println("param="+parameter.getName());
-//					}
-//				}
-//				
-//			//}
-//		}
-		
-
-				
-				
-		//initComment();
 	}
 
+	/**
+	 * ajoute les methode avec xTarget
+	 * @param method
+	 */
 	private void initMethod(Method method) {
 		xTarget target = method.getAnnotation(xTarget.class);
 		if (target != null) {

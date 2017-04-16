@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassImpl;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
@@ -124,11 +125,19 @@ public class XMLBuilder {
 		public Element(Object name, Object... inner) {
 			super();
 			this.name = name;
+			List<CSSClass> listClass = new ArrayList<>();
+			
 			if (inner != null) {
 				for (Object object : inner) {
 					if (object instanceof Attr) {
 						listAttr.add((Attr) object);
-					} else {
+						
+					} else if (object instanceof CSSClass)
+					{
+						listClass.add((CSSClass)object);
+					}
+					else {
+					
 						listInner.add(object);
 					}
 				}

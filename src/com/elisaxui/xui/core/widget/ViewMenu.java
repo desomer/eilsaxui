@@ -29,7 +29,7 @@ public class ViewMenu extends XHTMLPart {
 				.on(".menu", "z-index: 3;background-color: #ffffff;height: 120%;width: "+ScnStandard.widthMenu+"px; color:black;"
 						+ "box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);")
 				.on(".fixedLeft", "position:absolute; top:0px; transform:translate3d(-"+ScnStandard.widthMenu+"px,0px,0px)")
-				.on(cHeaderMenu, "height:53px; background-color:rgba(238, 110, 115, 0.78);")
+				.on(cHeaderMenu, "height:53px; "+ScnStandard.bgColorMenu)
 				
 				.on(".menu ul",  "padding-left: 0;  list-style-type: none; margin:0px;")
 				
@@ -47,7 +47,11 @@ public class ViewMenu extends XHTMLPart {
 
 	@xTarget(CONTENT.class)
 	public Element xContenu() {
-		return xDiv(xAttr("class", "'menu fixedLeft'"), xDiv( xDiv(xAttr("class", "'"+cHeaderMenu.getId()+"'")), xUl(  this.getChildren())));
+		return xDiv(xAttr("class", "'menu fixedLeft'"), 
+				xDiv( xDiv(xAttr("class", "'"+cHeaderMenu.getId()+"'")), 
+						xUl(  this.getChildren())
+						)
+			);
 	}
 
 }

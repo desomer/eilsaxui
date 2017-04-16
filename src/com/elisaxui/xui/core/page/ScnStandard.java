@@ -29,6 +29,8 @@ public class ScnStandard extends XHTMLPart {
 
 	public static final int heightNavBar = 53;
 	public static final int widthMenu = 250;
+	public static final String bgColor = "background: linear-gradient(to right, rgba(253,94,176,1) 0%, rgba(255,0,136,1) 64%, rgba(239,1,124,1) 100%);";
+    public static final String bgColorMenu = "background: linear-gradient(to right, rgba(239,1,124,0.5) 0%, rgba(255,0,136,0.68) 36%, rgba(253,94,176,1) 100%);";
 	
 	@xTarget(HEADER.class)
 	@xRessource

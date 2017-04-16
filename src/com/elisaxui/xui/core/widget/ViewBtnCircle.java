@@ -10,6 +10,7 @@ import com.elisaxui.core.xui.xml.XMLPart.CONTENT;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.xui.core.page.ScnStandard;
 
 /**
  * @author Bureau
@@ -28,7 +29,7 @@ public class ViewBtnCircle extends XHTMLPart {
 		return xCss()
 				.on(cBtnCircle, "border-radius: 50%;  font-size: 24px;  height: 56px;  margin: auto;  "
 						+ "min-width: 56px;  width: 56px; padding: 0;  overflow: hidden;  "
-						+ "background: rgba(158,158,158,.2); "
+						+ ScnStandard.bgColor
 						+ "box-shadow: 0 1px 1.5px 0 rgba(0,0,0,.12), 3px 3px 3px 0 rgba(0,0,0,.24);"
 						+ " position: relative; line-height: normal; border:none; background-color:#ee6e73;")
 				.on(".cBtnCircle .material-icons", "color:white; position: absolute; top: 50%;  left: 50%;"

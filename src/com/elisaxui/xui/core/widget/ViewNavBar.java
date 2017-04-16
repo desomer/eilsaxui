@@ -18,13 +18,13 @@ import com.elisaxui.xui.core.page.ScnStandard;
  */
 @xComment("ViewNavBar")
 public class ViewNavBar extends XHTMLPart {
-
+	
 	@xTarget(HEADER.class)
 	@xRessource
 	public Element xStyle() {
 		
 		return xCss()
-				.on(".navbar","z-index: 2;background-color: #ee6e73;height: "+ScnStandard.heightNavBar+"px;width: 100%; color:white; "
+				.on(".navbar","z-index: 2;"+ScnStandard.bgColor+"height: "+ScnStandard.heightNavBar+"px;width: 100%; color:white; "
 						+ "box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);")
 				
 				.on(".fixedTop", "position:fixed; top:0px; transform:translate3d(0px,0px,0px)")

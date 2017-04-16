@@ -26,9 +26,9 @@ public class ViewBtnBurger extends XHTMLPart {
 
 	@xComment("hamburger")
 	CSSClass hamburger;
-	@xComment("hamburger--box")
+	@xComment("hamburger-box")
 	CSSClass hamburger_box;
-	@xComment("hamburger--inner")
+	@xComment("hamburger-inner")
 	CSSClass hamburger_inner;
 
 	@xComment("hamburger--elastic")
@@ -45,6 +45,7 @@ public class ViewBtnBurger extends XHTMLPart {
 						+ ".hamburger .hamburger-inner:after, "
 						+ ".hamburger .hamburger-inner:before",
 						"background-color: #fff; transition-property:all !important; transition-duration:500ms !important;")
+				
 				.on(".hamburger.hmenu .hamburger-inner, "  // changement de couleur
 						+ ".hamburger.hmenu .hamburger-inner:after, "
 						+ ".hamburger.hmenu .hamburger-inner:before",
@@ -61,17 +62,20 @@ public class ViewBtnBurger extends XHTMLPart {
 
 	@xTarget(CONTENT.class)
 	public Element xBurgerBtn() {
-		return xElement("button", xAttr("type", "'button'"),
-				xAttr("class", "'cLeftBtn hamburger hamburger--elastic'"),
-				xSpan(xAttr("class", "'hamburger-box'"), xSpan(xAttr("class", "'hamburger-inner'"))));
+		return xElement("button", xAttr("type", "'button'"), cLeftBtn,  hamburger, hamburger_elastic,
+				xSpan(hamburger_box, xSpan(hamburger_inner)));
 	}
 
+	
 	@xTarget(AFTER_CONTENT.class)
 	public Element xAddJS() {
+		
+		ViewMenu vm =new ViewMenu();
+		xPart(vm);
+		
 		return xScriptJS(js()
 				.__("$('.hamburger').on('click',", fct()
 						._if("$('.fixedTop2').hasClass('fixedTop2')")
-						
 							.__(TKQueue.start(
 								fct()
 								// ferme le menu
@@ -79,7 +83,7 @@ public class ViewBtnBurger extends XHTMLPart {
 								.__("$('.activity').toggleClass('activityLeftMenu')")
 								.__("$('.hamburger').toggleClass('is-active hmenu')")
 								.__("$('.black_overlay').css('opacity','0')")
-								.__("$('.menu').css('transform', 'translate3d(-" + ScnStandard.widthMenu
+								.__("$('."+vm.cMenu.getId()+"').css('transform', 'translate3d(-" + ScnStandard.widthMenu
 										+ "px,'+$('body').scrollTop()+'px,0px)' )")
 								.__("$('.hamburger').css('transition','all 300ms ease-out')"
 										+ ".css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px) scale(1)' )")
@@ -102,8 +106,8 @@ public class ViewBtnBurger extends XHTMLPart {
 									.__("$('body').css('overflow','hidden')") // plus de
 																				// scroll
 									.__("$('.navbar').addClass('fixedTop2')")
-									.__("$('.menu').css('transition', '' )")
-									.__("$('.menu').css('transform', 'translate3d(-" + ScnStandard.widthMenu
+									.__("$('."+vm.cMenu.getId()+"').css('transition', '' )")
+									.__("$('."+vm.cMenu.getId()+"').css('transform', 'translate3d(-" + ScnStandard.widthMenu
 											+ "px,'+$('body').scrollTop()+'px,0px)' )")
 									.__("$('.black_overlay').css('display','block')")
 	
@@ -119,8 +123,8 @@ public class ViewBtnBurger extends XHTMLPart {
 											+ "px,'+$('body').scrollTop()+'px,0px)' )")
 									.__("$('.scene').append(hamburger)")
 									.__("$('.activity').toggleClass('activityLeftMenu')")
-									.__("$('.menu').css('transition', 'transform 200ms ease-out' )")
-									.__("$('.menu').css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px)' )")
+									.__("$('."+vm.cMenu.getId()+"').css('transition', 'transform 200ms ease-out' )")
+									.__("$('."+vm.cMenu.getId()+"').css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px)' )")
 									.__("$('.hamburger').css('transition','all 200ms ease-out').css('transform', 'translate3d(-15px,'+(-3+$('body').scrollTop())+'px,0px) scale(0.5)' )")
 									.__("$('.logo').toggleClass('animated shake')")
 									)

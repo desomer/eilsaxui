@@ -2,6 +2,8 @@ package com.elisaxui.core.xui.xml.builder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -125,21 +127,30 @@ public class XMLBuilder {
 		public Element(Object name, Object... inner) {
 			super();
 			this.name = name;
-			List<CSSClass> listClass = new ArrayList<>();
-			
+
 			if (inner != null) {
+				List<String> listClass = null;
+				
 				for (Object object : inner) {
 					if (object instanceof Attr) {
 						listAttr.add((Attr) object);
-						
-					} else if (object instanceof CSSClass)
-					{
-						listClass.add((CSSClass)object);
-					}
-					else {
-					
+
+					} else if (object instanceof CSSClass) {
+						if (listClass == null)
+							listClass = new ArrayList<>();
+						else
+							listClass.add(" ");
+						listClass.add(((CSSClass) object).getId());
+					} else {
+
 						listInner.add(object);
 					}
+				}
+				
+				if (listClass!=null)
+				{
+					String[] arr = new String[listClass.size()];
+					listAttr.add(XMLBuilder.createAttr("class", "'"+ String.join("", listClass.toArray(arr)) +"'"));
 				}
 			}
 

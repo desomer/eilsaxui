@@ -104,8 +104,10 @@ public class ScnStandard extends XHTMLPart {
 		return xDiv(xAttr("class", "'scene'"), 
 					xDiv(xAttr("class", "'activity'"),
 						xPart(new ViewNavBar(),
-								xPart(new ViewBtnBurger()),
-								xDiv(xAttr("class", "'center'"), xDiv(xAttr("class", "'logo'"), "Elisa"))),
+								xPart(new ViewBtnBurger()),  //<i class="material-icons">perm_identity</i>
+								xDiv(xAttr("class", "'center'"), xDiv(xAttr("class", "'logo'"), "Elisa")),
+							    xDiv(xAttr("class", "'rightAction'"),xA( "<i class='actionBtn material-icons'>perm_identity</i>"),xA( "<i class='actionBtn material-icons'>more_vert</i>"))
+								),
 						xDiv(xAttr("class", "'content'") 
 								, xDiv(xAttr("class", "'action'"),	xPart(new ViewBtnCircle().addProperty(ViewBtnCircle.PROPERTY_ICON, "history")))
 								, xDiv(xAttr("id",txt("content")))

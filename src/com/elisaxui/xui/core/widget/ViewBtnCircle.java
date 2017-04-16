@@ -39,7 +39,7 @@ public class ViewBtnCircle extends XHTMLPart {
 
 	@xTarget(CONTENT.class)
 	public Element xBurgerBtn() {
-		return xElement("button", xAttr("class", "'cBtnCircle'"), xAttr("type", "'button'"), "<i class='material-icons'>", this.getProperty(PROPERTY_ICON) ,"</i>");
+		return xElement("button", cBtnCircle , xAttr("type", "'button'"), "<i class='material-icons'>", this.getProperty(PROPERTY_ICON) ,"</i>");
 	}
 	
 }

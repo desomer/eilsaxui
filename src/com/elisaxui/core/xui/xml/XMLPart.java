@@ -220,7 +220,7 @@ public class XMLPart {
 		addElement(AFTER_CONTENT.class, part);
 	}
 
-	public final Part xPart(XMLPart part, Object... inner) {
+	public final static Part xPart(XMLPart part, Object... inner) {
 		return XMLBuilder.createPart(part, inner);
 	}
 	

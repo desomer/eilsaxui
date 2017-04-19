@@ -3,7 +3,6 @@
  */
 package com.elisaxui.xui.core.toolkit;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
@@ -76,12 +75,13 @@ public class TKQueue extends XHTMLPart {
 	public static final Object[] start(Object... param)
 	{
 		ArrayList<Object> ret = new ArrayList<>();
-		ret.add("TKQueue()");
+		ret.add("window.animInProgess=true;\nTKQueue()");
 		for (Object  object: param) {
 			ret.add("(");
 			ret.add(object);
 			ret.add(")");
 		}
+		ret.add("(\"callback\", function() {window.animInProgess=false})");
 		ret.add("()");
 		return ret.toArray();
 	}

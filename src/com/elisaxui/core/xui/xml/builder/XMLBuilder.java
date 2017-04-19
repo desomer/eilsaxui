@@ -150,7 +150,7 @@ public class XMLBuilder {
 				if (listClass!=null)
 				{
 					String[] arr = new String[listClass.size()];
-					listAttr.add(XMLBuilder.createAttr("class", "'"+ String.join("", listClass.toArray(arr)) +"'"));
+					listAttr.add(XMLBuilder.createAttr("class", "\""+ String.join("", listClass.toArray(arr)) +"\""));
 				}
 			}
 

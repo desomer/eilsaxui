@@ -115,8 +115,13 @@ public abstract class XHTMLPart extends XMLPart {
 
 	/**************************************************************************/
 
-	public final Attr xId(Object id) {
+	public final static Attr xId(Object id) {
 		Attr attr = xAttr("id", id);
+		return attr;
+	}
+	
+	public final static Attr xIdAction(Object id) {
+		Attr attr = xAttr("data-x-action", id);
 		return attr;
 	}
 
@@ -125,7 +130,7 @@ public abstract class XHTMLPart extends XMLPart {
 		return new JSVariable(param);
 	}
 
-	public String txt(Object var) {
+	public static String txt(Object var) {
 		return "\""+ var + "\"";
 	}
 }

@@ -209,6 +209,17 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 		listElem.add("} else {");
 		return this;
 	}
+	
+	@Override
+	public JSInterface _elseif(Object... content) {
+		listElem.add(JSNewLine.class);
+		listElem.add("} else if(");
+		for (Object object : content) {
+			addElem(object);
+		}
+		listElem.add(") {");
+		return this;
+	}
 
 	@Override
 	public JSInterface endif() {

@@ -32,7 +32,7 @@ public class ViewOverlay extends XHTMLPart {
 	
 	@xTarget(CONTENT.class)
 	public Element xContenu() {
-		return xDiv(xAttr("class", "'black_overlay'"), this.getChildren());
+		return xDiv(xIdAction("'Overlay'"), xAttr("class", "'black_overlay'"), this.getChildren());
 	}
 	
 }

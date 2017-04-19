@@ -2,26 +2,29 @@ package com.elisaxui.xui.core.page;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSInterface;
 import com.elisaxui.core.xui.xhtml.js.JSXHTMLPart;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataCtx;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataDriven;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataSet;
+import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
-import com.elisaxui.xui.admin.page.JSTest2Class;
-import com.elisaxui.xui.admin.page.JSTestClass;
 import com.elisaxui.xui.admin.page.JSTestDataDriven;
 import com.elisaxui.xui.core.toolkit.TKQueue;
-import com.elisaxui.xui.core.widget.ViewBtnBurger;
-import com.elisaxui.xui.core.widget.ViewBtnCircle;
-import com.elisaxui.xui.core.widget.ViewMenu;
-import com.elisaxui.xui.core.widget.ViewMenuDivider;
-import com.elisaxui.xui.core.widget.ViewMenuItems;
-import com.elisaxui.xui.core.widget.ViewNavBar;
+import com.elisaxui.xui.core.widget.ViewFloatAction;
 import com.elisaxui.xui.core.widget.ViewOverlay;
+import com.elisaxui.xui.core.widget.button.ViewBtnBurger;
+import com.elisaxui.xui.core.widget.button.ViewBtnCircle;
+import com.elisaxui.xui.core.widget.menu.JSMenu;
+import com.elisaxui.xui.core.widget.menu.ViewMenu;
+import com.elisaxui.xui.core.widget.menu.ViewMenuDivider;
+import com.elisaxui.xui.core.widget.menu.ViewMenuItems;
+import com.elisaxui.xui.core.widget.navbar.JSNavBar;
+import com.elisaxui.xui.core.widget.navbar.ViewNavBar;
 
 @xFile(id = "standard.html")
 @xComment("activite standard")
@@ -59,11 +62,10 @@ public class ScnStandard extends XHTMLPart {
 				.on("html", "font-size: 14px;line-height: 1.5;"
 						+ "font-family: 'Roboto', sans-serif;font-weight: normal; color: rgba(0,0,0,0.87);")
 				.on("body", "background-color: white;margin: 0")
-				// .add("div", "color: black;")
+				.on("*", "-webkit-tap-highlight-color: rgba(0,0,0,0);")
 
-				.on(".content", "position:relative; padding: 8px; padding-top: " + (heightNavBar + 8) + "px")
-				.on(".center", "height:100%; display: flex; align-items: center;justify-content: center")
-				.on(".logo", "color: inherit; font-size: 2.1rem; animation-duration: 700ms;")
+
+				.on(".content", "box-sizing: border-box; min-height:100%; position:relative; padding: 8px; padding-top: " + (heightNavBar + 8) + "px")
 
 				.on(".panel", "padding: 15px;"
 						+ "margin-bottom: 15px;"
@@ -71,15 +73,24 @@ public class ScnStandard extends XHTMLPart {
 						+ "background-color: #FFF;"
 						+ "box-shadow: 0 2px 2px 0 rgba(0,0,0,.16), 0 0 2px 0 rgba(0,0,0,.12)")
 
-//				.add(".scene",
-//						"position: absolute; width: 100%; height: 100%; overflow-x: hidden; background-color: black;")
-				.on(".scene","overflow-x: hidden; background-color: black;")
+				.on(".scene","overflow-x: hidden; background-color: black; "
+						//+ "width: 100%;  height: 100%;   position: absolute;"
+						)
 				
-				.on(".activity", "background-color: white; transition:transform 200ms ease-out;")
+				.on(".activity", "background-color: white; transition:all 200ms ease-out; position: absolute; "
+						+ "   top: 0px; left: 0px;   height: 100%;  width: 100%; ") //will-change:transform
+				
+				.on(".toback", "transform: scale(0.8); transform-origin: 50% 150px; overflow:hidden;")
+				//.on(".toback", "transform: translate3d(0px,100px,0px); overflow:hidden;")
+				
 				.on(".activityLeftMenu", "transform: translate3d(150px,0px,0px);")
+				
+			//	.on("#activity1", "height:3000px; position:relative;")
 				.on("#content", "height:3000px; position:relative")
 				
-				.on(".action", "z-index:1; position: fixed; right: 15px; bottom: 15px;  transform: translate3d(0px,0px,0px);")
+				.on(".inactive", " position: fixed; top: 0px;left: 0px; right: 0px; bottom: 0px; z-index: 2;"
+						+ "  transform: translate3d(0px,100%,0px);"
+						+ "box-shadow: 3px 3px 3px 0 rgba(0,0,0,.24);")
 				;
 	}
 
@@ -88,46 +99,45 @@ public class ScnStandard extends XHTMLPart {
 	public Element xImportJQUERY() {
 		return xElement("/", "<script  src='http://code.jquery.com/jquery-3.2.1.min.js'></script>"
 				+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js'></script>"
+			//	+ "<script src='https://code.jquery.com/pep/0.4.2/pep.js'></script>"
 				+ "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css'>"
 				+ "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css'>"
+				+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js'></script>"
 				+ "<link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet'>"
 				);
 	}
 
-	public Element xTest() {
-		return xDiv(xAttr("class", "'panel'"),
-				"Loin, très loin, au delà des monts Mots, à mille lieues des pays Voyellie et Consonnia, demeurent les Bolos Bolos. Ils vivent en retrait, à Bourg-en-Lettres, sur les côtes de la Sémantique, un vaste océan de langues. Un petit ruisseau, du nom de Larousse, coule en leur lieu et les approvisionne en règlalades nécessaires en tout genre; un pays paradisiagmatique, dans lequel des pans entiers de phrases prémâchées vous volent litéralement tout cuit dans la bouche. Pas même la toute puissante Ponctuation ne régit les Bolos Bolos - une vie on ne peut moins orthodoxographique. Un jour pourtant, une petite ligne de Bolo Bolo du nom de Lorem Ipsum décida de s'aventurer dans la vaste Grammaire. Le grand Oxymore voulut l'en dissuader, le prevenant que là-bas cela fourmillait de vils Virgulos, de sauvages Pointdexclamators et de sournois Semicolons qui l'attendraient pour sûr au prochain paragraphe, mais ces mots ne firent écho dans l'oreille du petit Bolo qui ne se laissa point déconcerter. Il pacqua ses 12 lettrines, glissa son initiale dans sa panse et se mit en route. Alors qu'il avait gravi les premiers flancs de la chaîne des monts Italiques, il jeta un dernier regard sur la skyline de");
+	
+	@Deprecated
+	public Object getStaticPage()
+	{
+		return  xListElement(xPart(new ViewBtnBurger()) 
+		,xDiv(xAttr("class", "'center'"), xDiv(xAttr("class", "'logo'"), "Elisa"))
+	    ,xDiv(xAttr("class", "'rightAction'"),
+	    		xA( "<i class='actionBtn material-icons'>perm_identity</i>"),
+	    		xA( "<i class='actionBtn material-icons'>more_vert</i>"))
+	    );
+
 	}
 
 	@xTarget(CONTENT.class)
 	public Element xContenu() {
 		return xDiv(xAttr("class", "'scene'"), 
-					xDiv(xAttr("class", "'activity'"),
-						xPart(new ViewNavBar(),
-								xPart(new ViewBtnBurger()),  //<i class="material-icons">perm_identity</i>
-								xDiv(xAttr("class", "'center'"), xDiv(xAttr("class", "'logo'"), "Elisa")),
-							    xDiv(xAttr("class", "'rightAction'"),xA( "<i class='actionBtn material-icons'>perm_identity</i>"),xA( "<i class='actionBtn material-icons'>more_vert</i>"))
-								),
-						xDiv(xAttr("class", "'content'") 
-								, xDiv(xAttr("class", "'action'"),	xPart(new ViewBtnCircle().addProperty(ViewBtnCircle.PROPERTY_ICON, "history")))
+					xDiv(xId("activity1"), xAttr("class", "'activity active'")
+							,xPart(new ViewNavBar())
+							,xDiv(xAttr("class", "'content'") 
+								, xPart(new ViewFloatAction())
 								, xDiv(xAttr("id",txt("content")))
-						, xPart(new ViewOverlay()))
-						
-				        )
-					,xPart(new ViewMenu(), xPart(new ViewMenuItems()
-												.addProperty(ViewMenuItems.PROPERTY_NAME, "Paramètres")
-												.addProperty(ViewMenuItems.PROPERTY_ICON, "settings")
-												) 
-										, xPart(new ViewMenuItems()
-												.addProperty(ViewMenuItems.PROPERTY_NAME, "Configuration")
-												.addProperty(ViewMenuItems.PROPERTY_ICON, "build")
-												)
-										, xPart(new ViewMenuDivider())	
-										, xPart(new ViewMenuItems()
-												.addProperty(ViewMenuItems.PROPERTY_NAME, "Aide")
-												.addProperty(ViewMenuItems.PROPERTY_ICON, "help_outline")
-												)
+								, xPart(new ViewOverlay())
 							)
+				        )
+					,xDiv(xId("activity2"), xAttr("class", "'activity inactive'")
+							, xPart(new ViewNavBar())
+							, xDiv(xAttr("class", "'content'") 	
+									, xPart(new ViewOverlay())
+						   )	
+					     )
+					,xPart(new ViewMenu())
 
 		);
 	}
@@ -152,14 +162,108 @@ public class ScnStandard extends XHTMLPart {
 						"};")
 				
 				.var(testDataDriven, _new())
-				.__(testDataDriven.startTest())
-				
-//				.__("$('.hamburger').on('click',", 
-//						fct()
-//						.__("$('.logo').toggleClass('animated shake')")				
-//						, ")")
+				//.__(testDataDriven.startTest())				
 				
 			);
+	}
+	
+	JSMenu jsMenu;
+	JSNavBar jsNavBar;
+
+	public JSInterface getActionManager()
+	{
+	  return fct()
+			   .__("$('.scene').on('touchstart',", fct('e')//.consoleDebug("e") 
+					   .var("btn", "$(e.target).closest('[data-x-action]')")
+					   .var("action", "btn.data('x-action')")
+					   ._if("!window.animInProgess && action!=null")
+					   	   .consoleDebug("action")
+					   	   .__("if (navigator.vibrate) { navigator.vibrate(30); }")
+						   ._if("action=='BtnFloatMain' || action=='more' ")
+						       .__(TKQueue.start(200, fct().__("$('#activity2').toggleClass('inactive active')")
+								   		.__("$('#activity1').toggleClass('toback')")
+								   		.__("$('#activity1').toggleClass('active')")
+								   		, 100, fct().consoleDebug("'end activity anim'")
+								   ))
+						   .endif()
+						   ._if("action=='burger' || action=='Overlay'")
+								.var(jsNavBar, _new())
+						   		.__(jsNavBar.doBurger())
+						   .endif()
+						   
+					   .endif()
+					   , ")")
+			;
+	}
+	
+	public JSInterface getMoveManager()
+	{
+	  return fct().consoleDebug("'ok move'") 
+				.__("var mc = new Hammer($('.scene')[0])")    //, {touchAction: 'auto'}
+			//	.__("mc.get('pinch').set({ enable: true })")
+				.__("mc.get('pan').set({ enable: true, direction: Hammer.DIRECTION_HORIZONTAL })")  //DIRECTION_ALL
+				.var("anim", true)
+				.__("mc.on('hammer.input',", fct("ev")
+//						.__("$('#content')[0].innerHTML = [ev.srcEvent.type, ev.pointers.length, ev.isFirst, ev.isFinal, ev.deltaX, ev.deltaY, ev.distance, ev.velocity, ev.deltaTime, ev.offsetDirection, ev.target].join('<br>');")
+						._if("$(ev.target).closest('.menu').length > 0")
+							._if("ev.deltaX>-100 && ev.offsetDirection==2 && ev.velocity>-1 ")
+								._if("anim==true")
+									.__("$('.menu').css('transition', '' )")
+									.__("$('.menu').css('transform', 'translate3d('+ev.deltaX+'px,'+$('body').scrollTop()+'px,0px)' )")
+								.endif()
+							._elseif("anim==true && ev.offsetDirection==2 ")
+								.set("anim", "false")
+								.__("$('.menu').css('transition', 'transform 200ms ease-out' )")
+								.var(jsNavBar, _new())
+								.__(jsNavBar.doBurger())
+							.endif()
+							
+							._if("ev.isFinal")
+								._if("anim==true")
+									.__("$('.menu').css('transition', 'transform 200ms ease-out' )")
+									.__("$('.menu').css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px)' )")
+								.endif()
+								.set("anim", "true")
+							.endif()
+						.endif()
+						
+					,")")
+			 
+			;
+	}
+	
+	@xTarget(AFTER_CONTENT.class)
+	public Element xAddMenu() {
+		return xScriptJS(js()
+   		   	   .set("navigator.vibrate", "navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate")
+
+				
+				.var(jsMenu, _new())
+				.var("jsonMenu", jsMenu.getData())
+				.__("jsonMenu.push({name:'Paramètres', icon:'settings', idAction:'setting'} )")
+				.__("jsonMenu.push({name:'Configuration', icon:'build', idAction:'config'} )")
+				.__("jsonMenu.push({type:'divider' })")
+				.__("jsonMenu.push({name:'Aide', icon:'help_outline', idAction:'help'} )")
+				.set("window.jsonMainMenu", "jsonMenu")
+				
+				.var(jsNavBar, _new())
+				.var("jsonNavBar", jsNavBar.getData("'#activity1'"))
+				.__("jsonNavBar.push({type:'burger' })")
+				.__("jsonNavBar.push({type:'name', name:'Elisa' })")
+				.__("jsonNavBar.push({type:'action', icon:'perm_identity', idAction:'identity'})")
+				.__("jsonNavBar.push({type:'action', icon:'more_vert', idAction:'more'})")
+				
+				.set(jsNavBar, _new())
+				.set("jsonNavBar", jsNavBar.getData("'#activity2'"))
+				.__("jsonNavBar.push({type:'burger' })")
+				.__("jsonNavBar.push({type:'name', name:'Detail' })")
+				.__("jsonNavBar.push({type:'action', icon:'search', idAction:'search'})")
+				.__("jsonNavBar.push({type:'action', icon:'more_vert', idAction:'more'})")
+				
+				.__("(",getActionManager(),")()")
+				.__("(",getMoveManager(),")()")
+
+				);
 	}
 
 }

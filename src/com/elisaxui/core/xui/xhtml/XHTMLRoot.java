@@ -98,9 +98,10 @@ public class XHTMLRoot extends XHTMLPart {
 				xComment("version 1.0.0" +nbChangement , "generated at " + formatDateTimeNow  , "build at " + formatDateTimeBuild),
 				xElement("head", xElement("meta", xAttr("charset", xTxt("utf-8"))),
 						xElement("meta", xAttr("name", xTxt("mobile-web-app-capable")), xAttr("content", xTxt("yes"))),
+						xElement("meta", xAttr("name", xTxt("apple-mobile-web-app-capable")), xAttr("content", xTxt("yes"))),
 						xElement("meta", xAttr("name", xTxt("application-name")), xAttr("content", xTxt("Elisa"))),
 						xElement("meta", xAttr("name", xTxt("viewport")),
-								xAttr("content", xTxt("width=device-width, initial-scale=1.0, shrink-to-fit=no"))),
+								xAttr("content", xTxt("width=device-width, initial-scale=1.0, shrink-to-fit=no, user-scalable=no"))),
 						header
 						),
 				xElement("body", textbody),

@@ -26,7 +26,7 @@ import com.elisaxui.xui.core.widget.menu.ViewMenuItems;
 import com.elisaxui.xui.core.widget.navbar.JSNavBar;
 import com.elisaxui.xui.core.widget.navbar.ViewNavBar;
 
-@xFile(id = "standard.html")
+@xFile(id = "standard")
 @xComment("activite standard")
 public class ScnStandard extends XHTMLPart {
 
@@ -99,6 +99,8 @@ public class ScnStandard extends XHTMLPart {
 	public Element xImportJQUERY() {
 		return xElement("/", "<script  src='http://code.jquery.com/jquery-3.2.1.min.js'></script>"
 				+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js'></script>"
+			//	+ "<script src='https://cdnjs.cloudflare.com/ajax/libs/js-signals/1.0.0/js-signals.min.js'></script>"
+				+ "<script src='http://work.krasimirtsonev.com/git/navigo/navigo.js'></script>"
 			//	+ "<script src='https://code.jquery.com/pep/0.4.2/pep.js'></script>"
 				+ "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css'>"
 				+ "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css'>"
@@ -173,24 +175,20 @@ public class ScnStandard extends XHTMLPart {
 	public JSInterface getActionManager()
 	{
 	  return fct()
+			   .consoleDebug("'ok ActionManager'") 
 			   .__("$('.scene').on('touchstart',", fct('e')//.consoleDebug("e") 
 					   .var("btn", "$(e.target).closest('[data-x-action]')")
 					   .var("action", "btn.data('x-action')")
 					   ._if("!window.animInProgess && action!=null")
 					   	   .consoleDebug("action")
 					   	   .__("if (navigator.vibrate) { navigator.vibrate(30); }")
-						   ._if("action=='BtnFloatMain' || action=='more' ")
-						       .__(TKQueue.start(200, fct().__("$('#activity2').toggleClass('inactive active')")
-								   		.__("$('#activity1').toggleClass('toback')")
-								   		.__("$('#activity1').toggleClass('active')")
-								   		, 100, fct().consoleDebug("'end activity anim'")
-								   ))
-						   .endif()
-						   ._if("action=='burger' || action=='Overlay'")
-								.var(jsNavBar, _new())
-						   		.__(jsNavBar.doBurger())
-						   .endif()
-						   
+					   	   //.__("router.navigate(action)")
+					   	   ._if("action=='BtnFloatMain' || action=='more' ")
+					   	   		.__("(",doAction(),")('open')")
+							.endif()
+							._if("action=='burger' || action=='Overlay'")
+								.__("(",doAction(),")('menu')")	
+							.endif()
 					   .endif()
 					   , ")")
 			;
@@ -198,7 +196,7 @@ public class ScnStandard extends XHTMLPart {
 	
 	public JSInterface getMoveManager()
 	{
-	  return fct().consoleDebug("'ok move'") 
+	  return fct().consoleDebug("'ok MoveManager'") 
 				.__("var mc = new Hammer($('.scene')[0])")    //, {touchAction: 'auto'}
 			//	.__("mc.get('pinch').set({ enable: true })")
 				.__("mc.get('pan').set({ enable: true, direction: Hammer.DIRECTION_HORIZONTAL })")  //DIRECTION_ALL
@@ -232,6 +230,45 @@ public class ScnStandard extends XHTMLPart {
 			;
 	}
 	
+	public JSInterface doAction()
+	{
+	  return fct("action")
+		 ._if("action=='open' ")
+		     .__(TKQueue.start(200, fct().__("$('#activity2').toggleClass('inactive active')")
+				   		.__("$('#activity1').toggleClass('toback')")
+				   		.__("$('#activity1').toggleClass('active')")
+				   		, 100, fct().consoleDebug("'end activity anim'")
+				   ))
+	     .endif()
+		 ._if("action=='menu'")
+				.var(jsNavBar, _new())
+		 		.__(jsNavBar.doBurger())
+		 .endif();
+	}
+ 
+	public JSInterface getStateManager()
+	{
+	  return fct().consoleDebug("'ok StateManager'") 
+				.var("handler", fct("params","query")
+				.__("console.debug(params,query)")
+				.consoleDebug("router._lastRouteResolved")
+				.consoleDebug("this.toString()", "History.length")
+				
+				.__("(",doAction(),")(this.toString())")
+				
+				)
+		
+		.__("router=new Navigo(null,true)")   //   null,true,'!#')")
+		.__("router.on("
+				+ "{'openActivity': { as: 'burger', uses: handler.bind('openActivity') },"
+				+ " 'menu': { as: 'more', uses: handler.bind('menu') },"
+			//	+ " '*' : { as: 'home', uses: handler.bind('home') }" 
+				+ "})")
+		.__("router.resolve()")
+		;
+			  
+	}
+	
 	@xTarget(AFTER_CONTENT.class)
 	public Element xAddMenu() {
 		return xScriptJS(js()
@@ -262,8 +299,50 @@ public class ScnStandard extends XHTMLPart {
 				
 				.__("(",getActionManager(),")()")
 				.__("(",getMoveManager(),")()")
+				.__("(",getStateManager(),")()")
 
+				
+//				.var("handler", fct("params","query")
+//						.__("console.debug(params,query)")
+//						.consoleDebug("router._lastRouteResolved")
+//						.consoleDebug("this.toString()", "History.length")
+//						)
+//				
+//				.__("router=new Navigo(null,true)")   //   null,true,'!#')")
+//				.__("router.on("
+//						+ "{'/trip/:tripId/edit': { as: 'trip.edit', uses: handler.bind('trip.edit') },"
+//						+ " '/trip/save': { as: 'trip.save', uses: handler.bind('trip.save') },"
+//						+ " '/trip/:action/:tripId': { as: 'trip.action', uses: handler.bind('trip.action') },"
+//						+ " '*' : { as: 'home', uses: handler.bind('home') }" 
+//						+ "})")
+//				.__("router.resolve()")
+//				.var("viewHistory", "[]")
+//			//	.__("router.navigate('*');")
+//				.__("setTimeout(", fct().__("router.navigate('/trip/save?p=1')") ,",2000)")
+//				.__("setTimeout(", fct().__("router.navigate('/trip/12/edit?p=2')") ,",4000)")
+//				.__("setTimeout(", fct().__("router.navigate('?p=3')") ,",6000)")
+//			//	.__("router.navigate('/trip/12/edit');")
 				);
 	}
 
+	/*if (viewHistory.indexOf(nextView) > 0) {
+    // *** Back Button Clicked ***
+    // this logic assumes that there is never a recipeList nested
+    // under another recipeList in the view hierarchy
+    animateBack(nextView);
+
+    // don't forget to remove 'recipeList' from the history
+    viewHistory.splice(viewHistory.indexOf(nextView), viewHistory.length);
+} else {
+    // *** They arrived some other way ***
+    animateForward(nextView);
+} 
+
+When invoking pushState give the data object a unique incrementing id (uid).
+When onpopstate handler is invoked; check the state uid against a persistent variable containing the last state uid.
+Update the persistent variable with the current state uid.
+Do different actions depending on if state uid was greater or less than last state uid.
+*
+*/
+	
 }

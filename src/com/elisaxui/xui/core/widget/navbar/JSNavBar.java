@@ -30,13 +30,14 @@ public interface JSNavBar extends JSClass {
 						.__("$('.active .logo').toggleClass('animated shake')")
 						.__("$('.active.activity').toggleClass('activityLeftMenu')")
 						.__("$('.scene .hamburger.active').toggleClass('is-active hmenu')")
-						.__("$('.active .black_overlay').css('opacity','0').css('display','none')")
+						.__("$('.active .black_overlay').css('opacity','0')")
 						.__("$('." + ViewMenu.style.cMenu.getId() + "').css('transform', 'translate3d(-"
 								+ (ScnStandard.widthMenu + 5)
 								+ "px,'+$('body').scrollTop()+'px,0px)' )")
 						.__("$('.scene .hamburger.active').css('transition','all 300ms ease-out')"
 								+ ".css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px) scale(1)' )"),
 				500, fct()
+						.__("$('.active .black_overlay').css('display','none')")
 						.__("$('.active .fixedTop').css('transform', 'translate3d(0px,0px,0px)' )")
 						.__("$('body').css('overflow','auto')") // remet
 																// le

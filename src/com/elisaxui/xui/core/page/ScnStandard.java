@@ -15,6 +15,7 @@ import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 import com.elisaxui.xui.admin.page.JSTestDataDriven;
 import com.elisaxui.xui.core.toolkit.TKQueue;
+import com.elisaxui.xui.core.toolkit.TKRouter;
 import com.elisaxui.xui.core.widget.ViewFloatAction;
 import com.elisaxui.xui.core.widget.ViewOverlay;
 import com.elisaxui.xui.core.widget.button.ViewBtnBurger;
@@ -50,7 +51,8 @@ public class ScnStandard extends XHTMLPart {
 				xImport(JSTestDataDriven.class),
 				xImport(JSDataDriven.class),
 				xImport(JSDataSet.class),
-				xImport(JSDataCtx.class)
+				xImport(JSDataCtx.class),
+				xImport(TKRouter.class)
 				);
 	}
 	
@@ -171,6 +173,7 @@ public class ScnStandard extends XHTMLPart {
 	
 	JSMenu jsMenu;
 	JSNavBar jsNavBar;
+	TKRouter tkrouter;
 
 	public JSInterface getActionManager()
 	{
@@ -178,18 +181,8 @@ public class ScnStandard extends XHTMLPart {
 			   .consoleDebug("'ok ActionManager'") 
 			   .__("$('.scene').on('touchstart',", fct('e')//.consoleDebug("e") 
 					   .var("btn", "$(e.target).closest('[data-x-action]')")
-					   .var("action", "btn.data('x-action')")
-					   ._if("!window.animInProgess && action!=null")
-					   	   .consoleDebug("action")
-					   	   .__("if (navigator.vibrate) { navigator.vibrate(30); }")
-					   	   //.__("router.navigate(action)")
-					   	   ._if("action=='BtnFloatMain' || action=='more' ")
-					   	   		.__("(",doAction(),")('open')")
-							.endif()
-							._if("action=='burger' || action=='Overlay'")
-								.__("(",doAction(),")('menu')")	
-							.endif()
-					   .endif()
+					   .var("event", "btn.data('x-action')")
+					   .__(tkrouter.doEvent("event"))
 					   , ")")
 			;
 	}
@@ -212,8 +205,7 @@ public class ScnStandard extends XHTMLPart {
 							._elseif("anim==true && ev.offsetDirection==2 ")
 								.set("anim", "false")
 								.__("$('.menu').css('transition', 'transform 200ms ease-out' )")
-								.var(jsNavBar, _new())
-								.__(jsNavBar.doBurger())
+								.__(tkrouter.doEvent("'Overlay'"))
 							.endif()
 							
 							._if("ev.isFinal")
@@ -229,42 +221,45 @@ public class ScnStandard extends XHTMLPart {
 			 
 			;
 	}
-	
-	public JSInterface doAction()
-	{
-	  return fct("action")
-		 ._if("action=='open' ")
-		     .__(TKQueue.start(200, fct().__("$('#activity2').toggleClass('inactive active')")
-				   		.__("$('#activity1').toggleClass('toback')")
-				   		.__("$('#activity1').toggleClass('active')")
-				   		, 100, fct().consoleDebug("'end activity anim'")
-				   ))
-	     .endif()
-		 ._if("action=='menu'")
-				.var(jsNavBar, _new())
-		 		.__(jsNavBar.doBurger())
-		 .endif();
-	}
  
 	public JSInterface getStateManager()
 	{
 	  return fct().consoleDebug("'ok StateManager'") 
 				.var("handler", fct("params","query")
-				.__("console.debug(params,query)")
-				.consoleDebug("router._lastRouteResolved")
-				.consoleDebug("this.toString()", "History.length")
-				
-				.__("(",doAction(),")(this.toString())")
-				
+					.__("console.debug(params,query)")
+					._if("router.nextenable")
+						.consoleDebug("router._lastRouteResolved")
+						.consoleDebug("this.toString()", "History.length")
+						.var("backEvent", tkrouter.isBack("this.toString()"))
+						._if("backEvent=='menu'")
+							.__(tkrouter.doAction(txt("menu")))
+						._elseif("this.toString()=='menu'") // is next
+							.__("history.replaceState(null,null,'#home')")
+						.endif()
+						._if("backEvent=='open'")
+							.__(tkrouter.doAction(txt("open")))
+						._elseif("this.toString()=='open'") // is next
+							.__("history.replaceState(null,null,'#home')")
+						.endif()
+					._else()
+						.set("router.nextenable", true)
+					.endif()
 				)
 		
 		.__("router=new Navigo(null,true)")   //   null,true,'!#')")
 		.__("router.on("
-				+ "{'openActivity': { as: 'burger', uses: handler.bind('openActivity') },"
-				+ " 'menu': { as: 'more', uses: handler.bind('menu') },"
-			//	+ " '*' : { as: 'home', uses: handler.bind('home') }" 
+				+ "{'open': { as: 'open', uses: handler.bind('open') },"
+				+ " 'menu': { as: 'menu', uses: handler.bind('menu') },"
+				+ " 'home' : { as: 'home', uses: handler.bind('home') }" 
 				+ "})")
-		.__("router.resolve()")
+
+	//	.__("router.resolve()")
+
+		.set("router.history","[]")
+		.set("router.nextenable", false)
+		.var(tkrouter , _new())
+		.set("window.tkrouter", tkrouter)
+		.__(tkrouter.doNavigate(txt("home")))
 		;
 			  
 	}

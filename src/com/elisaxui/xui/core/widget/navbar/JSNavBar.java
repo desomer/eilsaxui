@@ -34,9 +34,9 @@ public interface JSNavBar extends JSClass {
 						.__("$('." + ViewMenu.style.cMenu.getId() + "').css('transform', 'translate3d(-"
 								+ (ScnStandard.widthMenu + 5)
 								+ "px,'+$('body').scrollTop()+'px,0px)' )")
-						.__("$('.scene .hamburger.active').css('transition','all 300ms ease-out')"
+						.__("$('.scene .hamburger.active').css('transition','all "+ScnStandard.activitySpeed+"ms ease-out')"
 								+ ".css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px) scale(1)' )"),
-				500, fct()
+				ScnStandard.activitySpeed, fct()
 						.__("$('.active .black_overlay').css('display','none')")
 						.__("$('.active .fixedTop').css('transform', 'translate3d(0px,0px,0px)' )")
 						.__("$('body').css('overflow','auto')") // remet
@@ -46,7 +46,7 @@ public interface JSNavBar extends JSClass {
 						.var("hamburger", "$('.scene .hamburger.active').detach()")
 						.__("hamburger.removeClass('active')")
 						.__("$('.active .navbar').append(hamburger)")
-						.__("hamburger.css('transition','none 300ms ease-out').css('transform', 'translate3d(0px,0px,0px) scale(1)' )"),
+						.__("hamburger.css('transition','none "+ScnStandard.activitySpeed+"ms ease-out').css('transform', 'translate3d(0px,0px,0px) scale(1)' )"),
 				1, fct().consoleDebug("'end anim'")
 				)
 			)
@@ -73,8 +73,8 @@ public interface JSNavBar extends JSClass {
 				100, fct().__("$('.active .hamburger').toggleClass('hmenu')") // passe
 																				// en
 																				// back
-				, 300, fct()
-						.__("$('.active .black_overlay').css('transition','opacity 300ms ease-out')")
+				, 300, fct()  // attent passage en croix
+						.__("$('.active .black_overlay').css('transition','opacity "+ScnStandard.overlaySpeed+"ms ease-out')")
 						.__("$('.active .black_overlay').css('opacity','0.3')")
 						.var("hamburger", "$('.active .hamburger').detach()")
 						.__("hamburger.css('transform', 'translate3d(" + ScnStandard.widthMenu
@@ -88,10 +88,10 @@ public interface JSNavBar extends JSClass {
 																						// du
 																						// menu
 						.__("$('." + ViewMenu.style.cMenu.getId()
-								+ "').css('transition', 'transform 200ms ease-out' )")
+								+ "').css('transition', 'transform "+ScnStandard.activitySpeed+"ms ease-out' )")
 						.__("$('." + ViewMenu.style.cMenu.getId()
 								+ "').css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px)' )")
-						.__("$('.scene .active.hamburger').css('transition','all 200ms ease-out').css('transform', 'translate3d(-15px,'+(-3+$('body').scrollTop())+'px,0px) scale(0.5)' )")
+						.__("$('.scene .active.hamburger').css('transition','all "+ScnStandard.activitySpeed+"ms ease-out').css('transform', 'translate3d(-15px,'+(-3+$('body').scrollTop())+'px,0px) scale(0.5)' )")
 						.__("$('.active .logo').toggleClass('animated shake')")
 						._for("var i in window.jsonMainMenu") // animation
 																// des
@@ -100,7 +100,7 @@ public interface JSNavBar extends JSClass {
 																// menu
 						.__("setTimeout(", fct("elem")
 								.__("elem.anim='fadeInLeft'")
-								.__("elem.anim=''"), ",i*20,window.jsonMainMenu[i])")
+								.__("elem.anim=''"), ",(i*"+(ScnStandard.activitySpeed/10)+"),window.jsonMainMenu[i])")
 						.endfor()
 						
 				  , 400, fct().consoleDebug("'end anim'")

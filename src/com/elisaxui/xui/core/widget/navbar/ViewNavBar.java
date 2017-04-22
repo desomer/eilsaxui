@@ -34,7 +34,7 @@ public class ViewNavBar extends XHTMLPart {
 				.on(".navbar","z-index: 2;"+ScnStandard.bgColor+"height: "+ScnStandard.heightNavBar+"px;width: 100%; color:white; "
 						+ "box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);")
 				
-				.on(".fixedTop", "position:fixed; top:0px; transform:translate3d(0px,0px,0px)")
+				.on(".fixedTop", "position:fixed; top:0px; transform:translate3d(0px,0px,0px); backface-visibility: hidden;")
 				.on(".fixedTop2", "position:absolute;")  // pas de scroll
 				
 				.on(".rightAction", "position: absolute; right: 0px;  top: 0px;  height: 100%;  width: auto;")

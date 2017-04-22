@@ -7,7 +7,6 @@ import com.elisaxui.core.xui.xhtml.js.JSXHTMLPart;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataCtx;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataDriven;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataSet;
-import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -19,11 +18,8 @@ import com.elisaxui.xui.core.toolkit.TKRouter;
 import com.elisaxui.xui.core.widget.ViewFloatAction;
 import com.elisaxui.xui.core.widget.ViewOverlay;
 import com.elisaxui.xui.core.widget.button.ViewBtnBurger;
-import com.elisaxui.xui.core.widget.button.ViewBtnCircle;
 import com.elisaxui.xui.core.widget.menu.JSMenu;
 import com.elisaxui.xui.core.widget.menu.ViewMenu;
-import com.elisaxui.xui.core.widget.menu.ViewMenuDivider;
-import com.elisaxui.xui.core.widget.menu.ViewMenuItems;
 import com.elisaxui.xui.core.widget.navbar.JSNavBar;
 import com.elisaxui.xui.core.widget.navbar.ViewNavBar;
 
@@ -33,6 +29,9 @@ public class ScnStandard extends XHTMLPart {
 
 	public static final int heightNavBar = 53;
 	public static final int widthMenu = 250;
+	
+	public static final int activitySpeed = 300;
+	public static final int overlaySpeed = 300;
 	public static final String bgColor = "background: linear-gradient(to right, rgba(253,94,176,1) 0%, rgba(255,0,136,1) 64%, rgba(239,1,124,1) 100%);";
     public static final String bgColorMenu = "background: linear-gradient(to right, rgba(239,1,124,0.5) 0%, rgba(255,0,136,0.68) 36%, rgba(253,94,176,1) 100%);";
 	
@@ -79,10 +78,19 @@ public class ScnStandard extends XHTMLPart {
 						//+ "width: 100%;  height: 100%;   position: absolute;"
 						)
 				
-				.on(".activity", "background-color: white; transition:all 200ms ease-out; position: absolute; "
-						+ "   top: 0px; left: 0px;   height: 100%;  width: 100%; ") //will-change:transform
+				.on(".activity", "background-color: white; position: absolute; "
+						+ "   top: 0px; left: 0px;   height: 100%;  width: 100%; "
+						+ "backface-visibility: hidden; will-change:overflow") //will-change:transform
 				
-				.on(".toback", "transform: scale(0.8); transform-origin: 50% 150px; overflow:hidden;")
+				.on(".active", "")
+				
+				.on(".inactive", "transition:transform "+activitySpeed+"ms ease-out; position: fixed; top: 0px;left: 0px; right: 0px; bottom: 0px;"
+						+ "  transform: translate3d(0px,100%,0px); backface-visibility: hidden;"
+						+ "box-shadow: 3px 3px 3px 0 rgba(0,0,0,.24);")
+				
+				.on(".backToFront", "transition:all "+activitySpeed+"ms ease-out; overflow:hidden;")
+				.on(".toback", "transition:all "+activitySpeed+"ms ease-out; transform:translate3d(0px,0px,0px) scale(0.8); transform-origin: 50% 150px; overflow:hidden;")
+				.on(".tofront", "transition:transform "+activitySpeed+"ms ease-out; transform: translate3d(0px,0px,0px); z-index: 2;")
 				//.on(".toback", "transform: translate3d(0px,100px,0px); overflow:hidden;")
 				
 				.on(".activityLeftMenu", "transform: translate3d(150px,0px,0px);")
@@ -90,9 +98,6 @@ public class ScnStandard extends XHTMLPart {
 			//	.on("#activity1", "height:3000px; position:relative;")
 				.on("#content", "height:3000px; position:relative")
 				
-				.on(".inactive", " position: fixed; top: 0px;left: 0px; right: 0px; bottom: 0px; z-index: 2;"
-						+ "  transform: translate3d(0px,100%,0px);"
-						+ "box-shadow: 3px 3px 3px 0 rgba(0,0,0,.24);")
 				;
 	}
 
@@ -130,7 +135,7 @@ public class ScnStandard extends XHTMLPart {
 					xDiv(xId("activity1"), xAttr("class", "'activity active'")
 							,xPart(new ViewNavBar())
 							,xDiv(xAttr("class", "'content'") 
-								, xPart(new ViewFloatAction())
+							//	, xPart(new ViewFloatAction())
 								, xDiv(xAttr("id",txt("content")))
 								, xPart(new ViewOverlay())
 							)
@@ -165,7 +170,7 @@ public class ScnStandard extends XHTMLPart {
 						"\treturn this;\n"+
 						"};")
 				
-				.var(testDataDriven, _new())
+				//.var(testDataDriven, _new())
 				//.__(testDataDriven.startTest())				
 				
 			);
@@ -204,13 +209,13 @@ public class ScnStandard extends XHTMLPart {
 								.endif()
 							._elseif("anim==true && ev.offsetDirection==2 ")
 								.set("anim", "false")
-								.__("$('.menu').css('transition', 'transform 200ms ease-out' )")
+								.__("$('.menu').css('transition', 'transform "+activitySpeed+"ms ease-out' )")
 								.__(tkrouter.doEvent("'Overlay'"))
 							.endif()
 							
 							._if("ev.isFinal")
 								._if("anim==true")
-									.__("$('.menu').css('transition', 'transform 200ms ease-out' )")
+									.__("$('.menu').css('transition', 'transform "+activitySpeed+"ms ease-out' )")
 									.__("$('.menu').css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px)' )")
 								.endif()
 								.set("anim", "true")
@@ -224,42 +229,12 @@ public class ScnStandard extends XHTMLPart {
  
 	public JSInterface getStateManager()
 	{
-	  return fct().consoleDebug("'ok StateManager'") 
-				.var("handler", fct("params","query")
-					.__("console.debug(params,query)")
-					._if("router.nextenable")
-						.consoleDebug("router._lastRouteResolved")
-						.consoleDebug("this.toString()", "History.length")
-						.var("backEvent", tkrouter.isBack("this.toString()"))
-						._if("backEvent=='menu'")
-							.__(tkrouter.doAction(txt("menu")))
-						._elseif("this.toString()=='menu'") // is next
-							.__("history.replaceState(null,null,'#home')")
-						.endif()
-						._if("backEvent=='open'")
-							.__(tkrouter.doAction(txt("open")))
-						._elseif("this.toString()=='open'") // is next
-							.__("history.replaceState(null,null,'#home')")
-						.endif()
-					._else()
-						.set("router.nextenable", true)
-					.endif()
-				)
+	  return fct()
+		.consoleDebug("'ok StateManager'") 
 		
-		.__("router=new Navigo(null,true)")   //   null,true,'!#')")
-		.__("router.on("
-				+ "{'open': { as: 'open', uses: handler.bind('open') },"
-				+ " 'menu': { as: 'menu', uses: handler.bind('menu') },"
-				+ " 'home' : { as: 'home', uses: handler.bind('home') }" 
-				+ "})")
-
-	//	.__("router.resolve()")
-
-		.set("router.history","[]")
-		.set("router.nextenable", false)
-		.var(tkrouter , _new())
+		.set("nav", "new Navigo(null,true)")   //   null,true,'!#')")
+		.var(tkrouter , _new("nav"))
 		.set("window.tkrouter", tkrouter)
-		.__(tkrouter.doNavigate(txt("home")))
 		;
 			  
 	}
@@ -296,48 +271,7 @@ public class ScnStandard extends XHTMLPart {
 				.__("(",getMoveManager(),")()")
 				.__("(",getStateManager(),")()")
 
-				
-//				.var("handler", fct("params","query")
-//						.__("console.debug(params,query)")
-//						.consoleDebug("router._lastRouteResolved")
-//						.consoleDebug("this.toString()", "History.length")
-//						)
-//				
-//				.__("router=new Navigo(null,true)")   //   null,true,'!#')")
-//				.__("router.on("
-//						+ "{'/trip/:tripId/edit': { as: 'trip.edit', uses: handler.bind('trip.edit') },"
-//						+ " '/trip/save': { as: 'trip.save', uses: handler.bind('trip.save') },"
-//						+ " '/trip/:action/:tripId': { as: 'trip.action', uses: handler.bind('trip.action') },"
-//						+ " '*' : { as: 'home', uses: handler.bind('home') }" 
-//						+ "})")
-//				.__("router.resolve()")
-//				.var("viewHistory", "[]")
-//			//	.__("router.navigate('*');")
-//				.__("setTimeout(", fct().__("router.navigate('/trip/save?p=1')") ,",2000)")
-//				.__("setTimeout(", fct().__("router.navigate('/trip/12/edit?p=2')") ,",4000)")
-//				.__("setTimeout(", fct().__("router.navigate('?p=3')") ,",6000)")
-//			//	.__("router.navigate('/trip/12/edit');")
 				);
 	}
-
-	/*if (viewHistory.indexOf(nextView) > 0) {
-    // *** Back Button Clicked ***
-    // this logic assumes that there is never a recipeList nested
-    // under another recipeList in the view hierarchy
-    animateBack(nextView);
-
-    // don't forget to remove 'recipeList' from the history
-    viewHistory.splice(viewHistory.indexOf(nextView), viewHistory.length);
-} else {
-    // *** They arrived some other way ***
-    animateForward(nextView);
-} 
-
-When invoking pushState give the data object a unique incrementing id (uid).
-When onpopstate handler is invoked; check the state uid against a persistent variable containing the last state uid.
-Update the persistent variable with the current state uid.
-Do different actions depending on if state uid was greater or less than last state uid.
-*
-*/
 	
 }

@@ -58,7 +58,7 @@ public class ViewMenu extends XHTMLPart {
 				.on(".menu li", "list-style-type: none;clear: both;  color: rgba(0,0,0,0.87);   "
 						+ "cursor: pointer;   min-height: 50px; line-height: 21px; "
 						+ "width: 100%;   text-align: left;   text-transform: none;"
-						+ "animation-duration:400ms;"
+						+ "animation-duration:400ms; transform:translate3d(0px,0px,0px);will-change:transform;"
 						)
 
 				.on(".menu li>a", "font-size: 16px;  line-height: 26px;  padding: 14px 16px;  float: left;")

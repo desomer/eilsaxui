@@ -13,6 +13,7 @@ import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 import com.elisaxui.xui.admin.page.JSTestDataDriven;
+import com.elisaxui.xui.core.toolkit.TKAnimation;
 import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.toolkit.TKRouter;
 import com.elisaxui.xui.core.widget.ViewFloatAction;
@@ -51,7 +52,8 @@ public class ScnStandard extends XHTMLPart {
 				xImport(JSDataDriven.class),
 				xImport(JSDataSet.class),
 				xImport(JSDataCtx.class),
-				xImport(TKRouter.class)
+				xImport(TKRouter.class),
+				xImport(TKAnimation.class)
 				);
 	}
 	
@@ -62,7 +64,7 @@ public class ScnStandard extends XHTMLPart {
 		return xCss()
 				.on("html", "font-size: 14px;line-height: 1.5;"
 						+ "font-family: 'Roboto', sans-serif;font-weight: normal; color: rgba(0,0,0,0.87);")
-				.on("body", "background-color: white;margin: 0")
+				.on("body", "background-color: white;margin: 0; top: 0px;left: 0px; right: 0px; bottom: 0px; ")
 				.on("*", "-webkit-tap-highlight-color: rgba(0,0,0,0);")
 
 
@@ -79,23 +81,30 @@ public class ScnStandard extends XHTMLPart {
 						)
 				
 				.on(".activity", "background-color: white; position: absolute; "
-						+ "   top: 0px; left: 0px;   height: 100%;  width: 100%; "
-						+ "backface-visibility: hidden; will-change:overflow") //will-change:transform
+						+ "   top: 0px; left: 0px; right: 0px; bottom: 0px; "
+						+ "backface-visibility: hidden; will-change:overflow,z-index;") //will-change:transform
 				
-				.on(".active", "")
 				
-				.on(".inactive", "transition:transform "+activitySpeed+"ms ease-out; position: fixed; top: 0px;left: 0px; right: 0px; bottom: 0px;"
+				
+				.on(".activity.active", "z-index:1;")
+				
+				.on(".activity.inactive", "transition:transform "+activitySpeed+"ms ease-out; position: fixed; top: 0px;left: 0px; right: 0px; bottom: 0px;"
 						+ "  transform: translate3d(0px,100%,0px); backface-visibility: hidden;"
 						+ "box-shadow: 3px 3px 3px 0 rgba(0,0,0,.24);")
 				
-				.on(".backToFront", "transition:all "+activitySpeed+"ms ease-out; overflow:hidden;")
-				.on(".toback", "transition:all "+activitySpeed+"ms ease-out; transform:translate3d(0px,0px,0px) scale(0.8); transform-origin: 50% 150px; overflow:hidden;")
-				.on(".tofront", "transition:transform "+activitySpeed+"ms ease-out; transform: translate3d(0px,0px,0px); z-index: 2;")
-				//.on(".toback", "transform: translate3d(0px,100px,0px); overflow:hidden;")
+				.on(".activity.backToFront", "transition:transform "+activitySpeed+"ms ease-out;"
+						//+ " overflow:hidden;"
+						)
+				.on(".activity.toback", "transition:transform "+activitySpeed+"ms ease-out; transform:translate3d(0px,0px,0px) scale(0.8); "
+						//+ "overflow:hidden;"
+						)
+				.on(".activity.tofront", "transition:transform "+activitySpeed+"ms ease-out; transform: translate3d(0px,0px,0px); z-index: 2;")
 				
-				.on(".activityLeftMenu", "transform: translate3d(150px,0px,0px);")
 				
-			//	.on("#activity1", "height:3000px; position:relative;")
+				
+				.on(".activityLeftMenu", "transition:transform "+activitySpeed+"ms ease-out; transform: translate3d("+(widthMenu-100)+"px,0px,0px);")
+				.on(".activityBackMenu", "transition:transform "+activitySpeed+"ms ease-out; transform: translate3d(0px,0px,0px);")
+				
 				.on("#content", "height:3000px; position:relative")
 				
 				;
@@ -170,8 +179,8 @@ public class ScnStandard extends XHTMLPart {
 						"\treturn this;\n"+
 						"};")
 				
-				//.var(testDataDriven, _new())
-				//.__(testDataDriven.startTest())				
+				.var(testDataDriven, _new())
+				.__(testDataDriven.startTest())				
 				
 			);
 	}

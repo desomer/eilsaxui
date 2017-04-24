@@ -4,7 +4,6 @@
 package com.elisaxui.xui.core.toolkit;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
-import com.elisaxui.xui.core.page.ScnStandard;
 import com.elisaxui.xui.core.widget.navbar.JSNavBar;
 
 /**
@@ -14,6 +13,7 @@ import com.elisaxui.xui.core.widget.navbar.JSNavBar;
 public interface TKRouter extends JSClass {
 
 	JSNavBar jsNavBar = null;
+	TKAnimation tkAnimation = null;
 	TKRouter _this = null;
 	TKRouter _self = null;
 	Object navigo = null;
@@ -21,6 +21,7 @@ public interface TKRouter extends JSClass {
 	default Object constructor(Object nav) {
 		__()
 		.set(jsNavBar, _new())	
+		.set(tkAnimation, _new())
 
 //	.__("router.resolve()")
 		.set(navigo, nav)
@@ -128,25 +129,7 @@ public interface TKRouter extends JSClass {
 	{
 		 __()
 		 ._if("action=='open' ")
-		    ._if("$('#activity1').hasClass('active')")
-			     .__(TKQueue.start(200, fct()
-					   		.__("$('#activity1').toggleClass('toback')")
-					   		.__("$('#activity2').toggleClass('tofront')"),
-					   		ScnStandard.activitySpeed, fct()
-					   		.__("$('#activity1').toggleClass('active')")
-			    		 	.__("$('#activity2').toggleClass('inactive active tofront')")
-					   		, 100, fct().consoleDebug("'end activity anim'")
-					   ))
-			._else()
-				.__(TKQueue.start(200, fct()
-				   		.__("$('#activity1').toggleClass('active toback backToFront')")
-				   		.__("$('#activity2').toggleClass('inactive')"),
-				   		ScnStandard.activitySpeed, fct()
-				   		.__("$('#activity1').toggleClass('backToFront')")
-		    		 	.__("$('#activity2').toggleClass('active')"),
-				   		 100, fct().consoleDebug("'end activity anim'")
-				   ))	
-		    .endif()
+		    .__(tkAnimation.doOpenActivity())
 	     .endif()
 		 ._if("action=='menu'")
 		 		.__(jsNavBar.doBurger())

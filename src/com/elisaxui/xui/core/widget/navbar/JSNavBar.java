@@ -24,29 +24,34 @@ public interface JSNavBar extends JSClass {
 	default Object doBurger() {
 		__()
 		// ferme le menu
-		._if("$('.active .fixedTop2').hasClass('fixedTop2')")
+		._if("$('.active .fixedToAbsolute').hasClass('fixedToAbsolute')")
 		.__(TKQueue.start(
 				fct()
-						.__("$('.active .logo').toggleClass('animated shake')")
-						.__("$('.active.activity').toggleClass('activityLeftMenu')")
-						.__("$('.scene .hamburger.active').toggleClass('is-active hmenu')")
+						.__("$('.active .logo').toggleClass('animated shake')")  // retire le shake
+						.__("$('.active.activity').toggleClass('activityLeftMenu activityBackMenu')")
+						.__("$('.scene .hamburger.active').toggleClass('is-active changeColorMenu')")
 						.__("$('.active .black_overlay').css('opacity','0')")
 						.__("$('." + ViewMenu.style.cMenu.getId() + "').css('transform', 'translate3d(-"
 								+ (ScnStandard.widthMenu + 5)
 								+ "px,'+$('body').scrollTop()+'px,0px)' )")
 						.__("$('.scene .hamburger.active').css('transition','all "+ScnStandard.activitySpeed+"ms ease-out')"
 								+ ".css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px) scale(1)' )"),
+						
 				ScnStandard.activitySpeed, fct()
 						.__("$('.active .black_overlay').css('display','none')")
-						.__("$('.active .fixedTop').css('transform', 'translate3d(0px,0px,0px)' )")
+						.__("$('.active .navbar').css('transform', 'translate3d(0px,0px,0px)' )")
+
+//						.__("$('body').css('position','block')") // plus de scroll
 						.__("$('body').css('overflow','auto')") // remet
 																// le
 																// scroll
-						.__("$('.active .navbar').removeClass('fixedTop2')")
+						.__("$('.active .navbar').removeClass('fixedToAbsolute')")
 						.var("hamburger", "$('.scene .hamburger.active').detach()")
 						.__("hamburger.removeClass('active')")
 						.__("$('.active .navbar').append(hamburger)")
+						.__("$('.active.activity').removeClass('activityBackMenu')")
 						.__("hamburger.css('transition','none "+ScnStandard.activitySpeed+"ms ease-out').css('transform', 'translate3d(0px,0px,0px) scale(1)' )"),
+
 				1, fct().consoleDebug("'end anim'")
 				)
 			)
@@ -54,33 +59,28 @@ public interface JSNavBar extends JSClass {
 		// ouvre le menu
 		.__(TKQueue.start(
 				fct()
-						.__("$('.active .fixedTop').css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px)' )")
-						.__("$('body').css('overflow','hidden')") // plus
-																	// de
-																	// scroll
-						.__("$('.active .navbar').addClass('fixedTop2')") // permet
-																			// la
-																			// nav
-																			// de
-																			// bouger
+						// fige la barre nav
+						.__("$('.active .navbar').css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px)' )")
+						.__("$('body').css('overflow','hidden')") // plus de scroll
+//						.__("$('body').css('position','fixed')") // plus de scroll
+						//.__("$('.activity.active').css('overflow','hidden')") // plus de scroll
+						.__("$('.active .navbar').addClass('fixedToAbsolute')") // permet la nav de bouger
+						
 						.__("$('." + ViewMenu.style.cMenu.getId() + "').css('transition', '' )")
 						.__("$('." + ViewMenu.style.cMenu.getId() + "').css('transform', 'translate3d(-"
 								+ ScnStandard.widthMenu
 								+ "px,'+$('body').scrollTop()+'px,0px)' )")
+						
 						.__("$('.active .black_overlay').css('display','block')")
-
 						.__("$('.active .hamburger').toggleClass('is-active')"),
-				100, fct().__("$('.active .hamburger').toggleClass('hmenu')") // passe
-																				// en
-																				// back
+						
+				  100, fct().__("$('.active .hamburger').toggleClass('changeColorMenu')") // passe en back
 				, 300, fct()  // attent passage en croix
 						.__("$('.active .black_overlay').css('transition','opacity "+ScnStandard.overlaySpeed+"ms ease-out')")
 						.__("$('.active .black_overlay').css('opacity','0.3')")
-						.var("hamburger", "$('.active .hamburger').detach()")
-						.__("hamburger.css('transform', 'translate3d(" + ScnStandard.widthMenu
-								+ "px,'+$('body').scrollTop()+'px,0px)' )")
+						.var("hamburger", "$('.active .hamburger').detach()")	
 						.__("hamburger.addClass('active')")
-						.__("$('.scene').append(hamburger)")
+						.__("$('.scene').append(hamburger)")						
 						.__("$('.active.activity').toggleClass('activityLeftMenu')") // deplace
 																						// l'activity
 																						// a
@@ -91,19 +91,18 @@ public interface JSNavBar extends JSClass {
 								+ "').css('transition', 'transform "+ScnStandard.activitySpeed+"ms ease-out' )")
 						.__("$('." + ViewMenu.style.cMenu.getId()
 								+ "').css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px)' )")
-						.__("$('.scene .active.hamburger').css('transition','all "+ScnStandard.activitySpeed+"ms ease-out').css('transform', 'translate3d(-15px,'+(-3+$('body').scrollTop())+'px,0px) scale(0.5)' )")
-						.__("$('.active .logo').toggleClass('animated shake')")
-						._for("var i in window.jsonMainMenu") // animation
-																// des
-																// items
-																// de
-																// menu
+						.__("$('.scene .active.hamburger').css('transition','all "+ScnStandard.activitySpeed+"ms ease-out')"
+								+ ".css('transform', 'translate3d(-15px,'+(-3+$('body').scrollTop())+'px,0px) scale(0.6)' )")
+						//.__("$('.active .logo').toggleClass('animated shake')")
+
+				//, ScnStandard.activitySpeed, fct()  // animation des items de menu					
+						._for("var i in window.jsonMainMenu") 
 						.__("setTimeout(", fct("elem")
 								.__("elem.anim='fadeInLeft'")
-								.__("elem.anim=''"), ",(i*"+(ScnStandard.activitySpeed/10)+"),window.jsonMainMenu[i])")
+								.__("elem.anim=''"), ",(i*"+10+"), window.jsonMainMenu[i])")
 						.endfor()
 						
-				  , 400, fct().consoleDebug("'end anim'")
+				, ScnStandard.activitySpeed, fct().__("$('.active .logo').toggleClass('animated shake')").consoleDebug("'end anim'")
 				  )
 				)
 		.endif();

@@ -25,13 +25,14 @@ import com.elisaxui.xui.core.widget.menu.ViewMenuItems;
 public class ViewNavBar extends XHTMLPart {
 	
 	static CSSClass actionBtnContainer;
+	CSSClass animatedBg;
 	
 	@xTarget(HEADER.class)
 	@xRessource
 	public Element xStyle() {
 		
-		return xCss()
-				.on(".navbar","z-index: 2;"+ScnStandard.bgColor+"height: "+ScnStandard.heightNavBar+"px;width: 100%; color:white; "
+		return xCss()    //"+ScnStandard.bgColor+"
+				.on(".navbar","z-index: 2;  "+ScnStandard.bgColor+" height: "+ScnStandard.heightNavBar+"px;width: 100%; color:white; "
 						+ "box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);")
 				
 				.on(".fixedTop", "position:fixed; top:0px; transform:translate3d(0px,0px,0px); backface-visibility: hidden;")
@@ -42,6 +43,8 @@ public class ViewNavBar extends XHTMLPart {
 				
 				.on(".center", "height:100%; display: flex; align-items: center;justify-content: center")
 				.on(".logo", "color: inherit; font-size: 2.1rem; animation-duration: 700ms;")
+				
+				.on(animatedBg, "position: absolute; display: block;  width: 100%; height: 100%; top: 0; right: 0; bottom: 0; left: 0;")
 				
 				.on(actionBtnContainer, "cursor: pointer; position: relative; background-color: Transparent; color:white;"
 						+ "padding: 0;  overflow: hidden; outline: 0 !important; " // pas de bordure au focus
@@ -57,8 +60,8 @@ public class ViewNavBar extends XHTMLPart {
 	}
 	
 	@xTarget(CONTENT.class)
-	public Element xContenu() {
-		return xDiv(xAttr("class", "\"navbar fixedTop\""), this.getChildren());
+	public Element xContenu() {  
+		return xDiv(xAttr("class", "\"navbar fixedTop\""),xElement("canvas", animatedBg),  this.getChildren());
 	}
 	
 	public static Element getTemplateBtnBurger() {

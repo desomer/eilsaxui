@@ -33,6 +33,7 @@ public class ScnStandard extends XHTMLPart {
 	
 	public static final int activitySpeed = 300;
 	public static final int overlaySpeed = 300;
+	
 	public static final String bgColor = "background: linear-gradient(to right, rgba(253,94,176,1) 0%, rgba(255,0,136,1) 64%, rgba(239,1,124,1) 100%);";
     public static final String bgColorMenu = "background: linear-gradient(to right, rgba(239,1,124,0.5) 0%, rgba(255,0,136,0.68) 36%, rgba(253,94,176,1) 100%);";
 	
@@ -121,6 +122,7 @@ public class ScnStandard extends XHTMLPart {
 				+ "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css'>"
 				+ "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css'>"
 				+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js'></script>"
+				+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/granim/1.0.6/granim.min.js'></script>"
 				+ "<link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet'>"
 				);
 	}
@@ -152,6 +154,8 @@ public class ScnStandard extends XHTMLPart {
 					,xDiv(xId("activity2"), xAttr("class", "'activity inactive'")
 							, xPart(new ViewNavBar())
 							, xDiv(xAttr("class", "'content'") 	
+								//	, xPart(new ViewFloatAction())
+									, xDiv(xAttr("id",txt("content2")))
 									, xPart(new ViewOverlay())
 						   )	
 					     )
@@ -163,6 +167,32 @@ public class ScnStandard extends XHTMLPart {
 	//var oRect = oElement.getBoundingClientRect();
 
 	JSTestDataDriven testDataDriven;
+	
+	String s="var granimInstance = new Granim({\n"+
+			" element: \'.animatedBg\',\n"+
+			" name: \'basic-gradient\',\n"+
+			" direction: \'diagonal\',\n"+
+			" opacity: [1, 1],\n"+
+			" isPausedWhenNotInView: false,\n"+
+			" states : {\n"+
+			" \"default-state\": {\n"+
+			" gradients: [\n"+
+//			    " ['#FFF', '#000'], ['#000', '#FFF']" +
+			
+//				" [\'#AA076B\', \'#61045F\'],\n"+
+//				" [\'#02AAB0\', \'#00CDAC\'],\n"+
+//				" [\'#DA22FF\', \'#9733EE\']\n"+
+
+			"[\'#EB3349\', \'#F45C43\'],\n"+
+			" [\'#FF8008\', \'#FFC837\'],\n"+
+			" [\'#4CB8C4\', \'#3CD3AD\'],\n"+
+			" [\'#24C6DC\', \'#514A9D\'],\n"+
+			" [\'#FF512F\', \'#DD2476\'],\n"+
+			" [\'#DA22FF\', \'#9733EE\']\n"+
+			" ]\n"+
+			" }\n"+
+			" }\n"+
+			"});";
 	
 	@xTarget(AFTER_CONTENT.class)
 	public Element xAddJS() {
@@ -182,6 +212,8 @@ public class ScnStandard extends XHTMLPart {
 				.var(testDataDriven, _new())
 				.__(testDataDriven.startTest())				
 				
+				
+				.__(s)	
 			);
 	}
 	

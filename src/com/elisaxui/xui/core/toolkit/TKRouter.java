@@ -12,7 +12,6 @@ import com.elisaxui.xui.core.widget.navbar.JSNavBar;
  */
 public interface TKRouter extends JSClass {
 
-	JSNavBar jsNavBar = null;
 	TKAnimation tkAnimation = null;
 	TKRouter _this = null;
 	TKRouter _self = null;
@@ -20,7 +19,6 @@ public interface TKRouter extends JSClass {
 	
 	default Object constructor(Object nav) {
 		__()
-		.set(jsNavBar, _new())	
 		.set(tkAnimation, _new())
 
 //	.__("router.resolve()")
@@ -132,7 +130,7 @@ public interface TKRouter extends JSClass {
 		    .__(tkAnimation.doOpenActivity())
 	     .endif()
 		 ._if("action=='menu'")
-		 		.__(jsNavBar.doBurger())
+		 	.__(tkAnimation.doOpenBurgerMenu())
 		 .endif();
 		 return null;
 	}

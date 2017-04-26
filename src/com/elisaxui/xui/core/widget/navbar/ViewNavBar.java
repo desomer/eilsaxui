@@ -41,8 +41,8 @@ public class ViewNavBar extends XHTMLPart {
 				.on(".rightAction", "position: absolute; right: 0px;  top: 0px;  height: 100%;  width: auto;")
 				.on(".actionBtn", "margin: 0; padding: 8px;  font-size: 36px !important;  cursor: pointer;")
 				
-				.on(".center", "height:100%; display: flex; align-items: center;justify-content: center")
-				.on(".logo", "color: inherit; font-size: 2.1rem; animation-duration: 700ms;")
+				.on(".center", "z-index:1;height:100%; display: flex; align-items: center;justify-content: center")
+				.on(".logo", "z-index:inherit; color: inherit; font-size: 2.1rem; animation-duration: 700ms;")
 				
 				.on(animatedBg, "position: absolute; display: block;  width: 100%; height: 100%; top: 0; right: 0; bottom: 0; left: 0;")
 				

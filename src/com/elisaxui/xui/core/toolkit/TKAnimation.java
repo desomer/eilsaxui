@@ -67,13 +67,16 @@ public interface TKAnimation extends JSClass {
 						.__("$('.active .black_overlay').css('display','block')")
 						.__("$('.active .hamburger').toggleClass('is-active')"),
 						
-				  100, fct().__("$('.active .hamburger').toggleClass('changeColorMenu')") // passe en back
-				, 300, fct()  // attent passage en croix
+				//  100, fct().__("$('.active .hamburger').toggleClass('changeColorMenu')"), // passe en back
+				 350, fct()  // attent passage en croix
 						.__("$('.active .black_overlay').css('transition','opacity "+ScnStandard.overlaySpeed+"ms ease-out')")
 						.__("$('.active .black_overlay').css('opacity','0.3')")
 						.var("hamburger", "$('.active .hamburger').detach()")	
+
 						.__("hamburger.addClass('active')")
-						.__("$('.scene').append(hamburger)")						
+						.__("$('.scene').append(hamburger)")
+						.__("hamburger.css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px)' )")  // positionne en haut
+						
 						.__("$('.active.activity').toggleClass('activityLeftMenu')") // deplace
 																						// l'activity
 																						// a
@@ -84,7 +87,8 @@ public interface TKAnimation extends JSClass {
 								+ "').css('transition', 'transform "+ScnStandard.activitySpeed+"ms ease-out' )")
 						.__("$('." + ViewMenu.style.cMenu.getId()
 								+ "').css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px)' )")
-						.__("$('.scene .active.hamburger').css('transition','all "+ScnStandard.activitySpeed+"ms ease-out')"
+						
+						.__("$('.scene .active.hamburger').css('transition','transform "+ScnStandard.activitySpeed+"ms ease-out')"
 								+ ".css('transform', 'translate3d(-15px,'+(-3+$('body').scrollTop())+'px,0px) scale(0.6)' )")
 
 				//, ScnStandard.activitySpeed, fct()  // animation des items de menu					

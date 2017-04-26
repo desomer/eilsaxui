@@ -20,6 +20,7 @@ public interface TKAnimation extends JSClass {
 		._if("$('.active .fixedToAbsolute').hasClass('fixedToAbsolute')")
 		.__(TKQueue.start(
 				fct()
+				    .__("fastdom.mutate(", fct()
 						.__("$('.active .logo').toggleClass('animated shake')")  // retire le shake
 						.__("$('.active.activity').toggleClass('activityLeftMenu activityBackMenu')")
 						.__("$('.scene .hamburger.active').toggleClass('is-active changeColorMenu')")
@@ -29,8 +30,9 @@ public interface TKAnimation extends JSClass {
 								+ "px,'+$('body').scrollTop()+'px,0px)' )")
 						.__("$('.scene .hamburger.active').css('transition','all "+ScnStandard.activitySpeed+"ms ease-out')"
 								+ ".css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px) scale(1)' )"),
-						
+				   ")"),		
 				ScnStandard.activitySpeed, fct()
+				 .__("fastdom.mutate(", fct()
 						.__("$('.active .black_overlay').css('display','none')")
 						.__("$('.active .navbar').css('transform', 'translate3d(0px,0px,0px)' )")
 
@@ -44,7 +46,7 @@ public interface TKAnimation extends JSClass {
 						.__("$('.active .navbar').append(hamburger)")
 						.__("$('.active.activity').removeClass('activityBackMenu')")
 						.__("hamburger.css('transition','none "+ScnStandard.activitySpeed+"ms ease-out').css('transform', 'translate3d(0px,0px,0px) scale(1)' )"),
-
+					")"),	
 				1, fct().consoleDebug("'end anim'")
 				)
 			)
@@ -52,6 +54,7 @@ public interface TKAnimation extends JSClass {
 		// ouvre le menu
 		.__(TKQueue.start(
 				fct()
+				         .__("fastdom.mutate(", fct()
 						// fige la barre nav
 						.__("$('.active .navbar').css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px)' )")
 						.__("$('body').css('overflow','hidden')") // plus de scroll
@@ -66,9 +69,10 @@ public interface TKAnimation extends JSClass {
 						
 						.__("$('.active .black_overlay').css('display','block')")
 						.__("$('.active .hamburger').toggleClass('is-active')"),
-						
+					 ")"),	
 				//  100, fct().__("$('.active .hamburger').toggleClass('changeColorMenu')"), // passe en back
-				 350, fct()  // attent passage en croix
+				 50, fct()    	// attent passage en croix
+				 		.__("fastdom.mutate(", fct()
 						.__("$('.active .black_overlay').css('transition','opacity "+ScnStandard.overlaySpeed+"ms ease-out')")
 						.__("$('.active .black_overlay').css('opacity','0.3')")
 						.var("hamburger", "$('.active .hamburger').detach()")	
@@ -97,7 +101,7 @@ public interface TKAnimation extends JSClass {
 								.__("elem.anim='fadeInLeft'")
 								.__("elem.anim=''"), ",(i*"+10+"), window.jsonMainMenu[i])")
 						.endfor()
-						
+						, ")")	
 				, ScnStandard.activitySpeed, fct().__("$('.active .logo').toggleClass('animated shake')").consoleDebug("'end anim'")
 				  )
 				)
@@ -109,8 +113,9 @@ public interface TKAnimation extends JSClass {
 	{
 		__()
 	    ._if("$('#activity1').hasClass('active')")
-	         // ouverture activity 2 
-		     .__(TKQueue.start(100, fct()
+	         // ouverture activity 2
+		     .__(TKQueue.start(0, fct()   // attente bulle
+		 	    	.__("fastdom.mutate(", fct()
 		    		 	.var("sct", "$('body').scrollTop()")
 				   		.__("$('#activity1').data('scrolltop', sct ) ") 
 				   		.__("$('#activity1 .navbar').css('top', sct+'px' )")
@@ -119,26 +124,35 @@ public interface TKAnimation extends JSClass {
 				   		.__("$('#activity1').scrollTop(sct)")
 				   		.__("$('#activity1').addClass('toback')")
 				   		.__("$('#activity2').addClass('tofront')")
+				   	, ")")	
 				   	,ScnStandard.activitySpeed, fct()
+				     	.__("fastdom.mutate(", fct()
 				   		.__("$('#activity1').removeClass('active')")
 				   		.__("$('#activity1').css('display', 'none')")
 		    		 	.__("$('#activity2').toggleClass('inactive active tofront')")
+		    		, ")")	
 				   	, 100, fct().consoleDebug("'end activity anim'")
-				   ))
+				   )) 	
 		._else()
 			// fermeture activity 2 
-			.__(TKQueue.start(100, fct()
+			.__(TKQueue.start(0, fct()   // attente bulle
+					.__("fastdom.mutate(", fct()
 					.__("$('#activity1').css('display', 'block')")
-				,100, fct()
+					, ")")	
+				,10, fct()
+				  .__("fastdom.mutate(", fct()
 			   		.__("$('#activity1').toggleClass('active toback backToFront')")
 			   		.__("$('#activity2').addClass('inactive')")
+			   		, ")")	
 			   	,ScnStandard.activitySpeed, fct()
+			   	 .__("fastdom.mutate(", fct()
 			   		.__("$('#activity1').css('overflow', '')")
 			   		.__("$('#activity1 .navbar').css('top', '0px' )")
 			   		.__("$('#activity1').css('transform-origin', '')")
 					.__("$('body').scrollTop($('#activity1').data('scrolltop'))")
 			   		.__("$('#activity1').removeClass('backToFront')")
-			   		.__("$('#activity2').removeClass('active')"),
+			   		.__("$('#activity2').removeClass('active')")
+			   		, ")"),	
 			   	100, fct().consoleDebug("'end activity anim'")
 			   ))	
 	   .endif();

@@ -27,6 +27,8 @@ public class ViewNavBar extends XHTMLPart {
 	static CSSClass actionBtnContainer;
 	CSSClass animatedBg;
 	
+	public static final String PROPERTY_NAME = "PROPERTY_NAME";
+	
 	@xTarget(HEADER.class)
 	@xRessource
 	public Element xStyle() {
@@ -61,7 +63,7 @@ public class ViewNavBar extends XHTMLPart {
 	
 	@xTarget(CONTENT.class)
 	public Element xContenu() {  
-		return xDiv(xAttr("class", "\"navbar fixedTop\""),xElement("canvas", animatedBg),  this.getChildren());
+		return xDiv(xAttr("class", "\"navbar fixedTop\""),xElement("canvas", animatedBg, xId(this.getProperty(PROPERTY_NAME))),  this.getChildren());
 	}
 	
 	public static Element getTemplateBtnBurger() {

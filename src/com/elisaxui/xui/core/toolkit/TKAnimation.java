@@ -28,10 +28,10 @@ public interface TKAnimation extends JSClass {
 						.__("$('." + ViewMenu.style.cMenu.getId() + "').css('transform', 'translate3d(-"
 								+ (ScnStandard.widthMenu + 5)
 								+ "px,'+$('body').scrollTop()+'px,0px)' )")
-						.__("$('.scene .hamburger.active').css('transition','all "+ScnStandard.activitySpeed+"ms ease-out')"
+						.__("$('.scene .hamburger.active').css('transition','all "+ScnStandard.bugerMenuAnimSpeed+"ms ease-out')"
 								+ ".css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px) scale(1)' )"),
 				   ")"),		
-				ScnStandard.activitySpeed, fct()
+				ScnStandard.bugerMenuAnimSpeed, fct()
 				 .__("fastdom.mutate(", fct()
 						.__("$('.active .black_overlay').css('display','none')")
 						.__("$('.active .navbar').css('transform', 'translate3d(0px,0px,0px)' )")
@@ -45,7 +45,7 @@ public interface TKAnimation extends JSClass {
 						.__("hamburger.removeClass('active')")
 						.__("$('.active .navbar').append(hamburger)")
 						.__("$('.active.activity').removeClass('activityBackMenu')")
-						.__("hamburger.css('transition','none "+ScnStandard.activitySpeed+"ms ease-out').css('transform', 'translate3d(0px,0px,0px) scale(1)' )"),
+						.__("hamburger.css('transition','none "+ScnStandard.bugerMenuAnimSpeed+"ms ease-out').css('transform', 'translate3d(0px,0px,0px) scale(1)' )"),
 					")"),	
 				1, fct().consoleDebug("'end anim'")
 				)
@@ -88,11 +88,11 @@ public interface TKAnimation extends JSClass {
 																						// du
 																						// menu
 						.__("$('." + ViewMenu.style.cMenu.getId()
-								+ "').css('transition', 'transform "+ScnStandard.activitySpeed+"ms ease-out' )")
+								+ "').css('transition', 'transform "+ScnStandard.bugerMenuAnimSpeed+"ms ease-out' )")
 						.__("$('." + ViewMenu.style.cMenu.getId()
 								+ "').css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px)' )")
 						
-						.__("$('.scene .active.hamburger').css('transition','transform "+ScnStandard.activitySpeed+"ms ease-out')"
+						.__("$('.scene .active.hamburger').css('transition','transform "+ScnStandard.bugerMenuAnimSpeed+"ms ease-out')"
 								+ ".css('transform', 'translate3d(-15px,'+(-3+$('body').scrollTop())+'px,0px) scale(0.6)' )")
 
 				//, ScnStandard.activitySpeed, fct()  // animation des items de menu					
@@ -102,7 +102,7 @@ public interface TKAnimation extends JSClass {
 								.__("elem.anim=''"), ",(i*"+10+"), window.jsonMainMenu[i])")
 						.endfor()
 						, ")")	
-				, ScnStandard.activitySpeed, fct().__("$('.active .logo').toggleClass('animated shake')").consoleDebug("'end anim'")
+				, ScnStandard.bugerMenuAnimSpeed, fct().__("$('.active .logo').toggleClass('animated shake')").consoleDebug("'end anim'")
 				  )
 				)
 		.endif();
@@ -125,11 +125,11 @@ public interface TKAnimation extends JSClass {
 				   		.__("$('#activity1').addClass('toback')")
 				   		.__("$('#activity2').addClass('tofront')")
 				   	, ")")	
-				   	,ScnStandard.activitySpeed, fct()
+				   	,ScnStandard.activityAnimSpeed, fct()
 				     	.__("fastdom.mutate(", fct()
 				   		.__("$('#activity1').removeClass('active')")
-				   		.__("$('#activity1').css('display', 'none')")
-		    		 	.__("$('#activity2').toggleClass('inactive active tofront')")
+				   //		.__("$('#activity1').css('display', 'none')")
+		    		 	.__("$('#activity2').toggleClass('inactive active tofront toHidden')")
 		    		, ")")	
 				   	, 100, fct().consoleDebug("'end activity anim'")
 				   )) 	
@@ -137,22 +137,33 @@ public interface TKAnimation extends JSClass {
 			// fermeture activity 2 
 			.__(TKQueue.start(0, fct()   // attente bulle
 					.__("fastdom.mutate(", fct()
-					.__("$('#activity1').css('display', 'block')")
-					, ")")	
-				,10, fct()
+				//	.__("$('#activity1').css('display', 'block')")
+					.__("$('#activity2').addClass('inactive')")
+					, ")")
+				 ,10, fct()   // attente obligatoire pour bug changement de display trop rapide
 				  .__("fastdom.mutate(", fct()
-			   		.__("$('#activity1').toggleClass('active toback backToFront')")
-			   		.__("$('#activity2').addClass('inactive')")
+					.__("$('#activity1').removeClass('toback')")	  
+					.__("$('#activity1').addClass('active backToFront')")
+			   		, ")")	 					
+					
+				,10, fct()   // attente obligatoire pour bug changement de display trop rapide car rejoue les anim en attente
+				  .__("fastdom.mutate(", fct()
+					   	.__("$('#activity2').addClass('toHidden')")
 			   		, ")")	
-			   	,ScnStandard.activitySpeed, fct()
+
+			   	,ScnStandard.activityAnimSpeed, fct()
 			   	 .__("fastdom.mutate(", fct()
 			   		.__("$('#activity1').css('overflow', '')")
 			   		.__("$('#activity1 .navbar').css('top', '0px' )")
-			   		.__("$('#activity1').css('transform-origin', '')")
 					.__("$('body').scrollTop($('#activity1').data('scrolltop'))")
-			   		.__("$('#activity1').removeClass('backToFront')")
+
 			   		.__("$('#activity2').removeClass('active')")
-			   		, ")"),	
+			   		, ")")	
+			 	,100, fct()
+			   	 .__("fastdom.mutate(", fct() 
+			   			 .__("$('#activity1').css('transform-origin', '')")
+					   	 .__("$('#activity1').removeClass('backToFront')")
+			   			, ")"),	
 			   	100, fct().consoleDebug("'end activity anim'")
 			   ))	
 	   .endif();

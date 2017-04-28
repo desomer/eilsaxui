@@ -140,7 +140,7 @@ public interface TKAnimation extends JSClass {
 					.__("$('#activity1').addClass('active backToFront')")
 			   		, ")")	 					
 					
-				,10, fct()   // 100 ms attente obligatoire pour bug changement de display trop rapide car rejoue les anim en attente
+				,50, fct()   // 100 ms attente obligatoire pour bug changement de display trop rapide car rejoue les anim en attente
 				  .__("fastdom.mutate(", fct()
 					   	.__("$('#activity2').addClass('toHidden')")
 			   		, ")")	

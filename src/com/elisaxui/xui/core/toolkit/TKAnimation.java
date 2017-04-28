@@ -25,11 +25,10 @@ public interface TKAnimation extends JSClass {
 						.__("$('.active.activity').toggleClass('activityLeftMenu activityBackMenu')")
 						.__("$('.scene .hamburger.active').toggleClass('is-active changeColorMenu')")
 						.__("$('.active .black_overlay').css('opacity','0')")
-						.__("$('." + ViewMenu.style.cMenu.getId() + "').css('transform', 'translate3d(-"
-								+ (ScnStandard.widthMenu + 5)
-								+ "px,'+$('body').scrollTop()+'px,0px)' )")
+						.__("$('.menu').css('transform', 'translate3d(-"+ (ScnStandard.widthMenu + 5)
+								+ "px,'+$('.scene').scrollTop()+'px,0px)' )")
 						.__("$('.scene .hamburger.active').css('transition','all "+ScnStandard.bugerMenuAnimSpeed+"ms ease-out')"
-								+ ".css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px) scale(1)' )"),
+								+ ".css('transform', 'translate3d(0px,'+$('.scene').scrollTop()+'px,0px) scale(1)' )"),
 				   ")"),		
 				ScnStandard.bugerMenuAnimSpeed, fct()
 				 .__("fastdom.mutate(", fct()
@@ -37,7 +36,7 @@ public interface TKAnimation extends JSClass {
 						.__("$('.active .navbar').css('transform', 'translate3d(0px,0px,0px)' )")
 
 //						.__("$('body').css('position','block')") // plus de scroll
-						.__("$('body').css('overflow','auto')") // remet
+						.__("$('.scene').css('overflow','auto')") // remet
 																// le
 																// scroll
 						.__("$('.active .navbar').removeClass('fixedToAbsolute')")
@@ -56,17 +55,14 @@ public interface TKAnimation extends JSClass {
 				fct()
 				         .__("fastdom.mutate(", fct()
 						// fige la barre nav
-						.__("$('.active .navbar').css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px)' )")
-						.__("$('body').css('overflow','hidden')") // plus de scroll
+						.__("$('.active .navbar').css('transform', 'translate3d(0px,'+$('.scene').scrollTop()+'px,0px)' )")
+						.__("$('.scene').css('overflow','hidden')") // plus de scroll
 //						.__("$('body').css('position','fixed')") // plus de scroll
 						//.__("$('.activity.active').css('overflow','hidden')") // plus de scroll
 						.__("$('.active .navbar').addClass('fixedToAbsolute')") // permet la nav de bouger
 						
-						.__("$('." + ViewMenu.style.cMenu.getId() + "').css('transition', '' )")
-						.__("$('." + ViewMenu.style.cMenu.getId() + "').css('transform', 'translate3d(-"
-								+ ScnStandard.widthMenu
-								+ "px,'+$('body').scrollTop()+'px,0px)' )")
-						
+						.__("$('.menu').css('transition', '' )")
+						.__("$('.menu').css('transform', 'translate3d(-"+ ScnStandard.widthMenu	+ "px,'+$('.scene').scrollTop()+'px,0px)' )")
 						.__("$('.active .black_overlay').css('display','block')")
 						.__("$('.active .hamburger').toggleClass('is-active')"),
 					 ")"),	
@@ -79,7 +75,7 @@ public interface TKAnimation extends JSClass {
 
 						.__("hamburger.addClass('active')")
 						.__("$('.scene').append(hamburger)")
-						.__("hamburger.css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px)' )")  // positionne en haut
+						.__("hamburger.css('transform', 'translate3d(0px,'+$('.scene').scrollTop()+'px,0px)' )")  // positionne en haut
 						
 						.__("$('.active.activity').toggleClass('activityLeftMenu')") // deplace
 																						// l'activity
@@ -87,13 +83,11 @@ public interface TKAnimation extends JSClass {
 																						// louverture
 																						// du
 																						// menu
-						.__("$('." + ViewMenu.style.cMenu.getId()
-								+ "').css('transition', 'transform "+ScnStandard.bugerMenuAnimSpeed+"ms ease-out' )")
-						.__("$('." + ViewMenu.style.cMenu.getId()
-								+ "').css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px)' )")
+						.__("$('.menu').css('transition', 'transform "+ScnStandard.bugerMenuAnimSpeed+"ms ease-out' )")
+						.__("$('.menu').css('transform', 'translate3d(0px,'+$('.scene').scrollTop()+'px,0px)' )")
 						
 						.__("$('.scene .active.hamburger').css('transition','transform "+ScnStandard.bugerMenuAnimSpeed+"ms ease-out')"
-								+ ".css('transform', 'translate3d(-15px,'+(-3+$('body').scrollTop())+'px,0px) scale(0.6)' )")
+								+ ".css('transform', 'translate3d(-15px,'+(-3+$('.scene').scrollTop())+'px,0px) scale(0.6)' )")
 
 				//, ScnStandard.activitySpeed, fct()  // animation des items de menu					
 						._for("var i in window.jsonMainMenu") 
@@ -140,30 +134,27 @@ public interface TKAnimation extends JSClass {
 				//	.__("$('#activity1').css('display', 'block')")
 					.__("$('#activity2').addClass('inactive')")
 					, ")")
-				 ,10, fct()   // attente obligatoire pour bug changement de display trop rapide
+				 ,100, fct()   // attente obligatoire pour bug changement de display trop rapide
 				  .__("fastdom.mutate(", fct()
 					.__("$('#activity1').removeClass('toback')")	  
 					.__("$('#activity1').addClass('active backToFront')")
 			   		, ")")	 					
 					
-				,10, fct()   // attente obligatoire pour bug changement de display trop rapide car rejoue les anim en attente
+				,10, fct()   // 100 ms attente obligatoire pour bug changement de display trop rapide car rejoue les anim en attente
 				  .__("fastdom.mutate(", fct()
 					   	.__("$('#activity2').addClass('toHidden')")
 			   		, ")")	
 
 			   	,ScnStandard.activityAnimSpeed, fct()
 			   	 .__("fastdom.mutate(", fct()
-			   		.__("$('#activity1').css('overflow', '')")
+					.__("$('#activity2').removeClass('active')")
+			   		
 			   		.__("$('#activity1 .navbar').css('top', '0px' )")
-					.__("$('body').scrollTop($('#activity1').data('scrolltop'))")
-
-			   		.__("$('#activity2').removeClass('active')")
-			   		, ")")	
-			 	,100, fct()
-			   	 .__("fastdom.mutate(", fct() 
-			   			 .__("$('#activity1').css('transform-origin', '')")
-					   	 .__("$('#activity1').removeClass('backToFront')")
-			   			, ")"),	
+					.__("$('#activity1').css('overflow', '')")
+		   			.__("$('#activity1').css('transform-origin', '')")
+		   			.__("$('body').scrollTop($('#activity1').data('scrolltop'))")
+		   			.__("$('#activity1').removeClass('backToFront')")
+			   		, ")"),		
 			   	100, fct().consoleDebug("'end activity anim'")
 			   ))	
 	   .endif();

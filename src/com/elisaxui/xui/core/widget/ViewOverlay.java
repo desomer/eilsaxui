@@ -24,7 +24,7 @@ public class ViewOverlay extends XHTMLPart {
 		
 		return xCss()
 				.on(".black_overlay","display: none;	position: absolute;	"
-						+ "top: 0px;    left: 0px;    right: 0px;    bottom: 0px; z-index:1;"
+						+ "top: 0px;    left: 0px;   min-width:100% ; min-height:100%;"
 						+ "background-color: black; will-change:opacity;"
 						+ "opacity:0;z-index:2;")
 				;

@@ -17,12 +17,13 @@ import com.elisaxui.xui.core.toolkit.TKAnimation;
 import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.toolkit.TKRouter;
 import com.elisaxui.xui.core.widget.ViewFloatAction;
-import com.elisaxui.xui.core.widget.ViewOverlay;
 import com.elisaxui.xui.core.widget.button.ViewBtnBurger;
 import com.elisaxui.xui.core.widget.menu.JSMenu;
 import com.elisaxui.xui.core.widget.menu.ViewMenu;
 import com.elisaxui.xui.core.widget.navbar.JSNavBar;
 import com.elisaxui.xui.core.widget.navbar.ViewNavBar;
+import com.elisaxui.xui.core.widget.overlay.JSOverlay;
+import com.elisaxui.xui.core.widget.overlay.ViewOverlay;
 
 @xFile(id = "standard")
 @xComment("activite standard")
@@ -33,7 +34,7 @@ public class ScnStandard extends XHTMLPart {
 	
 	public static final int bugerMenuAnimSpeed = 200;
 	public static final int activityAnimSpeed = 300;
-	public static final int overlaySpeed = 500;
+	public static final int overlaySpeed = 400;
 	
 	public static final String bgColor = "background: linear-gradient(to right, rgba(253,94,176,1) 0%, rgba(255,0,136,1) 64%, rgba(239,1,124,1) 100%);";
     //public static final String bgColorMenu = "background: linear-gradient(to right, rgba(239,1,124,0.5) 0%, rgba(255,0,136,0.68) 36%, rgba(253,94,176,1) 100%);";
@@ -54,6 +55,7 @@ public class ScnStandard extends XHTMLPart {
 				xImport(JSDataDriven.class),
 				xImport(JSDataSet.class),
 				xImport(JSDataCtx.class),
+				xImport(JSOverlay.class),
 				xImport(TKRouter.class),
 				xImport(TKAnimation.class)
 				);

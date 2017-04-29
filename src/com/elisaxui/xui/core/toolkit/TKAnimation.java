@@ -5,7 +5,7 @@ package com.elisaxui.xui.core.toolkit;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
 import com.elisaxui.xui.core.page.ScnStandard;
-import com.elisaxui.xui.core.widget.menu.ViewMenu;
+import com.elisaxui.xui.core.widget.overlay.JSOverlay;
 
 /**
  * @author Bureau
@@ -13,18 +13,21 @@ import com.elisaxui.xui.core.widget.menu.ViewMenu;
  */
 public interface TKAnimation extends JSClass {
 
+	JSOverlay _overlay = null;
+	
 	
 	default Object doOpenBurgerMenu() {
-		__()
+		var(_overlay, _new(ScnStandard.overlaySpeed, 0.3))
 		// ferme le menu
 		._if("$('.active .fixedToAbsolute').hasClass('fixedToAbsolute')")
 		.__(TKQueue.start(
 				fct()
 				    .__("fastdom.mutate(", fct()
-						.__("$('.active .logo').toggleClass('animated shake')")  // retire le shake
+//						.__("$('.active .logo').toggleClass('animated shake')")  // retire le shake
 						.__("$('.active.activity').toggleClass('activityLeftMenu activityBackMenu')")
 						.__("$('.scene .hamburger.active').toggleClass('is-active changeColorMenu')")
-						.__("$('.active .black_overlay').css('opacity','0')")
+//						.__("$('.active .black_overlay').css('opacity','0')")
+						.__(_overlay.doHide(1))
 						.__("$('.menu').css('transform', 'translate3d(-"+ (ScnStandard.widthMenu + 5)
 								+ "px,'+$('.scene').scrollTop()+'px,0px)' )")
 						.__("$('.scene .hamburger.active').css('transition','all "+ScnStandard.bugerMenuAnimSpeed+"ms ease-out')"
@@ -32,7 +35,8 @@ public interface TKAnimation extends JSClass {
 				   ")"),		
 				ScnStandard.bugerMenuAnimSpeed, fct()
 				 .__("fastdom.mutate(", fct()
-						.__("$('.active .black_overlay').css('display','none')")
+//						.__("$('.active .black_overlay').css('display','none')")
+						.__(_overlay.doHide(2))
 						.__("$('.active .navbar').css('transform', 'translate3d(0px,0px,0px)' )")
 
 //						.__("$('body').css('position','block')") // plus de scroll
@@ -63,40 +67,41 @@ public interface TKAnimation extends JSClass {
 						
 						.__("$('.menu').css('transition', '' )")
 						.__("$('.menu').css('transform', 'translate3d(-"+ ScnStandard.widthMenu	+ "px,'+$('.scene').scrollTop()+'px,0px)' )")
-						.__("$('.active .black_overlay').css('display','block')")
+						//.__("$('.active .black_overlay').css('display','block')")
+						.__(_overlay.doShow(1))
 						.__("$('.active .hamburger').toggleClass('is-active')"),
 					 ")"),	
 				//  100, fct().__("$('.active .hamburger').toggleClass('changeColorMenu')"), // passe en back
-				 50, fct()    	// attent passage en croix
+				 300, fct()    	// attent passage en croix
 				 		.__("fastdom.mutate(", fct()
-						.__("$('.active .black_overlay').css('transition','opacity "+ScnStandard.overlaySpeed+"ms ease-out')")
-						.__("$('.active .black_overlay').css('opacity','0.3')")
+				 		.__(_overlay.doShow(2))
+					//	.__("$('.active .black_overlay').css('transition','opacity "+ScnStandard.overlaySpeed+"ms ease-out')")
+					//	.__("$('.active .black_overlay').css('opacity','0.3')")
 						.var("hamburger", "$('.active .hamburger').detach()")	
 
 						.__("hamburger.addClass('active')")
 						.__("$('.scene').append(hamburger)")
 						.__("hamburger.css('transform', 'translate3d(0px,'+$('.scene').scrollTop()+'px,0px)' )")  // positionne en haut
 						
-						.__("$('.active.activity').toggleClass('activityLeftMenu')") // deplace
-																						// l'activity
-																						// a
-																						// louverture
-																						// du
-																						// menu
+						// deplace l'activity a louverture du menu
+						.__("$('.active.activity').toggleClass('activityLeftMenu')") 
+
 						.__("$('.menu').css('transition', 'transform "+ScnStandard.bugerMenuAnimSpeed+"ms ease-out' )")
 						.__("$('.menu').css('transform', 'translate3d(0px,'+$('.scene').scrollTop()+'px,0px)' )")
 						
 						.__("$('.scene .active.hamburger').css('transition','transform "+ScnStandard.bugerMenuAnimSpeed+"ms ease-out')"
 								+ ".css('transform', 'translate3d(-15px,'+(-3+$('.scene').scrollTop())+'px,0px) scale(0.6)' )")
 
-				//, ScnStandard.activitySpeed, fct()  // animation des items de menu					
+						// anim des item de menu	
 						._for("var i in window.jsonMainMenu") 
 						.__("setTimeout(", fct("elem")
 								.__("elem.anim='fadeInLeft'")
 								.__("elem.anim=''"), ",(i*"+10+"), window.jsonMainMenu[i])")
 						.endfor()
 						, ")")	
-				, ScnStandard.bugerMenuAnimSpeed, fct().__("$('.active .logo').toggleClass('animated shake')").consoleDebug("'end anim'")
+				, ScnStandard.bugerMenuAnimSpeed, fct()
+										//.__("$('.active .logo').toggleClass('animated shake')")
+										.consoleDebug("'end anim'")
 				  )
 				)
 		.endif();
@@ -105,10 +110,15 @@ public interface TKAnimation extends JSClass {
 	
 	default Object doOpenActivity()
 	{
-		__()
+		var(_overlay, _new(ScnStandard.activityAnimSpeed, 0.6))
 	    ._if("$('#activity1').hasClass('active')")
 	         // ouverture activity 2
-		     .__(TKQueue.start(0, fct()   // attente bulle
+		     .__(TKQueue.start(
+		    		 fct() 
+			 	    	.__("fastdom.mutate(", fct()
+						   	.__(_overlay.doShow(1))
+			 	    			, ")")	
+		    		 ,100, fct()   // attente bulle
 		 	    	.__("fastdom.mutate(", fct()
 		    		 	.var("sct", "$('body').scrollTop()")
 				   		.__("$('#activity1').data('scrolltop', sct ) ") 
@@ -118,6 +128,8 @@ public interface TKAnimation extends JSClass {
 				   		.__("$('#activity1').scrollTop(sct)")
 				   		.__("$('#activity1').addClass('toback')")
 				   		.__("$('#activity2').addClass('tofront')")
+
+		    		 	.__(_overlay.doShow(2))
 				   	, ")")	
 				   	,ScnStandard.activityAnimSpeed, fct()
 				     	.__("fastdom.mutate(", fct()
@@ -133,6 +145,7 @@ public interface TKAnimation extends JSClass {
 					.__("fastdom.mutate(", fct()
 				//	.__("$('#activity1').css('display', 'block')")
 					.__("$('#activity2').addClass('inactive')")
+
 					, ")")
 				 ,100, fct()   // attente obligatoire pour bug changement de display trop rapide
 				  .__("fastdom.mutate(", fct()
@@ -143,6 +156,7 @@ public interface TKAnimation extends JSClass {
 				,50, fct()   // 100 ms attente obligatoire pour bug changement de display trop rapide car rejoue les anim en attente
 				  .__("fastdom.mutate(", fct()
 					   	.__("$('#activity2').addClass('toHidden')")
+						.__(_overlay.doHide(1))
 			   		, ")")	
 
 			   	,ScnStandard.activityAnimSpeed, fct()
@@ -154,6 +168,7 @@ public interface TKAnimation extends JSClass {
 		   			.__("$('#activity1').css('transform-origin', '')")
 		   			.__("$('body').scrollTop($('#activity1').data('scrolltop'))")
 		   			.__("$('#activity1').removeClass('backToFront')")
+					.__(_overlay.doHide(2))
 			   		, ")"),		
 			   	100, fct().consoleDebug("'end activity anim'")
 			   ))	

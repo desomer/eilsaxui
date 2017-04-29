@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.xui.core.widget;
+package com.elisaxui.xui.core.widget.overlay;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
@@ -25,7 +25,7 @@ public class ViewOverlay extends XHTMLPart {
 		return xCss()
 				.on(".black_overlay","display: none;	position: absolute;	"
 						+ "top: 0px;    left: 0px;   min-width:100% ; min-height:100%;"
-						+ "background-color: black; will-change:opacity;"
+						+ "background-color: black; will-change:opacity, display;"
 						+ "opacity:0;z-index:2;")
 				;
 	}

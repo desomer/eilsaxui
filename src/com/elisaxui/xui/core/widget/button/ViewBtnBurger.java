@@ -10,6 +10,7 @@ import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.xui.core.page.ScnStandard;
 
 /**
  * @author Bureau
@@ -50,7 +51,7 @@ public class ViewBtnBurger extends XHTMLPart {
 						+ ".hamburger.changeColorMenu .hamburger-inner:before",
 						"background-color: #fff; transition-property:all !important; transition-duration:500ms !important;")
 
-				.on(cLeftBtn, "position: absolute;top: 0px; left: 0px; z-index: 3; outline:0 !important") // pas
+				.on(cLeftBtn, "position: absolute;top: 0px; left: 0px; z-index: "+ScnStandard.ZINDEX_MENU+"; outline:0 !important") // pas
 																											// de
 																											// bord
 																											// bleu

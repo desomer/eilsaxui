@@ -46,7 +46,7 @@ public class ViewMenu extends XHTMLPart {
 	public Element xStyle() {
 
 		return xCss()
-				.on(cMenu, "z-index: 3;background-color: #ffffff;height: 120%;width: " + ScnStandard.widthMenu
+				.on(cMenu, "z-index: "+ScnStandard.ZINDEX_MENU+";background-color: #ffffff;height: 120%;width: " + ScnStandard.widthMenu
 						+ "px; color:black;"
 						+ "box-shadow: 4px 4px 2px 0 rgba(0,0,0,0.14);will-change:transform;")
 				.on(cFixedLeft,

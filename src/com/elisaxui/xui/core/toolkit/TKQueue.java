@@ -20,49 +20,49 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 @xComment("TKQueue")
 public class TKQueue extends XHTMLPart {
 
-	String queuejs = "var TKQueue = function() {\n"+
-			"\tvar api = null, self = this;\n"+
-			"\tvar\tqueueElements = [], queueElementsSource = [];\n"+
-			"\tvar\tisNumber = function(n) { return !isNaN(parseFloat(n)) && isFinite(n); };\n"+
-			"\tvar flags = {}, interval = null;\n"+
-			"\tvar processing = function() {\n"+
-			"\t\tif(queueElements.length > 0) {\n"+
-			"\t\t\tvar item = queueElements.shift();\n"+
-			"\t\t\tif(flags.stop !== true) {\n"+
-			"\t\t\t\tif(isNumber(item)) { // delay\n"+
-			"\t\t\t\t\tinterval = setTimeout(api, item);\n"+
-			"\t\t\t\t} else if(typeof item === \'function\') { // functions\n"+
-			"\t\t\t\t\titem();\n"+
-			"\t\t\t\t\tapi();\n"+
-			"\t\t\t\t}\n"+
-			"\t\t\t} else {\n"+
-			"\t\t\t\tclearTimeout(interval);\n"+
-			"\t\t\t}\n"+
-			"\t\t} else {\n"+
-			"\t\t\tif(typeof flags.callback !== \'undefined\') flags.callback();\n"+
-			"\t\t\tif(flags.loop) {\n"+
-			"\t\t\t\tqueueElements = [];\n"+
-			"\t\t\t\tfor(var i=0; el=queueElementsSource[i]; i++) {\n"+
-			"\t\t\t\t\tqueueElements.push(el);\n"+
-			"\t\t\t\t}\n"+
-			"\t\t\t\tapi();\n"+
-			"\t\t\t}\n"+
-			"\t\t}\t\n"+
-			"\t}\n"+
-			"\tvar filling = function() {\n"+
-			"\t\tvar item = arguments[0];\n"+
-			"\t\tif(isNumber(item) || typeof item === \'function\') {\n"+
-			"\t\t\tqueueElements.push(item);\n"+
-			"\t\t\tqueueElementsSource.push(item);\t\n"+
-			"\t\t} else if(typeof item === \'string\') {\n"+
-			"\t\t\tflags[item] = arguments[1] || true;\n"+
-			"\t\t}\n"+
-			"\t}\n"+
-			"\treturn api = function() {\n"+
-			"\t\targuments.length === 0 ? processing() : filling.apply(self, arguments);\n"+
-			"\t\treturn api;\n"+
-			"\t}\n"+
-			"\treturn api;\n"+
+	String queuejs = "var TKQueue = function() {"+
+			"var api = null, self = this;\n"+
+			"var queueElements = [], queueElementsSource = [];\n"+
+			"var isNumber = function(n) { return !isNaN(parseFloat(n)) && isFinite(n); };\n"+
+			"var flags = {}, interval = null;\n"+
+			"var processing = function() {\n"+
+			"	if(queueElements.length > 0) {\n"+
+			"		var item = queueElements.shift();\n"+
+			"		if(flags.stop !== true) {\n"+
+			"			if(isNumber(item)) { // delay\n"+
+			"				interval = setTimeout(api, item);\n"+
+			"			} else if(typeof item === \'function\') { // functions\n"+
+			"				item();\n"+
+			"				api();\n"+
+			"			}\n"+
+			"		} else {\n"+
+			"			clearTimeout(interval);\n"+
+			"		}\n"+
+			"	} else {\n"+
+			"		if(typeof flags.callback !== \'undefined\') flags.callback();\n"+
+			"			if(flags.loop) {\n"+
+			"				queueElements = [];\n"+
+			"				for(var i=0; el=queueElementsSource[i]; i++) {\n"+
+			"					queueElements.push(el);\n"+
+			"				}\n"+
+			"			api();\n"+
+			"			}\n"+
+			"		}\t\n"+
+			"	}\n"+
+			"var filling = function() {\n"+
+			"var item = arguments[0];\n"+
+			"if(isNumber(item) || typeof item === \'function\') {\n"+
+			"		queueElements.push(item);\n"+
+			"		queueElementsSource.push(item);\t\n"+
+			"	} else if(typeof item === \'string\') {\n"+
+			"		flags[item] = arguments[1] || true;\n"+
+			"	}\n"+
+			"}\n"+
+			"return api = function() {\n"+
+			"		arguments.length === 0 ? processing() : filling.apply(self, arguments);\n"+
+			"		return api;\n"+
+			"	}\n"+
+			"return api;\n"+
 			"}";
 			
 	@xTarget(HEADER.class)
@@ -75,7 +75,8 @@ public class TKQueue extends XHTMLPart {
 	public static final Object[] start(Object... param)
 	{
 		ArrayList<Object> ret = new ArrayList<>();
-		ret.add("window.animInProgess=true;\nTKQueue()");
+		ret.add("window.animInProgess=true;\n");
+		ret.add("TKQueue()");
 		for (Object  object: param) {
 			ret.add("(");
 			ret.add(object);

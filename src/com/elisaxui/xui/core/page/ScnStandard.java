@@ -32,9 +32,15 @@ public class ScnStandard extends XHTMLPart {
 	public static final int heightNavBar = 53;
 	public static final int widthMenu = 250;
 	
-	public static final int bugerMenuAnimSpeed = 200;
-	public static final int activityAnimSpeed = 300;
-	public static final int overlaySpeed = 400;
+	public static final int SPEDD_SHOW_BURGERMENU = 200;
+	public static final int SPEED_SHOW_ACTIVITY = 300;
+	public static final int SPEED_SHOW_OVERLAY = 400;
+	
+//	public static final int ZINDEX_TO_FRONT = 2;
+	public static final int ZINDEX_NAV_BAR = 1;
+	public static final int ZINDEX_MENU = 2;
+	public static final int ZINDEX_FLOAT = 3;
+	public static final int ZINDEX_OVERLAY = 4;
 	
 	public static final String bgColor = "background: linear-gradient(to right, rgba(253,94,176,1) 0%, rgba(255,0,136,1) 64%, rgba(239,1,124,1) 100%);";
     //public static final String bgColorMenu = "background: linear-gradient(to right, rgba(239,1,124,0.5) 0%, rgba(255,0,136,0.68) 36%, rgba(253,94,176,1) 100%);";
@@ -91,24 +97,22 @@ public class ScnStandard extends XHTMLPart {
 				
 				
 			//	.on(".activity.active", "z-index:1;")
-				
-				.on(".activity.inactive", "transition:transform "+activityAnimSpeed+"ms ease-out; position: fixed; top: 0px;left: 0px; right: 0px; bottom: 0px;"
+				.on(".activity.inactive.hidden", "position: fixed;") 
+				.on(".activity.inactive", "transition:transform "+SPEED_SHOW_ACTIVITY+"ms ease-out; top: 0px;left: 0px; right: 0px; bottom: 0px;"
 						+ "backface-visibility: hidden;"
 						+ "box-shadow: 3px 3px 3px 0 rgba(0,0,0,.24);")
 
-				.on(".activity.backToFront", "transition:transform "+(activityAnimSpeed+100)+"ms ease-out;"
-						//+ " overflow:hidden;"
+				.on(".activity.backToFront", "transition:transform "+(SPEED_SHOW_ACTIVITY+100)+"ms ease-out;"
 						)
-				.on(".activity.toback", "transition:transform "+activityAnimSpeed+"ms ease-out; transform:translate3d(0px,0px,0px) scale(0.8); "
-						//+ "overflow:hidden;"
+				.on(".activity.toback", "transition:transform "+SPEED_SHOW_ACTIVITY+"ms ease-out; transform:translate3d(0px,0px,0px) scale(0.8); "
 						)
 				.on(".activity.inactive.toHidden", "transform: translate3d(0px,100%,0px);")
-				.on(".activity.inactive.tofront", "transition:transform "+activityAnimSpeed+"ms ease-out; transform: translate3d(0px,0px,0px); z-index: 2;")
+				.on(".activity.inactive.tofront", "transition:transform "+SPEED_SHOW_ACTIVITY+"ms ease-out; transform: translate3d(0px,0px,0px);") //z-inde2x: "+ZINDEX_TO_FRONT+";
 
 				
 				
-				.on(".activityLeftMenu", "transition:transform "+bugerMenuAnimSpeed+"ms ease-out; transform: translate3d("+(widthMenu-100)+"px,0px,0px);")
-				.on(".activityBackMenu", "transition:transform "+bugerMenuAnimSpeed+"ms ease-out; transform: translate3d(0px,0px,0px);")
+				.on(".activityMoveForShowMenu", "transition:transform "+SPEDD_SHOW_BURGERMENU+"ms ease-out; transform: translate3d("+(widthMenu-100)+"px,0px,0px);")
+				.on(".activityMoveForHideMenu", "transition:transform "+SPEDD_SHOW_BURGERMENU+"ms ease-out; transform: translate3d(0px,0px,0px);")
 				
 				.on("#content", "height:3000px; position:relative")
 				
@@ -150,17 +154,17 @@ public class ScnStandard extends XHTMLPart {
 					xDiv(xId("activity1"), xAttr("class", "'activity active'")
 							,xPart(new ViewNavBar().addProperty(ViewNavBar.PROPERTY_NAME, "NavBar1"))
 							,xDiv(xAttr("class", "'content'") 
-							//	, xPart(new ViewFloatAction())
-								, xDiv(xAttr("id",txt("content")))
+								, xPart(new ViewFloatAction())
+								, xDiv(xAttr("id",txt("content2")))
 								, xPart(new ViewOverlay())
 							)
 							
 				        )
-					,xDiv(xId("activity2"), xAttr("class", "'activity inactive toHidden'")
+					,xDiv(xId("activity2"), xAttr("class", "'activity inactive hidden toHidden'")
 							, xPart(new ViewNavBar().addProperty(ViewNavBar.PROPERTY_NAME, "NavBar2"))
 							, xDiv(xAttr("class", "'content'") 	
 								//	, xPart(new ViewFloatAction())
-									, xDiv(xAttr("id",txt("content2")))
+									, xDiv(xAttr("id",txt("content")))
 							, xPart(new ViewOverlay())
 						   )	
 					     )
@@ -238,8 +242,8 @@ public class ScnStandard extends XHTMLPart {
 				.__(testDataDriven.startTest())				
 				
 				
-				.__(NavBarAnimated1)
-				.__(NavBarAnimated2)	
+				//.__(NavBarAnimated1)
+				//.__(NavBarAnimated2)	
 			);
 	}
 	
@@ -276,13 +280,13 @@ public class ScnStandard extends XHTMLPart {
 								.endif()
 							._elseif("anim==true && ev.offsetDirection==2 ")
 								.set("anim", "false")
-								.__("$('.menu').css('transition', 'transform "+(bugerMenuAnimSpeed+50)+"ms ease-out' )")
+								.__("$('.menu').css('transition', 'transform "+(SPEDD_SHOW_BURGERMENU+50)+"ms ease-out' )")
 								.__(tkrouter.doEvent("'Overlay'"))
 							.endif()
 							
 							._if("ev.isFinal")
 								._if("anim==true")
-									.__("$('.menu').css('transition', 'transform "+(bugerMenuAnimSpeed+50)+"ms ease-out' )")
+									.__("$('.menu').css('transition', 'transform "+(SPEDD_SHOW_BURGERMENU+50)+"ms ease-out' )")
 									.__("$('.menu').css('transform', 'translate3d(0px,'+$('.scene').scrollTop()+'px,0px)' )")
 								.endif()
 								.set("anim", "true")

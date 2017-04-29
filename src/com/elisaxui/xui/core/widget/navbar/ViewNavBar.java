@@ -34,7 +34,7 @@ public class ViewNavBar extends XHTMLPart {
 	public Element xStyle() {
 		
 		return xCss()    //"+ScnStandard.bgColor+"
-				.on(".navbar","z-index: 2;  "+ScnStandard.bgColor+" height: "+ScnStandard.heightNavBar+"px;width: 100%; color:white; "
+				.on(".navbar","z-index: "+ScnStandard.ZINDEX_NAV_BAR+";  "+ScnStandard.bgColor+" height: "+ScnStandard.heightNavBar+"px;width: 100%; color:white; "
 						+ "box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);")
 				
 				.on(".fixedTop", "position:fixed; top:0px; transform:translate3d(0px,0px,0px); backface-visibility: hidden;")
@@ -43,8 +43,8 @@ public class ViewNavBar extends XHTMLPart {
 				.on(".rightAction", "position: absolute; right: 0px;  top: 0px;  height: 100%;  width: auto;")
 				.on(".actionBtn", "margin: 0; padding: 8px;  font-size: 36px !important;  cursor: pointer;")
 				
-				.on(".center", "z-index:1;height:100%; display: flex; align-items: center;justify-content: center")
-				.on(".logo", "z-index:inherit; color: inherit; font-size: 2.1rem; animation-duration: 700ms;")
+				.on(".center", "z-index:"+(ScnStandard.ZINDEX_NAV_BAR+1)+";height:100%; display: flex; align-items: center;justify-content: center")
+				.on(".logo", "z-index:"+(ScnStandard.ZINDEX_NAV_BAR+1)+"; color: inherit; font-size: 2.1rem; animation-duration: 700ms;")
 				
 				.on(animatedBg, "position: absolute; display: block;  width: 100%; height: 100%; top: 0; right: 0; bottom: 0; left: 0;")
 				

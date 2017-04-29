@@ -9,6 +9,7 @@ import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.xui.core.page.ScnStandard;
 import com.elisaxui.xui.core.widget.button.ViewBtnCircle;
 
 /**
@@ -40,7 +41,7 @@ public class ViewFloatAction extends XHTMLPart {
 	public Element xStyle() {
 
 		return xCss()
-				.on(cFloatAction, "z-index:10; position: fixed; right: 15px; bottom: 15px;  transform: translate3d(0px,0px,0px);")
+				.on(cFloatAction, "z-index:"+ScnStandard.ZINDEX_FLOAT+"; position: fixed; right: 15px; bottom: 15px;  transform: translate3d(0px,0px,0px);")
 		;
 	}
 	

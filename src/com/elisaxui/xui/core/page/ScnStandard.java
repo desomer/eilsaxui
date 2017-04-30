@@ -18,6 +18,7 @@ import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.toolkit.TKRouter;
 import com.elisaxui.xui.core.widget.ViewFloatAction;
 import com.elisaxui.xui.core.widget.button.ViewBtnBurger;
+import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
 import com.elisaxui.xui.core.widget.menu.JSMenu;
 import com.elisaxui.xui.core.widget.menu.ViewMenu;
 import com.elisaxui.xui.core.widget.navbar.JSNavBar;
@@ -32,20 +33,21 @@ public class ScnStandard extends XHTMLPart {
 	public static final int heightNavBar = 53;
 	public static final int widthMenu = 250;
 	
-	public static final int SPEDD_SHOW_BURGERMENU = 200;
+	public static final int SPEED_SHOW_BURGERMENU = 200;
 	public static final int SPEED_SHOW_ACTIVITY = 300;
 	public static final int SPEED_SHOW_OVERLAY = 400;
+	public static final int SPEED_RIPPLE_EFFECT = 50;
 	
-//	public static final int ZINDEX_TO_FRONT = 2;
 	public static final int ZINDEX_NAV_BAR = 1;
 	public static final int ZINDEX_MENU = 2;
 	public static final int ZINDEX_FLOAT = 3;
 	public static final int ZINDEX_OVERLAY = 4;
 	
 	public static final String bgColor = "background: linear-gradient(to right, rgba(253,94,176,1) 0%, rgba(255,0,136,1) 64%, rgba(239,1,124,1) 100%);";
-    //public static final String bgColorMenu = "background: linear-gradient(to right, rgba(239,1,124,0.5) 0%, rgba(255,0,136,0.68) 36%, rgba(253,94,176,1) 100%);";
-	public static final String bgColorMenu = "background: linear-gradient(to right, rgba(121, 119, 120, 0.5) 0%, rgba(176, 179, 181, 0.68) 36%, rgb(136, 131, 134) 100%);";
-	@xTarget(HEADER.class)
+    public static final String bgColorMenu = "background: linear-gradient(to right, rgba(239,1,124,0.5) 0%, rgba(255,0,136,0.68) 36%, rgba(253,94,176,1) 100%);";
+	//public static final String bgColorMenu = "background: linear-gradient(to right, rgba(121, 119, 120, 0.5) 0%, rgba(176, 179, 181, 0.68) 36%, rgb(136, 131, 134) 100%);";
+
+    @xTarget(HEADER.class)
 	@xRessource
 	public Element xTitle() {
 		return xElement("title", "le standard");
@@ -97,7 +99,7 @@ public class ScnStandard extends XHTMLPart {
 				
 				
 			//	.on(".activity.active", "z-index:1;")
-				.on(".activity.inactive.hidden", "position: fixed;") 
+				.on(".activity.inactive.inactivefixed", "position: fixed;") 
 				.on(".activity.inactive", "transition:transform "+SPEED_SHOW_ACTIVITY+"ms ease-out; top: 0px;left: 0px; right: 0px; bottom: 0px;"
 						+ "backface-visibility: hidden;"
 						+ "box-shadow: 3px 3px 3px 0 rgba(0,0,0,.24);")
@@ -111,8 +113,8 @@ public class ScnStandard extends XHTMLPart {
 
 				
 				
-				.on(".activityMoveForShowMenu", "transition:transform "+SPEDD_SHOW_BURGERMENU+"ms ease-out; transform: translate3d("+(widthMenu-100)+"px,0px,0px);")
-				.on(".activityMoveForHideMenu", "transition:transform "+SPEDD_SHOW_BURGERMENU+"ms ease-out; transform: translate3d(0px,0px,0px);")
+				.on(".activityMoveForShowMenu", "transition:transform "+SPEED_SHOW_BURGERMENU+"ms ease-out; transform: translate3d("+(widthMenu-100)+"px,0px,0px);")
+				.on(".activityMoveForHideMenu", "transition:transform "+SPEED_SHOW_BURGERMENU+"ms ease-out; transform: translate3d(0px,0px,0px);")
 				
 				.on("#content", "height:3000px; position:relative")
 				
@@ -160,7 +162,7 @@ public class ScnStandard extends XHTMLPart {
 							)
 							
 				        )
-					,xDiv(xId("activity2"), xAttr("class", "'activity inactive hidden toHidden'")
+					,xDiv(xId("activity2"), xAttr("class", "'activity inactive inactivefixed toHidden'")
 							, xPart(new ViewNavBar().addProperty(ViewNavBar.PROPERTY_NAME, "NavBar2"))
 							, xDiv(xAttr("class", "'content'") 	
 								//	, xPart(new ViewFloatAction())
@@ -257,6 +259,21 @@ public class ScnStandard extends XHTMLPart {
 			   .consoleDebug("'ok ActionManager'") 
 			   .__("$('.scene').on('touchstart',", fct('e')//.consoleDebug("e") 
 					   .var("btn", "$(e.target).closest('[data-x-action]')")
+					   .var("ripple", "btn")
+					   ._if( "! ripple.hasClass('",  ViewRippleEffect.cRippleEffect().getId(), "')")
+					   		.set("ripple", "btn.closest('.",  ViewRippleEffect.cRippleEffect().getId(), "')")
+							._if( "! ripple.hasClass('",  ViewRippleEffect.cRippleEffect().getId(), "')")
+					   			.set("ripple", "btn.children('.",  ViewRippleEffect.cRippleEffect().getId(), "')")
+					   		.endif()	
+					   .endif()
+					   ._if( "ripple.length>0")
+						   .__(TKQueue.startAlone(fct()
+						   			.__("ripple.addClass('", ViewRippleEffect.cRippleEffectShow().getId() ,"')")
+						   			,300, fct().__("ripple.removeClass('", ViewRippleEffect.cRippleEffectShow().getId() ,"')")
+								   )
+							)
+					   .endif()
+					   
 					   .var("event", "btn.data('x-action')")
 					   .__(tkrouter.doEvent("event"))
 					   , ")")
@@ -280,13 +297,13 @@ public class ScnStandard extends XHTMLPart {
 								.endif()
 							._elseif("anim==true && ev.offsetDirection==2 ")
 								.set("anim", "false")
-								.__("$('.menu').css('transition', 'transform "+(SPEDD_SHOW_BURGERMENU+50)+"ms ease-out' )")
+								.__("$('.menu').css('transition', 'transform "+(SPEED_SHOW_BURGERMENU+50)+"ms ease-out' )")
 								.__(tkrouter.doEvent("'Overlay'"))
 							.endif()
 							
 							._if("ev.isFinal")
 								._if("anim==true")
-									.__("$('.menu').css('transition', 'transform "+(SPEDD_SHOW_BURGERMENU+50)+"ms ease-out' )")
+									.__("$('.menu').css('transition', 'transform "+(SPEED_SHOW_BURGERMENU+50)+"ms ease-out' )")
 									.__("$('.menu').css('transform', 'translate3d(0px,'+$('.scene').scrollTop()+'px,0px)' )")
 								.endif()
 								.set("anim", "true")

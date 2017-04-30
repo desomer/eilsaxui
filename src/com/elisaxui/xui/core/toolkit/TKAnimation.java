@@ -15,91 +15,94 @@ public interface TKAnimation extends JSClass {
 
 	JSOverlay _overlay = null;
 	
-	
 	default Object doOpenBurgerMenu() {
 		var(_overlay, _new(ScnStandard.SPEED_SHOW_OVERLAY, 0.3))
+		.var("jqMenu", "$('.menu')")
+		.var("jqScene", "$('.scene')")
+		.var("jqNavBar", "$('.activity.active .navbar')")
+		.var("jqActivityActive", "$('.activity.active')")
+		.var("sct", "$('.scene').scrollTop()")
+		
 		// ferme le menu
-		._if("$('.active .fixedToAbsolute').hasClass('fixedToAbsolute')")
-		.__(TKQueue.start(
+		._if("jqNavBar.hasClass('fixedToAbsolute')")
+			.var("jqHamburgerDetach", "$('.scene .hamburger.detach')")
+			.__(TKQueue.start(
 				fct()
-				    .__("fastdom.mutate(", fct()
 //						.__("$('.active .logo').toggleClass('animated shake')")  // retire le shake
-						.__("$('.active.activity').toggleClass('activityMoveForShowMenu activityMoveForHideMenu')")
-						.__("$('.scene .hamburger.active').toggleClass('is-active changeColorMenu')")
-//						.__("$('.active .black_overlay').css('opacity','0')")
-						.__(_overlay.doHide(1))
-						.__("$('.menu').css('transform', 'translate3d(-"+ (ScnStandard.widthMenu + 5)
-								+ "px,'+$('.scene').scrollTop()+'px,0px)' )")
-						.__("$('.scene .hamburger.active').css('transition','all "+ScnStandard.SPEDD_SHOW_BURGERMENU+"ms ease-out')"
-								+ ".css('transform', 'translate3d(0px,'+$('.scene').scrollTop()+'px,0px) scale(1)' )"),
-				   ")"),		
-				ScnStandard.SPEDD_SHOW_BURGERMENU, fct()
-				 .__("fastdom.mutate(", fct()
-//						.__("$('.active .black_overlay').css('display','none')")
+						.__("jqHamburgerDetach.removeClass('is-active changeColorMenu')")
+				, 200, fct()   // attente ouverte burger		
+				    	.__(_overlay.doHide(1))
+				    	//-------------------------- repositionne l'activity --------------------
+				    	.__("jqActivityActive.removeClass('activityMoveForShowMenu')")
+						.__("jqActivityActive.addClass('activityMoveForHideMenu')")
+						//----------------------------- cache le menu ------------------------
+						.__("jqMenu.css('transform', 'translate3d(-"+ (ScnStandard.widthMenu + 5)+ "px,'+sct+'px,0px)' )")
+						//----------------------------- repasse en croix ----------------------
+						.__("jqHamburgerDetach.css('transition','all "+ScnStandard.SPEED_SHOW_BURGERMENU+"ms ease-out')")
+						.__("jqHamburgerDetach.css('transform', 'translate3d(0px,'+sct+'px,0px) scale(1)' )")
+						
+				, ScnStandard.SPEED_SHOW_BURGERMENU, fct()
 						.__(_overlay.doHide(2))
-						.__("$('.active .navbar').css('transform', 'translate3d(0px,0px,0px)' )")
+						//-----------  fige la barre nav en haut  (fixed) --------
+						.__("jqNavBar.css('transform', 'translate3d(0px,0px,0px)' )")
+						.__("jqScene.css('overflow','auto')") // remet le scroll
+						.__("$('body').css('overflow','auto')") // remet de scroll
+						.__("jqNavBar.removeClass('fixedToAbsolute')")
+						// anime le burger et le passe de la scene vers l'activity
+						.var("hamburger", "jqHamburgerDetach.detach()")
+						.__("hamburger.removeClass('detach')")
+						.__("jqNavBar.append(hamburger)")
+						.__("hamburger.css('transition','none "+ScnStandard.SPEED_SHOW_BURGERMENU+"ms ease-out')")
+						.__("hamburger.css('transform', 'translate3d(0px,0px,0px) scale(1)' )")
+						
+						//-------------------------- fin du repositionnement l'activity --------------------
+						.__("jqActivityActive.removeClass('activityMoveForHideMenu')"),
 
-//						.__("$('body').css('position','block')") // plus de scroll
-						.__("$('.scene').css('overflow','auto')") // remet
-																// le
-																// scroll
-						.__("$('.active .navbar').removeClass('fixedToAbsolute')")
-						.var("hamburger", "$('.scene .hamburger.active').detach()")
-						.__("hamburger.removeClass('active')")
-						.__("$('.active .navbar').append(hamburger)")
-						.__("$('.active.activity').removeClass('activityMoveForHideMenu')")
-						.__("hamburger.css('transition','none "+ScnStandard.SPEDD_SHOW_BURGERMENU+"ms ease-out').css('transform', 'translate3d(0px,0px,0px) scale(1)' )"),
-					")"),	
 				1, fct().consoleDebug("'end anim'")
 				)
 			)
 		._else()
+		.var("jqHamburger", "$('.activity.active .hamburger')")
 		// ouvre le menu
 		.__(TKQueue.start(
 				fct()
-				         .__("fastdom.mutate(", fct()
-						// fige la barre nav
-						.__("$('.active .navbar').css('transform', 'translate3d(0px,'+$('.scene').scrollTop()+'px,0px)' )")
-						.__("$('.scene').css('overflow','hidden')") // plus de scroll
-//						.__("$('body').css('position','fixed')") // plus de scroll
-						//.__("$('.activity.active').css('overflow','hidden')") // plus de scroll
-						.__("$('.active .navbar').addClass('fixedToAbsolute')") // permet la nav de bouger
-						
-						.__("$('.menu').css('transition', '' )")
-						.__("$('.menu').css('transform', 'translate3d(-"+ ScnStandard.widthMenu	+ "px,'+$('.scene').scrollTop()+'px,0px)' )")
-						//.__("$('.active .black_overlay').css('display','block')")
-						.__(_overlay.doShow(1))
-						.__("$('.active .hamburger').toggleClass('is-active')"),
-					 ")"),	
-				//  100, fct().__("$('.active .hamburger').toggleClass('changeColorMenu')"), // passe en back
+						.__(_overlay.doShow(1))		 	        		 
+						//-----------  passe en absolute la barre nav en haut par rapport au scroll  --------
+						.__("jqNavBar.css('transform', 'translate3d(0px,'+sct+'px,0px)' )")					
+						.__("jqScene.css('overflow','hidden')") // plus de scroll
+						.__("$('body').css('overflow','hidden')") // plus de scroll
+						.__("jqNavBar.addClass('fixedToAbsolute')") // permet la nav de bouger
+						//---------------------------------------
+						.__("jqMenu.css('transition', '' )")   // fige le menu en haut
+						.__("jqMenu.css('transform', 'translate3d(-"+ ScnStandard.widthMenu	+ "px,'+$('.scene').scrollTop()+'px,0px)' )")
+						//---------------------------------------
+						.__("jqHamburger.addClass('is-active')"),  // passe en croix
+				//  100, fct().__("$('.active .hamburger').addClass('changeColorMenu')"), // passe en back
 				 300, fct()    	// attent passage en croix
-				 		.__("fastdom.mutate(", fct()
 				 		.__(_overlay.doShow(2))
-					//	.__("$('.active .black_overlay').css('transition','opacity "+ScnStandard.overlaySpeed+"ms ease-out')")
-					//	.__("$('.active .black_overlay').css('opacity','0.3')")
-						.var("hamburger", "$('.active .hamburger').detach()")	
-
-						.__("hamburger.addClass('active')")
-						.__("$('.scene').append(hamburger)")
-						.__("hamburger.css('transform', 'translate3d(0px,'+$('.scene').scrollTop()+'px,0px)' )")  // positionne en haut
+				 		
+				 		//---------- anime le burger et le passe sur la scene---------------
+						.var("hamburger", "jqHamburger.detach()")	
+						.__("hamburger.addClass('detach')")
+						.__("jqScene.append(hamburger)")
+						.__("hamburger.css('transform', 'translate3d(0px,'+sct+'px,0px)' )")  // positionne en haut
+						.__("hamburger.css('transition','transform "+ScnStandard.SPEED_SHOW_BURGERMENU+"ms ease-out')")
 						
-						// deplace l'activity a louverture du menu
-						.__("$('.active.activity').toggleClass('activityMoveForShowMenu')") 
+						//------------ deplace l'activity a louverture du menu-------------
+						.__("jqActivityActive.addClass('activityMoveForShowMenu')") 
 
-						.__("$('.menu').css('transition', 'transform "+ScnStandard.SPEDD_SHOW_BURGERMENU+"ms ease-out' )")
-						.__("$('.menu').css('transform', 'translate3d(0px,'+$('.scene').scrollTop()+'px,0px)' )")
-						
-						.__("$('.scene .active.hamburger').css('transition','transform "+ScnStandard.SPEDD_SHOW_BURGERMENU+"ms ease-out')"
-								+ ".css('transform', 'translate3d(-15px,'+(-3+$('.scene').scrollTop())+'px,0px) scale(0.6)' )")
-
-						// anim des item de menu	
+						//------------ ouvre le menu---------
+						.__("jqMenu.css('transition', 'transform "+ScnStandard.SPEED_SHOW_BURGERMENU+"ms ease-out' )")
+						.__("jqMenu.css('transform', 'translate3d(0px,'+$('.scene').scrollTop()+'px,0px)' )")
+						.__("hamburger.css('transform', 'translate3d(-15px,'+(-3+sct)+'px,0px) scale(0.6)' )")
+						//------------- anim des item de menu----------	
 						._for("var i in window.jsonMainMenu") 
 						.__("setTimeout(", fct("elem")
 								.__("elem.anim='fadeInLeft'")
 								.__("elem.anim=''"), ",(i*"+10+"), window.jsonMainMenu[i])")
 						.endfor()
-						, ")")	
-				, ScnStandard.SPEDD_SHOW_BURGERMENU, fct()
+						
+				, ScnStandard.SPEED_SHOW_BURGERMENU, fct()
 										//.__("$('.active .logo').toggleClass('animated shake')")
 										.consoleDebug("'end anim'")
 				  )
@@ -115,13 +118,10 @@ public interface TKAnimation extends JSClass {
 	 	
 	    ._if("$('#activity1').hasClass('active')")
 	         // ouverture activity 2
-		     .__(TKQueue.start(
+		     .__(TKQueue.start( ScnStandard.SPEED_RIPPLE_EFFECT, // attente bulle
 		    		 fct() 
-			 	    	.__("fastdom.mutate(", fct()
-						   	.__(_overlay.doShow(1))
-			 	    			, ")")	
-		    		 ,100, fct()   // attente bulle
-		 	    	.__("fastdom.mutate(", fct()
+						.__(_overlay.doShow(1))
+		    		 ,100, fct()   // attente overlay
 				   		.__("$('#activity1').data('scrolltop', sct ) ") 
 				   		.__("$('#activity1 .navbar').css('top', sct+'px' )")
 				   		.__("$('#activity1').css('transform-origin', '50% 150px')")
@@ -129,57 +129,39 @@ public interface TKAnimation extends JSClass {
 				   		.__("$('#activity1').scrollTop(sct)")
 				   		.__("$('#activity1').addClass('toback')")
 				   		.__("$('#activity2').addClass('tofront')")
-				   		.__("$('#activity2').removeClass('hidden')")	
-				   //		.__("$('.scene').scrollTop($('#activity2').data('scrolltop'))")
+				   		.__("$('#activity2').removeClass('inactivefixed')")	
 		    		 	.__(_overlay.doShow(2))
-				   	, ")")	
-				   	,ScnStandard.SPEED_SHOW_ACTIVITY, fct()
-				     	.__("fastdom.mutate(", fct()		
+				   	,ScnStandard.SPEED_SHOW_ACTIVITY, fct()		
 				   		.__("$('#activity1').removeClass('active')")
 				   		.__("$('#activity2').removeClass('inactive')")
 				   		.__("$('#activity2').addClass('active')")
 				   		.__("$('#activity2').removeClass('tofront')")
-				   //		.__("$('#activity1').css('display', 'none')")
 		    		 	.__("$('#activity2').removeClass('toHidden')") 
-		    		// 	.__("$('#activity2').removeClass('hidden')")
 					    .__("$('.scene').scrollTop($('#activity2').data('scrolltop'))")		
-		    		, ")")	
 				   	, 100, fct().consoleDebug("'end activity anim'")
 				   )) 	
 		._else()
 			// fermeture activity 2 
-			.__(TKQueue.start(0, fct()   // attente bulle
-					.__("fastdom.mutate(", fct()
-				//	.__("$('#activity1').css('display', 'block')")
+			.__(TKQueue.start( ScnStandard.SPEED_RIPPLE_EFFECT, fct()   // attente bulle
 					.__("$('#activity2').addClass('inactive')")
 					.__("$('#activity2').data('scrolltop', sct ) ") 
-					, ")")
-				 ,100, fct()   // attente obligatoire pour bug changement de display trop rapide
-				  .__("fastdom.mutate(", fct()
+				,100, fct()   // attente obligatoire pour bug changement de display trop rapide
 					.__("$('#activity1').removeClass('toback')")	  
-					.__("$('#activity1').addClass('active backToFront')")
-			   		, ")")	 					
-					
+					.__("$('#activity1').addClass('active backToFront')") 								
 				,50, fct()   // 100 ms attente obligatoire pour bug changement de display trop rapide car rejoue les anim en attente
-				  .__("fastdom.mutate(", fct()
-						  .__("$('#activity2').addClass('hidden')")
+						.__("$('#activity2').addClass('inactivefixed')")
 					   	.__("$('#activity2').addClass('toHidden')")
 						.__(_overlay.doHide(1))
-			   		, ")")	
-
 			   	,ScnStandard.SPEED_SHOW_ACTIVITY, fct()
-			   	 .__("fastdom.mutate(", fct()
 					.__("$('#activity2').removeClass('active')")
-					//.__("$('#activity2').addClass('hidden')")
 					
 			   		.__("$('#activity1 .navbar').css('top', '0px' )")
 					.__("$('#activity1').css('overflow', '')")
 		   			.__("$('#activity1').css('transform-origin', '')")
 		   			.__("$('.scene').scrollTop($('#activity1').data('scrolltop'))")
 		   			.__("$('#activity1').removeClass('backToFront')")
-					.__(_overlay.doHide(2))
-			   		, ")"),		
-			   	100, fct().consoleDebug("'end activity anim'")
+					.__(_overlay.doHide(2))	
+			   	,100, fct().consoleDebug("'end activity anim'")
 			   ))	
 	   .endif();
 		

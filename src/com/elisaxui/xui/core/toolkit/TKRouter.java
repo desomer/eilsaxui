@@ -4,6 +4,7 @@
 package com.elisaxui.xui.core.toolkit;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
+import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
 import com.elisaxui.xui.core.widget.navbar.JSNavBar;
 
 /**
@@ -69,7 +70,7 @@ public interface TKRouter extends JSClass {
 		._if("!window.animInProgess && event!=null")
 //		   .__("alert(event)")
 		   .__("if (navigator.vibrate) { navigator.vibrate(30); }")    // je vibre
-
+		   
 		   ._if("event=='BtnFloatMain' || event=='more' ")
 				._if(navigo,".history[",navigo,".history.length-1]=='open'")
 					.__(navigo,".nextenable=", false)

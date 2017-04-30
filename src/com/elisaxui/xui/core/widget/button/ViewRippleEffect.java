@@ -19,15 +19,20 @@ public class ViewRippleEffect extends XHTMLPart {
 
     static ViewRippleEffect style = new ViewRippleEffect();
 	static {
-		xPart(style);
+		xPart(style);   // import
 	}
 	public static CSSClass cRippleEffect()
 	{
 		return style.cRippleEffect;
 	}
 	
-	CSSClass cRippleEffect;
+	public static CSSClass cRippleEffectShow()
+	{
+		return style.cRippleEffectShow;
+	}
 	
+	CSSClass cRippleEffect;
+	CSSClass cRippleEffectShow;
 	
 
 	@xTarget(HEADER.class)
@@ -37,14 +42,16 @@ public class ViewRippleEffect extends XHTMLPart {
 		return xCss()
 				.on(cRippleEffect, "overflow: hidden; ")  /*position: relative;*/
 				.on(CSSSelector.onPath(cRippleEffect, ":after"), " content: ''; "
-						+ "position: absolute; top: 50%;  left: 50%;  width: 5px;  height: 5px;"
+						+ "  position: absolute; top: 50%;  left: 50%;  width: 5px;  height: 5px;"
 						+ "  background: rgba(255, 255, 255, .7);  opacity: 0;  border-radius: 100%;"
 						+ "  transform: scale(1, 1) translate(-50%);  transform-origin: 50% 50%;")
 				.on("@keyframes rippleanim", 
 						"0% {transform: scale(0, 0); opacity: 1; }"
-						+ "20% {transform: scale(25, 25); opacity: 1;  } "
-						+ "100% {opacity: 0;transform: scale(40, 40);  }")
-				.on(CSSSelector.onPath(cRippleEffect,":focus:not(:active)::after"),"animation: rippleanim 500ms ease-out;" )
+						+ "20% {transform: scale(50, 25); opacity: 1;  } "
+						+ "100% {opacity: 0;transform: scale(80, 40);  }")
+				
+//				.on(CSSSelector.onPath(cRippleEffect,":focus:not(:active)::after"),"animation: rippleanim 500ms ease-out;" )
+				.on(CSSSelector.onPath(cRippleEffect,cRippleEffectShow,":after"),"animation: rippleanim 500ms ease-out;" )
 				
 				;
 	}	

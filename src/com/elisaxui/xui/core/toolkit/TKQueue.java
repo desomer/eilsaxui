@@ -32,7 +32,7 @@ public class TKQueue extends XHTMLPart {
 			"			if(isNumber(item)) { // delay\n"+
 			"				interval = setTimeout(api, item);\n"+
 			"			} else if(typeof item === \'function\') { // functions\n"+
-			"				item();\n"+
+			"				fastdom.mutate(item);\n"+
 			"				api();\n"+
 			"			}\n"+
 			"		} else {\n"+
@@ -83,6 +83,21 @@ public class TKQueue extends XHTMLPart {
 			ret.add(")");
 		}
 		ret.add("(\"callback\", function() {window.animInProgess=false})");
+		ret.add("()");
+		return ret.toArray();
+	}
+	
+	public static final Object[] startAlone(Object... param)
+	{
+		ArrayList<Object> ret = new ArrayList<>();
+		//ret.add("window.animInProgess=true;\n");
+		ret.add("TKQueue()");
+		for (Object  object: param) {
+			ret.add("(");
+			ret.add(object);
+			ret.add(")");
+		}
+		//ret.add("(\"callback\", function() {window.animInProgess=false})");
 		ret.add("()");
 		return ret.toArray();
 	}

@@ -10,6 +10,7 @@ import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.xui.core.page.ScnStandard;
 
 /**
  * @author Bureau
@@ -31,9 +32,14 @@ public class ViewRippleEffect extends XHTMLPart {
 		return style.cRippleEffectShow;
 	}
 	
+	public static CSSClass cRippleEffectColorBack()
+	{
+		return style.cRippleEffectColorBack;
+	}
+	
 	CSSClass cRippleEffect;
 	CSSClass cRippleEffectShow;
-	
+	CSSClass cRippleEffectColorBack;
 
 	@xTarget(HEADER.class)
 	@xRessource
@@ -45,13 +51,15 @@ public class ViewRippleEffect extends XHTMLPart {
 						+ "  position: absolute; top: 50%;  left: 50%;  width: 5px;  height: 5px;"
 						+ "  background: rgba(255, 255, 255, .7);  opacity: 0;  border-radius: 100%;"
 						+ "  transform: scale(1, 1) translate(-50%);  transform-origin: 50% 50%;")
+				
+				.on(CSSSelector.onPath(cRippleEffectColorBack, ":after"), "background: rgba(0, 0, 0, 0.1)")
+				
 				.on("@keyframes rippleanim", 
 						"0% {transform: scale(0, 0); opacity: 1; }"
-						+ "20% {transform: scale(50, 25); opacity: 1;  } "
-						+ "100% {opacity: 0;transform: scale(80, 40);  }")
+						+"50% {transform: scale(30, 25); opacity: 1;  } "
+						+"100% {opacity: 0;transform: scale(80, 40);  }")
 				
-//				.on(CSSSelector.onPath(cRippleEffect,":focus:not(:active)::after"),"animation: rippleanim 500ms ease-out;" )
-				.on(CSSSelector.onPath(cRippleEffect,cRippleEffectShow,":after"),"animation: rippleanim 500ms ease-out;" )
+				.on(CSSSelector.onPath(cRippleEffect,cRippleEffectShow,":after"),"animation: rippleanim "+ ScnStandard.SPEED_RIPPLE_EFFECT +"ms ease-out;" )
 				
 				;
 	}	

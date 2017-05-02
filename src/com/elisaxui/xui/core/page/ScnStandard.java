@@ -36,7 +36,8 @@ public class ScnStandard extends XHTMLPart {
 	public static final int SPEED_SHOW_BURGERMENU = 200;
 	public static final int SPEED_SHOW_ACTIVITY = 300;
 	public static final int SPEED_SHOW_OVERLAY = 400;
-	public static final int SPEED_RIPPLE_EFFECT = 50;
+	public static final int SPEED_RIPPLE_EFFECT = 300;
+	public static final int SPEED_BURGER_EFFECT = 600;
 	
 	public static final int ZINDEX_NAV_BAR = 1;
 	public static final int ZINDEX_MENU = 2;
@@ -45,7 +46,6 @@ public class ScnStandard extends XHTMLPart {
 	
 	public static final String bgColor = "background: linear-gradient(to right, rgba(253,94,176,1) 0%, rgba(255,0,136,1) 64%, rgba(239,1,124,1) 100%);";
     public static final String bgColorMenu = "background: linear-gradient(to right, rgba(239,1,124,0.5) 0%, rgba(255,0,136,0.68) 36%, rgba(253,94,176,1) 100%);";
-	//public static final String bgColorMenu = "background: linear-gradient(to right, rgba(121, 119, 120, 0.5) 0%, rgba(176, 179, 181, 0.68) 36%, rgb(136, 131, 134) 100%);";
 
     @xTarget(HEADER.class)
 	@xRessource
@@ -79,26 +79,20 @@ public class ScnStandard extends XHTMLPart {
 				.on("body", "background-color: white;margin: 0; top: 0px;left: 0px; right: 0px; bottom: 0px; ")
 				.on("*", "-webkit-tap-highlight-color: rgba(0,0,0,0);")
 
-
-				.on(".content", "background-color: white; box-sizing: border-box; min-height:100%; min-width: 100%; position:absolute; padding: 8px; padding-top: " + (heightNavBar + 8) + "px")
-
-				.on(".panel", "padding: 15px;"
-						+ "margin-bottom: 15px;"
-						+ "border-radius: 0;"
-						+ "background-color: #FFF;"
-						+ "box-shadow: 0 2px 2px 0 rgba(0,0,0,.16), 0 0 2px 0 rgba(0,0,0,.12)")
-
+				//----------------------------------------------------------------
 				.on(".scene","overflow-x: hidden; background-color: black; "
 						+ "min-width: 100%;  min-height: 100%; position: absolute   "   //position: absolute;
 						)
 				
+				//----------------------------------------------------------------
 				.on(".activity", ""
-						+ "  position: absolute;   min-width: 100%;  min-height: 100%;   "// top: 0px; left: 0px; right: 0px; bottom: 0px; "
+						+ "position: absolute;   min-width: 100%;  min-height: 100%;   "// top: 0px; left: 0px; right: 0px; bottom: 0px; "
 						+ "backface-visibility: hidden; will-change:overflow,z-index;") //will-change:transform
 				
 				
 				
 			//	.on(".activity.active", "z-index:1;")
+				
 				.on(".activity.inactive.inactivefixed", "position: fixed;") 
 				.on(".activity.inactive", "transition:transform "+SPEED_SHOW_ACTIVITY+"ms ease-out; top: 0px;left: 0px; right: 0px; bottom: 0px;"
 						+ "backface-visibility: hidden;"
@@ -110,14 +104,25 @@ public class ScnStandard extends XHTMLPart {
 						)
 				.on(".activity.inactive.toHidden", "transform: translate3d(0px,100%,0px);")
 				.on(".activity.inactive.tofront", "transition:transform "+SPEED_SHOW_ACTIVITY+"ms ease-out; transform: translate3d(0px,0px,0px);") //z-inde2x: "+ZINDEX_TO_FRONT+";
+				.on(".activity.inactive.tofrontSlow", "transition:transform "+400+"ms ease-out; transform: translate3d(0px,0px,0px);") //z-inde2x: "+ZINDEX_TO_FRONT+";
 
-				
-				
 				.on(".activityMoveForShowMenu", "transition:transform "+SPEED_SHOW_BURGERMENU+"ms ease-out; transform: translate3d("+(widthMenu-100)+"px,0px,0px);")
 				.on(".activityMoveForHideMenu", "transition:transform "+SPEED_SHOW_BURGERMENU+"ms ease-out; transform: translate3d(0px,0px,0px);")
 				
-				.on("#content", "height:3000px; position:relative")
+				//----------------------------------------------------------------
 				
+				.on(".content", "background-color: white; box-sizing: border-box; min-height:100%; min-width: 100%; position:absolute; padding: 8px; padding-top: " + (heightNavBar + 8) + "px")
+
+				//----------------------------------------------------------------
+				.on("#content", "height:3000px; position:relative")
+				.on("#content2", "height:2000px; position:relative")
+				
+				
+				.on(".panel", "padding: 15px;"
+						+ "margin-bottom: 15px;"
+						+ "border-radius: 0;"
+						+ "background-color: #FFF;"
+						+ "box-shadow: 0 2px 2px 0 rgba(0,0,0,.16), 0 0 2px 0 rgba(0,0,0,.12)")
 				;
 	}
 
@@ -257,31 +262,53 @@ public class ScnStandard extends XHTMLPart {
 	{
 	  return fct()
 			   .consoleDebug("'ok ActionManager'") 
-			   .__("$('.scene').on('touchstart',", fct('e')//.consoleDebug("e") 
+			   .__("$('.scene').on('touchstart',", fct('e')
 					   .var("btn", "$(e.target).closest('[data-x-action]')")
+					  
 					   .var("ripple", "btn")
+					   .var("event", "btn.data('x-action')")
 					   ._if( "! ripple.hasClass('",  ViewRippleEffect.cRippleEffect().getId(), "')")
 					   		.set("ripple", "btn.closest('.",  ViewRippleEffect.cRippleEffect().getId(), "')")
 							._if( "! ripple.hasClass('",  ViewRippleEffect.cRippleEffect().getId(), "')")
 					   			.set("ripple", "btn.children('.",  ViewRippleEffect.cRippleEffect().getId(), "')")
 					   		.endif()	
 					   .endif()
-					   ._if( "ripple.length>0")
+					   
+					   ._if("$('#activity1').hasClass('active')")
+					   		.__("$xui.config.nextActivityAnim= 'fromBottom' ")
+					   .endif()	
+					   
+					   ._if( "ripple.length>0") 
+					   
+					   	   ._if("ripple.hasClass('cBtnCircle')")
+					   	   	   .__("$xui.config.nextActivityAnim= 'opacity'")
+						   	   .__(TKQueue.startAlone(fct()
+					   				.__("ripple.addClass('cBtnCircleChangeForm')")
+					   				,1000, fct() 
+						   		    .__("ripple.removeClass('cBtnCircleChangeForm')")
+						   		    )
+						   		)
+					   	   .endif()
+					   
+					   
 						   .__(TKQueue.startAlone(fct()
-						   			.__("ripple.addClass('", ViewRippleEffect.cRippleEffectShow().getId() ,"')")
-						   			,300, fct().__("ripple.removeClass('", ViewRippleEffect.cRippleEffectShow().getId() ,"')")
+						   				.__("ripple.addClass('", ViewRippleEffect.cRippleEffectShow().getId() ,"')")
+								 ,SPEED_RIPPLE_EFFECT/3, fct()  // attente ripple effect
+						   		      	.__(tkrouter.doEvent("event"))
+								 ,SPEED_RIPPLE_EFFECT, fct()  // attente ripple effect
+							   		    .__("ripple.removeClass('", ViewRippleEffect.cRippleEffectShow().getId() ,"')")     	
 								   )
 							)
+					   ._else()
+					   		.__(tkrouter.doEvent("event"))
 					   .endif()
-					   
-					   .var("event", "btn.data('x-action')")
-					   .__(tkrouter.doEvent("event"))
-					   , ")")
+				, ")")
 			;
 	}
 	
 	public JSInterface getMoveManager()
 	{
+		// gestion deplacement menu et fermeture par gesture 
 	  return fct().consoleDebug("'ok MoveManager'") 
 				.__("var mc = new Hammer($('.scene')[0])")    //, {touchAction: 'auto'}
 			//	.__("mc.get('pinch').set({ enable: true })")
@@ -328,11 +355,10 @@ public class ScnStandard extends XHTMLPart {
 	}
 	
 	@xTarget(AFTER_CONTENT.class)
-	public Element xAddMenu() {
+	public Element xInitJS() {
 		return xScriptJS(js()
    		   	   .set("navigator.vibrate", "navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate")
-
-				
+		
 				.var(jsMenu, _new())
 				.var("jsonMenu", jsMenu.getData())
 				.__("jsonMenu.push({name:'Paramètres', icon:'settings', idAction:'setting'} )")
@@ -354,6 +380,9 @@ public class ScnStandard extends XHTMLPart {
 				.__("jsonNavBar.push({type:'name', name:'Detail' })")
 				.__("jsonNavBar.push({type:'action', icon:'search', idAction:'search'})")
 				.__("jsonNavBar.push({type:'action', icon:'more_vert', idAction:'more'})")
+				
+				
+				.set("$xui", "{ config: { delayWaitForShowMenu : 0, nextActivityAnim : 'fromBottom' } }")
 				
 				.__("(",getActionManager(),")()")
 				.__("(",getMoveManager(),")()")

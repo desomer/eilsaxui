@@ -4,6 +4,7 @@
 package com.elisaxui.xui.core.toolkit;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
+import com.elisaxui.xui.core.page.ScnStandard;
 import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
 import com.elisaxui.xui.core.widget.navbar.JSNavBar;
 
@@ -90,9 +91,9 @@ public interface TKRouter extends JSClass {
 					.__(navigo,".nextenable=", false)
 					.__(_this.doNavigate(txt("menu")))
 				.endif()
+				.__("$xui.config.delayWaitForShowMenu = event=='Overlay'?0:"+ScnStandard.SPEED_BURGER_EFFECT/2)
 				.__(_this.doAction(txt("menu")))	
 			.endif()
-			
 		.endif();
 		 return null;
 	}	
@@ -128,7 +129,11 @@ public interface TKRouter extends JSClass {
 	{
 		 __()
 		 ._if("action=='open' ")
-		    .__(tkAnimation.doOpenActivity())
+		    ._if("$xui.config.nextActivityAnim=='fromBottom'")
+		    	.__(tkAnimation.doOpenActivityFromBottom())
+		    ._else()
+		    	.__(tkAnimation.doOpenActivityFromOpacity())
+		    .endif()
 	     .endif()
 		 ._if("action=='menu'")
 		 	.__(tkAnimation.doOpenBurgerMenu())

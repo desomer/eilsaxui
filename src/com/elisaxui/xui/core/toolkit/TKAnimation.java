@@ -30,7 +30,7 @@ public interface TKAnimation extends JSClass {
 				fct()
 //						.__("$('.active .logo').toggleClass('animated shake')")  // retire le shake
 						.__("jqHamburgerDetach.removeClass('is-active changeColorMenu')")
-				, 200, fct()   // attente ouverte burger		
+				, "$xui.config.delayWaitForShowMenu", fct()   // attente ouverte burger		
 				    	.__(_overlay.doHide(1))
 				    	//-------------------------- repositionne l'activity --------------------
 				    	.__("jqActivityActive.removeClass('activityMoveForShowMenu')")
@@ -78,7 +78,7 @@ public interface TKAnimation extends JSClass {
 						//---------------------------------------
 						.__("jqHamburger.addClass('is-active')"),  // passe en croix
 				//  100, fct().__("$('.active .hamburger').addClass('changeColorMenu')"), // passe en back
-				 300, fct()    	// attent passage en croix
+				 "$xui.config.delayWaitForShowMenu", fct()    	// attent passage en croix
 				 		.__(_overlay.doShow(2))
 				 		
 				 		//---------- anime le burger et le passe sur la scene---------------
@@ -111,14 +111,14 @@ public interface TKAnimation extends JSClass {
 		return null;
 	}
 	
-	default Object doOpenActivity()
+	default Object doOpenActivityFromBottom()
 	{
 		var(_overlay, _new(ScnStandard.SPEED_SHOW_ACTIVITY, 0.6))
 	 	.var("sct", "$('.scene').scrollTop()")
 	 	
 	    ._if("$('#activity1').hasClass('active')")
 	         // ouverture activity 2
-		     .__(TKQueue.start( ScnStandard.SPEED_RIPPLE_EFFECT, // attente bulle
+		     .__(TKQueue.start(  // ScnStandard.SPEED_RIPPLE_EFFECT, // attente bulle
 		    		 fct() 
 						.__(_overlay.doShow(1))
 		    		 ,100, fct()   // attente overlay
@@ -142,16 +142,17 @@ public interface TKAnimation extends JSClass {
 				   )) 	
 		._else()
 			// fermeture activity 2 
-			.__(TKQueue.start( ScnStandard.SPEED_RIPPLE_EFFECT, fct()   // attente bulle
+			.__(TKQueue.start(  // ScnStandard.SPEED_RIPPLE_EFFECT, 
+				fct()   // attente bulle
 					.__("$('#activity2').addClass('inactive')")
 					.__("$('#activity2').data('scrolltop', sct ) ") 
 				,100, fct()   // attente obligatoire pour bug changement de display trop rapide
 					.__("$('#activity1').removeClass('toback')")	  
 					.__("$('#activity1').addClass('active backToFront')") 								
 				,50, fct()   // 100 ms attente obligatoire pour bug changement de display trop rapide car rejoue les anim en attente
-						.__("$('#activity2').addClass('inactivefixed')")
-					   	.__("$('#activity2').addClass('toHidden')")
-						.__(_overlay.doHide(1))
+					.__("$('#activity2').addClass('inactivefixed')")
+					.__("$('#activity2').addClass('toHidden')")
+					.__(_overlay.doHide(1))
 			   	,ScnStandard.SPEED_SHOW_ACTIVITY, fct()
 					.__("$('#activity2').removeClass('active')")
 					
@@ -162,6 +163,58 @@ public interface TKAnimation extends JSClass {
 		   			.__("$('#activity1').removeClass('backToFront')")
 					.__(_overlay.doHide(2))	
 			   	,100, fct().consoleDebug("'end activity anim'")
+			   ))	
+	   .endif();
+		
+		return null;
+	}
+	
+	
+	default Object doOpenActivityFromOpacity()
+	{
+		__()
+	 	.var("sct", "$('.scene').scrollTop()")
+	 	
+	    ._if("$('#activity1').hasClass('active')")
+	         // ouverture activity 2
+		     .__(TKQueue.start(  // ScnStandard.SPEED_RIPPLE_EFFECT, // attente bulle
+		    		 fct() 
+		    		 .__("$('#activity1').data('scrolltop', sct ) ") 
+		    		 .__("$('#activity1').removeClass('active')")  
+		    		 
+		    		 .__("$('#activity2').removeClass('inactivefixed')")
+		    		 .__("$('#activity2').addClass('active')")
+		    		 .__("$('#activity2').addClass('tofrontSlow')")
+		    		 .__("$('#activity2').css('opacity', '0.1')")
+					 .__("$('.scene').scrollTop($('#activity2').data('scrolltop'))")	
+				, 300, fct()
+				 	 .__("$('#activity2').css('transition', 'opacity 500ms ease-out')")
+				 	 .__("$('#activity2').css('opacity', '1')")
+		    	, 500, 
+		    	    fct()	
+		    	    	 .__("$('#activity2').removeClass('inactive')")
+		    	         .__("$('#activity2').removeClass('tofrontSlow')")
+			    		 .__("$('#activity2').removeClass('toHidden')") 
+		    	         .consoleDebug("'end activity anim'")
+				   )) 	
+		._else()
+			// fermeture activity 2 
+			.__(TKQueue.start(  fct()
+				 	 .__("$('#activity2').css('transition', 'opacity 500ms ease')")
+				 	 .__("$('#activity2').css('opacity', '0')")
+					 .__("$('#activity2').data('scrolltop', sct ) ") 
+				, 200, fct()   // attente bulle
+					.__("$('#activity2').css('transition', '')")
+					.__("$('#activity2').addClass('inactive')")
+					.__("$('#activity2').addClass('inactivefixed')")
+					.__("$('#activity2').addClass('toHidden')")
+				    .__("$('#activity2').removeClass('active')")
+					.__("$('#activity1').addClass('active')") 		
+		   			.__("$('.scene').scrollTop($('#activity1').data('scrolltop'))")
+			   	, 400,  fct()
+			   			.__("$('#activity2').css('opacity', '1')")
+			   			.__("$('#activity2').css('opacity', '')")
+			   	 		.consoleDebug("'end activity anim'")
 			   ))	
 	   .endif();
 		

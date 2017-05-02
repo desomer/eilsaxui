@@ -20,6 +20,6 @@ public class ViewMenuItems extends XHTMLPart {
 	
 	@xTarget(CONTENT.class)
 	public Element xContenu() {
-		return xLi(ViewRippleEffect.cRippleEffect(), xIdAction(this.getProperty(PROPERTY_ACTION)), xA("<i class=\"material-icons\">", this.getProperty(PROPERTY_ICON) ,"</i>", this.getProperty(PROPERTY_NAME) ));
+		return xLi(ViewRippleEffect.cRippleEffect(), ViewRippleEffect.cRippleEffectColorBack(), xIdAction(this.getProperty(PROPERTY_ACTION)), xA("<i class=\"material-icons\">", this.getProperty(PROPERTY_ICON) ,"</i>", this.getProperty(PROPERTY_NAME) ));
 	}
 }

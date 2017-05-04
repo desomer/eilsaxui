@@ -98,7 +98,7 @@ public interface JSTestDataDriven extends JSClass {
 							, ", 1)")
 				
 				.__("setTimeout(", fct()
-						._for("var i=0; i<100; i++")
+						._for("var i=0; i<0; i++")
 							.__("setTimeout(function() {var idx = Math.floor(Math.random()*(v.length));\n"
 						        +"var idx2 = Math.floor(Math.random()*(v.length));\n"
 							    + "   var s = v.splice(idx, 1)\n; "  // retire
@@ -113,7 +113,7 @@ public interface JSTestDataDriven extends JSClass {
 							, ", 3000)")
 				
 				.__("setTimeout(", fct()
-						._for("var i=0; i<100; i++")
+						._for("var i=0; i<0; i++")
 							.__("setTimeout(function() { var idx = Math.floor(Math.random()*(v.length));\nvar val = Math.floor(Math.random()*(100)); v[idx].b='test'+val; }, i*100)") 
 						.endfor()	
 				, ", 5000)")

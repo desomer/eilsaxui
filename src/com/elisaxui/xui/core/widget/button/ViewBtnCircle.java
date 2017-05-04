@@ -34,11 +34,18 @@ public class ViewBtnCircle extends XHTMLPart {
 								+ "min-width: 56px;  width: 56px; padding: 0;  overflow: hidden; outline: 0 !important; " // pas																						// focus
 								+ ScnStandard.bgColor
 								+ "box-shadow: 0 1px 1.5px 0 rgba(0,0,0,.12), 3px 3px 3px 0 rgba(0,0,0,.24);"
-								+ " position: relative; line-height: normal; border:none; background-color:#ee6e73;")
-				
-				.on(CSSSelector.onPath(cBtnCircle, cBtnCircleChangeForm), "transition: all  600ms ease-out; border-radius: 25%; width: 415px; transform: translate3d(15px,-661px,0px);")
+								+ "transition:transform " + ScnStandard.SPEED_SHOW_ACTIVITY +  "ms ease-out;"
+								+ " position: absolute; line-height: normal; border:none; background-color:#ee6e73; transform: scale3d(1,1,1);"
+								+ "-webkit-backface-visibility: hidden; will-change: transform;")
+					
 				.on(CSSSelector.onPath(cBtnCircle, " .material-icons"), "color:white; position: absolute; top: 50%;  left: 50%;"
-						+ " transform: translate(-12px,-12px);  line-height: 24px;  width: 24px;");
+						+ " transform: translate(-12px,-12px);  line-height: 24px;  width: 24px;")
+
+	
+				.on(CSSSelector.onPath(cBtnCircle, cBtnCircleChangeForm), "transform: scale3d(40,40,1)")    //-webkit-backface-visibility: hidden; transform: scale3d(30,30,1);
+				.on(CSSSelector.onPath(cBtnCircle, cBtnCircleChangeForm, " .material-icons"), "display: none;")
+	
+				;
 	}
 
 	@xTarget(CONTENT.class)

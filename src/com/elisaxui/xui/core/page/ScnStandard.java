@@ -85,7 +85,7 @@ public class ScnStandard extends XHTMLPart {
 						)
 				
 				//----------------------------------------------------------------
-				.on(".activity", ""
+				.on(".activity", "background-color: white;"
 						+ "position: absolute;   min-width: 100%;  min-height: 100%;   "// top: 0px; left: 0px; right: 0px; bottom: 0px; "
 						+ "backface-visibility: hidden; will-change:overflow,z-index;") //will-change:transform
 				
@@ -246,7 +246,7 @@ public class ScnStandard extends XHTMLPart {
 						"};")
 				
 				.var(testDataDriven, _new())
-				.__(testDataDriven.startTest())				
+			//	.__(testDataDriven.startTest())				
 				
 				
 				//.__(NavBarAnimated1)
@@ -284,21 +284,26 @@ public class ScnStandard extends XHTMLPart {
 					   	   	   .__("$xui.config.nextActivityAnim= 'opacity'")
 						   	   .__(TKQueue.startAlone(fct()
 					   				.__("ripple.addClass('cBtnCircleChangeForm')")
-					   				,1000, fct() 
-						   		    .__("ripple.removeClass('cBtnCircleChangeForm')")
+					   				,ScnStandard.SPEED_SHOW_ACTIVITY/2, fct()
+					   					.__(tkrouter.doEvent("event"))
+					   			    ,ScnStandard.SPEED_SHOW_ACTIVITY+100, fct()
+					   			    	.__("ripple.removeClass('cBtnCircleChangeForm')")
+					   				,100,fct() 
+						   		   
 						   		    )
 						   		)
-					   	   .endif()
-					   
-					   
-						   .__(TKQueue.startAlone(fct()
-						   				.__("ripple.addClass('", ViewRippleEffect.cRippleEffectShow().getId() ,"')")
-								 ,SPEED_RIPPLE_EFFECT/3, fct()  // attente ripple effect
-						   		      	.__(tkrouter.doEvent("event"))
-								 ,SPEED_RIPPLE_EFFECT, fct()  // attente ripple effect
-							   		    .__("ripple.removeClass('", ViewRippleEffect.cRippleEffectShow().getId() ,"')")     	
-								   )
-							)
+						   ._else()
+						   	   					   
+							   .__(TKQueue.startAlone(fct()
+							   				.__("ripple.addClass('", ViewRippleEffect.cRippleEffectShow().getId() ,"')")
+									 ,SPEED_RIPPLE_EFFECT/3, fct()  // attente ripple effect
+							   		      	.__(tkrouter.doEvent("event"))
+									 ,SPEED_RIPPLE_EFFECT, fct()  // attente ripple effect
+								   		    .__("ripple.removeClass('", ViewRippleEffect.cRippleEffectShow().getId() ,"')")     	
+									   )
+								)
+						   
+						   .endif()
 					   ._else()
 					   		.__(tkrouter.doEvent("event"))
 					   .endif()

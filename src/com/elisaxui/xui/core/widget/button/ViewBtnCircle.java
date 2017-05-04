@@ -35,8 +35,10 @@ public class ViewBtnCircle extends XHTMLPart {
 								+ ScnStandard.bgColor
 								+ "box-shadow: 0 1px 1.5px 0 rgba(0,0,0,.12), 3px 3px 3px 0 rgba(0,0,0,.24);"
 								+ "transition:transform " + ScnStandard.SPEED_SHOW_ACTIVITY +  "ms ease-out;"
-								+ " position: absolute; line-height: normal; border:none; background-color:#ee6e73; transform: scale3d(1,1,1);"
-								+ "-webkit-backface-visibility: hidden; will-change: transform;")
+								+ " position: relative; line-height: normal; border:none; background-color:#ee6e73;"
+								//+ "-webkit-backface-visibility: hidden;"
+								//+ "transform: scale3d(1,1,1); will-change: transform;"
+								)
 					
 				.on(CSSSelector.onPath(cBtnCircle, " .material-icons"), "color:white; position: absolute; top: 50%;  left: 50%;"
 						+ " transform: translate(-12px,-12px);  line-height: 24px;  width: 24px;")

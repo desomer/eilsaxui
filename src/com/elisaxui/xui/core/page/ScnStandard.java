@@ -298,7 +298,7 @@ public class ScnStandard extends XHTMLPart {
 							   				.__("ripple.addClass('", ViewRippleEffect.cRippleEffectShow().getId() ,"')")
 									 ,SPEED_RIPPLE_EFFECT/3, fct()  // attente ripple effect
 							   		      	.__(tkrouter.doEvent("event"))
-									 ,SPEED_RIPPLE_EFFECT, fct()  // attente ripple effect
+									 ,SPEED_RIPPLE_EFFECT*2, fct()  // attente ripple effect
 								   		    .__("ripple.removeClass('", ViewRippleEffect.cRippleEffectShow().getId() ,"')")     	
 									   )
 								)

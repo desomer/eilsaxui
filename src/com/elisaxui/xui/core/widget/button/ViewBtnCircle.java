@@ -30,10 +30,11 @@ public class ViewBtnCircle extends XHTMLPart {
 
 		return xCss()
 				.on(cBtnCircle,
-						"border-radius: 50%;  font-size: 24px;  height: 56px;  margin: auto;   cursor: pointer; "
-								+ "min-width: 56px;  width: 56px; padding: 0;  overflow: hidden; outline: 0 !important; " // pas																						// focus
+								"border-radius: 50%;  font-size: 24px; margin: auto;   cursor: pointer; "
+						 		+ "height: 56px; width: 56px; "
+								+ "min-width: 56px; padding: 0;  overflow: hidden; outline: 0 !important; " // pas																						// focus
 								+ ScnStandard.bgColor
-								+ "box-shadow: 0 1px 1.5px 0 rgba(0,0,0,.12), 3px 3px 3px 0 rgba(0,0,0,.24);"
+								+ "box-shadow: 3px 3px 3px 0 rgba(0,0,0,.24);"
 								+ "transition:transform " + ScnStandard.SPEED_SHOW_ACTIVITY +  "ms ease-out;"
 								+ " position: relative; line-height: normal; border:none; background-color:#ee6e73;"
 								//+ "-webkit-backface-visibility: hidden;"
@@ -44,8 +45,8 @@ public class ViewBtnCircle extends XHTMLPart {
 						+ " transform: translate(-12px,-12px);  line-height: 24px;  width: 24px;")
 
 	
-				.on(CSSSelector.onPath(cBtnCircle, cBtnCircleChangeForm), "transform: scale3d(40,40,1)")    //-webkit-backface-visibility: hidden; transform: scale3d(30,30,1);
-				.on(CSSSelector.onPath(cBtnCircle, cBtnCircleChangeForm, " .material-icons"), "display: none;")
+//				.on(CSSSelector.onPath(cBtnCircle, cBtnCircleChangeForm), "transform: scale3d(40,40,1)")    //-webkit-backface-visibility: hidden; transform: scale3d(30,30,1);
+//				.on(CSSSelector.onPath(cBtnCircle, cBtnCircleChangeForm, " .material-icons"), "display: none;")
 	
 				;
 	}

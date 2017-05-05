@@ -282,16 +282,18 @@ public class ScnStandard extends XHTMLPart {
 					   
 					   	   ._if("ripple.hasClass('cBtnCircle')")
 					   	   	   .__("$xui.config.nextActivityAnim= 'opacity'")
-						   	   .__(TKQueue.startAlone(fct()
-					   				.__("ripple.addClass('cBtnCircleChangeForm')")
-					   				,ScnStandard.SPEED_SHOW_ACTIVITY/2, fct()
+						   	  // .__(TKQueue.startAlone(fct()
+					   			//	.__("ripple.addClass('cBtnCircleChangeForm')")
+					   			//	,ScnStandard.SPEED_SHOW_ACTIVITY/2, fct()
+					   	   	   
 					   					.__(tkrouter.doEvent("event"))
-					   			    ,ScnStandard.SPEED_SHOW_ACTIVITY+100, fct()
-					   			    	.__("ripple.removeClass('cBtnCircleChangeForm')")
-					   				,100,fct() 
+					   					
+					   		//	    ,ScnStandard.SPEED_SHOW_ACTIVITY+100, fct()
+					   			//    	.__("ripple.removeClass('cBtnCircleChangeForm')")
+					   			//	,100,fct() 
 						   		   
-						   		    )
-						   		)
+						   		//    )
+						   	//	)
 						   ._else()
 						   	   					   
 							   .__(TKQueue.startAlone(fct()

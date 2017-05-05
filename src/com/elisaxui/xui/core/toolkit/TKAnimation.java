@@ -4,8 +4,10 @@
 package com.elisaxui.xui.core.toolkit;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
+import com.elisaxui.core.xui.xhtml.js.JSXHTMLPart;
 import com.elisaxui.xui.core.page.ScnStandard;
 import com.elisaxui.xui.core.widget.overlay.JSOverlay;
+import com.elisaxui.xui.core.widget.overlay.ViewOverlayRipple;
 
 /**
  * @author Bureau
@@ -170,56 +172,71 @@ public interface TKAnimation extends JSClass {
 	}
 	
 	
+	JSXHTMLPart _template = null;
 	default Object doOpenActivityFromOpacity()
 	{
 		__()
+		
 	 	.var("sct", "$('.scene').scrollTop()")
 	 	
 	    ._if("$('#activity1').hasClass('active')")
 	         // ouverture activity 2
 		     .__(TKQueue.start(  // ScnStandard.SPEED_RIPPLE_EFFECT, // attente bulle
 		    		 fct() 
+		    		 .var(_template,  ViewOverlayRipple.xTemplate() )
+		    		 .var("rippleOverlay", _template.append("$('.scene')"))
 		    		 .__("$('#activity1').data('scrolltop', sct ) ") 
-					 .__("$('#activity2').css('clip-path' ,'circle(0.0% at 100% 100%)')")
+					 .__("$('#activity2').css('clip-path' ,'circle(0.0% at 100vw 100vh)')")
+					 .__("$('#activity2').css('z-index' ,'1')")
 		    		 .__("$('#activity1').removeClass('active')")  
-		    	//, 100, fct()
 		    		 .__("$('#activity2').removeClass('inactivefixed')")
 		    		 .__("$('#activity2').addClass('active')")
-		    	//	 .__("$('#activity2').addClass('tofrontSlow')")
-		    	//	 .__("$('#activity2').css('opacity', '0.1')")
 					 .__("$('.scene').scrollTop($('#activity2').data('scrolltop'))")	
 	    	    	 .__("$('#activity2').removeClass('inactive')")
-	    	    	 //        .__("$('#activity2').removeClass('tofrontSlow')")
-	    		    .__("$('#activity2').removeClass('toHidden')") 
-					 .__("$('#activity2').css('transition', 'clip-path "+ ScnStandard.SPEED_SHOW_ACTIVITY+"ms ease-out')")
+	    		     .__("$('#activity2').removeClass('toHidden')") 
+	 				 .__("$('#activity2').css('transform', 'scale3d(1.2,1.2,1)')")
+					 .__("$('#activity2').css('transition', 'all "+ ScnStandard.SPEED_SHOW_ACTIVITY +"ms ease-out')")
 				 , 100, fct()
-				 //	 .__("$('#activity2').css('transition', 'opacity 500ms ease-out')")
-				 //	 .__("$('#activity2').css('opacity', '1')")
-				 .__("$('#activity2').css('clip-path', 'circle(150% at 100% 100%)')")
+				 		.__("$('.scene .ripple_overlay').addClass('anim')") 
+				 , ScnStandard.SPEED_SHOW_ACTIVITY, fct()
+				 		.__("$('#activity2').css('clip-path', 'circle(100% at center)')")
+				 , 100, fct()		
+		    	    	.__("$('#activity2').css('transform', 'scale3d(1,1,1)')")
 		    	, ScnStandard.SPEED_SHOW_ACTIVITY, 
-		    	    fct()	
-		    	    	.__("$('#activity2').css('transition', '')")
-		    	    	.__("$('#activity2').css('clip-path', '')")
-		    	         .consoleDebug("'end activity anim'")
+		    	    fct()
+		    	    	.__("$('.scene .ripple_overlay').css('display', 'none')")
+		    	   , ScnStandard.SPEED_SHOW_ACTIVITY , fct()	 	
+    	    		.__("$('#activity2').css('z-index' ,'')")
+	    	    	.__("$('#activity2').css('transition', '')")
+	    	    	.__("$('#activity2').css('clip-path', '')")
+	    	    	.__("$('#activity2').css('transform', '')")
+		    	        .consoleDebug("'end activity anim'")
 				   )) 	
 		._else()
 			// fermeture activity 2 
 			.__(TKQueue.start(  fct()
-				 	// .__("$('#activity2').css('transition', 'opacity 500ms ease')")
-				 	// .__("$('#activity2').css('opacity', '0')")
-					 .__("$('#activity2').data('scrolltop', sct ) ") 
-			//	, 200, fct()   // attente bulle
-					.__("$('#activity2').css('transition', '')")
+					.__("$('#activity2').data('scrolltop', sct ) ") 
+					.__("$('#activity2').css('z-index' ,'1')")
+					.__("$('.scene .ripple_overlay').css('display', '')")
+					.__("$('#activity2').css('clip-path', 'circle(100% at center)')")
+					.__("$('#activity2').css('transition', 'clip-path "+ ScnStandard.SPEED_SHOW_ACTIVITY +"ms ease-out')")
+				, 100 , fct()	
+					.__("$('#activity2').css('clip-path' ,'circle(0.0% at 100vw 100vh)')")
+				,ScnStandard.SPEED_SHOW_ACTIVITY, fct()	
 					.__("$('#activity2').addClass('inactive')")
 					.__("$('#activity2').addClass('inactivefixed')")
+					.__("$('#activity2').css('transition', 'none')")
 					.__("$('#activity2').addClass('toHidden')")
 				    .__("$('#activity2').removeClass('active')")
 					.__("$('#activity1').addClass('active')") 		
 		   			.__("$('.scene').scrollTop($('#activity1').data('scrolltop'))")
-			   	, 100,  fct()
-			   		//	.__("$('#activity2').css('opacity', '1')")
-			   		//	.__("$('#activity2').css('opacity', '')")
-			   	 		.consoleDebug("'end activity anim'")
+		   			.__("$('.scene .ripple_overlay').removeClass('anim')")
+		   		 ,ScnStandard.SPEED_SHOW_ACTIVITY, fct()		
+		   		 	.__("$('.scene .ripple_overlay').remove()")
+		   		 	.__("$('#activity2').css('transition', '')")
+		   		 	.__("$('#activity2').css('z-index' ,'')")
+		   		 	.__("$('#activity2').css('clip-path', '')")
+			   	 	.consoleDebug("'end activity anim'")
 			   ))	
 	   .endif();
 		

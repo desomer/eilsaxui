@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.xui.core.widget;
+package com.elisaxui.xui.core.widget.button;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
@@ -10,7 +10,7 @@ import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 import com.elisaxui.xui.core.page.ScnStandard;
-import com.elisaxui.xui.core.widget.button.ViewBtnCircle;
+import com.elisaxui.xui.core.widget.container.ViewCard;
 
 /**
  * @author Bureau
@@ -47,7 +47,11 @@ public class ViewFloatAction extends XHTMLPart {
 	
 	@xTarget(CONTENT.class)
 	public static Element getTemplateBtnFloat() {
-		return xDiv(cFloatAction, xIdAction("'BtnFloatMain'"),	xPart(new ViewBtnCircle().addProperty(ViewBtnCircle.PROPERTY_ICON, "history")));
+		return xDiv(cFloatAction, xIdAction("\"BtnFloatMain\""),	xPart(new ViewBtnCircle().addProperty(ViewBtnCircle.PROPERTY_ICON, "history")));
+	}
+	
+	public static Element getTemplate() {
+		return xListElement(xPart(new ViewFloatAction() ));
 	}
 	
 }

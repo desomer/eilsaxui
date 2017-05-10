@@ -304,6 +304,10 @@ public class XMLBuilder {
 		private Object name;
 		private Object value;
 
+		public Object getValue() {
+			return value;
+		}
+
 		public Attr(Object name, Object value) {
 			super();
 			this.name = name;

@@ -72,7 +72,7 @@ public interface TKRouter extends JSClass {
 //		   .__("alert(event)")
 		   .__("if (navigator.vibrate) { navigator.vibrate(30); }")    // je vibre
 		   
-		   ._if("event=='BtnFloatMain' || event=='more' ")
+		   ._if("event=='BtnFloatMain' || event=='more' || event=='closeActivity' ")
 				._if(navigo,".history[",navigo,".history.length-1]=='open'")
 					.__(navigo,".nextenable=", false)
 					.__(_this.doBack())

@@ -16,6 +16,8 @@ import com.elisaxui.xui.core.widget.overlay.ViewOverlayRipple;
 public interface TKAnimation extends JSClass {
 
 	JSOverlay _overlay = null;
+	TKAnimation _this = null;
+	TKAnimation _self = null;
 	
 	default Object doOpenBurgerMenu() {
 		var(_overlay, _new(ScnStandard.SPEED_SHOW_OVERLAY, 0.3))
@@ -113,23 +115,42 @@ public interface TKAnimation extends JSClass {
 		return null;
 	}
 	
+	default Object doActivity1ToBack()
+	{
+	 	var("sct", "$('.scene').scrollTop()")
+   		.__("$('#activity1').data('scrolltop', sct ) ") 
+   		.__("$('#activity1 .navbar').css('top', sct+'px' )")
+   		.__("$('#activity1').css('transform-origin', '50% 300px')")
+   		.__("$('#activity1').css('overflow', 'auto')")  //cest plus la scene qui scroll mais l'activity
+   		.__("$('#activity1').scrollTop(sct)")
+   		.__("$('#activity1').addClass('toback')")
+   		;
+   			
+		return null;
+	}
+	
+	default Object doActivity1ToFront()
+	{
+   		__("$('#activity1 .navbar').css('top', '0px' )")
+		.__("$('#activity1').css('overflow', '').css('transform-origin', '')")
+		.__("$('.scene').scrollTop($('#activity1').data('scrolltop'))")
+		.__("$('#activity1').removeClass('backToFront')")	
+		;
+		return null;
+	}
+	
 	default Object doOpenActivityFromBottom()
 	{
 		var(_overlay, _new(ScnStandard.SPEED_SHOW_ACTIVITY, 0.6))
 	 	.var("sct", "$('.scene').scrollTop()")
-	 	
+	 	.var(_self, _this)
 	    ._if("$('#activity1').hasClass('active')")
 	         // ouverture activity 2
 		     .__(TKQueue.start(  // ScnStandard.SPEED_RIPPLE_EFFECT, // attente bulle
 		    		 fct() 
 						.__(_overlay.doShow(1))
 		    		 ,100, fct()   // attente overlay
-				   		.__("$('#activity1').data('scrolltop', sct ) ") 
-				   		.__("$('#activity1 .navbar').css('top', sct+'px' )")
-				   		.__("$('#activity1').css('transform-origin', '50% 150px')")
-				   		.__("$('#activity1').css('overflow', 'auto')")
-				   		.__("$('#activity1').scrollTop(sct)")
-				   		.__("$('#activity1').addClass('toback')")
+		    		    .__(_self.doActivity1ToBack())	
 				   		.__("$('#activity2').addClass('tofront')")
 				   		.__("$('#activity2').removeClass('inactivefixed')")	
 		    		 	.__(_overlay.doShow(2))
@@ -157,12 +178,7 @@ public interface TKAnimation extends JSClass {
 					.__(_overlay.doHide(1))
 			   	,ScnStandard.SPEED_SHOW_ACTIVITY, fct()
 					.__("$('#activity2').removeClass('active')")
-					
-			   		.__("$('#activity1 .navbar').css('top', '0px' )")
-					.__("$('#activity1').css('overflow', '')")
-		   			.__("$('#activity1').css('transform-origin', '')")
-		   			.__("$('.scene').scrollTop($('#activity1').data('scrolltop'))")
-		   			.__("$('#activity1').removeClass('backToFront')")
+					.__(_self.doActivity1ToFront())
 					.__(_overlay.doHide(2))	
 			   	,100, fct().consoleDebug("'end activity anim'")
 			   ))	
@@ -175,30 +191,34 @@ public interface TKAnimation extends JSClass {
 	JSXHTMLPart _template = null;
 	default Object doOpenActivityFromOpacity()
 	{
-		__()
-		
-	 	.var("sct", "$('.scene').scrollTop()")
-	 	
+		var(_overlay, _new(ScnStandard.SPEED_SHOW_ACTIVITY, 0.6))
+	 	.var(_self, _this)
+	 	.var("sct", "$('.scene').scrollTop()")	 	
 	    ._if("$('#activity1').hasClass('active')")
 	         // ouverture activity 2
-		     .__(TKQueue.start(  // ScnStandard.SPEED_RIPPLE_EFFECT, // attente bulle
-		    		 fct() 
+		     .__(TKQueue.start( 
+		    	fct() 
+					  .__(_overlay.doShow(1))
+		    	 ,100,fct() 
 		    		 .var(_template,  ViewOverlayRipple.xTemplate() )
 		    		 .var("rippleOverlay", _template.append("$('.scene')"))
-		    		 .__("$('#activity1').data('scrolltop', sct ) ") 
+		    		
+		    		 .__(_self.doActivity1ToBack())
+		    		 .__(_overlay.doShow(2))
+				   		
 					 .__("$('#activity2').css('clip-path' ,'circle(0.0% at 100vw 100vh)')")
 					 .__("$('#activity2').css('z-index' ,'1')")
-		    		 .__("$('#activity1').removeClass('active')")  
 		    		 .__("$('#activity2').removeClass('inactivefixed')")
 		    		 .__("$('#activity2').addClass('active')")
-					 .__("$('.scene').scrollTop($('#activity2').data('scrolltop'))")	
+					 .__("$('.scene').scrollTop($('#activity2').data('scrolltop'))")
 	    	    	 .__("$('#activity2').removeClass('inactive')")
 	    		     .__("$('#activity2').removeClass('toHidden')") 
-	 				 .__("$('#activity2').css('transform', 'scale3d(1.2,1.2,1)')")
-					 .__("$('#activity2').css('transition', 'all "+ ScnStandard.SPEED_SHOW_ACTIVITY +"ms ease-out')")
+	 				 .__("$('#activity2').css('transform', 'scale3d(1.2,1.2,1)')") 
 				 , 100, fct()
+				 	 .__("$('#activity2').css('transition', 'all "+ ScnStandard.SPEED_SHOW_ACTIVITY +"ms ease-out')")
 				 		.__("$('.scene .ripple_overlay').addClass('anim')") 
 				 , ScnStandard.SPEED_SHOW_ACTIVITY, fct()
+				 		.__("$('#activity1').removeClass('active')")  
 				 		.__("$('#activity2').css('clip-path', 'circle(100% at center)')")
 				 , 100, fct()		
 		    	    	.__("$('#activity2').css('transform', 'scale3d(1,1,1)')")
@@ -221,22 +241,29 @@ public interface TKAnimation extends JSClass {
 					.__("$('#activity2').css('clip-path', 'circle(100% at center)')")
 					.__("$('#activity2').css('transition', 'clip-path "+ ScnStandard.SPEED_SHOW_ACTIVITY +"ms ease-out')")
 				, 100 , fct()	
-					.__("$('#activity2').css('clip-path' ,'circle(0.0% at 100vw 100vh)')")
+					.__("$('#activity2').css('clip-path' ,'circle(0.0% at 100vw 100vh)')")	
 				,ScnStandard.SPEED_SHOW_ACTIVITY, fct()	
 					.__("$('#activity2').addClass('inactive')")
 					.__("$('#activity2').addClass('inactivefixed')")
-					.__("$('#activity2').css('transition', 'none')")
+					.__("$('#activity2').css('transition', 'none')")  // pas d'animation pour le toHidden
 					.__("$('#activity2').addClass('toHidden')")
 				    .__("$('#activity2').removeClass('active')")
-					.__("$('#activity1').addClass('active')") 		
+				    
 		   			.__("$('.scene').scrollTop($('#activity1').data('scrolltop'))")
 		   			.__("$('.scene .ripple_overlay').removeClass('anim')")
-		   		 ,ScnStandard.SPEED_SHOW_ACTIVITY, fct()		
+		   		 ,50, fct()	
+					.__("$('#activity1').removeClass('toback')")
+					.__("$('#activity1').addClass('active backToFront')") 
+		   			.__(_overlay.doHide(1))
+				,ScnStandard.SPEED_SHOW_ACTIVITY, fct()	
+					.__(_self.doActivity1ToFront())
+	   			
 		   		 	.__("$('.scene .ripple_overlay').remove()")
 		   		 	.__("$('#activity2').css('transition', '')")
 		   		 	.__("$('#activity2').css('z-index' ,'')")
 		   		 	.__("$('#activity2').css('clip-path', '')")
-			   	 	.consoleDebug("'end activity anim'")
+				    .__(_overlay.doHide(2))
+				  ,100, fct().consoleDebug("'end activity anim'")
 			   ))	
 	   .endif();
 		

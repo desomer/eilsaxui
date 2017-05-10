@@ -50,6 +50,11 @@ public abstract class XHTMLPart extends XMLPart {
 	public final static Element xH1(Object... inner) {
 		return xElement("h1", inner);
 	}
+	
+	public final static Element xH2(Object... inner) {
+		return xElement("h2", inner);
+	}
+
 
 	public final static Element xUl(Object... inner) {
 		return xElement("ul", inner);
@@ -57,6 +62,14 @@ public abstract class XHTMLPart extends XMLPart {
 
 	public final static Element xLi(Object... inner) {
 		return xElement("li", inner);
+	}
+	
+	public final static Element xImg(Object... inner) {
+		return xElement("img", inner);
+	}
+	
+	public final static Element xCanvas(Object... inner) {
+		return xElement("canvas", inner);
 	}
 
 	public final static Element xComment(Object... comment) {

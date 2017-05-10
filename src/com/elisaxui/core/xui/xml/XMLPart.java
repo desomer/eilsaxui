@@ -10,6 +10,7 @@ import java.util.List;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.builder.Xid;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
 import com.elisaxui.core.xui.xml.annotation.xComment;
@@ -61,6 +62,11 @@ public class XMLPart {
 	public Element getPropertyElement(Object key)
 	{
 		return (Element)listProperties.get(key);
+	}
+	
+	public Attr getPropertyXID(Object key)
+	{
+		return (Attr)listProperties.get(key);
 	}
 	
 	@Deprecated
@@ -224,6 +230,10 @@ public class XMLPart {
 		return XMLBuilder.createPart(part, inner);
 	}
 	
+	public final static Element xElementPart(XMLPart part, Object... inner) {
+		return xElement(null, XMLBuilder.createPart(part, inner));
+	}
+	
 	public final static Element xElement(String name, Object... inner) {
 		Element tag = XMLBuilder.createElement(name, inner);
 		return tag;
@@ -238,12 +248,12 @@ public class XMLPart {
 		return attr;
 	}
 	
-	public final Handle vHandle(String name) {
+	public final static Handle vHandle(String name) {
 		Handle attr = XMLBuilder.createHandle(name);
 		return attr;
 	}
 
-	public final Object xTxt(Object text) {
+	public final static Object xTxt(Object text) {
 		return "\"" + text + "\"";
 	}
 }

@@ -7,7 +7,6 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
-import com.elisaxui.core.xui.xml.XMLPart.CONTENT;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
@@ -54,8 +53,8 @@ public class ViewBtnCircle extends XHTMLPart {
 	@xTarget(CONTENT.class)
 	public Element xBurgerBtn() {
 		return  xListElement( xPart(new ViewRippleEffect()),   ////////////////// IMPORT //////////////////
-		       xElement("button", ViewRippleEffect.cRippleEffect(), cBtnCircle, xAttr("type", "'button'"),
-				"<i class='material-icons'>", this.getProperty(PROPERTY_ICON), "</i>")
+		       xElement("button", ViewRippleEffect.cRippleEffect(), cBtnCircle, xAttr("type", "\"button\""),
+				"<i class=\"material-icons\">", this.getProperty(PROPERTY_ICON), "</i>")
 		       );
 	}
 

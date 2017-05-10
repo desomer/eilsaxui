@@ -29,6 +29,7 @@ public interface JSNavBar extends JSClass {
 				.__(aDataSet.setData("[]"))
 
 				.set(aDataDriven, _new(aDataSet))
+				
 				.__(aDataDriven.onEnter(fct("ctx")
 						._if("ctx.row['_dom_']==null")
 							._if("ctx.row.type=='burger'")
@@ -49,6 +50,7 @@ public interface JSNavBar extends JSClass {
 								.__("ctx.row['_dom_']=jqdom[0]")
 							.endif()
 						.endif()))
+				
 				.__(aDataDriven.onExit(fct("value")
 						._if("value!=null && value.row['_dom_']!=null")
 
@@ -58,9 +60,7 @@ public interface JSNavBar extends JSClass {
 						._if("value.row['_dom_']!=null && value.property=='idx'")
 
 						.endif()
-						._if("value.row['_dom_']!=null && value.property=='b'")
-
-						.endif()))
+					))
 
 				.var("jsonMenu", aDataSet.getData())
 				.__("return jsonMenu")

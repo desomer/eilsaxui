@@ -149,6 +149,7 @@ public interface TKAnimation extends JSClass {
 		     .__(TKQueue.start(  // ScnStandard.SPEED_RIPPLE_EFFECT, // attente bulle
 		    		 fct() 
 						.__(_overlay.doShow(1))
+				   		.__("$('#activity2').removeClass('nodisplay')")
 		    		 ,100, fct()   // attente overlay
 		    		    .__(_self.doActivity1ToBack())	
 				   		.__("$('#activity2').addClass('tofront')")
@@ -156,29 +157,36 @@ public interface TKAnimation extends JSClass {
 		    		 	.__(_overlay.doShow(2))
 				   	,ScnStandard.SPEED_SHOW_ACTIVITY, fct()		
 				   		.__("$('#activity1').removeClass('active')")
+		    		 	.__("$('#activity1').addClass('nodisplay')")
+		    		 	
 				   		.__("$('#activity2').removeClass('inactive')")
 				   		.__("$('#activity2').addClass('active')")
 				   		.__("$('#activity2').removeClass('tofront')")
 		    		 	.__("$('#activity2').removeClass('toHidden')") 
+
 					    .__("$('.scene').scrollTop($('#activity2').data('scrolltop'))")		
 				   	, 100, fct().consoleDebug("'end activity anim'")
 				   )) 	
 		._else()
 			// fermeture activity 2 
 			.__(TKQueue.start(  // ScnStandard.SPEED_RIPPLE_EFFECT, 
-				fct()   // attente bulle
+				fct().__("$('#activity1').removeClass('nodisplay')")	
+				,30, fct()   // attente bulle
 					.__("$('#activity2').addClass('inactive')")
 					.__("$('#activity2').data('scrolltop', sct ) ") 
-				,100, fct()   // attente obligatoire pour bug changement de display trop rapide
-					.__("$('#activity1').removeClass('toback')")	  
-					.__("$('#activity1').addClass('active backToFront')") 								
-				,50, fct()   // 100 ms attente obligatoire pour bug changement de display trop rapide car rejoue les anim en attente
 					.__("$('#activity2').addClass('inactivefixed')")
+				,30, fct()   // attente obligatoire pour bug changement de display trop rapide  
 					.__("$('#activity2').addClass('toHidden')")
+				,40, fct()   // 100 ms attente obligatoire pour bug changement de display trop rapide car rejoue les anim en attente
+					.__("$('#activity1').removeClass('toback')")	
+					.__("$('#activity1').addClass('backToFront')") 	
 					.__(_overlay.doHide(1))
 			   	,ScnStandard.SPEED_SHOW_ACTIVITY, fct()
 					.__("$('#activity2').removeClass('active')")
+			   		.__("$('#activity2').addClass('nodisplay')")
+			   		.__("$('#activity1').addClass('active')")
 					.__(_self.doActivity1ToFront())
+					
 					.__(_overlay.doHide(2))	
 			   	,100, fct().consoleDebug("'end activity anim'")
 			   ))	
@@ -199,6 +207,7 @@ public interface TKAnimation extends JSClass {
 		     .__(TKQueue.start( 
 		    	fct() 
 					  .__(_overlay.doShow(1))
+					  .__("$('#activity2').removeClass('nodisplay')")
 		    	 ,100,fct() 
 		    		 .var(_template,  ViewOverlayRipple.xTemplate() )
 		    		 .var("rippleOverlay", _template.append("$('.scene')"))
@@ -207,6 +216,7 @@ public interface TKAnimation extends JSClass {
 		    		 .__(_overlay.doShow(2))
 				   		
 					 .__("$('#activity2').css('clip-path' ,'circle(0.0% at 100vw 100vh)')")
+					 .__("$('#activity2').css('-webkit-clip-path' ,'circle(0.0% at 100vw 100vh)')")
 					 .__("$('#activity2').css('z-index' ,'1')")
 		    		 .__("$('#activity2').removeClass('inactivefixed')")
 		    		 .__("$('#activity2').addClass('active')")
@@ -220,28 +230,35 @@ public interface TKAnimation extends JSClass {
 				 , ScnStandard.SPEED_SHOW_ACTIVITY, fct()
 				 		.__("$('#activity1').removeClass('active')")  
 				 		.__("$('#activity2').css('clip-path', 'circle(100% at center)')")
+				 		.__("$('#activity2').css('-webkit-clip-path', 'circle(100% at center)')")
 				 , 100, fct()		
 		    	    	.__("$('#activity2').css('transform', 'scale3d(1,1,1)')")
 		    	, ScnStandard.SPEED_SHOW_ACTIVITY, 
 		    	    fct()
 		    	    	.__("$('.scene .ripple_overlay').css('display', 'none')")
-		    	   , ScnStandard.SPEED_SHOW_ACTIVITY , fct()	 	
+		    	   , ScnStandard.SPEED_SHOW_ACTIVITY , fct()	
+		    	   .__("$('#activity1').addClass('nodisplay')")
     	    		.__("$('#activity2').css('z-index' ,'')")
 	    	    	.__("$('#activity2').css('transition', '')")
 	    	    	.__("$('#activity2').css('clip-path', '')")
+	    	    	.__("$('#activity2').css('-webkit-clip-path', '')")
 	    	    	.__("$('#activity2').css('transform', '')")
 		    	        .consoleDebug("'end activity anim'")
 				   )) 	
 		._else()
 			// fermeture activity 2 
 			.__(TKQueue.start(  fct()
+					.__("$('#activity1').removeClass('nodisplay')")
 					.__("$('#activity2').data('scrolltop', sct ) ") 
 					.__("$('#activity2').css('z-index' ,'1')")
 					.__("$('.scene .ripple_overlay').css('display', '')")
 					.__("$('#activity2').css('clip-path', 'circle(100% at center)')")
-					.__("$('#activity2').css('transition', 'clip-path "+ ScnStandard.SPEED_SHOW_ACTIVITY +"ms ease-out')")
+					.__("$('#activity2').css('-webkit-clip-path', 'circle(100% at center)')")
+					.__("$('#activity2').css('transition', ' "+ ScnStandard.SPEED_SHOW_ACTIVITY +"ms ease-out')")
+					.__("$('#activity2').css('transition-property', '-webkit-clip-path, clip-path')")
 				, 100 , fct()	
 					.__("$('#activity2').css('clip-path' ,'circle(0.0% at 100vw 100vh)')")	
+					.__("$('#activity2').css('-webkit-clip-path' ,'circle(0.0% at 100vw 100vh)')")	
 				,ScnStandard.SPEED_SHOW_ACTIVITY, fct()	
 					.__("$('#activity2').addClass('inactive')")
 					.__("$('#activity2').addClass('inactivefixed')")
@@ -262,6 +279,8 @@ public interface TKAnimation extends JSClass {
 		   		 	.__("$('#activity2').css('transition', '')")
 		   		 	.__("$('#activity2').css('z-index' ,'')")
 		   		 	.__("$('#activity2').css('clip-path', '')")
+		   		 	.__("$('#activity2').css('-webkit-clip-path', '')")
+		   		 	.__("$('#activity2').addClass('nodisplay')")
 				    .__(_overlay.doHide(2))
 				  ,100, fct().consoleDebug("'end activity anim'")
 			   ))	

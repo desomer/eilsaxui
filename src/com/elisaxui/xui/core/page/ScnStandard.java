@@ -80,7 +80,7 @@ public class ScnStandard extends XHTMLPart {
 		return xCss()
 				.on("html", "font-size: 14px;line-height: 1.5;"
 						+ "font-family: 'Roboto', sans-serif;font-weight: normal; color: rgba(0,0,0,0.87);")
-				.on("body", "background-color: white;margin: 0; top: 0px;left: 0px; right: 0px; bottom: 0px; ")
+				.on("body", "background-color: white;margin: 0; top: 0px;left: 0px; right: 0px; bottom: 0px; -webkit-overflow-scrolling: touch;")
 				.on("*", "-webkit-tap-highlight-color: rgba(0,0,0,0);")
 
 				//----------------------------------------------------------------
@@ -101,12 +101,12 @@ public class ScnStandard extends XHTMLPart {
 				
 			//	.on(".activity.active", "z-index:1;")
 
-				.on(".activity.inactive", "transition:transform "+SPEED_SHOW_ACTIVITY+"ms ease-out; top: 0px;left: 0px; right: 0px; bottom: 0px;"
-						+ "backface-visibility: hidden;"
+				.on(".activity.inactive", "transition:transform "+SPEED_SHOW_ACTIVITY+"ms linear; /* top: 0px;left: 0px; right: 0px; bottom: 0px;*/"
 						+ "box-shadow: 3px 3px 3px 0 rgba(0,0,0,.24);")
-				.on(".activity.inactive.tofront", "transition:transform "+SPEED_SHOW_ACTIVITY+"ms ease-out; transform: translate3d(0px,0px,0px);") //z-inde2x: "+ZINDEX_TO_FRONT+";
-				.on(".activity.inactive.tofrontSlow", "transition:transform "+400+"ms ease-out; transform: translate3d(0px,0px,0px);") //z-inde2x: "+ZINDEX_TO_FRONT+";
-				.on(".activity.inactive.inactivefixed", "position: fixed;") 
+				.on(".activity.inactive.tofront", "transition:transform "+SPEED_SHOW_ACTIVITY+"ms ease-out; transform: translate3d(0px,0px,0px);") 
+				.on(".activity.inactive.tofrontSlow", "transition:transform "+400+"ms ease-out; transform: translate3d(0px,0px,0px);") 
+				.on(".activity.inactive.inactivefixed", "position: fixed;")   // reste cacher en bas de la page et ne suit pas l'ascenceur
+				.on(".activity.nodisplay", "display:none;")
 				
 
 
@@ -114,13 +114,9 @@ public class ScnStandard extends XHTMLPart {
 				.on(".activityMoveForHideMenu", "transition:transform "+SPEED_SHOW_BURGERMENU+"ms ease-out; transform: translate3d(0px,0px,0px);")
 				
 				//----------------------------------------------------------------
-				
-				.on(".content", "background-color: white; box-sizing: border-box; "
+				.on(".content", "background-color: white; box-sizing: border-box;"
 						+ "min-height:100%; min-width: 100%; max-width: 100%; "
-						+ "position:absolute; padding: 8px; padding-top: " + (heightNavBar + 8) + "px")
-		//		.on("#content", "height:3000px; width:100%; position:relative")
-		//		.on("#content2", "height:2000px;  width:100%; position:relative")
-				
+						+ "position:absolute; padding: 8px; padding-top: " + (heightNavBar + 8) + "px")			
 				;
 	}
 
@@ -150,15 +146,15 @@ public class ScnStandard extends XHTMLPart {
 					xDiv(xId("activity1"), xAttr("class", "'activity active'")
 							,xPart(new ViewNavBar().addProperty(ViewNavBar.PROPERTY_NAME, "NavBar1"))
 							,xDiv(xAttr("class", "'content'") 
-								, xDiv(/*xAttr("id",txt("content2")),*/ xAttr("class", "'article'"))
+								, xDiv( xAttr("class", "'article'"))
 								, xPart(new ViewOverlay())
 							)
 							
 				        )
-					,xDiv(xId("activity2"), xAttr("class", "'activity inactive inactivefixed toHidden'")
+					,xDiv(xId("activity2"), xAttr("class", "'activity inactive inactivefixed toHidden nodisplay'")
 							, xPart(new ViewNavBar().addProperty(ViewNavBar.PROPERTY_NAME, "NavBar2"))
 							, xDiv(xAttr("class", "'content'") 	
-									, xDiv(/*xAttr("id",txt("content")),*/ xAttr("class", "'article'"))
+									, xDiv(xAttr("class", "'article'"))
 							, xPart(new ViewOverlay())
 						   )	
 					     )

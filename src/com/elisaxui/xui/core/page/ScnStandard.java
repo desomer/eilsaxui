@@ -36,11 +36,14 @@ public class ScnStandard extends XHTMLPart {
 	public static final int heightNavBar = 53;
 	public static final int widthMenu = 250;
 	
-	public static final int SPEED_SHOW_BURGERMENU = 200;
+	public static final int SPEED_SHOW_MENU = 150;
+	public static final int SPEED_SHOW_OVERLAY = 150;
+	public static final double OVERLAY_OPACITY = 0.5;
+	
 	public static final int SPEED_SHOW_ACTIVITY = 200;
-	public static final int SPEED_SHOW_OVERLAY = 400;
 	public static final int SPEED_RIPPLE_EFFECT = 300;
 	public static final int SPEED_BURGER_EFFECT = 600;
+	public static final int SPEED_NEXT_FASTDOM = 100;
 	
 	public static final int ZINDEX_NAV_BAR = 1;
 	public static final int ZINDEX_MENU = 2;
@@ -53,7 +56,9 @@ public class ScnStandard extends XHTMLPart {
     @xTarget(HEADER.class)
 	@xRessource
 	public Element xTitle() {
-		return xElement("title", "le standard");
+		return xListElement(xElement("title", "le standard"),
+				xElement("meta", xAttr("name", xTxt("theme-color")), xAttr("content", xTxt("#ff359d")))
+				);
 	}
 
 	@xTarget(HEADER.class)
@@ -69,7 +74,8 @@ public class ScnStandard extends XHTMLPart {
 				xImport(JSOverlay.class),
 				xImport(JSContainer.class),
 				xImport(TKRouter.class),
-				xImport(TKAnimation.class)
+				xImport(TKAnimation.class),
+				xImport(JSMenu.class)
 				);
 	}
 	
@@ -80,18 +86,18 @@ public class ScnStandard extends XHTMLPart {
 		return xCss()
 				.on("html", "font-size: 14px;line-height: 1.5;"
 						+ "font-family: 'Roboto', sans-serif;font-weight: normal; color: rgba(0,0,0,0.87);")
-				.on("body", "background-color: white;margin: 0; top: 0px;left: 0px; right: 0px; bottom: 0px; -webkit-overflow-scrolling: touch;")
+				.on("body", "background-color: white;margin: 0; /*top: 0px;left: 0px; right: 0px; bottom: 0px; -webkit-overflow-scrolling: touch;*/")
 				.on("*", "-webkit-tap-highlight-color: rgba(0,0,0,0);")
 
 				//----------------------------------------------------------------
 				.on(".scene","overflow-x: hidden; background-color: black; "
-						+ "min-width: 100%;  min-height: 100%; position: absolute   "   //position: absolute;
+						+ "min-width: 100%;  min-height: 100%; "   //position: absolute;
 						)
 				
 		//		.on(".scene #headerScene", "position:fixed; top: 0px;  right: 0px;  left: 0px; height: 53px; z-index:"+ZINDEX_FLOAT+";" )
 				//----------------------------------------------------------------
 				.on(".activity", "background-color: white;"
-						+ "position: absolute;   min-width: 100%;  min-height: 100%;   "// top: 0px; left: 0px; right: 0px; bottom: 0px; "
+						+ "   min-width: 100%;  min-height: 100%;   "// position: absolute; // top: 0px; left: 0px; right: 0px; bottom: 0px; "
 						+ "backface-visibility: hidden; will-change:overflow,z-index;") //will-change:transform
 				
 				.on(".activity.backToFront", "transition:transform "+(SPEED_SHOW_ACTIVITY+100)+"ms ease-out;")
@@ -110,13 +116,13 @@ public class ScnStandard extends XHTMLPart {
 				
 
 
-				.on(".activityMoveForShowMenu", "transition:transform "+SPEED_SHOW_BURGERMENU+"ms ease-out; transform: translate3d("+(widthMenu-100)+"px,0px,0px);")
-				.on(".activityMoveForHideMenu", "transition:transform "+SPEED_SHOW_BURGERMENU+"ms ease-out; transform: translate3d(0px,0px,0px);")
+				.on(".activityMoveForShowMenu", "transition:transform "+SPEED_SHOW_MENU+"ms ease-out; transform: translate3d("+(widthMenu-100)+"px,0px,0px);")
+				.on(".activityMoveForHideMenu", "transition:transform "+SPEED_SHOW_MENU+"ms ease-out; transform: translate3d(0px,0px,0px);")
 				
 				//----------------------------------------------------------------
 				.on(".content", "background-color: white; box-sizing: border-box;"
 						+ "min-height:100%; min-width: 100%; max-width: 100%; "
-						+ "position:absolute; padding: 8px; padding-top: " + (heightNavBar + 8) + "px")			
+						+ "padding: 8px; padding-top: " + (heightNavBar + 8) + "px")	  //position:absolute;		
 				;
 	}
 
@@ -140,17 +146,21 @@ public class ScnStandard extends XHTMLPart {
 
 	@xTarget(CONTENT.class)
 	public Element xContenu() {
-		return xDiv(xAttr("class", "'scene'"), 
+		return 
+			xListElement(
+				xPart(new ViewNavBar().addProperty(ViewNavBar.PROPERTY_NAME, "NavBar1")),
+				xPart(new ViewMenu()),
+				xDiv(xAttr("class", "'scene'"), 
 					//xDiv(xId("headerScene")),
 				
 					xDiv(xId("activity1"), xAttr("class", "'activity active'")
-							,xPart(new ViewNavBar().addProperty(ViewNavBar.PROPERTY_NAME, "NavBar1"))
 							,xDiv(xAttr("class", "'content'") 
 								, xDiv( xAttr("class", "'article'"))
 								, xPart(new ViewOverlay())
 							)
 							
 				        )
+					
 					,xDiv(xId("activity2"), xAttr("class", "'activity inactive inactivefixed toHidden nodisplay'")
 							, xPart(new ViewNavBar().addProperty(ViewNavBar.PROPERTY_NAME, "NavBar2"))
 							, xDiv(xAttr("class", "'content'") 	
@@ -158,8 +168,7 @@ public class ScnStandard extends XHTMLPart {
 							, xPart(new ViewOverlay())
 						   )	
 					     )
-					,xPart(new ViewMenu())
-
+				)
 		);
 	}
 	
@@ -265,7 +274,7 @@ public class ScnStandard extends XHTMLPart {
 	{
 	  return fct()
 			   .consoleDebug("'ok ActionManager'") 
-			   .__("$('.scene').on('touchstart',", fct('e')
+			   .__("$('body').on('touchstart',", fct('e')
 					   .var("btn", "$(e.target).closest('[data-x-action]')")
 					  
 					   .var("ripple", "btn")
@@ -310,7 +319,7 @@ public class ScnStandard extends XHTMLPart {
 		// gestion deplacement menu et fermeture par gesture 
 	  return fct().consoleDebug("'ok MoveManager'") 
 			  			  
-				.__("var mc = new Hammer($('.scene')[0])")    //, {touchAction: 'auto'}
+				.__("var mc = new Hammer($('body')[0])")    //, {touchAction: 'auto'}
 			//	.__("mc.get('pinch').set({ enable: true })")
 				.__("mc.get('pan').set({ enable: true, direction: Hammer.DIRECTION_HORIZONTAL })")  //DIRECTION_ALL
 				.var("anim", true)
@@ -321,18 +330,18 @@ public class ScnStandard extends XHTMLPart {
 							._if("ev.deltaX>-100 && ev.offsetDirection==2 && ev.velocity>-1 ")
 								._if("anim==true")
 									.__("$('.menu').css('transition', '' )")
-									.__("$('.menu').css('transform', 'translate3d('+ev.deltaX+'px,'+$('.scene').scrollTop()+'px,0px)' )")
+									.__("$('.menu').css('transform', 'translate3d('+ev.deltaX+'px,'+$('body').scrollTop()+'px,0px)' )")
 								.endif()
 							._elseif("anim==true && ev.offsetDirection==2 ")
 								.set("anim", "false")
-								.__("$('.menu').css('transition', 'transform "+(SPEED_SHOW_BURGERMENU+50)+"ms ease-out' )")
+								.__("$('.menu').css('transition', 'transform "+(SPEED_SHOW_MENU+50)+"ms ease-out' )")
 								.__(tkrouter.doEvent("'Overlay'"))
 							.endif()
 							
 							._if("ev.isFinal")
 								._if("anim==true")
-									.__("$('.menu').css('transition', 'transform "+(SPEED_SHOW_BURGERMENU+50)+"ms ease-out' )")
-									.__("$('.menu').css('transform', 'translate3d(0px,'+$('.scene').scrollTop()+'px,0px)' )")
+									.__("$('.menu').css('transition', 'transform "+(SPEED_SHOW_MENU+50)+"ms ease-out' )")
+									.__("$('.menu').css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px)' )")
 								.endif()
 								.set("anim", "true")
 							.endif()
@@ -382,14 +391,14 @@ public class ScnStandard extends XHTMLPart {
 				.set("window.jsonMainMenu", "jsonMenu")
 				
 				.var(jsNavBar, _new())
-				.var("jsonNavBar", jsNavBar.getData("'#activity1'"))
+				.var("jsonNavBar", jsNavBar.getData("'#NavBar1'"))
 				.__("jsonNavBar.push({type:'burger' })")
 				.__("jsonNavBar.push({type:'name', name:'Elisa' })")
 				.__("jsonNavBar.push({type:'action', icon:'perm_identity', idAction:'identity'})")
 				.__("jsonNavBar.push({type:'action', icon:'more_vert', idAction:'more'})")
 				
 				.set(jsNavBar, _new())
-				.set("jsonNavBar", jsNavBar.getData("'#activity2'"))
+				.set("jsonNavBar", jsNavBar.getData("'#NavBar2'"))
 				.__("jsonNavBar.push({type:'burger' })")
 				.__("jsonNavBar.push({type:'name', name:'Detail' })")
 				.__("jsonNavBar.push({type:'action', icon:'search', idAction:'search'})")

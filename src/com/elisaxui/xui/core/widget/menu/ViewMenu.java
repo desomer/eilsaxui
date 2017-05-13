@@ -79,7 +79,8 @@ public class ViewMenu extends XHTMLPart {
 	@xRessource
 	public Element xImportAllClass() {
 		return xListElement(
-				xImport(JSMenu.class));
+			//	xImport(JSMenu.class)
+				);
 	}
 
 

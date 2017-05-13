@@ -29,7 +29,7 @@ public interface JSOverlay extends JSClass {
 			.__("overlay.css('display','block')")
 			.__("overlay.css('opacity','0')")
 		._elseif(phase, "==2")
-			.__("overlay.css('transition','opacity '+", speed ,"+'ms ease-out')")
+			.__("overlay.css('transition','opacity '+", speed ,"+'ms linear')")
 			.__("overlay.css('opacity',",opacity,")")
 		.endif()
 		;
@@ -41,6 +41,9 @@ public interface JSOverlay extends JSClass {
 		var("overlay", "$('.active .black_overlay')" )
 		._if(phase, "==1")
 			.__("overlay.css('opacity','0')")
+//			.__("overlay.one('transitionend',", fct()
+//					.__("overlay.css('display','none')")
+//					.__("overlay.css('transition','')") ,")")
 		._elseif(phase, "==2")
 			.__("overlay.css('display','none')")
 			.__("overlay.css('transition','')")

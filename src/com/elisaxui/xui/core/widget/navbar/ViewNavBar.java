@@ -63,7 +63,7 @@ public class ViewNavBar extends XHTMLPart {
 	
 	@xTarget(CONTENT.class)
 	public Element xContenu() {  
-		return xDiv(xAttr("class", "\"navbar fixedTop\""),xElement("canvas", animatedBg, xId(this.getProperty(PROPERTY_NAME))),  this.getChildren());
+		return xDiv( xId(this.getProperty(PROPERTY_NAME)), xAttr("class", "\"navbar fixedTop\""),xElement("canvas", animatedBg),  this.getChildren());
 	}
 	
 	public static Element getTemplateBtnBurger() {

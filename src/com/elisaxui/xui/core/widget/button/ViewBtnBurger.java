@@ -41,15 +41,17 @@ public class ViewBtnBurger extends XHTMLPart {
 
 		return xCss()
 
+				.on(".hamburger", "will-change:transform")
+				
 				.on(".hamburger .hamburger-inner, "
 						+ ".hamburger .hamburger-inner:after, "
 						+ ".hamburger .hamburger-inner:before",
 						"background-color: #fff; transition-property:all !important; transition-duration:500ms !important;")
 				
-				.on(".hamburger.changeColorMenu .hamburger-inner, "  // changement de couleur
-						+ ".hamburger.changeColorMenu .hamburger-inner:after, "
-						+ ".hamburger.changeColorMenu .hamburger-inner:before",
-						"background-color: #fff; transition-property:all !important; transition-duration:500ms !important;")
+//				.on(".hamburger.changeColorMenu .hamburger-inner, "  // changement de couleur
+//						+ ".hamburger.changeColorMenu .hamburger-inner:after, "
+//						+ ".hamburger.changeColorMenu .hamburger-inner:before",
+//						"background-color: #fff; transition-property:all !important; transition-duration:500ms !important;")
 
 				.on(cLeftBtn, "position: absolute;top: 0px; left: 0px; z-index: "+ScnStandard.ZINDEX_MENU+"; outline:0 !important") // pas
 																											// de

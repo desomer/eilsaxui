@@ -91,7 +91,7 @@ public interface TKRouter extends JSClass {
 					.__(navigo,".nextenable=", false)
 					.__(_this.doNavigate(txt("menu")))
 				.endif()
-				.__("$xui.config.delayWaitForShowMenu = event=='Overlay'?0:"+ScnStandard.SPEED_BURGER_EFFECT/2)
+				//.__("$xui.config.delayWaitForShowMenu = event=='Overlay'?0:"+ScnStandard.SPEED_BURGER_EFFECT/2)
 				.__(_this.doAction(txt("menu")))	
 			.endif()
 		.endif();

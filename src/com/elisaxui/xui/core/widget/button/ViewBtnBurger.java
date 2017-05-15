@@ -46,7 +46,7 @@ public class ViewBtnBurger extends XHTMLPart {
 				.on(".hamburger .hamburger-inner, "
 						+ ".hamburger .hamburger-inner:after, "
 						+ ".hamburger .hamburger-inner:before",
-						"background-color: #fff; transition-property:all !important; transition-duration:500ms !important;")
+						"background-color: #fff; transition-property:all !important; transition-duration:"+ScnStandard.SPEED_BURGER_EFFECT+"ms !important;")
 				
 //				.on(".hamburger.changeColorMenu .hamburger-inner, "  // changement de couleur
 //						+ ".hamburger.changeColorMenu .hamburger-inner:after, "

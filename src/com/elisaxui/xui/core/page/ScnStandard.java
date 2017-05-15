@@ -42,7 +42,7 @@ public class ScnStandard extends XHTMLPart {
 	
 	public static final int SPEED_SHOW_ACTIVITY = 200;
 	public static final int SPEED_RIPPLE_EFFECT = 300;
-	public static final int SPEED_BURGER_EFFECT = 600;
+	public static final int SPEED_BURGER_EFFECT = 200;
 	public static final int SPEED_NEXT_FASTDOM = 100;
 	
 	public static final int ZINDEX_NAV_BAR = 1;
@@ -108,10 +108,11 @@ public class ScnStandard extends XHTMLPart {
 			//	.on(".activity.active", "z-index:1;")
 
 				.on(".activity.inactive", "transition:transform "+SPEED_SHOW_ACTIVITY+"ms linear; /* top: 0px;left: 0px; right: 0px; bottom: 0px;*/"
-						+ "box-shadow: 3px 3px 3px 0 rgba(0,0,0,.24);")
-				.on(".activity.inactive.tofront", "transition:transform "+SPEED_SHOW_ACTIVITY+"ms ease-out; transform: translate3d(0px,0px,0px);") 
+//						+ "box-shadow: 3px 3px 3px 0 rgba(0,0,0,.24);"
+				)
+				.on(".activity.inactive.tofront", "transform: translate3d(0px,0px,0px);")    //transition:transform "+SPEED_SHOW_ACTIVITY+"ms ease-out;
 				.on(".activity.inactive.tofrontSlow", "transition:transform "+400+"ms ease-out; transform: translate3d(0px,0px,0px);") 
-				.on(".activity.inactive.inactivefixed", "position: fixed;")   // reste cacher en bas de la page et ne suit pas l'ascenceur
+				.on(".activity.inactive.inactivefixed", "top:0px; position: fixed;")   // reste cacher en bas de la page et ne suit pas l'ascenceur
 				.on(".activity.nodisplay", "display:none;")
 				
 
@@ -279,6 +280,8 @@ public class ScnStandard extends XHTMLPart {
 					  
 					   .var("ripple", "btn")
 					   .var("event", "btn.data('x-action')")
+					   
+					   // recherche le ripple btn
 					   ._if( "! ripple.hasClass('",  ViewRippleEffect.cRippleEffect().getId(), "')")
 					   		.set("ripple", "btn.closest('.",  ViewRippleEffect.cRippleEffect().getId(), "')")
 							._if( "! ripple.hasClass('",  ViewRippleEffect.cRippleEffect().getId(), "')")
@@ -301,7 +304,7 @@ public class ScnStandard extends XHTMLPart {
 							   				.__("ripple.addClass('", ViewRippleEffect.cRippleEffectShow().getId() ,"')")
 									 ,SPEED_RIPPLE_EFFECT/3, fct()  // attente ripple effect
 							   		      	.__(tkrouter.doEvent("event"))
-									 ,SPEED_RIPPLE_EFFECT*2, fct()  // attente ripple effect
+									 ,SPEED_RIPPLE_EFFECT, fct()  // attente ripple effect
 								   		    .__("ripple.removeClass('", ViewRippleEffect.cRippleEffectShow().getId() ,"')")     	
 									   )
 								)
@@ -430,7 +433,7 @@ public class ScnStandard extends XHTMLPart {
 				
 				
 				// a mettre dans TKConfig
-				.set("$xui", "{ config: { delayWaitForShowMenu : 0, nextActivityAnim : 'fromBottom' } }")
+				.set("$xui", "{ config: { nextActivityAnim : 'fromBottom' } }")   //delayWaitForShowMenu : 0,
 				
 				/**********************************************/
 				.__("(",getActionManager(),")()")

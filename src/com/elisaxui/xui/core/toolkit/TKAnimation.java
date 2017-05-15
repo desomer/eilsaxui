@@ -19,6 +19,29 @@ public interface TKAnimation extends JSClass {
 	TKAnimation _this = null;
 	TKAnimation _self = null;
 	
+	default Object doNavBarToActivity(Object sct) {
+		var("jqNavBar", "$('body>.navbar')")
+		.var("jqActivityActive", "$('.activity.active')")
+		//-----------  detache la barre nav en haut par rapport au scroll et ajoute a l'activité  --------
+		.__("jqNavBar.detach()")
+		.__("jqNavBar.css('transform', 'translate3d(0px,'+sct+'px,0px)' )")		
+		.__("jqNavBar.addClass('fixedToAbsolute')") // permet la nav de bouger
+		.__("jqActivityActive.prepend(jqNavBar)") 
+		;
+		return null;
+	}
+
+	default Object doNavBarToBody() {
+		var("jqNavBar", "$('.activity.active>.navbar')")
+		.__("jqNavBar.detach()")
+		.__("jqNavBar.css('transform', 'translate3d(0px,0px,0px)' )")
+		.__("jqNavBar.removeClass('fixedToAbsolute')")
+		.__("$('body').prepend(jqNavBar)")
+	;
+	
+	return null;
+	}
+	
 	default Object doOpenBurgerMenu() {
 		var(_overlay, _new(ScnStandard.SPEED_SHOW_OVERLAY, ScnStandard.OVERLAY_OPACITY))
 		.var("jqMenu", "$('.menu')")
@@ -30,15 +53,14 @@ public interface TKAnimation extends JSClass {
 		.var("jqActivityActive", "$('.activity.active')")
 		.var("sct", "$('body').scrollTop()")
 		
+	 	.var(_self, _this)
+		
 		// ferme le menu
 		._if("jqNavBar.hasClass('fixedToAbsolute')")
 			.var("jqHamburgerDetach", "$('.scene .hamburger.detach')")
 			.__(TKQueue.start(
 				fct()
 //						.__("$('.active .logo').toggleClass('animated shake')")  // retire le shake
-						.__("jqHamburgerDetach.removeClass('is-active')")   //changeColorMenu
-						
-				, "$xui.config.delayWaitForShowMenu", fct()   // attente ouverte burger		
 				    	.__(_overlay.doHide(1))    	
 				    	//-------------------------- repositionne l'activity --------------------
 				    	.__("jqActivityActive.removeClass('activityMoveForShowMenu')")
@@ -49,16 +71,12 @@ public interface TKAnimation extends JSClass {
 						.__("jqHamburgerDetach.css('transition','transform "+ScnStandard.SPEED_SHOW_MENU+"ms linear')")
 						.__("jqHamburgerDetach.css('transform', 'translate3d(0px,'+sct+'px,0px) scale(1)' )")
 						
-				, ScnStandard.SPEED_SHOW_MENU, fct()
+				, ScnStandard.SPEED_SHOW_MENU+50, fct()
 						.__(_overlay.doHide(2))		
-						
-//						.__("jqScene.css('overflow','auto')") // remet le scroll
 						.__("$('body').css('overflow','')") // remet de scroll
 						
 						//-----------  fige la barre nav en haut  (fixed) --------
-						.__("jqNavBar.detach()")
-						.__("jqNavBar.css('transform', 'translate3d(0px,0px,0px)' )")
-						.__("jqNavBar.removeClass('fixedToAbsolute')")
+						.__(_self.doNavBarToBody())
 						
 						// anime le burger et le passe de la scene vers l'activity
 						.var("hamburger", "jqHamburgerDetach.detach()")
@@ -66,13 +84,12 @@ public interface TKAnimation extends JSClass {
 						.__("jqNavBar.append(hamburger)")
 						.__("hamburger.css('transition','')")
 						.__("hamburger.css('transform', '' )")
-						
-						.__("$('body').prepend(jqNavBar)")
-						
 						//-------------------------- fin du repositionnement l'activity --------------------
 						.__("jqActivityActive.removeClass('activityMoveForHideMenu')")
 
-				, ScnStandard.SPEED_NEXT_FASTDOM, fct().consoleDebug("'end anim'")
+				, ScnStandard.SPEED_NEXT_FASTDOM, fct()	
+						.__("jqHamburgerDetach.removeClass('is-active')")   //changeColorMenu.consoleDebug("'end anim'")
+				, ScnStandard.SPEED_BURGER_EFFECT, fct()
 				)
 			)
 		._else()
@@ -81,29 +98,21 @@ public interface TKAnimation extends JSClass {
 		.__(TKQueue.start(
 				fct()
 						.__(_overlay.doShow(1))		 	        		 			
-					//	.__("jqScene.css('overflow','hidden')") // plus de scroll
-						.__("$('body').css('overflow','hidden')") // plus de scroll
-						
+						.__("$('body').css('overflow','hidden')") // plus de scroll		
 						//---------------------------------------
 						.__("jqMenu.css('transition', '' )")   // fige le menu en haut sans animation
 						.__("jqMenu.css('transform', 'translate3d(-"+ ScnStandard.widthMenu	+ "px,'+sct+'px,0px)' )")
-						//---------------------------------------
-						.__("jqHamburger.addClass('is-active')"),  // passe en croix
-				//  100, fct().__("$('.active .hamburger').addClass('changeColorMenu')"), // passe en back
-				"$xui.config.delayWaitForShowMenu", fct()    	// attent passage en croix
-								
-						//-----------  detache la barre nav en haut par rapport au scroll  --------
-						.__("jqNavBar.detach()")
-						.__("jqNavBar.css('transform', 'translate3d(0px,'+sct+'px,0px)' )")		
-						.__("jqNavBar.addClass('fixedToAbsolute')") // permet la nav de bouger
-						.__("jqActivityActive.prepend(jqNavBar)") 		
-				
+						
+						//-----------  detache la barre nav en haut par rapport au scroll et ajoute a l'activité  --------
+						.__(_self.doNavBarToActivity("sct"))
+					
 				 		//---------- anime le burger et le passe sur la scene---------------
 						.__("jqHamburger.detach()")	
 						.__("jqHamburger.addClass('detach')")
-						.__("jqScene.append(jqHamburger)")
 						.__("jqHamburger.css('transform', 'translate3d(0px,'+sct+'px,0px)' )")  // positionne en haut
-						.__("jqHamburger.css('transition','transform "+ScnStandard.SPEED_SHOW_MENU+"ms linear')")
+						.__("jqHamburger.css('transition','transform "+ScnStandard.SPEED_SHOW_MENU+"ms linear')")  // prepare transition
+						.__("jqScene.append(jqHamburger)")
+						
 						//------------ deplace l'activity a l ouverture du menu-------------
 						.__("jqActivityActive.addClass('activityMoveForShowMenu')") 
 
@@ -124,22 +133,22 @@ public interface TKAnimation extends JSClass {
 								.__("elem.anim=''"), ",(i*"+30+"), window.jsonMainMenu[i])")
 						.endfor()		
 						
-				, ScnStandard.SPEED_SHOW_MENU, fct()
-										//.__("$('.active .logo').toggleClass('animated shake')")
-										.consoleDebug("'end anim'")
+				, ScnStandard.SPEED_SHOW_MENU+50, fct()
+						.__("jqHamburger.addClass('is-active')")  // passe en croix
+						//.__("$('.active .logo').toggleClass('animated shake')")
+				, ScnStandard.SPEED_BURGER_EFFECT, fct()		
 				  )
 				)
 		.endif();
 		return null;
 	}
 	
-	default Object doActivity1ToBack()
+	default Object doActivity1ToBack(Object sct)
 	{
-	 	var("sct", "$('.scene').scrollTop()")
-   		.__("$('#activity1').data('scrolltop', sct ) ") 
-   		.__("$('#activity1 .navbar').css('top', sct+'px' )")
-   		.__("$('#activity1').css('transform-origin', '50% 300px')")
-   		.__("$('#activity1').css('overflow', 'auto')")  //cest plus la scene qui scroll mais l'activity
+   		__("$('#activity1').data('scrolltop', sct ) ") 
+  // 		.__("$('#activity1 .navbar').css('top', sct+'px' )")
+   		.__("$('#activity1').css('transform-origin', '50% '+(sct+300)+'px')")
+   		.__("$('#activity1').css('overflow', 'hidden')")  //cest plus la scene qui scroll mais l'activity
    		.__("$('#activity1').scrollTop(sct)")
    		.__("$('#activity1').addClass('toback')")
    		;
@@ -149,9 +158,9 @@ public interface TKAnimation extends JSClass {
 	
 	default Object doActivity1ToFront()
 	{
-   		__("$('#activity1 .navbar').css('top', '0px' )")
-		.__("$('#activity1').css('overflow', '').css('transform-origin', '')")
-		.__("$('.scene').scrollTop($('#activity1').data('scrolltop'))")
+   	//	__("$('#activity1 .navbar').css('top', '0px' )")
+		__("$('#activity1').css('overflow', '').css('transform-origin', '')")
+		.__("$('.body').scrollTop($('#activity1').data('scrolltop'))")
 		.__("$('#activity1').removeClass('backToFront')")	
 		;
 		return null;
@@ -160,53 +169,64 @@ public interface TKAnimation extends JSClass {
 	default Object doOpenActivityFromBottom()
 	{
 		var(_overlay, _new(ScnStandard.SPEED_SHOW_ACTIVITY, 0.6))
-	 	.var("sct", "$('.scene').scrollTop()")
+	 	.var("sct", "$('body').scrollTop()")
 	 	.var(_self, _this)
 	    ._if("$('#activity1').hasClass('active')")
 	         // ouverture activity 2
 		     .__(TKQueue.start(  // ScnStandard.SPEED_RIPPLE_EFFECT, // attente bulle
 		    		 fct() 
+						.__(_self.doNavBarToActivity("sct"))
 						.__(_overlay.doShow(1))
 				   		.__("$('#activity2').removeClass('nodisplay')")
-		    		 ,100, fct()   // attente overlay
-		    		    .__(_self.doActivity1ToBack())	
+						.__("$('body').css('overflow','hidden')") // plus de scroll	
+		    		 ,ScnStandard.SPEED_NEXT_FASTDOM, fct()   // attente overlay
+		    		    .__(_self.doActivity1ToBack("sct"))	
 				   		.__("$('#activity2').addClass('tofront')")
-				   		.__("$('#activity2').removeClass('inactivefixed')")	
 		    		 	.__(_overlay.doShow(2))
-				   	,ScnStandard.SPEED_SHOW_ACTIVITY, fct()		
+				   	,ScnStandard.SPEED_SHOW_ACTIVITY+50, fct()		
 				   		.__("$('#activity1').removeClass('active')")
 		    		 	.__("$('#activity1').addClass('nodisplay')")
-		    		 	
-				   		.__("$('#activity2').removeClass('inactive')")
+	
+		    		 	.__("$('#activity2').removeClass('inactivefixed')")	
+		    		 	.__("$('#activity2').removeClass('inactive')")
 				   		.__("$('#activity2').addClass('active')")
 				   		.__("$('#activity2').removeClass('tofront')")
 		    		 	.__("$('#activity2').removeClass('toHidden')") 
-
-					    .__("$('.scene').scrollTop($('#activity2').data('scrolltop'))")		
-				   	, 100, fct().consoleDebug("'end activity anim'")
+				   		.__(_self.doNavBarToBody())
+						.__("$('body').css('overflow','')") // plus de scroll	
+						.var("scrposition", "$('#activity2').data('scrolltop')")
+					    .__("$('body').scrollTop(scrposition==null?0:scrposition)")		
+				   	, ScnStandard.SPEED_NEXT_FASTDOM, fct()
+				   		.consoleDebug("'end activity anim'")
 				   )) 	
 		._else()
 			// fermeture activity 2 
-			.__(TKQueue.start(  // ScnStandard.SPEED_RIPPLE_EFFECT, 
-				fct().__("$('#activity1').removeClass('nodisplay')")	
-				,30, fct()   // attente bulle
-					.__("$('#activity2').addClass('inactive')")
-					.__("$('#activity2').data('scrolltop', sct ) ") 
-					.__("$('#activity2').addClass('inactivefixed')")
-				,30, fct()   // attente obligatoire pour bug changement de display trop rapide  
-					.__("$('#activity2').addClass('toHidden')")
-				,40, fct()   // 100 ms attente obligatoire pour bug changement de display trop rapide car rejoue les anim en attente
-					.__("$('#activity1').removeClass('toback')")	
-					.__("$('#activity1').addClass('backToFront')") 	
+			.__(TKQueue.start(  //ScnStandard.SPEED_RIPPLE_EFFECT, 
+				fct()
+					 .__(_self.doNavBarToActivity("sct"))
+					 .__("$('#activity2').data('scrolltop', sct ) ") 
+					 .__("$('#activity2').removeClass('active')")
+					 .__("$('#activity2').addClass('inactive')")
+					 .__("$('#activity2').addClass('inactivefixed')")
+					 
+					 .__("$('#activity1').removeClass('nodisplay')")	
+					 .__("$('#activity1').addClass('active')")
+					 .__("$('body').css('overflow','hidden')") // plus de scroll	
+					 
+				,ScnStandard.SPEED_NEXT_FASTDOM, fct()   
 					.__(_overlay.doHide(1))
-			   	,ScnStandard.SPEED_SHOW_ACTIVITY, fct()
-					.__("$('#activity2').removeClass('active')")
-			   		.__("$('#activity2').addClass('nodisplay')")
-			   		.__("$('#activity1').addClass('active')")
-					.__(_self.doActivity1ToFront())
+					.__("$('#activity2').addClass('toHidden')")
+					.__("$('#activity1').removeClass('toback')")	
+					.__("$('#activity1').addClass('backToFront')") 
 					
-					.__(_overlay.doHide(2))	
-			   	,100, fct().consoleDebug("'end activity anim'")
+			   	,ScnStandard.SPEED_SHOW_ACTIVITY+50, fct()
+			   		.__(_overlay.doHide(2))	
+			   		.__("$('#activity2').addClass('nodisplay')")
+					.__(_self.doActivity1ToFront())	
+			   		.__(_self.doNavBarToBody())
+			   		.__("$('body').css('overflow','')") // remet de scroll	
+			   	,ScnStandard.SPEED_NEXT_FASTDOM, fct()
+			   		.consoleDebug("'end activity anim'")
 			   ))	
 	   .endif();
 		
@@ -219,7 +239,7 @@ public interface TKAnimation extends JSClass {
 	{
 		var(_overlay, _new(ScnStandard.SPEED_SHOW_ACTIVITY, 0.6))
 	 	.var(_self, _this)
-	 	.var("sct", "$('.scene').scrollTop()")	 	
+	 	.var("sct", "$('body').scrollTop()")	 	
 	    ._if("$('#activity1').hasClass('active')")
 	         // ouverture activity 2
 		     .__(TKQueue.start( 
@@ -230,7 +250,7 @@ public interface TKAnimation extends JSClass {
 		    		 .var(_template,  ViewOverlayRipple.xTemplate() )
 		    		 .var("rippleOverlay", _template.append("$('.scene')"))
 		    		
-		    		 .__(_self.doActivity1ToBack())
+		    		 .__(_self.doActivity1ToBack("sct"))
 		    		 .__(_overlay.doShow(2))
 				   		
 					 .__("$('#activity2').css('clip-path' ,'circle(0.0% at 100vw 100vh)')")

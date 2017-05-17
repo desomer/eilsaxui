@@ -316,8 +316,10 @@ public interface TKAnimation extends JSClass {
 					 .__("$('#activity2').css('clip-path' ,'circle(0.0% at 100vw 100vh)')")     // invisible
 					 .__("$('#activity2').css('-webkit-clip-path' ,'circle(0.0% at 100vw 100vh)')")
 					 .__("$('#activity2').css('z-index' ,'1')")
-					 .var("scrposition", "$('#activity2').data('scrolltop')")
-					 .__("$('body').scrollTop(scrposition==null?0:scrposition)")
+					 
+//					 .var("scrposition", "$('#activity2').data('scrolltop')")
+//					 .__("$('body').scrollTop(scrposition==null?0:scrposition)")
+					 
 				 	 .__("$('#activity2').css('transition', 'all "+ ScnStandard.SPEED_SHOW_ACTIVITY/2 +"ms linear')")
 				 	 
 					.__(_self.doActivityNoDisplay("'#activity1'"))
@@ -330,7 +332,9 @@ public interface TKAnimation extends JSClass {
 		    	    	.__("$('#activity2').css('transform', 'scale3d(1,1,1)')")
 		    	    	
 		    	, ScnStandard.SPEED_SHOW_ACTIVITY+ScnStandard.DELAY_SURETE_END_ANIMATION,     fct()
-			   		.__(_self.doActivityDeFreeze("'#activity2'"))			 	
+			   		.__(_self.doActivityDeFreeze("'#activity2'"))	
+					 .var("scrposition", "$('#activity2').data('scrolltop')")
+					 .__("$('body').scrollTop(scrposition==null?0:scrposition)")
 			   		.__(_self.doNavBarToBody())
 		    	    .__("$('.scene .ripple_overlay').css('display', 'none')")	
 		    	    

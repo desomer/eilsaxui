@@ -48,6 +48,7 @@ public class ViewMenu extends XHTMLPart {
 		return xCss()
 				.on(cMenu, "z-index: "+ScnStandard.ZINDEX_MENU+";background-color: #ffffff;height: 120%;width: " + ScnStandard.widthMenu
 						+ "px; color:black;"
+						+ ScnStandard.PREF_3D
 						//+ "box-shadow: 4px 4px 2px 0 rgba(0,0,0,0.14);"
 						+ "will-change:transform;")
 				.on(cFixedLeft,
@@ -59,6 +60,7 @@ public class ViewMenu extends XHTMLPart {
 				.on(".menu li", "list-style-type: none;clear: both;  color: rgba(0,0,0,0.87);   "
 						+ "cursor: pointer;   min-height: 50px; line-height: 21px; "
 						+ "width: 100%;   text-align: left;   text-transform: none;"
+						+ ScnStandard.PREF_3D
 						+ "animation-duration:400ms; transform:translate3d(0px,0px,0px);will-change:transform;"
 						)
 

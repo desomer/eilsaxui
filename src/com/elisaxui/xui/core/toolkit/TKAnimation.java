@@ -43,7 +43,7 @@ public interface TKAnimation extends JSClass {
 	}
 	
 	default Object doOpenBurgerMenu() {
-		var(_overlay, _new(ScnStandard.SPEED_SHOW_OVERLAY, ScnStandard.OVERLAY_OPACITY))
+		var(_overlay, _new(ScnStandard.SPEED_SHOW_MENU, ScnStandard.OVERLAY_OPACITY_MENU))
 		.var("jqMenu", "$('.menu')")
 		.var("jqScene", "$('.scene')")
 		.var("jqNavBar", "$('body>.navbar')")
@@ -71,7 +71,7 @@ public interface TKAnimation extends JSClass {
 						.__("jqHamburgerDetach.css('transition','transform "+ScnStandard.SPEED_SHOW_MENU+"ms linear')")
 						.__("jqHamburgerDetach.css('transform', 'translate3d(0px,'+sct+'px,0px) scale(1)' )")
 						
-				, ScnStandard.SPEED_SHOW_MENU+50, fct()
+				, ScnStandard.SPEED_SHOW_MENU + ScnStandard.DELAY_SURETE_END_ANIMATION, fct()
 						.__(_overlay.doHide(2))		
 						.__("$('body').css('overflow','')") // remet de scroll
 						
@@ -97,7 +97,7 @@ public interface TKAnimation extends JSClass {
 		// ouvre le menu
 		.__(TKQueue.start(
 				fct()
-						.__(_overlay.doShow(1))		 	        		 			
+						.__(_overlay.doShow("'.active'", 1))		 	        		 			
 						.__("$('body').css('overflow','hidden')") // plus de scroll		
 						//---------------------------------------
 						.__("jqMenu.css('transition', '' )")   // fige le menu en haut sans animation
@@ -113,16 +113,15 @@ public interface TKAnimation extends JSClass {
 						.__("jqHamburger.css('transition','transform "+ScnStandard.SPEED_SHOW_MENU+"ms linear')")  // prepare transition
 						.__("jqScene.append(jqHamburger)")
 						
+						
+				, ScnStandard.SPEED_NEXT_FASTDOM, fct()	
 						//------------ deplace l'activity a l ouverture du menu-------------
 						.__("jqActivityActive.addClass('activityMoveForShowMenu')") 
-
 						//------------ ouvre le menu avec animation---------
 						.__("jqMenu.css('transition', 'transform "+ScnStandard.SPEED_SHOW_MENU+"ms linear' )")
 						.__("jqMenu.css('transform', 'translate3d(0px,'+sct+'px,0px)' )")
-						
-						
-				, ScnStandard.SPEED_NEXT_FASTDOM, fct()	
-		 				.__(_overlay.doShow(2))
+						//-------------------------------------------------
+		 				.__(_overlay.doShow("'.active'", 2))
 						//------------ deplace le hamburger---------
 						.__("jqHamburger.css('transform', 'translate3d(-15px,'+(-3+sct)+'px,0px) scale(0.6)' )")
 				
@@ -133,7 +132,7 @@ public interface TKAnimation extends JSClass {
 								.__("elem.anim=''"), ",(i*"+30+"), window.jsonMainMenu[i])")
 						.endfor()		
 						
-				, ScnStandard.SPEED_SHOW_MENU+50, fct()
+				, ScnStandard.SPEED_SHOW_MENU+ScnStandard.DELAY_SURETE_END_ANIMATION, fct()
 						.__("jqHamburger.addClass('is-active')")  // passe en croix
 						//.__("$('.active .logo').toggleClass('animated shake')")
 				, ScnStandard.SPEED_BURGER_EFFECT, fct()		
@@ -143,88 +142,137 @@ public interface TKAnimation extends JSClass {
 		return null;
 	}
 	
-	default Object doActivity1ToBack(Object sct)
-	{
-   		__("$('#activity1').data('scrolltop', sct ) ") 
-  // 		.__("$('#activity1 .navbar').css('top', sct+'px' )")
-   		.__("$('#activity1').css('transform-origin', '50% '+(sct+300)+'px')")
-   		.__("$('#activity1').css('overflow', 'hidden')")  //cest plus la scene qui scroll mais l'activity
-   		.__("$('#activity1').scrollTop(sct)")
-   		.__("$('#activity1').addClass('toback')")
-   		;
-   			
-		return null;
-	}
 	
-	default Object doActivity1ToFront()
+
+	default Object doActivityFreeze(Object act, Object sct)
 	{
-   	//	__("$('#activity1 .navbar').css('top', '0px' )")
-		__("$('#activity1').css('overflow', '').css('transform-origin', '')")
-		.__("$('.body').scrollTop($('#activity1').data('scrolltop'))")
-		.__("$('#activity1').removeClass('backToFront')")	
+		var("actContent", "$(act+' .content')")
+   		.__("$(act).data('scrolltop', sct ) ") 
+		// freeze
+		.__("actContent.css('overflow', 'hidden')")   // fait clignoter en ios
+		.__("actContent.css('height', '100vh')")
+		.__("actContent.scrollTop(sct)")
 		;
 		return null;
 	}
 	
+	default Object doActivityDeFreeze(Object act)
+	{
+		var("actContent", "$(act+' .content')")
+		.__("actContent.css('overflow', '')")
+		.__("actContent.css('height', '')")
+		;
+		return null;
+	}
+	
+	default Object doActivityInactive(Object act) //Object sct
+	{
+		__()
+		 .__("$(act).removeClass('active')")
+		 .__("$(act).addClass('inactive')")
+		 ;
+		return null;
+	}
+	
+	default Object doActivityActive(Object act)
+	{
+		__()
+   		.__("$(act).removeClass('nodisplay')")
+		.__("$(act).addClass('active')")
+		;
+		return null;
+	}
+	
+	default Object doActivityNoDisplay(Object act)
+	{
+		__()
+   		.__("$(act).removeClass('active')")
+	 	.__("$(act).addClass('nodisplay')")
+		;
+		return null;
+	}
+	
+	default Object doActivity2IsFront()
+	{
+		__()
+	 	.__("$('#activity2').removeClass('inactivefixed')")	
+	 	.__("$('#activity2').removeClass('inactive')")
+		.__("$('#activity2').removeClass('tofront')")
+	 	.__("$('#activity2').removeClass('toHidden')") 
+	 	;
+		return null;
+	}
+	
+	default Object doActivity1IsFront()
+	{
+		__()
+		.__("$('#activity1').css('overflow', '')") //.css('transform-origin', '')
+		.__("$('#activity1').removeClass('backToFront')")
+		;
+		return null;
+	}
+	
+	
 	default Object doOpenActivityFromBottom()
 	{
-		var(_overlay, _new(ScnStandard.SPEED_SHOW_ACTIVITY, 0.6))
+		var(_overlay, _new(ScnStandard.SPEED_SHOW_ACTIVITY, ScnStandard.OVERLAY_OPACITY_BACK))
 	 	.var("sct", "$('body').scrollTop()")
 	 	.var(_self, _this)
 	    ._if("$('#activity1').hasClass('active')")
 	         // ouverture activity 2
-		     .__(TKQueue.start(  // ScnStandard.SPEED_RIPPLE_EFFECT, // attente bulle
+		     .__(TKQueue.start(
 		    		 fct() 
-						.__(_self.doNavBarToActivity("sct"))
-						.__(_overlay.doShow(1))
-				   		.__("$('#activity2').removeClass('nodisplay')")
-						.__("$('body').css('overflow','hidden')") // plus de scroll	
-		    		 ,ScnStandard.SPEED_NEXT_FASTDOM, fct()   // attente overlay
-		    		    .__(_self.doActivity1ToBack("sct"))	
-				   		.__("$('#activity2').addClass('tofront')")
-		    		 	.__(_overlay.doShow(2))
-				   	,ScnStandard.SPEED_SHOW_ACTIVITY+50, fct()		
-				   		.__("$('#activity1').removeClass('active')")
-		    		 	.__("$('#activity1').addClass('nodisplay')")
-	
-		    		 	.__("$('#activity2').removeClass('inactivefixed')")	
-		    		 	.__("$('#activity2').removeClass('inactive')")
-				   		.__("$('#activity2').addClass('active')")
-				   		.__("$('#activity2').removeClass('tofront')")
-		    		 	.__("$('#activity2').removeClass('toHidden')") 
-				   		.__(_self.doNavBarToBody())
-						.__("$('body').css('overflow','')") // plus de scroll	
-						.var("scrposition", "$('#activity2').data('scrolltop')")
-					    .__("$('body').scrollTop(scrposition==null?0:scrposition)")		
-				   	, ScnStandard.SPEED_NEXT_FASTDOM, fct()
-				   		.consoleDebug("'end activity anim'")
+					.__(_self.doNavBarToActivity(0))
+					.__(_overlay.doShow("'#activity1'",1))    // init
+					.__(_self.doActivityInactive("'#activity1'"))	
+					.__(_self.doActivityActive("'#activity2'"))		
+			   		.__(_self.doActivityFreeze("'#activity1'","sct"))
+//	 				 .__("$('#activity2').css('transform', 'scale3d(1.2,1.2,1)')") 
+		
+	    		 ,ScnStandard.SPEED_NEXT_FASTDOM, fct()   // lance les anim
+	    		 	.__(_overlay.doShow("'#activity1'", 2))
+	    	   		.__("$('#activity1').addClass('toback')")
+			   		.__("$('#activity2').addClass('tofront')")
+//		    	 ,ScnStandard.SPEED_NEXT_FASTDOM, fct()   // lance les anim			   		
+//	    	    	.__("$('#activity2').css('transform', 'scale3d(1,1,1)')")
+	    		 	
+			   	,ScnStandard.SPEED_SHOW_ACTIVITY+ScnStandard.DELAY_SURETE_END_ANIMATION, fct()		// 50 attente vraiment la fin de l'animation
+			   		.__(_self.doActivityNoDisplay("'#activity1'"))	
+			   		.__(_self.doActivity2IsFront())	
+			   		.__(_self.doActivityDeFreeze("'#activity2'"))			 	
+			   		.__(_self.doNavBarToBody())
+			   		
+					.var("scrposition", "$('#activity2').data('scrolltop')")
+				    .__("$('body').scrollTop(scrposition==null?0:scrposition)")	
+				    
+			   	, ScnStandard.SPEED_NEXT_FASTDOM, fct()
+			   		.consoleDebug("'end activity anim'")
 				   )) 	
 		._else()
 			// fermeture activity 2 
-			.__(TKQueue.start(  //ScnStandard.SPEED_RIPPLE_EFFECT, 
+			.__(TKQueue.start( 
 				fct()
-					 .__(_self.doNavBarToActivity("sct"))
-					 .__("$('#activity2').data('scrolltop', sct ) ") 
-					 .__("$('#activity2').removeClass('active')")
-					 .__("$('#activity2').addClass('inactive')")
-					 .__("$('#activity2').addClass('inactivefixed')")
+					 .__(_self.doNavBarToActivity(0))				 
+					 .__(_self.doActivityInactive("'#activity2'"))
+					 .__(_self.doActivityActive("'#activity1'"))
+					 .__(_self.doActivityFreeze("'#activity2'","sct"))
+					 .__("$('#activity2').addClass('inactivefixed')") //prepare l'animation
 					 
-					 .__("$('#activity1').removeClass('nodisplay')")	
-					 .__("$('#activity1').addClass('active')")
-					 .__("$('body').css('overflow','hidden')") // plus de scroll	
-					 
-				,ScnStandard.SPEED_NEXT_FASTDOM, fct()   
+				,ScnStandard.SPEED_NEXT_FASTDOM, fct()    // lance les anim
 					.__(_overlay.doHide(1))
-					.__("$('#activity2').addClass('toHidden')")
 					.__("$('#activity1').removeClass('toback')")	
 					.__("$('#activity1').addClass('backToFront')") 
+					.__("$('#activity2').addClass('toHidden')")
 					
-			   	,ScnStandard.SPEED_SHOW_ACTIVITY+50, fct()
+			   	,ScnStandard.SPEED_SHOW_ACTIVITY+ScnStandard.DELAY_SURETE_END_ANIMATION, fct()
 			   		.__(_overlay.doHide(2))	
-			   		.__("$('#activity2').addClass('nodisplay')")
-					.__(_self.doActivity1ToFront())	
-			   		.__(_self.doNavBarToBody())
-			   		.__("$('body').css('overflow','')") // remet de scroll	
+			   		.__(_self.doActivityNoDisplay("'#activity2'"))	
+			   		.__(_self.doNavBarToBody())	
+					.__(_self.doActivity1IsFront())	
+					.__(_self.doActivityDeFreeze("'#activity1'"))
+			   		
+					.__("$('body').scrollTop($('#activity1').data('scrolltop'))")	
+					
 			   	,ScnStandard.SPEED_NEXT_FASTDOM, fct()
 			   		.consoleDebug("'end activity anim'")
 			   ))	
@@ -244,38 +292,49 @@ public interface TKAnimation extends JSClass {
 	         // ouverture activity 2
 		     .__(TKQueue.start( 
 		    	fct() 
-					  .__(_overlay.doShow(1))
-					  .__("$('#activity2').removeClass('nodisplay')")
-		    	 ,100,fct() 
+					  .__(_overlay.doShow("'#activity1'", 1))
+					  .__(_self.doNavBarToActivity(0))
+				   	  .__(_self.doActivityFreeze("'#activity1'","sct"))
 		    		 .var(_template,  ViewOverlayRipple.xTemplate() )
-		    		 .var("rippleOverlay", _template.append("$('.scene')"))
-		    		
-		    		 .__(_self.doActivity1ToBack("sct"))
-		    		 .__(_overlay.doShow(2))
-				   		
-					 .__("$('#activity2').css('clip-path' ,'circle(0.0% at 100vw 100vh)')")
+		    		 .var("rippleOverlay", _template.append("$('.scene')"))   //rippleOverlay par defaut invisible
+		    		 
+				, ScnStandard.SPEED_NEXT_FASTDOM, fct()	 //lance animation    		 
+		    	   	 .__("$('#activity1').addClass('toback')")	    		 
+		    		 .__(_overlay.doShow("'#activity1'", 2))
+		    		 
+				,  ScnStandard.SPEED_NEXT_FASTDOM, fct()	 
+				 	.__("$('.scene .ripple_overlay').addClass('anim')") 
+					 
+				, ScnStandard.SPEED_SHOW_ACTIVITY-50, fct()
+				 	.__(_self.doActivityInactive("'#activity1'"))	
+					.__(_self.doActivityActive("'#activity2'"))
+					.__(_self.doActivity2IsFront())
+					 
+					// prepare anim
+					 .__("$('#activity2').css('position', 'absolute')") 
+	 				 .__("$('#activity2').css('transform', 'scale3d(1.2,1.2,1)')") 
+					 .__("$('#activity2').css('clip-path' ,'circle(0.0% at 100vw 100vh)')")     // invisible
 					 .__("$('#activity2').css('-webkit-clip-path' ,'circle(0.0% at 100vw 100vh)')")
 					 .__("$('#activity2').css('z-index' ,'1')")
-		    		 .__("$('#activity2').removeClass('inactivefixed')")
-		    		 .__("$('#activity2').addClass('active')")
-					 .__("$('.scene').scrollTop($('#activity2').data('scrolltop'))")
-	    	    	 .__("$('#activity2').removeClass('inactive')")
-	    		     .__("$('#activity2').removeClass('toHidden')") 
-	 				 .__("$('#activity2').css('transform', 'scale3d(1.2,1.2,1)')") 
-				 , 100, fct()
-				 	 .__("$('#activity2').css('transition', 'all "+ ScnStandard.SPEED_SHOW_ACTIVITY +"ms ease-out')")
-				 		.__("$('.scene .ripple_overlay').addClass('anim')") 
-				 , ScnStandard.SPEED_SHOW_ACTIVITY, fct()
-				 		.__("$('#activity1').removeClass('active')")  
+					 .var("scrposition", "$('#activity2').data('scrolltop')")
+					 .__("$('body').scrollTop(scrposition==null?0:scrposition)")
+				 	 .__("$('#activity2').css('transition', 'all "+ ScnStandard.SPEED_SHOW_ACTIVITY/2 +"ms linear')")
+				 	 
+					.__(_self.doActivityNoDisplay("'#activity1'"))
+					
+				 , ScnStandard.SPEED_NEXT_FASTDOM, fct()	 //lance animation 	 		 		
 				 		.__("$('#activity2').css('clip-path', 'circle(100% at center)')")
-				 		.__("$('#activity2').css('-webkit-clip-path', 'circle(100% at center)')")
-				 , 100, fct()		
+				 		.__("$('#activity2').css('-webkit-clip-path', 'circle(100% at center)')")	// rend visible
+				 
+				 , ScnStandard.SPEED_NEXT_FASTDOM, fct()	 //lance animation 	 	
 		    	    	.__("$('#activity2').css('transform', 'scale3d(1,1,1)')")
-		    	, ScnStandard.SPEED_SHOW_ACTIVITY, 
-		    	    fct()
-		    	    	.__("$('.scene .ripple_overlay').css('display', 'none')")
-		    	   , ScnStandard.SPEED_SHOW_ACTIVITY , fct()	
-		    	   .__("$('#activity1').addClass('nodisplay')")
+		    	    	
+		    	, ScnStandard.SPEED_SHOW_ACTIVITY+ScnStandard.DELAY_SURETE_END_ANIMATION,     fct()
+			   		.__(_self.doActivityDeFreeze("'#activity2'"))			 	
+			   		.__(_self.doNavBarToBody())
+		    	    .__("$('.scene .ripple_overlay').css('display', 'none')")	
+		    	    
+		    	    .__("$('#activity1').addClass('nodisplay')")
     	    		.__("$('#activity2').css('z-index' ,'')")
 	    	    	.__("$('#activity2').css('transition', '')")
 	    	    	.__("$('#activity2').css('clip-path', '')")
@@ -311,8 +370,8 @@ public interface TKAnimation extends JSClass {
 					.__("$('#activity1').addClass('active backToFront')") 
 		   			.__(_overlay.doHide(1))
 				,ScnStandard.SPEED_SHOW_ACTIVITY, fct()	
-					.__(_self.doActivity1ToFront())
-	   			
+					.__(_self.doActivity1IsFront())
+					.__("$('body').scrollTop($('#activity1').data('scrolltop'))")	
 		   		 	.__("$('.scene .ripple_overlay').remove()")
 		   		 	.__("$('#activity2').css('transition', '')")
 		   		 	.__("$('#activity2').css('z-index' ,'')")

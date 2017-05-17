@@ -36,11 +36,14 @@ public class ScnStandard extends XHTMLPart {
 	public static final int heightNavBar = 53;
 	public static final int widthMenu = 250;
 	
-	public static final int SPEED_SHOW_MENU = 150;
-	public static final int SPEED_SHOW_OVERLAY = 150;
-	public static final double OVERLAY_OPACITY = 0.5;
-	
 	public static final int SPEED_SHOW_ACTIVITY = 200;
+	public static final int DELAY_SURETE_END_ANIMATION = 100;
+	
+	public static final int SPEED_SHOW_MENU = 150;
+	public static final double OVERLAY_OPACITY_MENU = 0.5;
+	public static final double OVERLAY_OPACITY_BACK = 0.7;
+	
+	
 	public static final int SPEED_RIPPLE_EFFECT = 300;
 	public static final int SPEED_BURGER_EFFECT = 200;
 	public static final int SPEED_NEXT_FASTDOM = 100;
@@ -53,6 +56,10 @@ public class ScnStandard extends XHTMLPart {
 	public static final String bgColor = "background: linear-gradient(to right, rgba(253,94,176,1) 0%, rgba(255,0,136,1) 64%, rgba(239,1,124,1) 100%);";
     public static final String bgColorMenu = "background: linear-gradient(to right, rgba(239,1,124,0.5) 0%, rgba(255,0,136,0.68) 36%, rgba(253,94,176,1) 100%);";
 
+    public static final String PREF_3D= "backface-visibility: hidden;"
+    		//+ " transform-style:preserve-3d;"
+    		;
+    
     @xTarget(HEADER.class)
 	@xRessource
 	public Element xTitle() {
@@ -82,24 +89,26 @@ public class ScnStandard extends XHTMLPart {
 	@xTarget(HEADER.class)
 	@xRessource
 	public Element xStyle() {
-
+		
 		return xCss()
 				.on("html", "font-size: 14px;line-height: 1.5;"
 						+ "font-family: 'Roboto', sans-serif;font-weight: normal; color: rgba(0,0,0,0.87);")
-				.on("body", "background-color: white;margin: 0; /*top: 0px;left: 0px; right: 0px; bottom: 0px; -webkit-overflow-scrolling: touch;*/")
+				.on("body", "background-color: white;margin: 0; ")
 				.on("*", "-webkit-tap-highlight-color: rgba(0,0,0,0);")
 
 				//----------------------------------------------------------------
-				.on(".scene","overflow-x: hidden; background-color: black; "
+				.on(".scene","overflow-x: hidden; background-color: black;"   // overflow: auto; -webkit-overflow-scrolling: auto; 
 						+ "min-width: 100%;  min-height: 100%; "   //position: absolute;
 						)
 				
 		//		.on(".scene #headerScene", "position:fixed; top: 0px;  right: 0px;  left: 0px; height: 53px; z-index:"+ZINDEX_FLOAT+";" )
 				//----------------------------------------------------------------
 				.on(".activity", "background-color: white;"
-						+ "   min-width: 100%;  min-height: 100%;   "// position: absolute; // top: 0px; left: 0px; right: 0px; bottom: 0px; "
-						+ "backface-visibility: hidden; will-change:overflow,z-index;") //will-change:transform
+						+ PREF_3D
+						+ " min-width: 100%;  min-height: 100%;   "// position: absolute; // top: 0px; left: 0px; right: 0px; bottom: 0px; "
+						+ " will-change:overflow,z-index;") //will-change:transform
 				
+				.on(".activity .content", "will-change:contents")  // changement durant le freeze du contenu de l'activity
 				.on(".activity.backToFront", "transition:transform "+(SPEED_SHOW_ACTIVITY+100)+"ms ease-out;")
 				.on(".activity.toback", "transition:transform "+SPEED_SHOW_ACTIVITY+"ms ease-out; "
 						+ "transform:translate3d(0px,0px,0px) scale(0.9); ")

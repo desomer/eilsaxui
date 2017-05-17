@@ -22,9 +22,9 @@ public interface JSOverlay extends JSClass {
 	}
 	
 	
-	default Object doShow(Object phase)
+	default Object doShow(Object act, Object phase)
 	{
-		var("overlay", "$('.active .black_overlay')" )
+		var("overlay", "$(act+' .black_overlay')" )
 		._if(phase, "==1")
 			.__("overlay.css('display','block')")
 			.__("overlay.css('opacity','0')")

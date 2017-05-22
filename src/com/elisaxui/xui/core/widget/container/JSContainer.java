@@ -8,6 +8,9 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
 import com.elisaxui.core.xui.xhtml.js.JSXHTMLPart;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataDriven;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataSet;
+import com.elisaxui.xui.core.toolkit.TKAnimation;
+import com.elisaxui.xui.core.toolkit.TKQueue;
+import com.elisaxui.xui.core.toolkit.TKRouter;
 import com.elisaxui.xui.core.widget.button.ViewFloatAction;
 import com.elisaxui.xui.core.widget.navbar.ViewNavBar;
 
@@ -23,9 +26,25 @@ public interface JSContainer extends JSClass {
 	JSContainer _this=null;
 	JSContainer _self=null;
 	
+	TKRouter _tkrouter =null;
+	TKAnimation _tkAnimation = null;
+	
 	default Object getSubData(Object ctx)
 	{
-		__("return ", XHTMLPart.xDiv(XHTMLPart.xVar("ctx.row.html")))
+		__()
+		._if("ctx.row.html instanceof JSXHTMLPart")
+			.var("part", "ctx.row.html")
+			.var("ret", XHTMLPart.xDiv(XHTMLPart.xVar("part.html")))
+			.__("ret.js+=part.js")
+//			.__(TKQueue.startAlone(200, fct()
+//					.var("c", "$(part.js)")
+//					.__("$.each( c, function( i, el ) {\n  if (el.nodeName=='SCRIPT') eval(el.text)\n })")
+//				))
+
+			.__("return ret")
+		._else()
+			.__("return ", XHTMLPart.xDiv(XHTMLPart.xVar("ctx.row.html")))
+		.endif()
 		;
 		return null;
 	}
@@ -41,15 +60,39 @@ public interface JSContainer extends JSClass {
 		.var(_self, _this)
 		.__(aDataDriven.onEnter(fct("ctx")
 				._if("ctx.row['_dom_']==null")
-					._if("ctx.row.type=='card'")
-					    .var("subData", _self.getSubData("ctx"))
-						.set(template, ViewCard.getTemplate((ViewCard)card.addProperty("childrenCard", XHTMLPart.xVar("subData.html") )))
+				
+				 	._if("ctx.row.type=='page'")
+						.set(template, XHTMLPart.xElementPart(new ViewPageLayout(XHTMLPart.xVar("ctx.row.id"))))
 						.var("jqdom", template.append("$(selector)"))
 						.__("ctx.row['_dom_']=jqdom[0]")
+						
+						._for("var i in ctx.row.children")
+							.var("child", "ctx.row.children[i]")
+							.var("factory", "new (eval(child.factory))()" )
+							.var("data", "factory.getData(child.selector)")
+							._for("var j in child.rows")
+								.var("row", "child.rows[j]")
+								.__("data.push(row)")	
+							.endfor()
+						.endfor()
+						
+						._if("ctx.row.active")
+						  	.__(_tkrouter, ".", _tkAnimation.doActivityActive("'#'+ctx.row.id"))
+						  	.__(_tkrouter, ".", _tkAnimation.doNavBarToBody())
+						.endif()
+				
+					._elseif("ctx.row.type=='card'")
+					    .var("subData", _self.getSubData("ctx"))
+						.set(template, ViewCard.getTemplate((ViewCard)card.addProperty("childrenCard", XHTMLPart.xVar("subData.html") )))
+						.__(template, ".js+=subData.js")
+						.var("jqdom", template.append("$(selector)"))
+						.__("ctx.row['_dom_']=jqdom[0]")
+						
 					._elseif("ctx.row.type=='floatAction'")
 						.set(template, ViewFloatAction.getTemplate())
 						.var("jqdom", template.append("$(selector)"))
 						.__("ctx.row['_dom_']=jqdom[0]")
+	
 					._elseif("ctx.row.type=='action'")
 //								._if("$(selector+' .rightAction').length==0")
 //									.set(template, ViewNavBar.getTemplateActionBar())

@@ -13,6 +13,7 @@ import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 import com.elisaxui.xui.admin.page.JSTestDataDriven;
+import com.elisaxui.xui.core.toolkit.TKActivity;
 import com.elisaxui.xui.core.toolkit.TKAnimation;
 import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.toolkit.TKRouter;
@@ -43,7 +44,6 @@ public class ScnStandard extends XHTMLPart {
 	public static final double OVERLAY_OPACITY_MENU = 0.5;
 	public static final double OVERLAY_OPACITY_BACK = 0.7;
 	
-	
 	public static final int SPEED_RIPPLE_EFFECT = 300;
 	public static final int SPEED_BURGER_EFFECT = 200;
 	public static final int SPEED_NEXT_FASTDOM = 100;
@@ -53,6 +53,7 @@ public class ScnStandard extends XHTMLPart {
 	public static final int ZINDEX_FLOAT = 3;
 	public static final int ZINDEX_OVERLAY = 4;
 	
+	public static final String bgColorTheme = "#ff359d";
 	public static final String bgColor = "background: linear-gradient(to right, rgba(253,94,176,1) 0%, rgba(255,0,136,1) 64%, rgba(239,1,124,1) 100%);";
     public static final String bgColorMenu = "background: linear-gradient(to right, rgba(239,1,124,0.5) 0%, rgba(255,0,136,0.68) 36%, rgba(253,94,176,1) 100%);";
 
@@ -64,7 +65,7 @@ public class ScnStandard extends XHTMLPart {
 	@xRessource
 	public Element xTitle() {
 		return xListElement(xElement("title", "le standard"),
-				xElement("meta", xAttr("name", xTxt("theme-color")), xAttr("content", xTxt("#ff359d")))
+				xElement("meta", xAttr("name", xTxt("theme-color")), xAttr("content", xTxt(bgColorTheme)))
 				);
 	}
 
@@ -82,7 +83,8 @@ public class ScnStandard extends XHTMLPart {
 				xImport(JSContainer.class),
 				xImport(TKRouter.class),
 				xImport(TKAnimation.class),
-				xImport(JSMenu.class)
+				xImport(JSMenu.class),
+				xImport(TKActivity.class)
 				);
 	}
 	
@@ -91,17 +93,16 @@ public class ScnStandard extends XHTMLPart {
 	public Element xStyle() {
 		
 		return xCss()
-				.on("html", "font-size: 14px;line-height: 1.5;"
-						+ "font-family: 'Roboto', sans-serif;font-weight: normal; color: rgba(0,0,0,0.87);")
-				.on("body", "background-color: white;margin: 0; ")
-				.on("*", "-webkit-tap-highlight-color: rgba(0,0,0,0);")
+				.on("html", "font-size: 14px; line-height: 1.5;"
+						+ "font-family: 'Roboto', sans-serif;font-weight: normal;")    //color: rgba(0,0,0,0.87);
+				
+				.on("body", "background-color: black; margin: 0; ")
+				.on("*", "-webkit-tap-highlight-color: rgba(0,0,0,0);")  // pas de coulour au click => ripple a la place
 
 				//----------------------------------------------------------------
 				.on(".scene","overflow-x: hidden; background-color: black;"   // overflow: auto; -webkit-overflow-scrolling: auto; 
 						+ "min-width: 100%;  min-height: 100%; "   //position: absolute;
 						)
-				
-		//		.on(".scene #headerScene", "position:fixed; top: 0px;  right: 0px;  left: 0px; height: 53px; z-index:"+ZINDEX_FLOAT+";" )
 				//----------------------------------------------------------------
 				.on(".activity", "background-color: white;"
 						+ PREF_3D
@@ -109,23 +110,26 @@ public class ScnStandard extends XHTMLPart {
 						+ " will-change:overflow,z-index;") //will-change:transform
 				
 				.on(".activity .content", "will-change:contents")  // changement durant le freeze du contenu de l'activity
-				.on(".activity.backToFront", "transition:transform "+(SPEED_SHOW_ACTIVITY+100)+"ms ease-out;")
-				.on(".activity.toback", "transition:transform "+SPEED_SHOW_ACTIVITY+"ms ease-out; "
+				.on(".activity.backToFront", "transition:transform "+(SPEED_SHOW_ACTIVITY+100)+"ms linear;")
+				
+				.on(".activity.toback", "transition:transform "+SPEED_SHOW_ACTIVITY+"ms linear; "
 						+ "transform:translate3d(0px,0px,0px) scale(0.9); ")
+				
 				.on(".activity.toHidden", "transform: translate3d(0px,100%,0px);")
 				
-			//	.on(".activity.active", "z-index:1;")
-
-				.on(".activity.inactive", "transition:transform "+SPEED_SHOW_ACTIVITY+"ms linear; /* top: 0px;left: 0px; right: 0px; bottom: 0px;*/"
-//						+ "box-shadow: 3px 3px 3px 0 rgba(0,0,0,.24);"
-				)
-				.on(".activity.inactive.tofront", "transform: translate3d(0px,0px,0px);")    //transition:transform "+SPEED_SHOW_ACTIVITY+"ms ease-out;
-				.on(".activity.inactive.tofrontSlow", "transition:transform "+400+"ms ease-out; transform: translate3d(0px,0px,0px);") 
-				.on(".activity.inactive.inactivefixed", "top:0px; position: fixed;")   // reste cacher en bas de la page et ne suit pas l'ascenceur
+				.on(".activity.tofront", "transform: translate3d(0px,0px,0px);")  
+				.on(".activity.fixedForAnimated", "top:0px; position: fixed; transition:transform "+SPEED_SHOW_ACTIVITY+"ms linear;")   // reste cacher en bas de la page et ne suit pas l'ascenceur
 				.on(".activity.nodisplay", "display:none;")
 				
+				.on(".activity.circleAnim0prt", "z-index:1; clip-path:circle(0.0% at 100vw 100vh); -webkit-clip-path:circle(0.0% at 100vw 100vh); ")
+				.on(".activity.circleAnim100prt", "z-index:1; clip-path:circle(100% at center); -webkit-clip-path:circle(100% at center); ")
 
+				.on(".activity.zoom12", "transform:scale3d(1.2,1.2,1)")
+				.on(".activity.zoom10", "transform:scale3d(1,1,1)")
 
+				.on(".activity.transitionSpeed", "transition:all "+ ScnStandard.SPEED_SHOW_ACTIVITY +"ms linear")
+				.on(".activity.transitionSpeedx2", "transition:all "+ ScnStandard.SPEED_SHOW_ACTIVITY / 2 +"ms linear")
+				
 				.on(".activityMoveForShowMenu", "transition:transform "+SPEED_SHOW_MENU+"ms ease-out; transform: translate3d("+(widthMenu-100)+"px,0px,0px);")
 				.on(".activityMoveForHideMenu", "transition:transform "+SPEED_SHOW_MENU+"ms ease-out; transform: translate3d(0px,0px,0px);")
 				
@@ -158,26 +162,8 @@ public class ScnStandard extends XHTMLPart {
 	public Element xContenu() {
 		return 
 			xListElement(
-				xPart(new ViewNavBar().addProperty(ViewNavBar.PROPERTY_NAME, "NavBar1")),
 				xPart(new ViewMenu()),
-				xDiv(xAttr("class", "'scene'"), 
-					//xDiv(xId("headerScene")),
-				
-					xDiv(xId("activity1"), xAttr("class", "'activity active'")
-							,xDiv(xAttr("class", "'content'") 
-								, xDiv( xAttr("class", "'article'"))
-								, xPart(new ViewOverlay())
-							)
-							
-				        )
-					
-					,xDiv(xId("activity2"), xAttr("class", "'activity inactive inactivefixed toHidden nodisplay'")
-							, xPart(new ViewNavBar().addProperty(ViewNavBar.PROPERTY_NAME, "NavBar2"))
-							, xDiv(xAttr("class", "'content'") 	
-									, xDiv(xAttr("class", "'article'"))
-							, xPart(new ViewOverlay())
-						   )	
-					     )
+				xDiv(xAttr("class", "'scene'") 
 				)
 		);
 	}
@@ -236,15 +222,18 @@ public class ScnStandard extends XHTMLPart {
 	
 	JSXHTMLPart template = null;
 	
-	//"http://static3.grsites.com/archive/textures/pink/pink098.jpg
-	String image1 = "https://images.pexels.com/photos/316465/pexels-photo-316465.jpeg?h=350&auto=compress&cs=tinysrgb";
-	String image2 = "https://images.pexels.com/photos/6337/light-coffee-pen-working.jpg?h=350&auto=compress&cs=tinysrgb";
-	String image3 = "https://images.pexels.com/photos/117729/pexels-photo-117729.jpeg?h=350&auto=compress&cs=tinysrgb";
+	public static String image1 = "https://images.pexels.com/photos/316465/pexels-photo-316465.jpeg?h=350&auto=compress&cs=tinysrgb";
+	public static String image2 = "https://images.pexels.com/photos/6337/light-coffee-pen-working.jpg?h=350&auto=compress&cs=tinysrgb";
+	public static String image3 = "https://images.pexels.com/photos/117729/pexels-photo-117729.jpeg?h=350&auto=compress&cs=tinysrgb";
 
 	@xTarget(AFTER_CONTENT.class)
 	public Element xAddJS() {
+		
 		return xScriptJS(
 				js()
+				
+	   		   	.set("navigator.vibrate", "navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate")
+	   		   	
 				.__("$.fn.insertAt = function(elements, index){\n"+
 						"\tvar children = this.children();\n"+
 						"\tif(index >= children.length){\n"+
@@ -259,7 +248,6 @@ public class ScnStandard extends XHTMLPart {
 			//	.var(testDataDriven, _new())
 			//	.__(testDataDriven.startTest())				
 				
-				
 				//.__(NavBarAnimated1)
 				//.__(NavBarAnimated2)	
 				
@@ -273,7 +261,6 @@ public class ScnStandard extends XHTMLPart {
 				
 			//	.__("$('#content').append(", xImg(xId("test2"), xAttr("src", "\"" +image2 +"\"")) ,".html)")
 				
-				// http://static3.grsites.com/archive/textures/pink/pink098.jpg
 			);
 	}
 	
@@ -298,7 +285,7 @@ public class ScnStandard extends XHTMLPart {
 					   		.endif()	
 					   .endif()
 					   
-					   ._if("$('#activity1').hasClass('active')")
+					   ._if("$('#Activity1').hasClass('active')")
 					   		.__("$xui.config.nextActivityAnim= 'fromBottom' ")
 					   .endif()	
 					   
@@ -360,15 +347,6 @@ public class ScnStandard extends XHTMLPart {
 						.endif()
 						
 					,")")
-			 
-				  // gesture bas pour fermer l'activity
-				  .__("var mcheader = new Hammer($('#activity2 .navbar')[0])")
-				  .__("mcheader.get('pan').set({ enable: true, direction: Hammer.DIRECTION_VERTICAL})")
-				  .__("mcheader.on('hammer.input',", fct("ev") 
-						  		._if("ev.deltaY>20 && ev.offsetDirection==16 && ev.velocity>1 ")
-						  		.__(tkrouter.doEvent("'closeActivity'"))
-						  		.endif()
-						  ,")")	
 			;
 	}
  
@@ -388,11 +366,11 @@ public class ScnStandard extends XHTMLPart {
 	JSMenu jsMenu;
 	JSNavBar jsNavBar;
 	JSContainer jsContainer;
+	TKActivity tkActivity;
 	
 	@xTarget(AFTER_CONTENT.class)
 	public Element xInitJS() {
 		return xScriptJS(js()
-   		   	   .set("navigator.vibrate", "navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate")
 		
 				.var(jsMenu, _new())
 				.var("jsonMenu", jsMenu.getData())
@@ -402,43 +380,76 @@ public class ScnStandard extends XHTMLPart {
 				.__("jsonMenu.push({name:'Aide', icon:'help_outline', idAction:'help'} )")
 				.set("window.jsonMainMenu", "jsonMenu")
 				
-				.var(jsNavBar, _new())
-				.var("jsonNavBar", jsNavBar.getData("'#NavBar1'"))
-				.__("jsonNavBar.push({type:'burger' })")
-				.__("jsonNavBar.push({type:'name', name:'Elisa' })")
-				.__("jsonNavBar.push({type:'action', icon:'perm_identity', idAction:'identity'})")
-				.__("jsonNavBar.push({type:'action', icon:'more_vert', idAction:'more'})")
+				/***********************************************************************************************/		
+				.var("name", txt("Activity1"))
+				 
+				.var("cnt1", XHTMLPart.xDiv(XHTMLPart.xId("test1"), XHTMLPart.xAttr("style", "\"width: 100%; height: 30vh; background:url(" +ScnStandard.image1 +") center / cover\"")))
+				.var("chart",  XHTMLPart.xElementPart(new ViewJSChart(XHTMLPart.xId("test")))	)
+				.var("cnt2", XHTMLPart.xDiv(XHTMLPart.xAttr("style", "\"width: 100%; height: 50vh; background:url(" +ScnStandard.image3 +") center / cover\"")))
+				 
+				 /********************************************************************/
+				.var("declaration1","{type:'page', id:name, active:true , children : ["
+						/********************************************************************/				
+						+ "{ selector: '#NavBar'+name, factory:'JSNavBar', rows : [ "
+						+ "				{type:'burger' },"
+						+ "				{type:'name', name:'Elisa'},"
+						+ "				{type:'action', icon:'perm_identity', idAction:'identity'},"
+						+ "				{type:'action', icon:'more_vert', idAction:'more'}"
+						+ "  ]  "
+						+ "},"
+						/********************************************************************/				
+						+ "{ selector: '#'+name+' .article', factory:'JSContainer', rows : [ "
+						+ "				{type:'card', html:cnt1},"
+						+ "				{type:'card', html:chart },"
+						+ "				{type:'card', html:cnt2 }"
+						+ "  ]  "
+						+ "},"		
+						/********************************************************************/				
+						+ "{ selector: '#'+name+' .content', factory:'JSContainer', rows : [ "
+						+ "				{type:'floatAction' }"
+						+ "  ]  "
+						+ "}"
+						/********************************************************************/					
+						+ "]"
+						+ "}") 
 				
+				
+				.set("name", txt("Activity2"))
+				
+				.set("cnt1", xDiv(xAttr("style", "\"width: 100%; height: 30vh; background:url(" +image2 +") center / cover\"")))
+				.set("cnt2", xDiv(xAttr("style", "\"width: 100%; height: 50vh; background:url(" +image3 +") center / cover\"")))
+				.var("cnt3", xDiv(xAttr("style", "\"width: 100%; height: 30vh; background:url(" +image1 +") center / cover\"")))
+
+				.var("declaration2","{type:'page', id:name, active:false , children : ["
+						/********************************************************************/				
+						+ "{ selector: '#NavBar'+name, factory:'JSNavBar', rows : [ "
+						+ "				{type:'burger' },"
+						+ "				{type:'name', name:'Detail'},"
+						+ "				{type:'action', icon:'search', idAction:'search'},"
+						+ "				{type:'action', icon:'more_vert', idAction:'more'}"
+						+ "  ]  "
+						+ "},"
+						/********************************************************************/				
+						+ "{ selector: '#'+name+' .article', factory:'JSContainer', rows : [ "
+						+ "				{type:'card', html:cnt1},"
+						+ "				{type:'card', html:cnt2 },"
+						+ "				{type:'card', html:cnt3 }"
+						+ "  ]  "
+						+ "},"		
+						/********************************************************************/					
+						+ "]"
+						+ "}") 
+				
+				.var(tkActivity, _new())
+				.__(tkActivity.createActivity("declaration1"))
+				.__(tkActivity.createActivity("declaration2"))
+				
+				/*************************************************/
+			
 				.set(jsNavBar, _new())
-				.set("jsonNavBar", jsNavBar.getData("'#NavBar2'"))
-				.__("jsonNavBar.push({type:'burger' })")
-				.__("jsonNavBar.push({type:'name', name:'Detail' })")
-				.__("jsonNavBar.push({type:'action', icon:'search', idAction:'search'})")
-				.__("jsonNavBar.push({type:'action', icon:'more_vert', idAction:'more'})")
-				
-				.var("cnt", xDiv(xId("test1"), xAttr("style", "\"width: 100%; height: 30vh; background:url(" +image1 +") center / cover\"")))
-				.var("chart",  xElementPart(new ViewJSChart(xId("test")))	)
-				
-				.set(jsContainer, _new())
-				.set("jsonContainer", jsContainer.getData("'#activity1 .article'"))
-				.__("jsonContainer.push({type:'card', html:cnt.html })")
-				.__("jsonContainer.push({type:'card', html:chart.html })")
-				.set("cnt", xDiv(xAttr("style", "\"width: 100%; height: 50vh; background:url(" +image3 +") center / cover\"")))
-				.__("jsonContainer.push({type:'card', html:cnt.html })")
-				
-				.set(jsContainer, _new())
-				.set("jsonContainer", jsContainer.getData("'#activity1 .content'"))
-				.__("jsonContainer.push({type:'floatAction' })")
-				
-				
-				.set("cnt", xDiv(xAttr("style", "\"width: 100%; height: 30vh; background:url(" +image2 +") center / cover\"")))
-				.set(jsContainer, _new())
-				.set("jsonContainer", jsContainer.getData("'#activity2 .article'"))
-				.__("jsonContainer.push({type:'card', html:cnt.html })")
-				.set("cnt", xDiv(xAttr("style", "\"width: 100%; height: 50vh; background:url(" +image3 +") center / cover\"")))
-				.__("jsonContainer.push({type:'card', html:cnt.html })")
-				.set("cnt", xDiv(xAttr("style", "\"width: 100%; height: 30vh; background:url(" +image1 +") center / cover\"")))
-				.__("jsonContainer.push({type:'card', html:cnt.html })")
+				.set("jsonNavBar", jsNavBar.getData("'#NavBarActivity2'"))    // bug
+
+			
 				
 				
 				// a mettre dans TKConfig
@@ -449,10 +460,6 @@ public class ScnStandard extends XHTMLPart {
 				.__("(",getMoveManager(),")()")
 				.__("(",getStateManager(),")()")
 
-				.__(TKQueue.startAlone(100, fct()
-							.var("c", "$(chart.js)")
-							.__("$.each( c, function( i, el ) {\n  if (el.nodeName=='SCRIPT') eval(el.text)\n })")
-						))
 				);
 	}
 	

@@ -28,11 +28,11 @@ public interface TKRouter extends JSClass {
 		.var(_self, _this)
 		
 		.var("h", fct("params","query")
-				.__("console.debug(params,query)")
+				//.__("console.debug(params,query)")
 				._if(_self,".navigo.nextenable")
 				    .var("lastRoute", _self,".navigo._lastRouteResolved")
-					.consoleDebug("lastRoute")
-					.consoleDebug("this.toString()", "History.length")
+				//	.consoleDebug("lastRoute")
+				//	.consoleDebug("this.toString()", "History.length")
 					.var("backEvent", _self.isBack("this.toString()"))
 					
 					._if("backEvent=='menu'")

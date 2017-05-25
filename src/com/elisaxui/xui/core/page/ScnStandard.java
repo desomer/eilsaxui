@@ -54,9 +54,11 @@ public class ScnStandard extends XHTMLPart {
 	public static final int ZINDEX_OVERLAY = 4;
 	
 	public static final String bgColorTheme = "#ff359d";
+	public static final String bgColorThemeOpacity = "rgba(255,0,136,0.7)";
 	public static final String bgColor = "background: linear-gradient(to right, rgba(253,94,176,1) 0%, rgba(255,0,136,1) 64%, rgba(239,1,124,1) 100%);";
     public static final String bgColorMenu = "background: linear-gradient(to right, rgba(239,1,124,0.5) 0%, rgba(255,0,136,0.68) 36%, rgba(253,94,176,1) 100%);";
-
+    public static final String bgColorContent = "rgb(245, 243, 237)";
+    
     public static final String PREF_3D= "backface-visibility: hidden;"
     		//+ " transform-style:preserve-3d;"
     		;
@@ -101,15 +103,14 @@ public class ScnStandard extends XHTMLPart {
 
 				//----------------------------------------------------------------
 				.on(".scene","overflow-x: hidden; background-color: black;"   // overflow: auto; -webkit-overflow-scrolling: auto; 
-						+ "min-width: 100%;  min-height: 100%; "   //position: absolute;
+						+ "min-width: 100vw;  min-height: 100vh; "   //position: absolute;
 						)
 				//----------------------------------------------------------------
 				.on(".activity", "background-color: white;"
 						+ PREF_3D
-						+ " min-width: 100%;  min-height: 100%;   "// position: absolute; // top: 0px; left: 0px; right: 0px; bottom: 0px; "
+					//	+ " min-width: 100%;  min-height: 100%;   "// position: absolute; // top: 0px; left: 0px; right: 0px; bottom: 0px; "
 						+ " will-change:overflow,z-index;") //will-change:transform
 				
-				.on(".activity .content", "will-change:contents")  // changement durant le freeze du contenu de l'activity
 				.on(".activity.backToFront", "transition:transform "+(SPEED_SHOW_ACTIVITY+100)+"ms linear;")
 				
 				.on(".activity.toback", "transition:transform "+SPEED_SHOW_ACTIVITY+"ms linear; "
@@ -134,7 +135,8 @@ public class ScnStandard extends XHTMLPart {
 				.on(".activityMoveForHideMenu", "transition:transform "+SPEED_SHOW_MENU+"ms ease-out; transform: translate3d(0px,0px,0px);")
 				
 				//----------------------------------------------------------------
-				.on(".content", "background-color: white; box-sizing: border-box;"
+				.on(".activity .content", " min-height: 100vh; min-width: 100vw; background-color:"+bgColorContent+";will-change:contents")  // changement durant le freeze du contenu de l'activity
+				.on(".content", "box-sizing: border-box;"
 						+ "min-height:100%; min-width: 100%; max-width: 100%; "
 						+ "padding: 8px; padding-top: " + (heightNavBar + 8) + "px")	  //position:absolute;		
 				;
@@ -440,14 +442,37 @@ public class ScnStandard extends XHTMLPart {
 						+ "]"
 						+ "}") 
 				
+				
+				.set("name", txt("Activity3"))
+				.var("declaration3","{type:'page', id:name, active:false , children : ["
+						/********************************************************************/				
+						+ "{ selector: '#NavBar'+name, factory:'JSNavBar', rows : [ "
+						+ "				{type:'burger' },"
+						+ "				{type:'name', name:'Vide'},"
+//						+ "				{type:'action', icon:'search', idAction:'search'},"
+						+ "				{type:'action', icon:'more_vert', idAction:'more'}"
+						+ "  ]  "
+						+ "},"
+						/********************************************************************/				
+//						+ "{ selector: '#'+name+' .article', factory:'JSContainer', rows : [ "
+//						+ "				{type:'card', html:cnt1},"
+//						+ "				{type:'card', html:cnt2 },"
+//						+ "				{type:'card', html:cnt3 }"
+//						+ "  ]  "
+//						+ "},"		
+						/********************************************************************/					
+						+ "]"
+						+ "}") 
+				
 				.var(tkActivity, _new())
 				.__(tkActivity.createActivity("declaration1"))
-				.__(tkActivity.createActivity("declaration2"))
+				.__(tkActivity.prepareActivity("declaration2"))
+				.__(tkActivity.registerActivity("declaration3"))
 				
 				/*************************************************/
 			
 				.set(jsNavBar, _new())
-				.set("jsonNavBar", jsNavBar.getData("'#NavBarActivity2'"))    // bug
+				.set("jsonNavBar", jsNavBar.getData("'#NavBarActivity2'"))    // bug import mth jsNavBar
 
 			
 				

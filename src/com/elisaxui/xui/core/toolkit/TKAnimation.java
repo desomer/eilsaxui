@@ -383,7 +383,7 @@ public interface TKAnimation extends JSClass {
 					.__("jqAct2.removeClass('circleAnim100prt')")
 					.__("jqAct2.addClass('circleAnim0prt')")
 					
-				,ScnStandard.SPEED_SHOW_ACTIVITY + ScnStandard.DELAY_SURETE_END_ANIMATION, fct()	  
+				,ScnStandard.SPEED_SHOW_ACTIVITY- (ScnStandard.SPEED_SHOW_ACTIVITY/3), fct()	  
 		   			.__("$('.scene .ripple_overlay').removeClass('anim')")   // lance la bulle
 		   			
 		   		, ScnStandard.SPEED_NEXT_FASTDOM , fct()    // lance animation activity 1

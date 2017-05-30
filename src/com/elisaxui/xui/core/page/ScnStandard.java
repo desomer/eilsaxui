@@ -17,18 +17,13 @@ import com.elisaxui.xui.core.toolkit.TKActivity;
 import com.elisaxui.xui.core.toolkit.TKAnimation;
 import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.toolkit.TKRouter;
-import com.elisaxui.xui.core.widget.button.ViewBtnBurger;
-import com.elisaxui.xui.core.widget.button.ViewFloatAction;
 import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
 import com.elisaxui.xui.core.widget.chart.ViewJSChart;
 import com.elisaxui.xui.core.widget.container.JSContainer;
-import com.elisaxui.xui.core.widget.container.ViewCard;
 import com.elisaxui.xui.core.widget.menu.JSMenu;
 import com.elisaxui.xui.core.widget.menu.ViewMenu;
 import com.elisaxui.xui.core.widget.navbar.JSNavBar;
-import com.elisaxui.xui.core.widget.navbar.ViewNavBar;
 import com.elisaxui.xui.core.widget.overlay.JSOverlay;
-import com.elisaxui.xui.core.widget.overlay.ViewOverlay;
 
 @xFile(id = "standard")
 @xComment("activite standard")
@@ -37,7 +32,7 @@ public class ScnStandard extends XHTMLPart {
 	public static final int heightNavBar = 53;
 	public static final int widthMenu = 250;
 	
-	public static final int SPEED_SHOW_ACTIVITY = 200;
+	public static final int SPEED_SHOW_ACTIVITY = 2000;
 	public static final int DELAY_SURETE_END_ANIMATION = 100;
 	
 	public static final int SPEED_SHOW_MENU = 150;
@@ -48,6 +43,7 @@ public class ScnStandard extends XHTMLPart {
 	public static final int SPEED_BURGER_EFFECT = 200;
 	public static final int SPEED_NEXT_FASTDOM = 100;
 	
+	public static final int ZINDEX_ANIM_FRONT = 1;
 	public static final int ZINDEX_NAV_BAR = 1;
 	public static final int ZINDEX_MENU = 2;
 	public static final int ZINDEX_FLOAT = 3;
@@ -116,8 +112,8 @@ public class ScnStandard extends XHTMLPart {
 				.on(".activity.toback", "transition:transform "+SPEED_SHOW_ACTIVITY+"ms linear; "
 						+ "transform:translate3d(0px,0px,0px) scale(0.9); ")
 				
-				.on(".activity.toHidden", "transform: translate3d(0px,100%,0px);")
-				
+				.on(".activity.frontActivity", "z-index:"+ZINDEX_ANIM_FRONT+";")
+				.on(".activity.toHidden", "transform: translate3d(0px,100%,0px);")				
 				.on(".activity.tofront", "transform: translate3d(0px,0px,0px);")  
 				.on(".activity.fixedForAnimated", "top:0px; position: fixed; transition:transform "+SPEED_SHOW_ACTIVITY+"ms linear;")   // reste cacher en bas de la page et ne suit pas l'ascenceur
 				.on(".activity.nodisplay", "display:none;")
@@ -269,10 +265,10 @@ public class ScnStandard extends XHTMLPart {
 
 	TKRouter tkrouter;
 
-	public JSInterface getActionManager()
+	public JSInterface getEventManager()
 	{
 	  return fct()
-			   .consoleDebug("'ok ActionManager'") 
+			   .consoleDebug("'ok EventManager'") 
 			   .__("$('body').on('touchstart',", fct('e')
 					   .var("btn", "$(e.target).closest('[data-x-action]')")
 					  
@@ -286,18 +282,16 @@ public class ScnStandard extends XHTMLPart {
 					   			.set("ripple", "btn.children('.",  ViewRippleEffect.cRippleEffect().getId(), "')")
 					   		.endif()	
 					   .endif()
-					   
-					   ._if("$('#Activity1').hasClass('active')")
-					   		.__("$xui.config.nextActivityAnim= 'fromBottom' ")
-					   .endif()	
-					   
+					   					   
+					   	.__("$xui.intent.nextActivityAnim= 'fromBottom' ")	
+					   				   	
 					   ._if( "ripple.length>0") 
 					   
 					   	   ._if("ripple.hasClass('cBtnCircle')")
-					   	   	    .__("$xui.config.nextActivityAnim= 'opacity'")
+					   	   	    .__("$xui.intent.nextActivityAnim= 'opacity'")
 					   			.__(tkrouter.doEvent("event"))
 						   ._else()
-						   	   					   
+						   	   // ripple sans ouverture d'activity		   
 							   .__(TKQueue.startAlone(fct()
 							   				.__("ripple.addClass('", ViewRippleEffect.cRippleEffectShow().getId() ,"')")
 									 ,SPEED_RIPPLE_EFFECT/3, fct()  // attente ripple effect
@@ -305,10 +299,10 @@ public class ScnStandard extends XHTMLPart {
 									 ,SPEED_RIPPLE_EFFECT, fct()  // attente ripple effect
 								   		    .__("ripple.removeClass('", ViewRippleEffect.cRippleEffectShow().getId() ,"')")     	
 									   )
-								)
-						   
+								)  
 						   .endif()
 					   ._else()
+					   		// pas de ripple effect
 					   		.__(tkrouter.doEvent("event"))
 					   .endif()
 				, ")")
@@ -327,6 +321,7 @@ public class ScnStandard extends XHTMLPart {
 				
 				.__("mc.on('hammer.input',", fct("ev")
 //						.__("$('#content')[0].innerHTML = [ev.srcEvent.type, ev.pointers.length, ev.isFirst, ev.isFinal, ev.deltaX, ev.deltaY, ev.distance, ev.velocity, ev.deltaTime, ev.offsetDirection, ev.target].join('<br>');")
+						//**************************** gestion swipe anim du menu *************************/
 						._if("$(ev.target).closest('.menu').length > 0")
 							._if("ev.deltaX>-100 && ev.offsetDirection==2 && ev.velocity>-1 ")
 								._if("anim==true")
@@ -347,7 +342,7 @@ public class ScnStandard extends XHTMLPart {
 								.set("anim", "true")
 							.endif()
 						.endif()
-						
+						//***************************************************************************************/
 					,")")
 			;
 	}
@@ -359,7 +354,7 @@ public class ScnStandard extends XHTMLPart {
 		
 		.set("nav", "new Navigo(null,true)")   //   null,true,'!#')")
 		.var(tkrouter , _new("nav"))
-		.set("window.tkrouter", tkrouter)
+		.set("window.tkrouter", tkrouter)  // a mettre dans TKConfig
 		;
 			  
 	}
@@ -374,13 +369,14 @@ public class ScnStandard extends XHTMLPart {
 	public Element xInitJS() {
 		return xScriptJS(js()
 		
+				//******************** construction du menu ****************************************************
 				.var(jsMenu, _new())
 				.var("jsonMenu", jsMenu.getData())
 				.__("jsonMenu.push({name:'Paramètres', icon:'settings', idAction:'setting'} )")
 				.__("jsonMenu.push({name:'Configuration', icon:'build', idAction:'config'} )")
 				.__("jsonMenu.push({type:'divider' })")
 				.__("jsonMenu.push({name:'Aide', icon:'help_outline', idAction:'help'} )")
-				.set("window.jsonMainMenu", "jsonMenu")
+				.set("window.jsonMainMenu", "jsonMenu")  // liste des nemu pour animation dans tkAnimation
 				
 				/***********************************************************************************************/		
 				.var("name", txt("Activity1"))
@@ -389,8 +385,7 @@ public class ScnStandard extends XHTMLPart {
 				.var("chart",  XHTMLPart.xElementPart(new ViewJSChart(XHTMLPart.xId("test")))	)
 				.var("cnt2", XHTMLPart.xDiv(XHTMLPart.xAttr("style", "\"width: 100%; height: 50vh; background:url(" +ScnStandard.image3 +") center / cover\"")))
 				 
-				 /********************************************************************/
-				.var("declaration1","{type:'page', id:name, active:true , children : ["
+				.var("declaration1","{type:'page', id:name , children : ["
 						/********************************************************************/				
 						+ "{ selector: '#NavBar'+name, factory:'JSNavBar', rows : [ "
 						+ "				{type:'burger' },"
@@ -413,9 +408,12 @@ public class ScnStandard extends XHTMLPart {
 						+ "}"
 						/********************************************************************/					
 						+ "]"
+						+ ", events: { more: { action:'route' , url: 'route/Activity2?p=1'} ,"
+						+ "				BtnFloatMain : { action:'route' , url: 'route/Activity3?p=12'} "
+						+ "  }"
 						+ "}") 
 				
-				
+				/********************************************************************/
 				.set("name", txt("Activity2"))
 				
 				.set("cnt1", xDiv(xAttr("style", "\"width: 100%; height: 30vh; background:url(" +image2 +") center / cover\"")))
@@ -440,16 +438,19 @@ public class ScnStandard extends XHTMLPart {
 						+ "},"		
 						/********************************************************************/					
 						+ "]"
+						+ ", events: { more: { action:'route' , url: 'route/Activity1'} ,"
+						+ "			   search : { action:'route' , url: 'route/Activity3?p=12'} "
+						+ "  }"
 						+ "}") 
 				
-				
+				/********************************************************************/
 				.set("name", txt("Activity3"))
 				.var("declaration3","{type:'page', id:name, active:false , children : ["
 						/********************************************************************/				
 						+ "{ selector: '#NavBar'+name, factory:'JSNavBar', rows : [ "
 						+ "				{type:'burger' },"
 						+ "				{type:'name', name:'Vide'},"
-//						+ "				{type:'action', icon:'search', idAction:'search'},"
+						+ "				{type:'action', icon:'search', idAction:'search'},"
 						+ "				{type:'action', icon:'more_vert', idAction:'more'}"
 						+ "  ]  "
 						+ "},"
@@ -460,14 +461,33 @@ public class ScnStandard extends XHTMLPart {
 //						+ "				{type:'card', html:cnt3 }"
 //						+ "  ]  "
 //						+ "},"		
-						/********************************************************************/					
+						/********************************************************************/				
+						+ "{ selector: '#'+name+' .content', factory:'JSContainer', rows : [ "
+						+ "				{type:'floatAction' }"
+						+ "  ]  "
+						+ "}"
+						/********************************************************************/						
 						+ "]"
+						+ ", events: { more: { action:'back' },"
+						+ "			   BtnFloatMain : { action:'route' , url: 'route/Activity2?p=22'},"
+						+ "			   search : { action:'route' , url: 'route/Activity2?p=24'} " 
+						+ "  }"
 						+ "}") 
 				
-				.var(tkActivity, _new())
+				
+				// a mettre dans TKConfig
+				.set("$xui", "{ intent: { nextActivityAnim : 'fromBottom' }, config:{ } }")  
+				
+				/**********************************************/
+				.__("(",getEventManager(),")()")
+				.__("(",getMoveManager(),")()")
+				.__("(",getStateManager(),")()")
+				
+				.var(tkActivity, "window.tkrouter.activityMgr")
+//				.set("window.tkActivity", tkActivity)     // a mettre dans TKConfig
 				.__(tkActivity.createActivity("declaration1"))
 				.__(tkActivity.prepareActivity("declaration2"))
-				.__(tkActivity.registerActivity("declaration3"))
+				.__(tkActivity.prepareActivity("declaration3"))
 				
 				/*************************************************/
 			
@@ -477,13 +497,7 @@ public class ScnStandard extends XHTMLPart {
 			
 				
 				
-				// a mettre dans TKConfig
-				.set("$xui", "{ config: { nextActivityAnim : 'fromBottom' } }")   //delayWaitForShowMenu : 0,
-				
-				/**********************************************/
-				.__("(",getActionManager(),")()")
-				.__("(",getMoveManager(),")()")
-				.__("(",getStateManager(),")()")
+
 
 				);
 	}

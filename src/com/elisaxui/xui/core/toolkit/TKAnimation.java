@@ -42,7 +42,7 @@ public interface TKAnimation extends JSClass {
 	return null;
 	}
 	
-	default Object doOpenBurgerMenu() {
+	default Object doToggleBurgerMenu() {
 		var(_overlay, _new(ScnStandard.SPEED_SHOW_MENU, ScnStandard.OVERLAY_OPACITY_MENU))
 		.var("jqMenu", "$('.menu')")
 		.var("jqScene", "$('.scene')")
@@ -214,14 +214,12 @@ public interface TKAnimation extends JSClass {
 	
 	default Object doOpenActivityFromBottom()
 	{
-		String act1 = "'#Activity1'";
-		String act2 = "'#Activity2'";
 		
 		var(_overlay, _new(ScnStandard.SPEED_SHOW_ACTIVITY, ScnStandard.OVERLAY_OPACITY_BACK))
 	 	.var("sct", "$('body').scrollTop()")
 	 	.var(_self, _this)
-	 	.var("act1", act1)
-	 	.var("act2", act2)
+	 	.var("act1", "'#'+$xui.intent.prevActivity")
+	 	.var("act2", "'#'+$xui.intent.activity")
 	 	.var("jqAct1", "$(act1)")
 	 	.var("jqAct2", "$(act2)")
 	 	
@@ -230,30 +228,30 @@ public interface TKAnimation extends JSClass {
 		     .__(TKQueue.start(
 		    		 fct() 
 					.__(_self.doNavBarToActivity(0))
-					.__(_overlay.doShow(act1,1))    // init
-					.__(_self.doActivityInactive(act1))	
-			   		.__(_self.doActivityFreeze(act1,"sct"))               //freeze 1
-					.__(_self.doActivityActive(act2))	
-					
+					.__(_overlay.doShow("act1",1))    // init
+					.__(_self.doActivityInactive("act1"))	
+			   		.__(_self.doActivityFreeze("act1","sct"))               //freeze 1
+					.__(_self.doActivityActive("act2"))	
+					.__("jqAct2.addClass('frontActivity')")
 			   		.__("jqAct2.addClass('toHidden')") //prepare l'animation  top 0 fixed
 			   	   
 	    		 ,ScnStandard.SPEED_NEXT_FASTDOM, fct()   // lance les anim
-	    		 	.__(_overlay.doShow(act1, 2)) 			
-	    	   		.__(_self.doActivityFreeze(act2, -1))    //freeze 2
+	    		 	.__(_overlay.doShow("act1", 2)) 			
+	    	   		.__(_self.doActivityFreeze("act2", -1))    //freeze 2
 	    	   		
 	    	   		.__("jqAct1.addClass('toback')")
 			   		.__("jqAct2.addClass('tofront')")
 	    		 	
 			   	,ScnStandard.SPEED_SHOW_ACTIVITY + ScnStandard.DELAY_SURETE_END_ANIMATION, fct()
-			   		.__(_self.doActivityNoDisplay(act1))	
+			   		.__(_self.doActivityNoDisplay("act1"))	
 			   		
 					.__("jqAct2.removeClass('tofront')")
 				 	.__("jqAct2.removeClass('toHidden')") 
-			   		
-			   		.__(_self.doActivityDeFreeze(act2))			  // defrezze 2 
+				 	.__("jqAct2.removeClass('frontActivity')")
+			   		.__(_self.doActivityDeFreeze("act2"))			  // defrezze 2 
 			   		.__(_self.doNavBarToBody())
 			   		
-			   		.__(_self.doInitScrollTo(act2))
+			   		.__(_self.doInitScrollTo("act2"))
 				    
 			   	, ScnStandard.SPEED_NEXT_FASTDOM, fct()
 			  // 		.consoleDebug("'end activity anim'")
@@ -263,10 +261,10 @@ public interface TKAnimation extends JSClass {
 			.__(TKQueue.start( 
 				fct()
 					 .__(_self.doNavBarToActivity(0))				 
-					 .__(_self.doActivityInactive(act2))
-					 .__(_self.doActivityActive(act1))
-					 .__(_self.doActivityFreeze(act2,"sct"))   // frezze 2
-					
+					 .__(_self.doActivityInactive("act2"))
+					 .__(_self.doActivityActive("act1"))
+					 .__(_self.doActivityFreeze("act2","sct"))   // frezze 2
+					 .__("jqAct2.addClass('frontActivity')")
 					 
 				,ScnStandard.SPEED_NEXT_FASTDOM, fct()    // lance les anim
 					.__(_overlay.doHide(1))
@@ -277,15 +275,16 @@ public interface TKAnimation extends JSClass {
 					
 			   	,ScnStandard.SPEED_SHOW_ACTIVITY+ScnStandard.DELAY_SURETE_END_ANIMATION, fct()
 			   		.__(_overlay.doHide(2))	
-			   		.__(_self.doActivityNoDisplay(act2))	
-			   		.__(_self.doActivityDeFreeze(act2))	   // defrezze 2
+			   		.__(_self.doActivityNoDisplay("act2"))	
+			   		.__(_self.doActivityDeFreeze("act2"))	   // defrezze 2
 			   		.__(_self.doNavBarToBody())	
 			   		
 					.__("jqAct1.removeClass('backToFront')")
 				 	.__("jqAct2.removeClass('toHidden')") 
+				 	.__("jqAct2.removeClass('frontActivity')")
 				 	
-					.__(_self.doActivityDeFreeze(act1))      // defrezze 1
-					.__(_self.doInitScrollTo(act1))
+					.__(_self.doActivityDeFreeze("act1"))      // defrezze 1
+					.__(_self.doInitScrollTo("act1"))
 					
 			   	,ScnStandard.SPEED_NEXT_FASTDOM, fct()
 			//   		.consoleDebug("'end activity anim'")
@@ -299,14 +298,12 @@ public interface TKAnimation extends JSClass {
 	JSXHTMLPart _template = null;
 	default Object doOpenActivityFromOpacity()
 	{
-		String act1 = "'#Activity1'";
-		String act2 = "'#Activity2'";
 		
 		var(_overlay, _new(ScnStandard.SPEED_SHOW_ACTIVITY, 0.6))
 	 	.var(_self, _this)
 	 	.var("sct", "$('body').scrollTop()")	
-	 	.var("act1", act1)
-	 	.var("act2", act2)
+	 	.var("act1", "'#'+$xui.intent.prevActivity")
+	 	.var("act2", "'#'+$xui.intent.activity")
 	 	.var("jqAct1", "$(act1)")
 	 	.var("jqAct2", "$(act2)")
 	 	
@@ -314,29 +311,29 @@ public interface TKAnimation extends JSClass {
 	         // ouverture activity 2
 		     .__(TKQueue.start( 
 		    	fct() 
-		    		 .__(_overlay.doShow(act1, 1))
+		    		 .__(_overlay.doShow("act1", 1))
 				  	 .__(_self.doNavBarToActivity(0))
-				   	 .__(_self.doActivityFreeze(act1,"sct"))    // frezze 1
+				   	 .__(_self.doActivityFreeze("act1","sct"))    // frezze 1
 				   	 
 		    		 .var(_template,  ViewOverlayRipple.xTemplate() )
 		    		 .var("rippleOverlay", _template.append("$('.scene')"))   //rippleOverlay par defaut invisible
 		    		 
 				, ScnStandard.SPEED_NEXT_FASTDOM, fct()	 //lance animation   
-	    		 	.__(_overlay.doShow(act1, 2))
+	    		 	.__(_overlay.doShow("act1", 2))
 				
 		    	   	.__("jqAct1.addClass('toback')")	    		  	 
 				 	.__("$('.scene .ripple_overlay').addClass('anim')") 
 					 
 				, ScnStandard.SPEED_SHOW_ACTIVITY - (ScnStandard.SPEED_SHOW_ACTIVITY/2), fct()   // 50 l'anim de la bulle peut etre arreter avant la fin
-				 	.__(_self.doActivityInactive(act1))
-					.__(_self.doActivityNoDisplay(act1))
-					.__(_self.doActivityActive(act2))
+				 	.__(_self.doActivityInactive("act1"))
+//					.__(_self.doActivityNoDisplay("act1"))
+					.__(_self.doActivityActive("act2"))
 								 		
 					// prepare anim
 	 				.__("jqAct2.addClass('circleAnim0prt')")
 	 				.__("jqAct2.addClass('zoom12')")
 					
-	    	   		.__(_self.doActivityFreeze(act2,-1)) // frezze 2
+	    	   		.__(_self.doActivityFreeze("act2",-1)) // frezze 2
 					
 				 , ScnStandard.SPEED_NEXT_FASTDOM, fct()	 //lance animation 	
 				 	.__("jqAct2.removeClass('circleAnim0prt')")
@@ -353,8 +350,8 @@ public interface TKAnimation extends JSClass {
 					.__("$('.scene .ripple_overlay').css('display', 'none')")
 					
 		   			.__(_self.doNavBarToBody())
-					.__(_self.doActivityNoDisplay(act1))
-			   		.__(_self.doActivityDeFreeze(act2))	    // defrezze 2
+					.__(_self.doActivityNoDisplay("act1"))
+			   		.__(_self.doActivityDeFreeze("act2"))	    // defrezze 2
 			   		
 			   		.__("jqAct2.removeClass('transitionSpeed')")
 			   		.__("jqAct2.removeClass('circleAnim100prt')")
@@ -363,16 +360,18 @@ public interface TKAnimation extends JSClass {
 		    	    // annule l'animation
 	    	    	.__("jqAct2.css('transform', '')")
 	    	    	
-	    	    	.__(_self.doInitScrollTo(act2))  	
+	    	    	.__(_self.doInitScrollTo("act2"))  	
 		    	    //    .consoleDebug("'end activity anim'")
 				   )) 	
 		._else()
 			// fermeture activity 2 
 			.__(TKQueue.start(  fct()
 					.__(_self.doNavBarToActivity(0))				 
-					.__(_self.doActivityInactive(act2))
-					.__(_self.doActivityActive(act1))
-					.__(_self.doActivityFreeze(act2,"sct"))    // frezze 2
+					.__(_self.doActivityInactive("act2"))
+					.__(_self.doActivityActive("act1"))
+					.__(_self.doActivityFreeze("act2","sct"))    // frezze 2
+					
+					// recherche ripple
 					
 					.__("$('.scene .ripple_overlay').css('display', '')")   // display en grand
 					
@@ -393,19 +392,19 @@ public interface TKAnimation extends JSClass {
 		   			
 				,ScnStandard.SPEED_SHOW_ACTIVITY + ScnStandard.DELAY_SURETE_END_ANIMATION, fct()	
 					.__(_overlay.doHide(2))
-			   		.__(_self.doActivityNoDisplay(act2))	
+			   		.__(_self.doActivityNoDisplay("act2"))	
 			   		.__(_self.doNavBarToBody())	
-					.__(_self.doActivityDeFreeze(act1))       // defrezze 1
+					.__(_self.doActivityDeFreeze("act1"))       // defrezze 1
 					
 					.__("jqAct1.removeClass('backToFront')")
 		   		 	.__("$('.scene .ripple_overlay').remove()")
 
-			   		.__(_self.doActivityDeFreeze(act2))	    // defrezze 2
+			   		.__(_self.doActivityDeFreeze("act2"))	    // defrezze 2
 					
 			   		.__("jqAct2.removeClass('transitionSpeed')")
 	 				.__("jqAct2.removeClass('circleAnim0prt')")
 		   		 	
-					.__(_self.doInitScrollTo(act1))
+					.__(_self.doInitScrollTo("act1"))
 					
 				 ,ScnStandard.SPEED_NEXT_FASTDOM , fct()
 				// 	.consoleDebug("'end activity anim'")

@@ -18,81 +18,123 @@ public interface TKRouter extends JSClass {
 	TKRouter _this = null;
 	TKRouter _self = null;
 	Object navigo = null;
+	TKActivity activityMgr= null;
+	Object historyIntent = null;
+	Object _historyIntent = null;
 	
 	default Object constructor(Object nav) {
 		__()
 		.set(tkAnimation, _new())
-
+	    .set(activityMgr, _new())
+	    
 //	.__("router.resolve()")
 		.set(navigo, nav)
 		.var(_self, _this)
 		
-		.var("h", fct("params","query")
-				//.__("console.debug(params,query)")
+		.var("h", fct("params","query")   // ecoute l'history back
 				._if(_self,".navigo.nextenable")
-				    .var("lastRoute", _self,".navigo._lastRouteResolved")
-				//	.consoleDebug("lastRoute")
-				//	.consoleDebug("this.toString()", "History.length")
-					.var("backEvent", _self.isBack("this.toString()"))
+				
+				    .var("toRoute", _self,".navigo._lastRouteResolved")
+					.var("backFromIntent", _self.isBack("toRoute.url"))
+					.var("fromIntent", _self.geCurrentIntention())
 					
-					._if("backEvent=='menu'")
-						.__(_self.doAction(txt("menu")))
+					.consoleDebug("'pushState ENABLE action=', this.toString() , ' toRoute =',toRoute,' backFromIntent =', backFromIntent, 'fromIntent=', fromIntent")
+					
+					/**************** gestion toogle menu  **********************/
+					._if("backFromIntent!=null && backFromIntent.url=='menu'")
+						.__(_self.doAction(txt("toggleMenu")))
+						.__("return")    // exit 
 					._elseif("this.toString()=='menu'") // is next
-					//	.__("history.replaceState(null,null,'#home')")
+						.set("$xui.intent.action", "'toggleMenu'")
+						.set("$xui.intent.url", "'menu'")
+						.var("intent", "{}")
+						.__("$.extend(intent, $xui.intent)")
+						
+						.__(_self,".",_historyIntent,".push(intent)")   // ajoute a l historique interne
+						.consoleDebug("'intent='", "intent")
+						.__(_self.doAction(txt("toggleMenu")))
 					.endif()
+				
+					/**************** gestion route activity  **********************/
+					._if("backFromIntent!=null && this.toString()=='route'")
 					
-					._if("backEvent=='open'")
-						.__(_self.doAction(txt("open")))
-					._elseif("this.toString()=='open'") // is next
-					//	.__("history.replaceState(null,null,'#home')")
+						.set("$xui.intent.prevActivity", "params.url")     //TODO a changer
+					    .set("$xui.intent.activity", "tkActivity.idCurrentActivity")
+					    .set("$xui.intent.action", "'route'")
+					    .set("$xui.intent.nextActivityAnim", "backFromIntent.nextActivityAnim")
+						.__(_self.doAction(txt("backRoute")))
+						
+					._elseif("this.toString()=='route'") // is next
+					
+						.set("$xui.intent.prevActivity", "tkActivity.idCurrentActivity")
+					    .set("$xui.intent.activity", "params.url")
+					    .set("$xui.intent.action", "'route'")
+					    .set("$xui.intent.url", "toRoute.url")
+					    .var("intent", "{}")
+					    .__("$.extend(intent, $xui.intent)")
+						.__(_self,".",_historyIntent,".push(intent)")   // ajoute a l historique interne
+					 //   .consoleDebug("'intent='", "intent")
+						.__(_self.doAction(txt("route")))
 					.endif()
+					/******************************************/
 				._else()
+					.__("console.debug(",txt("pushState DISABLE param=<"), ",params, '> query =<', query, '> action=', this, ' nextEnable=',", _self,".navigo.nextenable)")
 					.__(_self,".navigo.nextenable=", true)
 				.endif()
 			)
 
 		.__("nav.on("
 				+ "{"
-				+ " 'open': { as: 'open', uses: h.bind('open') },"
-				+ " 'menu': { as: 'menu', uses: h.bind('menu') },"
-				+ " 'home' : { as: 'home', uses: h.bind('home') }" 
+				+ " 'route/:url': { as: 'route', uses: h.bind('route') },"  
+				+ " 'menu': { as: 'menu', uses: h.bind('menu') },"  
+			//	+ " 'home' : { as: 'home', uses: h.bind('home') }"   
 				+ "})")
 		
-		.__(navigo,".history=[]")
+		.__("nav.notFound(", fct("query").consoleDebug("'notFound navigo ='", "query") ,")")
+		
+		.set(historyIntent,"[]")
 		.__(navigo,".nextenable=", false)
-		.__(_this.doNavigate(txt("home")))
+		.__(_this.doNavigate(txt("route/Activity1")))   // premier etat
+		.var("intent", "{ url:'route/Activity1', nextActivityAnim : 'fromBottom' }")
+		.__(historyIntent,".push(intent)")   // ajoute a l historique interne)
+		.__(navigo,".resolve()")
 		;
 		return null;
 	}
 	
 	default Object doEvent(Object event)
 	{
-		 __()
+		 __()   // action lancer au click
 		._if("!window.animInProgess && event!=null")
-//		   .__("alert(event)")
+		   .var("currentIntent",   historyIntent, "[", historyIntent, ".length-1]")
+		   .consoleDebug(txt("do event"), "event","' currentIntent ='", "currentIntent")
 		   .__("if (navigator.vibrate) { navigator.vibrate(30); }")    // je vibre
 		   
-		   ._if("event=='BtnFloatMain' || event=='more' || event=='closeActivity' ")
-				._if(navigo,".history[",navigo,".history.length-1]=='open'")
-					.__(navigo,".nextenable=", false)
-					.__(_this.doBack())
-				._else()
-					.__(navigo,".nextenable=", false)
-					.__(_this.doNavigate(txt("open")))
-				.endif()
-		   		.__(_this.doAction(txt("open")))	
-			.endif()
+		   
+		   .var("jsonAct", activityMgr.getCurrentActivity())
+		   .consoleDebug("'jsonAct'", "jsonAct")
+		   .var("jsonAction", "jsonAct.events[event]")
+		   
+		   ._if("jsonAction!=null &&jsonAction.action=='route' ")
+		   		.__(_this.doNavigate("jsonAction.url"))  
+		   .endif()
+		   
+		   ._if("jsonAction!=null &&jsonAction.action=='back' ")
+		   		.__(_this.doBack())  
+	   		.endif()
+		   
+		   
+//		   ._if("event=='BtnFloatMain' || event=='more' || event=='HeaderSwipeDown' ")
+//		   			.__(navigo,".nextenable=", true)
+//					.__(_this.doNavigate(txt("open/Activity2?p=1"))) // ajoute history pour le back   /test/act1/read?p=1
+//			.endif()
 			
 			._if("event=='burger' || event=='Overlay'")
-				._if(navigo,".history[",navigo,".history.length-1]=='menu'")
-					.__(navigo,".nextenable=", false)
-					.__(_this.doBack())
+				._if(historyIntent, "[",historyIntent,".length-1].url=='menu'")  // a ameliorer
+					.__(_this.doBack()) 
 				._else()
-					.__(navigo,".nextenable=", false)
 					.__(_this.doNavigate(txt("menu")))
 				.endif()
-				//.__("$xui.config.delayWaitForShowMenu = event=='Overlay'?0:"+ScnStandard.SPEED_BURGER_EFFECT/2)
-				.__(_this.doAction(txt("menu")))	
 			.endif()
 		.endif();
 		 return null;
@@ -100,7 +142,8 @@ public interface TKRouter extends JSClass {
 	
 	default Object doNavigate(Object uri)
 	{
-		__(navigo,".history.push(uri)")
+		__()
+		.consoleDebug(txt("doNavigate"), "uri")
 		.__(navigo,".navigate(uri)")
 		;
 		return null;
@@ -110,17 +153,24 @@ public interface TKRouter extends JSClass {
 	default Object isBack(Object change)
 	{
 		__()
-		._if(navigo,".history.length>1 && ",navigo,".history[",navigo,".history.length-2]==", change )
-			.__("return ",navigo,".history.pop()")
+		._if(historyIntent,".length>1 && ",historyIntent, "[",historyIntent,".length-2].url==", change )
+			.__("return ",historyIntent,".pop()")
 		.endif()
 		;
 		return null;
 	}
+
+	default Object geCurrentIntention()
+	{ 
+		__("return ", historyIntent, "[", historyIntent ,".length-1]")
+		;
+		return null;
+	}
+	
 	
 	default Object doBack()
 	{
-		__(navigo,".history.pop()")
-		.__("history.go(-1)")
+		__("history.go(-1)")
 		;
 		return null;
 	}
@@ -128,15 +178,33 @@ public interface TKRouter extends JSClass {
 	default Object doAction(Object action)
 	{
 		 __()
-		 ._if("action=='open' ")
-		    ._if("$xui.config.nextActivityAnim=='fromBottom'")
+		 .var(_self, _this)   //  self.geCurrentIntention())
+		 
+		 ._if("action=='route'")
+		 	.var("actAnim", geCurrentIntention(), ".nextActivityAnim")
+		 	.__(activityMgr.setCurrentActivity("$xui.intent.activity"))  
+			 .consoleDebug(txt("doAction"), "action", "'anim='", "actAnim")
+		 	
+		    ._if("actAnim=='fromBottom'")
 		    	.__(tkAnimation.doOpenActivityFromBottom())
 		    ._else()
 		    	.__(tkAnimation.doOpenActivityFromOpacity())
 		    .endif()
 	     .endif()
-		 ._if("action=='menu'")
-		 	.__(tkAnimation.doOpenBurgerMenu())
+	     
+		 ._if("action=='backRoute'")  
+		 	.var("actAnim", "$xui.intent.nextActivityAnim")
+		 	.__(activityMgr.setCurrentActivity("$xui.intent.prevActivity"))   
+			.consoleDebug(txt("doAction"), "action", "'anim='", "actAnim")
+		    ._if("actAnim=='fromBottom'")
+		    	.__(tkAnimation.doOpenActivityFromBottom())
+		    ._else()
+		    	.__(tkAnimation.doOpenActivityFromOpacity())
+		    .endif()
+	     .endif()
+	     
+		 ._if("action=='toggleMenu'")
+		 	.__(tkAnimation.doToggleBurgerMenu())
 		 .endif();
 		 return null;
 	}
@@ -181,7 +249,7 @@ public interface TKRouter extends JSClass {
 When invoking pushState give the data object a unique incrementing id (uid).
 When onpopstate handler is invoked; check the state uid against a persistent variable containing the last state uid.
 Update the persistent variable with the current state uid.
-Do different actions depending on if state uid was greater or less than last state uid.
+Do different events depending on if state uid was greater or less than last state uid.
 *
 */	
 }

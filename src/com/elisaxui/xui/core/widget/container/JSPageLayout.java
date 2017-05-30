@@ -26,7 +26,7 @@ public interface JSPageLayout extends JSClass {
 	  .__("mcheader.get('pan').set({ enable: true, direction: Hammer.DIRECTION_VERTICAL})")
 	  .__("mcheader.on('hammer.input',", fct("ev") 
 			  		._if("ev.deltaY>20 && ev.offsetDirection==16 && ev.velocity>1 ")
-			  		.__(_tkrouter.doEvent("'closeActivity'"))
+			  		.__(_tkrouter.doEvent("'HeaderSwipeDown'"))
 			  		.endif()
 			  ,")")	
 	   ;

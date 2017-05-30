@@ -14,20 +14,42 @@ public interface TKActivity extends JSClass {
 //	JSNavBar _jsNavBar = null;
 	JSContainer jsContainer = null;
 	Object listRegisterActivity = null;
-	
+	Object idCurrentActivity = null;
 	
 	default Object constructor()
 	{
-		set(listRegisterActivity, "{}");
-		set(jsContainer, _new());
+		set(listRegisterActivity, "{}")
+		.set(jsContainer, _new())
+		.set(idCurrentActivity, "''")
+		;
 		return null;
 	}
+	
+	default Object getCurrentActivity()
+	{
+		
+		__("return ",listRegisterActivity, "[", idCurrentActivity, "]")
+		;
+		return null;
+	}
+	
+	
+	default Object setCurrentActivity(Object id)
+	{
+	    set(idCurrentActivity, "id")
+	    .__("return ",listRegisterActivity, "[", idCurrentActivity, "]")
+	    ;
+		return null;
+	}
+	
 	default Object createActivity(Object json)
 	{
 
 		var("jsonContainer", jsContainer.getData("'.scene'"))
 		.__("jsonContainer.push(json)")
+		.set("json.active", true)
 		.__(listRegisterActivity,"[json.id] = json;")
+		.set(idCurrentActivity, "json.id")
 		;
 		return null;
 	}

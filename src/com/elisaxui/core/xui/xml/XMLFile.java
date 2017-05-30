@@ -53,7 +53,10 @@ public class XMLFile {
 						}
 					} else
 						try {
-							ReflectionHelper.setFinalStatic(field, "this."+field.getName());
+							if ( field.getName().startsWith("_"))
+								ReflectionHelper.setFinalStatic(field, field.getName().substring(1));
+							else
+								ReflectionHelper.setFinalStatic(field, "this."+field.getName());
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();

@@ -26,11 +26,13 @@ public class ViewOverlayRipple extends XHTMLPart {
 				.on(".ripple_overlay","position: absolute;	"
 					+ "top: 0px;    left: 0px; "
 					+ "width: 100vw;  height: 100vh; background: "+ ScnStandard.bgColorThemeOpacity +"; "
-					+ "clip-path: circle(0px at 90vw 95vh);  -webkit-clip-path: circle(0px at 90vw 95vh);  "
-					+ "transition: "+ScnStandard.SPEED_SHOW_ACTIVITY+"ms;"
 					)
 				
-				.on(".ripple_overlay.anim","clip-path: circle(100% at center);-webkit-clip-path: circle(100% at center)")
+				.on(".ripple_overlay.transitionx2","transition: "+ScnStandard.SPEED_ACTIVITY_TRANSITION_EFFECT*2+"ms;")
+				.on(".ripple_overlay.transition","transition: "+ScnStandard.SPEED_ACTIVITY_TRANSITION_EFFECT+"ms;")
+				
+				.on(".ripple_overlay.t0prct","clip-path: circle(0px at 90vw 95vh);  -webkit-clip-path: circle(0px at 90vw 95vh);  ")
+				.on(".ripple_overlay.t100prct","clip-path: circle(100% at center);-webkit-clip-path: circle(100% at center);")
 				;
 	}
 	

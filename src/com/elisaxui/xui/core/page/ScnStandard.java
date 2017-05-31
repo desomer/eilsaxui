@@ -32,7 +32,8 @@ public class ScnStandard extends XHTMLPart {
 	public static final int heightNavBar = 53;
 	public static final int widthMenu = 250;
 	
-	public static final int SPEED_SHOW_ACTIVITY = 2000;
+	public static final int SPEED_SHOW_ACTIVITY = 200;
+	public static final int SPEED_ACTIVITY_TRANSITION_EFFECT = 100;
 	public static final int DELAY_SURETE_END_ANIMATION = 100;
 	
 	public static final int SPEED_SHOW_MENU = 150;
@@ -107,15 +108,17 @@ public class ScnStandard extends XHTMLPart {
 					//	+ " min-width: 100%;  min-height: 100%;   "// position: absolute; // top: 0px; left: 0px; right: 0px; bottom: 0px; "
 						+ " will-change:overflow,z-index;") //will-change:transform
 				
+				.on(".activity.fixedForAnimated", "top:0px; position: fixed; transition:transform "+SPEED_SHOW_ACTIVITY+"ms linear;")   // reste cacher en bas de la page et ne suit pas l'ascenceur
+
+				
 				.on(".activity.backToFront", "transition:transform "+(SPEED_SHOW_ACTIVITY+100)+"ms linear;")
 				
-				.on(".activity.toback", "transition:transform "+SPEED_SHOW_ACTIVITY+"ms linear; "
+				.on(".activity.toback", "transition:transform "+(SPEED_SHOW_ACTIVITY+100)+"ms linear; "
 						+ "transform:translate3d(0px,0px,0px) scale(0.9); ")
 				
 				.on(".activity.frontActivity", "z-index:"+ZINDEX_ANIM_FRONT+";")
 				.on(".activity.toHidden", "transform: translate3d(0px,100%,0px);")				
 				.on(".activity.tofront", "transform: translate3d(0px,0px,0px);")  
-				.on(".activity.fixedForAnimated", "top:0px; position: fixed; transition:transform "+SPEED_SHOW_ACTIVITY+"ms linear;")   // reste cacher en bas de la page et ne suit pas l'ascenceur
 				.on(".activity.nodisplay", "display:none;")
 				
 				.on(".activity.circleAnim0prt", "z-index:1; clip-path:circle(0.0% at 100vw 100vh); -webkit-clip-path:circle(0.0% at 100vw 100vh); ")
@@ -125,7 +128,7 @@ public class ScnStandard extends XHTMLPart {
 				.on(".activity.zoom10", "transform:scale3d(1,1,1)")
 
 				.on(".activity.transitionSpeed", "transition:all "+ ScnStandard.SPEED_SHOW_ACTIVITY +"ms linear")
-				.on(".activity.transitionSpeedx2", "transition:all "+ ScnStandard.SPEED_SHOW_ACTIVITY / 2 +"ms linear")
+				.on(".activity.transitionSpeedx2", "transition:all "+ ScnStandard.SPEED_ACTIVITY_TRANSITION_EFFECT +"ms linear")
 				
 				.on(".activityMoveForShowMenu", "transition:transform "+SPEED_SHOW_MENU+"ms ease-out; transform: translate3d("+(widthMenu-100)+"px,0px,0px);")
 				.on(".activityMoveForHideMenu", "transition:transform "+SPEED_SHOW_MENU+"ms ease-out; transform: translate3d(0px,0px,0px);")

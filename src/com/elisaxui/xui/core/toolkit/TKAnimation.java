@@ -13,6 +13,22 @@ import com.elisaxui.xui.core.widget.overlay.ViewOverlayRipple;
  * @author Bureau
  *
  */
+
+/** TODO 
+ * 
+ 
+ - creer un layout intercalaire entre activity   (ex ripple anim)
+ - creer un layout intercalaire au dessus des activity  ( ex  zoom image anim, overlay layout)
+ - gerer status de l'intention (route push or route pop    meme page ou autre page SEO)
+ - ne pas reutiliser une activité deja dans l historique (ou remettre dans l'etat animation du status de l'intention)
+ - gerer le menu burger comme une activity
+ - gerer sur tous le animation les classes
+ 		- transitionSpeedx1 transitionSpeedx2
+ 		- class StateOpen , StateClose, StateXXX  
+ - empecher ou differer le button back durant l'animation sinon pb execution fin d'animation 	
+ *
+ */
+
 public interface TKAnimation extends JSClass {
 
 	JSOverlay _overlay = null;
@@ -317,16 +333,18 @@ public interface TKAnimation extends JSClass {
 				   	 
 		    		 .var(_template,  ViewOverlayRipple.xTemplate() )
 		    		 .var("rippleOverlay", _template.append("$('.scene')"))   //rippleOverlay par defaut invisible
+		    		 .__("$('.scene .ripple_overlay').addClass('t0prct')")
+		    		 .__("$('.scene .ripple_overlay').addClass('transitionx2')")
 		    		 
 				, ScnStandard.SPEED_NEXT_FASTDOM, fct()	 //lance animation   
 	    		 	.__(_overlay.doShow("act1", 2))
 				
-		    	   	.__("jqAct1.addClass('toback')")	    		  	 
-				 	.__("$('.scene .ripple_overlay').addClass('anim')") 
+		    	   	.__("jqAct1.addClass('toback')")	    
+		    	   	.__("$('.scene .ripple_overlay').removeClass('t0prct')")
+				 	.__("$('.scene .ripple_overlay').addClass('t100prct')") 
 					 
-				, ScnStandard.SPEED_SHOW_ACTIVITY - (ScnStandard.SPEED_SHOW_ACTIVITY/2), fct()   // 50 l'anim de la bulle peut etre arreter avant la fin
+				, ScnStandard.SPEED_ACTIVITY_TRANSITION_EFFECT-50, fct()   // 50 l'anim de la bulle peut etre arreter avant la fin
 				 	.__(_self.doActivityInactive("act1"))
-//					.__(_self.doActivityNoDisplay("act1"))
 					.__(_self.doActivityActive("act2"))
 								 		
 					// prepare anim
@@ -337,7 +355,7 @@ public interface TKAnimation extends JSClass {
 					
 				 , ScnStandard.SPEED_NEXT_FASTDOM, fct()	 //lance animation 	
 				 	.__("jqAct2.removeClass('circleAnim0prt')")
-				    .__("jqAct2.addClass('transitionSpeedx2')")
+				    .__("jqAct2.addClass('transitionSpeedx2')")   // cercle plus rapide 
 				 	.__("jqAct2.addClass('circleAnim100prt')")
 				 
 				 , ScnStandard.SPEED_NEXT_FASTDOM, fct()	 //lance animation  dezoom	 
@@ -346,7 +364,7 @@ public interface TKAnimation extends JSClass {
 				 	.__("jqAct2.removeClass('zoom12')")
 				 	.__("jqAct2.addClass('zoom10')")
 		    	    	
-		    	, ScnStandard.SPEED_SHOW_ACTIVITY + ScnStandard.DELAY_SURETE_END_ANIMATION,     fct()
+		    	, Math.max(ScnStandard.SPEED_SHOW_ACTIVITY, ScnStandard.SPEED_ACTIVITY_TRANSITION_EFFECT) + ScnStandard.DELAY_SURETE_END_ANIMATION,     fct()
 					.__("$('.scene .ripple_overlay').css('display', 'none')")
 					
 		   			.__(_self.doNavBarToBody())
@@ -354,6 +372,7 @@ public interface TKAnimation extends JSClass {
 			   		.__(_self.doActivityDeFreeze("act2"))	    // defrezze 2
 			   		
 			   		.__("jqAct2.removeClass('transitionSpeed')")
+			   		.__("jqAct2.removeClass('transitionSpeedx2')")
 			   		.__("jqAct2.removeClass('circleAnim100prt')")
 				 	.__("jqAct2.removeClass('zoom10')")
 			   		
@@ -361,7 +380,7 @@ public interface TKAnimation extends JSClass {
 	    	    	.__("jqAct2.css('transform', '')")
 	    	    	
 	    	    	.__(_self.doInitScrollTo("act2"))  	
-		    	    //    .consoleDebug("'end activity anim'")
+		    	        .consoleDebug("'end activity anim'")
 				   )) 	
 		._else()
 			// fermeture activity 2 
@@ -372,42 +391,55 @@ public interface TKAnimation extends JSClass {
 					.__(_self.doActivityFreeze("act2","sct"))    // frezze 2
 					
 					// recherche ripple
-					
+					._if(true)
+						.__("$('.scene .ripple_overlay').removeClass('t0prct')")
+						.__("$('.scene .ripple_overlay').addClass('t100prct')") 
+				 	.endif()
+				 	
 					.__("$('.scene .ripple_overlay').css('display', '')")   // display en grand
 					
 			   		.__("jqAct2.addClass('circleAnim100prt')")
-				 	.__("jqAct2.addClass('transitionSpeed')")
-					
-				, ScnStandard.SPEED_NEXT_FASTDOM , fct()
+			   		.__("jqAct2.addClass('transitionSpeed')")
+
+				, ScnStandard.SPEED_NEXT_FASTDOM , fct()				 	
+		 				.__("jqAct2.addClass('zoom12')") 	
+				 	
+				, ScnStandard.SPEED_ACTIVITY_TRANSITION_EFFECT , fct()
+			 		.__("jqAct2.addClass('transitionSpeedx2')")
 					.__("jqAct2.removeClass('circleAnim100prt')")
-					.__("jqAct2.addClass('circleAnim0prt')")
+					.__("jqAct2.addClass('circleAnim0prt')")					
 					
-				,ScnStandard.SPEED_SHOW_ACTIVITY- (ScnStandard.SPEED_SHOW_ACTIVITY/3), fct()	  
-		   			.__("$('.scene .ripple_overlay').removeClass('anim')")   // lance la bulle
+				,(ScnStandard.SPEED_ACTIVITY_TRANSITION_EFFECT+100), fct()	
+					.__("$('.scene .ripple_overlay').removeClass('transitionx2')")
+					.__("$('.scene .ripple_overlay').addClass('transition')")
+		    	   	.__("$('.scene .ripple_overlay').addClass('t0prct')")
+				 	.__("$('.scene .ripple_overlay').removeClass('t100prct')") 
 		   			
-		   		, ScnStandard.SPEED_NEXT_FASTDOM , fct()    // lance animation activity 1
+		   		, ScnStandard.SPEED_ACTIVITY_TRANSITION_EFFECT-100 , fct()    // lance animation activity 1
 					.__("jqAct1.removeClass('toback')")
 					.__("jqAct1.addClass('backToFront')") 
 		   			.__(_overlay.doHide(1))
 		   			
-				,ScnStandard.SPEED_SHOW_ACTIVITY + ScnStandard.DELAY_SURETE_END_ANIMATION, fct()	
+				, Math.max(ScnStandard.SPEED_SHOW_ACTIVITY, ScnStandard.SPEED_ACTIVITY_TRANSITION_EFFECT) + ScnStandard.DELAY_SURETE_END_ANIMATION, fct()	
 					.__(_overlay.doHide(2))
 			   		.__(_self.doActivityNoDisplay("act2"))	
 			   		.__(_self.doNavBarToBody())	
 					.__(_self.doActivityDeFreeze("act1"))       // defrezze 1
 					
 					.__("jqAct1.removeClass('backToFront')")
-		   		 	.__("$('.scene .ripple_overlay').remove()")
+		   		 	.__("$('.scene .ripple_overlay').remove()")   //TODO a changer
 
 			   		.__(_self.doActivityDeFreeze("act2"))	    // defrezze 2
 					
 			   		.__("jqAct2.removeClass('transitionSpeed')")
+			   		.__("jqAct2.removeClass('transitionSpeedx2')")
 	 				.__("jqAct2.removeClass('circleAnim0prt')")
+	 				.__("jqAct2.removeClass('zoom12')")
 		   		 	
 					.__(_self.doInitScrollTo("act1"))
 					
 				 ,ScnStandard.SPEED_NEXT_FASTDOM , fct()
-				// 	.consoleDebug("'end activity anim'")
+				 	.consoleDebug("'end activity anim'")
 			   ))	
 	   .endif();
 		

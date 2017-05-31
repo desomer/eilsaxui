@@ -11,7 +11,6 @@ import com.elisaxui.xui.core.widget.container.JSContainer;
  */
 public interface TKActivity extends JSClass {
 
-//	JSNavBar _jsNavBar = null;
 	JSContainer jsContainer = null;
 	Object listRegisterActivity = null;
 	Object idCurrentActivity = null;

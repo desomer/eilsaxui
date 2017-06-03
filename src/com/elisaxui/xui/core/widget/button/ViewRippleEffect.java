@@ -11,7 +11,7 @@ import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 import com.elisaxui.xui.core.page.ScnStandard;
-
+import static  com.elisaxui.xui.core.transition.CssTransition.*;
 /**
  * @author Bureau
  *
@@ -59,7 +59,7 @@ public class ViewRippleEffect extends XHTMLPart {
 						+"50% {transform: scale(30, 25); opacity: 1;  } "
 						+"100% {opacity: 0;transform: scale(80, 40);  }")
 				
-				.on(CSSSelector.onPath(cRippleEffect,cRippleEffectShow,":after"),"animation: rippleanim "+ ScnStandard.SPEED_RIPPLE_EFFECT +"ms ease-out;" )
+				.on(CSSSelector.onPath(cRippleEffect,cRippleEffectShow,":after"),"animation: rippleanim "+ SPEED_RIPPLE_EFFECT +"ms ease-out;" )
 				
 				;
 	}	

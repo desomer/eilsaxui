@@ -5,6 +5,7 @@ package com.elisaxui.xui.core.toolkit;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
 import com.elisaxui.xui.core.page.ScnStandard;
+import com.elisaxui.xui.core.transition.TKTransition;
 import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
 import com.elisaxui.xui.core.widget.navbar.JSNavBar;
 
@@ -14,7 +15,7 @@ import com.elisaxui.xui.core.widget.navbar.JSNavBar;
  */
 public interface TKRouter extends JSClass {
 
-	TKAnimation tkAnimation = null;
+	TKTransition tkAnimation = null;
 	TKRouter _this = null;
 	TKRouter _self = null;
 	Object navigo = null;
@@ -188,7 +189,7 @@ public interface TKRouter extends JSClass {
 		    ._if("actAnim=='fromBottom'")
 		    	.__(tkAnimation.doOpenActivityFromBottom())
 		    ._else()
-		    	.__(tkAnimation.doOpenActivityFromOpacity())
+		    	.__(tkAnimation.doOpenActivityFromRipple())
 		    .endif()
 	     .endif()
 	     
@@ -199,13 +200,14 @@ public interface TKRouter extends JSClass {
 		    ._if("actAnim=='fromBottom'")
 		    	.__(tkAnimation.doOpenActivityFromBottom())
 		    ._else()
-		    	.__(tkAnimation.doOpenActivityFromOpacity())
+		    	.__(tkAnimation.doOpenActivityFromRipple())
 		    .endif()
 	     .endif()
 	     
 		 ._if("action=='toggleMenu'")
 		 	.__(tkAnimation.doToggleBurgerMenu())
 		 .endif();
+		 
 		 return null;
 	}
 

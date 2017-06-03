@@ -11,7 +11,7 @@ import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 import com.elisaxui.xui.core.page.ScnStandard;
-
+import static  com.elisaxui.xui.core.transition.CssTransition.*;
 /**
  * @author Bureau
  *
@@ -34,7 +34,7 @@ public class ViewBtnCircle extends XHTMLPart {
 								+ "min-width: 56px; padding: 0;  overflow: hidden; outline: 0 !important; " // pas																						// focus
 								+ ScnStandard.bgColor
 								+ "box-shadow: 3px 3px 3px 0 rgba(0,0,0,.24);"
-								+ "transition:transform " + ScnStandard.SPEED_SHOW_ACTIVITY +  "ms ease-out;"
+								+ "transition:transform " + SPEED_SHOW_ACTIVITY +  "ms ease-out;"
 								+ " position: relative; line-height: normal; border:none; background-color:#ee6e73;"
 								//+ "-webkit-backface-visibility: hidden;"
 								//+ "transform: scale3d(1,1,1); will-change: transform;"

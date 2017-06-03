@@ -1,14 +1,15 @@
 /**
  * 
  */
-package com.elisaxui.xui.core.toolkit;
+package com.elisaxui.xui.core.transition;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
 import com.elisaxui.core.xui.xhtml.js.JSXHTMLPart;
 import com.elisaxui.xui.core.page.ScnStandard;
+import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.widget.overlay.JSOverlay;
 import com.elisaxui.xui.core.widget.overlay.ViewOverlayRipple;
-
+import static  com.elisaxui.xui.core.transition.CssTransition.*;
 /**
  * @author Bureau
  *
@@ -29,11 +30,11 @@ import com.elisaxui.xui.core.widget.overlay.ViewOverlayRipple;
  *
  */
 
-public interface TKAnimation extends JSClass {
+public interface TKTransition extends JSClass {
 
 	JSOverlay _overlay = null;
-	TKAnimation _this = null;
-	TKAnimation _self = null;
+	TKTransition _this = null;
+	TKTransition _self = null;
 	
 	default Object doNavBarToActivity(Object sct) {
 		var("jqNavBar", "$('body>.navbar')")
@@ -59,7 +60,7 @@ public interface TKAnimation extends JSClass {
 	}
 	
 	default Object doToggleBurgerMenu() {
-		var(_overlay, _new(ScnStandard.SPEED_SHOW_MENU, ScnStandard.OVERLAY_OPACITY_MENU))
+		var(_overlay, _new(CssTransition.SPEED_SHOW_MENU, ScnStandard.OVERLAY_OPACITY_MENU))
 		.var("jqMenu", "$('.menu')")
 		.var("jqScene", "$('.scene')")
 		.var("jqNavBar", "$('body>.navbar')")
@@ -84,10 +85,10 @@ public interface TKAnimation extends JSClass {
 						//----------------------------- cache le menu ------------------------
 						.__("jqMenu.css('transform', 'translate3d(-"+ (ScnStandard.widthMenu + 5)+ "px,'+sct+'px,0px)' )")
 						//----------------------------- repasse en croix ----------------------
-						.__("jqHamburgerDetach.css('transition','transform "+ScnStandard.SPEED_SHOW_MENU+"ms linear')")
+						.__("jqHamburgerDetach.css('transition','transform "+CssTransition.SPEED_SHOW_MENU+"ms linear')")
 						.__("jqHamburgerDetach.css('transform', 'translate3d(0px,'+sct+'px,0px) scale(1)' )")
 						
-				, ScnStandard.SPEED_SHOW_MENU + ScnStandard.DELAY_SURETE_END_ANIMATION, fct()
+				, SPEED_SHOW_MENU + DELAY_SURETE_END_ANIMATION, fct()
 						.__(_overlay.doHide(2))		
 						.__("$('body').css('overflow','')") // remet de scroll
 						
@@ -103,9 +104,9 @@ public interface TKAnimation extends JSClass {
 						//-------------------------- fin du repositionnement l'activity --------------------
 						.__("jqActivityActive.removeClass('activityMoveForHideMenu')")
 
-				, ScnStandard.SPEED_NEXT_FASTDOM, fct()	
+				, SPEED_NEXT_FASTDOM, fct()	
 						.__("jqHamburgerDetach.removeClass('is-active')")   //changeColorMenu.consoleDebug("'end anim'")
-				, ScnStandard.SPEED_BURGER_EFFECT, fct()
+				, SPEED_BURGER_EFFECT, fct()
 				)
 			)
 		._else()
@@ -126,15 +127,15 @@ public interface TKAnimation extends JSClass {
 						.__("jqHamburger.detach()")	
 						.__("jqHamburger.addClass('detach')")
 						.__("jqHamburger.css('transform', 'translate3d(0px,'+sct+'px,0px)' )")  // positionne en haut
-						.__("jqHamburger.css('transition','transform "+ScnStandard.SPEED_SHOW_MENU+"ms linear')")  // prepare transition
+						.__("jqHamburger.css('transition','transform "+SPEED_SHOW_MENU+"ms linear')")  // prepare transition
 						.__("jqScene.append(jqHamburger)")
 						
 						
-				, ScnStandard.SPEED_NEXT_FASTDOM, fct()	
+				, SPEED_NEXT_FASTDOM, fct()	
 						//------------ deplace l'activity a l ouverture du menu-------------
 						.__("jqActivityActive.addClass('activityMoveForShowMenu')") 
 						//------------ ouvre le menu avec animation---------
-						.__("jqMenu.css('transition', 'transform "+ScnStandard.SPEED_SHOW_MENU+"ms linear' )")
+						.__("jqMenu.css('transition', 'transform "+SPEED_SHOW_MENU+"ms linear' )")
 						.__("jqMenu.css('transform', 'translate3d(0px,'+sct+'px,0px)' )")
 						//-------------------------------------------------
 		 				.__(_overlay.doShow("'.active'", 2))
@@ -148,10 +149,10 @@ public interface TKAnimation extends JSClass {
 								.__("elem.anim=''"), ",(i*"+30+"), window.jsonMainMenu[i])")
 						.endfor()		
 						
-				, ScnStandard.SPEED_SHOW_MENU+ScnStandard.DELAY_SURETE_END_ANIMATION, fct()
+				, SPEED_SHOW_MENU+DELAY_SURETE_END_ANIMATION, fct()
 						.__("jqHamburger.addClass('is-active')")  // passe en croix
 						//.__("$('.active .logo').toggleClass('animated shake')")
-				, ScnStandard.SPEED_BURGER_EFFECT, fct()		
+				, SPEED_BURGER_EFFECT, fct()		
 				  )
 				)
 		.endif();
@@ -231,7 +232,7 @@ public interface TKAnimation extends JSClass {
 	default Object doOpenActivityFromBottom()
 	{
 		
-		var(_overlay, _new(ScnStandard.SPEED_SHOW_ACTIVITY, ScnStandard.OVERLAY_OPACITY_BACK))
+		var(_overlay, _new(SPEED_SHOW_ACTIVITY, ScnStandard.OVERLAY_OPACITY_BACK))
 	 	.var("sct", "$('body').scrollTop()")
 	 	.var(_self, _this)
 	 	.var("act1", "'#'+$xui.intent.prevActivity")
@@ -251,14 +252,14 @@ public interface TKAnimation extends JSClass {
 					.__("jqAct2.addClass('frontActivity')")
 			   		.__("jqAct2.addClass('toHidden')") //prepare l'animation  top 0 fixed
 			   	   
-	    		 ,ScnStandard.SPEED_NEXT_FASTDOM, fct()   // lance les anim
+	    		 ,SPEED_NEXT_FASTDOM, fct()   // lance les anim
 	    		 	.__(_overlay.doShow("act1", 2)) 			
 	    	   		.__(_self.doActivityFreeze("act2", -1))    //freeze 2
 	    	   		
 	    	   		.__("jqAct1.addClass('toback')")
 			   		.__("jqAct2.addClass('tofront')")
 	    		 	
-			   	,ScnStandard.SPEED_SHOW_ACTIVITY + ScnStandard.DELAY_SURETE_END_ANIMATION, fct()
+			   	,SPEED_SHOW_ACTIVITY + DELAY_SURETE_END_ANIMATION, fct()
 			   		.__(_self.doActivityNoDisplay("act1"))	
 			   		
 					.__("jqAct2.removeClass('tofront')")
@@ -269,7 +270,7 @@ public interface TKAnimation extends JSClass {
 			   		
 			   		.__(_self.doInitScrollTo("act2"))
 				    
-			   	, ScnStandard.SPEED_NEXT_FASTDOM, fct()
+			   	, SPEED_NEXT_FASTDOM, fct()
 			  // 		.consoleDebug("'end activity anim'")
 				   )) 	
 		._else()
@@ -282,14 +283,14 @@ public interface TKAnimation extends JSClass {
 					 .__(_self.doActivityFreeze("act2","sct"))   // frezze 2
 					 .__("jqAct2.addClass('frontActivity')")
 					 
-				,ScnStandard.SPEED_NEXT_FASTDOM, fct()    // lance les anim
+				, SPEED_NEXT_FASTDOM, fct()    // lance les anim
 					.__(_overlay.doHide(1))
 					
 					.__("jqAct1.removeClass('toback')")	
 					.__("jqAct1.addClass('backToFront')") 
 					.__("jqAct2.addClass('toHidden')")
 					
-			   	,ScnStandard.SPEED_SHOW_ACTIVITY+ScnStandard.DELAY_SURETE_END_ANIMATION, fct()
+			   	,SPEED_SHOW_ACTIVITY+DELAY_SURETE_END_ANIMATION, fct()
 			   		.__(_overlay.doHide(2))	
 			   		.__(_self.doActivityNoDisplay("act2"))	
 			   		.__(_self.doActivityDeFreeze("act2"))	   // defrezze 2
@@ -302,7 +303,7 @@ public interface TKAnimation extends JSClass {
 					.__(_self.doActivityDeFreeze("act1"))      // defrezze 1
 					.__(_self.doInitScrollTo("act1"))
 					
-			   	,ScnStandard.SPEED_NEXT_FASTDOM, fct()
+			   	,SPEED_NEXT_FASTDOM, fct()
 			//   		.consoleDebug("'end activity anim'")
 			   ))	
 	   .endif();
@@ -312,10 +313,10 @@ public interface TKAnimation extends JSClass {
 	
 	
 	JSXHTMLPart _template = null;
-	default Object doOpenActivityFromOpacity()
+	default Object doOpenActivityFromRipple()
 	{
 		
-		var(_overlay, _new(ScnStandard.SPEED_SHOW_ACTIVITY, 0.6))
+		var(_overlay, _new(SPEED_SHOW_ACTIVITY, 0.6))
 	 	.var(_self, _this)
 	 	.var("sct", "$('body').scrollTop()")	
 	 	.var("act1", "'#'+$xui.intent.prevActivity")
@@ -332,18 +333,19 @@ public interface TKAnimation extends JSClass {
 				   	 .__(_self.doActivityFreeze("act1","sct"))    // frezze 1
 				   	 
 		    		 .var(_template,  ViewOverlayRipple.xTemplate() )
-		    		 .var("rippleOverlay", _template.append("$('.scene')"))   //rippleOverlay par defaut invisible
-		    		 .__("$('.scene .ripple_overlay').addClass('t0prct')")
-		    		 .__("$('.scene .ripple_overlay').addClass('transitionx2')")
+		    		 .var("rippleOverlay", _template.append("$(act2)"))   //rippleOverlay par defaut invisible   '.scene'
+		    	//	 .__("$('.scene .ripple_overlay').addClass('t0prct')")
+		    	//	 .__("$('.scene .ripple_overlay').addClass('transitionx2')")
+					 .__("$('.ripple_overlay').addClass('t100prct')") 
 		    		 
-				, ScnStandard.SPEED_NEXT_FASTDOM, fct()	 //lance animation   
+				, SPEED_NEXT_FASTDOM, fct()	 //lance animation   
 	    		 	.__(_overlay.doShow("act1", 2))
 				
 		    	   	.__("jqAct1.addClass('toback')")	    
-		    	   	.__("$('.scene .ripple_overlay').removeClass('t0prct')")
-				 	.__("$('.scene .ripple_overlay').addClass('t100prct')") 
+		    //	   	.__("$('.scene .ripple_overlay').removeClass('t0prct')")
+			//	 	.__("$('.scene .ripple_overlay').addClass('t100prct')") 
 					 
-				, ScnStandard.SPEED_ACTIVITY_TRANSITION_EFFECT-50, fct()   // 50 l'anim de la bulle peut etre arreter avant la fin
+			//	, ScnStandard.SPEED_ACTIVITY_TRANSITION_EFFECT-50, fct()   // 50 l'anim de la bulle peut etre arreter avant la fin
 				 	.__(_self.doActivityInactive("act1"))
 					.__(_self.doActivityActive("act2"))
 								 		
@@ -353,24 +355,27 @@ public interface TKAnimation extends JSClass {
 					
 	    	   		.__(_self.doActivityFreeze("act2",-1)) // frezze 2
 					
-				 , ScnStandard.SPEED_NEXT_FASTDOM, fct()	 //lance animation 	
+				 , SPEED_NEXT_FASTDOM, fct()	 //lance animation 	
 				 	.__("jqAct2.removeClass('circleAnim0prt')")
-				    .__("jqAct2.addClass('transitionSpeedx2')")   // cercle plus rapide 
+				    .__("jqAct2.addClass('transitionSpeedx2')")   // cercle plus rapide que le zoom
 				 	.__("jqAct2.addClass('circleAnim100prt')")
 				 
-				 , ScnStandard.SPEED_NEXT_FASTDOM, fct()	 //lance animation  dezoom	 
+				 , SPEED_NEXT_FASTDOM, fct()	 //lance animation  dezoom	 
 				 	.__("jqAct2.removeClass('transitionSpeedx2')")
 				 	.__("jqAct2.addClass('transitionSpeed')")
 				 	.__("jqAct2.removeClass('zoom12')")
+					.__("$('.ripple_overlay').css('opacity', '0')")
+			    	.__("$('.ripple_overlay').addClass('transition')")
 				 	.__("jqAct2.addClass('zoom10')")
 		    	    	
-		    	, Math.max(ScnStandard.SPEED_SHOW_ACTIVITY, ScnStandard.SPEED_ACTIVITY_TRANSITION_EFFECT) + ScnStandard.DELAY_SURETE_END_ANIMATION,     fct()
-					.__("$('.scene .ripple_overlay').css('display', 'none')")
+		    	, Math.max(SPEED_SHOW_ACTIVITY, SPEED_ACTIVITY_TRANSITION_EFFECT) + DELAY_SURETE_END_ANIMATION,     fct()
+
 					
 		   			.__(_self.doNavBarToBody())
 					.__(_self.doActivityNoDisplay("act1"))
 			   		.__(_self.doActivityDeFreeze("act2"))	    // defrezze 2
 			   		
+		   		 	.__("$('.ripple_overlay').remove()")  
 			   		.__("jqAct2.removeClass('transitionSpeed')")
 			   		.__("jqAct2.removeClass('transitionSpeedx2')")
 			   		.__("jqAct2.removeClass('circleAnim100prt')")
@@ -390,44 +395,44 @@ public interface TKAnimation extends JSClass {
 					.__(_self.doActivityActive("act1"))
 					.__(_self.doActivityFreeze("act2","sct"))    // frezze 2
 					
-					// recherche ripple
-					._if(true)
-						.__("$('.scene .ripple_overlay').removeClass('t0prct')")
-						.__("$('.scene .ripple_overlay').addClass('t100prct')") 
-				 	.endif()
-				 	
-					.__("$('.scene .ripple_overlay').css('display', '')")   // display en grand
+//					// recherche ripple
+//					._if(true)
+//						.__("$('.scene .ripple_overlay').removeClass('t0prct')")
+//						.__("$('.scene .ripple_overlay').addClass('t100prct')") 
+//				 	.endif()
+//				 	
+//					.__("$('.scene .ripple_overlay').css('display', '')")   // display en grand
 					
-			   		.__("jqAct2.addClass('circleAnim100prt')")
-			   		.__("jqAct2.addClass('transitionSpeed')")
+		   			.__("jqAct2.addClass('circleAnim100prt')")
 
-				, ScnStandard.SPEED_NEXT_FASTDOM , fct()				 	
-		 				.__("jqAct2.addClass('zoom12')") 	
+				, SPEED_NEXT_FASTDOM , fct()	
+		   			.__("jqAct2.addClass('transitionSpeedSlow')")
+		   			.__("jqAct2.addClass('zoom12')") 
 				 	
-				, ScnStandard.SPEED_ACTIVITY_TRANSITION_EFFECT , fct()
+				, SPEED_SHOW_ACTIVITY/2, fct()
 			 		.__("jqAct2.addClass('transitionSpeedx2')")
 					.__("jqAct2.removeClass('circleAnim100prt')")
 					.__("jqAct2.addClass('circleAnim0prt')")					
 					
-				,(ScnStandard.SPEED_ACTIVITY_TRANSITION_EFFECT+100), fct()	
-					.__("$('.scene .ripple_overlay').removeClass('transitionx2')")
-					.__("$('.scene .ripple_overlay').addClass('transition')")
-		    	   	.__("$('.scene .ripple_overlay').addClass('t0prct')")
-				 	.__("$('.scene .ripple_overlay').removeClass('t100prct')") 
+//				,(ScnStandard.SPEED_ACTIVITY_TRANSITION_EFFECT+100), fct()	
+//					.__("$('.scene .ripple_overlay').removeClass('transitionx2')")
+//					.__("$('.scene .ripple_overlay').addClass('transition')")
+//		    	   	.__("$('.scene .ripple_overlay').addClass('t0prct')")
+//				 	.__("$('.scene .ripple_overlay').removeClass('t100prct')") 
 		   			
-		   		, ScnStandard.SPEED_ACTIVITY_TRANSITION_EFFECT-100 , fct()    // lance animation activity 1
+		   		, SPEED_ACTIVITY_TRANSITION_EFFECT , fct()    // lance animation activity 1
 					.__("jqAct1.removeClass('toback')")
 					.__("jqAct1.addClass('backToFront')") 
 		   			.__(_overlay.doHide(1))
 		   			
-				, Math.max(ScnStandard.SPEED_SHOW_ACTIVITY, ScnStandard.SPEED_ACTIVITY_TRANSITION_EFFECT) + ScnStandard.DELAY_SURETE_END_ANIMATION, fct()	
+				, Math.max(SPEED_SHOW_ACTIVITY, SPEED_ACTIVITY_TRANSITION_EFFECT) + DELAY_SURETE_END_ANIMATION, fct()	
 					.__(_overlay.doHide(2))
 			   		.__(_self.doActivityNoDisplay("act2"))	
 			   		.__(_self.doNavBarToBody())	
 					.__(_self.doActivityDeFreeze("act1"))       // defrezze 1
 					
 					.__("jqAct1.removeClass('backToFront')")
-		   		 	.__("$('.scene .ripple_overlay').remove()")   //TODO a changer
+//		   		 	.__("$('.ripple_overlay').remove()")   //TODO a changer
 
 			   		.__(_self.doActivityDeFreeze("act2"))	    // defrezze 2
 					
@@ -438,7 +443,7 @@ public interface TKAnimation extends JSClass {
 		   		 	
 					.__(_self.doInitScrollTo("act1"))
 					
-				 ,ScnStandard.SPEED_NEXT_FASTDOM , fct()
+				 ,SPEED_NEXT_FASTDOM , fct()
 				 	.consoleDebug("'end activity anim'")
 			   ))	
 	   .endif();

@@ -11,7 +11,7 @@ import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 import com.elisaxui.xui.core.page.ScnStandard;
-
+import static  com.elisaxui.xui.core.transition.CssTransition.*;
 /**
  * @author Bureau
  *
@@ -46,7 +46,7 @@ public class ViewBtnBurger extends XHTMLPart {
 				.on(".hamburger .hamburger-inner, "
 						+ ".hamburger .hamburger-inner:after, "
 						+ ".hamburger .hamburger-inner:before",
-						"background-color: #fff; transition-property:all !important; transition-duration:"+ScnStandard.SPEED_BURGER_EFFECT+"ms !important;")
+						"background-color: #fff; transition-property:all !important; transition-duration:"+SPEED_BURGER_EFFECT+"ms !important;")
 				
 //				.on(".hamburger.changeColorMenu .hamburger-inner, "  // changement de couleur
 //						+ ".hamburger.changeColorMenu .hamburger-inner:after, "

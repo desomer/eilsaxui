@@ -14,9 +14,10 @@ import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 import com.elisaxui.xui.admin.page.JSTestDataDriven;
 import com.elisaxui.xui.core.toolkit.TKActivity;
-import com.elisaxui.xui.core.toolkit.TKAnimation;
 import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.toolkit.TKRouter;
+import com.elisaxui.xui.core.transition.CssTransition;
+import com.elisaxui.xui.core.transition.TKTransition;
 import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
 import com.elisaxui.xui.core.widget.chart.ViewJSChart;
 import com.elisaxui.xui.core.widget.container.JSContainer;
@@ -32,17 +33,9 @@ public class ScnStandard extends XHTMLPart {
 	public static final int heightNavBar = 53;
 	public static final int widthMenu = 250;
 	
-	public static final int SPEED_SHOW_ACTIVITY = 200;
-	public static final int SPEED_ACTIVITY_TRANSITION_EFFECT = 100;
-	public static final int DELAY_SURETE_END_ANIMATION = 100;
-	
-	public static final int SPEED_SHOW_MENU = 150;
+
 	public static final double OVERLAY_OPACITY_MENU = 0.5;
 	public static final double OVERLAY_OPACITY_BACK = 0.7;
-	
-	public static final int SPEED_RIPPLE_EFFECT = 300;
-	public static final int SPEED_BURGER_EFFECT = 200;
-	public static final int SPEED_NEXT_FASTDOM = 100;
 	
 	public static final int ZINDEX_ANIM_FRONT = 1;
 	public static final int ZINDEX_NAV_BAR = 1;
@@ -81,7 +74,8 @@ public class ScnStandard extends XHTMLPart {
 				xImport(JSOverlay.class),
 				xImport(JSContainer.class),
 				xImport(TKRouter.class),
-				xImport(TKAnimation.class),
+				xPart(new CssTransition()),
+				xImport(TKTransition.class),
 				xImport(JSMenu.class),
 				xImport(TKActivity.class)
 				);
@@ -105,33 +99,7 @@ public class ScnStandard extends XHTMLPart {
 				//----------------------------------------------------------------
 				.on(".activity", "background-color: white;"
 						+ PREF_3D
-					//	+ " min-width: 100%;  min-height: 100%;   "// position: absolute; // top: 0px; left: 0px; right: 0px; bottom: 0px; "
 						+ " will-change:overflow,z-index;") //will-change:transform
-				
-				.on(".activity.fixedForAnimated", "top:0px; position: fixed; transition:transform "+SPEED_SHOW_ACTIVITY+"ms linear;")   // reste cacher en bas de la page et ne suit pas l'ascenceur
-
-				
-				.on(".activity.backToFront", "transition:transform "+(SPEED_SHOW_ACTIVITY+100)+"ms linear;")
-				
-				.on(".activity.toback", "transition:transform "+(SPEED_SHOW_ACTIVITY+100)+"ms linear; "
-						+ "transform:translate3d(0px,0px,0px) scale(0.9); ")
-				
-				.on(".activity.frontActivity", "z-index:"+ZINDEX_ANIM_FRONT+";")
-				.on(".activity.toHidden", "transform: translate3d(0px,100%,0px);")				
-				.on(".activity.tofront", "transform: translate3d(0px,0px,0px);")  
-				.on(".activity.nodisplay", "display:none;")
-				
-				.on(".activity.circleAnim0prt", "z-index:1; clip-path:circle(0.0% at 100vw 100vh); -webkit-clip-path:circle(0.0% at 100vw 100vh); ")
-				.on(".activity.circleAnim100prt", "z-index:1; clip-path:circle(100% at center); -webkit-clip-path:circle(100% at center); ")
-
-				.on(".activity.zoom12", "transform:scale3d(1.2,1.2,1)")
-				.on(".activity.zoom10", "transform:scale3d(1,1,1)")
-
-				.on(".activity.transitionSpeed", "transition:all "+ ScnStandard.SPEED_SHOW_ACTIVITY +"ms linear")
-				.on(".activity.transitionSpeedx2", "transition:all "+ ScnStandard.SPEED_ACTIVITY_TRANSITION_EFFECT +"ms linear")
-				
-				.on(".activityMoveForShowMenu", "transition:transform "+SPEED_SHOW_MENU+"ms ease-out; transform: translate3d("+(widthMenu-100)+"px,0px,0px);")
-				.on(".activityMoveForHideMenu", "transition:transform "+SPEED_SHOW_MENU+"ms ease-out; transform: translate3d(0px,0px,0px);")
 				
 				//----------------------------------------------------------------
 				.on(".activity .content", " min-height: 100vh; min-width: 100vw; background-color:"+bgColorContent+";will-change:contents")  // changement durant le freeze du contenu de l'activity
@@ -174,7 +142,7 @@ public class ScnStandard extends XHTMLPart {
 	JSTestDataDriven testDataDriven;
 	
 	String NavBarAnimated1="var granimInstance = new Granim({\n"+
-			" element: \'#NavBar1\',\n"+
+			" element: \'#NavBarActivity1\',\n"+
 			" name: \'basic-gradient\',\n"+
 			" direction: \'diagonal\',\n"+
 			" opacity: [1, 1, 1],\n"+
@@ -226,7 +194,8 @@ public class ScnStandard extends XHTMLPart {
 	public static String image1 = "https://images.pexels.com/photos/316465/pexels-photo-316465.jpeg?h=350&auto=compress&cs=tinysrgb";
 	public static String image2 = "https://images.pexels.com/photos/6337/light-coffee-pen-working.jpg?h=350&auto=compress&cs=tinysrgb";
 	public static String image3 = "https://images.pexels.com/photos/117729/pexels-photo-117729.jpeg?h=350&auto=compress&cs=tinysrgb";
-
+	public static String image4 = "https://images.pexels.com/photos/211122/pexels-photo-211122.jpeg?h=350&auto=compress&cs=tinysrgb";
+	
 	@xTarget(AFTER_CONTENT.class)
 	public Element xAddJS() {
 		
@@ -249,7 +218,7 @@ public class ScnStandard extends XHTMLPart {
 			//	.var(testDataDriven, _new())
 			//	.__(testDataDriven.startTest())				
 				
-				//.__(NavBarAnimated1)
+			//	.__(NavBarAnimated1)
 				//.__(NavBarAnimated2)	
 				
 		//		.__("$('#content2').append(", xDiv(xId("test1"), xAttr("style", "\"width: 100%; height: 30vh; background:url(" +image +") center / cover\"")) ,".html)")
@@ -297,9 +266,9 @@ public class ScnStandard extends XHTMLPart {
 						   	   // ripple sans ouverture d'activity		   
 							   .__(TKQueue.startAlone(fct()
 							   				.__("ripple.addClass('", ViewRippleEffect.cRippleEffectShow().getId() ,"')")
-									 ,SPEED_RIPPLE_EFFECT/3, fct()  // attente ripple effect
+									 ,CssTransition.SPEED_RIPPLE_EFFECT/3, fct()  // attente ripple effect
 							   		      	.__(tkrouter.doEvent("event"))
-									 ,SPEED_RIPPLE_EFFECT, fct()  // attente ripple effect
+									 ,CssTransition.SPEED_RIPPLE_EFFECT, fct()  // attente ripple effect
 								   		    .__("ripple.removeClass('", ViewRippleEffect.cRippleEffectShow().getId() ,"')")     	
 									   )
 								)  
@@ -333,13 +302,13 @@ public class ScnStandard extends XHTMLPart {
 								.endif()
 							._elseif("anim==true && ev.offsetDirection==2 ")
 								.set("anim", "false")
-								.__("$('.menu').css('transition', 'transform "+(SPEED_SHOW_MENU+50)+"ms ease-out' )")
+								.__("$('.menu').css('transition', 'transform "+(CssTransition.SPEED_SHOW_MENU+50)+"ms ease-out' )")
 								.__(tkrouter.doEvent("'Overlay'"))
 							.endif()
 							
 							._if("ev.isFinal")
 								._if("anim==true")
-									.__("$('.menu').css('transition', 'transform "+(SPEED_SHOW_MENU+50)+"ms ease-out' )")
+									.__("$('.menu').css('transition', 'transform "+(CssTransition.SPEED_SHOW_MENU+50)+"ms ease-out' )")
 									.__("$('.menu').css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px)' )")
 								.endif()
 								.set("anim", "true")
@@ -422,6 +391,7 @@ public class ScnStandard extends XHTMLPart {
 				.set("cnt1", xDiv(xAttr("style", "\"width: 100%; height: 30vh; background:url(" +image2 +") center / cover\"")))
 				.set("cnt2", xDiv(xAttr("style", "\"width: 100%; height: 50vh; background:url(" +image3 +") center / cover\"")))
 				.var("cnt3", xDiv(xAttr("style", "\"width: 100%; height: 30vh; background:url(" +image1 +") center / cover\"")))
+				.var("cnt4", xDiv(xAttr("style", "\"width: 100%; height: 30vh; background:url(" +image4 +") center / cover\"")))
 
 				.var("declaration2","{type:'page', id:name, active:false , children : ["
 						/********************************************************************/				
@@ -458,12 +428,12 @@ public class ScnStandard extends XHTMLPart {
 						+ "  ]  "
 						+ "},"
 						/********************************************************************/				
-//						+ "{ selector: '#'+name+' .article', factory:'JSContainer', rows : [ "
-//						+ "				{type:'card', html:cnt1},"
+						+ "{ selector: '#'+name+' .article', factory:'JSContainer', rows : [ "
+						+ "				{type:'card', html:cnt4},"
 //						+ "				{type:'card', html:cnt2 },"
 //						+ "				{type:'card', html:cnt3 }"
-//						+ "  ]  "
-//						+ "},"		
+						+ "  ]  "
+						+ "},"		
 						/********************************************************************/				
 						+ "{ selector: '#'+name+' .content', factory:'JSContainer', rows : [ "
 						+ "				{type:'floatAction' }"
@@ -497,7 +467,7 @@ public class ScnStandard extends XHTMLPart {
 				.set(jsNavBar, _new())
 				.set("jsonNavBar", jsNavBar.getData("'#NavBarActivity2'"))    // bug import mth jsNavBar
 
-			
+			//	.__("setTimeout(", fct().__(NavBarAnimated1)," , 2000)")
 				
 				
 

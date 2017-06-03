@@ -41,7 +41,7 @@ public class ViewFloatAction extends XHTMLPart {
 	public Element xStyle() {
 
 		return xCss()
-				.on(cFloatAction, "z-index:"+ScnStandard.ZINDEX_FLOAT+"; position: fixed; right: 15px; bottom: 15px; transform: translate3d(0px,0px,0px);")
+				.on(cFloatAction, "z-index:"+ScnStandard.ZINDEX_FLOAT+"; position: fixed; left: calc(90vw - 40px); top: calc(95vh - 40px); transform: translate3d(0px,0px,0px);")
 		;
 	}
 	

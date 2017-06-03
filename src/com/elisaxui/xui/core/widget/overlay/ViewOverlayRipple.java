@@ -10,7 +10,7 @@ import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 import com.elisaxui.xui.core.page.ScnStandard;
-
+import static  com.elisaxui.xui.core.transition.CssTransition.*;
 /**
  * @author Bureau
  *
@@ -28,8 +28,8 @@ public class ViewOverlayRipple extends XHTMLPart {
 					+ "width: 100vw;  height: 100vh; background: "+ ScnStandard.bgColorThemeOpacity +"; "
 					)
 				
-				.on(".ripple_overlay.transitionx2","transition: "+ScnStandard.SPEED_ACTIVITY_TRANSITION_EFFECT*2+"ms;")
-				.on(".ripple_overlay.transition","transition: "+ScnStandard.SPEED_ACTIVITY_TRANSITION_EFFECT+"ms;")
+				.on(".ripple_overlay.transitionx2","transition: "+SPEED_ACTIVITY_TRANSITION_EFFECT*2+"ms;")
+				.on(".ripple_overlay.transition","transition: "+SPEED_ACTIVITY_TRANSITION_EFFECT+"ms;")
 				
 				.on(".ripple_overlay.t0prct","clip-path: circle(0px at 90vw 95vh);  -webkit-clip-path: circle(0px at 90vw 95vh);  ")
 				.on(".ripple_overlay.t100prct","clip-path: circle(100% at center);-webkit-clip-path: circle(100% at center);")

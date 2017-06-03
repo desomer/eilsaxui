@@ -8,9 +8,9 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
 import com.elisaxui.core.xui.xhtml.js.JSXHTMLPart;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataDriven;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataSet;
-import com.elisaxui.xui.core.toolkit.TKAnimation;
 import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.toolkit.TKRouter;
+import com.elisaxui.xui.core.transition.TKTransition;
 import com.elisaxui.xui.core.widget.button.ViewFloatAction;
 import com.elisaxui.xui.core.widget.navbar.ViewNavBar;
 
@@ -27,7 +27,7 @@ public interface JSContainer extends JSClass {
 	JSContainer _self=null;
 	
 	TKRouter _tkrouter =null;
-	TKAnimation _tkAnimation = null;
+	TKTransition _tkAnimation = null;
 	
 	default Object getSubData(Object ctx)
 	{

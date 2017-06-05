@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
@@ -16,6 +17,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.XMLPart.CONTENT;
+import com.elisaxui.core.xui.xml.annotation.xTarget;
 
 /**
  * 
@@ -75,6 +77,11 @@ public class XMLBuilder {
 	 * @param v
 	 */
 	public void addContent(Object v) {
+		if (afterContent==null)
+		{
+			//ErrorNotificafionMgr.doError(" doit etre ajouter dans un @xTarget(CONTENT)" , null);
+			after= false;
+		}
 		(after ? afterContent : content).append(v);
 	}
 

@@ -28,8 +28,8 @@ public class ViewOverlayRipple extends XHTMLPart {
 					+ "width: 100vw;  height: 100vh; background: "+ ScnStandard.bgColorThemeOpacity +"; "
 					)
 				
-				.on(".ripple_overlay.transitionx2","transition: "+SPEED_ACTIVITY_TRANSITION_EFFECT*2+"ms;")
-				.on(".ripple_overlay.transition","transition: "+SPEED_ACTIVITY_TRANSITION_EFFECT+"ms;")
+				.on(".ripple_overlay.transitionx2","transition:all  "+SPEED_ACTIVITY_TRANSITION_EFFECT*2+"ms cubic-bezier(1, 0, 1, 1);")
+				.on(".ripple_overlay.transition","transition: all "+SPEED_ACTIVITY_TRANSITION_EFFECT+"ms cubic-bezier(1, 0, 1, 1);")
 				
 				.on(".ripple_overlay.t0prct","clip-path: circle(0px at 90vw 95vh);  -webkit-clip-path: circle(0px at 90vw 95vh);  ")
 				.on(".ripple_overlay.t100prct","clip-path: circle(100% at center);-webkit-clip-path: circle(100% at center);")

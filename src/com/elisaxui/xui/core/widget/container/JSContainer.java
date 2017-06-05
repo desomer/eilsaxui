@@ -36,11 +36,6 @@ public interface JSContainer extends JSClass {
 			.var("part", "ctx.row.html")
 			.var("ret", XHTMLPart.xDiv(XHTMLPart.xVar("part.html")))
 			.__("ret.js+=part.js")
-//			.__(TKQueue.startAlone(200, fct()
-//					.var("c", "$(part.js)")
-//					.__("$.each( c, function( i, el ) {\n  if (el.nodeName=='SCRIPT') eval(el.text)\n })")
-//				))
-
 			.__("return ret")
 		._else()
 			.__("return ", XHTMLPart.xDiv(XHTMLPart.xVar("ctx.row.html")))

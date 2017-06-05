@@ -4,22 +4,32 @@
 package com.elisaxui.xui.core.toolkit;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
-import com.elisaxui.xui.core.page.ScnStandard;
 import com.elisaxui.xui.core.transition.TKTransition;
-import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
-import com.elisaxui.xui.core.widget.navbar.JSNavBar;
 
 /**
  * @author Bureau
  *
+ *
+ *
+ *    doEvent -> doNavigate (ou doBack)  -> doPushState ->  doIntent -> doAction  (route ou backRoute)
+ *
+ *			  -> doAction  (TODO)  	
+ *
  */
 public interface TKRouter extends JSClass {
 
+	public static final String ACTION_PREV_ROUTE = "ACTION_PREV_ROUTE";
+	public static final String ACTION_NEXT_ROUTE = "ACTION_NEXT_ROUTE";
+
+	public static final String STATE_ROUTE = "STATE_ROUTE";
+	
 	TKTransition tkAnimation = null;
 	TKRouter _this = null;
 	TKRouter _self = null;
 	Object navigo = null;
 	TKActivity activityMgr= null;
+	
+	//   gestion des historique d'intention
 	Object historyIntent = null;
 	Object _historyIntent = null;
 	
@@ -32,7 +42,7 @@ public interface TKRouter extends JSClass {
 		.set(navigo, nav)
 		.var(_self, _this)
 		
-		.var("h", fct("params","query")   // ecoute l'history back
+		.var("doPushState", fct("params","query")   // ecoute l'history back
 				._if(_self,".navigo.nextenable")
 				
 				    .var("toRoute", _self,".navigo._lastRouteResolved")
@@ -57,25 +67,29 @@ public interface TKRouter extends JSClass {
 					.endif()
 				
 					/**************** gestion route activity  **********************/
-					._if("backFromIntent!=null && this.toString()=='route'")
-					
+					._if("backFromIntent!=null && this.toString()==", txt(STATE_ROUTE))
+						 // to Prev Route
 						.set("$xui.intent.prevActivity", "params.url")     //TODO a changer
 					    .set("$xui.intent.activity", "tkActivity.idCurrentActivity")
-					    .set("$xui.intent.action", "'route'")
 					    .set("$xui.intent.nextActivityAnim", "backFromIntent.nextActivityAnim")
-						.__(_self.doAction(txt("backRoute")))
+					    .set("$xui.intent.url", txt("?"))
+					    
+					    .set("$xui.intent.action", txt(ACTION_PREV_ROUTE))
+						.__(_self.doAction(txt(ACTION_PREV_ROUTE)))
 						
-					._elseif("this.toString()=='route'") // is next
-					
+					._elseif("this.toString()==", txt(STATE_ROUTE)) // is next
+						// to Next Route
 						.set("$xui.intent.prevActivity", "tkActivity.idCurrentActivity")
 					    .set("$xui.intent.activity", "params.url")
-					    .set("$xui.intent.action", "'route'")
 					    .set("$xui.intent.url", "toRoute.url")
+					    
+					    .set("$xui.intent.action", txt(ACTION_NEXT_ROUTE))
 					    .var("intent", "{}")
 					    .__("$.extend(intent, $xui.intent)")
+						.consoleDebug("'intent='", "intent")
+					    
 						.__(_self,".",_historyIntent,".push(intent)")   // ajoute a l historique interne
-					 //   .consoleDebug("'intent='", "intent")
-						.__(_self.doAction(txt("route")))
+						.__(_self.doAction(txt(ACTION_NEXT_ROUTE)))
 					.endif()
 					/******************************************/
 				._else()
@@ -86,20 +100,30 @@ public interface TKRouter extends JSClass {
 
 		.__("nav.on("
 				+ "{"
-				+ " 'route/:url': { as: 'route', uses: h.bind('route') },"  
-				+ " 'menu': { as: 'menu', uses: h.bind('menu') },"  
-			//	+ " 'home' : { as: 'home', uses: h.bind('home') }"   
+				+ " 'route/:url': { as: 'route', uses: doPushState.bind('"+STATE_ROUTE+"') },"  
+				+ " 'menu': { as: 'menu', uses: doPushState.bind('menu') },"  
+			//	+ " 'home' : { as: 'home', uses: doPushState.bind('home') }"   
 				+ "})")
 		
 		.__("nav.notFound(", fct("query").consoleDebug("'notFound navigo ='", "query") ,")")
 		
 		.set(historyIntent,"[]")
+		.__(_self.doInitialize())
+		;
+		return null;
+	}
+	
+	
+	default Object doInitialize()
+	{
+		 __()
 		.__(navigo,".nextenable=", false)
 		.__(_this.doNavigate(txt("route/Activity1")))   // premier etat
 		.var("intent", "{ url:'route/Activity1', nextActivityAnim : 'fromBottom' }")
 		.__(historyIntent,".push(intent)")   // ajoute a l historique interne)
 		.__(navigo,".resolve()")
 		;
+		
 		return null;
 	}
 	
@@ -176,14 +200,34 @@ public interface TKRouter extends JSClass {
 		return null;
 	}
 	
+	default Object doCancel()
+	{
+		__(_this,".navigo.nextenable=false")
+ 		.__(historyIntent,".pop()")
+ 		.__("history.go(-1)")
+		;
+		return null;
+	}
+	
 	default Object doAction(Object action)
 	{
 		 __()
-		 .var(_self, _this)   //  self.geCurrentIntention())
+		 .var(_self, _this)   //TODO Bug si je retire dans le geCurrentIntention
 		 
-		 ._if("action=='route'")
+		 
+		 ._if("action==",txt(ACTION_NEXT_ROUTE))
 		 	.var("actAnim", geCurrentIntention(), ".nextActivityAnim")
+		 	
+		 	.var("act1", "'#'+$xui.intent.activity")
+		 	.var("jqAct1", "$(act1)")
+		 	._if("jqAct1.hasClass('backActivity')")
+		 		.consoleDebug("'************* IS USED ******************'")
+		 		.__(_this.doCancel())
+	 			.__("return")
+		 	.endif()
+		 	
 		 	.__(activityMgr.setCurrentActivity("$xui.intent.activity"))  
+		 	
 			 .consoleDebug(txt("doAction"), "action", "'anim='", "actAnim")
 		 	
 		    ._if("actAnim=='fromBottom'")
@@ -193,10 +237,13 @@ public interface TKRouter extends JSClass {
 		    .endif()
 	     .endif()
 	     
-		 ._if("action=='backRoute'")  
+		 ._if("action==",txt(ACTION_PREV_ROUTE))  
 		 	.var("actAnim", "$xui.intent.nextActivityAnim")
+		 	
 		 	.__(activityMgr.setCurrentActivity("$xui.intent.prevActivity"))   
-			.consoleDebug(txt("doAction"), "action", "'anim='", "actAnim")
+			
+		 	.consoleDebug(txt("doAction"), "action", "'anim='", "actAnim")
+			
 		    ._if("actAnim=='fromBottom'")
 		    	.__(tkAnimation.doOpenActivityFromBottom())
 		    ._else()

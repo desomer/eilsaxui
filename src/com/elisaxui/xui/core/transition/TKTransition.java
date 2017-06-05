@@ -104,7 +104,7 @@ public interface TKTransition extends JSClass {
 						//-------------------------- fin du repositionnement l'activity --------------------
 						.__("jqActivityActive.removeClass('activityMoveForHideMenu')")
 
-				, SPEED_NEXT_FASTDOM, fct()	
+				, NEXT_FRAME, fct()	
 						.__("jqHamburgerDetach.removeClass('is-active')")   //changeColorMenu.consoleDebug("'end anim'")
 				, SPEED_BURGER_EFFECT, fct()
 				)
@@ -131,7 +131,7 @@ public interface TKTransition extends JSClass {
 						.__("jqScene.append(jqHamburger)")
 						
 						
-				, SPEED_NEXT_FASTDOM, fct()	
+				, NEXT_FRAME, fct()	
 						//------------ deplace l'activity a l ouverture du menu-------------
 						.__("jqActivityActive.addClass('activityMoveForShowMenu')") 
 						//------------ ouvre le menu avec animation---------
@@ -249,10 +249,13 @@ public interface TKTransition extends JSClass {
 					.__(_self.doActivityInactive("act1"))	
 			   		.__(_self.doActivityFreeze("act1","sct"))               //freeze 1
 					.__(_self.doActivityActive("act2"))	
+					
+					.__("jqAct1.addClass('backActivity')")
+		    		 
 					.__("jqAct2.addClass('frontActivity')")
 			   		.__("jqAct2.addClass('toHidden')") //prepare l'animation  top 0 fixed
 			   	   
-	    		 ,SPEED_NEXT_FASTDOM, fct()   // lance les anim
+	    		 ,NEXT_FRAME, fct()   // lance les anim
 	    		 	.__(_overlay.doShow("act1", 2)) 			
 	    	   		.__(_self.doActivityFreeze("act2", -1))    //freeze 2
 	    	   		
@@ -270,7 +273,7 @@ public interface TKTransition extends JSClass {
 			   		
 			   		.__(_self.doInitScrollTo("act2"))
 				    
-			   	, SPEED_NEXT_FASTDOM, fct()
+			   	, NEXT_FRAME, fct()
 			  // 		.consoleDebug("'end activity anim'")
 				   )) 	
 		._else()
@@ -283,7 +286,7 @@ public interface TKTransition extends JSClass {
 					 .__(_self.doActivityFreeze("act2","sct"))   // frezze 2
 					 .__("jqAct2.addClass('frontActivity')")
 					 
-				, SPEED_NEXT_FASTDOM, fct()    // lance les anim
+				, NEXT_FRAME, fct()    // lance les anim
 					.__(_overlay.doHide(1))
 					
 					.__("jqAct1.removeClass('toback')")	
@@ -299,11 +302,12 @@ public interface TKTransition extends JSClass {
 					.__("jqAct1.removeClass('backToFront')")
 				 	.__("jqAct2.removeClass('toHidden')") 
 				 	.__("jqAct2.removeClass('frontActivity')")
+				 	.__("jqAct1.removeClass('backActivity')")
 				 	
 					.__(_self.doActivityDeFreeze("act1"))      // defrezze 1
 					.__(_self.doInitScrollTo("act1"))
 					
-			   	,SPEED_NEXT_FASTDOM, fct()
+			   	,NEXT_FRAME, fct()
 			//   		.consoleDebug("'end activity anim'")
 			   ))	
 	   .endif();
@@ -331,14 +335,15 @@ public interface TKTransition extends JSClass {
 		    		 .__(_overlay.doShow("act1", 1))
 				  	 .__(_self.doNavBarToActivity(0))
 				   	 .__(_self.doActivityFreeze("act1","sct"))    // frezze 1
+				     .__("jqAct1.addClass('backActivity')")
 				   	 
 		    		 .var(_template,  ViewOverlayRipple.xTemplate() )
-		    		 .var("rippleOverlay", _template.append("$(act2)"))   //rippleOverlay par defaut invisible   '.scene'
+		    		 .var("rippleOverlay", _template.append("$(act2)"))
 		    	//	 .__("$('.scene .ripple_overlay').addClass('t0prct')")
 		    	//	 .__("$('.scene .ripple_overlay').addClass('transitionx2')")
-					 .__("$('.ripple_overlay').addClass('t100prct')") 
+				//	 .__("$('.ripple_overlay').addClass('t100prct')") 
 		    		 
-				, SPEED_NEXT_FASTDOM, fct()	 //lance animation   
+				, NEXT_FRAME, fct()	 //lance animation   
 	    		 	.__(_overlay.doShow("act1", 2))
 				
 		    	   	.__("jqAct1.addClass('toback')")	    
@@ -350,25 +355,29 @@ public interface TKTransition extends JSClass {
 					.__(_self.doActivityActive("act2"))
 								 		
 					// prepare anim
+					.__("jqAct2.addClass('frontActivity')")
 	 				.__("jqAct2.addClass('circleAnim0prt')")
 	 				.__("jqAct2.addClass('zoom12')")
 					
 	    	   		.__(_self.doActivityFreeze("act2",-1)) // frezze 2
 					
-				 , SPEED_NEXT_FASTDOM, fct()	 //lance animation 	
+				 , NEXT_FRAME, fct()	 //lance animation 	
 				 	.__("jqAct2.removeClass('circleAnim0prt')")
-				    .__("jqAct2.addClass('transitionSpeedx2')")   // cercle plus rapide que le zoom
+				 	
+				    .__("jqAct2.addClass('transitionSpeedx2')")   // cercle effect
 				 	.__("jqAct2.addClass('circleAnim100prt')")
-				 
-				 , SPEED_NEXT_FASTDOM, fct()	 //lance animation  dezoom	 
-				 	.__("jqAct2.removeClass('transitionSpeedx2')")
-				 	.__("jqAct2.addClass('transitionSpeed')")
-				 	.__("jqAct2.removeClass('zoom12')")
-					.__("$('.ripple_overlay').css('opacity', '0')")
 			    	.__("$('.ripple_overlay').addClass('transition')")
+					.__("$('.ripple_overlay').css('opacity', '0')")
+				 
+				 , SPEED_ACTIVITY_TRANSITION_EFFECT, fct()	 //lance animation  dezoom	plus tard 
+			   		.__("jqAct2.removeClass('circleAnim100prt')")
+				 	.__("jqAct2.addClass('transitionSpeed')")
+				 	.__("jqAct2.removeClass('transitionSpeedx2')")
+				 	.__("jqAct2.removeClass('zoom12')")
 				 	.__("jqAct2.addClass('zoom10')")
+				 	
 		    	    	
-		    	, Math.max(SPEED_SHOW_ACTIVITY, SPEED_ACTIVITY_TRANSITION_EFFECT) + DELAY_SURETE_END_ANIMATION,     fct()
+		    	, SPEED_SHOW_ACTIVITY + DELAY_SURETE_END_ANIMATION,     fct()
 
 					
 		   			.__(_self.doNavBarToBody())
@@ -378,7 +387,7 @@ public interface TKTransition extends JSClass {
 		   		 	.__("$('.ripple_overlay').remove()")  
 			   		.__("jqAct2.removeClass('transitionSpeed')")
 			   		.__("jqAct2.removeClass('transitionSpeedx2')")
-			   		.__("jqAct2.removeClass('circleAnim100prt')")
+			   		.__("jqAct2.removeClass('frontActivity')")
 				 	.__("jqAct2.removeClass('zoom10')")
 			   		
 		    	    // annule l'animation
@@ -404,23 +413,26 @@ public interface TKTransition extends JSClass {
 //					.__("$('.scene .ripple_overlay').css('display', '')")   // display en grand
 					
 		   			.__("jqAct2.addClass('circleAnim100prt')")
+		   			.__("jqAct2.addClass('frontActivity')")
 
-				, SPEED_NEXT_FASTDOM , fct()	
-		   			.__("jqAct2.addClass('transitionSpeedSlow')")
-		   			.__("jqAct2.addClass('zoom12')") 
+				, NEXT_FRAME , fct()	
+		   			.__("jqAct2.addClass('transitionSpeed')")
+		   			.__("jqAct2.addClass('zoom12')")    // lance le zoome
 				 	
-				, SPEED_SHOW_ACTIVITY/2, fct()
-			 		.__("jqAct2.addClass('transitionSpeedx2')")
-					.__("jqAct2.removeClass('circleAnim100prt')")
-					.__("jqAct2.addClass('circleAnim0prt')")					
+				, NEXT_FRAME, fct()   //puis lance la circle
+			 		.__("jqAct2.addClass('transitionSpeed')")
+					.__("jqAct2.addClass('circleAnim0prt')")
+					.__("jqAct2.removeClass('circleAnim100prt')")					
 					
 //				,(ScnStandard.SPEED_ACTIVITY_TRANSITION_EFFECT+100), fct()	
 //					.__("$('.scene .ripple_overlay').removeClass('transitionx2')")
 //					.__("$('.scene .ripple_overlay').addClass('transition')")
 //		    	   	.__("$('.scene .ripple_overlay').addClass('t0prct')")
 //				 	.__("$('.scene .ripple_overlay').removeClass('t100prct')") 
+					
+				// , 1000000, fct()   //puis lance la circle	
 		   			
-		   		, SPEED_ACTIVITY_TRANSITION_EFFECT , fct()    // lance animation activity 1
+		   		, SPEED_ACTIVITY_TRANSITION_EFFECT/2 , fct()    // lance animation activity 1
 					.__("jqAct1.removeClass('toback')")
 					.__("jqAct1.addClass('backToFront')") 
 		   			.__(_overlay.doHide(1))
@@ -440,10 +452,12 @@ public interface TKTransition extends JSClass {
 			   		.__("jqAct2.removeClass('transitionSpeedx2')")
 	 				.__("jqAct2.removeClass('circleAnim0prt')")
 	 				.__("jqAct2.removeClass('zoom12')")
+	 				.__("jqAct2.removeClass('frontActivity')")
+	 				.__("jqAct1.removeClass('backActivity')")
 		   		 	
 					.__(_self.doInitScrollTo("act1"))
 					
-				 ,SPEED_NEXT_FASTDOM , fct()
+				 ,NEXT_FRAME , fct()
 				 	.consoleDebug("'end activity anim'")
 			   ))	
 	   .endif();

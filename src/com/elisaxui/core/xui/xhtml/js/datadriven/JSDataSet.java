@@ -129,7 +129,9 @@ public interface JSDataSet extends JSClass {
 	}
 
 	default Object getData() {
-		return __("return ", data);
+		 __()
+		 .__("return ", data);		  
+		 return null;
 	}
 
 }

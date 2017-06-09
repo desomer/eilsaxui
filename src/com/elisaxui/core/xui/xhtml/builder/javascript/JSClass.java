@@ -9,6 +9,7 @@ public interface JSClass extends JSInterface  {
 		return XHTMLPart.jsBuilder.getProxy(cl);
 	}
 	
+	
 	static Object _new(Class<? extends JSClass> cl, Object...param ) {
 		StringBuilder buf = new StringBuilder();
 		buf.append("new "+cl.getSimpleName() +"(");

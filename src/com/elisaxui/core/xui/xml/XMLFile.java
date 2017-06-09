@@ -31,12 +31,13 @@ public class XMLFile {
 			impl.setName(cl.getSimpleName());
 
 			listClass.put(name, impl);
-			
-			// initfield
+			 
+			// init field  => chaque attribut contient le nom js de son champs
 			Field[] listField = cl.getDeclaredFields();
 			if (listField != null) {
 				for (Field field : listField) {
 					if (JSClass.class.isAssignableFrom(field.getType())) {
+						// gestion particuliere d'un proxy pour affecter le nom au proxy
 						@SuppressWarnings("unchecked")
 						JSClass prox = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) field.getType());
 						if ( field.getName().startsWith("_"))

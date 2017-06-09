@@ -11,9 +11,15 @@ import com.elisaxui.xui.core.widget.container.JSContainer;
  */
 public interface TKActivity extends JSClass {
 
+	
+	public static final String ON_ACTIVITY_CREATE = "onActivityCreate";
+	public static final String ON_ACTIVITY_RESUME = "onActivityResume";
+	public static final String ON_ACTIVITY_PAUSE = "onActivityPause";
+	
 	JSContainer jsContainer = null;
 	Object listRegisterActivity = null;
 	Object idCurrentActivity = null;
+	TKRouter _tkrouter =null;
 	
 	default Object constructor()
 	{
@@ -21,7 +27,7 @@ public interface TKActivity extends JSClass {
 		.set(jsContainer, _new())
 		.set(idCurrentActivity, "''")
 		;
-		return null;
+		return  _void();
 	}
 	
 	default Object getCurrentActivity()
@@ -50,24 +56,23 @@ public interface TKActivity extends JSClass {
 		.__(listRegisterActivity,"[json.id] = json;")
 		.set(idCurrentActivity, "json.id")
 		;
-		return null;
+		return _void();
 	}
 	
 	default Object prepareActivity(Object json)
 	{
-
 		var("jsonContainer", jsContainer.getData("'.scene'"))
 		.__("jsonContainer.push(json)")
 		.__(listRegisterActivity,"[json.id] = json;")
 		;
-		return null;
+		return _void();
 	}
 	
 	default Object registerActivity(Object json)
 	{
 		__(listRegisterActivity,"[json.id] = json;")
 		;
-		return null;
+		return _void();
 	}
 	
 }

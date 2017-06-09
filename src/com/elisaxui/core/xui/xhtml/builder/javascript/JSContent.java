@@ -252,6 +252,24 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 		return jsBuilder.createJSFunction().setParam(param);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSInterface#_void()
+	 */
+	@Override
+	public JSInterface _void() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSInterface#_null()
+	 */
+	@Override
+	public JSInterface _null() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 
 }

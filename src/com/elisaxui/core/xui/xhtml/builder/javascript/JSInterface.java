@@ -29,6 +29,8 @@ public interface JSInterface {
 
 	JSInterface _elseif(Object... content);
 
-
+	JSInterface _void();
+	
+	JSInterface _null();
 
 }

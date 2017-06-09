@@ -62,7 +62,7 @@ public interface JSDataDriven extends JSClass {
 
 	default Object start() {
 		var("data", dataSet.getData())
-				.var("self", "this")
+				.var(_self, _this)
 
 				// ._for("var i in data")
 				// ._if("typeof data[i] != 'function'")

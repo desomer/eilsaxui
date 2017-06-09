@@ -76,7 +76,9 @@ public class AppRoot extends XHTMLPart {
 						/********************************************************************/					
 						+ "]"
 						+ ", events: { more: { action:'route' , url: 'route/Activity2?p=1'} ,"
-						+ "				BtnFloatMain : { action:'route' , url: 'route/Activity3?p=12'} "
+						+ "				BtnFloatMain : { action:'route' , url: 'route/Activity3?p=12'} , "
+						+ "			   "+TKActivity.ON_ACTIVITY_CREATE+" : { action:'callback', fct:'onCreateActivity1'}, "
+						+ "			   "+TKActivity.ON_ACTIVITY_RESUME+" : { action:'callback', fct:'onResumeActivity1'} "
 						+ "  }"
 						+ "}") 
 				
@@ -107,7 +109,8 @@ public class AppRoot extends XHTMLPart {
 						/********************************************************************/					
 						+ "]"
 						+ ", events: { more: { action:'route' , url: 'route/Activity1'} ,"
-						+ "			   search : { action:'route' , url: 'route/Activity3?p=12'} "
+						+ "			   search : { action:'route' , url: 'route/Activity3?p=12'} ,"
+					//	+ "			   "+TKActivity.ON_ACTIVITY_CREATE+" : { action:'callback', fct:'c'} "	
 						+ "  }"
 						+ "}") 
 				
@@ -149,10 +152,14 @@ public class AppRoot extends XHTMLPart {
 				.__(tkActivity.prepareActivity("declaration3"))
 				
 				/**************************************************************/
-//				.__("setTimeout(", fct()
-//						.var("jCanvasGranim", "$('#NavBarActivity1 .animatedBg')[0]")
-//						.__(NavBarAnimated1)
-//				," , 1000)")
+				
+				.set("window.onCreateActivity1", fct()
+					//	.var("jCanvasGranim", "$('#NavBarActivity1 .animatedBg')[0]")
+					//	.__(NavBarAnimated1)
+				)
+				
+				.set("window.onResumeActivity1", fct().__("alert('ok')") 
+						)
 				
 				/************************************************************/
 				.set(jsNavBar, _new())

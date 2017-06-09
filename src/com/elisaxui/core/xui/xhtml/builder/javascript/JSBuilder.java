@@ -8,7 +8,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
@@ -37,11 +39,18 @@ public class JSBuilder extends Element {     // Element pour tabulation
 	abstract class aInvocationHandler implements InvocationHandler {
 		// public Object proxy; // le proxy
 		public Object name; // nom de la variable qui contient le proxy
-		public Class<? extends JSClass> implementClass;
-		public JSContent currentContent; // contenu de la methode
+		public Class<? extends JSClass> implementClass;   // type js de la class
+		public Map<String, JSContent> mapContent = new HashMap<>(); // contenu de la methode
+		public String nextName = null;
 	}
 
-	public String getId(Method method, Object[] args) {
+	/**
+	 * id  = nom method + nb argument
+	 * @param method
+	 * @param args
+	 * @return
+	 */
+	public String getMethodId(Method method, Object[] args) {
 		StringBuilder buf = new StringBuilder();
 		buf.append(method.getName());
 		buf.append(".");
@@ -66,33 +75,66 @@ public class JSBuilder extends Element {     // Element pour tabulation
 					return name.toString();
 				}
 
-				String id = getId(method, args);
+				String id = getMethodId(method, args);
 				JSClassImpl implcl = XUIFactoryXHtml.getXMLFile().getClassImpl(JSBuilder.this, cl);
 				boolean isMthInClass = implcl.listDistinctFct.containsKey(id);
 
 				if (!isMthInClass) {
 					if (method.isDefault()) {
 
-						implcl.listDistinctFct.put(id, id);
-						currentContent = null; // creation d'un contenu au premier appel
-
-						JSFunction fct = createJSFunctionImpl(proxy, method, args);
-						JSClassImpl ImplClass = createClass(cl, proxy);
-						ImplClass.addFunction(fct);
 						
+						if (nextName==null)
+						{
+							implcl.listDistinctFct.put(id, id);
+	
+						//	JSContent r = mapContent.remove(id);					
+							nextName=id;
+							
+							System.out.println("create mth "+id+" of class " + implcl.name);
+							
+							
+							JSFunction fct = createJSFunctionImpl(proxy, method, args);    // creer le code
+							JSClassImpl ImplClass = createClass(cl, proxy);
+							ImplClass.addFunction(fct);
+						}
+						else
+						{
+						    // appel d'une function js de la même class
+							System.out.println("******************************** mth "+id+" of class " + implcl.name + " next = "+nextName);
+						    return toCallInner(method, args);
+						}
 					} else {
-						if (currentContent == null)
-							currentContent = createJSContent(); // creer le contenu
-
+						
+						JSContent currentContent = mapContent.get(nextName);
+						if (currentContent==null)
+						{
+							currentContent=createJSContent();
+							System.out.println(System.identityHashCode(currentContent)+ " - createJSContent "+nextName+" of class " + implcl.name);
+						//	if (nextName!=null)
+								mapContent.put(nextName, currentContent); // creer le contenu
+							
+						//	nextName=null;
+						}
+						
 						// appel l'implementation si JSInterface
-						return method.invoke(currentContent, args);
+						Object ret =  method.invoke(currentContent, args);
+						if (ret instanceof JSContent )
+						{
+							System.out.println(System.identityHashCode(currentContent)+ " - appel de la mth "+id+" of class " + implcl.name +" => "+((JSContent)ret).listElem );
+						}	
+						else
+							System.out.println(System.identityHashCode(currentContent)+ " - [no JSContent] appel de la mth "+id+" of class " + implcl.name +" => "+ret );
+
+						System.out.println(System.identityHashCode(currentContent)+ " - value = " +currentContent.listElem);
+						
+						return ret;
 					}
 				}
 
 				return toCall(method, args);
 			}
 
-			private JSFunction createJSFunctionImpl(Object proxy, Method method,	Object[] args) 
+			private JSFunction createJSFunctionImpl(Object proxy, Method method, Object[] args) 
 							throws NoSuchMethodException, Throwable, IllegalAccessException,	InstantiationException, InvocationTargetException {
 
 				final Class<?> declaringClass = method.getDeclaringClass();
@@ -116,9 +158,14 @@ public class JSBuilder extends Element {     // Element pour tabulation
 				//if (ret instanceof JSContent) {
 					// ajout de la function durant l'appel
 				    //JSContent code =((JSContent) ret);
-				    JSContent code = currentContent; 
+					String id = getMethodId(method, args);
+				    JSContent code = mapContent.get(id); 
+				    
+				    System.out.println(System.identityHashCode(code)+ " - return JSFunction " + id);
 					JSFunction fct = createJSFunction().setName(method.getName()).setParam(p)
 							.setCode(code);
+					
+					nextName = null;
 					return fct;
 
 //				} else
@@ -138,6 +185,30 @@ public class JSBuilder extends Element {     // Element pour tabulation
 			private List<Object> toCall(Method method, Object[] args) {
 				List<Object> buf = new ArrayList<Object>();
 				buf.add(name + "." + method.getName() + "(");
+
+				int i = 0;
+				if (args != null) {
+					for (Object p : args) {
+						if (i > 0)
+							buf.add(", ");
+						buf.add(p);
+						i++;
+					}
+				}
+				buf.add(")");
+				return buf;
+			}
+			
+			/**
+			 * retourne le call
+			 * 
+			 * @param method
+			 * @param args
+			 * @return
+			 */
+			private List<Object> toCallInner(Method method, Object[] args) {
+				List<Object> buf = new ArrayList<Object>();
+				buf.add("this." + method.getName() + "(");
 
 				int i = 0;
 				if (args != null) {

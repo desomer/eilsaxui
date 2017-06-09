@@ -8,6 +8,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
 import com.elisaxui.core.xui.xhtml.js.JSXHTMLPart;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataDriven;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataSet;
+import com.elisaxui.xui.core.toolkit.TKActivity;
 import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.toolkit.TKRouter;
 import com.elisaxui.xui.core.transition.TKTransition;
@@ -75,6 +76,8 @@ public interface JSContainer extends JSClass {
 						  	.__(_tkrouter, ".", _tkAnimation.doActivityActive("'#'+ctx.row.id"))
 						  	.__(_tkrouter, ".", _tkAnimation.doNavBarToBody())
 						.endif()
+						
+						.__(_tkrouter.doEvent(txt(TKActivity.ON_ACTIVITY_CREATE)))
 				
 					._elseif("ctx.row.type=='card'")
 					    .var("subData", _self.getSubData("ctx"))

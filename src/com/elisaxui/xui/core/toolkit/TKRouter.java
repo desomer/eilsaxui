@@ -110,7 +110,7 @@ public interface TKRouter extends JSClass {
 		.set(historyIntent,"[]")
 		.__(_self.doInitialize())
 		;
-		return null;
+		return _void();
 	}
 	
 	
@@ -124,7 +124,7 @@ public interface TKRouter extends JSClass {
 		.__(navigo,".resolve()")
 		;
 		
-		return null;
+		return _void();
 	}
 	
 	default Object doEvent(Object event)
@@ -141,11 +141,15 @@ public interface TKRouter extends JSClass {
 		   .var("jsonAction", "jsonAct.events[event]")
 		   
 		   ._if("jsonAction!=null &&jsonAction.action=='route' ")
-		   		.__(_this.doNavigate("jsonAction.url"))  
+		   		.__(doNavigate("jsonAction.url"))  
 		   .endif()
 		   
 		   ._if("jsonAction!=null &&jsonAction.action=='back' ")
 		   		.__(_this.doBack())  
+	   		.endif()
+	   		
+	   		._if("jsonAction!=null &&jsonAction.action=='callback' ")
+		   		.__("window[jsonAction.fct].call(this, jsonAction, currentIntent)")  
 	   		.endif()
 		   
 		   
@@ -156,13 +160,13 @@ public interface TKRouter extends JSClass {
 			
 			._if("event=='burger' || event=='Overlay'")
 				._if(historyIntent, "[",historyIntent,".length-1].url=='menu'")  // a ameliorer
-					.__(_this.doBack()) 
+					.__(doBack()) 
 				._else()
-					.__(_this.doNavigate(txt("menu")))
+					.__(doNavigate(txt("menu")))
 				.endif()
 			.endif()
 		.endif();
-		 return null;
+		 return _void();
 	}	
 	
 	default Object doNavigate(Object uri)
@@ -171,7 +175,7 @@ public interface TKRouter extends JSClass {
 		.consoleDebug(txt("doNavigate"), "uri")
 		.__(navigo,".navigate(uri)")
 		;
-		return null;
+		return _void();
 	}
 	
 	
@@ -182,14 +186,14 @@ public interface TKRouter extends JSClass {
 			.__("return ",historyIntent,".pop()")
 		.endif()
 		;
-		return null;
+		/** TODO A changer return null retourne vraiment null en js*/
+		return _null();
 	}
 
 	default Object geCurrentIntention()
 	{ 
-		__("return ", historyIntent, "[", historyIntent ,".length-1]")
-		;
-		return null;
+		/** TODO A changer double return */
+		return __("return ", historyIntent, "[", historyIntent ,".length-1]");
 	}
 	
 	
@@ -197,7 +201,7 @@ public interface TKRouter extends JSClass {
 	{
 		__("history.go(-1)")
 		;
-		return null;
+		return _void();
 	}
 	
 	default Object doCancel()
@@ -206,7 +210,7 @@ public interface TKRouter extends JSClass {
  		.__(historyIntent,".pop()")
  		.__("history.go(-1)")
 		;
-		return null;
+		return _void();
 	}
 	
 	default Object doAction(Object action)
@@ -227,6 +231,7 @@ public interface TKRouter extends JSClass {
 		 	.endif()
 		 	
 		 	.__(activityMgr.setCurrentActivity("$xui.intent.activity"))  
+//		    .__(_self.doEvent(TKActivity.ON_ACTIVITY_RESUME))
 		 	
 			 .consoleDebug(txt("doAction"), "action", "'anim='", "actAnim")
 		 	
@@ -241,6 +246,7 @@ public interface TKRouter extends JSClass {
 		 	.var("actAnim", "$xui.intent.nextActivityAnim")
 		 	
 		 	.__(activityMgr.setCurrentActivity("$xui.intent.prevActivity"))   
+//		    .__(_self.doEvent(TKActivity.ON_ACTIVITY_RESUME))
 			
 		 	.consoleDebug(txt("doAction"), "action", "'anim='", "actAnim")
 			
@@ -255,7 +261,7 @@ public interface TKRouter extends JSClass {
 		 	.__(tkAnimation.doToggleBurgerMenu())
 		 .endif();
 		 
-		 return null;
+		 return _void();
 	}
 
 	/*****************************************************************************/

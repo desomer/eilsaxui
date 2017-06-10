@@ -4,27 +4,29 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder.MethodInvocationHandle;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
 public class JSClassImpl extends JSContent {
 	
 	Object name;
-	boolean isInitialized = false;
+//	boolean isInitialized = false;
 	LinkedList<JSFunction> listFuntion = new LinkedList<>();
 	Map<String, String> listDistinctFct = new HashMap<String, String>();
-	LinkedList<JSFunction> listVariable = new LinkedList<>();
+	
+	LinkedList<MethodInvocationHandle> listHandleFuntionPrivate = new LinkedList<>();
 	
 	JSClassImpl(JSBuilder jsBuilder) {
 		super(jsBuilder);
 	}
 	
-	public boolean isInitialized() {
-		return isInitialized;
-	}
-
-	public void setInitialized(boolean isInitialized) {
-		this.isInitialized = isInitialized;
-	}
+//	public boolean isInitialized() {
+//		return isInitialized;
+//	}
+//
+//	public void setInitialized(boolean isInitialized) {
+//		this.isInitialized = isInitialized;
+//	}
 
 	public Object getName() {
 		return name;

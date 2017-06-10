@@ -29,10 +29,10 @@ public class JSBuilder extends Element {     // Element pour tabulation
 
 	public JSClassImpl createClass(Class<? extends JSClass> cl, Object proxy) throws IllegalAccessException {
 		JSClassImpl ImplClass = XUIFactoryXHtml.getXMLFile().getClassImpl(JSBuilder.this, cl);
-		if (!ImplClass.isInitialized()) {
-
-			ImplClass.setInitialized(true);
-		}
+//		if (!ImplClass.isInitialized()) {
+//
+//			ImplClass.setInitialized(true);
+//		}
 		return ImplClass;
 	}
 
@@ -44,23 +44,27 @@ public class JSBuilder extends Element {     // Element pour tabulation
 		public String nextName = null;
 	}
 
-	/**
-	 * id  = nom method + nb argument
-	 * @param method
-	 * @param args
-	 * @return
-	 */
-	public String getMethodId(Method method, Object[] args) {
-		StringBuilder buf = new StringBuilder();
-		buf.append(method.getName());
-		buf.append(".");
-		buf.append(args == null ? 0 : args.length);
-		return buf.toString();
+	public final class MethodInvocationHandle
+	{
+		public MethodInvocationHandle(JSClassImpl implcl, Object proxy, Method method, Object[] args) {
+			super();
+			this.implcl = implcl;
+			this.proxy = proxy;
+			this.method = method;
+			this.args = args;
+		}
+		
+		JSClassImpl implcl;
+		Object proxy; 
+		Method method;
+		Object[] args;
 	}
+	
 
 	@SuppressWarnings("unchecked")
 	public final <E extends JSClass> E getProxy(final Class<? extends JSClass> cl) {
 
+		
 		class MyInvocationHandler extends aInvocationHandler {
 
 			public MyInvocationHandler(Class<? extends JSClass> impl) {
@@ -77,11 +81,10 @@ public class JSBuilder extends Element {     // Element pour tabulation
 
 				String id = getMethodId(method, args);
 				JSClassImpl implcl = XUIFactoryXHtml.getXMLFile().getClassImpl(JSBuilder.this, cl);
-				boolean isMthInClass = implcl.listDistinctFct.containsKey(id);
+				boolean isMthAlreadyInClass = implcl.listDistinctFct.containsKey(id);
 
-				if (!isMthInClass) {
+				if (!isMthAlreadyInClass) {
 					if (method.isDefault()) {
-
 						
 						if (nextName==null)
 						{
@@ -92,7 +95,6 @@ public class JSBuilder extends Element {     // Element pour tabulation
 							
 							System.out.println("create mth "+id+" of class " + implcl.name);
 							
-							
 							JSFunction fct = createJSFunctionImpl(proxy, method, args);    // creer le code
 							JSClassImpl ImplClass = createClass(cl, proxy);
 							ImplClass.addFunction(fct);
@@ -101,7 +103,10 @@ public class JSBuilder extends Element {     // Element pour tabulation
 						{
 						    // appel d'une function js de la même class
 							System.out.println("******************************** mth "+id+" of class " + implcl.name + " next = "+nextName);
-						    return toCallInner(method, args);
+							MethodInvocationHandle MthInvoke = new MethodInvocationHandle(implcl, proxy, method, args);
+							implcl.listHandleFuntionPrivate.add(MthInvoke);
+							
+							return toJSCallInner(method, args);
 						}
 					} else {
 						
@@ -110,13 +115,10 @@ public class JSBuilder extends Element {     // Element pour tabulation
 						{
 							currentContent=createJSContent();
 							System.out.println(System.identityHashCode(currentContent)+ " - createJSContent "+nextName+" of class " + implcl.name);
-						//	if (nextName!=null)
-								mapContent.put(nextName, currentContent); // creer le contenu
-							
-						//	nextName=null;
+							mapContent.put(nextName, currentContent); // creer le contenu
 						}
 						
-						// appel l'implementation si JSInterface
+						// appel l'implementation le methode JSInterface
 						Object ret =  method.invoke(currentContent, args);
 						if (ret instanceof JSContent )
 						{
@@ -131,7 +133,7 @@ public class JSBuilder extends Element {     // Element pour tabulation
 					}
 				}
 
-				return toCall(method, args);
+				return toJSCall(method, args);
 			}
 
 			private JSFunction createJSFunctionImpl(Object proxy, Method method, Object[] args) 
@@ -155,24 +157,17 @@ public class JSBuilder extends Element {     // Element pour tabulation
 				Object ret = constructor.newInstance(declaringClass, MethodHandles.Lookup.PRIVATE)
 						.unreflectSpecial(method, declaringClass).bindTo(proxy).invokeWithArguments(p);
 
-				//if (ret instanceof JSContent) {
-					// ajout de la function durant l'appel
-				    //JSContent code =((JSContent) ret);
-					String id = getMethodId(method, args);
-				    JSContent code = mapContent.get(id); 
-				    
-				    System.out.println(System.identityHashCode(code)+ " - return JSFunction " + id);
-					JSFunction fct = createJSFunction().setName(method.getName()).setParam(p)
-							.setCode(code);
-					
-					nextName = null;
-					return fct;
-
-//				} else
-//				{
-//					System.out.println("pb retour de la methode de class =" + ret);
-//					return null;
-//				}
+				//TODO ret  a ajouter en fin de methode JS
+				
+				String id = getMethodId(method, args);
+			    JSContent code = mapContent.get(id); 
+			    
+			    System.out.println(System.identityHashCode(code)+ " - return JSFunction " + id);
+				JSFunction fct = createJSFunction().setName(method.getName()).setParam(p)
+						.setCode(code);
+				
+				nextName = null;
+				return fct;
 			}
 
 			/**
@@ -182,7 +177,7 @@ public class JSBuilder extends Element {     // Element pour tabulation
 			 * @param args
 			 * @return
 			 */
-			private List<Object> toCall(Method method, Object[] args) {
+			private List<Object> toJSCall(Method method, Object[] args) {
 				List<Object> buf = new ArrayList<Object>();
 				buf.add(name + "." + method.getName() + "(");
 
@@ -206,7 +201,7 @@ public class JSBuilder extends Element {     // Element pour tabulation
 			 * @param args
 			 * @return
 			 */
-			private List<Object> toCallInner(Method method, Object[] args) {
+			private List<Object> toJSCallInner(Method method, Object[] args) {
 				List<Object> buf = new ArrayList<Object>();
 				buf.add("this." + method.getName() + "(");
 
@@ -231,7 +226,20 @@ public class JSBuilder extends Element {     // Element pour tabulation
 		return (E) proxy;
 	}
 
-
+	/**
+	 * id  = nom method + nb argument
+	 * @param method
+	 * @param args
+	 * @return
+	 */
+	public String getMethodId(Method method, Object[] args) {
+		StringBuilder buf = new StringBuilder();
+		buf.append(method.getName());
+		buf.append(".");
+		buf.append(args == null ? 0 : args.length);
+		return buf.toString();
+	}
+	
 	public JSClassImpl createJSClass() {
 		return new JSClassImpl(this);
 	}

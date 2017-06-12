@@ -5,13 +5,13 @@ package com.elisaxui.xui.core.toolkit;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
 import com.elisaxui.xui.core.widget.container.JSContainer;
+
 /**
  * @author Bureau
  *
  */
 public interface TKActivity extends JSClass {
 
-	
 	public static final String ON_ACTIVITY_CREATE = "onActivityCreate";
 	public static final String ON_ACTIVITY_RESUME = "onActivityResume";
 	public static final String ON_ACTIVITY_PAUSE = "onActivityPause";
@@ -32,19 +32,14 @@ public interface TKActivity extends JSClass {
 	
 	default Object getCurrentActivity()
 	{
-		
-		__("return ",listRegisterActivity, "[", idCurrentActivity, "]")
-		;
-		return null;
+		return jsvar(listRegisterActivity, "[", idCurrentActivity, "]");
 	}
 	
 	
 	default Object setCurrentActivity(Object id)
 	{
-	    set(idCurrentActivity, "id")
-	    .__("return ",listRegisterActivity, "[", idCurrentActivity, "]")
-	    ;
-		return null;
+	    set(idCurrentActivity, "id");
+		return jsvar(listRegisterActivity, "[", idCurrentActivity, "]");
 	}
 	
 	default Object createActivity(Object json)

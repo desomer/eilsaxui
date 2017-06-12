@@ -2,7 +2,7 @@ package com.elisaxui.xui.core.transition;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xhtml.js.JSXHTMLPart;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataCtx;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataDriven;

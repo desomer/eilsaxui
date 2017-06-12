@@ -2,6 +2,11 @@ package com.elisaxui.core.xui.xhtml.builder.javascript;
 
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
+/**
+ * class representant une function JS
+ * @author Bureau
+ *
+ */
 public class JSFunction extends JSContent
 {
 	//"use strict"
@@ -14,7 +19,7 @@ public class JSFunction extends JSContent
 	Object[] param = null; 
 	JSContent code;
 	
-	public JSInterface getCode() {
+	public JSMethodInterface getCode() {
 		return code;
 	}
 

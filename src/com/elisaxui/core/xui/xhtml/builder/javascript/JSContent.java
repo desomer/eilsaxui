@@ -13,7 +13,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder.aInvocationHandl
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 
-public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
+public class JSContent implements XMLBuilder.IXMLBuilder, JSMethodInterface {
 	/**
 	 * 
 	 */
@@ -89,7 +89,7 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 	}
 
 	private void addElem(Object object) {
-		if (object instanceof List && ! (object instanceof JSInterface)) {
+		if (object instanceof List && ! (object instanceof JSMethodInterface)) {
 			@SuppressWarnings("unchecked")
 			List<Object> list = (List<Object>) object;
 			for (Object object2 : list) {
@@ -108,7 +108,7 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 	 * Object)
 	 */
 	@Override
-	public JSInterface __(Object... content) {
+	public JSMethodInterface __(Object... content) {
 		listElem.add(JSNewLine.class);
 		for (Object object : content) {
 			addElem(object);
@@ -125,7 +125,7 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 	 * Object, java.lang.Object)
 	 */
 	@Override
-	public JSInterface set(Object name, Object... content) {
+	public JSMethodInterface set(Object name, Object... content) {
 		listElem.add(JSNewLine.class);
 		listElem.add(name);
 		listElem.add("=");
@@ -147,7 +147,7 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 	 * Object, java.lang.Object)
 	 */
 	@Override
-	public JSInterface var(Object name, Object... content) {
+	public JSMethodInterface var(Object name, Object... content) {
 		listElem.add(JSNewLine.class);
 		listElem.add("var ");
 		listElem.add(name);
@@ -160,7 +160,7 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 	}
 
 	@Override
-	public JSInterface consoleDebug(Object... content) {
+	public JSMethodInterface consoleDebug(Object... content) {
 		listElem.add(JSNewLine.class);
 		listElem.add("console.debug(");
 		int i = 0;
@@ -175,7 +175,7 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 	}
 
 	@Override
-	public JSInterface _for(Object... content) {
+	public JSMethodInterface _for(Object... content) {
 		listElem.add(JSNewLine.class);
 		listElem.add("for (");
 		for (Object object : content) {
@@ -186,14 +186,14 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 	}
 
 	@Override
-	public JSInterface endfor() {
+	public JSMethodInterface endfor() {
 		listElem.add(JSNewLine.class);
 		listElem.add("}");
 		return this;
 	}
 
 	@Override
-	public JSInterface _if(Object... content) {
+	public JSMethodInterface _if(Object... content) {
 		listElem.add(JSNewLine.class);
 		listElem.add("if (");
 		for (Object object : content) {
@@ -204,14 +204,14 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 	}
 
 	@Override
-	public JSInterface _else() {
+	public JSMethodInterface _else() {
 		listElem.add(JSNewLine.class);
 		listElem.add("} else {");
 		return this;
 	}
 	
 	@Override
-	public JSInterface _elseif(Object... content) {
+	public JSMethodInterface _elseif(Object... content) {
 		listElem.add(JSNewLine.class);
 		listElem.add("} else if(");
 		for (Object object : content) {
@@ -222,7 +222,7 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 	}
 
 	@Override
-	public JSInterface endif() {
+	public JSMethodInterface endif() {
 		listElem.add(JSNewLine.class);
 		listElem.add("}");
 		return this;
@@ -256,7 +256,7 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSInterface#_void()
 	 */
 	@Override
-	public JSInterface _void() {
+	public JSMethodInterface _void() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -265,9 +265,43 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSInterface {
 	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSInterface#_null()
 	 */
 	@Override
-	public JSInterface _null() {
+	public JSMethodInterface _null() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#_this()
+	 */
+	@Override
+	public Object _this() {
+		return "this";
+	}
+
+	/* (non-Javadoc)
+	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#_return(java.lang.Object[])
+	 */
+	@Override
+	public JSMethodInterface _return(Object... content) {
+		listElem.add(JSNewLine.class);
+		listElem.add("return ");
+		for (Object object : content) {
+			addElem(object);
+		}
+		listElem.add(";");
+		return this;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#jsvar(java.lang.Object[])
+	 */
+	@Override
+	public Object jsvar(Object... param) {
+		StringBuilder str = new StringBuilder();
+		for (int i = 0; i < param.length; i++) {
+			str.append(param[i]);
+		}
+		return str.toString();
 	}
 
 	

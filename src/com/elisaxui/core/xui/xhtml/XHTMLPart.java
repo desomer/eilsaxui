@@ -9,7 +9,7 @@ import com.elisaxui.core.xui.xhtml.builder.css.CSSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
@@ -82,7 +82,7 @@ public abstract class XHTMLPart extends XMLPart {
 		return xElement(null, elem.toArray());
 	}
 
-	public final static JSInterface js() {
+	public final static JSMethodInterface js() {
 		return jsBuilder.createJSContent();
 	}
 	

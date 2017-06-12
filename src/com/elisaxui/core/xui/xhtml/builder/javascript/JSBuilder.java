@@ -9,11 +9,21 @@ import java.lang.reflect.Parameter;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+
+
+/**
+ * 
+ *  invoke Proxy => xxxx => createJSFunctionImpl
+ * 
+ * @author Bureau
+ *
+ */
 
 public class JSBuilder extends Element {     // Element pour tabulation 
 	
@@ -27,14 +37,6 @@ public class JSBuilder extends Element {     // Element pour tabulation
 		mh.name = prefix + name;
 	}
 
-	public JSClassImpl createClass(Class<? extends JSClass> cl, Object proxy) throws IllegalAccessException {
-		JSClassImpl ImplClass = XUIFactoryXHtml.getXMLFile().getClassImpl(JSBuilder.this, cl);
-//		if (!ImplClass.isInitialized()) {
-//
-//			ImplClass.setInitialized(true);
-//		}
-		return ImplClass;
-	}
 
 	abstract class aInvocationHandler implements InvocationHandler {
 		// public Object proxy; // le proxy
@@ -86,6 +88,7 @@ public class JSBuilder extends Element {     // Element pour tabulation
 				if (!isMthAlreadyInClass) {
 					if (method.isDefault()) {
 						
+						MethodInvocationHandle MthInvoke = new MethodInvocationHandle(implcl, proxy, method, args);
 						if (nextName==null)
 						{
 							implcl.listDistinctFct.put(id, id);
@@ -95,15 +98,14 @@ public class JSBuilder extends Element {     // Element pour tabulation
 							
 							System.out.println("create mth "+id+" of class " + implcl.name);
 							
-							JSFunction fct = createJSFunctionImpl(proxy, method, args);    // creer le code
-							JSClassImpl ImplClass = createClass(cl, proxy);
+							JSFunction fct = createJSFunctionImpl(MthInvoke);    // creer le code
+							JSClassImpl ImplClass = getJSClassImpl(cl, proxy);
 							ImplClass.addFunction(fct);
 						}
 						else
 						{
 						    // appel d'une function js de la même class
 							System.out.println("******************************** mth "+id+" of class " + implcl.name + " next = "+nextName);
-							MethodInvocationHandle MthInvoke = new MethodInvocationHandle(implcl, proxy, method, args);
 							implcl.listHandleFuntionPrivate.add(MthInvoke);
 							
 							return toJSCallInner(method, args);
@@ -136,37 +138,56 @@ public class JSBuilder extends Element {     // Element pour tabulation
 				return toJSCall(method, args);
 			}
 
-			private JSFunction createJSFunctionImpl(Object proxy, Method method, Object[] args) 
-							throws NoSuchMethodException, Throwable, IllegalAccessException,	InstantiationException, InvocationTargetException {
+			/** TODO a deplacer dans JSClassImpl  */
+			
+			private JSFunction createJSFunctionImpl(MethodInvocationHandle handle) 
+							throws NoSuchMethodException, 
+							Throwable, 
+							IllegalAccessException,	
+							InstantiationException, 
+							InvocationTargetException {
 
-				final Class<?> declaringClass = method.getDeclaringClass();
+				final Class<?> declaringClass = handle.method.getDeclaringClass();
 				Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class
 						.getDeclaredConstructor(Class.class, int.class);
 				constructor.setAccessible(true);
 
-				Parameter[] param = method.getParameters();
+				Parameter[] param = handle.method.getParameters();
 				Object[] p = new Object[param.length];
 
-				if (args != null) {
-					for (int i = 0; i < args.length; i++) {
+				if (handle.args != null) {
+					for (int i = 0; i < handle.args.length; i++) {
 						p[i] = param[i].getName();
 					}
 				}
 
-				// appel la fct par defaut de l'interface
+				// appel la fct la classJS 
 				Object ret = constructor.newInstance(declaringClass, MethodHandles.Lookup.PRIVATE)
-						.unreflectSpecial(method, declaringClass).bindTo(proxy).invokeWithArguments(p);
+						.unreflectSpecial(handle.method, declaringClass).bindTo(handle.proxy).invokeWithArguments(p);
 
-				//TODO ret  a ajouter en fin de methode JS
 				
-				String id = getMethodId(method, args);
+				String id = getMethodId(handle.method, handle.args);
 			    JSContent code = mapContent.get(id); 
 			    
+				//ajouter en fin de methode JS
+				if (ret!=null && !(ret instanceof JSContent))
+				{
+					code._return(ret);
+				}
+			    
 			    System.out.println(System.identityHashCode(code)+ " - return JSFunction " + id);
-				JSFunction fct = createJSFunction().setName(method.getName()).setParam(p)
+				JSFunction fct = createJSFunction().setName(handle.method.getName()).setParam(p)
 						.setCode(code);
 				
 				nextName = null;
+				
+				// invoke les methodes private
+				for(Iterator<MethodInvocationHandle> i = handle.implcl.listHandleFuntionPrivate.iterator(); i.hasNext();) {
+						MethodInvocationHandle nextHandle = i.next();
+					    i.remove();	      					    
+					    nextHandle.method.invoke(nextHandle.proxy, nextHandle.args);
+				}
+				
 				return fct;
 			}
 
@@ -238,6 +259,15 @@ public class JSBuilder extends Element {     // Element pour tabulation
 		buf.append(".");
 		buf.append(args == null ? 0 : args.length);
 		return buf.toString();
+	}
+	
+	public JSClassImpl getJSClassImpl(Class<? extends JSClass> cl, Object proxy) throws IllegalAccessException {
+		JSClassImpl ImplClass = XUIFactoryXHtml.getXMLFile().getClassImpl(JSBuilder.this, cl);
+//		if (!ImplClass.isInitialized()) {
+//
+//			ImplClass.setInitialized(true);
+//		}
+		return ImplClass;
 	}
 	
 	public JSClassImpl createJSClass() {

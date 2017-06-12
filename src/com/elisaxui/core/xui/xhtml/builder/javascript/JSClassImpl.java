@@ -7,6 +7,11 @@ import java.util.Map;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder.MethodInvocationHandle;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
+/**
+ * class de representation d'une class JS
+ * @author Bureau
+ *
+ */
 public class JSClassImpl extends JSContent {
 	
 	Object name;

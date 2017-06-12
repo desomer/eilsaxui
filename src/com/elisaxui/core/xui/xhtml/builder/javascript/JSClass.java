@@ -2,7 +2,12 @@ package com.elisaxui.core.xui.xhtml.builder.javascript;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 
-public interface JSClass extends JSInterface  {
+/**
+ * interface proxy de class JS
+ * @author Bureau
+ *
+ */
+public interface JSClass extends JSMethodInterface  {
 
 	@Deprecated
 	static <E extends JSClass> E initVar(Class<E> cl) {

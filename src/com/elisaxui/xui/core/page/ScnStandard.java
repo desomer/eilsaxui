@@ -2,7 +2,7 @@ package com.elisaxui.xui.core.page;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xhtml.js.JSXHTMLPart;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataCtx;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataDriven;
@@ -181,7 +181,7 @@ public class ScnStandard extends XHTMLPart {
 
 	TKRouter tkrouter;
 
-	public JSInterface getEventManager()
+	public JSMethodInterface getEventManager()
 	{
 	  return fct()
 			   .consoleDebug("'ok EventManager'") 
@@ -225,7 +225,7 @@ public class ScnStandard extends XHTMLPart {
 			;
 	}
 	
-	public JSInterface getMoveManager()
+	public JSMethodInterface getMoveManager()
 	{
 		// gestion deplacement menu et fermeture par gesture 
 	  return fct().consoleDebug("'ok MoveManager'") 
@@ -263,7 +263,7 @@ public class ScnStandard extends XHTMLPart {
 			;
 	}
  
-	public JSInterface getStateManager()
+	public JSMethodInterface getStateManager()
 	{
 	  return fct()
 		.consoleDebug("'ok StateManager'") 

@@ -20,18 +20,16 @@ public interface TKRouter extends JSClass {
 
 	public static final String ACTION_PREV_ROUTE = "ACTION_PREV_ROUTE";
 	public static final String ACTION_NEXT_ROUTE = "ACTION_NEXT_ROUTE";
-
 	public static final String STATE_ROUTE = "STATE_ROUTE";
 	
 	TKTransition tkAnimation = null;
-	TKRouter _this = null;
-	TKRouter _self = null;
 	Object navigo = null;
 	TKActivity activityMgr= null;
-	
 	//   gestion des historique d'intention
 	Object historyIntent = null;
 	Object _historyIntent = null;
+	
+	TKRouter _self = null;
 	
 	default Object constructor(Object nav) {
 		__()
@@ -40,7 +38,7 @@ public interface TKRouter extends JSClass {
 	    
 //	.__("router.resolve()")
 		.set(navigo, nav)
-		.var(_self, _this)
+		.var(_self, _this())
 		
 		.var("doPushState", fct("params","query")   // ecoute l'history back
 				._if(_self,".navigo.nextenable")
@@ -118,7 +116,7 @@ public interface TKRouter extends JSClass {
 	{
 		 __()
 		.__(navigo,".nextenable=", false)
-		.__(_this.doNavigate(txt("route/Activity1")))   // premier etat
+		.__(doNavigate(txt("route/Activity1")))   // premier etat
 		.var("intent", "{ url:'route/Activity1', nextActivityAnim : 'fromBottom' }")
 		.__(historyIntent,".push(intent)")   // ajoute a l historique interne)
 		.__(navigo,".resolve()")
@@ -145,7 +143,8 @@ public interface TKRouter extends JSClass {
 		   .endif()
 		   
 		   ._if("jsonAction!=null &&jsonAction.action=='back' ")
-		   		.__(_this.doBack())  
+		   		//.__(_this.doBack())  
+		   		.__( doBack())  
 	   		.endif()
 	   		
 	   		._if("jsonAction!=null &&jsonAction.action=='callback' ")
@@ -206,7 +205,7 @@ public interface TKRouter extends JSClass {
 	
 	default Object doCancel()
 	{
-		__(_this,".navigo.nextenable=false")
+		__(_this(),".navigo.nextenable=false")
  		.__(historyIntent,".pop()")
  		.__("history.go(-1)")
 		;
@@ -216,7 +215,7 @@ public interface TKRouter extends JSClass {
 	default Object doAction(Object action)
 	{
 		 __()
-		 .var(_self, _this)   //TODO Bug si je retire dans le geCurrentIntention
+		 .var(_self, _this())   //TODO Bug si je retire dans le geCurrentIntention
 		 
 		 
 		 ._if("action==",txt(ACTION_NEXT_ROUTE))
@@ -226,7 +225,7 @@ public interface TKRouter extends JSClass {
 		 	.var("jqAct1", "$(act1)")
 		 	._if("jqAct1.hasClass('backActivity')")
 		 		.consoleDebug("'************* IS USED ******************'")
-		 		.__(_this.doCancel())
+		 		.__(doCancel())
 	 			.__("return")
 		 	.endif()
 		 	

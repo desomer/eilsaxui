@@ -9,6 +9,7 @@ public interface JSDataSet extends JSClass {
 	Object delayEvent = null;
 	Object myProxySet = null;
 	JSDataSet _that = null;
+	Object synchroneEvent = null;   // toDo
 
 	default Object constructor(Object d) {
 		return set(data, d)
@@ -37,28 +38,28 @@ public interface JSDataSet extends JSClass {
 		//JSDataSet that = i
 		return  
 				var("changeHandler", "{\n" +
-				" get: function(target, property) {\n" +
-//				" console.log(\'getting \' , property , \' for \' , target);\n" +
-				" // property is index in this case\n" +
-				" return target[property];\n" +
-				" },\n"+ 
-				" apply: function(target, thisArg, argumentsList) {\n"+
-				" return thisArg[target].apply(this, argumentList);\n"+
-				" },\n"+
-				" deleteProperty: function(target, property) {\n"+
-				" console.log(\"Deleted %s\", property);\n"+
-				" return true;\n"+
-				" },"+
-				"set:", fct("target", "property", "value", "receiver")
-
-				       ._if("property!='_dom_' && target[property]!==value")
-				       		//.consoleDebug("'setting'", "property" , "' for '" , "target" , "' with value '" , "value")
-							.var("row", "{ ope:'change', row:target, idx:target.idx, property:property, value: value, old: target[property] }")
-							.var("fct"," function() {\nfastdom.mutate(function() {\nthat.callBackChange.fire(row); })}")
-							.__("setTimeout(fct, 1)")
-				       .endif()
-			       	   .set("target[property]", "value")
-				       .__("return true")
+					" get: function(target, property) {\n" +
+		//				" console.log(\'getting \' , property , \' for \' , target);\n" +
+						" // property is index in this case\n" +
+						" return target[property];\n" +
+						" },\n"+ 
+						" apply: function(target, thisArg, argumentsList) {\n"+
+						" return thisArg[target].apply(this, argumentList);\n"+
+						" },\n"+
+						" deleteProperty: function(target, property) {\n"+
+						" console.log(\"Deleted %s\", property);\n"+
+						" return true;\n"+
+						" },"+
+					"set:", fct("target", "property", "value", "receiver")
+	
+					       ._if("property!='_dom_' && target[property]!==value")
+					       		//.consoleDebug("'setting'", "property" , "' for '" , "target" , "' with value '" , "value")
+								.var("row", "{ ope:'change', row:target, idx:target.idx, property:property, value: value, old: target[property] }")
+								.var("fct"," function() {\nfastdom.mutate(function() {\nthat.callBackChange.fire(row); })}")
+								.__("setTimeout(fct, 1)")
+					       .endif()
+				       	   .set("target[property]", "value")
+					       .__("return true")
 
 //				" set: function(target, property, value, receiver) {\n" +
 //				" console.log(\'setting \' , property , \' for \' , target , \' with value \' , value);\n" +
@@ -76,7 +77,9 @@ public interface JSDataSet extends JSClass {
 						.__(_that.addProxy("arguments[0]"))
 						.__("Array.prototype.push.apply(this, arguments)")		
 						.var("row", "{ ope:'enter', row:arguments[0], idx:this.length-1 }")
+						// les push sont lancé dans le fast dom 
 						.var("fct"," function() {\nfastdom.mutate(function() {\nthat.callBackChange.fire(row); })}")
+						// les push sont executé de facon echelonné dans le temps par intervalle de 2 ms
 						.var("t", "that.delayEvent")
 						._if("t==0")
 							.__("setTimeout(",fct().set("that.delayEvent",0) ,", 0)")   // remise a zero apres la boucle

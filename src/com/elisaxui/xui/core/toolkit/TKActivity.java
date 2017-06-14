@@ -35,6 +35,11 @@ public interface TKActivity extends JSClass {
 		return jsvar(listRegisterActivity, "[", idCurrentActivity, "]");
 	}
 	
+	default Object getCurrentIDActivity()
+	{
+		__();
+		return idCurrentActivity;
+	}
 	
 	default Object setCurrentActivity(Object id)
 	{

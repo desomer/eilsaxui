@@ -10,8 +10,11 @@ import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
 import com.elisaxui.xui.core.page.ScnStandard;
 import com.elisaxui.xui.core.toolkit.TKActivity;
+import com.elisaxui.xui.core.toolkit.TKQueue;
+import com.elisaxui.xui.core.transition.CssTransition;
 import com.elisaxui.xui.core.widget.chart.ViewJSChart;
 import com.elisaxui.xui.core.widget.container.JSContainer;
+import com.elisaxui.xui.core.widget.container.JSPageLayout;
 import com.elisaxui.xui.core.widget.menu.JSMenu;
 import com.elisaxui.xui.core.widget.navbar.JSNavBar;
 
@@ -24,6 +27,7 @@ public class AppRoot extends XHTMLPart {
 	JSMenu jsMenu;
 	JSNavBar jsNavBar;
 	TKActivity tkActivity;
+	JSPageLayout jsPageLayout;
 	
 	public static String image1 = "https://images.pexels.com/photos/316465/pexels-photo-316465.jpeg?h=350&auto=compress&cs=tinysrgb";
 	public static String image2 = "https://images.pexels.com/photos/6337/light-coffee-pen-working.jpg?h=350&auto=compress&cs=tinysrgb";
@@ -55,6 +59,7 @@ public class AppRoot extends XHTMLPart {
 				.var("declaration1","{type:'page', id:name , children : ["
 						/********************************************************************/				
 						+ "{ selector: '#NavBar'+name, factory:'JSNavBar', rows : [ "
+						+ "				{type:'background', mode:'granim'},"
 						+ "				{type:'burger' },"
 						+ "				{type:'name', name:'Elisa'},"
 						+ "				{type:'action', icon:'perm_identity', idAction:'identity'},"
@@ -93,6 +98,7 @@ public class AppRoot extends XHTMLPart {
 				.var("declaration2","{type:'page', id:name, active:false , children : ["
 						/********************************************************************/				
 						+ "{ selector: '#NavBar'+name, factory:'JSNavBar', rows : [ "
+						+ "				{type:'background', mode:'css', css:'url(" +image3 +") center / cover no-repeat' , opacity:0.3},"   //center / cover
 						+ "				{type:'burger' },"
 						+ "				{type:'name', name:'Detail'},"
 						+ "				{type:'action', icon:'search', idAction:'search'},"
@@ -110,7 +116,8 @@ public class AppRoot extends XHTMLPart {
 						+ "]"
 						+ ", events: { more: { action:'route' , url: 'route/Activity1'} ,"
 						+ "			   search : { action:'route' , url: 'route/Activity3?p=12'} ,"
-					//	+ "			   "+TKActivity.ON_ACTIVITY_CREATE+" : { action:'callback', fct:'c'} "	
+						+ "			   HeaderSwipeDown: { action:'back' }, "
+						+ "			   "+TKActivity.ON_ACTIVITY_CREATE+" : { action:'callback', fct:'onCreateActivityDown', param:'#NavBarActivity2'} "	
 						+ "  }"
 						+ "}") 
 				
@@ -141,7 +148,9 @@ public class AppRoot extends XHTMLPart {
 						+ "]"
 						+ ", events: { more: { action:'back' },"
 						+ "			   BtnFloatMain : { action:'route' , url: 'route/Activity2?p=22'},"
-						+ "			   search : { action:'route' , url: 'route/Activity2?p=24'} " 
+						+ "			   search : { action:'route' , url: 'route/Activity2?p=24'}, " 
+						+ "			   HeaderSwipeDown: { action:'back' }, "
+						+ "			   "+TKActivity.ON_ACTIVITY_CREATE+" : { action:'callback', fct:'onCreateActivityDown', param:'#NavBarActivity3'} "
 						+ "  }"
 						+ "}") 
 				
@@ -154,12 +163,26 @@ public class AppRoot extends XHTMLPart {
 				/**************************************************************/
 				
 				.set("window.onCreateActivity1", fct()
-					//	.var("jCanvasGranim", "$('#NavBarActivity1 .animatedBg')[0]")
-					//	.__(NavBarAnimated1)
+						.__(TKQueue.startAlone( 100,  fct()
+							.var("jCanvasGranim", "$('#NavBarActivity1 .animatedBg')[0]")
+							.__(NavBarAnimated1)
+							)
+						)
 				)
 				
 				.set("window.onResumeActivity1", fct().__("alert('ok')") 
 						)
+				
+				/**************************************************************/
+				
+				.set("window.onCreateActivityDown", fct("json")
+						.__(TKQueue.startAlone( 100,  fct()
+								.var(jsPageLayout, _new())
+								.__(jsPageLayout.setEnableCloseGesture("json.param"))
+								//*.__(jsPageLayout.setEnableCloseGesture("'#NavBarActivity3'"))
+							)
+						)
+				)
 				
 				/************************************************************/
 				.set(jsNavBar, _new())

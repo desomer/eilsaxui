@@ -25,7 +25,7 @@ import com.elisaxui.xui.core.widget.menu.ViewMenuItems;
 public class ViewNavBar extends XHTMLPart {
 	
 	static CSSClass actionBtnContainer;
-	CSSClass animatedBg;
+	static CSSClass animatedBg;
 	
 	public static final String PROPERTY_NAME = "PROPERTY_NAME";
 	
@@ -64,7 +64,7 @@ public class ViewNavBar extends XHTMLPart {
 	@xTarget(CONTENT.class)
 	public Element xContenu() {  
 		return xDiv( xId(this.getProperty(PROPERTY_NAME)), xAttr("class", "\"navbar fixedTop\""),
-				xElement("canvas", animatedBg), // pour granim
+				//
 				this.getChildren());
 	}
 	
@@ -84,6 +84,13 @@ public class ViewNavBar extends XHTMLPart {
 		return xElement("button", xAttr("data-x-action", txt(xVar(action))), actionBtnContainer, ViewRippleEffect.cRippleEffect() , xAttr("type", "\"button\""),  "<i class=\"actionBtn material-icons\">",xVar(name),"</i>");
 	}
 	
+	public static Element getTemplateBgCanvas() {
+		return xElement("canvas", animatedBg); // pour granim;
+	}
+	
+	public static Element getTemplateBgDiv() {
+		return xElement("div", animatedBg); 
+	}
 	
 //	@xTarget(AFTER_CONTENT.class)
 //	public Element xAddJS() {

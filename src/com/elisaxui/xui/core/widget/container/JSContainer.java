@@ -11,6 +11,7 @@ import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataSet;
 import com.elisaxui.xui.core.toolkit.TKActivity;
 import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.toolkit.TKRouter;
+import com.elisaxui.xui.core.transition.CssTransition;
 import com.elisaxui.xui.core.transition.TKTransition;
 import com.elisaxui.xui.core.widget.button.ViewFloatAction;
 import com.elisaxui.xui.core.widget.navbar.ViewNavBar;
@@ -29,6 +30,7 @@ public interface JSContainer extends JSClass {
 	
 	TKRouter _tkrouter =null;
 	TKTransition _tkAnimation = null;
+	TKActivity _activityMgr = null;
 	
 	default Object getSubData(Object ctx)
 	{
@@ -76,9 +78,11 @@ public interface JSContainer extends JSClass {
 						  	.__(_tkrouter, ".", _tkAnimation.doActivityActive("'#'+ctx.row.id"))
 						  	.__(_tkrouter, ".", _tkAnimation.doNavBarToBody())
 						.endif()
+						.__("var backupId=", _tkrouter, ".", _activityMgr.getCurrentIDActivity())
+						.__(_tkrouter, ".", _activityMgr.setCurrentActivity("ctx.row.id"))
+						.__(_tkrouter.doEvent(txt(TKActivity.ON_ACTIVITY_CREATE)))	
+						.__(_tkrouter, ".", _activityMgr.setCurrentActivity("backupId"))
 						
-						.__(_tkrouter.doEvent(txt(TKActivity.ON_ACTIVITY_CREATE)))
-				
 					._elseif("ctx.row.type=='card'")
 					    .var("subData", _self.getSubData("ctx"))
 						.set(template, ViewCard.getTemplate((ViewCard)card.addProperty("childrenCard", XHTMLPart.xVar("subData.html") )))

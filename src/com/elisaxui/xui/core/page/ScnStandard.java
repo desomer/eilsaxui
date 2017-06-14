@@ -21,6 +21,7 @@ import com.elisaxui.xui.core.transition.CssTransition;
 import com.elisaxui.xui.core.transition.TKTransition;
 import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
 import com.elisaxui.xui.core.widget.container.JSContainer;
+import com.elisaxui.xui.core.widget.container.JSPageLayout;
 import com.elisaxui.xui.core.widget.menu.JSMenu;
 import com.elisaxui.xui.core.widget.menu.ViewMenu;
 import com.elisaxui.xui.core.widget.overlay.JSOverlay;
@@ -75,7 +76,7 @@ public class ScnStandard extends XHTMLPart {
 						+ "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css'>"
 						+ "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css'>"
 						+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js'></script>"
-						+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js'></script>"
+						+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js'></script>"
 						+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/granim/1.0.6/granim.min.js'></script>"
 						+ "<link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet'>"
 						),
@@ -88,6 +89,7 @@ public class ScnStandard extends XHTMLPart {
 				xImport(JSDataCtx.class),
 				xImport(JSOverlay.class),
 				xImport(JSContainer.class),
+				xImport(JSPageLayout.class),
 				xImport(TKRouter.class),
 				xPart(new CssTransition()),
 				xImport(TKTransition.class),

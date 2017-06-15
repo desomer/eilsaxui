@@ -32,7 +32,7 @@ public class CssTransition extends XHTMLPart {
 
 	public static final int widthMenu = 250;
 	
-	public static final int SPEED_SHOW_ACTIVITY = 150;
+	public static final int SPEED_SHOW_ACTIVITY = 200;
 	public static final int SPEED_ACTIVITY_TRANSITION_EFFECT = 150;
 	public static final int DELAY_SURETE_END_ANIMATION = 50;
 	

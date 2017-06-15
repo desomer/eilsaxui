@@ -12,6 +12,7 @@ import com.elisaxui.xui.core.page.ScnStandard;
 import com.elisaxui.xui.core.toolkit.TKActivity;
 import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.transition.CssTransition;
+import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
 import com.elisaxui.xui.core.widget.chart.ViewJSChart;
 import com.elisaxui.xui.core.widget.container.JSContainer;
 import com.elisaxui.xui.core.widget.container.JSPageLayout;
@@ -33,7 +34,8 @@ public class AppRoot extends XHTMLPart {
 	public static String image2 = "https://images.pexels.com/photos/6337/light-coffee-pen-working.jpg?h=350&auto=compress&cs=tinysrgb";
 	public static String image3 = "https://images.pexels.com/photos/117729/pexels-photo-117729.jpeg?h=350&auto=compress&cs=tinysrgb";
 	public static String image4 = "https://images.pexels.com/photos/211122/pexels-photo-211122.jpeg?h=350&auto=compress&cs=tinysrgb";
-	
+	public static String image5 = "https://images.pexels.com/photos/210745/pexels-photo-210745.jpeg?h=350&auto=compress&cs=tinysrgb";
+	public static String image6 = "https://images.pexels.com/photos/164482/pexels-photo-164482.jpeg?h=350&auto=compress&cs=tinysrgb";
 	
 	@xTarget(AFTER_CONTENT.class)  // dans le header
 	@xRessource
@@ -52,14 +54,15 @@ public class AppRoot extends XHTMLPart {
 				/***********************************************************************************************/		
 				.var("name", txt("Activity1"))
 				 
-				.var("cnt1", XHTMLPart.xDiv(XHTMLPart.xId("test1"), XHTMLPart.xAttr("style", "\"width: 100%; height: 30vh; background:url(" +image1 +") center / cover\"")))
-				.var("chart",  XHTMLPart.xElementPart(new ViewJSChart(XHTMLPart.xId("test")))	)
-				.var("cnt2", XHTMLPart.xDiv(XHTMLPart.xAttr("style", "\"width: 100%; height: 50vh; background:url(" +image3 +") center / cover\"")))
+				.var("cnt1", xDiv(xId("test1")/*,  ViewRippleEffect.cRippleEffect()*/, xAttr("data-x-action", "\"more\""),  xAttr("style", "\"width: 100%; height: 30vh; background:url(" +image6 +") center / cover\"")))
+				.var("chart",  xElementPart(new ViewJSChart(xId("test")))	)
+				.var("cnt2", xDiv(xAttr("style", "\"width: 100%; height: 50vh; background:url(" +image3 +") center / cover\"")))
 				 
 				.var("declaration1","{type:'page', id:name , children : ["
 						/********************************************************************/				
 						+ "{ selector: '#NavBar'+name, factory:'JSNavBar', rows : [ "
-						+ "				{type:'background', mode:'granim'},"
+//						+ "				{type:'background', mode:'granim', fct:"fct"},"
+						+ "				{type:'background', mode:'css', css:'url(" +image5 +") center / cover no-repeat' , opacity:0.3},"   //center / cover
 						+ "				{type:'burger' },"
 						+ "				{type:'name', name:'Elisa'},"
 						+ "				{type:'action', icon:'perm_identity', idAction:'identity'},"
@@ -90,7 +93,7 @@ public class AppRoot extends XHTMLPart {
 				/********************************************************************/
 				.set("name", txt("Activity2"))
 				
-				.set("cnt1", xDiv(xAttr("style", "\"width: 100%; height: 30vh; background:url(" +image2 +") center / cover\"")))
+				.set("cnt1", xDiv( xAttr("data-x-action", "\"link\""),  xAttr("style", "\"width: 100%; height: 30vh; background:url(" +image2 +") center / cover\"")))
 				.set("cnt2", xDiv(xAttr("style", "\"width: 100%; height: 50vh; background:url(" +image3 +") center / cover\"")))
 				.var("cnt3", xDiv(xAttr("style", "\"width: 100%; height: 30vh; background:url(" +image1 +") center / cover\"")))
 				.var("cnt4", xDiv(xAttr("style", "\"width: 100%; height: 30vh; background:url(" +image4 +") center / cover\"")))
@@ -98,7 +101,7 @@ public class AppRoot extends XHTMLPart {
 				.var("declaration2","{type:'page', id:name, active:false , children : ["
 						/********************************************************************/				
 						+ "{ selector: '#NavBar'+name, factory:'JSNavBar', rows : [ "
-						+ "				{type:'background', mode:'css', css:'url(" +image3 +") center / cover no-repeat' , opacity:0.3},"   //center / cover
+						+ "				{type:'background', mode:'css', css:'url(" +image6 +") center / cover no-repeat' , opacity:0.3},"   //center / cover
 						+ "				{type:'burger' },"
 						+ "				{type:'name', name:'Detail'},"
 						+ "				{type:'action', icon:'search', idAction:'search'},"
@@ -160,12 +163,16 @@ public class AppRoot extends XHTMLPart {
 				.__(tkActivity.prepareActivity("declaration2"))
 				.__(tkActivity.prepareActivity("declaration3"))
 				
+				
+				/*************************************************************/
+				
+				
 				/**************************************************************/
 				
 				.set("window.onCreateActivity1", fct()
 						.__(TKQueue.startAlone( 100,  fct()
-							.var("jCanvasGranim", "$('#NavBarActivity1 .animatedBg')[0]")
-							.__(NavBarAnimated1)
+//							.var("jCanvasGranim", "$('#NavBarActivity1 .animatedBg')[0]")
+//							.__(NavBarAnimated1)
 							)
 						)
 				)

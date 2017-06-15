@@ -45,7 +45,7 @@ public class ScnStandard extends XHTMLPart {
 	public static final int ZINDEX_FLOAT = 3;
 	public static final int ZINDEX_OVERLAY = 4;
 
-	public static final String bgColorScene = "#dddddd";
+	public static final String bgColorScene = "#333333";
 	public static final String bgColorTheme = "#ff359d";
 	public static final String bgColorThemeOpacity = "rgba(255,0,136,1)";
 	public static final String bgColor = "background: linear-gradient(to right, rgba(253,94,176,1) 0%, rgba(255,0,136,1) 64%, rgba(239,1,124,1) 100%);";
@@ -166,7 +166,7 @@ public class ScnStandard extends XHTMLPart {
 				
 	   		   	.set("navigator.vibrate", "navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate")
 	   		   	
-				.__("$.fn.insertAt = function(elements, index){\n"+
+				.__("$.fn.insertAt = function(elements, index){\n"+   // utiliser dans le core 
 						"\tvar children = this.children();\n"+
 						"\tif(index >= children.length){\n"+
 						"\t\tthis.append(elements);\n"+
@@ -211,9 +211,11 @@ public class ScnStandard extends XHTMLPart {
 						   ._else()
 						   	   // ripple sans ouverture d'activity		   
 							   .__(TKQueue.startAlone(fct()
-							   				.__("ripple.addClass('", ViewRippleEffect.cRippleEffectShow().getId() ,"')")
-									 ,CssTransition.SPEED_RIPPLE_EFFECT/3, fct()  // attente ripple effect
-							   		      	.__(tkrouter.doEvent("event"))
+						   		      		.__(tkrouter.doEvent("event"))
+						   		      , CssTransition.NEXT_FRAME	, fct()  // attente ripple effect
+							 //  				.__("ripple.addClass('", ViewRippleEffect.cRippleEffectShow().getId() ,"')")
+									 //,CssTransition.SPEED_RIPPLE_EFFECT/3, 
+
 									 ,CssTransition.SPEED_RIPPLE_EFFECT, fct()  // attente ripple effect
 								   		    .__("ripple.removeClass('", ViewRippleEffect.cRippleEffectShow().getId() ,"')")     	
 									   )

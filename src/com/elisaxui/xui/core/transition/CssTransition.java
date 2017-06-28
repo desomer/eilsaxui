@@ -2,6 +2,7 @@ package com.elisaxui.xui.core.transition;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
+import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xhtml.js.JSXHTMLPart;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataCtx;
@@ -43,12 +44,15 @@ public class CssTransition extends XHTMLPart {
 	public static final int SPEED_RIPPLE_EFFECT = 300;
 	public static final int SPEED_BURGER_EFFECT = 200;;
 	
+	static CSSClass activity;
+	static CSSClass fixedForAnimated;
 	
 	@xTarget(HEADER.class)
 	@xRessource
 	public Element xStyle() {
 		
-		return xCss()			
+		return xCss()
+				.select(activity.and(fixedForAnimated)).set("top:0px; position: fixed; transition:transform ",SPEED_SHOW_ACTIVITY,"ms linear;")
 				.on(".activity.fixedForAnimated", "top:0px; position: fixed; transition:transform "+SPEED_SHOW_ACTIVITY+"ms linear;")   // reste cacher en bas de la page et ne suit pas l'ascenceur
 
 				

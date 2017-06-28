@@ -17,4 +17,21 @@ public class CSSClass {
 	public void setId(String id) {
 		this.id = id;
 	}
+	
+	
+	public CSSSelector and(Object desc)
+	{
+		return CSSSelector.onPath(this, desc);
+	}
+	
+	
+	public CSSSelector descendant(Object desc)
+	{
+		return CSSSelector.onPath(this, " ", desc);
+	}
+	
+	public CSSSelector children(Object desc)
+	{
+		return CSSSelector.onPath(this, ">", desc);
+	}
 }

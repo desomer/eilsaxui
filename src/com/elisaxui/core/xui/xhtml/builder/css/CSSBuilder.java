@@ -46,6 +46,16 @@ public class CSSBuilder  extends Element {
 		return this;
 	}
 	
+	public CSSBuilder select(Object... path)
+	{
+		//listStyle.add(new CSSStyle(path));
+		return this;
+	}
+	
+	public CSSBuilder set(Object... content)
+	{
+		return this;	
+	}
 	
 	public static final class CSSStyle {
 		Object path;

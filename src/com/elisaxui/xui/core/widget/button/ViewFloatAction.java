@@ -8,7 +8,7 @@ import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
 import com.elisaxui.xui.core.page.ScnStandard;
 import com.elisaxui.xui.core.widget.container.ViewCard;
 
@@ -38,7 +38,7 @@ public class ViewFloatAction extends XHTMLPart {
 	
 	@xTarget(HEADER.class)
 	@xRessource
-	public Element xStyle() {
+	public XMLElement xStyle() {
 
 		return xCss()
 				.on(cFloatAction, "z-index:"+ScnStandard.ZINDEX_FLOAT+"; position: fixed; left: calc(90vw - 40px); top: calc(95vh - 40px); transform: translate3d(0px,0px,0px);")
@@ -46,11 +46,11 @@ public class ViewFloatAction extends XHTMLPart {
 	}
 	
 	@xTarget(CONTENT.class)
-	public static Element getTemplateBtnFloat() {
+	public static XMLElement getTemplateBtnFloat() {
 		return xDiv(cFloatAction, xIdAction("\"BtnFloatMain\""),	xPart(new ViewBtnCircle().addProperty(ViewBtnCircle.PROPERTY_ICON, "history")));
 	}
 	
-	public static Element getTemplate() {
+	public static XMLElement getTemplate() {
 		return xListElement(xPart(new ViewFloatAction() ));
 	}
 	

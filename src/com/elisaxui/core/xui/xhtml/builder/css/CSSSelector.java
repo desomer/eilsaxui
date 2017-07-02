@@ -33,4 +33,19 @@ public class CSSSelector {
 	public String toString() {
 		return selector.toString();
 	}
+	
+	public CSSSelector pseudoClass(Object desc)
+	{
+		return CSSSelector.onPath(this, ":", desc);
+	}
+	
+	public CSSSelector pseudoElem(Object desc)
+	{
+		return CSSSelector.onPath(this, "::", desc);
+	}
+	
+	public CSSSelector or(Object desc)
+	{
+		return CSSSelector.onPath(this, ",", desc);
+	}
 }

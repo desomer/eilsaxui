@@ -7,7 +7,7 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
 
 /**
  * @author Bureau
@@ -22,7 +22,7 @@ public class ViewMenuDivider extends XHTMLPart {
 	public static final String PROPERTY_ICON = "PROPERTY_ICON";
 	
 	@xTarget(CONTENT.class)
-	public Element xContenu() {
+	public XMLElement xContenu() {
 		return xLi(cDivider);
 	}
 }

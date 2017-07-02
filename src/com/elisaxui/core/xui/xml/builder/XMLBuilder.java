@@ -50,8 +50,8 @@ public class XMLBuilder {
 		this.id = id;
 	}
 
-	public static Element createElement(Object name, Object... inner) {
-		Element t = new Element(name, inner);
+	public static XMLElement createElement(Object name, Object... inner) {
+		XMLElement t = new XMLElement(name, inner);
 		return t;
 	}
 
@@ -102,7 +102,7 @@ public class XMLBuilder {
 	 * @author Bureau
 	 *
 	 */
-	public static class Element implements IXMLBuilder {
+	public static class XMLElement implements IXMLBuilder {
 		private Object name;
 		private Object comment;
 
@@ -111,7 +111,7 @@ public class XMLBuilder {
 		}
 
 		/** commentaire **/
-		public Element setComment(Object comment) {
+		public XMLElement setComment(Object comment) {
 			this.comment = comment;
 			return this;
 		}
@@ -123,7 +123,7 @@ public class XMLBuilder {
 			return nbInitialTab;
 		}
 
-		public Element setNbInitialTab(int nbInitialTab) {
+		public XMLElement setNbInitialTab(int nbInitialTab) {
 			this.nbInitialTab = nbInitialTab;
 			return this;
 		}
@@ -131,7 +131,7 @@ public class XMLBuilder {
 		protected List<Attr> listAttr = new ArrayList<>();
 		protected List<Object> listInner = new ArrayList<>();
 
-		public Element(Object name, Object... inner) {
+		public XMLElement(Object name, Object... inner) {
 			super();
 			this.name = name;
 
@@ -237,16 +237,16 @@ public class XMLBuilder {
 
 		private int doChild(XMLBuilder buf, int nbChild, Object inner) {
 
-			if (inner instanceof Element) {
+			if (inner instanceof XMLElement) {
 				nbChild++;
-				Element tag = ((Element) inner);
+				XMLElement tag = ((XMLElement) inner);
 				tag.nbTabInternal = this.nbTabInternal + 1;
 				tag.nbInitialTab = this.nbInitialTab;
 				tag.toXML(buf);
 			} else if (inner instanceof Part) {
 				Part part = ((Part) inner);
 				nbChild++;
-				for (Element elem : part.part.getListElement(CONTENT.class)) {
+				for (XMLElement elem : part.part.getListElement(CONTENT.class)) {
 					elem.nbTabInternal = this.nbTabInternal + 1;
 					elem.nbInitialTab = this.nbInitialTab;
 				}
@@ -263,7 +263,7 @@ public class XMLBuilder {
 				Object handledObject = null;
 				for (Iterator<Object> it = listParent.descendingIterator(); it.hasNext();) {
 					Object elm = it.next();
-					if (elm instanceof Element) {
+					if (elm instanceof XMLElement) {
 						// MgrErrorNotificafion.doError("Handle on Element",
 						// null);
 					} else if (elm instanceof Part) {
@@ -342,11 +342,11 @@ public class XMLBuilder {
 		public XMLBuilder toXML(XMLBuilder buf) {
 			XUIFactoryXHtml.getXMLFile().listParent.add(this);
 			buf.after = false;
-			for (Element elem : part.getListElement(CONTENT.class)) {
+			for (XMLElement elem : part.getListElement(CONTENT.class)) {
 				elem.toXML(buf);
 			}
 			buf.after = true;
-			for (Element elem : part.getListElement(AFTER_CONTENT.class)) {
+			for (XMLElement elem : part.getListElement(AFTER_CONTENT.class)) {
 				elem.toXML(buf);
 			}
 			buf.after = false;

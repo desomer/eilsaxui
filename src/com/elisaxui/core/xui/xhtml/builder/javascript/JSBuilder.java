@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
 
 
 /**
@@ -25,7 +25,7 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
  *
  */
 
-public class JSBuilder extends Element {     // Element pour tabulation 
+public class JSBuilder extends XMLElement {     // Element pour tabulation 
 	
 	public JSBuilder(Object name, Object[] inner) {
 		// TODO Auto-generated constructor stub

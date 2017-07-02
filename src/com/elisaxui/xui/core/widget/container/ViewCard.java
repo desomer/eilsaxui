@@ -8,7 +8,7 @@ import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
 import com.elisaxui.xui.core.widget.button.ViewBtnBurger;
 
 /**
@@ -21,7 +21,7 @@ public class ViewCard extends XHTMLPart {
 	
 	@xTarget(HEADER.class)
 	@xRessource
-	public Element xStyle() {
+	public XMLElement xStyle() {
 
 		return xCss()
 				.on(cPanel, "padding: 15px;"
@@ -35,11 +35,11 @@ public class ViewCard extends XHTMLPart {
 	}
 	
 	@xTarget(CONTENT.class)
-	public Element xViewPanel() {
+	public XMLElement xViewPanel() {
 		return xDiv(cPanel, this.getChildren());
 	}
 	
-	public static Element getTemplate(ViewCard card) {
+	public static XMLElement getTemplate(ViewCard card) {
 		return xListElement(xPart(card, vHandle("childrenCard") ));
 	}
 }

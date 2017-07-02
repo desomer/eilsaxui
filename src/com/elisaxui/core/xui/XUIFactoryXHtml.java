@@ -25,7 +25,7 @@ import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.XMLPart.CONTENT;
 import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
 
 import javax.ws.rs.core.UriInfo;
 
@@ -72,9 +72,9 @@ public class XUIFactoryXHtml {
 			buf.append("<!doctype html>");
 			((XHTMLRoot) file.getRoot()).setLang(loc.toLanguageTag());
 			file.getRoot().initContent(null);
-			ArrayList<Element> rootContent = file.getRoot().getListElement(CONTENT.class);
+			ArrayList<XMLElement> rootContent = file.getRoot().getListElement(CONTENT.class);
 
-			for (Element elem : rootContent) {
+			for (XMLElement elem : rootContent) {
 				elem.toXML(new XMLBuilder("page", buf, null));
 			}
 
@@ -92,10 +92,10 @@ public class XUIFactoryXHtml {
 		try {
 			XHTMLPart page = pageClass.newInstance();
 			page.initContent(file.getRoot());
-			for (Element elem : page.getListElement(CONTENT.class)) {
+			for (XMLElement elem : page.getListElement(CONTENT.class)) {
 				page.vBody(elem);
 			}
-			for (Element elem : page.getListElement(AFTER_CONTENT.class)) {
+			for (XMLElement elem : page.getListElement(AFTER_CONTENT.class)) {
 				page.vAfterBody(elem);
 			}
 		} catch (InstantiationException | IllegalAccessException e) {

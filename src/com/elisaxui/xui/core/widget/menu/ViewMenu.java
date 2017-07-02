@@ -14,7 +14,7 @@ import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
 import com.elisaxui.xui.admin.page.JSTest2Class;
 import com.elisaxui.xui.admin.page.JSTestClass;
 import com.elisaxui.xui.admin.page.JSTestDataDriven;
@@ -43,7 +43,7 @@ public class ViewMenu extends XHTMLPart {
 
 	@xTarget(HEADER.class)
 	@xRessource
-	public Element xStyle() {
+	public XMLElement xStyle() {
 
 		return xCss()
 				.on(cMenu, "z-index: "+ScnStandard.ZINDEX_MENU+";background-color: #ffffff;height: 120%;width: " + ScnStandard.widthMenu
@@ -72,7 +72,7 @@ public class ViewMenu extends XHTMLPart {
 	}
 
 	@xTarget(CONTENT.class)
-	public Element xContenu() {
+	public XMLElement xContenu() {
 		return xDiv(cMenu, cFixedLeft,
 				xDiv(xDiv(cHeaderMenu),
 						xUl(this.getChildren())));
@@ -80,14 +80,14 @@ public class ViewMenu extends XHTMLPart {
 
 	@xTarget(HEADER.class)
 	@xRessource
-	public Element xImportAllClass() {
+	public XMLElement xImportAllClass() {
 		return xListElement(
 			//	xImport(JSMenu.class)
 				);
 	}
 
 
-	public static Element getTemplateMenu(Object name, Object icon, Object idAction) {
+	public static XMLElement getTemplateMenu(Object name, Object icon, Object idAction) {
 		return xListElement(xPart(new ViewMenuItems()
 				.addProperty(ViewMenuItems.PROPERTY_NAME, xVar(name))
 				.addProperty(ViewMenuItems.PROPERTY_ICON, xVar(icon))
@@ -95,7 +95,7 @@ public class ViewMenu extends XHTMLPart {
 				));
 	}
 	
-	public static Element getTemplateMenuDivider() {
+	public static XMLElement getTemplateMenuDivider() {
 		return xListElement(xPart(new ViewMenuDivider()));
 	}
 }

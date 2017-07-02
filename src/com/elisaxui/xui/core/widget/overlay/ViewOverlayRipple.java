@@ -8,7 +8,7 @@ import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
 import com.elisaxui.core.xui.xml.XMLPart.CONTENT;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
 import com.elisaxui.xui.core.page.ScnStandard;
 import static  com.elisaxui.xui.core.transition.CssTransition.*;
 /**
@@ -20,7 +20,7 @@ public class ViewOverlayRipple extends XHTMLPart {
 	
 	@xTarget(HEADER.class)
 	@xRessource
-	public Element xStyle() {
+	public XMLElement xStyle() {
 		
 		return xCss()
 				.on(".ripple_overlay","position: absolute;	"
@@ -37,11 +37,11 @@ public class ViewOverlayRipple extends XHTMLPart {
 	}
 	
 	@xTarget(CONTENT.class)
-	public Element xContenu() {
+	public XMLElement xContenu() {
 		return xDiv(xAttr("class", "\"ripple_overlay\""), this.getChildren());
 	}
 	
-	public static Element xTemplate() {
+	public static XMLElement xTemplate() {
 			return xListElement( xPart( new ViewOverlayRipple()  ));	
 	}
 

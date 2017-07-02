@@ -18,7 +18,7 @@ import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Attr;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Handle;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Part;
 import com.elisaxui.core.xui.xml.builder.XMLTarget;
@@ -43,7 +43,7 @@ public class XMLPart {
 		
 	};
 
-	protected HashMap<Class<? extends XMLTarget>, ArrayList<Element>> listPart = new HashMap<Class<? extends XMLTarget>, ArrayList<Element>>();
+	protected HashMap<Class<? extends XMLTarget>, ArrayList<XMLElement>> listPart = new HashMap<Class<? extends XMLTarget>, ArrayList<XMLElement>>();
 	protected HashMap<Object, Object> listProperties = new HashMap<Object, Object>(); 
 	
 	
@@ -59,9 +59,9 @@ public class XMLPart {
 		return (E) listProperties.get(key);
 	}
 	
-	public Element getPropertyElement(Object key)
+	public XMLElement getPropertyElement(Object key)
 	{
-		return (Element)listProperties.get(key);
+		return (XMLElement)listProperties.get(key);
 	}
 	
 	public Attr getPropertyXID(Object key)
@@ -72,8 +72,8 @@ public class XMLPart {
 	@Deprecated
 	private final List<Object> children = new ArrayList<>();
 
-	public void addElement(Class<? extends XMLTarget> target, Element value) {
-		ArrayList<Element> partData = listPart.get(target);
+	public void addElement(Class<? extends XMLTarget> target, XMLElement value) {
+		ArrayList<XMLElement> partData = listPart.get(target);
 		if (partData == null) {
 			partData = new ArrayList<>(100);
 			listPart.put(target, partData);
@@ -82,9 +82,9 @@ public class XMLPart {
 
 	}
 
-	private ArrayList<Element> none = new ArrayList<>();
-	public ArrayList<Element> getListElement(Class<? extends XMLTarget> part) {
-		ArrayList<Element> list =  listPart.get(part);
+	private ArrayList<XMLElement> none = new ArrayList<>();
+	public ArrayList<XMLElement> getListElement(Class<? extends XMLTarget> part) {
+		ArrayList<XMLElement> list =  listPart.get(part);
 		if (list!=null)
 			return list;
 		else
@@ -163,7 +163,7 @@ public class XMLPart {
 		if (target != null) {
 			try {
 
-				Element elem = ((Element) method.invoke(this, new Object[] {}));
+				XMLElement elem = ((XMLElement) method.invoke(this, new Object[] {}));
 				elem.setComment(getComment(method));
 				Class<? extends XMLTarget> targetClass = target.value();
 				//System.out.println(this.getClass().getSimpleName() + "#" + method.getName() );
@@ -218,11 +218,11 @@ public class XMLPart {
 		return children;
 	}
 
-	public final void vContent(Element part) {
+	public final void vContent(XMLElement part) {
 		addElement(CONTENT.class, part);
 	}
 
-	public final void vAfterContent(Element part) {
+	public final void vAfterContent(XMLElement part) {
 		addElement(AFTER_CONTENT.class, part);
 	}
 
@@ -230,16 +230,16 @@ public class XMLPart {
 		return XMLBuilder.createPart(part, inner);
 	}
 	
-	public final static Element xElementPart(XMLPart part, Object... inner) {
+	public final static XMLElement xElementPart(XMLPart part, Object... inner) {
 		return xElement(null, XMLBuilder.createPart(part, inner));
 	}
 	
-	public final static Element xElement(String name, Object... inner) {
-		Element tag = XMLBuilder.createElement(name, inner);
+	public final static XMLElement xElement(String name, Object... inner) {
+		XMLElement tag = XMLBuilder.createElement(name, inner);
 		return tag;
 	}
 
-	public final static Element xListElement(Object... array) {
+	public final static XMLElement xListElement(Object... array) {
 		return xElement(null, array);
 	}
 

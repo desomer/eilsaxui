@@ -10,7 +10,7 @@ import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
 
 /**
  * 
@@ -24,13 +24,13 @@ public class ScnAdminMain extends XHTMLPart {
 
 	@xTarget(HEADER.class)
 	@xRessource
-	public Element xTitle() {
+	public XMLElement xTitle() {
 		return xElement("title", "un titre");
 	}
 
 	@xTarget(HEADER.class)
 	@xRessource
-	public Element xImportJQUERY() {
+	public XMLElement xImportJQUERY() {
 		return	xElement("/","<script  src='http://code.jquery.com/jquery-3.2.1.min.js'"
 				+ "  integrity='sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4='  crossorigin='anonymous'></script>"
 				+"<script  src='https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js'></script>"
@@ -40,7 +40,7 @@ public class ScnAdminMain extends XHTMLPart {
 	
 	@xTarget(HEADER.class)
 	@xRessource
-	public Element xImportAllClass() {
+	public XMLElement xImportAllClass() {
 		return xListElement(
 				xImport(JSTestClass.class),
 				xImport(JSTest2Class.class),
@@ -53,7 +53,7 @@ public class ScnAdminMain extends XHTMLPart {
 	}
 	
 	@xTarget(CONTENT.class)
-	public Element xContenu() {
+	public XMLElement xContenu() {
 		return xDiv(xH1(xId("'test'"), xAttr("style", "'display:inline-block'"), "un ActListPage :",
 				xPart(new ActListPage()
 						.addProperty(ActListPage.PROPERTY_NAME, xDiv("property name ok"))
@@ -70,7 +70,7 @@ public class ScnAdminMain extends XHTMLPart {
 	JSTestDataDriven testDataDriven;
 	
 	@xTarget(AFTER_CONTENT.class)
-	public Element xAddJS() {
+	public XMLElement xAddJS() {
 		return 			
 				xScriptJS(js()
 						
@@ -118,7 +118,7 @@ public class ScnAdminMain extends XHTMLPart {
 	
 	static String panel="\"padding: 5px;margin-bottom: 20px;border-radius: 0;background-color: #FFF;box-shadow: 0 2px 2px 0 rgba(0,0,0,.16), 0 0 2px 0 rgba(0,0,0,.12);\"";
 	
-	public static Element xTemplateDataDriven(Object value, Object value2)
+	public static XMLElement xTemplateDataDriven(Object value, Object value2)
 	{
 		return 	xDiv(xAttr("style", panel), xVar(value), xSpan("-"), xSpan(xVar(value2)) );	
 	}

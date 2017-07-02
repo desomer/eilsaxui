@@ -5,7 +5,7 @@ package com.elisaxui.xui.core.widget.chart;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
 
 /**
  * @author Bureau
@@ -24,7 +24,7 @@ public class ViewJSChart extends XHTMLPart {
 
 
 	@xTarget(CONTENT.class)
-	public Element xContenu() {
+	public XMLElement xContenu() {
 		return xCanvas(this.getProperty(ID), xAttr("width", "100%")/* , xAttr("height", "300px")*/ ) ;
 		
 	}
@@ -70,7 +70,7 @@ public class ViewJSChart extends XHTMLPart {
 	
 	
 	@xTarget(AFTER_CONTENT.class)
-	public Element xAddJS() {
+	public XMLElement xAddJS() {
 		return xScriptJS(js()
 				  .var("options", doughnutOptions)
 				  .var("data", doughnutData)

@@ -15,7 +15,7 @@ import com.elisaxui.core.xui.XUILaucher;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
 import com.elisaxui.core.xui.xml.builder.XMLTarget;
 import com.elisaxui.core.xui.xml.builder.XMLTarget.ITargetRoot;
 import com.elisaxui.helper.ClassLoaderHelper;
@@ -49,7 +49,7 @@ public class XHTMLRoot extends XHTMLPart {
 	static long lastOlderFile = 0;
 	
 	@xTarget(XMLPart.CONTENT.class)
-	public Element xGetContent() {
+	public XMLElement xGetContent() {
 		LocalDateTime now = LocalDateTime.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -90,7 +90,7 @@ public class XHTMLRoot extends XHTMLPart {
 		xListElement(getListElement(AFTER_BODY.class)).setNbInitialTab(0)
 				.toXML(new XMLBuilder("page", textAfterbody, null));
 		
-		ArrayList<Element> header = getListElement(HEADER.class);
+		ArrayList<XMLElement> header = getListElement(HEADER.class);
 		Collections.reverse(header);
 
 		return xElement("html", xAttr("lang", xTxt(lang)),

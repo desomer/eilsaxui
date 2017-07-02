@@ -30,7 +30,12 @@ public class CSSClass {
 		return CSSSelector.onPath(this, " ", desc);
 	}
 	
-	public CSSSelector children(Object desc)
+	public CSSSelector __(Object desc)
+	{
+		return descendant(desc) ;
+	}
+	
+	public CSSSelector directChildren(Object desc)
 	{
 		return CSSSelector.onPath(this, ">", desc);
 	}

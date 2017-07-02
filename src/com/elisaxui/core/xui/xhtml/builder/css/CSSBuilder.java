@@ -4,9 +4,9 @@ import java.util.LinkedList;
 
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Attr;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
 
-public class CSSBuilder  extends Element {
+public class CSSBuilder  extends XMLElement {
 	
 	public CSSBuilder()
 	{
@@ -48,12 +48,13 @@ public class CSSBuilder  extends Element {
 	
 	public CSSBuilder select(Object... path)
 	{
-		//listStyle.add(new CSSStyle(path));
+		listStyle.add(new CSSStyle(CSSSelector.onPath(path), null));
 		return this;
 	}
 	
-	public CSSBuilder set(Object... content)
+	public CSSBuilder set(Object content)
 	{
+		listStyle.getLast().content = content;
 		return this;	
 	}
 	

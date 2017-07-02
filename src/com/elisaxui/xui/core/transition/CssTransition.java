@@ -12,7 +12,7 @@ import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
 import com.elisaxui.xui.admin.page.JSTestDataDriven;
 import com.elisaxui.xui.core.page.ScnStandard;
 import com.elisaxui.xui.core.toolkit.TKActivity;
@@ -49,12 +49,10 @@ public class CssTransition extends XHTMLPart {
 	
 	@xTarget(HEADER.class)
 	@xRessource
-	public Element xStyle() {
+	public XMLElement xStyle() {
 		
 		return xCss()
-				.select(activity.and(fixedForAnimated)).set("top:0px; position: fixed; transition:transform ",SPEED_SHOW_ACTIVITY,"ms linear;")
-				.on(".activity.fixedForAnimated", "top:0px; position: fixed; transition:transform "+SPEED_SHOW_ACTIVITY+"ms linear;")   // reste cacher en bas de la page et ne suit pas l'ascenceur
-
+				.select(activity.and(fixedForAnimated)).set("top:0px; position: fixed; transition:transform "+SPEED_SHOW_ACTIVITY +"ms linear;")
 				
 				.on(".activity.backToFront", "transition:transform "+(SPEED_SHOW_ACTIVITY+100)+"ms linear;")
 				

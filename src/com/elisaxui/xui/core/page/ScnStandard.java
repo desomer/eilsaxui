@@ -11,7 +11,7 @@ import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
 import com.elisaxui.xui.admin.AppRoot;
 import com.elisaxui.xui.admin.page.JSTestDataDriven;
 import com.elisaxui.xui.core.toolkit.TKActivity;
@@ -62,7 +62,7 @@ public class ScnStandard extends XHTMLPart {
     
 	@xTarget(HEADER.class)
 	@xRessource
-	public Element xImport() {
+	public XMLElement xImport() {
 		return xListElement(
 				
 				xElement("title", "le standard"),
@@ -102,7 +102,7 @@ public class ScnStandard extends XHTMLPart {
 		
 	@xTarget(HEADER.class)
 	@xRessource
-	public Element xStyle() {
+	public XMLElement xStyle() {
 		
 		return xCss()
 				.on("html", "font-size: 14px; line-height: 1.5;"
@@ -129,7 +129,7 @@ public class ScnStandard extends XHTMLPart {
 	}
 
 	@xTarget(CONTENT.class)
-	public Element xContenu() {
+	public XMLElement xContenu() {
 		return 
 			xListElement(
 				xPart(new ViewMenu()),
@@ -141,7 +141,7 @@ public class ScnStandard extends XHTMLPart {
 	
 	@xTarget(AFTER_CONTENT.class)
 	@xRessource
-	public Element xImportStart() {
+	public XMLElement xImportStart() {
 		return xListElement(
 				xScriptJS(js()
 						// a mettre dans TKConfig
@@ -160,7 +160,7 @@ public class ScnStandard extends XHTMLPart {
 	}
 		
 	@xTarget(AFTER_CONTENT.class)
-	public Element xAddJS() {
+	public XMLElement xAddJS() {
 		
 		return xScriptJS(js()
 				

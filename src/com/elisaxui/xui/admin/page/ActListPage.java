@@ -6,7 +6,7 @@ import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.annotation.xVersion;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
 
 @xComment("activite liste des pages")
 public class ActListPage extends XHTMLPart {
@@ -16,18 +16,18 @@ public class ActListPage extends XHTMLPart {
 	@xTarget(BODY.class)
 	@xRessource
 	@xVersion("1.2")
-	public Element xAddBody() {
+	public XMLElement xAddBody() {
 		return xSpan("ca marche target body ", this.getPropertyElement(PROPERTY_NAME));
 	}
 	
 	@xTarget(CONTENT.class)
-	public Element xListe() {
+	public XMLElement xListe() {
 		return xButton("ok", xPart(new ViewItem()), xUl(this.getChildren()));
 	}
 
 	@xTarget(AFTER_CONTENT.class)
 //	@xRessource
-	public Element xAddJS() {
+	public XMLElement xAddJS() {
 		return xScriptJS(js().__("console.debug('ActListPage.xAddJS')"));
 	}
 

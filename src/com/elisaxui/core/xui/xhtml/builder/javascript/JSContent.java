@@ -1,18 +1,22 @@
 package com.elisaxui.core.xui.xhtml.builder.javascript;
 
 import java.lang.reflect.Proxy;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder.JSNewLine;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder.aInvocationHandler;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
 
+/**
+ * super class de JSClass et JSFunction
+ * herite de JSMethod
+ * 
+ * @author Bureau
+ *
+ */
 public class JSContent implements XMLBuilder.IXMLBuilder, JSMethodInterface {
 	/**
 	 * 
@@ -43,8 +47,8 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSMethodInterface {
 			if (object == JSNewLine.class) {
 				this.jsBuilder.newLine(buf);
 				this.jsBuilder.newTabulation(buf);
-			} else if (object instanceof Element) {
-				doXMLElement(buf, ((Element) object));
+			} else if (object instanceof XMLElement) {
+				doXMLElement(buf, ((XMLElement) object));
 			} else if (object instanceof JSFunction) {
 				JSFunction fct = (JSFunction) object;
 				jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab() + 1);
@@ -57,6 +61,7 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSMethodInterface {
 //				c.toXML(buf);
 			} else {
 				if (buf.isJS())
+					// ajout d'un JS
 					buf.addContent(object.toString().replaceAll("'", "\\\\'"));
 				else
 					buf.addContent(object);
@@ -65,7 +70,12 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSMethodInterface {
 		return buf;
 	}
 
-	private void doXMLElement(XMLBuilder buf, Element elem) {
+	/**
+	 * ajout d'une div+js (XMLElement dans un JS)
+	 * @param buf
+	 * @param elem
+	 */
+	private void doXMLElement(XMLBuilder buf, XMLElement elem) {
 		StringBuilder txtXML = new StringBuilder(1000);
 		StringBuilder txtXMLAfter = new StringBuilder(1000);
 
@@ -80,6 +90,11 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSMethodInterface {
 		buf.addContent("')");
 	}
 
+	/**
+	 * utiliser par les set et var avec un new
+	 * @param name
+	 * @param object
+	 */
 	private void addElem(Object name, Object object) {
 		if (object instanceof JSVariable && name instanceof JSClass) {
 			aInvocationHandler inv = (aInvocationHandler) Proxy.getInvocationHandler(name);
@@ -88,6 +103,10 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSMethodInterface {
 			addElem(object);
 	}
 
+	/**
+	 * Boucle sur un tableau
+	 * @param object
+	 */
 	private void addElem(Object object) {
 		if (object instanceof List && ! (object instanceof JSMethodInterface)) {
 			@SuppressWarnings("unchecked")
@@ -153,7 +172,7 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSMethodInterface {
 		listElem.add(name);
 		listElem.add("=");
 		for (Object object : content) {
-			addElem(name, object);
+			addElem(name, object);  // pour le new class
 		}
 		listElem.add(";");
 		return this;

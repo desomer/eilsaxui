@@ -10,7 +10,7 @@ import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
 
 /**
  * @author Bureau
@@ -81,7 +81,7 @@ public class TKQueue extends XHTMLPart {
 			
 	@xTarget(HEADER.class)
 	@xRessource
-	public Element xAddJS() {
+	public XMLElement xAddJS() {
 		return xScriptJS(
 				js().__(queuejs));
 	}

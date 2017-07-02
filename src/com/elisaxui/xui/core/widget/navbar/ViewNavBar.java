@@ -9,7 +9,7 @@ import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
 import com.elisaxui.xui.core.page.ScnStandard;
 import com.elisaxui.xui.core.widget.button.ViewBtnBurger;
 import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
@@ -31,7 +31,7 @@ public class ViewNavBar extends XHTMLPart {
 	
 	@xTarget(HEADER.class)
 	@xRessource
-	public Element xStyle() {
+	public XMLElement xStyle() {
 		
 		return xCss()    //"+ScnStandard.bgColor+"
 				.on(".navbar","z-index: "+ScnStandard.ZINDEX_NAV_BAR+";  "+ScnStandard.bgColor+" height: "+ScnStandard.heightNavBar+"px;width: 100%; color:white; "
@@ -56,39 +56,39 @@ public class ViewNavBar extends XHTMLPart {
 	
 	@xTarget(HEADER.class)
 	@xRessource
-	public Element xImportAllClass() {
+	public XMLElement xImportAllClass() {
 		return xListElement(
 				xImport(JSNavBar.class));
 	}
 	
 	@xTarget(CONTENT.class)
-	public Element xContenu() {  
+	public XMLElement xContenu() {  
 		return xDiv( xId(this.getProperty(PROPERTY_NAME)), xAttr("class", "\"navbar fixedTop\""),
 				//
 				this.getChildren());
 	}
 	
-	public static Element getTemplateBtnBurger() {
+	public static XMLElement getTemplateBtnBurger() {
 		return xListElement(xPart(new ViewBtnBurger()));
 	}
 	
-	public static Element getTemplateActionBar() {
+	public static XMLElement getTemplateActionBar() {
 		return xDiv(xAttr("class", "\"rightAction\""));
 	}
 	
-	public static Element getTemplateName(Object name) {
+	public static XMLElement getTemplateName(Object name) {
 		return xDiv(xAttr("class", "\"center\""), xDiv(xAttr("class", "\"logo\""), xVar(name)));
 	}
 	
-	public static Element getTemplateAction(Object name, Object action) {
+	public static XMLElement getTemplateAction(Object name, Object action) {
 		return xElement("button", xAttr("data-x-action", txt(xVar(action))), actionBtnContainer, ViewRippleEffect.cRippleEffect() , xAttr("type", "\"button\""),  "<i class=\"actionBtn material-icons\">",xVar(name),"</i>");
 	}
 	
-	public static Element getTemplateBgCanvas() {
+	public static XMLElement getTemplateBgCanvas() {
 		return xElement("canvas", animatedBg); // pour granim;
 	}
 	
-	public static Element getTemplateBgDiv() {
+	public static XMLElement getTemplateBgDiv() {
 		return xElement("div", animatedBg); 
 	}
 	

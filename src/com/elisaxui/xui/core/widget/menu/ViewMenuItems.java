@@ -5,7 +5,7 @@ package com.elisaxui.xui.core.widget.menu;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Element;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
 import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
 
 /**
@@ -19,7 +19,7 @@ public class ViewMenuItems extends XHTMLPart {
 	public static final String PROPERTY_ACTION = "PROPERTY_ACTION";
 	
 	@xTarget(CONTENT.class)
-	public Element xContenu() {
+	public XMLElement xContenu() {
 		return xLi(ViewRippleEffect.cRippleEffect(), ViewRippleEffect.cRippleEffectColorBack(), xIdAction(this.getProperty(PROPERTY_ACTION)), xA("<i class=\"material-icons\">", this.getProperty(PROPERTY_ICON) ,"</i>", this.getProperty(PROPERTY_NAME) ));
 	}
 }

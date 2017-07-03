@@ -10,7 +10,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSListParameter;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Attr;
@@ -140,7 +140,7 @@ public abstract class XHTMLPart extends XMLPart {
 
 	/****************************************************************************/
 	public Object _new(Object... param) {
-		return new JSVariable(param);
+		return new JSListParameter(param);
 	}
 
 	public static String txt(Object var) {

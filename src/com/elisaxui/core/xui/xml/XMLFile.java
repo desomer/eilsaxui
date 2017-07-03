@@ -13,6 +13,7 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassImpl;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.helper.ReflectionHelper;
 
 public class XMLFile {
@@ -31,20 +32,19 @@ public class XMLFile {
 			impl.setName(cl.getSimpleName());
 
 			listClass.put(name, impl);
-			 
-			// init field  => chaque attribut contient le nom js de son champs
+
+			// init field => chaque attribut contient le nom js de son champs
 			Field[] listField = cl.getDeclaredFields();
 			if (listField != null) {
 				for (Field field : listField) {
 					if (JSClass.class.isAssignableFrom(field.getType())) {
-						// gestion particuliere d'un proxy pour affecter le nom au proxy
+						// gestion particuliere d'un proxy pour affecter le nom
+						// au proxy
 						@SuppressWarnings("unchecked")
 						JSClass prox = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) field.getType());
-						if ( field.getName().startsWith("_"))
-						{
+						if (field.getName().startsWith("_")) {
 							XHTMLPart.jsBuilder.setNameOfProxy("", prox, field.getName().substring(1));
-						}
-						else
+						} else
 							XHTMLPart.jsBuilder.setNameOfProxy("this.", prox, field.getName());
 						try {
 							ReflectionHelper.setFinalStatic(field, prox);
@@ -52,19 +52,33 @@ public class XMLFile {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-					} else
+					} else if (JSVariable.class.isAssignableFrom(field.getType())) {
 						try {
-							if ( field.getName().startsWith("_"))
+							JSVariable var =(JSVariable) field.getType().newInstance();
+							if (field.getName().startsWith("_"))
+								var.setName(field.getName().substring(1));
+							else
+								var.setName("this." + field.getName());
+								  
+						    ReflectionHelper.setFinalStatic(field, var);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					} else
+						// affecte le nom de la variable
+						try {
+							if (field.getName().startsWith("_"))
 								ReflectionHelper.setFinalStatic(field, field.getName().substring(1));
 							else
-								ReflectionHelper.setFinalStatic(field, "this."+field.getName());
+								ReflectionHelper.setFinalStatic(field, "this." + field.getName());
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 				}
 			}
-			
+
 			// init constructor
 			JSClass inst = XHTMLPart.jsBuilder.getProxy(cl);
 			Method[] lism = cl.getDeclaredMethods();
@@ -73,9 +87,10 @@ public class XMLFile {
 					if (method.getName().equals("constructor")) {
 						try {
 							method.invoke(inst, new Object[method.getParameterCount()]);
-						} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException| SecurityException e) {
-							 ErrorNotificafionMgr.doError("pb constructor sur " + cl.getSimpleName() , e);
-							 e.printStackTrace();
+						} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+								| SecurityException e) {
+							ErrorNotificafionMgr.doError("pb constructor sur " + cl.getSimpleName(), e);
+							e.printStackTrace();
 						}
 
 					}

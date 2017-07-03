@@ -59,6 +59,8 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSMethodInterface {
 //			} else if (object instanceof JSContent && (this != object)) {
 //				JSContent c = (JSContent) object;
 //				c.toXML(buf);
+			} else if (object instanceof JSVariable) {	
+				buf.addContent(((JSVariable)object).toString());
 			} else {
 				if (buf.isJS())
 					// ajout d'un JS
@@ -96,9 +98,9 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSMethodInterface {
 	 * @param object
 	 */
 	private void addElem(Object name, Object object) {
-		if (object instanceof JSVariable && name instanceof JSClass) {
+		if (object instanceof JSListParameter && name instanceof JSClass) {
 			aInvocationHandler inv = (aInvocationHandler) Proxy.getInvocationHandler(name);
-			listElem.add(JSClass._new(inv.implementClass, ((JSVariable) object).param));
+			listElem.add(JSClass._new(inv.implementClass, ((JSListParameter) object).param));
 		} else
 			addElem(object);
 	}
@@ -258,7 +260,7 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSMethodInterface {
 	 */
 	@Override
 	public Object _new(Object... param) {
-		return new JSVariable(param);
+		return new JSListParameter(param);
 	}
 
 	@Override

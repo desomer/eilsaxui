@@ -9,6 +9,13 @@ package com.elisaxui.core.xui.xhtml.builder.css;
  */
 public class CSSClass {
 	String id;
+	
+	
+	
+	@Override
+	public String toString() {
+		return "CSSClass [id=" + id + "]";
+	}
 
 	public String getId() {
 		return id;

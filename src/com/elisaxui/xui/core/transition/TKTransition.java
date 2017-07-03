@@ -3,13 +3,17 @@
  */
 package com.elisaxui.xui.core.transition;
 
+import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
 import com.elisaxui.core.xui.xhtml.js.JSXHTMLPart;
 import com.elisaxui.xui.core.page.ScnStandard;
+import com.elisaxui.xui.core.toolkit.JQuery;
 import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.widget.overlay.JSOverlay;
 import com.elisaxui.xui.core.widget.overlay.ViewOverlayRipple;
 import static  com.elisaxui.xui.core.transition.CssTransition.*;
+import static  com.elisaxui.xui.core.toolkit.JQuery.*;
+import static  com.elisaxui.xui.core.widget.navbar.ViewNavBar.*;
 /**
  * @author Bureau
  *
@@ -35,14 +39,18 @@ public interface TKTransition extends JSClass {
 	JSOverlay _overlay = null;
 	TKTransition _this = null;
 	TKTransition _self = null;
+	JQuery _jqNavBar = null;
+	JQuery _jqActivityActive = null;
 	
 	default Object doNavBarToActivity(Object sct) {
-		var("jqNavBar", "$('body>.navbar')")
-		.var("jqActivityActive", "$('.activity.active')")
+		var(_jqNavBar, $(CSSSelector.onPath("body>.navbar")))
+		//.var("jqNavBar", "$('body>.navbar')")
+		.var(_jqActivityActive, $(activity.and(active)))
+		//.var("jqActivityActive", "$('.activity.active')")
 		//-----------  detache la barre nav en haut par rapport au scroll et ajoute a l'activité  --------
 		.__("jqNavBar.detach()")
 		.__("jqNavBar.css('transform', 'translate3d(0px,'+sct+'px,0px)' )")		
-		.__("jqNavBar.addClass('fixedToAbsolute')") // permet la nav de bouger
+		.__(_jqNavBar.addClass(fixedToAbsolute)) // permet la nav de bouger
 		.__("jqActivityActive.prepend(jqNavBar)") 
 		;
 		return null;

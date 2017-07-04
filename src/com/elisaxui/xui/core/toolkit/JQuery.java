@@ -42,4 +42,19 @@ public class JQuery extends JSClassMethod {
 		return callMth("removeClass", classes);
 	}
 	
+	public JQuery detach()
+	{
+		return callMth("detach", null);
+	}
+	
+	public JQuery prepend(Object...classes)
+	{
+		return callMth("prepend", classes);
+	}
+	
+	public JQuery css(Object attr, Object value)
+	{
+		return callMth("css", addText(attr), "," ,addText(value));
+	}
+	
 }

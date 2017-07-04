@@ -37,6 +37,8 @@ public class XMLFile {
 			Field[] listField = cl.getDeclaredFields();
 			if (listField != null) {
 				for (Field field : listField) {
+					System.out.println("init var "+ field.getName() + " from "+ cl.getName());
+					
 					if (JSClass.class.isAssignableFrom(field.getType())) {
 						// gestion particuliere d'un proxy pour affecter le nom
 						// au proxy

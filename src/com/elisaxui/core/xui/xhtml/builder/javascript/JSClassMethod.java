@@ -43,11 +43,15 @@ public class JSClassMethod extends JSVariable {
 				
 				if (object instanceof CSSClass)
 					listContent.add(((CSSClass)object).getId());
+				else if ( object instanceof Object[])
+				{
+					addContent(object);
+				}
 				else
 					listContent.add(object);
 			}
 		}
-		else
+		else if (content!=null)
 			listContent.add(content);
 		return (E)this;
 	}

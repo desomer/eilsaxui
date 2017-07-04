@@ -37,6 +37,7 @@ import static  com.elisaxui.xui.core.widget.navbar.ViewNavBar.*;
 public interface TKTransition extends JSClass {
 
 	JSOverlay _overlay = null;
+	
 	TKTransition _this = null;
 	TKTransition _self = null;
 	JQuery _jqNavBar = null;
@@ -48,10 +49,10 @@ public interface TKTransition extends JSClass {
 		.var(_jqActivityActive, $(activity.and(active)))
 		//.var("jqActivityActive", "$('.activity.active')")
 		//-----------  detache la barre nav en haut par rapport au scroll et ajoute a l'activité  --------
-		.__("jqNavBar.detach()")
-		.__("jqNavBar.css('transform', 'translate3d(0px,'+sct+'px,0px)' )")		
+		.__(_jqNavBar.detach())
+		.__(_jqNavBar.css("transform", "translate3d(0px,' +sct+ 'px,0px)"))		
 		.__(_jqNavBar.addClass(fixedToAbsolute)) // permet la nav de bouger
-		.__("jqActivityActive.prepend(jqNavBar)") 
+		.__(_jqActivityActive.prepend(_jqNavBar)) 
 		;
 		return null;
 	}

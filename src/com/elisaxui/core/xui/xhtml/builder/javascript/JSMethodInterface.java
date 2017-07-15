@@ -1,6 +1,7 @@
 package com.elisaxui.core.xui.xhtml.builder.javascript;
 
-public interface JSMethodInterface {
+
+public interface JSMethodInterface  {
 
 	
 	JSMethodInterface __(Object... content);

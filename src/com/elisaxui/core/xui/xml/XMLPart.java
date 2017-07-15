@@ -30,7 +30,7 @@ import com.elisaxui.core.xui.xml.builder.XMLTarget.ITargetRoot;
  * @author Bureau
  *
  */
-public class XMLPart {
+public class XMLPart  {
 
 	public static final class CONTENT extends XMLTarget {
 	};
@@ -102,6 +102,24 @@ public class XMLPart {
 	/**************************************************************/
 	public final void initContent(XMLPart root) {
 		
+		initVar();
+		
+		doContent(root);
+		
+		XMLFile file = XUIFactoryXHtml.getXMLFile();
+		boolean isfirstInit = !file.isXMLPartAlreadyInFile(this);
+		Method[] listMth = this.getClass().getDeclaredMethods();
+		for (Method method : listMth) {
+			boolean isResource = method.getAnnotation(xRessource.class)!=null;
+			if (isfirstInit || !isResource)
+			{
+				initMethod(method);
+			}
+		}
+		
+	}
+
+	private void initVar() {
 		Field[] lf = this.getClass().getDeclaredFields();
 		if (lf!=null)
 		{
@@ -138,20 +156,6 @@ public class XMLPart {
 				}
 			}
 		}
-		
-		doContent(root);
-		
-		XMLFile file = XUIFactoryXHtml.getXMLFile();
-		boolean isfirstInit = !file.isXMLPartAlreadyInFile(this);
-		Method[] listMth = this.getClass().getDeclaredMethods();
-		for (Method method : listMth) {
-			boolean isResource = method.getAnnotation(xRessource.class)!=null;
-			if (isfirstInit || !isResource)
-			{
-				initMethod(method);
-			}
-		}
-		
 	}
 
 	/**

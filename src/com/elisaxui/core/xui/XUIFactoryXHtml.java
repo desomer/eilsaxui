@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.elisaxui.core.xui.xhtml.XHTMLRoot;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xml.XMLFile;
@@ -56,6 +57,8 @@ public class XUIFactoryXHtml {
 		if (pageClass != null) {
 			XMLFile file = createXMLFile();
 
+			initVariableJS();
+			
 			file.setRoot(new XHTMLRoot());
 			List<Locale> languages = headers.getAcceptableLanguages();
 			Locale loc = languages.get(0);
@@ -88,6 +91,16 @@ public class XUIFactoryXHtml {
 
 	}
 
+	private void initVariableJS() {
+		List<Class<? extends JSClass>> listJSClass = new ArrayList<>(100);
+		new FastClasspathScanner("com.elisaxui.xui").matchSubinterfacesOf(JSClass.class, listJSClass::add).scan();
+		new FastClasspathScanner("com.elisaxui.core.xui.xhtml").matchSubinterfacesOf(JSClass.class, listJSClass::add).scan();
+		for (Class<? extends JSClass> class1 : listJSClass) {
+			System.out.println("list JS class "+class1);
+			XUIFactoryXHtml.getXMLFile().initVar(XHTMLPart.jsBuilder, class1);
+		}
+	}
+
 	private void initXMLFile(Class<? extends XHTMLPart> pageClass, XMLFile file) {
 		try {
 			XHTMLPart page = pageClass.newInstance();
@@ -110,11 +123,14 @@ public class XUIFactoryXHtml {
 	}
 
 	private Map<String, Class<? extends XHTMLPart>> getMapXHTMLPart() {
-		List<Class<? extends XHTMLPart>> listClass = new ArrayList<>(100);
-		new FastClasspathScanner("com.elisaxui.xui").matchSubclassesOf(XHTMLPart.class, listClass::add).scan();
+				
+		List<Class<? extends XHTMLPart>> listXHTMLPart = new ArrayList<>(100);
+		new FastClasspathScanner("com.elisaxui.xui").matchSubclassesOf(XHTMLPart.class, listXHTMLPart::add).scan();
 
 		Map<String, Class<? extends XHTMLPart>> mapClass = new HashMap<String, Class<? extends XHTMLPart>>(100);
-		for (Class<? extends XHTMLPart> pageClass : listClass) {
+		for (Class<? extends XHTMLPart> pageClass : listXHTMLPart) {
+			System.out.println("list XHTMLPart "+pageClass);
+			
 			xFile annPage = pageClass.getAnnotation(xFile.class);
 			if (annPage != null) {
 				mapClass.put(annPage.id(), pageClass);

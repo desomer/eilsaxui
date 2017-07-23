@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -13,6 +14,17 @@ import com.elisaxui.core.xui.xml.builder.XMLTarget;
 import com.elisaxui.core.xui.xml.builder.XMLTarget.ITargetRoot;
 
 public class XHTMLRoot extends XHTMLPart {
+
+	/**
+	 * @author Bureau
+	 *
+	 */
+	private final class XMLElementComparator implements Comparator<XMLElement> {
+		@Override
+		public int compare(XMLElement arg0, XMLElement arg1) {
+			return arg0.getPriority()-arg1.getPriority();
+		}
+	}
 
 	public static final class HEADER extends XMLTarget implements ITargetRoot {
 	};
@@ -52,14 +64,21 @@ public class XHTMLRoot extends XHTMLPart {
 		StringBuilder textAfterbody = new StringBuilder(1000);
 		//StringBuilder textAfterbody2 = new StringBuilder(1000);
 		
-		xListElement(getListElement(BODY.class)).getXMLElementTabbed(1)
+		ArrayList<XMLElement> body = getListElement(BODY.class);
+		ArrayList<XMLElement> afterBody = getListElement(AFTER_BODY.class);
+		ArrayList<XMLElement> header = getListElement(HEADER.class);
+		
+		Collections.sort(header, new XMLElementComparator() );
+		Collections.sort(body, new XMLElementComparator() );
+		Collections.sort(afterBody, new XMLElementComparator() );
+		
+		xListElement(body).getXMLElementTabbed(1)
 				.toXML(new XMLBuilder("page", textbody, textAfterbody));
 
-		xListElement(getListElement(AFTER_BODY.class)).getXMLElementTabbed(0)
+		xListElement(afterBody).getXMLElementTabbed(0)
 				.toXML(new XMLBuilder("page", textAfterbody, null));
 		
-		ArrayList<XMLElement> header = getListElement(HEADER.class);
-		Collections.reverse(header);
+	//	Collections.reverse(header);
 
 		return xElement("html", xAttr("lang", xTxt(lang)),
 				xListElement("\n"),

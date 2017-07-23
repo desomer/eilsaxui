@@ -14,6 +14,7 @@ import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.html.Xid;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
 import com.elisaxui.core.xui.xml.annotation.xComment;
+import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLAttr;
@@ -180,11 +181,17 @@ public class XMLPart  {
 		xTarget target = method.getAnnotation(xTarget.class);
 		if (target != null) {
 			try {
-
 				XMLElement elem = ((XMLElement) method.invoke(this, new Object[] {}));
-				elem.setComment(getComment(method));
+				xPriority priority = method.getAnnotation(xPriority.class);
+				if (priority != null) {
+					elem.setPriority(priority.value());
+				}
+
+				String comment = getComment(method);
+				elem.setComment(comment!=null?comment+ " priority "+elem.getPriority() : null );
+				
 				Class<? extends XMLTarget> targetClass = target.value();
-				System.out.println("[XMLPart] add Target mth "+ this.getClass().getSimpleName() + " # " + method.getName() );
+				System.out.println("[XMLPart] add Target mth "+ this.getClass().getSimpleName() + " # " + method.getName() + " priority " + elem.getPriority() );
 				if (elem != null && targetClass!=null ) {
 					int nbTab = targetClass.newInstance().getInitialNbTab();
 					if (ITargetRoot.class.isAssignableFrom(targetClass))

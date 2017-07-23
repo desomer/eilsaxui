@@ -13,6 +13,7 @@ import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataDriven;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xFile;
+import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -65,6 +66,7 @@ public class ScnStandard extends XHTMLPart {
     
 	@xTarget(HEADER.class)
 	@xRessource
+	@xPriority(1)
 	public XMLElement xImport() {
 		return xListElement(
 				
@@ -112,6 +114,7 @@ public class ScnStandard extends XHTMLPart {
 				
 	@xTarget(HEADER.class)
 	@xRessource
+	@xPriority(2)
 	public XMLElement xStyle() {
 		
 		return xCss()

@@ -11,6 +11,17 @@ import com.elisaxui.core.xui.XUIFactoryXHtml;
  */
 public class XUIFormatManager {
 
+	
+	private int priority = 100;
+	
+	public int getPriority() {
+		return priority;
+	}
+
+	public void setPriority(int priority) {
+		this.priority = priority;
+	}
+
 	protected int nbTabInternal = 0;
 	protected int nbInitialTab = 0;
 

@@ -3,22 +3,21 @@ package com.elisaxui.core.xui.xhtml;
 import java.util.ArrayList;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
-import com.elisaxui.core.xui.xhtml.XHTMLRoot.BODY;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.AFTER_BODY;
+import com.elisaxui.core.xui.xhtml.XHTMLRoot.BODY;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSListParameter;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xml.XMLPart;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Attr;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
+import com.elisaxui.core.xui.xml.builder.XMLAttr;
+import com.elisaxui.core.xui.xml.builder.XMLElement;
 
 public abstract class XHTMLPart extends XMLPart {
 
-	public static JSBuilder jsBuilder = new JSBuilder(null, new Object[] {});
+	public static JSBuilder jsBuilder = new JSBuilder();
 
 	public final XMLPart vBody(XMLElement body) {
 		XUIFactoryXHtml.getXMLRoot().addElement(BODY.class, body);
@@ -91,10 +90,6 @@ public abstract class XHTMLPart extends XMLPart {
 		return jsBuilder.createJSFunction().setParam(param);
 	}
 
-//	public final static JSFunction _fct(Object... param) {
-//		return jsBuilder.createJSFunction().setParam(param);
-//	}
-
 	public static final String xVar(Object var) {
 		return "'+" + var + "+'";
 	}
@@ -112,29 +107,20 @@ public abstract class XHTMLPart extends XMLPart {
 	
 	
 	public final static XMLElement xImport(Class<? extends JSClass> cl) {
-		XMLElement t = xElement("script", xAttr("type", "\"text/javascript\""), XUIFactoryXHtml.getXMLFile().getClassImpl(jsBuilder, cl));
+		XMLElement t = xElement("script", xAttr("type", "\"text/javascript\""), XUIFactoryXHtml.getXHTMLFile().getClassImpl(jsBuilder, cl));
 		return t;
 	}
 	
  
-	@Deprecated
-	@SuppressWarnings("unchecked")
-	public final <E extends JSClass> E varOfType(Object name, Class<? extends JSClass> cl) {
-
-		JSClass inst = jsBuilder.getProxy(cl);
-		jsBuilder.setNameOfProxy("",inst, name);
-		return (E) inst;
-	}
-
 	/**************************************************************************/
 
-	public final static Attr xId(Object id) {
-		Attr attr = xAttr("id", id);
+	public final static XMLAttr xId(Object id) {
+		XMLAttr attr = xAttr("id", id);
 		return attr;
 	}
 	
-	public final static Attr xIdAction(Object id) {
-		Attr attr = xAttr("data-x-action", id);
+	public final static XMLAttr xIdAction(Object id) {
+		XMLAttr attr = xAttr("data-x-action", id);
 		return attr;
 	}
 

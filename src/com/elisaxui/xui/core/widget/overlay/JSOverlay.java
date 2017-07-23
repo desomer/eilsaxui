@@ -4,14 +4,17 @@
 package com.elisaxui.xui.core.widget.overlay;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
+import com.elisaxui.core.xui.xhtml.js.value.JSFloat;
+import com.elisaxui.core.xui.xhtml.js.value.JSInt;
+import static  com.elisaxui.xui.core.widget.overlay.ViewOverlay.*;
 
 /**
  * @author Bureau
  *
  */
 public interface JSOverlay extends JSClass {
-	Object speed = null;
-	Object opacity = null;
+	JSInt speed = null;
+	JSFloat opacity = null;
 	
 	default Object constructor(Object speed, Object opacity)
 	{
@@ -24,7 +27,7 @@ public interface JSOverlay extends JSClass {
 	
 	default Object doShow(Object act, Object phase)
 	{
-		var("overlay", "$(act+' .black_overlay')" )
+		var("overlay", "$(act+' ."+ cBlackOverlay.getId() +"')" )
 		._if(phase, "==1")
 			.__("overlay.css('display','block')")
 			.__("overlay.css('opacity','0')")
@@ -38,7 +41,7 @@ public interface JSOverlay extends JSClass {
 	
 	default Object doHide(Object phase)
 	{
-		var("overlay", "$('.active .black_overlay')" )
+		var("overlay", "$('.active ."+cBlackOverlay.getId()+"')" )
 		._if(phase, "==1")
 			.__("overlay.css('opacity','0')")
 //			.__("overlay.one('transitionend',", fct()

@@ -1,10 +1,11 @@
 package com.elisaxui.xui.admin.page;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 
 public interface JSTestClass extends JSClass {
 
-	Object a = null;
+	JSVariable a = null;
 	JSTest2Class b = null;
 
 	default Object constructor(Object val) {

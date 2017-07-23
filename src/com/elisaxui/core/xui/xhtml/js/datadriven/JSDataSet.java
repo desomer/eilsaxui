@@ -1,15 +1,20 @@
 package com.elisaxui.core.xui.xhtml.js.datadriven;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
+import com.elisaxui.core.xui.xhtml.js.value.JSCallBack;
+import com.elisaxui.core.xui.xhtml.js.value.JSInt;
+import com.elisaxui.core.xui.xhtml.js.value.JSon;
 
 public interface JSDataSet extends JSClass {
 
-	Object data = null;
-	String callBackChange = null;
-	Object delayEvent = null;
-	Object myProxySet = null;
+	JSon data = null;
+	JSCallBack callBackChange = null;
+	JSInt delayEvent = null;
+	JSVariable myProxySet = null;    //WeakSet
+	
 	JSDataSet _that = null;
-	Object synchroneEvent = null;   // toDo
+//	Object synchroneEvent = null;   // toDo
 
 	default Object constructor(Object d) {
 		return set(data, d)

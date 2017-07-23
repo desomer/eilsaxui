@@ -4,6 +4,8 @@
 package com.elisaxui.xui.core.toolkit;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
+import com.elisaxui.core.xui.xhtml.js.value.JSString;
+import com.elisaxui.core.xui.xhtml.js.value.JSon;
 import com.elisaxui.xui.core.widget.container.JSContainer;
 
 /**
@@ -17,8 +19,8 @@ public interface TKActivity extends JSClass {
 	public static final String ON_ACTIVITY_PAUSE = "onActivityPause";
 	
 	JSContainer jsContainer = null;
-	Object listRegisterActivity = null;
-	Object idCurrentActivity = null;
+	JSon listRegisterActivity = null;
+	JSString idCurrentActivity = null;
 	TKRouter _tkrouter =null;
 	
 	default Object constructor()

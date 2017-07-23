@@ -7,15 +7,18 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
+import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
+import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.xui.core.page.ScnStandard;
 import static  com.elisaxui.xui.core.transition.CssTransition.*;
+import static  com.elisaxui.xui.core.widget.button.ViewRippleEffect.*;
 /**
  * @author Bureau
  *
  */
+@xComment("ViewBtnCircle")
 public class ViewBtnCircle extends XHTMLPart {
 
 	public static final String PROPERTY_ICON = "PROPERTY_ICON";
@@ -53,7 +56,7 @@ public class ViewBtnCircle extends XHTMLPart {
 	@xTarget(CONTENT.class)
 	public XMLElement xBurgerBtn() {
 		return  xListElement( xPart(new ViewRippleEffect()),   ////////////////// IMPORT //////////////////
-		       xElement("button", ViewRippleEffect.cRippleEffect(), cBtnCircle, xAttr("type", "\"button\""),
+		       xElement("button", cRippleEffect, cBtnCircle, xAttr("type", "\"button\""),
 				"<i class=\"material-icons\">", this.getProperty(PROPERTY_ICON), "</i>")
 		       );
 	}

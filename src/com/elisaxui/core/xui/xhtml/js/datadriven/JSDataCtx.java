@@ -1,13 +1,15 @@
 package com.elisaxui.core.xui.xhtml.js.datadriven;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
+import com.elisaxui.core.xui.xhtml.js.value.JSInt;
+import com.elisaxui.core.xui.xhtml.js.value.JSon;
 
 public interface JSDataCtx extends JSClass {
 
-	String idxBegin = null;
-	String idxEnd = null;
-	String currentIdx = null;
-	String currentRow = null;
+	JSInt idxBegin = null;
+	JSInt idxEnd = null;
+	JSInt currentIdx = null;
+	JSon currentRow = null;
 	
 	default Object initCurrent (Object idx, Object row )
 	{

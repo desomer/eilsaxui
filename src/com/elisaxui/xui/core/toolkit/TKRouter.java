@@ -4,6 +4,7 @@
 package com.elisaxui.xui.core.toolkit;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.xui.core.transition.TKTransition;
 
 /**
@@ -23,11 +24,11 @@ public interface TKRouter extends JSClass {
 	public static final String STATE_ROUTE = "STATE_ROUTE";
 	
 	TKTransition tkAnimation = null;
-	Object navigo = null;
+	JSVariable navigo = null;
 	TKActivity activityMgr= null;
 	//   gestion des historique d'intention
-	Object historyIntent = null;
-	Object _historyIntent = null;
+	JSVariable historyIntent = null;
+	JSVariable _historyIntent = null;
 	
 	TKRouter _self = null;
 	

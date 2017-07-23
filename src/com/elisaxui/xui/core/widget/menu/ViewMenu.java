@@ -4,6 +4,7 @@
 package com.elisaxui.xui.core.widget.menu;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.XHTMLRoot.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
 import com.elisaxui.core.xui.xhtml.js.JSXHTMLPart;
@@ -14,7 +15,7 @@ import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
+import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.xui.admin.page.JSTest2Class;
 import com.elisaxui.xui.admin.page.JSTestClass;
 import com.elisaxui.xui.admin.page.JSTestDataDriven;

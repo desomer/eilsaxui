@@ -4,13 +4,13 @@
 package com.elisaxui.xui.core.widget.button;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.XHTMLRoot.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
-import com.elisaxui.xui.core.page.ScnStandard;
+import com.elisaxui.core.xui.xml.builder.XMLElement;
 import static  com.elisaxui.xui.core.transition.CssTransition.*;
 /**
  * @author Bureau
@@ -18,30 +18,12 @@ import static  com.elisaxui.xui.core.transition.CssTransition.*;
  */
 public class ViewRippleEffect extends XHTMLPart {
 
-    static ViewRippleEffect style = new ViewRippleEffect();
-	static {
-		xPart(style);   // import
-	}
-	public static CSSClass cRippleEffect()
-	{
-		return style.cRippleEffect;
-	}
 	
-	public static CSSClass cRippleEffectShow()
-	{
-		return style.cRippleEffectShow;
-	}
-	
-	public static CSSClass cRippleEffectColorBack()
-	{
-		return style.cRippleEffectColorBack;
-	}
-	
-	CSSClass cRippleEffect;
-	CSSClass cRippleEffectShow;
-	CSSClass cRippleEffectColorBack;
+	public static CSSClass cRippleEffect;
+	public static CSSClass cRippleEffectShow;
+	public static CSSClass cRippleEffectColorBack;
 
-	@xTarget(HEADER.class)
+	@xTarget(AFTER_BODY.class)
 	@xRessource
 	public XMLElement xStyle() {
 

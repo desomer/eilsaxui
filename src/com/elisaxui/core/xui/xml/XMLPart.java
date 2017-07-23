@@ -10,17 +10,17 @@ import java.util.List;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.Xid;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
+import com.elisaxui.core.xui.xhtml.builder.html.Xid;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
+import com.elisaxui.core.xui.xml.builder.XMLAttr;
+import com.elisaxui.core.xui.xml.builder.XMLPartElement;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Attr;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Handle;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Part;
+import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.builder.XMLTarget;
 import com.elisaxui.core.xui.xml.builder.XMLTarget.ITargetRoot;
 
@@ -32,6 +32,8 @@ import com.elisaxui.core.xui.xml.builder.XMLTarget.ITargetRoot;
  */
 public class XMLPart  {
 
+	
+	/**************************************************************************/
 	public static final class CONTENT extends XMLTarget {
 	};
 
@@ -43,6 +45,7 @@ public class XMLPart  {
 		
 	};
 
+	/**************************************************************************/
 	protected HashMap<Class<? extends XMLTarget>, ArrayList<XMLElement>> listPart = new HashMap<Class<? extends XMLTarget>, ArrayList<XMLElement>>();
 	protected HashMap<Object, Object> listProperties = new HashMap<Object, Object>(); 
 	
@@ -64,9 +67,9 @@ public class XMLPart  {
 		return (XMLElement)listProperties.get(key);
 	}
 	
-	public Attr getPropertyXID(Object key)
+	public XMLAttr getPropertyXID(Object key)
 	{
-		return (Attr)listProperties.get(key);
+		return (XMLAttr)listProperties.get(key);
 	}
 	
 	@Deprecated
@@ -93,24 +96,29 @@ public class XMLPart  {
 
 	/**************************************************************/
 
-	public void doContent(XMLPart root) {
-	}
-
-	public void doRessource(XMLPart root) {
-	}
+//	public void doContent(XMLPart root) {
+//	}
+//
+//	public void doRessource(XMLPart root) {
+//	}
 
 	/**************************************************************/
-	public final void initContent(XMLPart root) {
+	public final void doContent(XMLPart root) {
+		
+		System.out.println("[XMLPart]--------------- add content of ------------- " + this.getClass() );
+		
+		
+	//	doContent(root);
+		
+		XMLFile file = XUIFactoryXHtml.getXHTMLFile();
+		boolean isfirstInit = !file.isXMLPartAlreadyInFile(this);
 		
 		initVar();
 		
-		doContent(root);
-		
-		XMLFile file = XUIFactoryXHtml.getXMLFile();
-		boolean isfirstInit = !file.isXMLPartAlreadyInFile(this);
 		Method[] listMth = this.getClass().getDeclaredMethods();
 		for (Method method : listMth) {
 			boolean isResource = method.getAnnotation(xRessource.class)!=null;
+			// execute les methode target non ressource
 			if (isfirstInit || !isResource)
 			{
 				initMethod(method);
@@ -118,14 +126,18 @@ public class XMLPart  {
 		}
 		
 	}
-
-	private void initVar() {
+	
+	
+	public void initVar() {
 		Field[] lf = this.getClass().getDeclaredFields();
 		if (lf!=null)
 		{
 			for (Field field : lf) {
-				if (JSClass.class.isAssignableFrom(field.getType()))
+				
+				boolean isStatic = java.lang.reflect.Modifier.isStatic(field.getModifiers());
+				if (!isStatic && JSClass.class.isAssignableFrom(field.getType()))
 				{
+					System.out.println("[XMLPart] init var JSClass on " + this.getClass() + " name "+ field.getName() );
 					field.setAccessible(true);
 					@SuppressWarnings("unchecked")
 					JSClass inst = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) field.getType());
@@ -137,8 +149,9 @@ public class XMLPart  {
 						e.printStackTrace();
 					}
 				}
-				else if (CSSClass.class.isAssignableFrom(field.getType()))
+				else if (!isStatic && CSSClass.class.isAssignableFrom(field.getType()))
 				{
+					System.out.println("[XMLPart] init var CSSClass on " + this.getClass() + " name "+ field.getName() );
 					CSSClass classCss = new CSSClass();
 					String name = field.getName();
 					xComment comment = field.getAnnotation(xComment.class);
@@ -158,6 +171,7 @@ public class XMLPart  {
 		}
 	}
 
+
 	/**
 	 * ajoute les methode avec xTarget
 	 * @param method
@@ -170,13 +184,13 @@ public class XMLPart  {
 				XMLElement elem = ((XMLElement) method.invoke(this, new Object[] {}));
 				elem.setComment(getComment(method));
 				Class<? extends XMLTarget> targetClass = target.value();
-				//System.out.println(this.getClass().getSimpleName() + "#" + method.getName() );
+				System.out.println("[XMLPart] add Target mth "+ this.getClass().getSimpleName() + " # " + method.getName() );
 				if (elem != null && targetClass!=null ) {
 					int nbTab = targetClass.newInstance().getInitialNbTab();
 					if (ITargetRoot.class.isAssignableFrom(targetClass))
-						XUIFactoryXHtml.getXMLRoot().addElement(targetClass, elem.setNbInitialTab(nbTab));
+						XUIFactoryXHtml.getXMLRoot().addElement(targetClass, elem.getXMLElementTabbed(nbTab));
 					else
-						addElement(targetClass, elem.setNbInitialTab(nbTab));
+						addElement(targetClass, elem.getXMLElementTabbed(nbTab));
 				}
 			} 
 			catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
@@ -230,7 +244,7 @@ public class XMLPart  {
 		addElement(AFTER_CONTENT.class, part);
 	}
 
-	public final static Part xPart(XMLPart part, Object... inner) {
+	public final static XMLPartElement xPart(XMLPart part, Object... inner) {
 		return XMLBuilder.createPart(part, inner);
 	}
 	
@@ -247,8 +261,8 @@ public class XMLPart  {
 		return xElement(null, array);
 	}
 
-	public final static Attr xAttr(String name, Object value) {
-		Attr attr = XMLBuilder.createAttr(name, value);
+	public final static XMLAttr xAttr(String name, Object value) {
+		XMLAttr attr = XMLBuilder.createAttr(name, value);
 		return attr;
 	}
 	

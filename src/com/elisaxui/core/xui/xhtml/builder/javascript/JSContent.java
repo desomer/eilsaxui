@@ -7,8 +7,9 @@ import java.util.List;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder.JSNewLine;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder.aInvocationHandler;
+import com.elisaxui.core.xui.xml.builder.IXMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
+import com.elisaxui.core.xui.xml.builder.XMLElement;
 
 /**
  * super class de JSClass et JSFunction
@@ -17,7 +18,7 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
  * @author Bureau
  *
  */
-public class JSContent implements XMLBuilder.IXMLBuilder, JSMethodInterface {
+public class JSContent implements IXMLBuilder, JSMethodInterface {
 	/**
 	 * 
 	 */
@@ -37,7 +38,7 @@ public class JSContent implements XMLBuilder.IXMLBuilder, JSMethodInterface {
 	}
 
 	protected void newLine(XMLBuilder buf) {
-		if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCrJS())
+		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCrJS())
 			buf.addContent("\n");
 	}
 

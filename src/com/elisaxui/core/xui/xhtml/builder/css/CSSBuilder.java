@@ -2,9 +2,9 @@ package com.elisaxui.core.xui.xhtml.builder.css;
 
 import java.util.LinkedList;
 
+import com.elisaxui.core.xui.xml.builder.XMLAttr;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Attr;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
+import com.elisaxui.core.xui.xml.builder.XMLElement;
 
 public class CSSBuilder  extends XMLElement {
 	
@@ -30,8 +30,10 @@ public class CSSBuilder  extends XMLElement {
 	public XMLBuilder toXML(XMLBuilder buf) {
 		
 		for (Object object : listStyle) {
-			if (object instanceof Attr) {
-				listAttr.add((Attr) object);
+			if (object instanceof XMLAttr) {
+				listAttr.add((XMLAttr) object);
+			} else if (object instanceof CSSStyle) {
+				listInner.add(((CSSStyle) object));
 			} else {
 				listInner.add(object.toString());
 			}
@@ -56,25 +58,5 @@ public class CSSBuilder  extends XMLElement {
 	{
 		listStyle.getLast().content = content;
 		return this;	
-	}
-	
-	public static final class CSSStyle {
-		Object path;
-		Object content;
-
-		@Override
-		public String toString() {
-			if (path instanceof CSSClass)
-				return  "."+((CSSClass)path).getId() + " { " +content +" }\n";
-			else
-				return  path + " {" +content +"}\n";
-		}
-
-		public CSSStyle(Object path, Object content) {
-			super();
-			this.path = path;
-			this.content = content;
-		}
-		
 	}
 }

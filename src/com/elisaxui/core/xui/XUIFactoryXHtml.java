@@ -19,6 +19,8 @@ import javax.ws.rs.core.Response.Status;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
+import com.elisaxui.core.xui.xhtml.XHTMLAppBuilder;
+import com.elisaxui.core.xui.xhtml.XHTMLFile;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xml.XMLFile;
 import com.elisaxui.core.xui.xml.XMLPart;
@@ -26,7 +28,7 @@ import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.XMLPart.CONTENT;
 import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
+import com.elisaxui.core.xui.xml.builder.XMLElement;
 
 import javax.ws.rs.core.UriInfo;
 
@@ -35,13 +37,13 @@ import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 @Path("/page")
 public class XUIFactoryXHtml {
 
-	private static final ThreadLocal<XMLFile> ThreadLocalXUIFactoryPage = new ThreadLocal<XMLFile>();
+	private static final ThreadLocal<XHTMLFile> ThreadLocalXUIFactoryPage = new ThreadLocal<XHTMLFile>();
 
 	public static final XMLPart getXMLRoot() {
 		return ThreadLocalXUIFactoryPage.get().getRoot();
 	}
 
-	public static final XMLFile getXMLFile() {
+	public static final XHTMLFile getXHTMLFile() {
 		return ThreadLocalXUIFactoryPage.get();
 	}
 
@@ -51,31 +53,33 @@ public class XUIFactoryXHtml {
 	public Response getHtml(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("pays") String pays,
 			@PathParam("lang") String lang, @PathParam("id") String id) {
 
-		Map<String, Class<? extends XHTMLPart>> mapClass = getMapXHTMLPart();
+		Map<String, Class<? extends XHTMLPart>> mapClass = XHTMLAppBuilder.getMapXHTMLPart();
 
 		Class<? extends XHTMLPart> pageClass = mapClass.get(id);
 		if (pageClass != null) {
-			XMLFile file = createXMLFile();
-
-			initVariableJS();
+			XMLFile fileXML = createXHTMLFile();
 			
-			file.setRoot(new XHTMLRoot());
+			fileXML.setRoot(new XHTMLRoot());
 			List<Locale> languages = headers.getAcceptableLanguages();
 			Locale loc = languages.get(0);
 
 			// premier passe
-			initXMLFile(pageClass, file);
+			initXMLFile(pageClass, fileXML);
+			
 			if (ErrorNotificafionMgr.hasErrorMessage()) {
 				return Response.status(Status.INTERNAL_SERVER_ERROR) // .type(MediaType.TEXT_HTML)
 						.entity(ErrorNotificafionMgr.getBufferErrorMessage().toString()).build();
 			}
 
 			// generation page
+			System.out.println("[XUIFactoryXHtml]");
+			System.out.println("[XUIFactoryXHtml]********************************************* GENERATE XML File of "+pageClass+"  ****************************************");
+
 			StringBuilder buf = new StringBuilder(1000);
 			buf.append("<!doctype html>");
-			((XHTMLRoot) file.getRoot()).setLang(loc.toLanguageTag());
-			file.getRoot().initContent(null);
-			ArrayList<XMLElement> rootContent = file.getRoot().getListElement(CONTENT.class);
+			((XHTMLRoot) fileXML.getRoot()).setLang(loc.toLanguageTag());
+			fileXML.getRoot().doContent(null);
+			ArrayList<XMLElement> rootContent = fileXML.getRoot().getListElement(CONTENT.class);
 
 			for (XMLElement elem : rootContent) {
 				elem.toXML(new XMLBuilder("page", buf, null));
@@ -91,20 +95,14 @@ public class XUIFactoryXHtml {
 
 	}
 
-	private void initVariableJS() {
-		List<Class<? extends JSClass>> listJSClass = new ArrayList<>(100);
-		new FastClasspathScanner("com.elisaxui.xui").matchSubinterfacesOf(JSClass.class, listJSClass::add).scan();
-		new FastClasspathScanner("com.elisaxui.core.xui.xhtml").matchSubinterfacesOf(JSClass.class, listJSClass::add).scan();
-		for (Class<? extends JSClass> class1 : listJSClass) {
-			System.out.println("list JS class "+class1);
-			XUIFactoryXHtml.getXMLFile().initVar(XHTMLPart.jsBuilder, class1);
-		}
-	}
-
 	private void initXMLFile(Class<? extends XHTMLPart> pageClass, XMLFile file) {
 		try {
+			System.out.println("[XUIFactoryXHtml]");
+			System.out.println("[XUIFactoryXHtml]********************************************* INIT XML File of "+pageClass+"  ****************************************");
+
+			
 			XHTMLPart page = pageClass.newInstance();
-			page.initContent(file.getRoot());
+			page.doContent(file.getRoot());
 			for (XMLElement elem : page.getListElement(CONTENT.class)) {
 				page.vBody(elem);
 			}
@@ -116,26 +114,11 @@ public class XUIFactoryXHtml {
 		}
 	}
 
-	private XMLFile createXMLFile() {
-		XMLFile file = new XMLFile();
+	private XHTMLFile createXHTMLFile() {
+		XHTMLFile file = new XHTMLFile();
 		ThreadLocalXUIFactoryPage.set(file);
 		return file;
 	}
 
-	private Map<String, Class<? extends XHTMLPart>> getMapXHTMLPart() {
-				
-		List<Class<? extends XHTMLPart>> listXHTMLPart = new ArrayList<>(100);
-		new FastClasspathScanner("com.elisaxui.xui").matchSubclassesOf(XHTMLPart.class, listXHTMLPart::add).scan();
 
-		Map<String, Class<? extends XHTMLPart>> mapClass = new HashMap<String, Class<? extends XHTMLPart>>(100);
-		for (Class<? extends XHTMLPart> pageClass : listXHTMLPart) {
-			System.out.println("list XHTMLPart "+pageClass);
-			
-			xFile annPage = pageClass.getAnnotation(xFile.class);
-			if (annPage != null) {
-				mapClass.put(annPage.id(), pageClass);
-			}
-		}
-		return mapClass;
-	}
 }

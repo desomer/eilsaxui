@@ -1,25 +1,16 @@
 package com.elisaxui.core.xui.xhtml;
 
-import java.io.IOException;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 
-import com.elisaxui.core.xui.XUILaucher;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
+import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.builder.XMLTarget;
 import com.elisaxui.core.xui.xml.builder.XMLTarget.ITargetRoot;
-import com.elisaxui.helper.ClassLoaderHelper;
-import com.elisaxui.helper.ClassLoaderHelper.FileEntry;
 
 public class XHTMLRoot extends XHTMLPart {
 
@@ -45,37 +36,14 @@ public class XHTMLRoot extends XHTMLPart {
 	}
 ;
 	
-	static int nbChangement = 0;
-	static long lastOlderFile = 0;
 	
 	@xTarget(XMLPart.CONTENT.class)
 	public XMLElement xGetContent() {
+		
 		LocalDateTime now = LocalDateTime.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-		long olderFile = 0;
-		try {
-			Iterable<FileEntry> list = ClassLoaderHelper.listFilesRelativeToClass(XUILaucher.class,	"com"); ///elisaxui/core/xui/xml
-			for (FileEntry fileEntry : list) {
-				long lm = fileEntry.file.lastModified();
-				//Date d = new Date();
-				//System.out.println(fileEntry.file.getName() + " " + d);
-				if (lm > olderFile)
-					olderFile = lm;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		if (lastOlderFile!=olderFile)
-		{
-			lastOlderFile=olderFile;
-			nbChangement++;
-		}
-		
-		Date input = new Date(olderFile);
-		Instant instant = input.toInstant();
-		ZonedDateTime zdt = instant.atZone(ZoneId.systemDefault());
-		LocalDateTime dateBuild = zdt.toLocalDateTime();
+		LocalDateTime dateBuild = XHTMLAppBuilder.dateBuild;
 		
 		String formatDateTimeBuild =   dateBuild.format(formatter);
 		String formatDateTimeNow = now.format(formatter);
@@ -84,10 +52,10 @@ public class XHTMLRoot extends XHTMLPart {
 		StringBuilder textAfterbody = new StringBuilder(1000);
 		//StringBuilder textAfterbody2 = new StringBuilder(1000);
 		
-		xListElement(getListElement(BODY.class)).setNbInitialTab(1)
+		xListElement(getListElement(BODY.class)).getXMLElementTabbed(1)
 				.toXML(new XMLBuilder("page", textbody, textAfterbody));
 
-		xListElement(getListElement(AFTER_BODY.class)).setNbInitialTab(0)
+		xListElement(getListElement(AFTER_BODY.class)).getXMLElementTabbed(0)
 				.toXML(new XMLBuilder("page", textAfterbody, null));
 		
 		ArrayList<XMLElement> header = getListElement(HEADER.class);
@@ -95,7 +63,7 @@ public class XHTMLRoot extends XHTMLPart {
 
 		return xElement("html", xAttr("lang", xTxt(lang)),
 				xListElement("\n"),
-				xComment("version 1.0.0" +nbChangement , "generated at " + formatDateTimeNow  , "build at " + formatDateTimeBuild),
+				xComment("version 1.0.0" + XHTMLAppBuilder.nbChangement , "generated at " + formatDateTimeNow  , "build at " + formatDateTimeBuild),
 				xElement("head", xElement("meta", xAttr("charset", xTxt("utf-8"))),
 						xElement("meta", xAttr("name", xTxt("mobile-web-app-capable")), xAttr("content", xTxt("yes"))),
 						xElement("meta", xAttr("name", xTxt("apple-mobile-web-app-capable")), xAttr("content", xTxt("yes"))),

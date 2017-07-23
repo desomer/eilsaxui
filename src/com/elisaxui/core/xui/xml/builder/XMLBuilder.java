@@ -1,22 +1,11 @@
 package com.elisaxui.core.xui.xml.builder;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
-import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassImpl;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xml.XMLPart;
-import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
-import com.elisaxui.core.xui.xml.XMLPart.CONTENT;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 
 /**
@@ -26,7 +15,7 @@ import com.elisaxui.core.xui.xml.annotation.xTarget;
  * @author Bureau
  *
  */
-public class XMLBuilder {
+public class XMLBuilder  {
 
 	String id; // identifiant du bloc
 	StringBuilder content;
@@ -55,14 +44,14 @@ public class XMLBuilder {
 		return t;
 	}
 
-	public static Attr createAttr(Object name, Object value) {
-		Attr t = new Attr(name, value);
+	public static XMLAttr createAttr(Object name, Object value) {
+		XMLAttr t = new XMLAttr(name, value);
 		return t;
 	}
 
-	public static Part createPart(XMLPart part, Object... inner) {
-		Part t = new Part(part, inner);
-		part.initContent(XUIFactoryXHtml.getXMLRoot());
+	public static XMLPartElement createPart(XMLPart part, Object... inner) {
+		XMLPartElement t = new XMLPartElement(part, inner);
+		part.doContent(XUIFactoryXHtml.getXMLRoot());
 		return t;
 	}
 
@@ -83,276 +72,6 @@ public class XMLBuilder {
 			after= false;
 		}
 		(after ? afterContent : content).append(v);
-	}
-
-	/**
-	 * interface toXML
-	 * 
-	 * @author Bureau
-	 *
-	 */
-	public interface IXMLBuilder {
-
-		public XMLBuilder toXML(XMLBuilder buf);
-	}
-
-	/**
-	 * un element XML
-	 * 
-	 * @author Bureau
-	 *
-	 */
-	public static class XMLElement implements IXMLBuilder {
-		private Object name;
-		private Object comment;
-
-		public Object getComment() {
-			return comment;
-		}
-
-		/** commentaire **/
-		public XMLElement setComment(Object comment) {
-			this.comment = comment;
-			return this;
-		}
-
-		protected int nbTabInternal = 0;
-		protected int nbInitialTab = 0;
-
-		public int getNbInitialTab() {
-			return nbInitialTab;
-		}
-
-		public XMLElement setNbInitialTab(int nbInitialTab) {
-			this.nbInitialTab = nbInitialTab;
-			return this;
-		}
-
-		protected List<Attr> listAttr = new ArrayList<>();
-		protected List<Object> listInner = new ArrayList<>();
-
-		public XMLElement(Object name, Object... inner) {
-			super();
-			this.name = name;
-
-			if (inner != null) {
-				List<String> listClass = null;
-				
-				for (Object object : inner) {
-					if (object instanceof Attr) {
-						listAttr.add((Attr) object);
-
-					} else if (object instanceof CSSClass) {
-						if (listClass == null)
-							listClass = new ArrayList<>();
-						else
-							listClass.add(" ");
-						listClass.add(((CSSClass) object).getId());
-					} else {
-
-						listInner.add(object);
-					}
-				}
-				
-				if (listClass!=null)
-				{
-					String[] arr = new String[listClass.size()];
-					listAttr.add(XMLBuilder.createAttr("class", "\""+ String.join("", listClass.toArray(arr)) +"\""));
-				}
-			}
-
-		}
-
-		public void newLine(XMLBuilder buf) {
-
-			if (buf.isJS()) {
-				if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCrXMLinJS())
-					buf.addContent("'+\n'");
-			} else {
-				if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCrXML())
-					buf.addContent("\n");
-			}
-
-			for (int i = 0; i < nbInitialTab; i++) {
-				buf.addContent("\t");
-			}
-		}
-
-		public void newTabulation(XMLBuilder buf) {
-			// if (buf.isJS()) return;
-			for (int i = 0; i < nbTabInternal; i++) {
-				buf.addContent("\t");
-			}
-		}
-
-		@Override
-		public XMLBuilder toXML(XMLBuilder buf) {
-
-			XUIFactoryXHtml.getXMLFile().listParent.add(this);
-
-			if (comment != null /* && !buf.isJS() */) {
-				newLine(buf);
-				newTabulation(buf);
-				buf.addContent("<!--" + comment + "-->");
-			}
-
-			if (name != null) {
-				newLine(buf);
-			}
-
-			newTabulation(buf);
-			if (name != null) {
-				buf.addContent("<" + name);
-
-				for (Attr attr : listAttr) {
-					buf.addContent(" ");
-					attr.toXML(buf);
-				}
-				buf.addContent(">");
-			}
-			int nbChild = 0;
-			for (Object inner : listInner) {
-				if (inner != null)
-					nbChild = doChild(buf, nbChild, inner);
-			}
-			if (nbChild > 0) {
-				newLine(buf);
-				newTabulation(buf);
-			}
-			if (name != null) {
-				buf.addContent("</" + name + ">");
-			}
-
-			if (comment != null /* && !buf.isJS() */) {
-				newLine(buf);
-				newTabulation(buf);
-				buf.addContent("<!--end of " + comment + "-->");
-			}
-
-			nbTabInternal = 0;
-			nbInitialTab = 0;
-			XUIFactoryXHtml.getXMLFile().listParent.removeLast();
-			return buf;
-		}
-
-		private int doChild(XMLBuilder buf, int nbChild, Object inner) {
-
-			if (inner instanceof XMLElement) {
-				nbChild++;
-				XMLElement tag = ((XMLElement) inner);
-				tag.nbTabInternal = this.nbTabInternal + 1;
-				tag.nbInitialTab = this.nbInitialTab;
-				tag.toXML(buf);
-			} else if (inner instanceof Part) {
-				Part part = ((Part) inner);
-				nbChild++;
-				for (XMLElement elem : part.part.getListElement(CONTENT.class)) {
-					elem.nbTabInternal = this.nbTabInternal + 1;
-					elem.nbInitialTab = this.nbInitialTab;
-				}
-				part.toXML(buf);
-			} else if (inner instanceof List) {
-				List<?> listChild = (List<?>) inner;
-				for (Object object : listChild) {
-					nbChild = doChild(buf, nbChild, object);
-				}
-			} else if (inner instanceof Handle) {
-				Handle h = (Handle) inner;
-				String nameHandle = h.getName();
-				LinkedList<Object> listParent = XUIFactoryXHtml.getXMLFile().listParent;
-				Object handledObject = null;
-				for (Iterator<Object> it = listParent.descendingIterator(); it.hasNext();) {
-					Object elm = it.next();
-					if (elm instanceof XMLElement) {
-						// MgrErrorNotificafion.doError("Handle on Element",
-						// null);
-					} else if (elm instanceof Part) {
-						Object elem = ((Part) elm).part.getProperty(nameHandle);
-						if (elem != null) {
-							handledObject = elem;
-						}
-					}
-				}
-				if (handledObject != null) {
-					nbChild = doChild(buf, nbChild, handledObject);
-				}
-
-			} else if (inner instanceof JSClassImpl) {
-				JSClassImpl part = ((JSClassImpl) inner);
-				JSBuilder jsBuilder = part.getJSBuilder();
-				jsBuilder.nbTabInternal = this.nbTabInternal + 1;
-				jsBuilder.nbInitialTab = this.nbInitialTab;
-				part.toXML(buf);
-				nbChild++;
-			} else if (inner instanceof JSContent) {
-				{
-					JSContent part = ((JSContent) inner);
-					JSBuilder jsBuilder = part.getJSBuilder();
-					jsBuilder.nbTabInternal = this.nbTabInternal + 1;
-					jsBuilder.nbInitialTab = this.nbInitialTab;
-					part.toXML(buf);
-					nbChild++;
-				}
-			} else
-				buf.addContent(inner);
-
-			return nbChild;
-		}
-
-	}
-
-	/**
-	 * un attribut XML
-	 * 
-	 * @author Bureau
-	 *
-	 */
-	public static class Attr implements IXMLBuilder {
-		private Object name;
-		private Object value;
-
-		public Object getValue() {
-			return value;
-		}
-
-		public Attr(Object name, Object value) {
-			super();
-			this.name = name;
-			this.value = value;
-		}
-
-		@Override
-		public XMLBuilder toXML(XMLBuilder buf) {
-			buf.addContent(name);
-			buf.addContent("=");
-			buf.addContent(value);
-			return buf;
-		}
-	}
-
-	public static class Part implements IXMLBuilder {
-		XMLPart part;
-
-		public Part(XMLPart part, Object... inner) {
-			this.part = part;
-			this.part.getChildren().addAll(Arrays.asList(inner));
-		}
-
-		@Override
-		public XMLBuilder toXML(XMLBuilder buf) {
-			XUIFactoryXHtml.getXMLFile().listParent.add(this);
-			buf.after = false;
-			for (XMLElement elem : part.getListElement(CONTENT.class)) {
-				elem.toXML(buf);
-			}
-			buf.after = true;
-			for (XMLElement elem : part.getListElement(AFTER_CONTENT.class)) {
-				elem.toXML(buf);
-			}
-			buf.after = false;
-			XUIFactoryXHtml.getXMLFile().listParent.removeLast();
-			return buf;
-		}
 	}
 
 	public static class Handle {

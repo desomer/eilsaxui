@@ -1,6 +1,10 @@
 package com.elisaxui.xui.core.page;
 
+import static com.elisaxui.xui.core.widget.button.ViewRippleEffect.cRippleEffect;
+import static com.elisaxui.xui.core.widget.button.ViewRippleEffect.cRippleEffectShow;
+
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.XHTMLRoot.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xhtml.js.JSXHTMLPart;
@@ -11,7 +15,7 @@ import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
+import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.xui.admin.AppRoot;
 import com.elisaxui.xui.admin.page.JSTestDataDriven;
 import com.elisaxui.xui.core.toolkit.TKActivity;
@@ -19,7 +23,6 @@ import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.toolkit.TKRouter;
 import com.elisaxui.xui.core.transition.CssTransition;
 import com.elisaxui.xui.core.transition.TKTransition;
-import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
 import com.elisaxui.xui.core.widget.container.JSContainer;
 import com.elisaxui.xui.core.widget.container.JSPageLayout;
 import com.elisaxui.xui.core.widget.menu.JSMenu;
@@ -79,8 +82,18 @@ public class ScnStandard extends XHTMLPart {
 						+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js'></script>"
 						+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/granim/1.0.6/granim.min.js'></script>"
 						+ "<link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet'>"
-						),
+						)
 				
+				
+				
+				);
+	}
+		
+	
+	@xTarget(HEADER.class)
+	@xRessource
+	public XMLElement xImportAfter() {
+		return xListElement(
 				xPart(new TKQueue()),
 				xImport(JSXHTMLPart.class),
 				xImport(JSTestDataDriven.class),
@@ -94,12 +107,9 @@ public class ScnStandard extends XHTMLPart {
 				xPart(new CssTransition()),
 				xImport(TKTransition.class),
 				xImport(JSMenu.class),
-				xImport(TKActivity.class)
-				
-				
-				);
+				xImport(TKActivity.class));
 	}
-		
+				
 	@xTarget(HEADER.class)
 	@xRessource
 	public XMLElement xStyle() {
@@ -194,10 +204,10 @@ public class ScnStandard extends XHTMLPart {
 					   .var("event", "btn.data('x-action')")
 					   
 					   // recherche le ripple btn
-					   ._if( "! ripple.hasClass('",  ViewRippleEffect.cRippleEffect().getId(), "')")
-					   		.set("ripple", "btn.closest('.",  ViewRippleEffect.cRippleEffect().getId(), "')")
-							._if( "! ripple.hasClass('",  ViewRippleEffect.cRippleEffect().getId(), "')")
-					   			.set("ripple", "btn.children('.",  ViewRippleEffect.cRippleEffect().getId(), "')")
+					   ._if( "! ripple.hasClass('",  cRippleEffect.getId(), "')")
+					   		.set("ripple", "btn.closest('.",  cRippleEffect.getId(), "')")
+							._if( "! ripple.hasClass('",  cRippleEffect.getId(), "')")
+					   			.set("ripple", "btn.children('.",  cRippleEffect.getId(), "')")
 					   		.endif()	
 					   .endif()
 					   					   
@@ -213,11 +223,11 @@ public class ScnStandard extends XHTMLPart {
 							   .__(TKQueue.startAlone(fct()
 						   		      		.__(tkrouter.doEvent("event"))
 						   		      , CssTransition.NEXT_FRAME	, fct()  // attente ripple effect
-							 //  				.__("ripple.addClass('", ViewRippleEffect.cRippleEffectShow().getId() ,"')")
+							   				.__("ripple.addClass('", cRippleEffectShow.getId() ,"')")
 									 //,CssTransition.SPEED_RIPPLE_EFFECT/3, 
 
 									 ,CssTransition.SPEED_RIPPLE_EFFECT, fct()  // attente ripple effect
-								   		    .__("ripple.removeClass('", ViewRippleEffect.cRippleEffectShow().getId() ,"')")     	
+								   		    .__("ripple.removeClass('", cRippleEffectShow.getId() ,"')")     	
 									   )
 								)  
 						   .endif()

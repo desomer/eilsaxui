@@ -1,6 +1,8 @@
 package com.elisaxui.core.xui.xhtml.js;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
+import com.elisaxui.core.xui.xhtml.js.value.JSString;
 
 /**
  * 
@@ -11,14 +13,15 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
  */
 public interface JSXHTMLPart extends JSClass {
 
-	Object html=null;
-	Object js=null;
+	JSString html=null;
+	JSString js=null;
 	
 	default Object constructor(Object h, Object j) {
 		return set(html, h)
 			  .set(js, j)
 				;
 	}
+	
 	/** TODO creer le template en script type = "text/template"   */
 	default Object append(Object parent)
 	{

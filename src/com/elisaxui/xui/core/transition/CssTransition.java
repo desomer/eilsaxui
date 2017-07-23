@@ -12,7 +12,7 @@ import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
+import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.xui.admin.page.JSTestDataDriven;
 import com.elisaxui.xui.core.page.ScnStandard;
 import com.elisaxui.xui.core.toolkit.TKActivity;
@@ -27,7 +27,7 @@ import com.elisaxui.xui.core.widget.menu.ViewMenu;
 import com.elisaxui.xui.core.widget.navbar.JSNavBar;
 import com.elisaxui.xui.core.widget.overlay.JSOverlay;
 
-
+@xComment("CssTransition")
 public class CssTransition extends XHTMLPart {
 
 

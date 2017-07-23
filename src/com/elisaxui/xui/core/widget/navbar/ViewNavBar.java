@@ -4,19 +4,20 @@
 package com.elisaxui.xui.core.widget.navbar;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.XHTMLRoot.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
+import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.xui.core.page.ScnStandard;
 import com.elisaxui.xui.core.widget.button.ViewBtnBurger;
 import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
 import com.elisaxui.xui.core.widget.menu.JSMenu;
 import com.elisaxui.xui.core.widget.menu.ViewMenuDivider;
 import com.elisaxui.xui.core.widget.menu.ViewMenuItems;
-
+import static  com.elisaxui.xui.core.widget.button.ViewRippleEffect.*;
 /**
  * @author Bureau
  *
@@ -30,7 +31,7 @@ public class ViewNavBar extends XHTMLPart {
 	
 	public static final String PROPERTY_NAME = "PROPERTY_NAME";
 	
-	@xTarget(HEADER.class)
+	@xTarget(AFTER_BODY.class)
 	@xRessource
 	public XMLElement xStyle() {
 		
@@ -58,14 +59,12 @@ public class ViewNavBar extends XHTMLPart {
 	@xTarget(HEADER.class)
 	@xRessource
 	public XMLElement xImportAllClass() {
-		return xListElement(
-				xImport(JSNavBar.class));
+		return	xImport(JSNavBar.class);
 	}
 	
 	@xTarget(CONTENT.class)
 	public XMLElement xContenu() {  
 		return xDiv( xId(this.getProperty(PROPERTY_NAME)), xAttr("class", "\"navbar fixedTop\""),
-				//
 				this.getChildren());
 	}
 	
@@ -82,7 +81,7 @@ public class ViewNavBar extends XHTMLPart {
 	}
 	
 	public static XMLElement getTemplateAction(Object name, Object action) {
-		return xElement("button", xAttr("data-x-action", txt(xVar(action))), actionBtnContainer, ViewRippleEffect.cRippleEffect() , xAttr("type", "\"button\""),  "<i class=\"actionBtn material-icons\">",xVar(name),"</i>");
+		return xElement("button", xAttr("data-x-action", txt(xVar(action))), actionBtnContainer, cRippleEffect , xAttr("type", "\"button\""),  "<i class=\"actionBtn material-icons\">",xVar(name),"</i>");
 	}
 	
 	public static XMLElement getTemplateBgCanvas() {

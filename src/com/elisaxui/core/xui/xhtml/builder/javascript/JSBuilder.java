@@ -13,8 +13,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
+import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xml.builder.XMLElement;
+import com.elisaxui.core.xui.xml.builder.XUIFormatManager;
 
 
 /**
@@ -25,14 +28,14 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLElement;
  *
  */
 
-public class JSBuilder extends XMLElement {     // Element pour tabulation 
+public class JSBuilder extends XUIFormatManager {    
 	
 	
-	static boolean debug = false;
+	static boolean debug = true;
+	static boolean debug2 = false;
 	
-	public JSBuilder(Object name, Object[] inner) {
+	public JSBuilder() {
 		// TODO Auto-generated constructor stub
-		super(name, inner);
 	}
 
 	public void setNameOfProxy(String prefix, Object inst, Object name) {
@@ -85,7 +88,7 @@ public class JSBuilder extends XMLElement {     // Element pour tabulation
 				}
 
 				String id = getMethodId(method, args);
-				JSClassImpl implcl = XUIFactoryXHtml.getXMLFile().getClassImpl(JSBuilder.this, cl);
+				JSClassImpl implcl = XUIFactoryXHtml.getXHTMLFile().getClassImpl(JSBuilder.this, cl);
 				boolean isMthAlreadyInClass = implcl.listDistinctFct.containsKey(id);
 
 				if (!isMthAlreadyInClass) {
@@ -99,7 +102,7 @@ public class JSBuilder extends XMLElement {     // Element pour tabulation
 						//	JSContent r = mapContent.remove(id);					
 							nextName=id;
 							if (debug)
-								System.out.println("create mth "+id+" of class " + implcl.name);
+								System.out.println("[JSBuilder]   include mth "+id+" of class " + implcl.name);
 							
 							JSFunction fct = createJSFunctionImpl(MthInvoke);    // creer le code
 							JSClassImpl ImplClass = getJSClassImpl(cl, proxy);
@@ -108,8 +111,8 @@ public class JSBuilder extends XMLElement {     // Element pour tabulation
 						else
 						{
 						    // appel d'une function js de la même class
-							if (debug)
-								System.out.println("******************************** mth "+id+" of class " + implcl.name + " next = "+nextName);
+							if (debug2)
+								System.out.println("[JSBuilder]******************************** mth "+id+" of class " + implcl.name + " next = "+nextName);
 							implcl.listHandleFuntionPrivate.add(MthInvoke);
 							
 							return toJSCallInner(method, args);
@@ -120,23 +123,23 @@ public class JSBuilder extends XMLElement {     // Element pour tabulation
 						if (currentContent==null)
 						{
 							currentContent=createJSContent();
-							if (debug)
-								System.out.println(System.identityHashCode(currentContent)+ " - createJSContent "+nextName+" of class " + implcl.name);
+							if (debug2)
+								System.out.println("[JSBuilder]"+System.identityHashCode(currentContent)+ " - createJSContent "+nextName+" of class " + implcl.name);
 							mapContent.put(nextName, currentContent); // creer le contenu
 						}
 						
 						// appel l'implementation le methode JSInterface
 						Object ret =  method.invoke(currentContent, args);
-						if (debug)
+						if (debug2)
 						{
 							if (ret instanceof JSContent )
 							{
-								System.out.println(System.identityHashCode(currentContent)+ " - appel de la mth "+id+" of class " + implcl.name +" => "+((JSContent)ret).listElem );
+								System.out.println("[JSBuilder]"+System.identityHashCode(currentContent)+ " - appel de la mth "+id+" of class " + implcl.name +" => "+((JSContent)ret).listElem );
 							}	
 							else
-								System.out.println(System.identityHashCode(currentContent)+ " - [no JSContent] appel de la mth "+id+" of class " + implcl.name +" => "+ret );
+								System.out.println("[JSBuilder]"+System.identityHashCode(currentContent)+ " - [no JSContent] appel de la mth "+id+" of class " + implcl.name +" => "+ret );
 	
-							System.out.println(System.identityHashCode(currentContent)+ " - value = " +currentContent.listElem);
+							System.out.println("[JSBuilder]"+System.identityHashCode(currentContent)+ " - value = " +currentContent.listElem);
 						}						
 						return ret;
 					}
@@ -182,7 +185,7 @@ public class JSBuilder extends XMLElement {     // Element pour tabulation
 					code._return(ret);
 				}
 			    
-				if (debug)
+				if (debug2)
 					System.out.println(System.identityHashCode(code)+ " - return JSFunction " + id);
 				
 				JSFunction fct = createJSFunction().setName(handle.method.getName()).setParam(p)
@@ -256,6 +259,28 @@ public class JSBuilder extends XMLElement {     // Element pour tabulation
 		return (E) proxy;
 	}
 
+	
+	public static void initJSConstructor(Class<? extends JSClass> cl, String name) {
+		// init constructor
+		JSClass inst = XHTMLPart.jsBuilder.getProxy(cl);
+		Method[] lism = cl.getDeclaredMethods();
+		if (lism != null) {
+			for (Method method : lism) {
+				if (method.getName().equals("constructor")) {
+//					System.out.println("[JSBuilder]  include default constructor of class " + name);
+					try {
+						method.invoke(inst, new Object[method.getParameterCount()]);
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+							| SecurityException e) {
+						ErrorNotificafionMgr.doError("pb constructor sur " + cl.getSimpleName(), e);
+						e.printStackTrace();
+					}
+
+				}
+			}
+		}
+	}
+	
 	/**
 	 * id  = nom method + nb argument
 	 * @param method
@@ -271,7 +296,7 @@ public class JSBuilder extends XMLElement {     // Element pour tabulation
 	}
 	
 	public JSClassImpl getJSClassImpl(Class<? extends JSClass> cl, Object proxy) throws IllegalAccessException {
-		JSClassImpl ImplClass = XUIFactoryXHtml.getXMLFile().getClassImpl(JSBuilder.this, cl);
+		JSClassImpl ImplClass = XUIFactoryXHtml.getXHTMLFile().getClassImpl(JSBuilder.this, cl);
 //		if (!ImplClass.isInitialized()) {
 //
 //			ImplClass.setInitialized(true);

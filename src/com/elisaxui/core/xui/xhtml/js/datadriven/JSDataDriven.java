@@ -1,6 +1,7 @@
 package com.elisaxui.core.xui.xhtml.js.datadriven;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
+import com.elisaxui.core.xui.xhtml.js.value.JSCallBack;
 
 /**
  * 
@@ -16,9 +17,10 @@ public interface JSDataDriven extends JSClass {
 
 	JSDataSet dataSet = null;
 
-	String callBackEnter = null;
-	String callBackExit = null;
-	String callBackChange = null;
+	JSCallBack callBackEnter = null;
+	JSCallBack callBackExit = null;
+	JSCallBack callBackChange = null;
+	
 	JSDataDriven _this = null;
 	JSDataDriven _self = null;
 

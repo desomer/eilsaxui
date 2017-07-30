@@ -3,6 +3,7 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.css;
 
+import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xml.builder.IXMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XUIFormatManager;
@@ -13,8 +14,8 @@ public final class CSSStyle extends XUIFormatManager implements IXMLBuilder {
 
 	@Override
 	public String toString() {
-		if (path instanceof CSSClass)
-			return  "."+((CSSClass)path).getId() + " { " +content +" }";
+		if (path instanceof XClass)
+			return  "."+((XClass)path).getId() + " { " +content +" }";
 		else
 			return  path + " {" +content +"}";
 	}

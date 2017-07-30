@@ -6,7 +6,7 @@ package com.elisaxui.xui.core.widget.navbar;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
-import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
+import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -25,9 +25,9 @@ import static  com.elisaxui.xui.core.widget.button.ViewRippleEffect.*;
 @xComment("ViewNavBar")
 public class ViewNavBar extends XHTMLPart {
 	
-	static CSSClass actionBtnContainer;
-	static CSSClass animatedBg;
-	public static CSSClass fixedToAbsolute;
+	static XClass actionBtnContainer;
+	static XClass animatedBg;
+	public static XClass fixedToAbsolute;
 	
 	public static final String PROPERTY_NAME = "PROPERTY_NAME";
 	

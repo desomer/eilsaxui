@@ -20,7 +20,6 @@ public class CSSBuilder  extends XMLElement {
 	
 	private CSSBuilder(Object name, Object... inner) {
 		super("style", inner);
-		// TODO Auto-generated constructor stub
 	}
 
 
@@ -42,6 +41,7 @@ public class CSSBuilder  extends XMLElement {
 		return super.toXML(buf);
 	}
 	
+	@Deprecated
 	public CSSBuilder on(Object path, Object content)
 	{
 		listStyle.add(new CSSStyle(path, content));

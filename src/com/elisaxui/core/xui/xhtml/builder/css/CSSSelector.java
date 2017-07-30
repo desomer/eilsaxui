@@ -3,6 +3,8 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.css;
 
+import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+
 /**
  * @author Bureau
  *
@@ -19,10 +21,10 @@ public class CSSSelector {
 	private CSSSelector(Object... sel)
 	{
 		for (Object object : sel) {
-			if (object instanceof CSSClass)
+			if (object instanceof XClass)
 			{
 				selector.append(".");
-				selector.append(((CSSClass)object).getId());
+				selector.append(((XClass)object).getId());
 			}
 			else
 				selector.append(object.toString()); 		

@@ -1,12 +1,7 @@
 package com.elisaxui.core.xui.xml.builder;
 
-import java.util.Collection;
-import java.util.Collections;
-
-import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xml.XMLPart;
-import com.elisaxui.core.xui.xml.annotation.xTarget;
 
 /**
  * 

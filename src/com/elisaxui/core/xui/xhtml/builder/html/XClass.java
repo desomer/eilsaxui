@@ -1,13 +1,15 @@
 /**
  * 
  */
-package com.elisaxui.core.xui.xhtml.builder.css;
+package com.elisaxui.core.xui.xhtml.builder.html;
+
+import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
 
 /**
  * @author Bureau
  *
  */
-public class CSSClass {
+public class XClass {
 	String id;
 	
 	

@@ -6,7 +6,7 @@ package com.elisaxui.xui.core.widget.menu;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
-import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
+import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.js.JSXHTMLPart;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataCtx;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataDriven;
@@ -35,12 +35,12 @@ public class ViewMenu extends XHTMLPart {
 	}
 	
 	@xComment("menu")
-	public CSSClass cMenu;
+	public XClass cMenu;
 
 	@xComment("fixedLeft")
-	CSSClass cFixedLeft;
+	XClass cFixedLeft;
 
-	CSSClass cHeaderMenu;
+	XClass cHeaderMenu;
 
 	@xTarget(HEADER.class)
 	@xRessource

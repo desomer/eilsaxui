@@ -5,7 +5,7 @@ package com.elisaxui.xui.core.widget.container;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
-import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
+import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -17,7 +17,7 @@ import com.elisaxui.xui.core.widget.button.ViewBtnBurger;
  */
 public class ViewCard extends XHTMLPart {
 
-	CSSClass cPanel;
+	XClass cPanel;
 	
 	@xTarget(HEADER.class)
 	@xRessource

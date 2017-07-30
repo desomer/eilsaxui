@@ -10,9 +10,9 @@ import java.util.List;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
+import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.html.Xid;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -150,10 +150,10 @@ public class XMLPart  {
 						e.printStackTrace();
 					}
 				}
-				else if (!isStatic && CSSClass.class.isAssignableFrom(field.getType()))
+				else if (!isStatic && XClass.class.isAssignableFrom(field.getType()))
 				{
 					System.out.println("[XMLPart] init var CSSClass on " + this.getClass() + " name "+ field.getName() );
-					CSSClass classCss = new CSSClass();
+					XClass classCss = new XClass();
 					String name = field.getName();
 					xComment comment = field.getAnnotation(xComment.class);
 					if (comment != null) {

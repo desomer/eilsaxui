@@ -1,6 +1,7 @@
-package com.elisaxui.core.xui.xhtml.builder.javascript;
+package com.elisaxui.core.xui.xhtml.builder.javascript.jsclass;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 
 /**
  * interface proxy de class JS

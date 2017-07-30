@@ -17,10 +17,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.elisaxui.core.xui.XUILaucher;
-import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
+import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xFile;
@@ -121,10 +121,10 @@ public class XHTMLAppBuilder {
 						e.printStackTrace();
 					}
 				}
-				else if (isStatic && CSSClass.class.isAssignableFrom(field.getType()))
+				else if (isStatic && XClass.class.isAssignableFrom(field.getType()))
 				{
 					System.out.println("[XHTMLAppBuilder] init XMLPart var static <CSSClass> name "+ field.getName() );
-					CSSClass classCss = new CSSClass();
+					XClass classCss = new XClass();
 					String name = field.getName();
 					xComment comment = field.getAnnotation(xComment.class);
 					if (comment != null) {

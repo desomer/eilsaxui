@@ -5,8 +5,8 @@ package com.elisaxui.xui.core.widget.button;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
-import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
+import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -23,8 +23,8 @@ public class ViewBtnCircle extends XHTMLPart {
 
 	public static final String PROPERTY_ICON = "PROPERTY_ICON";
 
-	CSSClass cBtnCircle;
-	CSSClass cBtnCircleChangeForm;
+	XClass cBtnCircle;
+	XClass cBtnCircleChangeForm;
 
 	@xTarget(HEADER.class)
 	@xRessource

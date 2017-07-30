@@ -5,7 +5,7 @@ package com.elisaxui.core.xui.xhtml.builder.javascript;
 
 import java.util.ArrayList;
 
-import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
+import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 
 
 /**
@@ -34,6 +34,7 @@ public class JSClassMethod extends JSVariable {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	public <E extends JSClassMethod> E addContent(Object content) {
 		
 		if ( content instanceof Object[])
@@ -41,8 +42,8 @@ public class JSClassMethod extends JSVariable {
 			Object[] arr = (Object[])content;
 			for (Object object : arr) {
 				
-				if (object instanceof CSSClass)
-					listContent.add(((CSSClass)object).getId());
+				if (object instanceof XClass)
+					listContent.add(((XClass)object).getId());
 				else if ( object instanceof Object[])
 				{
 					addContent(object);
@@ -56,6 +57,7 @@ public class JSClassMethod extends JSVariable {
 		return (E)this;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public <E extends JSClassMethod> E  callMth(String mth, Object...classes)
 	{
 		E ret = (E)this;

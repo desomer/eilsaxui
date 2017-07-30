@@ -6,7 +6,8 @@ import java.util.List;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder.JSNewLine;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder.aInvocationHandler;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassInvocationHandler;
 import com.elisaxui.core.xui.xml.builder.IXMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -27,11 +28,11 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	/**
 	 * @param jsBuilder
 	 */
-	JSContent(JSBuilder jsBuilder) {
+	protected JSContent(JSBuilder jsBuilder) {
 		this.jsBuilder = jsBuilder;
 	}
 
-	LinkedList<Object> listElem = new LinkedList<Object>();
+	private LinkedList<Object> listElem = new LinkedList<Object>();
 
 	public JSBuilder getJSBuilder() {
 		return this.jsBuilder;
@@ -44,7 +45,7 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
-		for (Object object : listElem) {
+		for (Object object : getListElem()) {
 			if (object == JSNewLine.class) {
 				this.jsBuilder.newLine(buf);
 				this.jsBuilder.newTabulation(buf);
@@ -100,8 +101,8 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 */
 	private void addElem(Object name, Object object) {
 		if (object instanceof JSListParameter && name instanceof JSClass) {
-			aInvocationHandler inv = (aInvocationHandler) Proxy.getInvocationHandler(name);
-			listElem.add(JSClass._new(inv.implementClass, ((JSListParameter) object).param));
+			JSClassInvocationHandler inv = (JSClassInvocationHandler) Proxy.getInvocationHandler(name);
+			getListElem().add(JSClass._new(inv.getImplementClass(), ((JSListParameter) object).param));
 		} else
 			addElem(object);
 	}
@@ -115,10 +116,10 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 			@SuppressWarnings("unchecked")
 			List<Object> list = (List<Object>) object;
 			for (Object object2 : list) {
-				listElem.add(object2);
+				getListElem().add(object2);
 			}
 		} else
-			listElem.add(object);
+			getListElem().add(object);
 	}
 
 	/**************************************************************************************/
@@ -131,11 +132,11 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 */
 	@Override
 	public JSMethodInterface __(Object... content) {
-		listElem.add(JSNewLine.class);
+		getListElem().add(JSNewLine.class);
 		for (Object object : content) {
 			addElem(object);
 		}
-		listElem.add(";");
+		getListElem().add(";");
 		return this;
 	}
 
@@ -148,16 +149,16 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 */
 	@Override
 	public JSMethodInterface set(Object name, Object... content) {
-		listElem.add(JSNewLine.class);
-		listElem.add(name);
-		listElem.add("=");
+		getListElem().add(JSNewLine.class);
+		getListElem().add(name);
+		getListElem().add("=");
 		if (content != null) {
 			for (Object object : content) {
 				addElem(name, object);
 			}
 		} else
-			listElem.add("null");
-		listElem.add(";");
+			getListElem().add("null");
+		getListElem().add(";");
 		return this;
 	}
 
@@ -170,83 +171,83 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 */
 	@Override
 	public JSMethodInterface var(Object name, Object... content) {
-		listElem.add(JSNewLine.class);
-		listElem.add("var ");
-		listElem.add(name);
-		listElem.add("=");
+		getListElem().add(JSNewLine.class);
+		getListElem().add("var ");
+		getListElem().add(name);
+		getListElem().add("=");
 		for (Object object : content) {
 			addElem(name, object);  // pour le new class
 		}
-		listElem.add(";");
+		getListElem().add(";");
 		return this;
 	}
 
 	@Override
 	public JSMethodInterface consoleDebug(Object... content) {
-		listElem.add(JSNewLine.class);
-		listElem.add("console.debug(");
+		getListElem().add(JSNewLine.class);
+		getListElem().add("console.debug(");
 		int i = 0;
 		for (Object object : content) {
 			addElem(object);
 			i++;
 			if (i < content.length)
-				listElem.add(",");
+				getListElem().add(",");
 		}
-		listElem.add(");");
+		getListElem().add(");");
 		return this;
 	}
 
 	@Override
 	public JSMethodInterface _for(Object... content) {
-		listElem.add(JSNewLine.class);
-		listElem.add("for (");
+		getListElem().add(JSNewLine.class);
+		getListElem().add("for (");
 		for (Object object : content) {
 			addElem(object);
 		}
-		listElem.add(") {");
+		getListElem().add(") {");
 		return this;
 	}
 
 	@Override
 	public JSMethodInterface endfor() {
-		listElem.add(JSNewLine.class);
-		listElem.add("}");
+		getListElem().add(JSNewLine.class);
+		getListElem().add("}");
 		return this;
 	}
 
 	@Override
 	public JSMethodInterface _if(Object... content) {
-		listElem.add(JSNewLine.class);
-		listElem.add("if (");
+		getListElem().add(JSNewLine.class);
+		getListElem().add("if (");
 		for (Object object : content) {
 			addElem(object);
 		}
-		listElem.add(") {");
+		getListElem().add(") {");
 		return this;
 	}
 
 	@Override
 	public JSMethodInterface _else() {
-		listElem.add(JSNewLine.class);
-		listElem.add("} else {");
+		getListElem().add(JSNewLine.class);
+		getListElem().add("} else {");
 		return this;
 	}
 	
 	@Override
 	public JSMethodInterface _elseif(Object... content) {
-		listElem.add(JSNewLine.class);
-		listElem.add("} else if(");
+		getListElem().add(JSNewLine.class);
+		getListElem().add("} else if(");
 		for (Object object : content) {
 			addElem(object);
 		}
-		listElem.add(") {");
+		getListElem().add(") {");
 		return this;
 	}
 
 	@Override
 	public JSMethodInterface endif() {
-		listElem.add(JSNewLine.class);
-		listElem.add("}");
+		getListElem().add(JSNewLine.class);
+		getListElem().add("}");
 		return this;
 	}
 
@@ -305,12 +306,12 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 */
 	@Override
 	public JSMethodInterface _return(Object... content) {
-		listElem.add(JSNewLine.class);
-		listElem.add("return ");
+		getListElem().add(JSNewLine.class);
+		getListElem().add("return ");
 		for (Object object : content) {
 			addElem(object);
 		}
-		listElem.add(";");
+		getListElem().add(";");
 		return this;
 	}
 
@@ -324,6 +325,20 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 			str.append(param[i]);
 		}
 		return str.toString();
+	}
+
+	/**
+	 * @return the listElem
+	 */
+	public LinkedList<Object> getListElem() {
+		return listElem;
+	}
+
+	/**
+	 * @param listElem the listElem to set
+	 */
+	public void setListElem(LinkedList<Object> listElem) {
+		this.listElem = listElem;
 	}
 
 	

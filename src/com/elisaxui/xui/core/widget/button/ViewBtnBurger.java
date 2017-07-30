@@ -5,7 +5,7 @@ package com.elisaxui.xui.core.widget.button;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
-import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
+import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -20,20 +20,20 @@ import static  com.elisaxui.xui.core.transition.CssTransition.*;
 @xComment("ViewBtnBurger")
 public class ViewBtnBurger extends XHTMLPart {
 
-	CSSClass cLeftBtn;
+	XClass cLeftBtn;
 
 	@xComment("hamburger")
-	CSSClass hamburger;
+	XClass hamburger;
 	@xComment("hamburger-box")
-	CSSClass hamburger_box;
+	XClass hamburger_box;
 	@xComment("hamburger-inner")
-	CSSClass hamburger_inner;
+	XClass hamburger_inner;
 
 	@xComment("hamburger--elastic")
-	CSSClass hamburger_elastic;
+	XClass hamburger_elastic;
 	
 	@xComment("hamburger--arrow")
-	CSSClass hamburger_arrow;
+	XClass hamburger_arrow;
 
 	@xTarget(HEADER.class)
 	@xRessource

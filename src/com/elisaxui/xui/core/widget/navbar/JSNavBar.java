@@ -3,7 +3,7 @@
  */
 package com.elisaxui.xui.core.widget.navbar;
 
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.js.JSXHTMLPart;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataDriven;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataSet;

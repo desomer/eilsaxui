@@ -9,11 +9,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
-import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSStyle;
+import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassImpl;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassImpl;
 import com.elisaxui.core.xui.xml.XMLPart.CONTENT;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Handle;
 
@@ -56,12 +56,12 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 				if (object instanceof XMLAttr) {
 					listAttr.add((XMLAttr) object);
 
-				} else if (object instanceof CSSClass) {
+				} else if (object instanceof XClass) {
 					if (listClass == null)
 						listClass = new ArrayList<>();
 					else
 						listClass.add(" ");
-					listClass.add(((CSSClass) object).getId());
+					listClass.add(((XClass) object).getId());
 				} else {
 
 					listInner.add(object);

@@ -3,7 +3,7 @@
  */
 package com.elisaxui.xui.core.widget.container;
 
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.xui.core.toolkit.TKRouter;
 
 /**

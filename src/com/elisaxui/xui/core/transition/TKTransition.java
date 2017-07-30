@@ -4,7 +4,7 @@
 package com.elisaxui.xui.core.transition;
 
 import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.js.JSXHTMLPart;
 import com.elisaxui.xui.core.page.ScnStandard;
 import com.elisaxui.xui.core.toolkit.JQuery;

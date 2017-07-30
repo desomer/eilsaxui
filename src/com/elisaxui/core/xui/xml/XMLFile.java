@@ -11,9 +11,9 @@ import com.elisaxui.core.config.ConfigMgr;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassImpl;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassImpl;
 import com.elisaxui.helper.ReflectionHelper;
 
 public class XMLFile {

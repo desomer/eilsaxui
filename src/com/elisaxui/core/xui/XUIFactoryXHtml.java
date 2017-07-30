@@ -1,7 +1,6 @@
 package com.elisaxui.core.xui;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -15,24 +14,19 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
-import com.elisaxui.core.xui.xhtml.XHTMLRoot;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.xhtml.XHTMLAppBuilder;
 import com.elisaxui.core.xui.xhtml.XHTMLFile;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.XHTMLRoot;
 import com.elisaxui.core.xui.xml.XMLFile;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.XMLPart.CONTENT;
-import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
-
-import javax.ws.rs.core.UriInfo;
-
-import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 
 @Path("/page")
 public class XUIFactoryXHtml {

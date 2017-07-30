@@ -1,6 +1,6 @@
 package com.elisaxui.core.xui.xhtml.js.datadriven;
 
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.js.value.JSInt;
 import com.elisaxui.core.xui.xhtml.js.value.JSon;
 

@@ -5,7 +5,7 @@ package com.elisaxui.xui.core.widget.button;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
-import com.elisaxui.core.xui.xhtml.builder.css.CSSClass;
+import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -34,7 +34,7 @@ public class ViewFloatAction extends XHTMLPart {
 //.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
 
 
-	static CSSClass cFloatAction;
+	static XClass cFloatAction;
 	
 	@xTarget(HEADER.class)
 	@xRessource

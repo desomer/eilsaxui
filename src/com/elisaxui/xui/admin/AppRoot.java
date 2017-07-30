@@ -4,17 +4,12 @@
 package com.elisaxui.xui.admin;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
-import com.elisaxui.xui.core.page.ScnStandard;
 import com.elisaxui.xui.core.toolkit.TKActivity;
 import com.elisaxui.xui.core.toolkit.TKQueue;
-import com.elisaxui.xui.core.transition.CssTransition;
-import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
 import com.elisaxui.xui.core.widget.chart.ViewJSChart;
-import com.elisaxui.xui.core.widget.container.JSContainer;
 import com.elisaxui.xui.core.widget.container.JSPageLayout;
 import com.elisaxui.xui.core.widget.menu.JSMenu;
 import com.elisaxui.xui.core.widget.navbar.JSNavBar;

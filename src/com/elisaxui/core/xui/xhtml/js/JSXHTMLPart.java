@@ -1,6 +1,5 @@
 package com.elisaxui.core.xui.xhtml.js;
 
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.js.value.JSString;
 

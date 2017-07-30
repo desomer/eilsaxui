@@ -41,6 +41,7 @@ public class XUIFactoryXHtml {
 		return ThreadLocalXUIFactoryPage.get();
 	}
 
+	@SuppressWarnings("deprecation")
 	@GET
 	@Path("/{pays}/{lang}/id/{id}")
 	@Produces(MediaType.TEXT_HTML)

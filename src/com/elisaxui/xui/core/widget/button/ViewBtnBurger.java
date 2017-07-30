@@ -62,7 +62,8 @@ public class ViewBtnBurger extends XHTMLPart {
 
 	@xTarget(CONTENT.class)
 	public XMLElement xBurgerBtn() {
-		return xElement( "button", /*ViewRippleEffect.cRippleEffect(),*/ xIdAction(txt("burger")), xAttr("type", "\"button\""), cLeftBtn,  hamburger, true? hamburger_elastic:hamburger_arrow,
+		boolean modeXCross = true;
+		return xElement( "button", /*ViewRippleEffect.cRippleEffect(),*/ xIdAction(txt("burger")), xAttr("type", "\"button\""), cLeftBtn,  hamburger, modeXCross? hamburger_elastic:hamburger_arrow,
 				xSpan(hamburger_box, xSpan(hamburger_inner)));
 	}
 

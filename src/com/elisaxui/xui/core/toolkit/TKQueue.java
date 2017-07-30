@@ -6,7 +6,6 @@ package com.elisaxui.xui.core.toolkit;
 import java.util.ArrayList;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.XHTMLRoot.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xPriority;

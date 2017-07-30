@@ -5,7 +5,6 @@ package com.elisaxui.core.xui.xhtml;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -25,8 +24,8 @@ import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.helper.ClassLoaderHelper;
-import com.elisaxui.helper.ReflectionHelper;
 import com.elisaxui.helper.ClassLoaderHelper.FileEntry;
+import com.elisaxui.helper.ReflectionHelper;
 
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 
@@ -145,7 +144,7 @@ public class XHTMLAppBuilder {
 	
 	
 	public static void initJSClassVar(JSBuilder jsBuilder, Class<? extends JSClass> cl) {
-		String name = cl.getSimpleName();
+	//	String name = cl.getSimpleName();
 		// init field => chaque attribut contient le nom js de son champs
 		Field[] listField = cl.getDeclaredFields();
 		if (listField != null) {
@@ -159,10 +158,10 @@ public class XHTMLAppBuilder {
 
 	private static void initJSClassField(Field field) {
 		
-		int mod = field.getModifiers();
-		boolean isTransient =  Modifier.isTransient(mod);
-		boolean isFinal =  Modifier.isFinal(mod);
-		boolean isNative =  Modifier.isNative(mod);
+//		int mod = field.getModifiers();
+//		boolean isTransient =  Modifier.isTransient(mod);
+//		boolean isFinal =  Modifier.isFinal(mod);
+//		boolean isNative =  Modifier.isNative(mod);
 		
 		
 		System.out.print("[XHTMLAppBuilder]init JSClass var "+ field.getName() + " de type "+ field.getType());

@@ -71,6 +71,16 @@ public abstract class XHTMLPart extends XMLPart {
 		return xElement("canvas", inner);
 	}
 
+	/*************************  META **************************************/
+	
+	public final static XMLElement xTitle(Object... inner) {
+		return xElement("title", inner);
+	}
+	
+	public final static XMLElement xMeta(Object... inner) {
+		return xElement("meta", inner);
+	}
+	
 	public final static XMLElement xComment(Object... comment) {
 		ArrayList<Object> elem = new ArrayList<>();
 		elem.add("<!--\n");
@@ -81,6 +91,8 @@ public abstract class XHTMLPart extends XMLPart {
 		return xElement(null, elem.toArray());
 	}
 
+	
+	/***********************************************************************/
 	public final static JSMethodInterface js() {
 		return jsBuilder.createJSContent();
 	}
@@ -99,10 +111,24 @@ public abstract class XHTMLPart extends XMLPart {
 		XMLElement t = xElement("script", xAttr("type", "\"text/javascript\""), js);
 		return t;
 	}
+	
+	public final static XMLElement xScriptSrc(Object js) {
+		XMLElement t = xElement("script", xAttr("src", "\""+js+"\""));
+		return t;
+	}
+	
+	public final static XMLElement xScriptSrcAsync(Object js) {
+		XMLElement t = xElement("script", xAttr("src", "\""+js+"\""), xAttr("async"));
+		return t;
+	}
 
 
 	public final static CSSBuilder xCss() {
 		return new CSSBuilder();
+	}
+	
+	public final static CSSBuilder xCss(Object...path ) {
+		return new CSSBuilder().select(path);
 	}
 	
 	

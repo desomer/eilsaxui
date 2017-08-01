@@ -39,6 +39,11 @@ public class XClass {
 		return CSSSelector.onPath(this, " ", desc);
 	}
 	
+	/**
+	 * descendant
+	 * @param desc
+	 * @return
+	 */
 	public CSSSelector __(Object desc)
 	{
 		return descendant(desc) ;

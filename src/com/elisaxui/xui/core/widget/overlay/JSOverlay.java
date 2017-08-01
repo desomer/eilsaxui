@@ -13,13 +13,14 @@ import static  com.elisaxui.xui.core.widget.overlay.ViewOverlay.*;
  *
  */
 public interface JSOverlay extends JSClass {
+	
 	JSInt speed = null;
 	JSFloat opacity = null;
 	
 	default Object constructor(Object speed, Object opacity)
 	{
-		set(this.speed, speed)
-		.set(this.opacity, opacity)
+		set(JSOverlay.speed, speed)
+		.set(JSOverlay.opacity, opacity)
 		;
 		return null;
 	}

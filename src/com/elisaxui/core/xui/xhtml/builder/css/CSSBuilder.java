@@ -54,9 +54,28 @@ public class CSSBuilder  extends XMLElement {
 		return this;
 	}
 	
+	
+	public CSSBuilder path(CSSBuilder content)
+	{
+		LinkedList<CSSStyle> path = content.listStyle;
+		
+		for (CSSStyle cssStyle : path) {
+			listStyle.add(new CSSStyle(CSSSelector.onPath(listStyle.getLast().path, " ", cssStyle.path), cssStyle.content));
+		}
+		
+		return this;
+	}
+	
 	public CSSBuilder set(Object content)
 	{
-		listStyle.getLast().content = content;
+		Object cssContent = listStyle.getLast().content;
+	//	if (cssContent==null)
+			listStyle.getLast().content = content;
+	//	else
+//		{
+//			
+//		}
+			
 		return this;	
 	}
 }

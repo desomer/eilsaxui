@@ -45,7 +45,9 @@ public class CssTransition extends XHTMLPart {
 	public static final int SPEED_RIPPLE_EFFECT = 300;
 	public static final int SPEED_BURGER_EFFECT = 200;;
 	
-	static XClass activity;
+	public static XClass activity;
+	public static XClass content;
+	
 	static XClass fixedForAnimated;
 	static XClass active;
 	

@@ -272,6 +272,11 @@ public class XMLPart  {
 		return attr;
 	}
 	
+	public final static XMLAttr xAttr(String name) {
+		XMLAttr attr = XMLBuilder.createAttr(name, null);
+		return attr;
+	}
+	
 	public final static Handle vHandle(String name) {
 		Handle attr = XMLBuilder.createHandle(name);
 		return attr;

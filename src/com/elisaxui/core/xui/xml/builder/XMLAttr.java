@@ -26,8 +26,11 @@ public class XMLAttr implements IXMLBuilder {
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
 		buf.addContent(name);
-		buf.addContent("=");
-		buf.addContent(value);
+		if (value!=null)
+		{
+			buf.addContent("=");
+			buf.addContent(value);
+		}
 		return buf;
 	}
 }

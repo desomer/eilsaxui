@@ -5,7 +5,6 @@ package com.elisaxui.xui.core.widget.overlay;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.AFTER_BODY;
-import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;

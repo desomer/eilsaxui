@@ -2,10 +2,11 @@ package com.elisaxui.xui.core.page;
 
 import static com.elisaxui.xui.core.widget.button.ViewRippleEffect.cRippleEffect;
 import static com.elisaxui.xui.core.widget.button.ViewRippleEffect.cRippleEffectShow;
+import static com.elisaxui.xui.core.transition.CssTransition.*;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.XHTMLRoot.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
+import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xhtml.js.JSXHTMLPart;
 import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataCtx;
@@ -61,7 +62,8 @@ public class ScnStandard extends XHTMLPart {
     		;
     
 
-    
+	static XClass scene;
+	
 	//var oRect = oElement.getBoundingClientRect();
     
 	@xTarget(HEADER.class)
@@ -70,20 +72,24 @@ public class ScnStandard extends XHTMLPart {
 	public XMLElement xImport() {
 		return xListElement(
 				
-				xElement("title", "le standard"),
-				xElement("meta", xAttr("name", xTxt("theme-color")), xAttr("content", xTxt(bgColorTheme))),
-				
-				xElement("/", "<script  src='http://code.jquery.com/jquery-3.2.1.min.js'></script>"
-						+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js'></script>"
+				xTitle("le standard"),
+				xMeta(xAttr("name", xTxt("theme-color")), xAttr("content", xTxt(bgColorTheme))),
+				xScriptSrc("http://code.jquery.com/jquery-3.2.1.min.js"),
+				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"),
+				xScriptSrc("http://work.krasimirtsonev.com/git/navigo/navigo.js"),
+				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"),
+				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"),
+				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/granim/1.0.6/granim.min.js"),
+				xElement("/",""
 					//	+ "<script src='https://cdnjs.cloudflare.com/ajax/libs/js-signals/1.0.0/js-signals.min.js'></script>"
-						+ "<script src='http://work.krasimirtsonev.com/git/navigo/navigo.js'></script>"
 					//	+ "<script src='https://code.jquery.com/pep/0.4.2/pep.js'></script>"
 						+ "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css'>"
 						+ "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css'>"
-						+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js'></script>"
-						+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js'></script>"
-						+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/granim/1.0.6/granim.min.js'></script>"
-						+ "<link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet'>"
+					//	+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js'></script>"
+					//	+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js'></script>"
+					//	+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/granim/1.0.6/granim.min.js'></script>"
+						+ "<link rel='stylesheet' title='main' href='https://fonts.googleapis.com/icon?family=Material+Icons'>"
+				//		+ "<link rel='alternate stylesheet' title='main' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>"
 						)
 				
 				
@@ -118,25 +124,27 @@ public class ScnStandard extends XHTMLPart {
 	public XMLElement xStyle() {
 		
 		return xCss()
-				.on("html", "font-size: 14px; line-height: 1.5;"
+				.select("html").set("font-size: 14px; line-height: 1.5;"
 						+ "font-family: 'Roboto', sans-serif;font-weight: normal;")    //color: rgba(0,0,0,0.87);
 				
-				.on("body", "background-color: "+bgColorScene+"; margin: 0; ")
-				.on("*", "-webkit-tap-highlight-color: rgba(0,0,0,0);")  // pas de coulour au click => ripple a la place
+				.select("body").set("background-color: "+bgColorScene+"; margin: 0; ")
+				.select("*").set("-webkit-tap-highlight-color: rgba(0,0,0,0);")  // pas de coulour au click => ripple a la place
 
 				//----------------------------------------------------------------
-				.on(".scene","overflow-x: hidden; background-color: "+bgColorScene+";"   // overflow: auto; -webkit-overflow-scrolling: auto; 
+				.select(scene).set("overflow-x: hidden; background-color: "+bgColorScene+";"   // overflow: auto; -webkit-overflow-scrolling: auto; 
 						+ "min-width: 100vw;  min-height: 100vh; "   //position: absolute;
 						)
 				//----------------------------------------------------------------
-				.on(".activity", "background-color: white;"
-						+ PREF_3D
-						+ " will-change:overflow,z-index;") //will-change:transform
+				.select(activity).set("background-color: white;"+ PREF_3D+ " will-change:overflow,z-index;") //will-change:transform
+					.path(xCss(content)
+								.set(" min-height: 100vh; min-width: 100vw; "
+										+ "background-color:"+bgColorContent+";will-change:contents")  // changement durant le freeze du contenu de l'activity
+								)
 				
 				//----------------------------------------------------------------
-				.on(".activity .content", " min-height: 100vh; min-width: 100vw; background-color:"+bgColorContent+";will-change:contents")  // changement durant le freeze du contenu de l'activity
-				.on(".content", "box-sizing: border-box;"
-						+ "min-height:100%; min-width: 100%; max-width: 100%; "
+				.select(content).set("box-sizing: border-box;"  // ne pas ajouter a cActivity
+						+ "min-height:100%; min-width: 100%;"
+						+ " max-width: 100%; "
 						+ "padding: 8px; padding-top: " + (heightNavBar + 8) + "px")	  //position:absolute;		
 				;
 	}
@@ -146,8 +154,7 @@ public class ScnStandard extends XHTMLPart {
 		return 
 			xListElement(
 				xPart(new ViewMenu()),
-				xDiv(xAttr("class", "'scene'")
-				)
+				xDiv(scene)
 		);
 	}
 	

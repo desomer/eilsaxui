@@ -11,7 +11,7 @@ import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
-import com.elisaxui.xui.core.page.ScnStandard;
+import com.elisaxui.xui.core.page.XUIScene;
 import static  com.elisaxui.xui.core.transition.CssTransition.*;
 import static  com.elisaxui.xui.core.widget.button.ViewRippleEffect.*;
 /**
@@ -35,7 +35,7 @@ public class ViewBtnCircle extends XHTMLPart {
 								"border-radius: 50%;  font-size: 24px; margin: auto;   cursor: pointer; "
 						 		+ "height: 56px; width: 56px; "
 								+ "min-width: 56px; padding: 0;  overflow: hidden; outline: 0 !important; " // pas																						// focus
-								+ ScnStandard.bgColor
+								+ XUIScene.bgColor
 								+ "box-shadow: 3px 3px 3px 0 rgba(0,0,0,.24);"
 								+ "transition:transform " + SPEED_SHOW_ACTIVITY +  "ms ease-out;"
 								+ " position: relative; line-height: normal; border:none; background-color:#ee6e73;"

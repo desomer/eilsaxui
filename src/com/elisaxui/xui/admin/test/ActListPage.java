@@ -1,4 +1,4 @@
-package com.elisaxui.xui.admin.page;
+package com.elisaxui.xui.admin.test;
 
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.BODY;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;

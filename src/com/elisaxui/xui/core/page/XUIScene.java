@@ -8,10 +8,7 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
-import com.elisaxui.core.xui.xhtml.js.JSXHTMLPart;
-import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataCtx;
-import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataDriven;
-import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataSet;
+import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
@@ -19,7 +16,10 @@ import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.xui.admin.AppRoot;
-import com.elisaxui.xui.admin.page.JSTestDataDriven;
+import com.elisaxui.xui.admin.test.JSTestDataDriven;
+import com.elisaxui.xui.core.datadriven.JSDataCtx;
+import com.elisaxui.xui.core.datadriven.JSDataDriven;
+import com.elisaxui.xui.core.datadriven.JSDataSet;
 import com.elisaxui.xui.core.toolkit.TKActivity;
 import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.toolkit.TKRouter;
@@ -27,13 +27,14 @@ import com.elisaxui.xui.core.transition.CssTransition;
 import com.elisaxui.xui.core.transition.TKTransition;
 import com.elisaxui.xui.core.widget.container.JSContainer;
 import com.elisaxui.xui.core.widget.container.JSPageLayout;
+import com.elisaxui.xui.core.widget.loader.ViewLoader;
 import com.elisaxui.xui.core.widget.menu.JSMenu;
 import com.elisaxui.xui.core.widget.menu.ViewMenu;
 import com.elisaxui.xui.core.widget.overlay.JSOverlay;
 
 @xFile(id = "standard")
 @xComment("activite standard")
-public class ScnStandard extends XHTMLPart {
+public class XUIScene extends XHTMLPart {
 
 	public static final int heightNavBar = 53*2;
 	public static final int widthMenu = 250;
@@ -50,7 +51,7 @@ public class ScnStandard extends XHTMLPart {
 	public static final int ZINDEX_FLOAT = 3;
 	public static final int ZINDEX_OVERLAY = 4;
 
-	public static final String bgColorScene = "#333333";
+	public static final String bgColorScene = "#ffffff"; // "#333333";
 	public static final String bgColorTheme = "#ff359d";
 	public static final String bgColorThemeOpacity = "rgba(255,0,136,1)";
 	public static final String bgColor = "background: linear-gradient(to right, rgba(253,94,176,1) 0%, rgba(255,0,136,1) 64%, rgba(239,1,124,1) 100%);";
@@ -74,23 +75,61 @@ public class ScnStandard extends XHTMLPart {
 				
 				xTitle("le standard"),
 				xMeta(xAttr("name", xTxt("theme-color")), xAttr("content", xTxt(bgColorTheme))),
-				xScriptSrc("http://code.jquery.com/jquery-3.2.1.min.js"),
-				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"),
-				xScriptSrc("http://work.krasimirtsonev.com/git/navigo/navigo.js"),
-				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"),
-				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"),
-				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/granim/1.0.6/granim.min.js"),
-				xElement("/",""
+				
+//				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css", "resLoaded(this);"),
+				xLinkCss("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"),
+//				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css", "resLoaded(this);"),
+				xLinkCss("https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css"),
+				xLinkCss("https://fonts.googleapis.com/icon?family=Material+Icons"),
+				
+				xScriptJS(js()
+						.set("window.doOnResLoadWait", fct("res", "id")._if("window.doOnResLoad==undefined")
+									//.__("alert('doOnResLoadWait')")
+									.__("setTimeout(", fct().__("doOnResLoadWait(res,id)") ,",100)")
+								._else()
+									.__("doOnResLoad(res, id)")
+								.endif()
+								)
+								
+						.set("window.resLoaded", fct("res", "id").__("doOnResLoadWait(res, id)"))  
+						.set("window.onerror", fct("msg", "url", "noLigne", "noColonne", "erreur") 
+								.var("chaine", "msg.toLowerCase()")
+								.var("souschaine", txt("script error"))
+								._if("chaine.indexOf(souschaine) > -1")
+									.__("alert('Script Error : voir la Console du Navigateur pour les Détails')")
+								._else()
+									.var("message", "["
+											+ "'Message : ' + msg,"
+											+ "'URL : ' + url,"
+											+ "'Ligne : ' + noLigne,"
+											+ "'Colonne : ' + noColonne,"
+											+ "'Objet Error : ' + JSON.stringify(erreur)"
+											+ "].join(' - ')")
+									.__("alert(message)")
+								.endif()
+								._return(true)
+						)
+						),
+				
+				xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js", "resLoaded(this, "+XUICstRessource.ID_RES_FASTDOM+");"),
+				xScriptSrcAsync("/asset/?url=http://work.krasimirtsonev.com/git/navigo/navigo.js", "resLoaded(this, "+XUICstRessource.ID_RES_NAVIGO+");"),
+				//xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"),
+				xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js", "resLoaded(this, "+XUICstRessource.ID_RES_HAMMER+");"),
+				xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js", "resLoaded(this, "+XUICstRessource.ID_RES_CHART+");"),
+				//xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/granim/1.0.6/granim.min.js"),
+				xScriptSrcAsync("http://code.jquery.com/jquery-3.2.1.min.js", "resLoaded(this, "+XUICstRessource.ID_RES_JQUERY+");")
+
+				//,xElement("/",""
 					//	+ "<script src='https://cdnjs.cloudflare.com/ajax/libs/js-signals/1.0.0/js-signals.min.js'></script>"
 					//	+ "<script src='https://code.jquery.com/pep/0.4.2/pep.js'></script>"
-						+ "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css'>"
-						+ "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css'>"
+					//	+ "<link rel='stylesheet' media='none' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css'>"
+					//	+ "<link rel='stylesheet' media='none' href='https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css'>"
 					//	+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js'></script>"
 					//	+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js'></script>"
 					//	+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/granim/1.0.6/granim.min.js'></script>"
-						+ "<link rel='stylesheet' title='main' href='https://fonts.googleapis.com/icon?family=Material+Icons'>"
+					//	+ "<link rel='stylesheet' media='none' title='main' href='https://fonts.googleapis.com/icon?family=Material+Icons'>"
 				//		+ "<link rel='alternate stylesheet' title='main' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>"
-						)
+				//		)
 				
 				
 				
@@ -98,7 +137,7 @@ public class ScnStandard extends XHTMLPart {
 	}
 		
 	
-	@xTarget(HEADER.class)
+	@xTarget(AFTER_CONTENT.class)
 	@xRessource
 	public XMLElement xImportAfter() {
 		return xListElement(
@@ -154,53 +193,86 @@ public class ScnStandard extends XHTMLPart {
 		return 
 			xListElement(
 				xPart(new ViewMenu()),
-				xDiv(scene)
+				xDiv(scene)                       /**, xPart(new ViewLoader())**/
 		);
 	}
 	
 	
+	JSXHTMLPart template = null;
+	
 	@xTarget(AFTER_CONTENT.class)
+	@xPriority(1)
 	@xRessource
 	public XMLElement xImportStart() {
 		return xListElement(
 				xScriptJS(js()
 						// a mettre dans TKConfig
-						.set("$xui", "{ intent: { nextActivityAnim : 'fromBottom' }, config:{ } }")  
+						.set("$xui", "{ intent: { nextActivityAnim : 'fromBottom' }, config:{ }, resourceLoading:{} }")
+						.set("$xui.resourceLoading.query", true)
+						.set("$xui.resourceLoading.hammer", true)
+						.set("$xui.resourceLoading.navigo", true)
+						.set("$xui.resourceLoading.fastdom", true)
+						.set("$xui.resourceLoading.chart", true)
 						
-						/**********************************************/
-						.__("(",getEventManager(),")()")
-						.__("(",getMoveManager(),")()")
-						.__("(",getStateManager(),")()")
-						
-						/***************************************************/
-						)
+						.set("window.doOnResLoad", fct("res", "id")
+//								.__("alert(id)")
+								.consoleDebug(txt("ressource loaded ="), "id")   //res.src.split('/').pop()
+								.__()
+								._if("id=="+XUICstRessource.ID_RES_JQUERY)
+									.__(getIntializeJSFct())
+									.__("(",getEventManager(),")()")									
+									.set("$xui.resourceLoading.query", false)	
+								.endif()
+								._if("id=="+XUICstRessource.ID_RES_NAVIGO)
+									.set("$xui.resourceLoading.navigo", false)	
+									.__("(",getStateManager(),")()")
+								.endif()
+								._if("id=="+XUICstRessource.ID_RES_HAMMER)
+									.set("$xui.resourceLoading.hammer", false) 
+								.endif()	
+								._if("id=="+XUICstRessource.ID_RES_FASTDOM)
+									.set("$xui.resourceLoading.fastdom", false) 
+								.endif()
+								._if("id=="+XUICstRessource.ID_RES_CHART)
+									.set("$xui.resourceLoading.chart", false) 
+								.endif()
+								
+								._if("!$xui.resourceLoading.hammer && !$xui.resourceLoading.query")
+									.__("(",getMoveManager(),")()")
+								.endif()	
+								
+								._if("!$xui.resourceLoading.hammer && !$xui.resourceLoading.query&& !$xui.resourceLoading.navigo&& !$xui.resourceLoading.fastdom&& !$xui.resourceLoading.chart")
+//									.__(getIntializeJSFct())
+//									.__("(",getEventManager(),")()")
+//									.__("(",getMoveManager(),")()")
+//									.__("(",getStateManager(),")()")
+									.__(new AppRoot().getJS())
+								.endif()
+							)						
+					)	
 				
-				,xPart(new AppRoot())
 				);
 	}
+
+	public JSMethodInterface getIntializeJSFct()
+	{
+		return js()
 		
-	@xTarget(AFTER_CONTENT.class)
-	public XMLElement xAddJS() {
-		
-		return xScriptJS(js()
-				
-	   		   	.set("navigator.vibrate", "navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate")
-	   		   	
-				.__("$.fn.insertAt = function(elements, index){\n"+   // utiliser dans le core 
-						"\tvar children = this.children();\n"+
-						"\tif(index >= children.length){\n"+
-						"\t\tthis.append(elements);\n"+
-						"\t\treturn this;\n"+
-						"\t}\n"+
-						"\tvar before = children.eq(index);\n"+
-						"\t$(elements).insertBefore(before);\n"+
-						"\treturn this;\n"+
-						"};")
-								
-			);
+	   	.set("navigator.vibrate", "navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate")
+	   	
+		.__("$.fn.insertAt = function(elements, index){\n"+   // utiliser dans le core 
+				"\tvar children = this.children();\n"+
+				"\tif(index >= children.length){\n"+
+				"\t\tthis.append(elements);\n"+
+				"\t\treturn this;\n"+
+				"\t}\n"+
+				"\tvar before = children.eq(index);\n"+
+				"\t$(elements).insertBefore(before);\n"+
+				"\treturn this;\n"+
+				"}")
+		;
 	}
 	
-
 	TKRouter tkrouter;
 
 	public JSMethodInterface getEventManager()

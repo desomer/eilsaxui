@@ -9,7 +9,7 @@ import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
-import com.elisaxui.xui.core.page.ScnStandard;
+import com.elisaxui.xui.core.page.XUIScene;
 
 /**
  * @author Bureau
@@ -40,7 +40,7 @@ public class ViewFloatAction extends XHTMLPart {
 	public XMLElement xStyle() {
 
 		return xCss().select(cFloatAction)
-						.set("z-index:"+ScnStandard.ZINDEX_FLOAT+"; position: fixed; left: calc(90vw - 40px); top: calc(95vh - 40px); "
+						.set("z-index:"+XUIScene.ZINDEX_FLOAT+"; position: fixed; left: calc(90vw - 40px); top: calc(95vh - 40px); "
 								+ "transform: translate3d(0px,0px,0px);")
 		;
 	}

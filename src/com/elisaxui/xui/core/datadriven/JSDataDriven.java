@@ -1,7 +1,7 @@
-package com.elisaxui.core.xui.xhtml.js.datadriven;
+package com.elisaxui.xui.core.datadriven;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.js.value.JSCallBack;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSCallBack;
 
 /**
  * 

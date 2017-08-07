@@ -5,9 +5,9 @@ package com.elisaxui.xui.core.widget.container;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.js.JSXHTMLPart;
-import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataDriven;
-import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataSet;
+import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
+import com.elisaxui.xui.core.datadriven.JSDataDriven;
+import com.elisaxui.xui.core.datadriven.JSDataSet;
 import com.elisaxui.xui.core.toolkit.TKActivity;
 import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.toolkit.TKRouter;

@@ -1,4 +1,4 @@
-package com.elisaxui.xui.admin.page;
+package com.elisaxui.xui.admin.test;
 
 public class ScnOtherTest {
 

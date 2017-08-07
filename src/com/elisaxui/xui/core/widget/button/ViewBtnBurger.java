@@ -10,7 +10,7 @@ import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
-import com.elisaxui.xui.core.page.ScnStandard;
+import com.elisaxui.xui.core.page.XUIScene;
 import static  com.elisaxui.xui.core.transition.CssTransition.*;
 /**
  * @author Bureau
@@ -55,7 +55,7 @@ public class ViewBtnBurger extends XHTMLPart {
 //						"background-color: #fff; transition-property:all !important; transition-duration:500ms !important;")
 
 				.select(cLeftBtn).set("position: absolute;top: 0px; left: 0px; "
-						+ "z-index: "+ScnStandard.ZINDEX_MENU+"; outline:0 !important") 
+						+ "z-index: "+XUIScene.ZINDEX_MENU+"; outline:0 !important") 
 								// pas de bord bleu au click
 		;
 	}

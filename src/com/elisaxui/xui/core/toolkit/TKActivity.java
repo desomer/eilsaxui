@@ -4,8 +4,8 @@
 package com.elisaxui.xui.core.toolkit;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.js.value.JSString;
-import com.elisaxui.core.xui.xhtml.js.value.JSon;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSon;
 import com.elisaxui.xui.core.widget.container.JSContainer;
 
 /**

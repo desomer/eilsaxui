@@ -7,19 +7,19 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
-import com.elisaxui.core.xui.xhtml.js.JSXHTMLPart;
-import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataCtx;
-import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataDriven;
-import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataSet;
+import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
-import com.elisaxui.xui.admin.page.JSTest2Class;
-import com.elisaxui.xui.admin.page.JSTestClass;
-import com.elisaxui.xui.admin.page.JSTestDataDriven;
-import com.elisaxui.xui.core.page.ScnStandard;
+import com.elisaxui.xui.admin.test.JSTest2Class;
+import com.elisaxui.xui.admin.test.JSTestClass;
+import com.elisaxui.xui.admin.test.JSTestDataDriven;
+import com.elisaxui.xui.core.datadriven.JSDataCtx;
+import com.elisaxui.xui.core.datadriven.JSDataDriven;
+import com.elisaxui.xui.core.datadriven.JSDataSet;
+import com.elisaxui.xui.core.page.XUIScene;
 
 /**
  * @author Bureau
@@ -47,21 +47,21 @@ public class ViewMenu extends XHTMLPart {
 	public XMLElement xStyle() {
 
 		return xCss()
-				.on(cMenu, "z-index: "+ScnStandard.ZINDEX_MENU+";background-color: #ffffff;height: 120%;width: " + ScnStandard.widthMenu
+				.on(cMenu, "z-index: "+XUIScene.ZINDEX_MENU+";background-color: #ffffff;height: 120%;width: " + XUIScene.widthMenu
 						+ "px; color:black;"
-						+ ScnStandard.PREF_3D
+						+ XUIScene.PREF_3D
 						//+ "box-shadow: 4px 4px 2px 0 rgba(0,0,0,0.14);"
 						+ "will-change:transform;")
 				.on(cFixedLeft,
-						"position:absolute; top:0px; transform:translate3d(-" + (ScnStandard.widthMenu+5) + "px,0px,0px)")
-				.on(cHeaderMenu, "height:53px; " + ScnStandard.bgColorMenu)
+						"position:absolute; top:0px; transform:translate3d(-" + (XUIScene.widthMenu+5) + "px,0px,0px)")
+				.on(cHeaderMenu, "height:53px; " + XUIScene.bgColorMenu)
 
 				.on(".menu ul", "padding-left: 0;  list-style-type: none; margin:0px;")
 
 				.on(".menu li", "list-style-type: none;clear: both;  color: rgba(0,0,0,0.87);   "
 						+ "cursor: pointer;   min-height: 50px; line-height: 21px; "
 						+ "width: 100%;   text-align: left;   text-transform: none;"
-						+ ScnStandard.PREF_3D
+						+ XUIScene.PREF_3D
 						+ "animation-duration:400ms; transform:translate3d(0px,0px,0px);will-change:transform;"
 						)
 

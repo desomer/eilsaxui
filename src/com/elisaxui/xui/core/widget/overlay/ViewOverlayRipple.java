@@ -10,7 +10,7 @@ import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
-import com.elisaxui.xui.core.page.ScnStandard;
+import com.elisaxui.xui.core.page.XUIScene;
 import static  com.elisaxui.xui.core.transition.CssTransition.*;
 /**
  * @author Bureau
@@ -27,7 +27,7 @@ public class ViewOverlayRipple extends XHTMLPart {
 		return xCss()
 				.on(".ripple_overlay","position: absolute;	"
 					+ "top: 0px;    left: 0px; "
-					+ "width: 100vw;  height: 100vh; background: "+ ScnStandard.bgColorThemeOpacity +"; "
+					+ "width: 100vw;  height: 100vh; background: "+ XUIScene.bgColorThemeOpacity +"; "
 					)
 				
 				.on(".ripple_overlay.transitionx2","transition:all  "+SPEED_ACTIVITY_TRANSITION_EFFECT*2+"ms cubic-bezier(1, 0, 1, 1);")

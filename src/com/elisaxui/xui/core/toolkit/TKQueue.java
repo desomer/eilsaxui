@@ -6,7 +6,6 @@ package com.elisaxui.xui.core.toolkit;
 import java.util.ArrayList;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -80,9 +79,9 @@ public class TKQueue extends XHTMLPart {
 			"return api;\n"+
 			"}";
 			
-	@xTarget(HEADER.class)
+	@xTarget(AFTER_CONTENT.class)
 	@xRessource
-	@xPriority(200)
+	@xPriority(200)	
 	public XMLElement xAddJS() {
 		return xScriptJS( js().__(queuejs));
 	}

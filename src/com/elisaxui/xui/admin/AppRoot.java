@@ -4,6 +4,7 @@
 package com.elisaxui.xui.admin;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -20,10 +21,10 @@ import com.elisaxui.xui.core.widget.navbar.JSNavBar;
  */
 public class AppRoot extends XHTMLPart {
 
-	JSMenu jsMenu;
-	JSNavBar jsNavBar;
-	TKActivity tkActivity;
-	JSPageLayout jsPageLayout;
+	static JSMenu jsMenu;
+	static JSNavBar jsNavBar;
+	static TKActivity tkActivity;
+	static JSPageLayout jsPageLayout;
 	
 	public static String image1 = "https://images.pexels.com/photos/316465/pexels-photo-316465.jpeg?h=350&auto=compress&cs=tinysrgb";
 	public static String image2 = "https://images.pexels.com/photos/6337/light-coffee-pen-working.jpg?h=350&auto=compress&cs=tinysrgb";
@@ -35,7 +36,14 @@ public class AppRoot extends XHTMLPart {
 	@xTarget(AFTER_CONTENT.class)  // dans le header
 	@xRessource
 	public XMLElement xInitJS() {
-		return xScriptJS(js()
+		return xScriptJS(getJS())  ;
+	}
+	
+	
+	
+	public JSMethodInterface getJS()
+	{
+		return js()
 		
 				//******************** construction du menu ****************************************************
 				.var(jsMenu, _new())
@@ -45,6 +53,8 @@ public class AppRoot extends XHTMLPart {
 				.__("jsonMenu.push({type:'divider' })")
 				.__("jsonMenu.push({name:'Aide', icon:'help_outline', idAction:'help'} )")
 				.set("window.jsonMainMenu", "jsonMenu")  // liste des nemu pour animation dans tkAnimation
+				
+				.__("$.getJSON('/rest/json/toto').done(", fct("a").consoleDebug("a") ,").fail(", fct("xhr","textStatus", "error").consoleDebug("error") ,")")
 				
 				/***********************************************************************************************/		
 				.var("name", txt("Activity1"))
@@ -157,6 +167,7 @@ public class AppRoot extends XHTMLPart {
 				.__(tkActivity.createActivity("declaration1"))
 				.__(tkActivity.prepareActivity("declaration2"))
 				.__(tkActivity.prepareActivity("declaration3"))
+				.set("window.tkActivity" , tkActivity)
 				
 				
 				/*************************************************************/
@@ -190,10 +201,8 @@ public class AppRoot extends XHTMLPart {
 				.set(jsNavBar, _new())
 				.set("jsonNavBar", jsNavBar.getData("'#NavBarActivity2'"))    // bug import mth jsNavBar
 				
-				);
+				;
 	}
-	
-	
 	
 	
 	String NavBarAnimated1="var granimInstance = new Granim({\n"+

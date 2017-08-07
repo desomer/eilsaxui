@@ -1,4 +1,4 @@
-package com.elisaxui.core.xui.xhtml.js.value;
+package com.elisaxui.core.xui.xhtml.builder.javascript.value;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 

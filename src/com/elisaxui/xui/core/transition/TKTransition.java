@@ -5,8 +5,8 @@ package com.elisaxui.xui.core.transition;
 
 import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.js.JSXHTMLPart;
-import com.elisaxui.xui.core.page.ScnStandard;
+import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
+import com.elisaxui.xui.core.page.XUIScene;
 import com.elisaxui.xui.core.toolkit.JQuery;
 import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.widget.overlay.JSOverlay;
@@ -69,7 +69,7 @@ public interface TKTransition extends JSClass {
 	}
 	
 	default Object doToggleBurgerMenu() {
-		var(_overlay, _new(CssTransition.SPEED_SHOW_MENU, ScnStandard.OVERLAY_OPACITY_MENU))
+		var(_overlay, _new(CssTransition.SPEED_SHOW_MENU, XUIScene.OVERLAY_OPACITY_MENU))
 		.var("jqMenu", "$('.menu')")
 		.var("jqScene", "$('.scene')")
 		.var("jqNavBar", "$('body>.navbar')")
@@ -92,7 +92,7 @@ public interface TKTransition extends JSClass {
 				    	.__("jqActivityActive.removeClass('activityMoveForShowMenu')")
 						.__("jqActivityActive.addClass('activityMoveForHideMenu')")
 						//----------------------------- cache le menu ------------------------
-						.__("jqMenu.css('transform', 'translate3d(-"+ (ScnStandard.widthMenu + 5)+ "px,'+sct+'px,0px)' )")
+						.__("jqMenu.css('transform', 'translate3d(-"+ (XUIScene.widthMenu + 5)+ "px,'+sct+'px,0px)' )")
 						//----------------------------- repasse en croix ----------------------
 						.__("jqHamburgerDetach.css('transition','transform "+CssTransition.SPEED_SHOW_MENU+"ms linear')")
 						.__("jqHamburgerDetach.css('transform', 'translate3d(0px,'+sct+'px,0px) scale(1)' )")
@@ -127,7 +127,7 @@ public interface TKTransition extends JSClass {
 						.__("$('body').css('overflow','hidden')") // plus de scroll		
 						//---------------------------------------
 						.__("jqMenu.css('transition', '' )")   // fige le menu en haut sans animation
-						.__("jqMenu.css('transform', 'translate3d(-"+ ScnStandard.widthMenu	+ "px,'+sct+'px,0px)' )")
+						.__("jqMenu.css('transform', 'translate3d(-"+ XUIScene.widthMenu	+ "px,'+sct+'px,0px)' )")
 						
 						//-----------  detache la barre nav en haut par rapport au scroll et ajoute a l'activité  --------
 						.__(_self.doNavBarToActivity("sct"))
@@ -241,7 +241,7 @@ public interface TKTransition extends JSClass {
 	default Object doOpenActivityFromBottom()
 	{
 		
-		var(_overlay, _new(SPEED_SHOW_ACTIVITY, ScnStandard.OVERLAY_OPACITY_BACK))
+		var(_overlay, _new(SPEED_SHOW_ACTIVITY, XUIScene.OVERLAY_OPACITY_BACK))
 	 	.var("sct", "$('body').scrollTop()")
 	 	.var(_self, _this)
 	 	.var("act1", "'#'+$xui.intent.prevActivity")

@@ -1,4 +1,4 @@
-package com.elisaxui.xui.admin.page;
+package com.elisaxui.xui.admin.test;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xml.annotation.xComment;

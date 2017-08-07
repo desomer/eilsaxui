@@ -10,7 +10,7 @@ import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
-import com.elisaxui.xui.core.page.ScnStandard;;
+import com.elisaxui.xui.core.page.XUIScene;;
 
 /**
  * @author Bureau
@@ -29,7 +29,7 @@ public class ViewOverlay extends XHTMLPart {
 				.select(cBlackOverlay).set("display: none;	position: absolute;	"
 						+ "top: 0px;    left: 0px;   min-width:100% ; min-height:100%;"
 						+ "background-color: black; will-change:opacity, display;"
-						+ "opacity:0; z-index:"+ScnStandard.ZINDEX_OVERLAY+";")
+						+ "opacity:0; z-index:"+XUIScene.ZINDEX_OVERLAY+";")
 				;
 	}
 	

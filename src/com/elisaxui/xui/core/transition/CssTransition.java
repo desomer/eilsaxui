@@ -4,18 +4,18 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
-import com.elisaxui.core.xui.xhtml.js.JSXHTMLPart;
-import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataCtx;
-import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataDriven;
-import com.elisaxui.core.xui.xhtml.js.datadriven.JSDataSet;
+import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
-import com.elisaxui.xui.admin.page.JSTestDataDriven;
-import com.elisaxui.xui.core.page.ScnStandard;
+import com.elisaxui.xui.admin.test.JSTestDataDriven;
+import com.elisaxui.xui.core.datadriven.JSDataCtx;
+import com.elisaxui.xui.core.datadriven.JSDataDriven;
+import com.elisaxui.xui.core.datadriven.JSDataSet;
+import com.elisaxui.xui.core.page.XUIScene;
 import com.elisaxui.xui.core.toolkit.TKActivity;
 import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.toolkit.TKRouter;
@@ -64,8 +64,8 @@ public class CssTransition extends XHTMLPart {
 				.on(".activity.toback", "transition:transform "+(SPEED_SHOW_ACTIVITY+100)+"ms linear; "
 						+ "transform:translate3d(0px,0px,0px) scale(0.9); ")
 				
-				.on(".activity.frontActivity", "z-index:"+ScnStandard.ZINDEX_ANIM_FRONT+";")
-				.on(".activity.backActivity", "z-index:"+ScnStandard.ZINDEX_ANIM_BACK+";")
+				.on(".activity.frontActivity", "z-index:"+XUIScene.ZINDEX_ANIM_FRONT+";")
+				.on(".activity.backActivity", "z-index:"+XUIScene.ZINDEX_ANIM_BACK+";")
 				
 				.on(".activity.toHidden", "transform: translate3d(0px,100%,0px);")				
 				.on(".activity.tofront", "transform: translate3d(0px,0px,0px);")  

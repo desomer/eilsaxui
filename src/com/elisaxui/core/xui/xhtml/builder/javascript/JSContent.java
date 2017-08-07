@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder.JSNewLine;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassInvocationHandler;
 import com.elisaxui.core.xui.xml.builder.IXMLBuilder;
@@ -63,9 +62,13 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 //				c.toXML(buf);
 			} else if (object instanceof JSVariable) {	
 				buf.addContent(((JSVariable)object).toString());
-			} else {
+			} 
+			else if (object instanceof JSContent) {	
+				((JSContent)object).toXML(buf);
+			} 
+			else {
 				if (buf.isJS())
-					// ajout d'un JS
+					// ajout d'un JS sous forme de text
 					buf.addContent(object.toString().replaceAll("'", "\\\\'"));
 				else
 					buf.addContent(object);
@@ -84,13 +87,21 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 		StringBuilder txtXMLAfter = new StringBuilder(1000);
 
 		elem.toXML(new XMLBuilder("js", txtXML, txtXMLAfter).setJS(true));
-
+		
+		String txtJS = txtXMLAfter.toString().replace("</script>", "<\\/script>");
+		
+		// gestion d'ajout d'un JSXHTMLPart dans un autre JSXHTMLPart
+		if (txtJS.contains("new JSXHTMLPart("))	{
+			txtJS=	txtJS.replace("new JSXHTMLPart('", "new JSXHTMLPart(\\'");
+			txtJS = txtJS.replace("');", ");");
+		}	
+		
 		buf.addContent("new JSXHTMLPart('");
 		buf.addContent(txtXML);
 		buf.addContent("',");
 		newLine(buf);
 		buf.addContent("'");
-		buf.addContent(txtXMLAfter.toString().replace("</script>", "<\\/script>"));
+		buf.addContent(txtJS);
 		buf.addContent("')");
 	}
 
@@ -343,4 +354,7 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 
 	
 
+	// new line 
+	public static final class JSNewLine {
+	};
 }

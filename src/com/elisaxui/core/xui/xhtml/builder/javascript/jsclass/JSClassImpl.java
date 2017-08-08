@@ -101,6 +101,10 @@ public class JSClassImpl extends JSContent {
 	 * @return
 	 */
 	public static final List<Object> toJSCall(Object name ,Method method, Object[] args) {
+		
+		if (method.getName().equals("doNavigate"))
+			System.out.println("ok");
+		
 		List<Object> buf = new ArrayList<Object>();
 		buf.add(name + "." + method.getName() + "(");
 

@@ -74,6 +74,8 @@ public interface JSContainer extends JSClass {
 							.endfor()
 						.endfor()
 						
+						.var(_tkrouter, "$xui.tkrouter")
+						
 						._if("ctx.row.active")
 						  	.__(_tkrouter, ".", _tkAnimation.doActivityActive("'#'+ctx.row.id"))
 						  	.__(_tkrouter, ".", _tkAnimation.doNavBarToBody())

@@ -5,14 +5,14 @@ package com.elisaxui.xui.core.widget.container;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.xui.core.toolkit.TKRouter;
-
+import static  com.elisaxui.xui.core.toolkit.json.JXui.*;
 /**
  * @author Bureau
  *
  */
 public interface JSPageLayout extends JSClass {
 
-	TKRouter _tkrouter =null;
+	//TKRouter _tkrouter =null;
 	
 	
 	default Object setEnableCloseGesture(Object name) {
@@ -21,7 +21,7 @@ public interface JSPageLayout extends JSClass {
 	  .__("mcheader.get('pan').set({ enable: true, direction: Hammer.DIRECTION_VERTICAL})")
 	  .__("mcheader.on('hammer.input',", fct("ev") 
 			  		._if("ev.deltaY>20 && ev.offsetDirection==16 && ev.velocity>1 ")
-			  		.__(_tkrouter.doEvent("'HeaderSwipeDown'"))
+			  		.__($xui().tkrouter().doEvent("'HeaderSwipeDown'"))
 			  		.endif()
 			  ,")")	
 	   ;

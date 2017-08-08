@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -62,9 +63,16 @@ public class JSClassInvocationHandler implements InvocationHandler {
 					if (debug)
 						System.out.println("[JSBuilder]   include mth "+id+" of class " + implcl.getName());
 					
+					JSClassInvocationHandler mh = (JSClassInvocationHandler) Proxy.getInvocationHandler(proxy);
+					
+					Object nameProxy = mh.name;
+					mh.name = "this"; // force a this pour appel interne d'autre fct de la classe JS
+					
 					JSFunction fct = createJSFunctionImpl(MthInvoke);    // creer le code
 					JSClassImpl ImplClass = jsbuilder.getJSClassImpl(getImplementClass(), proxy);
 					ImplClass.addFunction(fct);
+					
+					mh.name = nameProxy;
 				}
 				else
 				{
@@ -127,11 +135,10 @@ public class JSClassInvocationHandler implements InvocationHandler {
 				p[i] = param[i].getName();
 			}
 		}
-
+		
 		// appel la fct la classJS 
 		Object ret = constructor.newInstance(declaringClass, MethodHandles.Lookup.PRIVATE)
 				.unreflectSpecial(handle.method, declaringClass).bindTo(handle.proxy).invokeWithArguments(p);
-
 		
 		String id = JSClassImpl.getMethodId(handle.method, handle.args);
 	    JSContent code = mapContent.get(id); 

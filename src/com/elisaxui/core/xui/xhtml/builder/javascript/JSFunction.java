@@ -50,10 +50,15 @@ public class JSFunction extends JSContent
 	public XMLBuilder toXML(XMLBuilder buf) {
 
 		if (name==null)
+		{
+			buf.addContent("/******** anonymous *******/");
 			buf.addContent("function");
+		}
 		else
 		{
-			//jsBuilder.newLine(buf);
+			jsBuilder.newTabulation(buf);
+			buf.addContent("/******** start "+ name + " *******/");
+			jsBuilder.newLine(buf);
 			jsBuilder.newTabulation(buf);
 			buf.addContent(name);
 		}
@@ -76,6 +81,12 @@ public class JSFunction extends JSContent
 		jsBuilder.newLine(buf);
 		jsBuilder.newTabulation(buf);
 		buf.addContent("}");
+		if (name==null)
+		{
+			jsBuilder.newLine(buf);
+			jsBuilder.newTabulation(buf);
+			buf.addContent("/******** end anonymous *******/");
+		}
 		return buf;
 	}
 

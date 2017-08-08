@@ -48,6 +48,10 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 			if (object == JSNewLine.class) {
 				this.jsBuilder.newLine(buf);
 				this.jsBuilder.newTabulation(buf);
+			} else if (object == JSAddTab.class) {
+				jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab() + 1);
+			} else if (object == JSRemoveTab.class) {
+				jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab() - 1);
 			} else if (object instanceof XMLElement) {
 				doXMLElement(buf, ((XMLElement) object));
 			} else if (object instanceof JSFunction) {
@@ -226,6 +230,7 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 		return this;
 	}
 
+	/*****************************************************/
 	@Override
 	public JSMethodInterface _if(Object... content) {
 		getListElem().add(JSNewLine.class);
@@ -234,29 +239,35 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 			addElem(object);
 		}
 		getListElem().add(") {");
+		getListElem().add(JSAddTab.class);
 		return this;
 	}
 
 	@Override
 	public JSMethodInterface _else() {
+		getListElem().add(JSRemoveTab.class);
 		getListElem().add(JSNewLine.class);
 		getListElem().add("} else {");
+		getListElem().add(JSAddTab.class);
 		return this;
 	}
 	
 	@Override
 	public JSMethodInterface _elseif(Object... content) {
+		getListElem().add(JSRemoveTab.class);
 		getListElem().add(JSNewLine.class);
 		getListElem().add("} else if(");
 		for (Object object : content) {
 			addElem(object);
 		}
 		getListElem().add(") {");
+		getListElem().add(JSAddTab.class);
 		return this;
 	}
 
 	@Override
 	public JSMethodInterface endif() {
+		getListElem().add(JSRemoveTab.class);
 		getListElem().add(JSNewLine.class);
 		getListElem().add("}");
 		return this;
@@ -356,5 +367,9 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 
 	// new line 
 	public static final class JSNewLine {
+	};
+	public static final class JSAddTab {
+	};
+	public static final class JSRemoveTab {
 	};
 }

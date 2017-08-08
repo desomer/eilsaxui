@@ -45,6 +45,10 @@ public interface TKRouter extends JSClass {
 				._if(_self,".navigo.nextenable")
 				
 				    .var("toRoute", _self,".navigo._lastRouteResolved")
+				    ._if("toRoute.url.substring(0, 1) == '!'")
+				    	.__("toRoute.url = toRoute.url.substring(1)")
+				    .endif()
+	
 					.var("backFromIntent", _self.isBack("toRoute.url"))
 					.var("fromIntent", _self.geCurrentIntention())
 					
@@ -69,7 +73,7 @@ public interface TKRouter extends JSClass {
 					._if("backFromIntent!=null && this.toString()==", txt(STATE_ROUTE))
 						 // to Prev Route
 						.set("$xui.intent.prevActivity", "params.url")     //TODO a changer
-					    .set("$xui.intent.activity", "tkActivity.idCurrentActivity")
+					    .set("$xui.intent.activity", "$xui.tkrouter.activityMgr.idCurrentActivity")
 					    .set("$xui.intent.nextActivityAnim", "backFromIntent.nextActivityAnim")
 					    .set("$xui.intent.url", txt("?"))
 					    
@@ -78,7 +82,7 @@ public interface TKRouter extends JSClass {
 						
 					._elseif("this.toString()==", txt(STATE_ROUTE)) // is next
 						// to Next Route
-						.set("$xui.intent.prevActivity", "tkActivity.idCurrentActivity")
+						.set("$xui.intent.prevActivity", "$xui.tkrouter.activityMgr.idCurrentActivity")
 					    .set("$xui.intent.activity", "params.url")
 					    .set("$xui.intent.url", "toRoute.url")
 					    
@@ -117,7 +121,7 @@ public interface TKRouter extends JSClass {
 	{
 		 __()
 		.__(navigo,".nextenable=", false)
-		.__(doNavigate(txt("route/Activity1")))   // premier etat
+		.__(doNavigate(txt("!route/Activity1")))   // premier etat
 		.var("intent", "{ url:'route/Activity1', nextActivityAnim : 'fromBottom' }")
 		.__(historyIntent,".push(intent)")   // ajoute a l historique interne)
 		.__(navigo,".resolve()")

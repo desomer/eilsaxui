@@ -3,9 +3,12 @@ package com.elisaxui.xui.core.page;
 import static com.elisaxui.xui.core.widget.button.ViewRippleEffect.cRippleEffect;
 import static com.elisaxui.xui.core.widget.button.ViewRippleEffect.cRippleEffectShow;
 import static com.elisaxui.xui.core.transition.CssTransition.*;
+import static  com.elisaxui.xui.core.toolkit.json.JXui.*;
+import static  com.elisaxui.xui.core.toolkit.JQuery.*;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
+import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
@@ -83,8 +86,8 @@ public class XUIScene extends XHTMLPart {
 				xLinkCss("https://fonts.googleapis.com/icon?family=Material+Icons"),
 				
 				xScriptJS(js()
-						.set("window.doOnResLoadWait", fct("res", "id")._if("window.doOnResLoad==undefined")
-									//.__("alert('doOnResLoadWait')")
+						.set("window.doOnResLoadWait", fct("res", "id")
+								._if("window.doOnResLoad==undefined")
 									.__("setTimeout(", fct().__("doOnResLoadWait(res,id)") ,",100)")
 								._else()
 									.__("doOnResLoad(res, id)")
@@ -92,6 +95,7 @@ public class XUIScene extends XHTMLPart {
 								)
 								
 						.set("window.resLoaded", fct("res", "id").__("doOnResLoadWait(res, id)"))  
+						
 						.set("window.onerror", fct("msg", "url", "noLigne", "noColonne", "erreur") 
 								.var("chaine", "msg.toLowerCase()")
 								.var("souschaine", txt("script error"))
@@ -107,13 +111,12 @@ public class XUIScene extends XHTMLPart {
 											+ "].join(' - ')")
 									.__("alert(message)")
 								.endif()
-								._return(true)
+								._return(false)  // false = trace dans le log de la console
 						)
 						),
 				
 				xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js", "resLoaded(this, "+XUICstRessource.ID_RES_FASTDOM+");"),
 				xScriptSrcAsync("/asset/?url=http://work.krasimirtsonev.com/git/navigo/navigo.js", "resLoaded(this, "+XUICstRessource.ID_RES_NAVIGO+");"),
-				//xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"),
 				xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js", "resLoaded(this, "+XUICstRessource.ID_RES_HAMMER+");"),
 				xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js", "resLoaded(this, "+XUICstRessource.ID_RES_CHART+");"),
 				//xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/granim/1.0.6/granim.min.js"),
@@ -198,16 +201,17 @@ public class XUIScene extends XHTMLPart {
 	}
 	
 	
-	JSXHTMLPart template = null;
+	//JSXHTMLPart template = null;
 	
 	@xTarget(AFTER_CONTENT.class)
 	@xPriority(1)
 	@xRessource
+	/**todo  creer une interface à $xui*/
 	public XMLElement xImportStart() {
 		return xListElement(
 				xScriptJS(js()
 						// a mettre dans TKConfig
-						.set("$xui", "{ intent: { nextActivityAnim : 'fromBottom' }, config:{ }, resourceLoading:{} }")
+						.set("$xui", "{ intent: { nextActivityAnim : 'fromBottom' }, tkrouter:'', config:{ }, resourceLoading:{} }")
 						.set("$xui.resourceLoading.query", true)
 						.set("$xui.resourceLoading.hammer", true)
 						.set("$xui.resourceLoading.navigo", true)
@@ -242,10 +246,6 @@ public class XUIScene extends XHTMLPart {
 								.endif()	
 								
 								._if("!$xui.resourceLoading.hammer && !$xui.resourceLoading.query&& !$xui.resourceLoading.navigo&& !$xui.resourceLoading.fastdom&& !$xui.resourceLoading.chart")
-//									.__(getIntializeJSFct())
-//									.__("(",getEventManager(),")()")
-//									.__("(",getMoveManager(),")()")
-//									.__("(",getStateManager(),")()")
 									.__(new AppRoot().getJS())
 								.endif()
 							)						
@@ -273,13 +273,11 @@ public class XUIScene extends XHTMLPart {
 		;
 	}
 	
-	TKRouter tkrouter;
-
 	public JSMethodInterface getEventManager()
 	{
 	  return fct()
 			   .consoleDebug("'ok EventManager'") 
-			   .__("$('body').on('touchstart',", fct('e')
+			   .__($(CSSSelector.onPath("body")).on(txt("touchstart"), ",", fct('e')
 					   .var("btn", "$(e.target).closest('[data-x-action]')")
 					  
 					   .var("ripple", "btn")
@@ -293,17 +291,17 @@ public class XUIScene extends XHTMLPart {
 					   		.endif()	
 					   .endif()
 					   					   
-					   	.__("$xui.intent.nextActivityAnim= 'fromBottom' ")	
+					   .__("$xui.intent.nextActivityAnim= 'fromBottom' ")	
 					   				   	
 					   ._if( "ripple.length>0") 
 					   
 					   	   ._if("ripple.hasClass('cBtnCircle')")
 					   	   	    .__("$xui.intent.nextActivityAnim= 'opacity'")
-					   			.__(tkrouter.doEvent("event"))
+					   			.__($xui().tkrouter().doEvent("event"))
 						   ._else()
 						   	   // ripple sans ouverture d'activity		   
 							   .__(TKQueue.startAlone(fct()
-						   		      		.__(tkrouter.doEvent("event"))
+						   		      		.__($xui().tkrouter().doEvent("event"))
 						   		      , CssTransition.NEXT_FRAME	, fct()  // attente ripple effect
 							   				.__("ripple.addClass('", cRippleEffectShow.getId() ,"')")
 									 //,CssTransition.SPEED_RIPPLE_EFFECT/3, 
@@ -315,9 +313,9 @@ public class XUIScene extends XHTMLPart {
 						   .endif()
 					   ._else()
 					   		// pas de ripple effect
-					   		.__(tkrouter.doEvent("event"))
+					   		.__($xui().tkrouter().doEvent("event"))
 					   .endif()
-				, ")")
+				))
 			;
 	}
 	
@@ -325,7 +323,8 @@ public class XUIScene extends XHTMLPart {
 	{
 		// gestion deplacement menu et fermeture par gesture 
 	  return fct().consoleDebug("'ok MoveManager'") 
-			  			  
+			  	
+			     // hammer sur le body
 				.__("var mc = new Hammer($('body')[0])")    //, {touchAction: 'auto'}
 			//	.__("mc.get('pinch').set({ enable: true })")
 				.__("mc.get('pan').set({ enable: true, direction: Hammer.DIRECTION_HORIZONTAL })")  //DIRECTION_ALL
@@ -343,7 +342,7 @@ public class XUIScene extends XHTMLPart {
 							._elseif("anim==true && ev.offsetDirection==2 ")
 								.set("anim", "false")
 								.__("$('.menu').css('transition', 'transform "+(CssTransition.SPEED_SHOW_MENU+50)+"ms ease-out' )")
-								.__(tkrouter.doEvent("'Overlay'"))
+								.__($xui().tkrouter() .doEvent("'Overlay'"))
 							.endif()
 							
 							._if("ev.isFinal")
@@ -359,14 +358,16 @@ public class XUIScene extends XHTMLPart {
 			;
 	}
  
+	TKRouter tkrouter;
 	public JSMethodInterface getStateManager()
 	{
 	  return fct()
 		.consoleDebug("'ok StateManager'") 
 		
-		.set("nav", "new Navigo(null,true)")   //   null,true,'!#')")
+		.set("nav", "new Navigo(null,true,'#!')")   //   null,true,'!#')")
 		.var(tkrouter , _new("nav"))
-		.set("window.tkrouter", tkrouter)  // a mettre dans TKConfig
+	//	.set($xui().tkrouter().toString(), tkrouter)
+		.set("$xui.tkrouter", tkrouter)  // a mettre dans TKConfig
 		;
 			  
 	}

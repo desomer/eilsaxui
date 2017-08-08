@@ -57,4 +57,9 @@ public class JQuery extends JSClassMethod {
 		return callMth("css", addText(attr), "," ,addText(value));
 	}
 	
+	public JQuery on(Object...classes)
+	{
+		return callMth("on", classes);
+	}
+	
 }

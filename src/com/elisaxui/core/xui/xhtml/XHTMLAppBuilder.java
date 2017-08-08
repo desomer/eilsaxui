@@ -18,6 +18,7 @@ import java.util.Map;
 import com.elisaxui.core.xui.XUILaucher;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassMethod;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xml.XMLPart;
@@ -43,6 +44,7 @@ public class XHTMLAppBuilder {
 		
 		List<Class<? extends XHTMLPart>> listXHTMLPart = new ArrayList<>(100);
 		List<Class<? extends JSClass>> listJSClass = new ArrayList<>(100);
+		List<Class<? extends JSClassMethod>> listJSClassMethod = new ArrayList<>(100);
 		
 		long olderFile = 0;
 		try {
@@ -72,6 +74,7 @@ public class XHTMLAppBuilder {
 		
 		new FastClasspathScanner("com.elisaxui.xui").matchSubclassesOf(XHTMLPart.class, listXHTMLPart::add).scan();
 		new FastClasspathScanner("com.elisaxui").matchSubinterfacesOf(JSClass.class, listJSClass::add).scan();
+		new FastClasspathScanner("com.elisaxui.xui").matchSubclassesOf(JSClassMethod.class, listJSClassMethod::add).scan();
 		
 		System.out.println("[XHTMLAppBuilder]********************************************* START SCAN XHTMLPart ************************************");
 
@@ -84,6 +87,13 @@ public class XHTMLAppBuilder {
 			if (annPage != null) {
 				mapClass.put(annPage.id(), pageClass);
 			}
+		}
+		
+		System.out.println("[XHTMLAppBuilder]********************************************* START SCAN JSClassMethod ************************************");
+
+		for (Class<? extends JSClassMethod> class1 : listJSClassMethod) {
+			System.out.println("[XHTMLAppBuilder]------------ START SCAN FIELD OF JSClassMethod -----"+ class1);
+			initJSClassVar(XHTMLPart.jsBuilder, class1);
 		}
 		
 		System.out.println("[XHTMLAppBuilder]********************************************* START SCAN JSClass ************************************");
@@ -143,7 +153,7 @@ public class XHTMLAppBuilder {
 	}
 	
 	
-	public static void initJSClassVar(JSBuilder jsBuilder, Class<? extends JSClass> cl) {
+	public static void initJSClassVar(JSBuilder jsBuilder, Class<?> cl) {
 	//	String name = cl.getSimpleName();
 		// init field => chaque attribut contient le nom js de son champs
 		Field[] listField = cl.getDeclaredFields();
@@ -164,7 +174,7 @@ public class XHTMLAppBuilder {
 //		boolean isNative =  Modifier.isNative(mod);
 		
 		
-		System.out.print("[XHTMLAppBuilder]init JSClass var "+ field.getName() + " de type "+ field.getType());
+		System.out.print("[XHTMLAppBuilder]init JSClass/JSClassMethod var "+ field.getName() + " de type "+ field.getType());
 		
 		if (JSClass.class.isAssignableFrom(field.getType())) {
 			// gestion particuliere d'un proxy pour affecter le nom
@@ -172,10 +182,8 @@ public class XHTMLAppBuilder {
 			@SuppressWarnings("unchecked")
 			
 			JSClass prox = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) field.getType());
-			if (field.getName().startsWith("_")) {
-				XHTMLPart.jsBuilder.setNameOfProxy("", prox, field.getName().substring(1));
-			} else
-				XHTMLPart.jsBuilder.setNameOfProxy("this.", prox, field.getName());
+			setProxyName(field, prox);
+			
 			try {
 				ReflectionHelper.setFinalStatic(field, prox);
 			} catch (Exception e) {
@@ -185,10 +193,7 @@ public class XHTMLAppBuilder {
 		} else if (JSVariable.class.isAssignableFrom(field.getType())) {
 			try {
 				JSVariable var =(JSVariable) field.getType().newInstance();
-				if (field.getName().startsWith("_"))
-					var.setName(field.getName().substring(1));
-				else
-					var.setName("this." + field.getName());
+				setVarName(field, var);
 					  
 			    ReflectionHelper.setFinalStatic(field, var);
 			} catch (Exception e) {
@@ -211,6 +216,32 @@ public class XHTMLAppBuilder {
 		}
 		
 		System.out.println("");
+	}
+
+
+	private static void setProxyName(Field field, JSClass prox) {
+		String name = field.getName();
+		xComment comment = field.getAnnotation(xComment.class);
+		if (comment != null) {
+			name = comment.value();
+		}
+		if (name.startsWith("_")) {
+			XHTMLPart.jsBuilder.setNameOfProxy("", prox, name.substring(1));
+		} else
+			XHTMLPart.jsBuilder.setNameOfProxy("this.", prox, name);
+	}
+
+
+	private static void setVarName(Field field, JSVariable var) {
+		String name = field.getName();
+		xComment comment = field.getAnnotation(xComment.class);
+		if (comment != null) {
+			name = comment.value();
+		}
+		if (name.startsWith("_"))
+			var.setName(name.substring(1));
+		else
+			var.setName("this." + name);
 	}
 	
 }

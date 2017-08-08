@@ -6,6 +6,7 @@ package com.elisaxui.core.xui.xhtml.builder.javascript;
 import java.util.ArrayList;
 
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
 
 /**
@@ -44,6 +45,14 @@ public class JSClassMethod extends JSVariable {
 				
 				if (object instanceof XClass)
 					listContent.add(((XClass)object).getId());
+				
+				else if (object instanceof JSFunction)
+				{
+					StringBuilder strBuf = new StringBuilder();
+					XMLBuilder buf = new XMLBuilder("????", strBuf, null);
+					((JSFunction)object).toXML(buf);
+					listContent.add(strBuf.toString());
+				}
 				else if ( object instanceof Object[])
 				{
 					addContent(object);
@@ -76,6 +85,25 @@ public class JSClassMethod extends JSVariable {
 		ret.addContent("."+mth+"(");
 		ret.addContent(classes);
 		ret.addContent(")");
+		return ret;
+	}
+	
+	public <E extends JSClassMethod> E  attr(String att)
+	{
+		E ret = (E)this;
+		if (listContent.size()==0 && this.name!=null)
+		{
+			// gestion premier appel de variable
+			try {
+				ret = (E) this.getClass().newInstance();
+			} catch (InstantiationException | IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			ret.setName(this.getName());
+		}
+		
+		ret.addContent("."+att);
 		return ret;
 	}
 }

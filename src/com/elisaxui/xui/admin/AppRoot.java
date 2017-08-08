@@ -88,8 +88,8 @@ public class AppRoot extends XHTMLPart {
 						+ "}"
 						/********************************************************************/					
 						+ "]"
-						+ ", events: { more: { action:'route' , url: 'route/Activity2?p=1'} ,"
-						+ "				BtnFloatMain : { action:'route' , url: 'route/Activity3?p=12'} , "
+						+ ", events: { more: { action:'route' , url: '!route/Activity2?p=1'} ,"
+						+ "				BtnFloatMain : { action:'route' , url: '!route/Activity3?p=12'} , "
 						+ "			   "+TKActivity.ON_ACTIVITY_CREATE+" : { action:'callback', fct:'onCreateActivity1'}, "
 						+ "			   "+TKActivity.ON_ACTIVITY_RESUME+" : { action:'callback', fct:'onResumeActivity1'} "
 						+ "  }"
@@ -122,8 +122,8 @@ public class AppRoot extends XHTMLPart {
 						+ "},"		
 						/********************************************************************/					
 						+ "]"
-						+ ", events: { more: { action:'route' , url: 'route/Activity1'} ,"
-						+ "			   search : { action:'route' , url: 'route/Activity3?p=12'} ,"
+						+ ", events: { more: { action:'route' , url: '!route/Activity1'} ,"
+						+ "			   search : { action:'route' , url: '!route/Activity3?p=12'} ,"
 						+ "			   HeaderSwipeDown: { action:'back' }, "
 						+ "			   "+TKActivity.ON_ACTIVITY_CREATE+" : { action:'callback', fct:'onCreateActivityDown', param:'#NavBarActivity2'} "	
 						+ "  }"
@@ -155,19 +155,19 @@ public class AppRoot extends XHTMLPart {
 						/********************************************************************/						
 						+ "]"
 						+ ", events: { more: { action:'back' },"
-						+ "			   BtnFloatMain : { action:'route' , url: 'route/Activity2?p=22'},"
-						+ "			   search : { action:'route' , url: 'route/Activity2?p=24'}, " 
+						+ "			   BtnFloatMain : { action:'route' , url: '!route/Activity2?p=22'},"
+						+ "			   search : { action:'route' , url: '!route/Activity2?p=24'}, " 
 						+ "			   HeaderSwipeDown: { action:'back' }, "
 						+ "			   "+TKActivity.ON_ACTIVITY_CREATE+" : { action:'callback', fct:'onCreateActivityDown', param:'#NavBarActivity3'} "
 						+ "  }"
 						+ "}") 
 				
 				/**************************************************************/
-				.var(tkActivity, "window.tkrouter.activityMgr")
+				.var(tkActivity, "$xui.tkrouter.activityMgr")
 				.__(tkActivity.createActivity("declaration1"))
 				.__(tkActivity.prepareActivity("declaration2"))
 				.__(tkActivity.prepareActivity("declaration3"))
-				.set("window.tkActivity" , tkActivity)
+			//	.set("window.tkActivity" , tkActivity)
 				
 				
 				/*************************************************************/

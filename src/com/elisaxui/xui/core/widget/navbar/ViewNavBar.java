@@ -46,7 +46,7 @@ public class ViewNavBar extends XHTMLPart {
 				.on(".actionBtn", "margin: 0; padding: 8px;  font-size: 36px !important;  cursor: pointer;")
 				
 				.on(".center", "z-index:"+(XUIScene.ZINDEX_NAV_BAR+1)+";height:100%; display: flex; align-items: center;justify-content: center")
-				.on(".logo", "z-index:"+(XUIScene.ZINDEX_NAV_BAR+1)+"; color: inherit; font-size: 2.1rem; animation-duration: 700ms;")
+				.on(".logo", "z-index:"+(XUIScene.ZINDEX_NAV_BAR+1)+"; margin-top:" + XUIScene.heightNavBar/2 +"px; color: inherit; font-size: 2.1rem; animation-duration: 700ms;")
 				
 				.on(animatedBg, "position: absolute; display: block;  width: 100%; height: 100%; top: 0; right: 0; bottom: 0; left: 0;")
 				

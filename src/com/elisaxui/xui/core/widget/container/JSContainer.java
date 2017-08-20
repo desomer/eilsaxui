@@ -120,9 +120,9 @@ public interface JSContainer extends JSClass {
 						.endfor()
 						
 						//------------- anim des item de menu----------	
-						.__("setTimeout(", fct("elem")
-								.__("elem.anim='fadeInUp'")
-								/*.__("elem.anim=''")*/, ", 100 * ctx.row.idx , ctx.row)")
+						.__("setTimeout(", fct("elem") 
+								.__("elem.anim='bounceInUp'")  //zoomInUp  //fadeInUp  //slideInUp //rollIn
+							, ", 500 * ctx.row.idx , ctx.row)")
 						
 						
 						

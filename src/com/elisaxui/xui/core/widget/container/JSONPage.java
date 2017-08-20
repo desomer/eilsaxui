@@ -51,11 +51,15 @@ public class JSONPage extends JSONBuilder
 	}
 	
 	
-	public Object callbackTo(Object fct)
+	public Object callbackTo(Object fct, Object param)
 	{
-		return  obj( v(ATTR_ACTION, "callback"), v("fct", fct));
+		return  obj( v(ATTR_ACTION, "callback"), v("fct", fct), v("param", param));
 	}
 	
+	public Object goBack()
+	{
+		return  obj( v(ATTR_ACTION, "back"));
+	}
 	
 	/**********************************************************************************/
 	

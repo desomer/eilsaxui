@@ -72,6 +72,7 @@ public class ViewJSChart extends XHTMLPart {
 	@xTarget(AFTER_CONTENT.class)
 	public XMLElement xAddJS() {
 		return xScriptJS(js()
+				//  .__("Chart.defaults.global.maintainAspectRatio = false") 
 				  .var("options", doughnutOptions)
 				  .var("data", doughnutData)
 				  .var("ctx", "document.getElementById('" + getPropertyXID(ID).getValue()+"').getContext('2d')")

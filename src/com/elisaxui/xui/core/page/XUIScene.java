@@ -25,8 +25,10 @@ import com.elisaxui.xui.core.datadriven.JSDataCtx;
 import com.elisaxui.xui.core.datadriven.JSDataDriven;
 import com.elisaxui.xui.core.datadriven.JSDataSet;
 import com.elisaxui.xui.core.toolkit.TKActivity;
+import com.elisaxui.xui.core.toolkit.TKConfig;
 import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.toolkit.TKRouterEvent;
+import com.elisaxui.xui.core.transition.ConstTransition;
 import com.elisaxui.xui.core.transition.CssTransition;
 import com.elisaxui.xui.core.transition.TKTransition;
 import com.elisaxui.xui.core.widget.container.JSContainer;
@@ -40,7 +42,7 @@ import com.elisaxui.xui.core.widget.overlay.JSOverlay;
 @xComment("activite standard")
 public class XUIScene extends XHTMLPart {
 
-	public static final int heightNavBar = 53*2;
+	public static final int heightNavBar = 50*2;
 	public static final int widthMenu = 250;
 	
 
@@ -124,7 +126,7 @@ public class XUIScene extends XHTMLPart {
 				//xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/json-editor/0.7.28/jsoneditor.min.js"),
 				//xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/granim/1.0.6/granim.min.js"),
 				xScriptSrcAsync("http://code.jquery.com/jquery-3.2.1.min.js", "resLoaded(this, "+XUICstRessource.ID_RES_JQUERY+");")
-
+				//xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js")
 				
 				//,xElement("/",""
 					//	+ "<script src='https://cdnjs.cloudflare.com/ajax/libs/js-signals/1.0.0/js-signals.min.js'></script>"
@@ -208,7 +210,7 @@ public class XUIScene extends XHTMLPart {
 	
 	
 	@xTarget(AFTER_CONTENT.class)
-	@xPriority(1)
+	@xPriority(500)
 	@xRessource
 	/**todo  creer une interface à $xui*/
 	public XMLElement xImportStart() {
@@ -223,13 +225,13 @@ public class XUIScene extends XHTMLPart {
 						.set("$xui.resourceLoading.chart", true)
 						
 						.set("window.doOnResLoad", fct("res", "id")
-//								.__("alert(id)")
-								.consoleDebug(txt("ressource loaded ="), "id")   //res.src.split('/').pop()
+								.systemDebugIf(TKConfig.debugAsyncResource, txt("ressource loaded ="), "id")   //res.src.split('/').pop()
 								.__()
 								._if("id=="+XUICstRessource.ID_RES_JQUERY)
 									.__(getIntializeJSFct())
 									.__("(",getEventManager(),")()")									
 									.set("$xui.resourceLoading.query", false)	
+									.__(" $.getScript('https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js')") 
 								.endif()
 								._if("id=="+XUICstRessource.ID_RES_NAVIGO)
 									.set("$xui.resourceLoading.navigo", false)	
@@ -246,10 +248,11 @@ public class XUIScene extends XHTMLPart {
 								.endif()
 								
 								._if("!$xui.resourceLoading.hammer && !$xui.resourceLoading.query")
-									.__("(",getMoveManager(),")()")
+									//.__("(",getMoveManager(),")()")
 								.endif()	
 								
 								._if("!$xui.resourceLoading.hammer && !$xui.resourceLoading.query&& !$xui.resourceLoading.navigo&& !$xui.resourceLoading.fastdom&& !$xui.resourceLoading.chart")
+									.__("(",getMoveManager(),")()")	
 									.__(new AppRoot().getJS())
 								.endif()
 							)						
@@ -277,47 +280,45 @@ public class XUIScene extends XHTMLPart {
 		;
 	}
 	
+	public JSMethodInterface searchRipple = fragment()
+			 // recherche le ripple btn
+			   .var("ripple", "btn")
+			   ._if( "! ripple.hasClass('",  cRippleEffect.getId(), "')")
+			   		.set("ripple", "btn.closest('.",  cRippleEffect.getId(), "')")
+					._if( "! ripple.hasClass('",  cRippleEffect.getId(), "')")
+			   			.set("ripple", "btn.children('.",  cRippleEffect.getId(), "')")
+			   		.endif()	
+			   .endif();
+	
+	
 	public JSMethodInterface getEventManager()
 	{
 	  return fct()
 			   .consoleDebug("'ok EventManager'") 
 			   .__($(CSSSelector.onPath("body")).on(txt("touchstart"), ",", fct('e')
 					   .var("btn", "$(e.target).closest('[data-x-action]')")
-					  
-					   .var("ripple", "btn")
 					   .var("event", "btn.data('x-action')")
 					   
-					   // recherche le ripple btn
-					   ._if( "! ripple.hasClass('",  cRippleEffect.getId(), "')")
-					   		.set("ripple", "btn.closest('.",  cRippleEffect.getId(), "')")
-							._if( "! ripple.hasClass('",  cRippleEffect.getId(), "')")
-					   			.set("ripple", "btn.children('.",  cRippleEffect.getId(), "')")
-					   		.endif()	
-					   .endif()
+					   .__(searchRipple)
 					   					   
-					   .__("$xui.intent.nextActivityAnim= 'fromBottom' ")	
+					   .__("$xui.intent.nextActivityAnim= '"+ConstTransition.ANIM_FROM_BOTTOM+"' ")	
 					   				   	
 					   ._if( "ripple.length>0") 
-					   
+					   	  //TODO A Changer 		
 					   	   ._if("ripple.hasClass('cBtnCircle')")
-					   	   	    .__("$xui.intent.nextActivityAnim= 'opacity'")
-					   			.__($xui().tkrouter().doEvent("event"))
+					   	   		// pas animation ripple
+					   	   	    .__("$xui.intent.nextActivityAnim= '"+ConstTransition.ANIM_FROM_RIPPLE+"'")
 						   ._else()
-						   	   // ripple sans ouverture d'activity		   
+						   	   // animation ripple 
 							   .__(TKQueue.startProcessQueued(fct()
-						   		      		.__($xui().tkrouter().doEvent("event"))
 						   		      , CssTransition.NEXT_FRAME	, fct()  // attente ripple effect
 							   				.__("ripple.addClass('", cRippleEffectShow.getId() ,"')")
-									 //,CssTransition.SPEED_RIPPLE_EFFECT/3, 
-
-									 ,CssTransition.SPEED_RIPPLE_EFFECT, fct()  // attente ripple effect
+									  ,CssTransition.SPEED_RIPPLE_EFFECT, fct()  // attente ripple effect
 								   		    .__("ripple.removeClass('", cRippleEffectShow.getId() ,"')")     	
+    
 									   )
 								)  
 						   .endif()
-					   ._else()
-					   		// pas de ripple effect
-					   		.__($xui().tkrouter().doEvent("event"))
 					   .endif()
 				))
 			;
@@ -326,15 +327,39 @@ public class XUIScene extends XHTMLPart {
 	public JSMethodInterface getMoveManager()
 	{
 		// gestion deplacement menu et fermeture par gesture 
-	  return fct().consoleDebug("'ok MoveManager'") 
-			  	
+	  return fct().consoleDebug("'ok MoveManager by HAMMER'") 
+				//.__("$.notify('ok MoveManager', {globalPosition: 'bottom left', className:'warn', autoHideDelay: 2000})")
+
 			     // hammer sur le body
 				.__("var mc = new Hammer($('body')[0])")    // {touchAction: 'auto'}
 			//	.__("mc.get('pinch').set({ enable: true })")
 				.__("mc.get('pan').set({ enable: true, direction: Hammer.DIRECTION_HORIZONTAL })")  //DIRECTION_ALL
+				.__("mc.get('tap').set({ enable: true, time: 1000 })")
 				.var("anim", true)
 				
+				.__("mc.on('tap',", fct("e")
+
+							.var("btn", "$(e.target).closest('[data-x-action]')")
+							.var("event", "btn.data('x-action')")
+							
+							//.__("$.notify('do Event '+event, {globalPosition: 'bottom left', className:'warn', autoHideDelay: 2000})")
+							
+							 .__(searchRipple)
+							
+							 // TODO passer un context d'event au doEvent  (ripple, btn, e,  event)
+							 .__(TKQueue.startProcessQueued(fct()
+									 .var("retEvent", $xui().tkrouter().doEvent("event"))
+									 ._if("retEvent.cancelRipple")
+										 ._if( "ripple.length>0") 
+										 	.__("ripple.removeClass('", cRippleEffectShow.getId() ,"')")   
+										 .endif()
+									 .endif()
+									 ))
+						, ")")
+				
 				.__("mc.on('hammer.input',", fct("ev")
+						//.consoleDebug("ev")
+						
 //						.__("$('#content')[0].innerHTML = [ev.srcEvent.type, ev.pointers.length, ev.isFirst, ev.isFinal, ev.deltaX, ev.deltaY, ev.distance, ev.velocity, ev.deltaTime, ev.offsetDirection, ev.target].join('<br>');")
 						//**************************** gestion swipe anim du menu *************************/
 						._if("$(ev.target).closest('.menu').length > 0")

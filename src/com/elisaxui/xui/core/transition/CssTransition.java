@@ -32,32 +32,40 @@ import com.elisaxui.xui.core.widget.overlay.JSOverlay;
 public class CssTransition extends XHTMLPart {
 
 
+	public static double coef = 1;
+	
 	public static final int widthMenu = 250;
 	
-	public static final int SPEED_SHOW_ACTIVITY = 200;
-	public static final int SPEED_ACTIVITY_TRANSITION_EFFECT = 150;
+	public static final int SPEED_SHOW_ACTIVITY = (int)(200*coef);
+	public static final int SPEED_ACTIVITY_TRANSITION_EFFECT = (int)(150*coef);
 	public static final int DELAY_SURETE_END_ANIMATION = 50;
 	
 	public static final String NEXT_FRAME = "'nextFrame'";
 	
-	public static final int SPEED_SHOW_MENU = 150;
+	public static final int SPEED_ANIMATED = (int)(1000*coef);
 	
-	public static final int SPEED_RIPPLE_EFFECT = 300;
-	public static final int SPEED_BURGER_EFFECT = 200;;
+	public static final int SPEED_SHOW_MENU = (int)(150*coef);
+	public static final int SPEED_SHOW_MENU_ITEMS = (int)(400*coef);
+	public static final int SPEED_SHOW_MENU_ITEMS_ANIM = (int)(50*coef);
+	
+	public static final int SPEED_RIPPLE_EFFECT =  (int)(300*coef);
+	public static final int SPEED_BURGER_EFFECT =  (int)(200*coef);
 	
 	public static XClass activity;
 	public static XClass content;
 	
 	static XClass fixedForAnimated;
 	static XClass active;
+	static XClass animated;
 	
 	@xTarget(HEADER.class)
 	@xRessource
 	@xPriority(5)
 	public XMLElement xStyle() {
-		
+
 		return xCss()
 				.select(activity.and(fixedForAnimated)).set("top:0px; position: fixed; transition:transform "+SPEED_SHOW_ACTIVITY +"ms linear;")
+				.select(animated).set("animation-duration:"+SPEED_ANIMATED+"ms")
 				
 				.on(".activity.backToFront", "transition:transform "+(SPEED_SHOW_ACTIVITY+100)+"ms linear;")
 				

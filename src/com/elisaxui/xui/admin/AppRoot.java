@@ -61,124 +61,12 @@ public class AppRoot extends XHTMLPart {
 						,").fail(", fct("xhr","textStatus", "error").consoleDebug("error") ,")")
 				
 				/***********************************************************************************************/		
-				.var("declaration0",  new JSONPage1().getJSON())
-				
-				.var("name", txt("Activity1"))
-				 
-				.var("cnt1", xDiv(xId("test1")/*,  ViewRippleEffect.cRippleEffect()*/, xAttr("data-x-action", "\"more\""),  xAttr("style", "\"width: 100%; height: 30vh; background:url(" +IMAGE6 +") center / cover\"")))
-//				.var("chart",  xPart(new ViewJSChart(xId("test")))	)
-				.var("cnt2", xDiv(xAttr("style", "\"width: 100%; height: 50vh; background:url(" +IMAGE3 +") center / cover\"")))
-				.var("cnt3", xDiv(xId("editor")))
-				
-				
-//				// toute les factory doivent avoir une methode getData
-//				
-//				.var("declaration1","{type:'page', id:name , children : ["
-//						/********************************************************************/				
-//						+ "{ selector: '#NavBar'+name, factory:'JSNavBar', rows : [ "
-////						+ "				{type:'background', mode:'granim', fct:"fct"},"
-//						+ "				{type:'background', mode:'css', css:'url(" +IMAGE5 +") center / cover no-repeat' , opacity:0.3},"   //center / cover
-//						+ "				{type:'burger' },"
-//						+ "				{type:'name', name:'Elisa'},"
-//						+ "				{type:'action', icon:'perm_identity', idAction:'identity'},"
-//						+ "				{type:'action', icon:'more_vert', idAction:'more'}"
-//						+ "  ]  "
-//						+ "},"
-//						/************************** AJOUTE DANS ARTICLE **********************/				
-//						+ "{ selector: '#'+name+' .article', factory:'JSContainer', rows : [ "
-//						+ "				{type:'card', html:cnt1},"
-//						+ "				{type:'card', html:chart },"
-//						+ "				{type:'card', html:cnt2 },"
-//						+ "				{type:'card', html:cnt3 }"
-//						+ "  ]  "
-//						+ "},"		
-//						/********************************************************************/				
-//						+ "{ selector: '#'+name+' .content', factory:'JSContainer', rows : [ "
-//						+ "				{type:'floatAction' }"
-//						+ "  ]  "
-//						+ "}"
-//						/********************************************************************/					
-//						+ "]"
-//						+ ", events: { more: { action:'route' , url: '!route/Activity2?p=1'} ,"
-//						+ "				BtnFloatMain : { action:'route' , url: '!route/Activity3?p=12'} , "
-//						+ "			   "+TKActivity.ON_ACTIVITY_CREATE+" : { action:'callback', fct:'onCreateActivity1'}, "
-//						+ "			   "+TKActivity.ON_ACTIVITY_RESUME+" : { action:'callback', fct:'onResumeActivity1'} "
-//						+ "  }"
-//						+ "}") 
-				
-				/********************************************************************/
-				.set("name", txt("Activity2"))
-				
-				.set("cnt1", xDiv( xAttr("data-x-action", "\"link\""),  xAttr("style", "\"width: 100%; height: 30vh; background:url(" +IMAGE2 +") center / cover\"")))
-				.set("cnt2", xDiv(xAttr("style", "\"width: 100%; height: 50vh; background:url(" +IMAGE3 +") center / cover\"")))
-				.var("cnt3", xDiv(xAttr("style", "\"width: 100%; height: 30vh; background:url(" +IMAGE1 +") center / cover\"")))
-				.var("cnt4", xDiv(xAttr("style", "\"width: 100%; height: 30vh; background:url(" +IMAGE4 +") center / cover\"")))
 
-				.var("declaration2","{type:'page', id:name, active:false , children : ["
-						/********************************************************************/				
-						+ "{ selector: '#NavBar'+name, factory:'JSNavBar', rows : [ "
-						+ "				{type:'background', mode:'css', css:'url(" +IMAGE6 +") center / cover no-repeat' , opacity:0.3},"   //center / cover
-						+ "				{type:'burger' },"
-						+ "				{type:'name', name:'Detail'},"
-						+ "				{type:'action', icon:'search', idAction:'search'},"
-						+ "				{type:'action', icon:'more_vert', idAction:'more'}"
-						+ "  ]  "
-						+ "},"
-						/********************************************************************/				
-						+ "{ selector: '#'+name+' .cArticle', factory:'JSContainer', rows : [ "
-						+ "				{type:'card', html:cnt1},"
-						+ "				{type:'card', html:cnt2 },"
-						+ "				{type:'card', html:cnt3 }"
-						+ "  ]  "
-						+ "},"		
-						/********************************************************************/					
-						+ "]"
-						+ ", events: { more: { action:'route' , url: '!route/Activity1'} ,"
-						+ "			   search : { action:'route' , url: '!route/Activity3?p=12'} ,"
-						+ "			   HeaderSwipeDown: { action:'back' }, "
-						+ "			   "+TKActivity.ON_ACTIVITY_CREATE+" : { action:'callback', fct:'onCreateActivityDown', param:'#NavBarActivity2'} "	
-						+ "  }"
-						+ "}") 
-				
-				/********************************************************************/
-				.set("name", txt("Activity3"))
-				.var("declaration3","{type:'page', id:name, active:false , children : ["
-						/********************************************************************/				
-						+ "{ selector: '#NavBar'+name, factory:'JSNavBar', rows : [ "
-						+ "				{type:'burger' },"
-						+ "				{type:'name', name:'Vide'},"
-						+ "				{type:'action', icon:'search', idAction:'search'},"
-						+ "				{type:'action', icon:'more_vert', idAction:'more'}"
-						+ "  ]  "
-						+ "},"
-						/********************************************************************/				
-						+ "{ selector: '#'+name+' .cArticle', factory:'JSContainer', rows : [ "
-						+ "				{type:'card', html:cnt4},"
-//						+ "				{type:'card', html:cnt2 },"
-//						+ "				{type:'card', html:cnt3 }"
-						+ "  ]  "
-						+ "},"		
-						/********************************************************************/				
-						+ "{ selector: '#'+name+' .content', factory:'JSContainer', rows : [ "
-						+ "				{type:'floatAction' }"
-						+ "  ]  "
-						+ "}"
-						/********************************************************************/						
-						+ "]"
-						+ ", events: { more: { action:'back' },"
-						+ "			   BtnFloatMain : { action:'route' , url: '!route/Activity2?p=22'},"
-						+ "			   search : { action:'route' , url: '!route/Activity2?p=24'}, " 
-						+ "			   HeaderSwipeDown: { action:'back' }, "
-						+ "			   "+TKActivity.ON_ACTIVITY_CREATE+" : { action:'callback', fct:'onCreateActivityDown', param:'#NavBarActivity3'} "
-						+ "  }"
-						+ "}") 
-				
 				/**************************************************************/
 				.var(tkActivity, "$xui.tkrouter.activityMgr")
-				.__(tkActivity.createActivity("declaration0"))
-				.__(tkActivity.prepareActivity("declaration2"))
-				.__(tkActivity.prepareActivity("declaration3"))
-				
+				.__(tkActivity.createActivity(new JSONPage1().getJSON()))
+				.__(tkActivity.prepareActivity(new JSONPage2().getJSON()))
+				.__(tkActivity.prepareActivity(new JSONPage3().getJSON()))
 				
 				/*************************************************************/
 				
@@ -186,7 +74,7 @@ public class AppRoot extends XHTMLPart {
 				/**************************************************************/
 				
 				.set("window.onCreateActivity1", fct()
-						.consoleDebug("'onCreateActivity1'")
+						.consoleDebug("'on Create Activity1'")
 						.__(TKQueue.startProcessQueued( 100,  fct()
 //							.var("jCanvasGranim", "$('#NavBarActivity1 .animatedBg')[0]")
 //							.__(NavBarAnimated1)
@@ -224,6 +112,15 @@ public class AppRoot extends XHTMLPart {
 						)
 				)
 				
+				/**************************************************************/
+				
+				.set("window.onIndentity", fct("json")
+						.__(TKQueue.startProcessQueued( fct()
+								.__("$.notify('Indentity coming soon', {globalPosition: 'bottom left', className:'success', autoHideDelay: 2000})")
+							)
+						)
+				)
+				
 				/************************************************************/
 				.set(jsNavBar, _new())
 				.set("jsonNavBar", jsNavBar.getData("'#NavBarActivity2'"))    // bug import mth jsNavBar car pas ajouer si pas appelé
@@ -231,7 +128,7 @@ public class AppRoot extends XHTMLPart {
 				;
 	}
 	
-	
+	/**********************************************************************/
 	class JSONPage1 extends JSONPage
 	{
 		
@@ -252,7 +149,7 @@ public class AppRoot extends XHTMLPart {
 			return page( "Activity1", arr( 
 						factory("#NavBarActivity1", FACTORY_NAVBAR, arr( backgroundImage(IMAGE5, 0.3),  
 																	 btnBurger(), 
-																	 title("Elisa"),
+																	 title("Bonjour Elisa"),
 																	 btnActionIcon("perm_identity", EVT_IDENTITY),
 																	 btnActionIcon("more_vert", EVT_MORE)
 																	) )
@@ -271,17 +168,100 @@ public class AppRoot extends XHTMLPart {
 					, obj( 
 							v(EVT_MORE , routeTo( "!route/Activity2?p=1")),
 							v(EVT_BTN_FLOAT , routeTo( "!route/Activity3?p=1")),
-							v(ON_ACTIVITY_CREATE , callbackTo("onCreateActivity1")),
-							v(ON_ACTIVITY_RESUME , callbackTo("onResumeActivity1"))
+							v(ON_ACTIVITY_CREATE , callbackTo("onCreateActivity1", null)),
+							v(ON_ACTIVITY_RESUME , callbackTo("onResumeActivity1", null)),
+							v(EVT_IDENTITY, callbackTo("onIndentity", null))
 							));
 		}
 		
 	}
 	
+	/**********************************************************************************/
+	class JSONPage2 extends JSONPage
+	{
+		
+		public static final String EVT_MORE = "more";
+		public static final String EVT_SEARCH = "search";
+		public static final String EVT_BACK = "back";
+		public static final String EVT_BTN_FLOAT = "BtnFloatMain";
+		public static final String EVT_HEADER_SWIPE_DOWN =  "HeaderSwipeDown";
+				
+		public Object getJSON()
+		{
+			
+			return page( "Activity2", arr( 
+						factory("#NavBarActivity2", FACTORY_NAVBAR, arr( backgroundImage(IMAGE6, 0.3),  
+																	 btnBurger(), 
+																	 title("Liste exercice"),
+																	 btnActionIcon("arrow_back", EVT_BACK),
+																	 btnActionIcon("search", EVT_SEARCH)
+																	) )
+					 ,  factory("#Activity2 .cArticle", FACTORY_CONTAINER, arr(
+							 										card( arr( backgroundImage(IMAGE2, 1),  
+							 													text("Un café")
+							 												)),
+							 										card( arr( backgroundImage(IMAGE3, 1),  
+						 													text("Un disque dur")
+						 												)),
+							 										card( arr( backgroundImage(IMAGE1, 1),  
+						 													text("Un dessin")
+						 												))
+							 										) )
+					)
+						/// les event
+					, obj( 
+							v(EVT_SEARCH , routeTo( "!route/Activity3?p=12")),
+							v(EVT_HEADER_SWIPE_DOWN , goBack()),
+							v(EVT_BACK , goBack()),
+							v(ON_ACTIVITY_CREATE , callbackTo("onCreateActivityDown", "#NavBarActivity2"))
+							));
+		}
+		
+	}
 	
+	/**********************************************************************************/
+	class JSONPage3 extends JSONPage
+	{
+		
+		public static final String EVT_MORE = "more";
+		public static final String EVT_SEARCH = "search";
+		public static final String EVT_BACK = "back";
+		public static final String EVT_BTN_FLOAT = "BtnFloatMain";
+		public static final String EVT_HEADER_SWIPE_DOWN =  "HeaderSwipeDown";
+				
+		public Object getJSON()
+		{
+			
+			return page( "Activity3", arr( 
+						factory("#NavBarActivity3", FACTORY_NAVBAR, arr(  
+																	 btnBurger(), 
+																	 title("Recherche"),
+																	 btnActionIcon("arrow_back", EVT_BACK),
+																	 btnActionIcon("search", EVT_SEARCH)
+																	) )
+					 ,  factory("#Activity3 .cArticle", FACTORY_CONTAINER, arr(
+							 										card( arr( backgroundImage(IMAGE4, 1),  
+							 													text("En construction")
+							 												))
+							 										) )
+					 
+					 ,  factory("#Activity3 .content", FACTORY_CONTAINER, arr( 
+								floatAction()))
+					)
+						/// les event
+					, obj( 
+							v(EVT_SEARCH , routeTo( "!route/Activity1")),
+							v(EVT_HEADER_SWIPE_DOWN , goBack()),
+							v(EVT_BACK , goBack()),
+							v(ON_ACTIVITY_CREATE , callbackTo("onCreateActivityDown", "#NavBarActivity3")),
+							v(EVT_BTN_FLOAT , routeTo( "!route/Activity2?p=ert"))
+							));
+		}
+		
+	}
 	
+	/**********************************************************************************************/
 	
-	/*
 	static final String NavBarAnimated1="var granimInstance = new Granim({\n"+
 			" element: jCanvasGranim,\n"+    //NavBarActivity1
 			" name: \'basic-gradient\',\n"+
@@ -308,8 +288,9 @@ public class AppRoot extends XHTMLPart {
 			" ]\n"+
 			" }\n"+
 			" }\n"+
-			"});";
-	
+			"});"
+			;
+	/*
 	static final String NavBarAnimated2="var granimInstance = new Granim({\n"+
 			" element: \'#NavBar2\',\n"+
 			" name: \'basic-gradient\',\n"+

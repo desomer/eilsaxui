@@ -15,5 +15,6 @@ public interface TKConfig extends JSClass {
 	public static final boolean debugDoAction = true;
 	public static final boolean debugPushState = true;
 	public static final boolean debugDoNavigate = true;
+	public static final boolean debugAsyncResource = true;
 	
 }

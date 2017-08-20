@@ -7,6 +7,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.xui.core.datadriven.JSDataDriven;
 import com.elisaxui.xui.core.datadriven.JSDataSet;
+import com.elisaxui.xui.core.transition.CssTransition;
 
 /**
  * @author Bureau
@@ -51,7 +52,8 @@ public interface JSMenu extends JSClass {
 					._if("!change==''")
 						.__("$(ctx.row['_dom_']).css('visibility','')")
 						.__("$(ctx.row['_dom_']).toggleClass('animated '+change)")
-						.__("setTimeout(\n", fct("elem").__("elem.toggleClass('animated '+change)") ,",500, $(ctx.row['_dom_']))")
+						// remise a zero de l'animation
+						.__("setTimeout(\n", fct("elem").__("elem.toggleClass('animated '+change)") ,",", CssTransition.SPEED_SHOW_MENU_ITEMS+CssTransition.DELAY_SURETE_END_ANIMATION,", $(ctx.row['_dom_']))")
 					.endif()	
 				.endif() 
 				))

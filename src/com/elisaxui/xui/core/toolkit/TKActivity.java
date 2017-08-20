@@ -53,8 +53,8 @@ public interface TKActivity extends JSClass {
 	{
 
 		var("jsonContainer", jsContainer.getData("'.scene'"))
-		.__("jsonContainer.push(json)")
 		.set("json.active", true)
+		.__("jsonContainer.push(json)")
 		.__(listRegisterActivity,"[json.id] = json;")
 		.set(idCurrentActivity, "json.id")
 		;
@@ -64,6 +64,7 @@ public interface TKActivity extends JSClass {
 	default Object prepareActivity(Object json)
 	{
 		var("jsonContainer", jsContainer.getData("'.scene'"))
+		.set("json.active", false)
 		.__("jsonContainer.push(json)")
 		.__(listRegisterActivity,"[json.id] = json;")
 		;

@@ -109,6 +109,11 @@ public abstract class XHTMLPart extends XMLPart {
 	{
 		return jsBuilder.createJSFunction().setParam(param);
 	}
+	
+	public final static JSFunction fragment()
+	{
+		return jsBuilder.createJSFunction().setFragment(true);
+	}
 
 	public static final String xVar(Object var) {
 		return "'+" + var + "+'";

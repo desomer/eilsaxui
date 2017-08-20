@@ -153,9 +153,12 @@ public interface TKTransition extends JSClass {
 				
 						//------------- anim des item de menu----------	
 						._for("var i in window.jsonMainMenu") 
+							.__("$(window.jsonMainMenu[i]['_dom_']).css('visibility','hidden')")
 							.__("setTimeout(", fct("elem")
-								.__("elem.anim='fadeInLeft'")
-								.__("elem.anim=''"), ",(i*"+30+"), window.jsonMainMenu[i])")
+									.__("elem.anim='fadeInLeft'")
+									.__("elem.anim=''")
+								, ",(i*"+CssTransition.SPEED_SHOW_MENU_ITEMS_ANIM+"), window.jsonMainMenu[i])")
+							
 						.endfor()		
 						
 				, SPEED_SHOW_MENU+DELAY_SURETE_END_ANIMATION, fct()

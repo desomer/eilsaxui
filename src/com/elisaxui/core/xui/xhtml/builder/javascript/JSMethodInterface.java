@@ -2,7 +2,6 @@ package com.elisaxui.core.xui.xhtml.builder.javascript;
 
 
 public interface JSMethodInterface  {
-
 	
 	JSMethodInterface __(Object... content);
 	
@@ -13,6 +12,7 @@ public interface JSMethodInterface  {
 	JSMethodInterface var(Object name, Object... content);
 	
 	JSMethodInterface consoleDebug(Object... content);
+	JSMethodInterface systemDebugIf(Object cond, Object... content);
 	
 	JSMethodInterface _for(Object... content);
 	
@@ -20,10 +20,33 @@ public interface JSMethodInterface  {
 
 	Object _new(Object... param);
 	
+	/**
+	 * exemple <br>  
+	 * txt("do ", jsvar("event"), "on", jsvar("variable")) <br>
+	 * consoleDebug(txt("do event typed ", jsvar("event")), txt(" on "), "jsonAct")
+	 * @param param
+	 * @return
+	 */
 	Object txt(Object... param);
+	
+	/**
+	 * creation d'un JSVariable <br>
+	 * exemple   jsvar("name", "[", 1 ,"]") 
+	 * @param param
+	 * @return
+	 */
 	Object jsvar(Object... param);
 
 	JSFunction fct(Object... param);
+	
+	/**
+	 * exemple <br>
+	 * 	.__( fragment(debugEvent).consoleDebug(txt("ok")))
+	
+	 * @param condition
+	 * @return
+	 */
+	JSFunction fragmentIf(Object condition);
 
 	JSMethodInterface _if(Object... content);
 

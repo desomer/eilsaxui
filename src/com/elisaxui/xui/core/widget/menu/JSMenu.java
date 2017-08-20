@@ -34,7 +34,7 @@ public interface JSMenu extends JSClass {
 					._else()
 			            .set(template, ViewMenu.getTemplateMenu("ctx.row.name", "ctx.row.icon", "ctx.row.idAction"))
 			            .var("jqdom", template.append("$('.menu ul')"))
-			            .__("jqdom.css('visibility','hidden')")
+			            .__("jqdom.css('visibility','hidden')")  // invisible par defaut avant animation
 			            .__("ctx.row['_dom_']=jqdom[0]")
 		            .endif()
 	            .endif()

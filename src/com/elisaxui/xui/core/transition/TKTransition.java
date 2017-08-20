@@ -84,7 +84,7 @@ public interface TKTransition extends JSClass {
 		// ferme le menu
 		._if("jqNavBar.hasClass('fixedToAbsolute')")
 			.var("jqHamburgerDetach", "$('.scene .hamburger.detach')")
-			.__(TKQueue.start(
+			.__(TKQueue.startAnimQueued(
 				fct()
 //						.__("$('.active .logo').toggleClass('animated shake')")  // retire le shake
 				    	.__(_overlay.doHide(1))    	
@@ -121,7 +121,7 @@ public interface TKTransition extends JSClass {
 		._else()
 		.var("jqHamburger", "jqNavBar.find('.hamburger')")
 		// ouvre le menu
-		.__(TKQueue.start(
+		.__(TKQueue.startAnimQueued(
 				fct()
 						.__(_overlay.doShow("'.active'", 1))		 	        		 			
 						.__("$('body').css('overflow','hidden')") // plus de scroll		
@@ -153,7 +153,7 @@ public interface TKTransition extends JSClass {
 				
 						//------------- anim des item de menu----------	
 						._for("var i in window.jsonMainMenu") 
-						.__("setTimeout(", fct("elem")
+							.__("setTimeout(", fct("elem")
 								.__("elem.anim='fadeInLeft'")
 								.__("elem.anim=''"), ",(i*"+30+"), window.jsonMainMenu[i])")
 						.endfor()		
@@ -251,7 +251,7 @@ public interface TKTransition extends JSClass {
 	 	
 	    ._if("jqAct1.hasClass('active')")
 	         // ouverture activity 2
-		     .__(TKQueue.start(
+		     .__(TKQueue.startAnimQueued(
 		    		 fct() 
 					.__(_self.doNavBarToActivity(0))
 					.__(_overlay.doShow("act1",1))    // init
@@ -287,7 +287,7 @@ public interface TKTransition extends JSClass {
 				   )) 	
 		._else()
 			// fermeture activity 2 
-			.__(TKQueue.start( 
+			.__(TKQueue.startAnimQueued( 
 				fct()
 					 .__(_self.doNavBarToActivity(0))				 
 					 .__(_self.doActivityInactive("act2"))
@@ -339,7 +339,7 @@ public interface TKTransition extends JSClass {
 	 	
 	    ._if("jqAct1.hasClass('active')")
 	         // ouverture activity 2
-		     .__(TKQueue.start( 
+		     .__(TKQueue.startAnimQueued( 
 		    	fct() 
 		    		 .__(_overlay.doShow("act1", 1))
 				  	 .__(_self.doNavBarToActivity(0))
@@ -407,7 +407,7 @@ public interface TKTransition extends JSClass {
 				   )) 	
 		._else()
 			// fermeture activity 2 
-			.__(TKQueue.start(  fct()
+			.__(TKQueue.startAnimQueued(  fct()
 					.__(_self.doNavBarToActivity(0))				 
 					.__(_self.doActivityInactive("act2"))
 					.__(_self.doActivityActive("act1"))

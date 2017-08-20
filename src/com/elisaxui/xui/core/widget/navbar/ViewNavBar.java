@@ -64,7 +64,7 @@ public class ViewNavBar extends XHTMLPart {
 	
 	@xTarget(CONTENT.class)
 	public XMLElement xContenu() {  
-		return xDiv( xId(this.getProperty(PROPERTY_NAME)), xAttr("class", "\"navbar fixedTop\""),
+		return xHeader( xId(this.getProperty(PROPERTY_NAME)), xAttr("class", "\"navbar fixedTop\""),
 				this.getChildren());
 	}
 	
@@ -85,7 +85,7 @@ public class ViewNavBar extends XHTMLPart {
 	}
 	
 	public static XMLElement getTemplateBgCanvas() {
-		return xElement("canvas", animatedBg); // pour granim;
+		return xElement("canvas", animatedBg); // pour granim
 	}
 	
 	public static XMLElement getTemplateBgDiv() {

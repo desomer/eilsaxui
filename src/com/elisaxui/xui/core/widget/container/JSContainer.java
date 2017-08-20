@@ -10,10 +10,11 @@ import com.elisaxui.xui.core.datadriven.JSDataDriven;
 import com.elisaxui.xui.core.datadriven.JSDataSet;
 import com.elisaxui.xui.core.toolkit.TKActivity;
 import com.elisaxui.xui.core.toolkit.TKQueue;
-import com.elisaxui.xui.core.toolkit.TKRouter;
+import com.elisaxui.xui.core.toolkit.TKRouterEvent;
 import com.elisaxui.xui.core.transition.CssTransition;
 import com.elisaxui.xui.core.transition.TKTransition;
 import com.elisaxui.xui.core.widget.button.ViewFloatAction;
+import com.elisaxui.xui.core.widget.loader.ViewPageLayout;
 import com.elisaxui.xui.core.widget.navbar.ViewNavBar;
 
 /**
@@ -28,7 +29,7 @@ public interface JSContainer extends JSClass {
 	JSContainer _this=null;
 	JSContainer _self=null;
 	
-	TKRouter _tkrouter =null;
+	TKRouterEvent _tkrouter =null;
 	TKTransition _tkAnimation = null;
 	TKActivity _activityMgr = null;
 	
@@ -41,12 +42,18 @@ public interface JSContainer extends JSClass {
 			.__("ret.js+=part.js")
 			.__("return ret")
 		._else()
-			.__("return ", XHTMLPart.xDiv(XHTMLPart.xVar("ctx.row.html")))
+			.var("ret", XHTMLPart.xDiv(XHTMLPart.xVar("ctx.row.html")))
+			.var("js", "ctx.row.js.replace('<script type=\\\"text\\\\/javascript\\\">', '')")
+			.set("js", "js.replace('<\\\\/script>', '')")
+			.__("ret.js=\"<script>\"+js+\"<\\/script>\"")
+			.__("return ret")
 		.endif()
 		;
 		return null;
 	}
 
+	JSViewCard _cardFactory = null;
+	
 	default Object getData(Object selector) {
 
 		ViewCard card = new ViewCard();
@@ -56,21 +63,26 @@ public interface JSContainer extends JSClass {
 
 		.set(aDataDriven, _new(aDataSet))
 		.var(_self, _this)
+		
 		.__(aDataDriven.onEnter(fct("ctx")
 				._if("ctx.row['_dom_']==null")
 				
 				 	._if("ctx.row.type=='page'")
-						.set(template, XHTMLPart.xElementPart(new ViewPageLayout(XHTMLPart.xVar("ctx.row.id"))))
+						.set(template, XHTMLPart.xPart(new ViewPageLayout(XHTMLPart.xVar("ctx.row.id"))))
 						.var("jqdom", template.append("$(selector)"))
 						.__("ctx.row['_dom_']=jqdom[0]")
 						
+						// ajoute les enfant
 						._for("var i in ctx.row.children")
 							.var("child", "ctx.row.children[i]")
 							.var("factory", "new (eval(child.factory))()" )
 							.var("data", "factory.getData(child.selector)")
 							._for("var j in child.rows")
 								.var("row", "child.rows[j]")
-								.__("data.push(row)")	
+								.set("row.idx", "j")
+//								.var("param", "{'data':data, 'row':row , 'idx':j }")
+//								.__("setTimeout(", fct("param").__("param.data.push(param.row)") , ", 100*j, param)")	
+								.__("data.push(row)")
 							.endfor()
 						.endfor()
 						
@@ -80,17 +92,39 @@ public interface JSContainer extends JSClass {
 						  	.__(_tkrouter, ".", _tkAnimation.doActivityActive("'#'+ctx.row.id"))
 						  	.__(_tkrouter, ".", _tkAnimation.doNavBarToBody())
 						.endif()
+						
 						.__("var backupId=", _tkrouter, ".", _activityMgr.getCurrentIDActivity())
 						.__(_tkrouter, ".", _activityMgr.setCurrentActivity("ctx.row.id"))
 						.__(_tkrouter.doEvent(txt(TKActivity.ON_ACTIVITY_CREATE)))	
 						.__(_tkrouter, ".", _activityMgr.setCurrentActivity("backupId"))
 						
 					._elseif("ctx.row.type=='card'")
-					    .var("subData", _self.getSubData("ctx"))
+						.var("subData", "{html:'', js:''}")
+					    ._if("ctx.row.html!=null") 
+					    	.set("subData", _self.getSubData("ctx"))
+					    .endif()
+					    
 						.set(template, ViewCard.getTemplate((ViewCard)card.addProperty("childrenCard", XHTMLPart.xVar("subData.html") )))
 						.__(template, ".js+=subData.js")
+						
 						.var("jqdom", template.append("$(selector)"))
 						.__("ctx.row['_dom_']=jqdom[0]")
+						.__("$(ctx.row['_dom_']).css('visibility','hidden')")
+						
+						.var(_cardFactory, _new() )
+						.var("data", _cardFactory.getData("jqdom"))
+						
+						._for("var j in ctx.row.rows")
+							.var("row", "ctx.row.rows[j]")
+							.__("data.push(row)")	
+						.endfor()
+						
+						//------------- anim des item de menu----------	
+						.__("setTimeout(", fct("elem")
+								.__("elem.anim='fadeInUp'")
+								/*.__("elem.anim=''")*/, ", 100 * ctx.row.idx , ctx.row)")
+						
+						
 						
 					._elseif("ctx.row.type=='floatAction'")
 						.set(template, ViewFloatAction.getTemplate())
@@ -98,13 +132,7 @@ public interface JSContainer extends JSClass {
 						.__("ctx.row['_dom_']=jqdom[0]")
 	
 					._elseif("ctx.row.type=='action'")
-//								._if("$(selector+' .rightAction').length==0")
-//									.set(template, ViewNavBar.getTemplateActionBar())
-//									.var("jqdom", template.append("$(selector+' .navbar')"))
-//								.endif()
-//								.set(template, ViewNavBar.getTemplateAction("ctx.row.icon", "ctx.row.idAction"))
-//								.var("jqdom", template.append("$(selector+' .rightAction')"))
-//								.__("ctx.row['_dom_']=jqdom[0]")
+
 					.endif()
 				.endif()))
 		
@@ -113,9 +141,14 @@ public interface JSContainer extends JSClass {
 
 				.endif()))
 
-		.__(aDataDriven.onChange(fct("value")
-				._if("value.row['_dom_']!=null && value.property=='idx'")
-
+		.__(aDataDriven.onChange(fct("ctx")
+				._if("ctx.row['_dom_']!=null && ctx.row.type=='card' && ctx.property=='anim'")
+					.consoleDebug(txt("JSContainer change "), "ctx.value", "ctx")
+					._if("!ctx.value==''")
+						.__("$(ctx.row['_dom_']).css('visibility','')")
+						.__("$(ctx.row['_dom_']).toggleClass('animated '+ctx.value)")
+						//.__("setTimeout(\n", fct("elem").__("elem.toggleClass('animated '+ctx.value)") ,",500, $(ctx.row['_dom_']))")
+					.endif()	
 				.endif()
 			))
 

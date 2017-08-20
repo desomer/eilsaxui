@@ -5,7 +5,7 @@ package com.elisaxui.xui.core.toolkit.json;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassMethod;
 import com.elisaxui.core.xui.xml.annotation.xComment;
-import com.elisaxui.xui.core.toolkit.TKRouter;
+import com.elisaxui.xui.core.toolkit.TKRouterEvent;
 
 /**
  * @author Bureau
@@ -13,7 +13,7 @@ import com.elisaxui.xui.core.toolkit.TKRouter;
  */
 public class JXui extends JSClassMethod {
 	@xComment("_$xui.tkrouter")    ////////
-	static TKRouter _tkrouter;
+	static TKRouterEvent _tkrouter;
 	
 	public static final JXui $xui()
 	{
@@ -22,7 +22,7 @@ public class JXui extends JSClassMethod {
 		return ret;
 	}
 	
-	public TKRouter tkrouter()
+	public TKRouterEvent tkrouter()
 	{
 		attr("tkrouter");
 		return _tkrouter;

@@ -1,6 +1,8 @@
 package com.elisaxui.core.xui.xhtml.builder.javascript;
 
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,7 +39,7 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 		return this.jsBuilder;
 	}
 
-	protected void newLine(XMLBuilder buf) {
+	protected final void newLine(XMLBuilder buf) {
 		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCrJS())
 			buf.addContent("\n");
 	}
@@ -56,11 +58,19 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 				doXMLElement(buf, ((XMLElement) object));
 			} else if (object instanceof JSFunction) {
 				JSFunction fct = (JSFunction) object;
-				jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab() + 1);
-				fct.toXML(buf);
-				jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab() - 1);
-				jsBuilder.newLine(buf);
-				this.jsBuilder.newTabulation(buf);
+				if (fct.isFragment())
+				{
+					fct.toXML(buf);
+				}
+				else
+				{
+					jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab() + 1);
+					fct.toXML(buf);
+					jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab() - 1);
+					jsBuilder.newLine(buf);
+					this.jsBuilder.newTabulation(buf);
+				}
+				
 //			} else if (object instanceof JSContent && (this != object)) {
 //				JSContent c = (JSContent) object;
 //				c.toXML(buf);
@@ -147,11 +157,24 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 */
 	@Override
 	public JSMethodInterface __(Object... content) {
-		getListElem().add(JSNewLine.class);
-		for (Object object : content) {
-			addElem(object);
+		if (content!=null)
+		{
+			if (content.length==1 && content[0] instanceof JSFunction)
+			{
+				JSFunction fct = ((JSFunction)  content[0] );
+				if (!fct.isActived()) 
+						return this;
+				
+				fct.setFragment(true);
+			}
+			else
+				getListElem().add(JSNewLine.class);
+			
+			for (Object object : content) {
+				addElem(object);
+			}
+			getListElem().add(";");
 		}
-		getListElem().add(";");
 		return this;
 	}
 
@@ -211,6 +234,15 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 		getListElem().add(");");
 		return this;
 	}
+	
+	@Override
+	public JSMethodInterface systemDebugIf(Object cond, Object... content) {
+		ArrayList<Object> p = new ArrayList<Object>();
+		p.add("'<SYSTEM>'");
+		p.addAll(Arrays.asList(content));
+		
+		return __(fragmentIf(cond).consoleDebug(p.toArray()));
+	};
 
 	@Override
 	public JSMethodInterface _for(Object... content) {
@@ -289,12 +321,32 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 
 	@Override
 	public Object txt(Object... param) {
-		return "\"" + param[0] + "\"";
+		
+		StringBuilder str = new StringBuilder();
+		str.append("\"");
+		for (int i = 0; i < param.length; i++) {
+			if (param[i] instanceof JSVariable)
+			{
+				str.append("\"+");
+				str.append(param[i]);
+				str.append("+\"");
+			}
+			else
+				str.append(param[i]);
+		}
+		str.append("\"");
+		return str.toString();
 	}
 
 	@Override
 	public JSFunction fct(Object... param) {
 		return jsBuilder.createJSFunction().setParam(param);
+	}
+	
+	@Override
+	public JSFunction fragmentIf(Object cond) {
+		
+		return jsBuilder.createJSFunction().setFragment(true).setActivatedCondition(cond);
 	}
 
 	/* (non-Javadoc)
@@ -346,7 +398,9 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 		for (int i = 0; i < param.length; i++) {
 			str.append(param[i]);
 		}
-		return str.toString();
+		JSVariable var = new JSVariable();
+		var.setName(str.toString());
+		return var;
 	}
 
 	/**
@@ -371,5 +425,9 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	public static final class JSAddTab {
 	};
 	public static final class JSRemoveTab {
-	};
+	}
+	/* (non-Javadoc)
+	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#systemDebug(java.lang.Object, java.lang.Object[])
+	 */
+
 }

@@ -15,6 +15,8 @@ import static  com.elisaxui.xui.core.transition.CssTransition.*;
 /**
  * @author Bureau
  *
+ *
+ *   pour gestion transition de type bubble overlay
  */
 @xComment("ViewOverlayRipple")
 public class ViewOverlayRipple extends XHTMLPart {

@@ -10,9 +10,18 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
  */
 public interface JSClass extends JSMethodInterface  {
 
-	@Deprecated
-	static <E extends JSClass> E initVar(Class<E> cl) {
-		return XHTMLPart.jsBuilder.getProxy(cl);
+//	@Deprecated
+//	static <E extends JSClass> E initVar(Class<E> cl) {
+//		return XHTMLPart.jsBuilder.getProxy(cl);
+//	}
+	
+	
+	public static <E> E defVar() {
+		return null;
+	}
+	
+	public static <E> E defAttr() {
+		return null;
 	}
 	
 	

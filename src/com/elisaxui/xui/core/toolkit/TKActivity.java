@@ -21,7 +21,7 @@ public interface TKActivity extends JSClass {
 	JSContainer jsContainer = null;
 	JSon listRegisterActivity = null;
 	JSString idCurrentActivity = null;
-	TKRouter _tkrouter =null;
+	TKRouterEvent _tkrouter =null;
 	
 	default Object constructor()
 	{

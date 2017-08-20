@@ -84,28 +84,33 @@ public class JSClassInvocationHandler implements InvocationHandler {
 					return JSClassImpl.toJSCallInner(method, args);
 				}
 			} else {
-				
-				JSContent currentContent = mapContent.get(nextName);
-				if (currentContent==null)
+				// creer le JSContent
+				JSContent currentJSContent = mapContent.get(nextName);
+				if (currentJSContent==null)
 				{
-					currentContent= jsbuilder.createJSContent();
+					currentJSContent= jsbuilder.createJSContent();
 					if (debug2)
-						System.out.println("[JSBuilder]"+System.identityHashCode(currentContent)+ " - createJSContent "+nextName+" of class " + implcl.getName());
-					mapContent.put(nextName, currentContent); // creer le contenu
+						System.out.println("[JSBuilder]"+System.identityHashCode(currentJSContent)+ " - createJSContent "+nextName+" of class " + implcl.getName());
+					mapContent.put(nextName, currentJSContent); // creer le contenu
 				}
+
+				System.out.println("[JSBuilder]"+System.identityHashCode(currentJSContent)+ " - appel meth "+ method.getName() + "  du JSContent "+nextName+" of class " + implcl.getName());
+
 				
 				// appel l'implementation le methode JSInterface
-				Object ret =  method.invoke(currentContent, args);
+				Object ret =  method.invoke(currentJSContent, args);
+				
 				if (debug2)
 				{
+					// trace du retour du retour
 					if (ret instanceof JSContent )
 					{
-						System.out.println("[JSBuilder]"+System.identityHashCode(currentContent)+ " - appel de la mth "+id+" of class " + implcl.getName() +" => "+((JSContent)ret).getListElem() );
+						System.out.println("[JSBuilder]"+System.identityHashCode(currentJSContent)+ " - appel de la mth "+id+" of class " + implcl.getName() +" => "+((JSContent)ret).getListElem() );
 					}	
 					else
-						System.out.println("[JSBuilder]"+System.identityHashCode(currentContent)+ " - [no JSContent] appel de la mth "+id+" of class " + implcl.getName() +" => "+ret );
+						System.out.println("[JSBuilder]"+System.identityHashCode(currentJSContent)+ " - [no JSContent] appel de la mth "+id+" of class " + implcl.getName() +" => "+ret );
 
-					System.out.println("[JSBuilder]"+System.identityHashCode(currentContent)+ " - value = " +currentContent.getListElem());
+					System.out.println("[JSBuilder]"+System.identityHashCode(currentJSContent)+ " - value = " +currentJSContent.getListElem());
 				}						
 				return ret;
 			}
@@ -116,15 +121,10 @@ public class JSClassInvocationHandler implements InvocationHandler {
 
 	/** TODO a deplacer dans JSClassImpl  */			
 	private JSFunction createJSFunctionImpl(MethodInvocationHandle handle) 
-					throws NoSuchMethodException, 
-					Throwable, 
-					IllegalAccessException,	
-					InstantiationException, 
-					InvocationTargetException {
+					throws Throwable {
 
 		final Class<?> declaringClass = handle.method.getDeclaringClass();
-		Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class
-				.getDeclaredConstructor(Class.class, int.class);
+		Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class.getDeclaredConstructor(Class.class, int.class);
 		constructor.setAccessible(true);
 
 		Parameter[] param = handle.method.getParameters();
@@ -136,7 +136,7 @@ public class JSClassInvocationHandler implements InvocationHandler {
 			}
 		}
 		
-		// appel la fct la classJS 
+		// appel la fct la classJS    ==> entrainte les appel  invoke de cette classe
 		Object ret = constructor.newInstance(declaringClass, MethodHandles.Lookup.PRIVATE)
 				.unreflectSpecial(handle.method, declaringClass).bindTo(handle.proxy).invokeWithArguments(p);
 		

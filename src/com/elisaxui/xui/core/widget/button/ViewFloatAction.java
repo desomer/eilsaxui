@@ -51,7 +51,7 @@ public class ViewFloatAction extends XHTMLPart {
 	}
 	
 	public static XMLElement getTemplate() {
-		return xListElement(xPart(new ViewFloatAction() ));
+		return xPart(new ViewFloatAction());
 	}
 	
 }

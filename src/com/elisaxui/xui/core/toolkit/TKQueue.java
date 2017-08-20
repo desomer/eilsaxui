@@ -86,7 +86,12 @@ public class TKQueue extends XHTMLPart {
 		return xScriptJS( js().__(queuejs));
 	}
 	
-	public static final Object[] start(Object... param)
+	/**
+	 * indique 
+	 * @param param
+	 * @return
+	 */
+	public static final Object[] startAnimQueued(Object... param)
 	{
 		ArrayList<Object> ret = new ArrayList<>();
 		ret.add("window.animInProgess=true;\n");
@@ -101,7 +106,7 @@ public class TKQueue extends XHTMLPart {
 		return ret.toArray();
 	}
 	
-	public static final Object[] startAlone(Object... param)
+	public static final Object[] startProcessQueued(Object... param)
 	{
 		ArrayList<Object> ret = new ArrayList<>();
 		//ret.add("window.animInProgess=true;\n");

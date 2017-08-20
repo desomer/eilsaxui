@@ -14,10 +14,10 @@ import com.elisaxui.xui.core.transition.TKTransition;
  *
  *    doEvent -> doNavigate (ou doBack)  -> doPushState ->  doIntent -> doAction  (route ou backRoute)
  *
- *			  -> doAction  (TODO)  	
+ *			  -> doAction  (a faire)  	
  *
  */
-public interface TKRouter extends JSClass {
+public interface TKRouterEvent extends JSClass {
 
 	public static final String ACTION_PREV_ROUTE = "ACTION_PREV_ROUTE";
 	public static final String ACTION_NEXT_ROUTE = "ACTION_NEXT_ROUTE";
@@ -30,8 +30,9 @@ public interface TKRouter extends JSClass {
 	JSVariable historyIntent = null;
 	JSVariable _historyIntent = null;
 	
-	TKRouter _self = null;
+	TKRouterEvent _self = null;
 	
+
 	default Object constructor(Object nav) {
 		__()
 		.set(tkAnimation, _new())
@@ -51,21 +52,20 @@ public interface TKRouter extends JSClass {
 	
 					.var("backFromIntent", _self.isBack("toRoute.url"))
 					.var("fromIntent", _self.geCurrentIntention())
-					
-					.consoleDebug("'pushState ENABLE action=', this.toString() , ' toRoute =',toRoute,' backFromIntent =', backFromIntent, 'fromIntent=', fromIntent")
-					
+					.systemDebugIf(TKConfig.debugPushState, "'pushState ENABLE action=', this.toString() , ' toRoute =',toRoute,' backFromIntent =', backFromIntent, 'fromIntent=', fromIntent")					
 					/**************** gestion toogle menu  **********************/
 					._if("backFromIntent!=null && backFromIntent.url=='menu'")
 						.__(_self.doAction(txt("toggleMenu")))
 						.__("return")    // exit 
 					._elseif("this.toString()=='menu'") // is next
+					
 						.set("$xui.intent.action", "'toggleMenu'")
 						.set("$xui.intent.url", "'menu'")
 						.var("intent", "{}")
 						.__("$.extend(intent, $xui.intent)")
 						
 						.__(_self,".",_historyIntent,".push(intent)")   // ajoute a l historique interne
-						.consoleDebug("'intent='", "intent")
+//						.consoleDebug("'intent='", "intent")
 						.__(_self.doAction(txt("toggleMenu")))
 					.endif()
 				
@@ -89,18 +89,19 @@ public interface TKRouter extends JSClass {
 					    .set("$xui.intent.action", txt(ACTION_NEXT_ROUTE))
 					    .var("intent", "{}")
 					    .__("$.extend(intent, $xui.intent)")
-						.consoleDebug("'intent='", "intent")
+//						.consoleDebug("'intent='", "intent")
 					    
 						.__(_self,".",_historyIntent,".push(intent)")   // ajoute a l historique interne
 						.__(_self.doAction(txt(ACTION_NEXT_ROUTE)))
 					.endif()
 					/******************************************/
 				._else()
-					.__("console.debug(",txt("pushState DISABLE param=<"), ",params, '> query =<', query, '> action=', this, ' nextEnable=',", _self,".navigo.nextenable)")
+					.systemDebugIf(TKConfig.debugPushState,txt("pushState DISABLE param=<"), "params, '> query =<', query, '> action=', this, ' nextEnable='", _self+".navigo.nextenable")
 					.__(_self,".navigo.nextenable=", true)
 				.endif()
 			)
 
+		/**TODO change la ligne menu */
 		.__("nav.on("
 				+ "{"
 				+ " 'route/:url': { as: 'route', uses: doPushState.bind('"+STATE_ROUTE+"') },"  
@@ -108,6 +109,7 @@ public interface TKRouter extends JSClass {
 			//	+ " 'home' : { as: 'home', uses: doPushState.bind('home') }"   
 				+ "})")
 		
+		/**TODO change par un affichage user */
 		.__("nav.notFound(", fct("query").consoleDebug("'notFound navigo ='", "query") ,")")
 		
 		.set(historyIntent,"[]")
@@ -120,7 +122,7 @@ public interface TKRouter extends JSClass {
 	default Object doInitialize()
 	{
 		 __()
-		.__(navigo,".nextenable=", false)
+		.__(navigo,".nextenable=", false)  // DISABLE PUSH STATE
 		.__(doNavigate(txt("!route/Activity1")))   // premier etat
 		.var("intent", "{ url:'route/Activity1', nextActivityAnim : 'fromBottom' }")
 		.__(historyIntent,".push(intent)")   // ajoute a l historique interne)
@@ -129,32 +131,30 @@ public interface TKRouter extends JSClass {
 		
 		return _void();
 	}
-	
+		
 	default Object doEvent(Object event)
 	{
-		 __()   // action lancer au click
-		._if("!window.animInProgess && event!=null")
-		   .var("currentIntent",   historyIntent, "[", historyIntent, ".length-1]")
-		   .consoleDebug(txt("do event"), "event","' currentIntent ='", "currentIntent")
-		   .__("if (navigator.vibrate) { navigator.vibrate(30); }")    // je vibre
-		   
-		   
-		   .var("jsonAct", activityMgr.getCurrentActivity())
-		   .consoleDebug("'jsonAct'", "jsonAct")
-		   .var("jsonAction", "jsonAct.events[event]")
-		   
-		   ._if("jsonAction!=null &&jsonAction.action=='route' ")
-		   		.__(doNavigate("jsonAction.url"))  
-		   .endif()
-		   
-		   ._if("jsonAction!=null &&jsonAction.action=='back' ")
-		   		//.__(_this.doBack())  
-		   		.__( doBack())  
-	   		.endif()
+		_if("!window.animInProgess && event!=null")
+		
+			   .var("currentIntent",   historyIntent, "[", historyIntent, ".length-1]")
+			   
+			   .var("jsonAct", activityMgr.getCurrentActivity())
+			   .systemDebugIf(TKConfig.debugDoEvent, txt("do event <", jsvar("event"), "> on"), "jsonAct", txt(" intent is"), "currentIntent") 
+			   .var("jsonAction", "jsonAct.events[event]")
+			   
+			   ._if("jsonAction!=null &&jsonAction.action=='route' ")
+			   		.__("if (navigator.vibrate) { navigator.vibrate(30); }")    // je vibre
+			   		.__(doNavigate("jsonAction.url"))  
+			   .endif()
+			   
+			   ._if("jsonAction!=null &&jsonAction.action=='back' ")
+			   		.__("if (navigator.vibrate) { navigator.vibrate(30); }")    // je vibre
+			   		.__( doBack())  
+			   .endif()
 	   		
-	   		._if("jsonAction!=null &&jsonAction.action=='callback' ")
-		   		.__("window[jsonAction.fct].call(this, jsonAction, currentIntent)")  
-	   		.endif()
+		   	   ._if("jsonAction!=null &&jsonAction.action=='callback' ")
+			   		.__("window[jsonAction.fct].call(this, jsonAction, currentIntent)")  
+			   .endif()
 		   
 		   
 //		   ._if("event=='BtnFloatMain' || event=='more' || event=='HeaderSwipeDown' ")
@@ -170,13 +170,13 @@ public interface TKRouter extends JSClass {
 				.endif()
 			.endif()
 		.endif();
+		
 		 return _void();
 	}	
 	
 	default Object doNavigate(Object uri)
 	{
-		__()
-		.consoleDebug(txt("doNavigate"), "uri")
+		systemDebugIf(TKConfig.debugDoNavigate , txt("doNavigate"), "uri")
 		.__(navigo,".navigate(uri)")
 		;
 		return _void();
@@ -190,7 +190,6 @@ public interface TKRouter extends JSClass {
 			.__("return ",historyIntent,".pop()")
 		.endif()
 		;
-		/** TODO A changer return null retourne vraiment null en js*/
 		return _null();
 	}
 
@@ -219,8 +218,7 @@ public interface TKRouter extends JSClass {
 	
 	default Object doAction(Object action)
 	{
-		 __()
-		 .var(_self, _this())   //TODO Bug si je retire dans le geCurrentIntention
+		 var(_self, _this())   //TODO Bug si je retire dans le geCurrentIntention
 		 
 		 
 		 ._if("action==",txt(ACTION_NEXT_ROUTE))
@@ -234,11 +232,13 @@ public interface TKRouter extends JSClass {
 	 			.__("return")
 		 	.endif()
 		 	
-		 	.__(activityMgr.setCurrentActivity("$xui.intent.activity"))  
+
 //		    .__(_self.doEvent(TKActivity.ON_ACTIVITY_RESUME))
 		 	
-			 .consoleDebug(txt("doAction"), "action", "'anim='", "actAnim")
-		 	
+			 .systemDebugIf(TKConfig.debugDoAction, txt("doAction"), "actAnim", "' to intent '", "$xui.intent")
+			 .__(activityMgr.setCurrentActivity("$xui.intent.activity"))  
+			 
+			 
 		    ._if("actAnim=='fromBottom'")
 		    	.__(tkAnimation.doOpenActivityFromBottom())
 		    ._else()
@@ -249,10 +249,11 @@ public interface TKRouter extends JSClass {
 		 ._if("action==",txt(ACTION_PREV_ROUTE))  
 		 	.var("actAnim", "$xui.intent.nextActivityAnim")
 		 	
+		 	.systemDebugIf(TKConfig.debugDoAction, txt("doAction"), "action", "' to intent '", "$xui.intent")
 		 	.__(activityMgr.setCurrentActivity("$xui.intent.prevActivity"))   
 //		    .__(_self.doEvent(TKActivity.ON_ACTIVITY_RESUME))
 			
-		 	.consoleDebug(txt("doAction"), "action", "'anim='", "actAnim")
+
 			
 		    ._if("actAnim=='fromBottom'")
 		    	.__(tkAnimation.doOpenActivityFromBottom())
@@ -262,6 +263,7 @@ public interface TKRouter extends JSClass {
 	     .endif()
 	     
 		 ._if("action=='toggleMenu'")
+		 	.systemDebugIf(TKConfig.debugDoAction, txt("doAction"), "action")
 		 	.__(tkAnimation.doToggleBurgerMenu())
 		 .endif();
 		 

@@ -1,11 +1,11 @@
 package com.elisaxui.core.config;
 
 public class ConfigMgr {
-	private boolean enableCrXML = true;
+	private boolean enableCrXML = true;   //true
 	private boolean enableTabXML = false;
-	private boolean enableCrXMLinJS = true;
+	private boolean enableCrXMLinJS = true;   //true
 	private boolean enableTabXMLinJS = false;
-	private boolean enableCrJS = true;
+	private boolean enableCrJS = true;    //true
 	
 	public boolean isEnableCrXML() {
 		return enableCrXML;

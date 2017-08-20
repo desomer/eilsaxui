@@ -23,11 +23,9 @@ import com.elisaxui.core.xui.xml.builder.XUIFormatManager;
 
 public class JSBuilder extends XUIFormatManager {    
 	
-	
 
-	
 	public JSBuilder() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public void setNameOfProxy(String prefix, Object inst, Object name) {

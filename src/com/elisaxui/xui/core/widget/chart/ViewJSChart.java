@@ -75,7 +75,6 @@ public class ViewJSChart extends XHTMLPart {
 				  .var("options", doughnutOptions)
 				  .var("data", doughnutData)
 				  .var("ctx", "document.getElementById('" + getPropertyXID(ID).getValue()+"').getContext('2d')")
-//				  .consoleDebug("'ctx'", "ctx")
 				  .var("mydoughnutChart", "new Chart(ctx, {type: 'doughnut', data: data, options : options })")	
 				);
 	}

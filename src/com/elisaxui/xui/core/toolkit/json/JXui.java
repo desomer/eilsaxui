@@ -24,7 +24,7 @@ public class JXui extends JSClassMethod {
 	
 	public TKRouterEvent tkrouter()
 	{
-		attr("tkrouter");
+		///return attr("tkrouter");   //TODO a faire marcher
 		return _tkrouter;
 	}
 	

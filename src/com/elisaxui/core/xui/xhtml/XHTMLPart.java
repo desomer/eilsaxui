@@ -10,6 +10,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSListParameter;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.builder.XMLAttr;
@@ -119,6 +120,15 @@ public abstract class XHTMLPart extends XMLPart {
 		return "'+" + var + "+'";
 	}
 	
+	public static JSVariable jsvar(Object... param) {
+		StringBuilder str = new StringBuilder();
+		for (int i = 0; i < param.length; i++) {
+			str.append(param[i]);
+		}
+		JSVariable var = new JSVariable();
+		var.setName(str.toString());
+		return var;
+	}
 	
 	public final static XMLElement xScriptJS(Object js) {
 		XMLElement t = xElement("script", xAttr("type", "\"text/javascript\""), js);

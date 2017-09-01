@@ -81,7 +81,7 @@ public class JSClassInvocationHandler implements InvocationHandler {
 						System.out.println("[JSBuilder]******************************** mth "+id+" of class " + implcl.getName() + " next = "+nextName);
 					implcl.getListHandleFuntionPrivate().add(MthInvoke);
 					
-					return JSClassImpl.toJSCallInner(method, args);
+					return JSClassImpl.toJSCallInner(getName(), method, args);
 				}
 			} else {
 				// creer le JSContent

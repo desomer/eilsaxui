@@ -3,6 +3,8 @@
  */
 package com.elisaxui.xui.core.toolkit;
 
+import static com.elisaxui.xui.core.toolkit.json.JXui.$xui;
+
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSon;
@@ -45,7 +47,9 @@ public interface TKActivity extends JSClass {
 	
 	default Object setCurrentActivity(Object id)
 	{
-	    set(idCurrentActivity, "id");
+	    set(idCurrentActivity, "id")
+		//.__($xui().tkrouter().doTraceHisto())
+	    ;
 		return jsvar(listRegisterActivity, "[", idCurrentActivity, "]");
 	}
 	

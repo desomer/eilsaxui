@@ -3,6 +3,8 @@
  */
 package com.elisaxui.xui.core.toolkit;
 
+import static com.elisaxui.xui.core.toolkit.json.JXui.$xui;
+
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.xui.core.transition.ConstTransition;
@@ -27,10 +29,10 @@ public interface TKRouterEvent extends JSClass {
 	TKTransition tkAnimation = null;
 	JSVariable navigo = null;
 	TKActivity activityMgr= null;
-	//   gestion des historique d'intention
-	JSVariable historyIntent = null;
-	JSVariable _historyIntent = null;
 	
+	JSVariable historyIntent = null;  //   gestion des historique d'intention
+	
+	JSVariable _historyIntent = null;
 	TKRouterEvent _self = null;
 	
 
@@ -117,6 +119,14 @@ public interface TKRouterEvent extends JSClass {
 		.__(_self.doInitialize())
 		;
 		return _void();
+	}
+	
+	default TKActivity activityMgr()
+	{
+		_return(activityMgr);
+		
+		//attr("activityMgr");
+		return null;
 	}
 	
 	
@@ -224,6 +234,14 @@ public interface TKRouterEvent extends JSClass {
 		.__(_this(),".navigo.nextenable=false")
  		.__(historyIntent,".pop()")
  		.__("history.go(-1)")
+		;
+		return _void();
+	}
+	
+	default Object doTraceHisto()
+	{
+		var("currentActivity", $xui().tkrouter().activityMgr().getCurrentActivity())
+ 		.systemDebugIf(TKConfig.debugPushState, txt("DO TRACE HISTORY'"), "currentActivity", txt(" histo intent "), historyIntent )
 		;
 		return _void();
 	}

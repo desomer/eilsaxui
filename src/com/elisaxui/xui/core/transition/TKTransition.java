@@ -44,7 +44,7 @@ public interface TKTransition extends JSClass {
 	JQuery _jqActivityActive = null;
 	
 	default Object doNavBarToActivity(Object sct) {
-		var(_jqNavBar, $(CSSSelector.onPath("body>.navbar")))
+		var(_jqNavBar, $("body>.navbar"))
 		//.var("jqNavBar", "$('body>.navbar')")
 		.var(_jqActivityActive, $(activity.and(active)))
 		//.var("jqActivityActive", "$('.activity.active')")

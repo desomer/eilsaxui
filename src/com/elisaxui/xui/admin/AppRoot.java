@@ -10,6 +10,7 @@ import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.xui.core.toolkit.TKActivity;
 import com.elisaxui.xui.core.toolkit.TKQueue;
+import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
 import com.elisaxui.xui.core.widget.chart.ViewJSChart;
 import com.elisaxui.xui.core.widget.container.JSONPage;
 import com.elisaxui.xui.core.widget.layout.JSPageLayout;
@@ -28,12 +29,20 @@ public class AppRoot extends XHTMLPart {
 	static TKActivity tkActivity;
 	static JSPageLayout jsPageLayout;
 	
-	public static final String IMAGE1 = "https://images.pexels.com/photos/316465/pexels-photo-316465.jpeg?h=350&auto=compress&cs=tinysrgb";
-	public static final String IMAGE2 = "https://images.pexels.com/photos/6337/light-coffee-pen-working.jpg?h=350&auto=compress&cs=tinysrgb";
-	public static final String IMAGE3 = "https://images.pexels.com/photos/117729/pexels-photo-117729.jpeg?h=350&auto=compress&cs=tinysrgb";
-	public static final String IMAGE4 = "https://images.pexels.com/photos/211122/pexels-photo-211122.jpeg?h=350&auto=compress&cs=tinysrgb";
-	public static final String IMAGE5 = "https://images.pexels.com/photos/210745/pexels-photo-210745.jpeg?h=350&auto=compress&cs=tinysrgb";
-	public static final String IMAGE6 = "https://images.pexels.com/photos/164482/pexels-photo-164482.jpeg?h=350&auto=compress&cs=tinysrgb";
+
+	public static final String[] listPhotos= new String[] {
+			"https://images.pexels.com/photos/316465/pexels-photo-316465.jpeg?h=350&auto=compress&cs=tinysrgb",
+			"https://images.pexels.com/photos/6337/light-coffee-pen-working.jpg?h=350&auto=compress&cs=tinysrgb",
+			"https://images.pexels.com/photos/117729/pexels-photo-117729.jpeg?h=350&auto=compress&cs=tinysrgb",
+			"https://images.pexels.com/photos/211122/pexels-photo-211122.jpeg?h=350&auto=compress&cs=tinysrgb",
+			"https://images.pexels.com/photos/210745/pexels-photo-210745.jpeg?h=350&auto=compress&cs=tinysrgb",
+			"https://images.pexels.com/photos/164482/pexels-photo-164482.jpeg?h=350&auto=compress&cs=tinysrgb",
+			"https://images.pexels.com/photos/256417/pexels-photo-256417.jpeg?h=350&auto=compress&cs=tinysrgb",
+			"https://images.pexels.com/photos/207665/pexels-photo-207665.jpeg?h=350&auto=compress&cs=tinysrgb",
+			"https://images.pexels.com/photos/272228/pexels-photo-272228.jpeg?h=350&auto=compress&cs=tinysrgb"
+	}; 
+	
+	
 	
 	@xTarget(AFTER_CONTENT.class)  // dans le header
 	@xRessource
@@ -138,28 +147,35 @@ public class AppRoot extends XHTMLPart {
 		
 		public Object getJSON()
 		{
-			XMLElement cnt1 = xDiv(
-					 xId("test1"), 
-					// xAttr("data-x-action", "\""+EVT_MORE+"\""),  
-					 xAttr("style", "\"width: 100%; height: 30vh; background:url(" +IMAGE6 +") center / cover\""));
+			XMLElement cnt1 = xDiv( ViewRippleEffect.cRippleEffect, 
+							xAttr("style", "\"width: 100%; height: 30vh; background:url(" +listPhotos[6] +") center / cover\""),
+							xId("test1"), 
+							xAttr("data-x-action", "\""+EVT_MORE+"\"")
+					 );
 				 
 			
 			XMLElement cnt2 = xPart(new ViewJSChart(xId("test2")));	
 			
 			return page( "Activity1", arr( 
-						factory("#NavBarActivity1", FACTORY_NAVBAR, arr( backgroundImage(IMAGE5, 0.3),  
+						factory("#NavBarActivity1", FACTORY_NAVBAR, arr( backgroundImage(listPhotos[4], 0.3),  
 																	 btnBurger(), 
 																	 title("Bonjour Elisa"),
 																	 btnActionIcon("perm_identity", EVT_IDENTITY),
 																	 btnActionIcon("more_vert", EVT_MORE)
 																	) )
 					 ,  factory("#Activity1 .cArticle", FACTORY_CONTAINER, arr(
-							 										card( arr( backgroundImage(IMAGE3, 1),  
-							 											//	backgroundImage(IMAGE4, 1),
-							 												text("un text")
-							 												)),
 							 										cardHtml( cnt1 ), 
-							 										cardHtml( cnt2 ) 
+							 										cardHtml( cnt2 ),
+							 										card( arr( backgroundImage(listPhotos[7], 1),  
+							 													backgroundImage(listPhotos[8], 1),  
+								 												text("une double image")
+								 												)),
+							 										card( arr( backgroundImage(listPhotos[2], 1),  
+							 												text("un disque dur")
+							 												)),
+							 										card( arr( backgroundImage(listPhotos[5], 1),  
+								 												text("De la monnaie")
+								 												))
 							 										) )
 					 ,  factory("#Activity1 .content", FACTORY_CONTAINER, arr( 
 							 										floatAction()))
@@ -190,20 +206,20 @@ public class AppRoot extends XHTMLPart {
 		{
 			
 			return page( "Activity2", arr( 
-						factory("#NavBarActivity2", FACTORY_NAVBAR, arr( backgroundImage(IMAGE6, 0.3),  
+						factory("#NavBarActivity2", FACTORY_NAVBAR, arr( backgroundImage(listPhotos[5], 0.3),  
 																	 btnBurger(), 
 																	 title("Liste exercice"),
 																	 btnActionIcon("arrow_back", EVT_BACK),
 																	 btnActionIcon("search", EVT_SEARCH)
 																	) )
 					 ,  factory("#Activity2 .cArticle", FACTORY_CONTAINER, arr(
-							 										card( arr( backgroundImage(IMAGE2, 1),  
+							 										card( arr( backgroundImage(listPhotos[1], 1),  
 							 													text("Un café")
 							 												)),
-							 										card( arr( backgroundImage(IMAGE3, 1),  
+							 										card( arr( backgroundImage(listPhotos[2], 1),  
 						 													text("Un disque dur")
 						 												)),
-							 										card( arr( backgroundImage(IMAGE1, 1),  
+							 										card( arr( backgroundImage(listPhotos[0], 1),  
 						 													text("Un dessin")
 						 												))
 							 										) )
@@ -240,7 +256,7 @@ public class AppRoot extends XHTMLPart {
 																	 btnActionIcon("search", EVT_SEARCH)
 																	) )
 					 ,  factory("#Activity3 .cArticle", FACTORY_CONTAINER, arr(
-							 										card( arr( backgroundImage(IMAGE4, 1),  
+							 										card( arr( backgroundImage(listPhotos[3], 1),  
 							 													text("En construction")
 							 												))
 							 										) )

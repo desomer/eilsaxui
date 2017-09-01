@@ -88,6 +88,7 @@ public class JSClassMethod extends JSVariable {
 		return ret;
 	}
 	
+	//TODO
 	public <E extends JSClassMethod> E  attr(String att)
 	{
 		E ret = (E)this;

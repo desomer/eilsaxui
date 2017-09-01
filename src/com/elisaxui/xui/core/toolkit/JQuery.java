@@ -4,7 +4,10 @@
 package com.elisaxui.xui.core.toolkit;
 
 import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
+import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassMethod;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 
 /**
  * @author Bureau
@@ -21,6 +24,19 @@ public class JQuery extends JSClassMethod {
 		return ret;
 	}
 	
+	public static final JQuery $(JSVariable variable)
+	{
+		JQuery ret = new JQuery();
+		ret.addContent("$(");
+		ret.addContent(variable);
+		ret.addContent(")");
+		return ret;
+	}
+	
+	public static final JQuery $(Object... selector)
+	{
+		return $(CSSSelector.onPath(selector));
+	}
 	
 	public Object[] addText(Object...classes)
 	{
@@ -39,7 +55,7 @@ public class JQuery extends JSClassMethod {
 	
 	public JQuery removeClass(Object...classes)
 	{
-		return callMth("removeClass", classes);
+		return callMth("removeClass", addText(classes));
 	}
 	
 	public JQuery detach()
@@ -47,9 +63,9 @@ public class JQuery extends JSClassMethod {
 		return callMth("detach", null);
 	}
 	
-	public JQuery prepend(Object...classes)
+	public JQuery prepend(Object...html)
 	{
-		return callMth("prepend", classes);
+		return callMth("prepend", html);
 	}
 	
 	public JQuery css(Object attr, Object value)
@@ -60,6 +76,30 @@ public class JQuery extends JSClassMethod {
 	public JQuery on(Object...classes)
 	{
 		return callMth("on", classes);
+	}
+
+	/**
+	 * @param selector
+	 * @return
+	 */
+	public Object closest(Object...selector) {
+		return callMth("closest", addText(CSSSelector.onPath(selector)));
+	}
+
+	/**
+	 * @param classes
+	 * @return
+	 */
+	public Object hasClass(Object...classes) {
+		return callMth("hasClass", addText(classes));
+	}
+
+	/**
+	 * @param selector
+	 * @return
+	 */
+	public Object children(Object...selector) {
+		return callMth("children", addText(CSSSelector.onPath(selector)));
 	}
 	
 }

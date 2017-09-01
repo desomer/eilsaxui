@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
@@ -76,21 +77,32 @@ public class JSClassImpl extends JSContent {
 	 * @param args
 	 * @return
 	 */
-	public static final  List<Object> toJSCallInner(Method method, Object[] args) {
-		List<Object> buf = new ArrayList<Object>();
-		buf.add("this." + method.getName() + "(");
-
-		int i = 0;
-		if (args != null) {
-			for (Object p : args) {
-				if (i > 0)
-					buf.add(", ");
-				buf.add(p);
-				i++;
-			}
+	public static final  Object toJSCallInner(Object name , Method method, Object[] args) {
+		
+		if (JSClass.class.isAssignableFrom(method.getReturnType() ))
+		{
+			// chainage d'attribut
+			JSClass prox = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) method.getReturnType());
+			XHTMLPart.jsBuilder.setNameOfProxy("", prox, name + "." + method.getName());
+			return prox;
 		}
-		buf.add(")");
-		return buf;
+		else
+		{
+			List<Object> buf = new ArrayList<Object>();
+			buf.add("this." + method.getName() + "(");
+	
+			int i = 0;
+			if (args != null) {
+				for (Object p : args) {
+					if (i > 0)
+						buf.add(", ");
+					buf.add(p);
+					i++;
+				}
+			}
+			buf.add(")");
+			return buf;
+		}
 	}
 	
 	/**
@@ -100,25 +112,38 @@ public class JSClassImpl extends JSContent {
 	 * @param args
 	 * @return
 	 */
-	public static final List<Object> toJSCall(Object name ,Method method, Object[] args) {
+	public static final Object toJSCall(Object name , Method method, Object[] args) {
 		
-//		if (method.getName().equals("doNavigate"))
-//			System.out.println("ok");
+//		if (method.getName().equals("activityMgr"))
+//			System.out.println("activityMgr activityMgr ok");
 		
-		List<Object> buf = new ArrayList<Object>();
-		buf.add(name + "." + method.getName() + "(");
-
-		int i = 0;
-		if (args != null) {
-			for (Object p : args) {
-				if (i > 0)
-					buf.add(", ");
-				buf.add(p);
-				i++;
-			}
+		if (JSClass.class.isAssignableFrom(method.getReturnType() ))
+		{
+			// chainage d'attribut
+			JSClass prox = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) method.getReturnType());
+			XHTMLPart.jsBuilder.setNameOfProxy("", prox, name + "." + method.getName());
+			return prox;
 		}
-		buf.add(")");
-		return buf;
+		else
+		{
+			// appel de methode
+			List<Object> buf = new ArrayList<Object>();
+			buf.add(name + "." + method.getName() + "(");
+
+			int i = 0;
+			if (args != null) {
+				for (Object p : args) {
+					if (i > 0)
+						buf.add(", ");
+					buf.add(p);
+					i++;
+				}
+			}
+			buf.add(")");
+			return buf;
+		}
+
+			
 	}
 	
 	/**

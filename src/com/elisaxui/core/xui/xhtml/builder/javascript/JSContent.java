@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassInvocationHandler;
 import com.elisaxui.core.xui.xml.builder.IXMLBuilder;
@@ -393,14 +394,8 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#jsvar(java.lang.Object[])
 	 */
 	@Override
-	public Object jsvar(Object... param) {
-		StringBuilder str = new StringBuilder();
-		for (int i = 0; i < param.length; i++) {
-			str.append(param[i]);
-		}
-		JSVariable var = new JSVariable();
-		var.setName(str.toString());
-		return var;
+	public JSVariable jsvar(Object... param) {
+		return XHTMLPart.jsvar(param);
 	}
 
 	/**

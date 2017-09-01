@@ -11,6 +11,7 @@ import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
@@ -162,6 +163,30 @@ public class XMLPart  {
 					field.setAccessible(true);
 					try {
 						field.set(this,classCss);
+					} catch (IllegalArgumentException | IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} 
+				}
+				else if (!isStatic && JSVariable.class.isAssignableFrom(field.getType()))
+				{
+					System.out.println("[XMLPart] init var JSVariable on " + this.getClass() + " name "+ field.getName() );
+					JSVariable variablejs=null;
+					try {
+						variablejs = (JSVariable) field.getType().newInstance();
+					} catch (InstantiationException | IllegalAccessException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					String name = field.getName();
+					xComment comment = field.getAnnotation(xComment.class);
+					if (comment != null) {
+						name = comment.value();
+					}
+					variablejs.setName(name);
+					field.setAccessible(true);
+					try {
+						field.set(this,variablejs);
 					} catch (IllegalArgumentException | IllegalAccessException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

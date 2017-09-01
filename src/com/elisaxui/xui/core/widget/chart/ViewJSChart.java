@@ -37,7 +37,7 @@ public class ViewJSChart extends XHTMLPart {
 //			"animation : true,"+
 //			"animationSteps : 100,"+
           "responsive: true, "+
-          "animation : {easing : \"easeOutBounce\", animateScale : false }"+
+          "animation : {easing : \"easeOutBounce\", animateScale : true }"+
 //		//	"animationEasing : \"easeOutBounce\","+
 //			"animateRotate : true,"+
 //			"animateScale : true,"+
@@ -47,9 +47,9 @@ public class ViewJSChart extends XHTMLPart {
 	
 	String doughnutData ="{"+
 			"labels: ["+
-			         " \"Red\","+
-			         " \"Blue\","+
-			         " \"Yellow\""+
+			         " \"Bonne\","+
+			         " \"Mauvaise\","+
+			         " \"A Faire\""+
 			         " ],"+
 			         " datasets: ["+
 			         " {"+

@@ -23,7 +23,7 @@ public class ViewBtnCircle extends XHTMLPart {
 
 	public static final String PROPERTY_ICON = "PROPERTY_ICON";
 
-	XClass cBtnCircle;
+	public static XClass cBtnCircle;
 	XClass cBtnCircleChangeForm;
 
 	@xTarget(HEADER.class)

@@ -24,6 +24,7 @@ import com.elisaxui.xui.admin.test.JSTestDataDriven;
 import com.elisaxui.xui.core.datadriven.JSDataCtx;
 import com.elisaxui.xui.core.datadriven.JSDataDriven;
 import com.elisaxui.xui.core.datadriven.JSDataSet;
+import com.elisaxui.xui.core.toolkit.JQuery;
 import com.elisaxui.xui.core.toolkit.TKActivity;
 import com.elisaxui.xui.core.toolkit.TKConfig;
 import com.elisaxui.xui.core.toolkit.TKQueue;
@@ -31,6 +32,7 @@ import com.elisaxui.xui.core.toolkit.TKRouterEvent;
 import com.elisaxui.xui.core.transition.ConstTransition;
 import com.elisaxui.xui.core.transition.CssTransition;
 import com.elisaxui.xui.core.transition.TKTransition;
+import com.elisaxui.xui.core.widget.button.ViewBtnCircle;
 import com.elisaxui.xui.core.widget.container.JSContainer;
 import com.elisaxui.xui.core.widget.container.JSViewCard;
 import com.elisaxui.xui.core.widget.layout.JSPageLayout;
@@ -127,21 +129,7 @@ public class XUIScene extends XHTMLPart {
 				//xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/granim/1.0.6/granim.min.js"),
 				xScriptSrcAsync("http://code.jquery.com/jquery-3.2.1.min.js", "resLoaded(this, "+XUICstRessource.ID_RES_JQUERY+");")
 				//xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js")
-				
-				//,xElement("/",""
-					//	+ "<script src='https://cdnjs.cloudflare.com/ajax/libs/js-signals/1.0.0/js-signals.min.js'></script>"
-					//	+ "<script src='https://code.jquery.com/pep/0.4.2/pep.js'></script>"
-					//	+ "<link rel='stylesheet' media='none' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css'>"
-					//	+ "<link rel='stylesheet' media='none' href='https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css'>"
-					//	+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js'></script>"
-					//	+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js'></script>"
-					//	+ "<script  src='https://cdnjs.cloudflare.com/ajax/libs/granim/1.0.6/granim.min.js'></script>"
-					//	+ "<link rel='stylesheet' media='none' title='main' href='https://fonts.googleapis.com/icon?family=Material+Icons'>"
-				//		+ "<link rel='alternate stylesheet' title='main' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>"
-				//		)
-				
-				
-				
+				//		+ "<link rel='alternate stylesheet' title='main' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>"				
 				);
 	}
 		
@@ -280,41 +268,45 @@ public class XUIScene extends XHTMLPart {
 		;
 	}
 	
-	public JSMethodInterface searchRipple = fragment()
+	JQuery ripple;
+	JQuery btn;
+	
+	public JSMethodInterface searchRipple()
+	{
+	  return fragment()
 			 // recherche le ripple btn
-			   .var("ripple", "btn")
-			   ._if( "! ripple.hasClass('",  cRippleEffect.getId(), "')")
-			   		.set("ripple", "btn.closest('.",  cRippleEffect.getId(), "')")
-					._if( "! ripple.hasClass('",  cRippleEffect.getId(), "')")
-			   			.set("ripple", "btn.children('.",  cRippleEffect.getId(), "')")
+			   .var(ripple, btn)
+			   ._if( "!", ripple.hasClass(cRippleEffect))
+			   		.set(ripple, btn.closest(cRippleEffect))
+					._if( "!", ripple.hasClass(cRippleEffect))
+			   			.set(ripple, btn.children(cRippleEffect))
 			   		.endif()	
 			   .endif();
-	
+	}
 	
 	public JSMethodInterface getEventManager()
 	{
 	  return fct()
 			   .consoleDebug("'ok EventManager'") 
-			   .__($(CSSSelector.onPath("body")).on(txt("touchstart"), ",", fct('e')
-					   .var("btn", "$(e.target).closest('[data-x-action]')")
-					   .var("event", "btn.data('x-action')")
+			   .__($("body").on(txt("touchstart"), ",", fct('e')
+					   .var(btn, $(jsvar("e.target")).closest("[data-x-action]"))
 					   
-					   .__(searchRipple)
+					   .__(searchRipple())
 					   					   
 					   .__("$xui.intent.nextActivityAnim= '"+ConstTransition.ANIM_FROM_BOTTOM+"' ")	
 					   				   	
 					   ._if( "ripple.length>0") 
-					   	  //TODO A Changer 		
-					   	   ._if("ripple.hasClass('cBtnCircle')")
+					   	  //TODO A Changer par action sur description 		
+					   	   ._if(ripple.hasClass(ViewBtnCircle.cBtnCircle))
 					   	   		// pas animation ripple
 					   	   	    .__("$xui.intent.nextActivityAnim= '"+ConstTransition.ANIM_FROM_RIPPLE+"'")
 						   ._else()
 						   	   // animation ripple 
 							   .__(TKQueue.startProcessQueued(fct()
 						   		      , CssTransition.NEXT_FRAME	, fct()  // attente ripple effect
-							   				.__("ripple.addClass('", cRippleEffectShow.getId() ,"')")
+							   				.__(ripple.addClass(cRippleEffectShow))
 									  ,CssTransition.SPEED_RIPPLE_EFFECT, fct()  // attente ripple effect
-								   		    .__("ripple.removeClass('", cRippleEffectShow.getId() ,"')")     	
+								   		    .__(ripple.removeClass(cRippleEffectShow))     	
     
 									   )
 								)  
@@ -339,12 +331,12 @@ public class XUIScene extends XHTMLPart {
 				
 				.__("mc.on('tap',", fct("e")
 
-							.var("btn", "$(e.target).closest('[data-x-action]')")
+							.var("btn", $(jsvar("e.target")).closest("[data-x-action]"))
 							.var("event", "btn.data('x-action')")
 							
 							//.__("$.notify('do Event '+event, {globalPosition: 'bottom left', className:'warn', autoHideDelay: 2000})")
 							
-							 .__(searchRipple)
+							 .__(searchRipple())
 							
 							 // TODO passer un context d'event au doEvent  (ripple, btn, e,  event)
 							 .__(TKQueue.startProcessQueued(fct()
@@ -391,12 +383,10 @@ public class XUIScene extends XHTMLPart {
 	public JSMethodInterface getStateManager()
 	{
 	  return fct()
-		.consoleDebug("'ok StateManager'") 
-		
+//		.consoleDebug("'ok StateManager'") 
 		.set("nav", "new Navigo(null,true,'#!')")   //   null,true,'!#')")
 		.var(tkrouter , _new("nav"))
-	//	.set($xui().tkrouter().toString(), tkrouter)
-		.set("$xui.tkrouter", tkrouter)  // a mettre dans TKConfig
+		.set($xui().tkrouter(), tkrouter) 
 		;
 			  
 	}

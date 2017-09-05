@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.xui.core.widget.loader;
+package com.elisaxui.xui.core.widget.layout;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;

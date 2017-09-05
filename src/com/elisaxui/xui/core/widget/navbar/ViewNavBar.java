@@ -69,7 +69,7 @@ public class ViewNavBar extends XHTMLPart {
 	}
 	
 	public static XMLElement getTemplateBtnBurger() {
-		return xListElement(xPart(new ViewBtnBurger()));
+		return xPart(new ViewBtnBurger());
 	}
 	
 	public static XMLElement getTemplateActionBar() {

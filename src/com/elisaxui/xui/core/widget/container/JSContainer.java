@@ -14,7 +14,7 @@ import com.elisaxui.xui.core.toolkit.TKRouterEvent;
 import com.elisaxui.xui.core.transition.CssTransition;
 import com.elisaxui.xui.core.transition.TKTransition;
 import com.elisaxui.xui.core.widget.button.ViewFloatAction;
-import com.elisaxui.xui.core.widget.loader.ViewPageLayout;
+import com.elisaxui.xui.core.widget.layout.ViewPageLayout;
 import com.elisaxui.xui.core.widget.navbar.ViewNavBar;
 
 /**

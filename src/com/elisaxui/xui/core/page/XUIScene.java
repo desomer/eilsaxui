@@ -36,8 +36,10 @@ import com.elisaxui.xui.core.widget.button.ViewBtnCircle;
 import com.elisaxui.xui.core.widget.container.JSContainer;
 import com.elisaxui.xui.core.widget.container.JSViewCard;
 import com.elisaxui.xui.core.widget.layout.JSPageLayout;
+import com.elisaxui.xui.core.widget.loader.ViewLoader;
 import com.elisaxui.xui.core.widget.menu.JSMenu;
 import com.elisaxui.xui.core.widget.menu.ViewMenu;
+import com.elisaxui.xui.core.widget.navbar.ViewNavBar;
 import com.elisaxui.xui.core.widget.overlay.JSOverlay;
 
 @xFile(id = "standard")
@@ -71,7 +73,7 @@ public class XUIScene extends XHTMLPart {
     		;
     
 
-	static XClass scene;
+	public static XClass scene;
 	
 	//var oRect = oElement.getBoundingClientRect()
     
@@ -84,9 +86,9 @@ public class XUIScene extends XHTMLPart {
 				xTitle("le standard"),
 				xMeta(xAttr("name", xTxt("theme-color")), xAttr("content", xTxt(bgColorTheme))),
 				
-//				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css", "resLoaded(this);"),
+//				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"),
 				xLinkCss("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"),
-//				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css", "resLoaded(this);"),
+//				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css"),
 				xLinkCss("https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css"),
 //				xLinkCss("https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"),
 				xLinkCss("https://fonts.googleapis.com/icon?family=Material+Icons"),
@@ -172,6 +174,7 @@ public class XUIScene extends XHTMLPart {
 				.select(scene).set("overflow-x: hidden; background-color: "+bgColorScene+";"   // overflow: auto; -webkit-overflow-scrolling: auto
 						+ "min-width: 100vw;  min-height: 100vh; "   //position: absolute
 						)
+					.path(xCss("#NavBarShell h1").set("text-align:center"))
 				//----------------------------------------------------------------
 				.select(activity).set("background-color: white;"+ PREF_3D+ " will-change:overflow,z-index;") //will-change:transform
 					.path(xCss(content)
@@ -184,6 +187,7 @@ public class XUIScene extends XHTMLPart {
 						+ "min-height:100%; min-width: 100%;"
 						+ " max-width: 100%; "
 						+ "padding-top: " + (heightNavBar) + "px")	  //position:absolute		
+				
 				;
 	}
 
@@ -192,7 +196,9 @@ public class XUIScene extends XHTMLPart {
 		return 
 			xListElement(
 				xPart(new ViewMenu()),
-				xDiv(scene)                       /**, xPart(new ViewLoader())**/
+				xDiv(scene, 
+						xPart(new ViewNavBar().addProperty(ViewNavBar.PROPERTY_NAME, "NavBarShell"), xH1("Loading...")),  
+						xPart(new ViewLoader()))                      
 		);
 	}
 	
@@ -200,12 +206,11 @@ public class XUIScene extends XHTMLPart {
 	@xTarget(AFTER_CONTENT.class)
 	@xPriority(500)
 	@xRessource
-	/**todo  creer une interface à $xui*/
 	public XMLElement xImportStart() {
 		return xListElement(
 				xScriptJS(js()
 						// a mettre dans TKConfig
-						.set("$xui", "{ intent: { nextActivityAnim : 'fromBottom' }, tkrouter:'', config:{ }, resourceLoading:{} }")
+						.set($xui(), "{ intent: { nextActivityAnim : 'fromBottom' }, tkrouter:'', config:{ }, resourceLoading:{} }")
 						.set("$xui.resourceLoading.query", true)
 						.set("$xui.resourceLoading.hammer", true)
 						.set("$xui.resourceLoading.navigo", true)
@@ -219,7 +224,7 @@ public class XUIScene extends XHTMLPart {
 									.__(getIntializeJSFct())
 									.__("(",getEventManager(),")()")									
 									.set("$xui.resourceLoading.query", false)	
-									.__(" $.getScript('https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js')") 
+									.__(" $.getScript({url:'https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js',  cache: true})") 
 								.endif()
 								._if("id=="+XUICstRessource.ID_RES_NAVIGO)
 									.set("$xui.resourceLoading.navigo", false)	

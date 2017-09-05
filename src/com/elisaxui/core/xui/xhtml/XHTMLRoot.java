@@ -88,7 +88,7 @@ public class XHTMLRoot extends XHTMLPart {
 						xElement("meta", xAttr("name", xTxt("apple-mobile-web-app-capable")), xAttr("content", xTxt("yes"))),
 						xElement("meta", xAttr("name", xTxt("application-name")), xAttr("content", xTxt("Elisa"))),
 						xElement("meta", xAttr("name", xTxt("viewport")),
-								xAttr("content", xTxt("width=device-width, initial-scale=1.0, shrink-to-fit=no, user-scalable=no"))),
+								xAttr("content", xTxt("width=device-width, initial-scale=1.0, shrink-to-fit=\"no\", user-scalable=\"no\""))),
 						header
 						),
 				xElement("body", textbody),

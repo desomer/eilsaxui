@@ -8,6 +8,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
+import com.elisaxui.xui.core.page.XUIScene;
 import com.elisaxui.xui.core.toolkit.TKActivity;
 import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
@@ -73,10 +74,11 @@ public class AppRoot extends XHTMLPart {
 
 				/**************************************************************/
 				.var(tkActivity, "$xui.tkrouter.activityMgr")
+				.__("$('.",XUIScene.scene.getId(), "').children().remove()")
 				.__(tkActivity.createActivity(new JSONPage1().getJSON()))
 				.__(tkActivity.prepareActivity(new JSONPage2().getJSON()))
 				.__(tkActivity.prepareActivity(new JSONPage3().getJSON()))
-				
+			//	.__(tkActivity.setCurrentActivity("'Activity1'"))
 				/*************************************************************/
 				
 				
@@ -165,7 +167,7 @@ public class AppRoot extends XHTMLPart {
 																	) )
 					 ,  factory("#Activity1 .cArticle", FACTORY_CONTAINER, arr(
 							 										cardHtml( cnt1 ), 
-							 										cardHtml( cnt2 ),
+							 									//	cardHtml( cnt2 ),
 							 										card( arr( backgroundImage(listPhotos[7], 1),  
 							 													backgroundImage(listPhotos[8], 1),  
 								 												text("une double image")

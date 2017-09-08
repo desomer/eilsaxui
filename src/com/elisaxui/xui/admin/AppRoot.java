@@ -25,6 +25,10 @@ import static com.elisaxui.xui.core.toolkit.TKActivity.*;
  */
 public class AppRoot extends XHTMLPart {
 
+	/**
+	 * 
+	 */
+	private static final String REST_JSON_MENU_ACTIVITY1 = "/rest/json/menu/activity1";
 	static JSMenu jsMenu;
 	static JSNavBar jsNavBar;
 	static TKActivity tkActivity;
@@ -55,30 +59,32 @@ public class AppRoot extends XHTMLPart {
 	
 	public JSMethodInterface getJS()
 	{
-		return js()
-		
-				
+		return js()				
 				//******************** construction du menu ****************************************************
 				.var(jsMenu, _new())
 				.var("jsonMenu", jsMenu.getData())
 				// TODO a changer par un data sur le menu
 				.set("window.jsonMainMenu", "jsonMenu")  // liste des nemu pour animation dans tkAnimation
 				
-				.__("$.getJSON('/rest/json/menu/activity1').done(", fct("a").consoleDebug("a")
-						._for("var i = 0, l = a.length; i < l; i++")
-							.__("jsonMenu.push(a[i])")
-						.endfor()
-						,").fail(", fct("xhr","textStatus", "error").consoleDebug("error") ,")")
-				
 				/***********************************************************************************************/		
 
 				/**************************************************************/
-				.var(tkActivity, "$xui.tkrouter.activityMgr")
-				.__("$('.",XUIScene.scene.getId(), "').children().remove()")
-				.__(tkActivity.createActivity(new JSONPage1().getJSON()))
-				.__(tkActivity.prepareActivity(new JSONPage2().getJSON()))
-				.__(tkActivity.prepareActivity(new JSONPage3().getJSON()))
-			//	.__(tkActivity.setCurrentActivity("'Activity1'"))
+				.__(TKQueue.startProcessQueued( 100,  fct()
+					.__(" $.getScript({url:'https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js',  cache: true})") 
+	
+					.__("$.getJSON('"+REST_JSON_MENU_ACTIVITY1+"').done(", fct("a").consoleDebug("'json menu'", "a")
+							._for("var i = 0, l = a.length; i < l; i++")
+								.__("jsonMenu.push(a[i])")
+							.endfor()
+							,").fail(", fct("xhr","textStatus", "error").consoleDebug("error") ,")")
+						
+					.var(tkActivity, "$xui.tkrouter.activityMgr")
+					.__("$('.",XUIScene.scene.getId(), "').children().remove()")
+					.__(tkActivity.createActivity(new JSONPage1().getJSON()))
+					.__(tkActivity.prepareActivity(new JSONPage2().getJSON()))
+					.__(tkActivity.prepareActivity(new JSONPage3().getJSON()))
+				//	.__(tkActivity.setCurrentActivity("'Activity1'"))
+					))
 				/*************************************************************/
 				
 				

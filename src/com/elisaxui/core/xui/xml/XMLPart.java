@@ -275,9 +275,9 @@ public class XMLPart  {
 		addElement(AFTER_CONTENT.class, part);
 	}
 
-	public final static XMLPartElement xPartElement(XMLPart part, Object... inner) {
-		return XMLBuilder.createPart(part, inner);
-	}
+//	public final static XMLPartElement xPartElement(XMLPart part, Object... inner) {
+//		return XMLBuilder.createPart(part, inner);
+//	}
 	
 	public final static XMLElement xPart(XMLPart part, Object... inner) {
 		return xElement(null, XMLBuilder.createPart(part, inner));

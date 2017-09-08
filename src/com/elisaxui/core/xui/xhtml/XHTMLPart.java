@@ -102,6 +102,10 @@ public abstract class XHTMLPart extends XMLPart {
 
 	
 	/***********************************************************************/
+	public final static <E> E declare() {
+		return null;
+	}
+	
 	public final static JSMethodInterface js() {
 		return jsBuilder.createJSContent();
 	}
@@ -156,18 +160,19 @@ public abstract class XHTMLPart extends XMLPart {
 		return t;
 	}
 
-//						+ "<link rel='stylesheet' media='none' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css'>"
-
 	public final static XMLElement xLinkCss(String url) {
 		return xElement("link", xAttr("rel", xTxt("stylesheet")), xAttr("href", xTxt(url)));
 	}
-	
-	public final static XMLElement xLinkCssAsync(String url) {
-		return xElement("link", xAttr("rel", xTxt("stylesheet")), xAttr("media", xTxt("async")), xAttr("href", xTxt(url)));
+	public final static XMLElement xLinkManifest(String url) {
+		return xElement("link", xAttr("rel", xTxt("manifest")), xAttr("href", xTxt(url)));
 	}
 	
-	public final static XMLElement xLinkCssAsync(String url, Object fct) {
-		return xElement("link", xAttr("rel", xTxt("stylesheet")), xAttr("media", xTxt("async")), xAttr("onload", txt(fct)), xAttr("href", xTxt(url)));
+	public final static XMLElement xLinkCssAsync(String url) {
+		return xElement("link", xAttr("rel", xTxt("stylesheet")), xAttr("media", xTxt("async")), xAttr("href", xTxt(url)), xAttr("onload", txt("resLoadedCss(this, 'all');")));
+	}
+	
+	public final static XMLElement xLinkCssAsync(String url, Object fctTxt) {
+		return xElement("link", xAttr("rel", xTxt("stylesheet")), xAttr("media", xTxt("async")), xAttr("onload", txt(fctTxt)), xAttr("href", xTxt(url)));
 	}
 	
 	public final static CSSBuilder xCss() {

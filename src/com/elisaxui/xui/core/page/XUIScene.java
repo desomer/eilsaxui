@@ -9,7 +9,7 @@ import static com.elisaxui.xui.core.widget.button.ViewRippleEffect.cRippleEffect
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
-import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
+import com.elisaxui.core.xui.xhtml.XHTMLRoot.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
@@ -72,37 +72,48 @@ public class XUIScene extends XHTMLPart {
     		//+ " transform-style:preserve-3d;"
     		;
     
-
+	private static final String REST_JSON_APP_MANIFEST = "/rest/json/manifest.json";
+    
 	public static XClass scene;
 	
 	//var oRect = oElement.getBoundingClientRect()
     
+	@xTarget(AFTER_BODY.class)
+	@xRessource
+	@xPriority(1)
+	public XMLElement xImportCss() {
+		return xListElement(
+				xLinkCssAsync("https://fonts.googleapis.com/icon?family=Material+Icons"),
+				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"),
+//				xLinkCss("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"),
+				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css")
+//				xLinkCss("https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css")
+//				xLinkCss("https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"),				
+				);
+	}
+	
 	@xTarget(HEADER.class)
 	@xRessource
 	@xPriority(1)
 	public XMLElement xImport() {
 		return xListElement(
 				
-				xTitle("le standard"),
-				xMeta(xAttr("name", xTxt("theme-color")), xAttr("content", xTxt(bgColorTheme))),
-				
-//				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"),
-				xLinkCss("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"),
-//				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css"),
-				xLinkCss("https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css"),
-//				xLinkCss("https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"),
-				xLinkCss("https://fonts.googleapis.com/icon?family=Material+Icons"),
+				xTitle("Elisys"),
+				xMeta(xAttr("name", xTxt("theme-color")), xAttr("content", xTxt(bgColorTheme))),	
+				xLinkManifest(REST_JSON_APP_MANIFEST),
+				//*<link rel="manifest" href="/manifest.json">
 				
 				xScriptJS(js()
 						.set("window.doOnResLoadWait", fct("res", "id")
 								._if("window.doOnResLoad==undefined")
 									.__("setTimeout(", fct().__("doOnResLoadWait(res,id)") ,",100)")
 								._else()
-									.__("doOnResLoad(res, id)")
+									.__("doOnResLoad(res, id)")   // attente fin chargement js
 								.endif()
 								)
 								
 						.set("window.resLoaded", fct("res", "id").__("doOnResLoadWait(res, id)"))  
+						.set("window.resLoadedCss", fct("res", "media").__("res.media=media"))  
 						
 						.set("window.onerror", fct("msg", "url", "noLigne", "noColonne", "erreur") 
 								.var("chaine", "msg.toLowerCase()")
@@ -126,10 +137,10 @@ public class XUIScene extends XHTMLPart {
 				xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js", "resLoaded(this, "+XUICstRessource.ID_RES_FASTDOM+");"),
 				xScriptSrcAsync("/asset/?url=http://work.krasimirtsonev.com/git/navigo/navigo.js", "resLoaded(this, "+XUICstRessource.ID_RES_NAVIGO+");"),
 				xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js", "resLoaded(this, "+XUICstRessource.ID_RES_HAMMER+");"),
-				xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js", "resLoaded(this, "+XUICstRessource.ID_RES_CHART+");"),
+				//xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js", "resLoaded(this, "+XUICstRessource.ID_RES_CHART+");"),
 				//xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/json-editor/0.7.28/jsoneditor.min.js"),
 				//xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/granim/1.0.6/granim.min.js"),
-				xScriptSrcAsync("http://code.jquery.com/jquery-3.2.1.min.js", "resLoaded(this, "+XUICstRessource.ID_RES_JQUERY+");")
+				xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js", "resLoaded(this, "+XUICstRessource.ID_RES_JQUERY+");")
 				//xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js")
 				//		+ "<link rel='alternate stylesheet' title='main' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>"				
 				);
@@ -174,7 +185,7 @@ public class XUIScene extends XHTMLPart {
 				.select(scene).set("overflow-x: hidden; background-color: "+bgColorScene+";"   // overflow: auto; -webkit-overflow-scrolling: auto
 						+ "min-width: 100vw;  min-height: 100vh; "   //position: absolute
 						)
-					.path(xCss("#NavBarShell h1").set("text-align:center"))
+					.path(xCss("#NavBarShell h1").set("text-align:center;color: inherit;  font-size: 2.1rem; margin-top: 50px"))
 				//----------------------------------------------------------------
 				.select(activity).set("background-color: white;"+ PREF_3D+ " will-change:overflow,z-index;") //will-change:transform
 					.path(xCss(content)
@@ -215,7 +226,7 @@ public class XUIScene extends XHTMLPart {
 						.set("$xui.resourceLoading.hammer", true)
 						.set("$xui.resourceLoading.navigo", true)
 						.set("$xui.resourceLoading.fastdom", true)
-						.set("$xui.resourceLoading.chart", true)
+						.set("$xui.resourceLoading.chart", false)
 						
 						.set("window.doOnResLoad", fct("res", "id")
 								.systemDebugIf(TKConfig.debugAsyncResource, txt("ressource loaded ="), "id")   //res.src.split('/').pop()
@@ -224,7 +235,6 @@ public class XUIScene extends XHTMLPart {
 									.__(getIntializeJSFct())
 									.__("(",getEventManager(),")()")									
 									.set("$xui.resourceLoading.query", false)	
-									.__(" $.getScript({url:'https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js',  cache: true})") 
 								.endif()
 								._if("id=="+XUICstRessource.ID_RES_NAVIGO)
 									.set("$xui.resourceLoading.navigo", false)	

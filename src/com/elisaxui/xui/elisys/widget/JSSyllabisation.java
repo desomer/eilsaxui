@@ -35,8 +35,8 @@ public interface JSSyllabisation extends JSClass {
 	default Object getMicro(Object textarea)
 	{
 		__()
-		//.var("f", "webkitSpeechRecognition")
-		.var("recognition", "new webkitSpeechRecognition()")
+		.var("f", "webkitSpeechRecognition || SpeechRecognition")
+		.set("window.recognition", "new f()")
 		.set("recognition.continuous", true)
 		.set("recognition.lang", txt("fr-FR"))
 		.set("recognition.onresult", fct("event") 
@@ -44,8 +44,8 @@ public interface JSSyllabisation extends JSClass {
 						.__("textarea.value += event.results[i][0].transcript")
 					.endfor()
 					.__("textarea.value +='\\n'")
-				)
-		.__("recognition.start()");
+				);
+
 		return "recognition";
 	}
 	

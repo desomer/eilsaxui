@@ -177,7 +177,8 @@ public class AppRoot extends XHTMLPart {
 				
 				.set("window.onIndentity", fct("json")
 						.__(TKQueue.startProcessQueued( fct()
-								.__("$.notify('Indentity coming soon', {globalPosition: 'bottom left', className:'success', autoHideDelay: 2000})")
+							    .__("window.recognition.start()")
+								.__("$.notify('Micro', {globalPosition: 'bottom left', className:'success', autoHideDelay: 2000})")
 							)
 						)
 				)
@@ -214,11 +215,11 @@ public class AppRoot extends XHTMLPart {
 						factory("#NavBarActivity1", FACTORY_NAVBAR, arr( backgroundImage(listPhotos[4], 0.3),  
 																	 btnBurger(), 
 																	 title("Bonjour Elisa"),
-																	 btnActionIcon("perm_identity", EVT_IDENTITY),
+																	 btnActionIcon("mic", EVT_IDENTITY),
 																	 btnActionIcon("more_vert", EVT_MORE)
 																	) )
 					 ,  factory("#Activity1 .cArticle", FACTORY_CONTAINER, arr(
-							 									//	cardHtml( cnt1 ), 
+							 										cardHtml( cnt1 ), 
 							 									//	cardHtml( cnt2 ),
 							 										cardHtml( cntSyllabique ),
 							 										card( arr( backgroundImage(listPhotos[7], 1),  

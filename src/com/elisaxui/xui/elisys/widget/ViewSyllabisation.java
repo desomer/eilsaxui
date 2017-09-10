@@ -31,8 +31,8 @@ public class ViewSyllabisation extends XHTMLPart {
 	public XMLElement xStyle() {
 
 		return xCss().select(cDivSyllabisation)
-						.set("min-height:20vh; line-height: 35px;"
-								+ "    font-size: large; font-stretch: expanded;")
+						.set("min-height:20vh; line-height: 45px;"
+								+ "    font-size: 25px; font-stretch: expanded;")
 					
 					 .select(cSyllabeMot)
 					 	.set("margin:10px")
@@ -69,7 +69,7 @@ public class ViewSyllabisation extends XHTMLPart {
 	
 	@xTarget(CONTENT.class)
 	public XMLElement xContenu() {
-		return xDiv( xDiv(cDivSyllabisation), xElement("textarea", cMicro, xAttr("rows","4"), xAttr("cols","50") ) );
+		return xDiv( xDiv(cDivSyllabisation), xElement("textarea", cMicro, xAttr("rows","4"), xAttr("cols","30") ) );
 	}
 	
 	public static XMLElement getMot(Object text) {

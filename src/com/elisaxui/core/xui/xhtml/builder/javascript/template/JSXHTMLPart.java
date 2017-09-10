@@ -22,7 +22,7 @@ public interface JSXHTMLPart extends JSClass {
 	}
 	
 	/** TODO creer le template en script type = "text/template"   */
-	default Object append(Object parent)
+	default Object appendInto(Object parent)
 	{
 		return 
 		var("jqdom", "$(this.html)")		

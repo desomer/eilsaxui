@@ -18,8 +18,11 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  * @author Bureau
  *
  */
-public class JSONBuilder {
+public abstract class JSONBuilder {
 
+	public abstract Object getJSON();
+	
+	
 	public Object obj(Object...value)
 	{
 		 JsonObjectBuilder jsonObj = Json.createObjectBuilder();

@@ -21,12 +21,12 @@ import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.xui.admin.AppRoot;
 import com.elisaxui.xui.admin.test.JSTestDataDriven;
+import com.elisaxui.xui.core.config.TKConfig;
 import com.elisaxui.xui.core.datadriven.JSDataCtx;
 import com.elisaxui.xui.core.datadriven.JSDataDriven;
 import com.elisaxui.xui.core.datadriven.JSDataSet;
 import com.elisaxui.xui.core.toolkit.JQuery;
 import com.elisaxui.xui.core.toolkit.TKActivity;
-import com.elisaxui.xui.core.toolkit.TKConfig;
 import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.toolkit.TKRouterEvent;
 import com.elisaxui.xui.core.transition.ConstTransition;
@@ -41,6 +41,7 @@ import com.elisaxui.xui.core.widget.menu.JSMenu;
 import com.elisaxui.xui.core.widget.menu.ViewMenu;
 import com.elisaxui.xui.core.widget.navbar.ViewNavBar;
 import com.elisaxui.xui.core.widget.overlay.JSOverlay;
+import com.elisaxui.xui.elisys.widget.JSSyllabisation;
 
 @xFile(id = "standard")
 @xComment("activite standard")
@@ -151,7 +152,7 @@ public class XUIScene extends XHTMLPart {
 	@xRessource
 	public XMLElement xImportAfter() {
 		return xListElement(
-				xPart(new TKQueue()),
+				xPart(new TKQueue()),   //TODO Remplacer
 				xImport(JSXHTMLPart.class),
 				xImport(JSTestDataDriven.class),
 				xImport(JSDataDriven.class),
@@ -165,7 +166,10 @@ public class XUIScene extends XHTMLPart {
 				xImport(TKTransition.class),
 				xImport(JSMenu.class),
 				xImport(TKActivity.class),
-				xImport(JSViewCard.class)
+				xImport(JSViewCard.class),
+				
+				xImport(JSSyllabisation.class)
+				
 				);
 	}
 				

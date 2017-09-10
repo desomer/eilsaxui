@@ -350,7 +350,7 @@ public interface TKTransition extends JSClass {
 				     .__("jqAct1.addClass('backActivity')")
 				   	 
 		    		 .var(_template,  ViewOverlayRipple.xTemplate() )
-		    		 .var("rippleOverlay", _template.append("$(act2)"))
+		    		 .var("rippleOverlay", _template.appendInto("$(act2)"))
 		    	//	 .__("$('.scene .ripple_overlay').addClass('t0prct')")
 		    	//	 .__("$('.scene .ripple_overlay').addClass('transitionx2')")
 				//	 .__("$('.ripple_overlay').addClass('t100prct')") 

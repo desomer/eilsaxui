@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.xui.core.toolkit;
+package com.elisaxui.xui.core.config;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 

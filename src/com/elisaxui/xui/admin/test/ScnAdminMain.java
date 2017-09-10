@@ -96,7 +96,7 @@ public class ScnAdminMain extends XHTMLPart {
 								, xLi(xAttr("data-d", "d"), "ligne ",  xVar("a"))
 								, xLi("ligne ", xVar("c"))
 								), xDiv(xAttr("style", txt("height: 800px; width:400px")),xAttr("id",txt("content")))))
-						.__(template.append("$('body')"))	
+						.__(template.appendInto("$('body')"))	
 						
 						.var(ab , _new(15))
 						.var(abc, _new())
@@ -110,7 +110,7 @@ public class ScnAdminMain extends XHTMLPart {
 						
 						
 						.var(template, xElement("input", xId("\"test\""), xAttr("type","\"text\"")))
-						.__(template.append("$('body')"))	
+						.__(template.appendInto("$('body')"))	
 						
 				);		
 	}

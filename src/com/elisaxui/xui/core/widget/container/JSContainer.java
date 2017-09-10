@@ -69,7 +69,7 @@ public interface JSContainer extends JSClass {
 				
 				 	._if("ctx.row.type=='page'")
 						.set(template, XHTMLPart.xPart(new ViewPageLayout(XHTMLPart.xVar("ctx.row.id"))))
-						.var("jqdom", template.append("$(selector)"))
+						.var("jqdom", template.appendInto("$(selector)"))
 						.__("ctx.row['_dom_']=jqdom[0]")
 						
 						// ajoute les enfant
@@ -107,7 +107,7 @@ public interface JSContainer extends JSClass {
 						.set(template, ViewCard.getTemplate((ViewCard)card.addProperty("childrenCard", XHTMLPart.xVar("subData.html") )))
 						.__(template, ".js+=subData.js")
 						
-						.var("jqdom", template.append("$(selector)"))
+						.var("jqdom", template.appendInto("$(selector)"))
 						.__("ctx.row['_dom_']=jqdom[0]")
 						.__("$(ctx.row['_dom_']).css('visibility','hidden')")
 						
@@ -128,7 +128,7 @@ public interface JSContainer extends JSClass {
 						
 					._elseif("ctx.row.type=='floatAction'")
 						.set(template, ViewFloatAction.getTemplate())
-						.var("jqdom", template.append("$(selector)"))
+						.var("jqdom", template.appendInto("$(selector)"))
 						.__("ctx.row['_dom_']=jqdom[0]")
 	
 					._elseif("ctx.row.type=='action'")

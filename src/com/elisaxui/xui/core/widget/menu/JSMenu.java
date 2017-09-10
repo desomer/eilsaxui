@@ -30,11 +30,11 @@ public interface JSMenu extends JSClass {
 				._if("ctx.row['_dom_']==null")
 					._if("ctx.row.type=='divider'")
 						.set(template, ViewMenu.getTemplateMenuDivider())
-			            .var("jqdom", template.append("$('.menu ul')"))
+			            .var("jqdom", template.appendInto("$('.menu ul')"))
 			            .__("ctx.row['_dom_']=jqdom[0]")
 					._else()
 			            .set(template, ViewMenu.getTemplateMenu("ctx.row.name", "ctx.row.icon", "ctx.row.idAction"))
-			            .var("jqdom", template.append("$('.menu ul')"))
+			            .var("jqdom", template.appendInto("$('.menu ul')"))
 			            .__("jqdom.css('visibility','hidden')")  // invisible par defaut avant animation
 			            .__("ctx.row['_dom_']=jqdom[0]")
 		            .endif()

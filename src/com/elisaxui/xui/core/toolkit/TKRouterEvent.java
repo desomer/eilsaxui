@@ -7,6 +7,7 @@ import static com.elisaxui.xui.core.toolkit.json.JXui.$xui;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.xui.core.config.TKConfig;
 import com.elisaxui.xui.core.transition.ConstTransition;
 import com.elisaxui.xui.core.transition.TKTransition;
 

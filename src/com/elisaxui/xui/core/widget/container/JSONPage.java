@@ -9,7 +9,7 @@ import com.elisaxui.core.data.json.JSONBuilder;
  * @author Bureau
  *
  */
-public class JSONPage extends JSONBuilder
+public abstract class JSONPage extends JSONBuilder
 {
 	
 	/**

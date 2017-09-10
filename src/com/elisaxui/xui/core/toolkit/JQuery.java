@@ -63,6 +63,11 @@ public class JQuery extends JSClassMethod {
 		return callMth("detach", null);
 	}
 	
+	public JQuery get(Object value)
+	{
+		return callMth("get", value);
+	}
+	
 	public JQuery prepend(Object...html)
 	{
 		return callMth("prepend", html);

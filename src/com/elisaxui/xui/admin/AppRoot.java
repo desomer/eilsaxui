@@ -5,18 +5,34 @@ package com.elisaxui.xui.admin;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
+import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
+import com.elisaxui.xui.admin.test.JSTestDataDriven;
+import com.elisaxui.xui.core.datadriven.JSDataCtx;
+import com.elisaxui.xui.core.datadriven.JSDataDriven;
+import com.elisaxui.xui.core.datadriven.JSDataSet;
 import com.elisaxui.xui.core.page.XUIScene;
+import com.elisaxui.xui.core.toolkit.JQuery;
 import com.elisaxui.xui.core.toolkit.TKActivity;
 import com.elisaxui.xui.core.toolkit.TKQueue;
+import com.elisaxui.xui.core.toolkit.TKRouterEvent;
+import com.elisaxui.xui.core.transition.CssTransition;
+import com.elisaxui.xui.core.transition.TKTransition;
 import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
 import com.elisaxui.xui.core.widget.chart.ViewJSChart;
+import com.elisaxui.xui.core.widget.container.JSContainer;
 import com.elisaxui.xui.core.widget.container.JSONPage;
+import com.elisaxui.xui.core.widget.container.JSViewCard;
 import com.elisaxui.xui.core.widget.layout.JSPageLayout;
 import com.elisaxui.xui.core.widget.menu.JSMenu;
 import com.elisaxui.xui.core.widget.navbar.JSNavBar;
+import com.elisaxui.xui.core.widget.overlay.JSOverlay;
+import com.elisaxui.xui.elisys.widget.JSSyllabisation;
+import com.elisaxui.xui.elisys.widget.ViewSyllabisation;
+
 import static com.elisaxui.xui.core.toolkit.TKActivity.*;
 
 /**
@@ -29,10 +45,13 @@ public class AppRoot extends XHTMLPart {
 	 * 
 	 */
 	private static final String REST_JSON_MENU_ACTIVITY1 = "/rest/json/menu/activity1";
+	private static final String REST_JSON_SYLLABISATION = "/rest/json/syllabisation/pacahontas";
 	static JSMenu jsMenu;
 	static JSNavBar jsNavBar;
 	static TKActivity tkActivity;
 	static JSPageLayout jsPageLayout;
+	
+	
 	
 
 	public static final String[] listPhotos= new String[] {
@@ -48,6 +67,14 @@ public class AppRoot extends XHTMLPart {
 	}; 
 	
 	
+	@xTarget(AFTER_CONTENT.class)
+	@xRessource
+	public XMLElement xImportAfter() {
+		return xListElement(
+				xImport(JSSyllabisation.class)   //TODO A faire marcher et retire du XUIScene
+				);
+	}
+	
 	
 	@xTarget(AFTER_CONTENT.class)  // dans le header
 	@xRessource
@@ -56,6 +83,7 @@ public class AppRoot extends XHTMLPart {
 	}
 	
 	
+	static JSSyllabisation jsSyllabe;
 	
 	public JSMethodInterface getJS()
 	{
@@ -65,6 +93,9 @@ public class AppRoot extends XHTMLPart {
 				.var("jsonMenu", jsMenu.getData())
 				// TODO a changer par un data sur le menu
 				.set("window.jsonMainMenu", "jsonMenu")  // liste des nemu pour animation dans tkAnimation
+				
+				.var(jsSyllabe, _new())
+				.var("jsonSyllabe", jsSyllabe.getData())
 				
 				/***********************************************************************************************/		
 
@@ -84,6 +115,19 @@ public class AppRoot extends XHTMLPart {
 					.__(tkActivity.prepareActivity(new JSONPage2().getJSON()))
 					.__(tkActivity.prepareActivity(new JSONPage3().getJSON()))
 				//	.__(tkActivity.setCurrentActivity("'Activity1'"))
+					
+					 , 1000,  fct()
+					 .__(jsSyllabe.getMicro(JQuery.$(ViewSyllabisation.cMicro).get(0)))
+					 
+					.__("$.getJSON('"+REST_JSON_SYLLABISATION+"').done(", fct("a")
+								.consoleDebug(txt("syllabisation"), "a")
+								.var("lesmots", "a.mots")
+								._for("var i = 0, l = lesmots.length; i < l; i++")
+									.__("jsonSyllabe.push(lesmots[i])")
+								.endfor()
+							,")")
+					
+					
 					))
 				/*************************************************************/
 				
@@ -164,6 +208,8 @@ public class AppRoot extends XHTMLPart {
 			
 			XMLElement cnt2 = xPart(new ViewJSChart(xId("test2")));	
 			
+			XMLElement cntSyllabique =  xPart(new ViewSyllabisation());	
+			
 			return page( "Activity1", arr( 
 						factory("#NavBarActivity1", FACTORY_NAVBAR, arr( backgroundImage(listPhotos[4], 0.3),  
 																	 btnBurger(), 
@@ -172,8 +218,9 @@ public class AppRoot extends XHTMLPart {
 																	 btnActionIcon("more_vert", EVT_MORE)
 																	) )
 					 ,  factory("#Activity1 .cArticle", FACTORY_CONTAINER, arr(
-							 										cardHtml( cnt1 ), 
+							 									//	cardHtml( cnt1 ), 
 							 									//	cardHtml( cnt2 ),
+							 										cardHtml( cntSyllabique ),
 							 										card( arr( backgroundImage(listPhotos[7], 1),  
 							 													backgroundImage(listPhotos[8], 1),  
 								 												text("une double image")

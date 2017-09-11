@@ -178,6 +178,7 @@ public class AppRoot extends XHTMLPart {
 				.set("window.onIndentity", fct("json")
 						.__(TKQueue.startProcessQueued( fct()
 							    .__("window.recognition.start()")
+							    .__(JQuery.$(ViewSyllabisation.cMicro).val("''"))
 								.__("$.notify('Micro', {globalPosition: 'bottom left', className:'success', autoHideDelay: 2000})")
 							)
 						)

@@ -68,6 +68,11 @@ public class JQuery extends JSClassMethod {
 		return callMth("get", value);
 	}
 	
+	public JQuery val(Object value)
+	{
+		return callMth("val", value);
+	}
+	
 	public JQuery prepend(Object...html)
 	{
 		return callMth("prepend", html);

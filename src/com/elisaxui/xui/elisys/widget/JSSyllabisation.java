@@ -41,7 +41,10 @@ public interface JSSyllabisation extends JSClass {
 		.set("recognition.lang", txt("fr-FR"))
 		.set("recognition.onresult", fct("event") 
 					._for("var i = event.resultIndex; i < event.results.length; i++")
-						.__("textarea.value += event.results[i][0].transcript")
+						._if("event.results[i].isFinal")
+							.__("$.notify('time '+ event.timeStamp, {globalPosition: 'bottom left', className:'success', autoHideDelay: 2000})")
+							.__("textarea.value += event.results[i][0].transcript")
+						.endif()
 					.endfor()
 					.__("textarea.value +='\\n'")
 				);

@@ -45,7 +45,7 @@ public class AppRoot extends XHTMLPart {
 	 * 
 	 */
 	private static final String REST_JSON_MENU_ACTIVITY1 = "/rest/json/menu/activity1";
-	private static final String REST_JSON_SYLLABISATION = "/rest/json/syllabisation/pacahontas";
+	public static final String REST_JSON_SYLLABISATION = "/rest/json/syllabisation/pacahontas";
 	static JSMenu jsMenu;
 	static JSNavBar jsNavBar;
 	static TKActivity tkActivity;
@@ -87,6 +87,7 @@ public class AppRoot extends XHTMLPart {
 	
 	public JSMethodInterface getJS()
 	{
+		
 		return js()				
 				//******************** construction du menu ****************************************************
 				.var(jsMenu, _new())
@@ -117,11 +118,12 @@ public class AppRoot extends XHTMLPart {
 				//	.__(tkActivity.setCurrentActivity("'Activity1'"))
 					
 					 , 1000,  fct()
-					 .__(jsSyllabe.getMicro(JQuery.$(ViewSyllabisation.cMicro).get(0)))
+					 .set("window.microlistener",jsSyllabe.createMicroListener())
 					 
 					.__("$.getJSON('"+REST_JSON_SYLLABISATION+"').done(", fct("a")
 								.consoleDebug(txt("syllabisation"), "a")
 								.var("lesmots", "a.mots")
+								
 								._for("var i = 0, l = lesmots.length; i < l; i++")
 									.__("jsonSyllabe.push(lesmots[i])")
 								.endfor()
@@ -177,9 +179,30 @@ public class AppRoot extends XHTMLPart {
 				
 				.set("window.onIndentity", fct("json")
 						.__(TKQueue.startProcessQueued( fct()
-							    .__("window.recognition.start()")
-							    .__(JQuery.$(ViewSyllabisation.cMicro).val("''"))
-								.__("$.notify('Micro', {globalPosition: 'bottom left', className:'success', autoHideDelay: 2000})")
+							    .__("window.microlistener.recognition.start()")
+							  //  .__(JQuery.$(ViewSyllabisation.cMicro).val("''"))
+							  //	.__("$.notify('Micro', {globalPosition: 'bottom left', className:'success', autoHideDelay: 2000})")
+							)
+						)
+				)
+				
+				.set("window.onDelete", fct("json")
+						.__(TKQueue.startProcessQueued( fct()
+								.set("window.microlistener.stop", true)
+							    .__("window.microlistener.recognition.stop()")
+							  //  .__(JQuery.$(ViewSyllabisation.cMicro).val("''"))
+							  //	.__("$.notify('Micro', {globalPosition: 'bottom left', className:'success', autoHideDelay: 2000})")
+							)
+						)
+				)
+				
+				.set("window.onMot", fct("json")
+						.var("leMot", "$(window.lastBtn).data('mot')")
+						.var("msg", "new SpeechSynthesisUtterance(leMot)")
+						.set("msg.lang", "'fr-FR'")
+						.__("window.speechSynthesis.speak(msg)")
+						.__(TKQueue.startProcessQueued( fct()
+								
 							)
 						)
 				)
@@ -192,12 +215,13 @@ public class AppRoot extends XHTMLPart {
 	}
 	
 	/**********************************************************************/
-	class JSONPage1 extends JSONPage
+	public static class JSONPage1 extends JSONPage
 	{
-		
+		public static final String EVT_CLEAR = "clear";
 		public static final String EVT_MORE = "more";
 		public static final String EVT_IDENTITY = "identity";
 		public static final String EVT_BTN_FLOAT = "BtnFloatMain";
+		public static final String EVT_DO_MOT = "doMot";
 		
 		public Object getJSON()
 		{
@@ -216,6 +240,7 @@ public class AppRoot extends XHTMLPart {
 						factory("#NavBarActivity1", FACTORY_NAVBAR, arr( backgroundImage(listPhotos[4], 0.3),  
 																	 btnBurger(), 
 																	 title("Bonjour Elisa"),
+																	 btnActionIcon("delete", EVT_CLEAR),
 																	 btnActionIcon("mic", EVT_IDENTITY),
 																	 btnActionIcon("more_vert", EVT_MORE)
 																	) )
@@ -224,15 +249,15 @@ public class AppRoot extends XHTMLPart {
 							 									//	cardHtml( cnt2 ),
 							 										cardHtml( cntSyllabique ),
 							 										card( arr( backgroundImage(listPhotos[7], 1),  
-							 													backgroundImage(listPhotos[8], 1),  
+							 												//	backgroundImage(listPhotos[8], 1),  
 								 												text("une double image")
-								 												)),
-							 										card( arr( backgroundImage(listPhotos[2], 1),  
-							 												text("un disque dur")
-							 												)),
-							 										card( arr( backgroundImage(listPhotos[5], 1),  
-								 												text("De la monnaie")
-								 												))
+								 												))  //,
+//							 										card( arr( backgroundImage(listPhotos[2], 1),  
+//							 												text("un disque dur")
+//							 												)),
+//							 										card( arr( backgroundImage(listPhotos[5], 1),  
+//								 												text("De la monnaie")
+//								 												))
 							 										) )
 					 ,  factory("#Activity1 .content", FACTORY_CONTAINER, arr( 
 							 										floatAction()))
@@ -243,7 +268,9 @@ public class AppRoot extends XHTMLPart {
 							v(EVT_BTN_FLOAT , routeTo( "!route/Activity3?p=1")),
 							v(ON_ACTIVITY_CREATE , callbackTo("onCreateActivity1", null)),
 							v(ON_ACTIVITY_RESUME , callbackTo("onResumeActivity1", null)),
-							v(EVT_IDENTITY, callbackTo("onIndentity", null))
+							v(EVT_IDENTITY, callbackTo("onIndentity", null)),
+							v(EVT_CLEAR, callbackTo("onDelete", null)),
+							v(EVT_DO_MOT, callbackTo("onMot", null))
 							));
 		}
 		

@@ -12,6 +12,7 @@ import com.elisaxui.core.data.json.JSONBuilder;
 public abstract class JSONPage extends JSONBuilder
 {
 	
+
 	/**
 	 * 
 	 */

@@ -7,7 +7,9 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSInt;
 import com.elisaxui.core.xui.xml.XMLPart;
+import com.elisaxui.xui.admin.AppRoot;
 import com.elisaxui.xui.core.datadriven.JSDataDriven;
 import com.elisaxui.xui.core.datadriven.JSDataSet;
 import com.elisaxui.xui.core.toolkit.JQuery;
@@ -22,7 +24,11 @@ public interface JSSyllabisation extends JSClass {
 	JSDataDriven aDataDriven = null; 
 	JSDataSet aDataSet = null;
 	JSXHTMLPart template = null;
-	
+	JSInt lastResult = null;
+	JSVariable recognition = null;
+	JSSyllabisation _self = null;
+	JSSyllabisation _this = null;
+	JSVariable stop = null;
 	
 //	recognition.onresult = function (event) {
 //	for (i = event.resultIndex; i < event.results.length; i++) {
@@ -32,31 +38,61 @@ public interface JSSyllabisation extends JSClass {
 //	}
 //}
 	
-	default Object getMicro(Object textarea)
+	default Object constructor() {
+		set(aDataSet, _new());
+		set(stop, false);
+		return set(lastResult, 0)
+				;
+	}
+	
+	
+	
+	default Object createMicroListener()
 	{
 		__()
 		.var("f", "webkitSpeechRecognition || SpeechRecognition")
-		.set("window.recognition", "new f()")
-		.set("recognition.continuous", true)
-		.set("recognition.lang", txt("fr-FR"))
-		.set("recognition.onresult", fct("event") 
+		.set(recognition, "new f()")
+		.set("this.recognition.continuous", true)
+		.set("this.recognition.lang", txt("fr-FR"))
+		.var(_self, _this)
+		.var("jsonSyllabe", aDataSet.getData())
+		.set("this.recognition.onresult", fct("event") 
 					._for("var i = event.resultIndex; i < event.results.length; i++")
-						._if("event.results[i].isFinal")
-							.__("$.notify('time '+ event.timeStamp, {globalPosition: 'bottom left', className:'success', autoHideDelay: 2000})")
-							.__("textarea.value += event.results[i][0].transcript")
+						.var("time", "event.timeStamp-self.lastResult")
+						._if("event.results[i].isFinal && time>500")
+							.set("self.lastResult", "event.timeStamp")
+//							.__("$.notify(event.results[i][0].transcript, {globalPosition: 'bottom left', className:'success', autoHideDelay: 2000})")
+							.__("$.getJSON('"+AppRoot.REST_JSON_SYLLABISATION+"', {text:event.results[i][0].transcript}).done(", fct("a")
+
+									._for("var i = jsonSyllabe.length-1; i >=0; i--")
+										.__("jsonSyllabe.splice(i,1);")
+									.endfor()
+									
+									.var("lesmots", "a.mots")
+									._for("var i = 0, l = lesmots.length; i < l; i++")
+										.__("jsonSyllabe.push(lesmots[i])")
+									.endfor()
+								,")")
+							
 						.endif()
 					.endfor()
-					.__("textarea.value +='\\n'")
-				);
+				)
+		.set("this.recognition.onend", fct("event")
+				._if("window.microlistener.stop")
+					.set("window.microlistener.stop", false)
+				._else()
+					.__("window.microlistener.recognition.start()"))
+				.endif()
+		
+		;
 
-		return "recognition";
+		return _this;
 	}
 	
 	default Object getData()
 	{
 				
-		set(aDataSet, _new())
-		.__(aDataSet.setData("[]"))
+		__(aDataSet.setData("[]"))
 		
 		.set(aDataDriven, _new(aDataSet))
 		
@@ -64,7 +100,7 @@ public interface JSSyllabisation extends JSClass {
 		.__(aDataDriven.onEnter(fct("ctx")
 				._if("ctx.row['_dom_']==null")
 					
-					.set(template, ViewSyllabisation.getMot(""))   //XHTMLPart.xVar("ctx.row.text")
+					.set(template, ViewSyllabisation.getMot(XHTMLPart.xVar("ctx.row.text")))  
 					.var("jqdom", template.appendInto(JQuery.$(ViewSyllabisation.cDivSyllabisation)))
 		            .__("ctx.row['_dom_']=jqdom[0]")
 		            .var("sylb", "ctx.row.syllabes")
@@ -76,23 +112,11 @@ public interface JSSyllabisation extends JSClass {
 		            		.__(JQuery.$((JSVariable)jsvar("jqdomSyl")).addClass(ViewSyllabisation.cSyllabeImpaire)  )
 		            	.endif()
 		            .endfor()
-		            
-		            
-//					._if("ctx.row.type=='divider'")
-//					//	.set(template, ViewMenu.getTemplateMenuDivider())
-//			            .var("jqdom", template.appendInto("$('.menu ul')"))
-//			            .__("ctx.row['_dom_']=jqdom[0]")
-//					._else()
-//			          //  .set(template, ViewMenu.getTemplateMenu("ctx.row.name", "ctx.row.icon", "ctx.row.idAction"))
-//			            .var("jqdom", template.appendInto("$('.menu ul')"))
-//			            .__("jqdom.css('visibility','hidden')")  // invisible par defaut avant animation
-//			            .__("ctx.row['_dom_']=jqdom[0]")
-//		            .endif()
 	            .endif()
         ))
 		.__(aDataDriven.onExit(fct("value")
 				._if("value!=null && value.row['_dom_']!=null")
-
+					.__("$(value.row['_dom_']).hide(50+(value.idx*20),", fct().__("$(this).remove()"), ")")
 				.endif()
 			))
 		

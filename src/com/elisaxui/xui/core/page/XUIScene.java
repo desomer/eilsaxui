@@ -87,9 +87,10 @@ public class XUIScene extends XHTMLPart {
 				xLinkCssAsync("https://fonts.googleapis.com/icon?family=Material+Icons"),
 				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"),
 //				xLinkCss("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"),
-				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css")
+				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css"),
 //				xLinkCss("https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css")
-//				xLinkCss("https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"),				
+//				xLinkCss("https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"),	
+				xLinkCssAsync("https://fonts.googleapis.com/css?family=Open+Sans")
 				);
 	}
 	
@@ -352,6 +353,7 @@ public class XUIScene extends XHTMLPart {
 
 							.var("btn", $(jsvar("e.target")).closest("[data-x-action]"))
 							.var("event", "btn.data('x-action')")
+							.set("window.lastBtn", btn)  // TODO a virer
 							
 							//.__("$.notify('do Event '+event, {globalPosition: 'bottom left', className:'warn', autoHideDelay: 2000})")
 							

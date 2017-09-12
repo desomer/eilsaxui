@@ -35,40 +35,45 @@ public class SrvSyllabisation {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getSyllabisation(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("id") String id) {
 
-		Object json = doSyllbisation();
+		List<String> query = uri.getQueryParameters().get("text");
+		
+		String str = "Il était une fois une jeune princesse intrépide qui s'appelait Pocahontas. "
+				+ "Elle aimait parcourir ses terres natales en toute liberté. "
+				+ "Pocahontas et son amie, Nakoma, passaient des heures entières à explorer. "
+				+ "Descendant la rivière à bord de leur canoë, elles admiraient les paysages environnants. ";
+		
+//		+"un portefeuille un feuilleton un chevreuil\n"
+//		+ "s’habiller famille gorille incroyable\n"
+//		+ "épouvantail bataille travailler débarbouiller\n"
+//		+ "ratatouille bouilloire\n" + 
+//		"Merveilleux surveiller  corbeille appareil\n" + 
+//		"heureuse mignonne champignon campagne\n" + 
+//		"pied poulet dessinez conjugaison anniversaire\n" + 
+//		"directrice lunettes empreinte lendemain\n" + 
+		
+		Object json = doSyllbisation(query==null?str:query.get(0));
 		
 		return Response.status(Status.OK)
 				.entity(json.toString())
 				.build();
 	}
 
-	public Object doSyllbisation() {
+	public Object doSyllbisation(String text) {
 	
 		class jsonMot extends JSONBuilder
 		{
-			String unePhrase = "Il était une fois une jeune princesse intrépide qui s'appelait Pocahontas.\n "
-					+ "Elle aimait parcourir ses terres natales en toute liberté.\n"
-					+ "Pocahontas et son amie, Nakoma, passaient des heures entières à explorer.\n "
-					+ "Descendant la rivière à bord de leur canoë, elles admiraient les paysages environnants.\n"
-//					+"un portefeuille un feuilleton un chevreuil\n"
-//					+ "s’habiller famille gorille incroyable\n"
-//					+ "épouvantail bataille travailler débarbouiller\n"
-//					+ "ratatouille bouilloire\n" + 
-//					"Merveilleux surveiller  corbeille appareil\n" + 
-//					"heureuse mignonne champignon campagne\n" + 
-//					"pied poulet dessinez conjugaison anniversaire\n" + 
-//					"directrice lunettes empreinte lendemain\n" + 
-//					"\n" + 
-//					"\n" + 
-//					""
-					;
+			String unePhrase;
 			
+			public jsonMot(String unePhrase) {
+				super();
+				this.unePhrase = unePhrase;
+			}
+
 			/* (non-Javadoc)
 			 * @see com.elisaxui.core.data.json.JSONBuilder#getJSON()
 			 */
 			@Override
 			public Object getJSON() {
-				unePhrase= unePhrase.replace('\n', ' ');
 				Scanner s = new Scanner(unePhrase).useDelimiter(" ");
 				List<Object> jsonMot = new ArrayList<Object>();
 				while (s.hasNext()) {
@@ -78,17 +83,16 @@ public class SrvSyllabisation {
 					
 					jsonMot.add( obj(v("text", word), v("syllabes", unMot.doJson())));
 					
-					//unMot.doDisplay();
 				}
 				s.close();
-				//System.out.println("");
+				
 				return  obj(v("type", "phrase"), v("mots",  arr(jsonMot.toArray())));
 			}
 	
 
 		}
 		
-		return new jsonMot().getJSON();
+		return new jsonMot(text).getJSON();
 	}
 
 	public static class Syllable {
@@ -201,15 +205,6 @@ public class SrvSyllabisation {
 			syllabe.add(c);
 		}
 
-		public void doDisplay() {
-			for (int i = 0; i < listSyllable.size(); i++) {
-				if (i > 0)
-					System.out.print("/");
-
-				System.out.print(listSyllable.get(i).syllabe);
-			}
-			System.out.print(" ");
-		}
 		
 		public Object doJson() {
 			class JSONStyllable extends JSONBuilder

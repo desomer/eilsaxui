@@ -63,7 +63,8 @@ public class AppRoot extends XHTMLPart {
 			"https://images.pexels.com/photos/164482/pexels-photo-164482.jpeg?h=350&auto=compress&cs=tinysrgb",
 			"https://images.pexels.com/photos/256417/pexels-photo-256417.jpeg?h=350&auto=compress&cs=tinysrgb",
 			"https://images.pexels.com/photos/207665/pexels-photo-207665.jpeg?h=350&auto=compress&cs=tinysrgb",
-			"https://images.pexels.com/photos/272228/pexels-photo-272228.jpeg?h=350&auto=compress&cs=tinysrgb"
+			"https://images.pexels.com/photos/272228/pexels-photo-272228.jpeg?h=350&auto=compress&cs=tinysrgb",
+			"https://images.pexels.com/photos/287336/pexels-photo-287336.jpeg?h=350&auto=compress&cs=tinysrgb"
 	}; 
 	
 	
@@ -127,6 +128,8 @@ public class AppRoot extends XHTMLPart {
 								._for("var i = 0, l = lesmots.length; i < l; i++")
 									.__("jsonSyllabe.push(lesmots[i])")
 								.endfor()
+								
+								.set("window.lastPhrase", "a.text")
 							,")")
 					
 					
@@ -201,11 +204,17 @@ public class AppRoot extends XHTMLPart {
 						.var("msg", "new SpeechSynthesisUtterance(leMot)")
 						.set("msg.lang", "'fr-FR'")
 						.__("window.speechSynthesis.speak(msg)")
-						.__(TKQueue.startProcessQueued( fct()
-								
-							)
-						)
 				)
+				
+				.set("window.onPhrase", fct("json")
+						.var("msg", "new SpeechSynthesisUtterance(window.lastPhrase)")
+						.set("msg.lang", "'fr-FR'")
+						.set("msg.rate", 0.9)
+						//.set("msg.pitch", 1)
+						.__("window.speechSynthesis.speak(msg)")
+				)
+				
+				
 				
 				/************************************************************/
 				.set(jsNavBar, _new())
@@ -222,13 +231,14 @@ public class AppRoot extends XHTMLPart {
 		public static final String EVT_IDENTITY = "identity";
 		public static final String EVT_BTN_FLOAT = "BtnFloatMain";
 		public static final String EVT_DO_MOT = "doMot";
+		public static final String EVT_DO_PHRASE = "doPhrase";
 		
 		public Object getJSON()
 		{
-			XMLElement cnt1 = xDiv( ViewRippleEffect.cRippleEffect, 
-							xAttr("style", "\"width: 100%; height: 30vh; background:url(" +listPhotos[6] +") center / cover\""),
+			XMLElement cnt1 = xDiv( ViewRippleEffect.cRippleEffect,                             //6
+							xAttr("style", "\"width: 100%; height: 30vh; background:url(" +listPhotos[9] +") center / cover\""),
 							xId("test1"), 
-							xAttr("data-x-action", "\""+EVT_MORE+"\"")
+							xAttr("data-x-action", "\""+EVT_DO_PHRASE+"\"")
 					 );
 				 
 			
@@ -270,7 +280,8 @@ public class AppRoot extends XHTMLPart {
 							v(ON_ACTIVITY_RESUME , callbackTo("onResumeActivity1", null)),
 							v(EVT_IDENTITY, callbackTo("onIndentity", null)),
 							v(EVT_CLEAR, callbackTo("onDelete", null)),
-							v(EVT_DO_MOT, callbackTo("onMot", null))
+							v(EVT_DO_MOT, callbackTo("onMot", null)),
+							v(EVT_DO_PHRASE, callbackTo("onPhrase", null))
 							));
 		}
 		

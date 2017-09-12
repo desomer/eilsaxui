@@ -86,7 +86,7 @@ public class SrvSyllabisation {
 				}
 				s.close();
 				
-				return  obj(v("type", "phrase"), v("mots",  arr(jsonMot.toArray())));
+				return  obj(v("type", "phrase"), v("text", unePhrase), v("mots",  arr(jsonMot.toArray())));
 			}
 	
 

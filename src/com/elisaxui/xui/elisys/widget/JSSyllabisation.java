@@ -61,6 +61,7 @@ public interface JSSyllabisation extends JSClass {
 						.var("time", "event.timeStamp-self.lastResult")
 						._if("event.results[i].isFinal && time>500")
 							.set("self.lastResult", "event.timeStamp")
+							.set("window.lastPhrase", "event.results[i][0].transcript")
 //							.__("$.notify(event.results[i][0].transcript, {globalPosition: 'bottom left', className:'success', autoHideDelay: 2000})")
 							.__("$.getJSON('"+AppRoot.REST_JSON_SYLLABISATION+"', {text:event.results[i][0].transcript}).done(", fct("a")
 

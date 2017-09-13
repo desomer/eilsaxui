@@ -21,6 +21,8 @@ import com.elisaxui.xui.core.transition.CssTransition;
  */
 public interface JSSyllabisation extends JSClass {
 
+	public static final String REST_JSON_SYLLABISATION = "/rest/json/syllabisation/pacahontas";
+	
 	JSDataDriven aDataDriven = null; 
 	JSDataSet aDataSet = null;
 	JSXHTMLPart template = null;
@@ -29,20 +31,14 @@ public interface JSSyllabisation extends JSClass {
 	JSSyllabisation _self = null;
 	JSSyllabisation _this = null;
 	JSVariable stop = null;
+	JSVariable isRunning = null;
 	
-//	recognition.onresult = function (event) {
-//	for (i = event.resultIndex; i < event.results.length; i++) {
-//			textarea.value += event.results[i][0].transcript + "\n"
-//			document.getElementById("span").innerHTML =
-//				Math.round(event.results[i][0].confidence * 100) + " %"
-//	}
-//}
 	
 	default Object constructor() {
-		set(aDataSet, _new());
-		set(stop, false);
-		return set(lastResult, 0)
-				;
+		set(aDataSet, _new())
+		.set(stop, false)
+		.set(isRunning, false);
+		return set(lastResult, 0);
 	}
 	
 	
@@ -63,21 +59,20 @@ public interface JSSyllabisation extends JSClass {
 							.set("self.lastResult", "event.timeStamp")
 							.set("window.lastPhrase", "event.results[i][0].transcript")
 //							.__("$.notify(event.results[i][0].transcript, {globalPosition: 'bottom left', className:'success', autoHideDelay: 2000})")
-							.__("$.getJSON('"+AppRoot.REST_JSON_SYLLABISATION+"', {text:event.results[i][0].transcript}).done(", fct("a")
-
-									._for("var i = jsonSyllabe.length-1; i >=0; i--")
-										.__("jsonSyllabe.splice(i,1);")
-									.endfor()
+							.__("$.getJSON('"+REST_JSON_SYLLABISATION+"', {text:event.results[i][0].transcript}).done(", fct("a")
 									
 									.var("lesmots", "a.mots")
 									._for("var i = 0, l = lesmots.length; i < l; i++")
-										.__("jsonSyllabe.push(lesmots[i])")
+										.__("setTimeout(", fct("num")
+											.__("jsonSyllabe.push(lesmots[num])")
+										, ",50+(20*i), i)")	
 									.endfor()
 								,")")
 							
 						.endif()
 					.endfor()
 				)
+		
 		.set("this.recognition.onend", fct("event")
 				._if("window.microlistener.stop")
 					.set("window.microlistener.stop", false)
@@ -109,6 +104,8 @@ public interface JSSyllabisation extends JSClass {
 		                
 		            	.set(template, ViewSyllabisation.getSyl(XHTMLPart.xVar("sylb[j].text")))
 		            	.var("jqdomSyl", template.appendInto("jqdom"))
+					//	.__(JQuery.$((JSVariable)jsvar("jqdomSyl")), ".hide()")
+					//	.__(JQuery.$((JSVariable)jsvar("jqdomSyl")), ".show(50+ (ctx.idx*50))")
 		            	._if("j%2==1")
 		            		.__(JQuery.$((JSVariable)jsvar("jqdomSyl")).addClass(ViewSyllabisation.cSyllabeImpaire)  )
 		            	.endif()

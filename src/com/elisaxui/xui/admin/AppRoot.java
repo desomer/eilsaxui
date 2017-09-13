@@ -30,8 +30,10 @@ import com.elisaxui.xui.core.widget.layout.JSPageLayout;
 import com.elisaxui.xui.core.widget.menu.JSMenu;
 import com.elisaxui.xui.core.widget.navbar.JSNavBar;
 import com.elisaxui.xui.core.widget.overlay.JSOverlay;
+import com.elisaxui.xui.elisys.app.JSHistoireManager;
 import com.elisaxui.xui.elisys.widget.JSSyllabisation;
 import com.elisaxui.xui.elisys.widget.ViewSyllabisation;
+import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
 
 import static com.elisaxui.xui.core.toolkit.TKActivity.*;
 
@@ -45,13 +47,11 @@ public class AppRoot extends XHTMLPart {
 	 * 
 	 */
 	private static final String REST_JSON_MENU_ACTIVITY1 = "/rest/json/menu/activity1";
-	public static final String REST_JSON_SYLLABISATION = "/rest/json/syllabisation/pacahontas";
+	
 	static JSMenu jsMenu;
 	static JSNavBar jsNavBar;
 	static TKActivity tkActivity;
 	static JSPageLayout jsPageLayout;
-	
-	
 	
 
 	public static final String[] listPhotos= new String[] {
@@ -68,11 +68,12 @@ public class AppRoot extends XHTMLPart {
 	}; 
 	
 	
-	@xTarget(AFTER_CONTENT.class)
+	@xTarget(HEADER.class)  // TODO marche pas car composant
 	@xRessource
 	public XMLElement xImportAfter() {
 		return xListElement(
-				xImport(JSSyllabisation.class)   //TODO A faire marcher et retire du XUIScene
+				//xImport(JSSyllabisation.class)   //TODO A faire marcher et retire du XUIScene
+				//xImport(JSHistoireManager.class)  
 				);
 	}
 	
@@ -85,6 +86,8 @@ public class AppRoot extends XHTMLPart {
 	
 	
 	static JSSyllabisation jsSyllabe;
+	static JSHistoireManager jsHitoireMgr;
+	
 	
 	public JSMethodInterface getJS()
 	{
@@ -98,6 +101,7 @@ public class AppRoot extends XHTMLPart {
 				
 				.var(jsSyllabe, _new())
 				.var("jsonSyllabe", jsSyllabe.getData())
+				.var(jsHitoireMgr, _new())
 				
 				/***********************************************************************************************/		
 
@@ -119,20 +123,9 @@ public class AppRoot extends XHTMLPart {
 				//	.__(tkActivity.setCurrentActivity("'Activity1'"))
 					
 					 , 1000,  fct()
-					 .set("window.microlistener",jsSyllabe.createMicroListener())
-					 
-					.__("$.getJSON('"+REST_JSON_SYLLABISATION+"').done(", fct("a")
-								.consoleDebug(txt("syllabisation"), "a")
-								.var("lesmots", "a.mots")
-								
-								._for("var i = 0, l = lesmots.length; i < l; i++")
-									.__("jsonSyllabe.push(lesmots[i])")
-								.endfor()
-								
-								.set("window.lastPhrase", "a.text")
-							,")")
-					
-					
+					 .set("window.microlistener", jsSyllabe.createMicroListener())
+					 .__(jsHitoireMgr.getHistoire())
+
 					))
 				/*************************************************************/
 				
@@ -180,21 +173,32 @@ public class AppRoot extends XHTMLPart {
 				
 				/**************************************************************/
 				
-				.set("window.onIndentity", fct("json")
+				.set("window.onMicro", fct("json")
 						.__(TKQueue.startProcessQueued( fct()
-							    .__("window.microlistener.recognition.start()")
-							  //  .__(JQuery.$(ViewSyllabisation.cMicro).val("''"))
-							  //	.__("$.notify('Micro', {globalPosition: 'bottom left', className:'success', autoHideDelay: 2000})")
+								.var(jsSyllabe, "window.microlistener")
+								._if(jsSyllabe,".isRunning==false")
+									.set(jsvar(jsSyllabe,".isRunning"), true)
+							    	.__(jsSyllabe,".recognition.start()")
+							    ._else()
+									.set(jsvar(jsSyllabe,".isRunning"), false)
+									.set(jsvar(jsSyllabe,".stop"), true)
+									.__(jsSyllabe,".recognition.stop()")
+							    .endif()
 							)
 						)
 				)
 				
 				.set("window.onDelete", fct("json")
 						.__(TKQueue.startProcessQueued( fct()
-								.set("window.microlistener.stop", true)
-							    .__("window.microlistener.recognition.stop()")
-							  //  .__(JQuery.$(ViewSyllabisation.cMicro).val("''"))
-							  //	.__("$.notify('Micro', {globalPosition: 'bottom left', className:'success', autoHideDelay: 2000})")
+								.var(jsSyllabe, "window.microlistener")
+								.var("jsonSyllabe", jsvar(jsSyllabe, ".aDataSet.getData()"))
+								
+								._for("var i = jsonSyllabe.length-1; i >=0; i--")
+									.__("setTimeout(", fct()
+													.__("jsonSyllabe.splice(0,1);")
+										, ",50*i)")			
+								.endfor()
+								
 							)
 						)
 				)
@@ -207,13 +211,31 @@ public class AppRoot extends XHTMLPart {
 				)
 				
 				.set("window.onPhrase", fct("json")
-						.var("msg", "new SpeechSynthesisUtterance(window.lastPhrase)")
-						.set("msg.lang", "'fr-FR'")
-						.set("msg.rate", 0.9)
-						//.set("msg.pitch", 1)
-						.__("window.speechSynthesis.speak(msg)")
+						.var(jsSyllabe, "window.microlistener")
+						._if(jsSyllabe,".isRunning")
+							.set(jsvar(jsSyllabe,".isRunning"), false)
+							.set(jsvar(jsSyllabe,".stop"), true)
+							.__(jsSyllabe,".recognition.stop()")
+					    .endif()
+						
+						._if("window.speechSynthesis.speaking")
+							.__("window.speechSynthesis.cancel()")
+						  	.__("$.notify('stop', {globalPosition: 'bottom left', className:'success', autoHideDelay: 2000})")
+
+						._else()
+							.var("msg", "new SpeechSynthesisUtterance(window.lastPhrase)")
+							.set("msg.lang", "'fr-FR'")
+							.set("msg.rate", 0.9)
+							//.set("msg.pitch", 1)
+							.__("window.speechSynthesis.speak(msg)")
+						.endif()
 				)
 				
+				.set("window.onLoadHistoire", fct("json")
+						.var(jsHitoireMgr, _new())
+						.__(jsHitoireMgr.getHistoire())
+				)
+
 				
 				
 				/************************************************************/
@@ -232,6 +254,7 @@ public class AppRoot extends XHTMLPart {
 		public static final String EVT_BTN_FLOAT = "BtnFloatMain";
 		public static final String EVT_DO_MOT = "doMot";
 		public static final String EVT_DO_PHRASE = "doPhrase";
+		public static final String EVT_DO_LOAD_HISTOIRE = "doLoadHistoire";
 		
 		public Object getJSON()
 		{
@@ -242,7 +265,7 @@ public class AppRoot extends XHTMLPart {
 					 );
 				 
 			
-			XMLElement cnt2 = xPart(new ViewJSChart(xId("test2")));	
+			//XMLElement cnt2 = xPart(new ViewJSChart(xId("test2")));	
 			
 			XMLElement cntSyllabique =  xPart(new ViewSyllabisation());	
 			
@@ -258,11 +281,13 @@ public class AppRoot extends XHTMLPart {
 							 										cardHtml( cnt1 ), 
 							 									//	cardHtml( cnt2 ),
 							 										cardHtml( cntSyllabique ),
-							 										card( arr( backgroundImage(listPhotos[7], 1),  
-							 												//	backgroundImage(listPhotos[8], 1),  
-								 												text("une double image")
+							 										card( arr( backgroundImage(listPhotos[7], 1),
+							 												    cardAction(EVT_DO_LOAD_HISTOIRE), 
+								 												text("Paconhontas")
 								 												))  //,
+							 										
 //							 										card( arr( backgroundImage(listPhotos[2], 1),  
+//					 															backgroundImage(listPhotos[8], 1), 
 //							 												text("un disque dur")
 //							 												)),
 //							 										card( arr( backgroundImage(listPhotos[5], 1),  
@@ -278,10 +303,12 @@ public class AppRoot extends XHTMLPart {
 							v(EVT_BTN_FLOAT , routeTo( "!route/Activity3?p=1")),
 							v(ON_ACTIVITY_CREATE , callbackTo("onCreateActivity1", null)),
 							v(ON_ACTIVITY_RESUME , callbackTo("onResumeActivity1", null)),
-							v(EVT_IDENTITY, callbackTo("onIndentity", null)),
+							v(EVT_IDENTITY, callbackTo("onMicro", null)),
 							v(EVT_CLEAR, callbackTo("onDelete", null)),
 							v(EVT_DO_MOT, callbackTo("onMot", null)),
-							v(EVT_DO_PHRASE, callbackTo("onPhrase", null))
+							v(EVT_DO_PHRASE, callbackTo("onPhrase", null)),
+							v(EVT_DO_LOAD_HISTOIRE, callbackTo("onLoadHistoire", null))
+							
 							));
 		}
 		

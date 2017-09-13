@@ -35,7 +35,10 @@ public class JQuery extends JSClassMethod {
 	
 	public static final JQuery $(Object... selector)
 	{
-		return $(CSSSelector.onPath(selector));
+		if (selector.length==1 && selector[0] instanceof JSVariable)
+			return $((JSVariable)selector[0]);	
+		else
+			return $(CSSSelector.onPath(selector));
 	}
 	
 	public Object[] addText(Object...classes)

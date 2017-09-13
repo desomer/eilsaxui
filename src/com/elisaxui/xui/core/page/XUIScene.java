@@ -41,6 +41,7 @@ import com.elisaxui.xui.core.widget.menu.JSMenu;
 import com.elisaxui.xui.core.widget.menu.ViewMenu;
 import com.elisaxui.xui.core.widget.navbar.ViewNavBar;
 import com.elisaxui.xui.core.widget.overlay.JSOverlay;
+import com.elisaxui.xui.elisys.app.JSHistoireManager;
 import com.elisaxui.xui.elisys.widget.JSSyllabisation;
 
 @xFile(id = "standard")
@@ -168,7 +169,7 @@ public class XUIScene extends XHTMLPart {
 				xImport(JSMenu.class),
 				xImport(TKActivity.class),
 				xImport(JSViewCard.class),
-				
+				xImport(JSHistoireManager.class), 
 				xImport(JSSyllabisation.class)
 				
 				);

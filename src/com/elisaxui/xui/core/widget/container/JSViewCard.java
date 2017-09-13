@@ -8,7 +8,9 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.xui.core.datadriven.JSDataDriven;
 import com.elisaxui.xui.core.datadriven.JSDataSet;
 import com.elisaxui.xui.core.page.XUIScene;
+import com.elisaxui.xui.core.toolkit.JQuery;
 import com.elisaxui.xui.core.toolkit.TKQueue;
+import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
 import com.elisaxui.xui.core.widget.menu.ViewMenu;
 
 /**
@@ -43,24 +45,9 @@ public interface JSViewCard extends JSClass {
 						.var("jqdom", template.appendInto("$(selector)"))
 						.__("ctx.row['_dom_']=jqdom[0]")
 						
-//					._elseif("ctx.row.type=='action'")
-//						._if("$(selector+' .rightAction').length==0")
-//							.set(template, ViewNavBar.getTemplateActionBar())
-//							.var("jqdom", template.append("$(selector)"))
-//						.endif()
-//						.set(template, ViewNavBar.getTemplateAction("ctx.row.icon", "ctx.row.idAction"))
-//						.var("jqdom", template.append("$(selector+' .rightAction')"))
-//						.__("ctx.row['_dom_']=jqdom[0]")
-//					._elseif("ctx.row.type=='background'")	
-//					    ._if("ctx.row.mode=='granim'")
-//							.set(template, ViewNavBar.getTemplateBgCanvas())
-//							.var("jqdom", template.append("$(selector)"))
-//						._elseif("ctx.row.mode=='css'")
-//							.set(template, ViewNavBar.getTemplateBgDiv())
-//							.var("jqdom", template.append("$(selector)"))
-//							.__("jqdom.css('background', ctx.row.css)")
-//							.__("jqdom.css('opacity', ctx.row.opacity)")
-//						.endif()
+					._elseif("ctx.row.type=='cardAction'")
+						.__("$(selector).attr('data-x-action', ctx.row.idAction )")
+						.__(JQuery.$(jsvar("selector")).addClass(ViewRippleEffect.cRippleEffect))
 					.endif()	
 				.endif()))
 		

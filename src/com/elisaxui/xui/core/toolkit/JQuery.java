@@ -40,16 +40,7 @@ public class JQuery extends JSClassMethod {
 		else
 			return $(CSSSelector.onPath(selector));
 	}
-	
-	public Object[] addText(Object...classes)
-	{
-		Object[] ret =  new Object[3];
-		ret[0]="'";
-		ret[1]=classes[0];
-		ret[2]="'";
-		return ret;
-	}
-	
+		
 	/**TODO remplacer par une annotation */
 	public JQuery addClass(Object...classes)
 	{

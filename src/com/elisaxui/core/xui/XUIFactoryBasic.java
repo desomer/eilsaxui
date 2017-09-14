@@ -1,11 +1,9 @@
 package com.elisaxui.core.xui;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.GZIPOutputStream;
@@ -32,19 +30,12 @@ public class XUIFactoryBasic extends AbstractHandler {
 	public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 
-//		response.getWriter().println("<h1>Hello World</h1>");
-		
-		//response = new GZIPHttpServletResponseWrapper(response);
 		
 		String url = request.getParameter("url");
 		
 		String content = cache.get(url);
 		
 		if (content==null) {
-	//		String str = Base64.getUrlEncoder().encodeToString("some string".getBytes("utf-8"));
-	//		
-	//		byte[] asBytes = Base64.getUrlDecoder().decode(str);
-	//		System.out.println(new String(asBytes, "utf-8")); // And the output is: some string
 			
 			StringBuilder js = URLLoader.loadUrl(url);
 			
@@ -57,7 +48,7 @@ public class XUIFactoryBasic extends AbstractHandler {
 		response.setHeader(HttpHeaders.CACHE_CONTROL, "max-age=315360000, public");
 		response.setHeader(HttpHeaders.CONTENT_ENCODING,"gzip");
 		response.setCharacterEncoding("utf-8");
-		response.setContentType("application/javascript;charset=utf-8");   //"text/html;charset=utf-8"
+		response.setContentType("application/javascript;charset=utf-8");   
 		
         GZIPOutputStream gzip = new GZIPOutputStream(response.getOutputStream());
         gzip.write(content.getBytes("UTF-8"));

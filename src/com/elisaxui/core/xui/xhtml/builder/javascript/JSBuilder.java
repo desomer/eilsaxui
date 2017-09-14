@@ -3,6 +3,7 @@ package com.elisaxui.core.xui.xhtml.builder.javascript;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.concurrent.Callable;
 
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
@@ -42,6 +43,16 @@ public class JSBuilder extends XUIFormatManager {
 	}
 
 	
+	public static JSClass classfct(Callable c)
+	{
+		try {
+			return (JSClass) c.call();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
 	/***************************************************************************/
 	

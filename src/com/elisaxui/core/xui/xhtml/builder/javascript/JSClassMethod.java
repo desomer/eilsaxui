@@ -23,6 +23,15 @@ public class JSClassMethod extends JSVariable {
 		listContent.clear();
 	}
 	
+	public Object[] addText(Object...classes)
+	{
+		Object[] ret =  new Object[3];
+		ret[0]="'";
+		ret[1]=classes[0];
+		ret[2]="'";
+		return ret;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder(super.toString());

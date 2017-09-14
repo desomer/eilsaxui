@@ -94,9 +94,8 @@ public class XUIFactoryXHtml {
 				}
 
 				String html = buf.toString();
-				//pageCache.put(id, html);
+				pageCache.put(id, html);
 
-				// System.out.println("------------------------------------------");
 
 				return Response.status(Status.OK) // .type(MediaType.TEXT_HTML)
 						.entity(html).header("XUI", "ok").build();

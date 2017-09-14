@@ -14,8 +14,9 @@ public class JSVariable {
 		return name;
 	}
 
-	public void setName(Object name) {
+	public <E extends JSVariable> E setName(Object name) {
 		this.name = name;
+		return (E)this;
 	}
 
 	@Override

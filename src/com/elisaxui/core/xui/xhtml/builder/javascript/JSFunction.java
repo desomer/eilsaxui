@@ -1,5 +1,7 @@
 package com.elisaxui.core.xui.xhtml.builder.javascript;
 
+import java.util.concurrent.Callable;
+
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
 /**
@@ -77,6 +79,12 @@ public class JSFunction extends JSContent
 		return this;
 	}
 
+	public JSFunction __( Runnable c)
+	{
+		JSBuilder.classfct(this , c);
+		return this;
+	}
+	
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
 		

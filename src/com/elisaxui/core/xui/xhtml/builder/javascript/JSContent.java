@@ -10,6 +10,7 @@ import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassInvocationHandler;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSArray;
 import com.elisaxui.core.xui.xml.builder.IXMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -26,7 +27,7 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 * 
 	 */
 	protected final JSBuilder jsBuilder;
-
+	public JSMethodInterface proxy;
 	/**
 	 * @param jsBuilder
 	 */
@@ -36,6 +37,21 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 
 	private LinkedList<Object> listElem = new LinkedList<Object>();
 
+	/**
+	 * @return the listElem
+	 */
+	public LinkedList<Object> getListElem() {
+		return listElem;
+	}
+
+	/**
+	 * @param listElem the listElem to set
+	 */
+	public void setListElem(LinkedList<Object> listElem) {
+		this.listElem = listElem;
+	}
+
+	
 	public JSBuilder getJSBuilder() {
 		return this.jsBuilder;
 	}
@@ -221,6 +237,26 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 		return this;
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#setTimeout(java.lang.Object[])
+	 */
+	@Override
+	public JSMethodInterface setTimeout(Object... content) {
+		getListElem().add(JSNewLine.class);
+		getListElem().add("setTimeout(");
+			int i=0;
+			for (Object object : content) {
+				if (i>0)
+					addElem(",");
+				addElem(object);
+				i++;
+			}
+
+		getListElem().add(");");
+		return null;
+	}
+	
 	@Override
 	public JSMethodInterface consoleDebug(Object... content) {
 		getListElem().add(JSNewLine.class);
@@ -245,6 +281,9 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 		return __(fragmentIf(cond).consoleDebug(p.toArray()));
 	};
 
+	
+	/***************************************************************************/
+	
 	@Override
 	public JSMethodInterface _for(Object... content) {
 		getListElem().add(JSNewLine.class);
@@ -256,6 +295,12 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 		return this;
 	}
 
+	@Override
+	public JSMethodInterface _forIdx(Object idx, JSArray array) {
+		// TODO Auto-generated method stub
+		return _for("var "+idx+" = 0, "+idx+"len =", array.length(), "; "+idx+" < "+idx+"len; "+idx+"++");
+	}
+	
 	@Override
 	public JSMethodInterface endfor() {
 		getListElem().add(JSNewLine.class);
@@ -351,6 +396,32 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	}
 
 	/* (non-Javadoc)
+	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#_return(java.lang.Object[])
+	 */
+	@Override
+	public JSMethodInterface _return(Object... content) {
+		getListElem().add(JSNewLine.class);
+		getListElem().add("return ");
+		for (Object object : content) {
+			addElem(object);
+		}
+		getListElem().add(";");
+		return this;
+	}
+
+	
+	/* (non-Javadoc)
+	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#jsvar(java.lang.Object[])
+	 */
+	@Override
+	public JSVariable jsvar(Object... param) {
+		return XHTMLPart.jsvar(param);
+	}
+
+
+	/**************************** FORMATAGE  ********************************/
+
+	/* (non-Javadoc)
 	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSInterface#_void()
 	 */
 	@Override
@@ -375,45 +446,7 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	public Object _this() {
 		return "this";
 	}
-
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#_return(java.lang.Object[])
-	 */
-	@Override
-	public JSMethodInterface _return(Object... content) {
-		getListElem().add(JSNewLine.class);
-		getListElem().add("return ");
-		for (Object object : content) {
-			addElem(object);
-		}
-		getListElem().add(";");
-		return this;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#jsvar(java.lang.Object[])
-	 */
-	@Override
-	public JSVariable jsvar(Object... param) {
-		return XHTMLPart.jsvar(param);
-	}
-
-	/**
-	 * @return the listElem
-	 */
-	public LinkedList<Object> getListElem() {
-		return listElem;
-	}
-
-	/**
-	 * @param listElem the listElem to set
-	 */
-	public void setListElem(LinkedList<Object> listElem) {
-		this.listElem = listElem;
-	}
-
 	
-
 	// new line 
 	public static final class JSNewLine {
 	};
@@ -421,8 +454,22 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	};
 	public static final class JSRemoveTab {
 	}
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#systemDebug(java.lang.Object, java.lang.Object[])
-	 */
+
+	
+	/****************************************************************/
+	@Override
+	public Object $$subContent() {
+		 LinkedList<Object> ret = getListElem();
+		 setListElem(new LinkedList<Object>());
+		 return ret;
+	}
+
+	@Override
+	public Object $$gosubContent(Object content) {
+		LinkedList<Object> ret = getListElem();
+		setListElem((LinkedList<Object>)content);
+		return ret;
+	}
+
 
 }

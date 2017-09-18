@@ -190,6 +190,7 @@ public class AppRoot extends XHTMLPart {
 				
 				.set("window.onDelete", fct("json")
 						.__(TKQueue.startProcessQueued( fct()
+								.set("window.lastPhrase", "''")
 								.var(jsSyllabe, "window.microlistener")
 								.var("jsonSyllabe", jsvar(jsSyllabe, ".aDataSet.getData()"))
 								

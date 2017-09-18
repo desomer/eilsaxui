@@ -25,9 +25,9 @@ public class JSArray extends JSClassMethod {
 		return ret;
 	}
 	
-	public JSArray length()
+	public JSInt length()
 	{
-		return attr("length");
+		return attrOfType(new JSInt(), "length");
 	}
 	
 }

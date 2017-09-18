@@ -1,5 +1,6 @@
 package com.elisaxui.core.xui.xhtml.builder.javascript;
 
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSArray;
 
 public interface JSMethodInterface  {
 	
@@ -15,6 +16,7 @@ public interface JSMethodInterface  {
 	JSMethodInterface systemDebugIf(Object cond, Object... content);
 	
 	JSMethodInterface _for(Object... content);
+	JSMethodInterface _forIdx(Object idx, JSArray array);
 	
 	JSMethodInterface endfor();
 
@@ -56,10 +58,13 @@ public interface JSMethodInterface  {
 
 	JSMethodInterface _elseif(Object... content);
 
+	JSMethodInterface setTimeout(Object... content);
+	
+	/**********************************************************************/
 	Object _void();
-	
 	Object _null();
-	
 	Object _this();
-
+	/*******************************************************************/
+	Object $$subContent();
+	Object $$gosubContent(Object content);
 }

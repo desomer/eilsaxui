@@ -232,7 +232,7 @@ public interface TKRouterEvent extends JSClass {
 	default Object doCancel()
 	{
  		systemDebugIf(TKConfig.debugDoAction, txt("REMOVE HISTORY'", "$xui.intent"))
-		.__(_this(),".navigo.nextenable=false")
+		.__("this.navigo.nextenable=false")
  		.__(historyIntent,".pop()")
  		.__("history.go(-1)")
 		;

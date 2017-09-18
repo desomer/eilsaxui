@@ -94,7 +94,7 @@ public class XUIFactoryXHtml {
 				}
 
 				String html = buf.toString();
-				pageCache.put(id, html);
+			//	pageCache.put(id, html);
 
 
 				return Response.status(Status.OK) // .type(MediaType.TEXT_HTML)

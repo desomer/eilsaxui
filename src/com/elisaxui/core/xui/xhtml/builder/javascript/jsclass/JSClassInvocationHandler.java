@@ -15,9 +15,11 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.xhtml.builder.javascript.Anonym;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 
 public class JSClassInvocationHandler implements InvocationHandler {
 	
@@ -32,6 +34,7 @@ public class JSClassInvocationHandler implements InvocationHandler {
 	private JSBuilder jsbuilder;
 	
 	private String nextName = null;
+	private static boolean testAnonymousInProgress = false;
 	
 
 	public JSClassInvocationHandler(Class<? extends JSClass> impl, JSBuilder jsbuilder) {
@@ -47,6 +50,8 @@ public class JSClassInvocationHandler implements InvocationHandler {
 			return getName().toString();
 		}
 
+
+	
 		String id = JSClassImpl.getMethodId(method, args);
 		JSClassImpl implcl = XUIFactoryXHtml.getXHTMLFile().getClassImpl(jsbuilder, getImplementClass());
 		boolean isMthAlreadyInClass = implcl.getListDistinctFct().containsKey(id);
@@ -54,9 +59,14 @@ public class JSClassInvocationHandler implements InvocationHandler {
 		if (!isMthAlreadyInClass) {
 			if (method.isDefault()) {
 				
+				if (testAnonymousInProgress)
+					return JSClassImpl.toJSCallInner(getName(), method, args);
+				
+				/*****  APPEL DES FUNCTION DE LA CLASSE *****/ 
 				MethodInvocationHandle MthInvoke = new MethodInvocationHandle(implcl, proxy, method, args);
 				if (nextName==null)
 				{
+										
 					implcl.getListDistinctFct().put(id, id);
 					
 					nextName=id;
@@ -68,7 +78,7 @@ public class JSClassInvocationHandler implements InvocationHandler {
 					Object nameProxy = mh.name;
 					mh.name = "this"; // force a this pour appel interne d'autre fct de la classe JS
 					
-					JSFunction fct = createJSFunctionImpl(MthInvoke);    // creer le code
+					JSFunction fct = createJSFunctionImpl(MthInvoke, false);    // creer le code
 					JSClassImpl ImplClass = jsbuilder.getJSClassImpl(getImplementClass(), proxy);
 					ImplClass.addFunction(fct);
 					
@@ -76,14 +86,28 @@ public class JSClassInvocationHandler implements InvocationHandler {
 				}
 				else
 				{
+
+					/*********************** TEST SI ANONYMOUS FOUNCTION **************************/
+					JSClassInvocationHandler mh = (JSClassInvocationHandler) Proxy.getInvocationHandler(proxy);
+					Object nameProxy = mh.name;
+					mh.name = "this"; // force a this pour appel interne d'autre fct de la classe JS
+					JSFunction fct = createJSFunctionImpl(MthInvoke, true);    // creer le code
+					mh.name = nameProxy;
+					if (fct!=null)
+						return fct;
+					/*******************************************************************************/
+					
 				    // appel d'une function js de la même class
 					if (debug2)
 						System.out.println("[JSBuilder]******************************** mth "+id+" of class " + implcl.getName() + " next = "+nextName);
+					
 					implcl.getListHandleFuntionPrivate().add(MthInvoke);
 					
 					return JSClassImpl.toJSCallInner(getName(), method, args);
 				}
 			} else {
+				/*****  APPEL DES FUNCTION INTERNE (var, set, if) *****/ 
+				
 				// creer le JSContent
 				JSContent currentJSContent = mapContent.get(nextName);
 				if (currentJSContent==null)
@@ -99,10 +123,15 @@ public class JSClassInvocationHandler implements InvocationHandler {
 				
 				// appel l'implementation le methode JSInterface
 				Object ret =  method.invoke(currentJSContent, args);
+
+				if (method.getName().equals("fct"))
+				{
+					((JSFunction)ret).proxy=(JSMethodInterface) proxy;
+				}
 				
 				if (debug2)
 				{
-					// trace du retour du retour
+					// trace du retour
 					if (ret instanceof JSContent )
 					{
 						System.out.println("[JSBuilder]"+System.identityHashCode(currentJSContent)+ " - appel de la mth "+id+" of class " + implcl.getName() +" => "+((JSContent)ret).getListElem() );
@@ -119,8 +148,8 @@ public class JSClassInvocationHandler implements InvocationHandler {
 		return JSClassImpl.toJSCall(getName(), method, args);
 	}
 
-	/** TODO a deplacer dans JSClassImpl  */			
-	private JSFunction createJSFunctionImpl(MethodInvocationHandle handle) 
+	
+	private JSFunction createJSFunctionImpl(MethodInvocationHandle handle, boolean testAnonymous) 
 					throws Throwable {
 
 		final Class<?> declaringClass = handle.method.getDeclaringClass();
@@ -136,32 +165,66 @@ public class JSClassInvocationHandler implements InvocationHandler {
 			}
 		}
 		
+		
+		Object prevCode = null;
+		JSContent code = null;
+		
+		if (testAnonymous)
+		{    
+			testAnonymousInProgress = true;
+			code= mapContent.get(nextName);
+		    prevCode = code.$$subContent();
+		}
+		
 		// appel la fct la classJS    ==> entrainte les appel  invoke de cette classe
 		Object ret = constructor.newInstance(declaringClass, MethodHandles.Lookup.PRIVATE)
 				.unreflectSpecial(handle.method, declaringClass).bindTo(handle.proxy).invokeWithArguments(p);
 		
-		String id = JSClassImpl.getMethodId(handle.method, handle.args);
-	    JSContent code = mapContent.get(id); 
-	    
-		//ajouter en fin de methode JS
-		if (ret!=null && !(ret instanceof JSContent))
+		JSFunction fct= null;
+		
+		if (testAnonymous && ret instanceof Anonym)
 		{
-			code._return(ret);
+			testAnonymousInProgress = false;
+			((Runnable)ret).run();
+			Object aCode = code.$$gosubContent(prevCode);
+			prevCode=null;
+			JSContent cont = jsbuilder.createJSContent();
+			cont.$$gosubContent(aCode);
+			fct = jsbuilder.createJSFunction().setParam(p).setCode(cont);
+			
 		}
-	    
-		if (debug2)
-			System.out.println(System.identityHashCode(code)+ " - return JSFunction " + id);
+		else if (testAnonymous==false)
+		{
+			String id = JSClassImpl.getMethodId(handle.method, handle.args);
+		    code = mapContent.get(id); 
+		    
+			//ajouter en fin de methode JS
+			if (ret!=null && !(ret instanceof JSContent))
+			{
+				code._return(ret);
+			}
+		    
+			if (debug2)
+				System.out.println(System.identityHashCode(code)+ " - return JSFunction " + id);
+			
+			fct = jsbuilder.createJSFunction().setName(handle.method.getName()).setParam(p)
+					.setCode(code);
+			
+			// function en cours terminé 
+			nextName = null;
+			
+			// invoke les methodes interne private
+			for(Iterator<MethodInvocationHandle> i = handle.implcl.getListHandleFuntionPrivate().iterator(); i.hasNext();) {
+					MethodInvocationHandle nextHandle = i.next();
+				    i.remove();	      					    
+				    nextHandle.method.invoke(nextHandle.proxy, nextHandle.args);
+			}
+		}
 		
-		JSFunction fct = jsbuilder.createJSFunction().setName(handle.method.getName()).setParam(p)
-				.setCode(code);
-		
-		nextName = null;
-		
-		// invoke les methodes private
-		for(Iterator<MethodInvocationHandle> i = handle.implcl.getListHandleFuntionPrivate().iterator(); i.hasNext();) {
-				MethodInvocationHandle nextHandle = i.next();
-			    i.remove();	      					    
-			    nextHandle.method.invoke(nextHandle.proxy, nextHandle.args);
+		if (testAnonymous && prevCode!=null)
+		{ 
+			code.$$gosubContent(prevCode);
+			testAnonymousInProgress = false;
 		}
 		
 		return fct;

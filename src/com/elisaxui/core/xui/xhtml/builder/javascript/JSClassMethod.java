@@ -116,4 +116,22 @@ public class JSClassMethod extends JSVariable {
 		ret.addContent("."+att);
 		return ret;
 	}
+	
+	public <E extends JSClassMethod> E  attrOfType(JSClassMethod cl, String att)
+	{
+		if (listContent.size()==0 && this.name!=null)
+		{
+//			// gestion premier appel de variable
+//			try {
+//				ret = (E) this.getClass().newInstance();
+//			} catch (InstantiationException | IllegalAccessException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+			cl.setName(this.getName());
+		}
+		
+		cl.addContent("."+att);
+		return (E) cl;
+	}
 }

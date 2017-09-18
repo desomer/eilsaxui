@@ -106,4 +106,8 @@ public class JQuery extends JSClassMethod {
 		return callMth("children", addText(CSSSelector.onPath(selector)));
 	}
 	
+	public Object hide(Object time, Object fct) {
+		return callMth("hide", time, "," , fct);
+	}
+	
 }

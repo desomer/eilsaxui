@@ -43,15 +43,21 @@ public class JSBuilder extends XUIFormatManager {
 	}
 
 	
-	public static JSClass classfct(Callable c)
+	public static JSFunction classfct(JSFunction f,  Runnable c)
 	{
+		Object ret = f.proxy.$$subContent();
+		
 		try {
-			return (JSClass) c.call();
+			 c.run();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
+		Object sub = f.proxy.$$gosubContent(ret);
+		JSContent cont = f.jsBuilder.createJSContent();
+		cont.$$gosubContent(sub);
+		f.setCode(cont);
+		return f;
 	}
 	
 	/***************************************************************************/

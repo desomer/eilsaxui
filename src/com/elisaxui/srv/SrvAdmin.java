@@ -40,6 +40,7 @@ public class SrvAdmin {
 	
 	class JSONMenuAct1 extends JSONMenu
 	{
+		@Override
 		public Object getJSON()
 		{
 		  return arr(item("Paramètres", "settings", "setting"),
@@ -57,8 +58,6 @@ public class SrvAdmin {
 	@Path("/menu/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getHtml(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("id") String id) {
-		
-		
 		
 		if (JSON==null)
 		{
@@ -95,7 +94,6 @@ public class SrvAdmin {
 		{
 			public Object getJSON()
 			{
-			  //https://images.pexels.com/photos/256484/pexels-photo-256484.jpeg?h=350&auto=compress&cs=tinysrgb	
 				
 			  return obj(v("short_name","Elisys"),
 					     v("name","Elisys dyslexie"),

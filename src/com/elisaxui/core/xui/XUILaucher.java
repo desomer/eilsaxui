@@ -1,105 +1,205 @@
 package com.elisaxui.core.xui;
 
+
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Collections;
+
+import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
+import org.eclipse.jetty.http2.HTTP2Cipher;
+import org.eclipse.jetty.http2.server.HTTP2ServerConnectionFactory;
 import org.eclipse.jetty.rewrite.handler.RedirectPatternRule;
 import org.eclipse.jetty.rewrite.handler.RewriteHandler;
 import org.eclipse.jetty.rewrite.handler.RewritePatternRule;
+import org.eclipse.jetty.security.ConstraintMapping;
+import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
+import org.eclipse.jetty.server.NegotiatingServerConnectionFactory;
 import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.server.handler.MovedContextHandler;
+import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.server.handler.SecuredRedirectHandler;
 import org.eclipse.jetty.server.handler.gzip.GzipHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 
-//import com.github.leonardoxh.gzipfilter.GZIPFilter;
 
 public class XUILaucher {
 
+	
+    private static ConstraintSecurityHandler buildConstraintSecurityHandler() {
+        // this configures jetty to require HTTPS for all requests
+        Constraint constraint = new Constraint();
+        constraint.setDataConstraint(Constraint.DC_CONFIDENTIAL);
+        ConstraintMapping mapping = new ConstraintMapping();
+        mapping.setPathSpec("/*");
+        mapping.setConstraint(constraint);
+        ConstraintSecurityHandler security = new ConstraintSecurityHandler();
+        security.setConstraintMappings(Collections.singletonList(mapping));
+        return security;
+    }
+	
+    private static ContextHandler buildStaticResourceHandler() {
+        // if you want the static content to serve off a url like
+        // localhost:8080/files/.... then put 'files' in the constructor
+        // to the ContextHandler
+        ContextHandler ch = new ContextHandler("/");
+        ResourceHandler rh = new ResourceHandler();
+        rh.setWelcomeFiles(new String[]{"index.html"});
+        rh.setResourceBase(".");
+        ch.setHandler(rh);
+        return ch;
+    }
+    
 	public static void main(String[] args) throws Exception {
-
 
 		Server server = new Server();
 		
-		ServerConnector connector = new ServerConnector(server);
-		connector.setPort(8080);
-
+        //*******************************************************************/
 		RewriteHandler rewrite = new RewriteHandler();
 		rewrite.setRewriteRequestURI(true);
 		rewrite.setRewritePathInfo(false);
 		rewrite.setOriginalPathAttribute("requestedPath");
-		  
-		String[] redirectArray = {"", "/main", "/manager"};
+
+		String[] redirectArray = { "", "/main", "/manager" };
 		for (String redirect : redirectArray) {
-		    RedirectPatternRule rule = new RedirectPatternRule();
-		    rule.setTerminating(true);
-		    rule.setPattern(redirect);
-		    rule.setLocation("/rest/page/fr/fra/id/standard");
-		    rewrite.addRule(rule);
+			RedirectPatternRule rule = new RedirectPatternRule();
+			rule.setTerminating(true);
+			rule.setPattern(redirect);
+			rule.setLocation("/rest/page/fr/fra/id/main");    // redirection 302
+			rewrite.addRule(rule);
 		}
-		
+
 		RewritePatternRule oldToNew = new RewritePatternRule();
 		oldToNew.setPattern("/fr/*");
-		oldToNew.setReplacement("/rest/page/fr/fra/id/");
+		oldToNew.setReplacement("/rest/page/fr/fra/id/");   // redirection interne
 		oldToNew.setTerminating(true);
 		oldToNew.setHandling(false);
-		rewrite.addRule(oldToNew);   
+		rewrite.addRule(oldToNew);
 		
-		
+		oldToNew = new RewritePatternRule();
+		oldToNew.setPattern("/.well-known/acme-challenge/*");
+		oldToNew.setReplacement("/rest/page/challenge/");    // redirection interne
+		oldToNew.setTerminating(true);
+		oldToNew.setHandling(false);
+		rewrite.addRule(oldToNew);
+
 		/*********************************************************************/
 		ServletContextHandler restHandler = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
 		restHandler.setContextPath("/rest");
-		
+
 		ServletHolder jerseyServlet = restHandler.addServlet(org.glassfish.jersey.servlet.ServletContainer.class, "/*");
 		jerseyServlet.setInitOrder(0);
-		jerseyServlet.setInitParameter("jersey.config.server.provider.classnames",	XUIFactoryXHtml.class.getCanonicalName());
+		jerseyServlet.setInitParameter("jersey.config.server.provider.classnames",
+				XUIFactoryXHtml.class.getCanonicalName());
 		jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "com.elisaxui.srv");
-		
-
 
 		/*********************************************************************/
 		ContextHandler basicHandler = new ContextHandler();
 		basicHandler.setContextPath("/asset");
-	//	basicHandler.setResourceBase(".");
+		// basicHandler.setResourceBase(".");
 		basicHandler.setHandler(new XUIFactoryBasic());
-		// basicHandler.setClassLoader(Thread.currentThread().getContextClassLoader());
 
-		/*********************************************************************/	
-	    GzipHandler gzipHolder = new GzipHandler();
-	    gzipHolder.setIncludedMimeTypes("text/html", "text/plain", "text/xml", 
-	            "text/css", "application/javascript", "text/javascript", "application/json");
-	    
+		/*********************************************************************/
+		GzipHandler gzipHolder = new GzipHandler();
+		gzipHolder.setIncludedMimeTypes("text/html", "text/plain", "text/xml",
+				"text/css", "application/javascript", "text/javascript", "application/json");
+
 		HandlerCollection myhandlers = new HandlerCollection(true);
 		myhandlers.addHandler(restHandler);
 		myhandlers.addHandler(basicHandler);
 		gzipHolder.setHandler(myhandlers);
-		
 		rewrite.setHandler(gzipHolder);
-		
-		server.setHandler(rewrite);
-		
-		
-		 HttpConfiguration https = new HttpConfiguration();
-		  https.addCustomizer(new SecureRequestCustomizer());
-		  
-		  SslContextFactory sslContextFactory = new SslContextFactory();
-		 sslContextFactory.setKeyStorePath("C:\\Users\\Bureau\\git\\eilsaxui\\keystore.jks");    //(EmbeddedServer.class.getResource("/keystore.jks").toExternalForm()
- 		 sslContextFactory.setKeyStorePassword("123456");
-		 sslContextFactory.setKeyManagerPassword("123456");
-		 ServerConnector sslConnector = new ServerConnector(server,
-		         new SslConnectionFactory(sslContextFactory, "http/1.1"),
-		         new HttpConnectionFactory(https));
-		 sslConnector.setPort(9998);
 
-		 server.setConnectors(new Connector[] { connector, sslConnector });
-		 
+		
+        MovedContextHandler movedHandlerToHttps = new MovedContextHandler();
+        movedHandlerToHttps.setNewContextURL("https://www.elisys-dyslexie.com");
+        movedHandlerToHttps.setContextPath("/*");
+        movedHandlerToHttps.setPermanent(true);
+        movedHandlerToHttps.setDiscardPathInfo(false);
+        movedHandlerToHttps.setDiscardQuery(false);
+        movedHandlerToHttps.setVirtualHosts(new String[]{"@unsecured"});   // uniquement en http
+		
+		HandlerCollection myhandlers2 = new HandlerCollection(true);
+		myhandlers2.addHandler(movedHandlerToHttps);
+	//	myhandlers2.addHandler(new SecuredRedirectHandler());   // interdit le non secure
+		myhandlers2.addHandler(rewrite);
+		
+
+      //  movedHandler.setVirtualHosts(new String[]{"elisys-dyslexie.com"});  //Note that this will also redirect example.com to www.example.com:
+
+//        ConstraintSecurityHandler securityHandlerAllHttps = buildConstraintSecurityHandler();
+//        securityHandlerAllHttps.setHandler(rewrite);
+//        
+//        ConstraintSecurityHandler securityHandlerHttp = buildConstraintSecurityHandler();
+//        ContextHandler ch  = buildStaticResourceHandler();
+//        securityHandlerHttp.setHandler(ch);   // a ajouter
+
+		
+		/******************************** HTTPS **************************************/
+		HttpConfiguration config = getHttpConfiguration();
+
+		HttpConnectionFactory https1 = new HttpConnectionFactory(config);
+	    HTTP2ServerConnectionFactory https2 = new HTTP2ServerConnectionFactory(config);
+	    
+	    NegotiatingServerConnectionFactory.checkProtocolNegotiationAvailable();
+	    	    
+	    ALPNServerConnectionFactory alpn = new ALPNServerConnectionFactory();
+	    alpn.setDefaultProtocol(https1.getProtocol()); // sets default protocol to HTTP 1.1
+
+		
+		SslContextFactory sslContextFactory = new SslContextFactory();
+		sslContextFactory.setKeyStorePath("C:\\Users\\Bureau\\git\\eilsaxui\\keystore.jks"); // (EmbeddedServer.class.getResource("/keystore.jks").toExternalForm()
+		sslContextFactory.setKeyStorePassword("123456");
+		sslContextFactory.setKeyManagerPassword("123456");
+		
+		sslContextFactory.setCipherComparator(HTTP2Cipher.COMPARATOR);
+	    sslContextFactory.setUseCipherSuitesOrder(true);
+		
+	    SslConnectionFactory ssl = new SslConnectionFactory(sslContextFactory, alpn.getProtocol());
+
+		ServerConnector sslConnector = new ServerConnector(server,
+				ssl,
+				alpn,
+				https2,
+				https1
+				);
+		sslConnector.setPort(9998);
+
+		/********************************* HTTP    ****************************************/
+		
+		ServerConnector httpconnector = new ServerConnector(server);
+		httpconnector.setName("unsecured"); // named connector
+		httpconnector.setPort(8080);
+		
+		/***********************************************************************************/
+		
+		server.setHandler(myhandlers2);   // les handlers 
+		
+		server.setConnectors(new Connector[] { httpconnector, sslConnector });   // les connectors
+
 		server.start();
 		server.join();
 	}
 
+	
+	private static HttpConfiguration getHttpConfiguration() {
+	    HttpConfiguration config = new HttpConfiguration();
+	    config.setSecureScheme("https");
+	    config.setSecurePort(9998);
+	    config.setSendXPoweredBy(false);
+	    config.setSendServerVersion(false);
+	    config.addCustomizer(new SecureRequestCustomizer());
+	    return config;
+	}
+	
 }

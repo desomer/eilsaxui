@@ -30,7 +30,7 @@ public class ViewSyllabisation extends XHTMLPart {
 
 		return xCss().select(cDivSyllabisation)
 						.set("min-height:20vh; line-height: 45px;"
-								+ "font-family: 'Open Sans', sans-serif;"
+							//*	+ "font-family: 'Open Sans', sans-serif;"
 								+ "    font-size: 25px; font-stretch: expanded;"
 								+ " background-color: #feffc7;"
 								)

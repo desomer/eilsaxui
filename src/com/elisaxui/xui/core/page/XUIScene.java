@@ -44,7 +44,7 @@ import com.elisaxui.xui.core.widget.overlay.JSOverlay;
 import com.elisaxui.xui.elisys.app.JSHistoireManager;
 import com.elisaxui.xui.elisys.widget.JSSyllabisation;
 
-@xFile(id = "standard")
+@xFile(id = "main")
 @xComment("activite standard")
 public class XUIScene extends XHTMLPart {
 
@@ -87,11 +87,8 @@ public class XUIScene extends XHTMLPart {
 		return xListElement(
 				xLinkCssAsync("https://fonts.googleapis.com/icon?family=Material+Icons"),
 				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"),
-//				xLinkCss("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"),
-				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css"),
-//				xLinkCss("https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css")
-//				xLinkCss("https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"),	
-				xLinkCssAsync("https://fonts.googleapis.com/css?family=Open+Sans")
+				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css")
+//				xLinkCssAsync("https://fonts.googleapis.com/css?family=Open+Sans")
 				);
 	}
 	
@@ -102,7 +99,8 @@ public class XUIScene extends XHTMLPart {
 		return xListElement(
 				
 				xTitle("Elisys"),
-				xMeta(xAttr("name", xTxt("theme-color")), xAttr("content", xTxt(bgColorTheme))),	
+				xMeta(xAttr("name", xTxt("theme-color")), xAttr("content", xTxt(bgColorTheme))),
+				xLinkIcon("/rest/json/icon-32x32.png"),  //TODO Config
 				xLinkManifest(REST_JSON_APP_MANIFEST),
 				//*<link rel="manifest" href="/manifest.json">
 				

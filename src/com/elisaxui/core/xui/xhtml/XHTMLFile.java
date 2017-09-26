@@ -14,6 +14,8 @@ import com.elisaxui.core.xui.xml.XMLFile;
 /**
  * @author Bureau
  *
+ * dictionnaire unique des ressource d'un file XHTML
+ * 
  */
 public class XHTMLFile extends XMLFile {
 

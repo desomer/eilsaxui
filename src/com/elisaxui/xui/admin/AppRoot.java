@@ -27,6 +27,7 @@ import com.elisaxui.xui.core.widget.container.JSContainer;
 import com.elisaxui.xui.core.widget.container.JSONPage;
 import com.elisaxui.xui.core.widget.container.JSViewCard;
 import com.elisaxui.xui.core.widget.layout.JSPageLayout;
+import com.elisaxui.xui.core.widget.log.ViewLog;
 import com.elisaxui.xui.core.widget.menu.JSMenu;
 import com.elisaxui.xui.core.widget.navbar.JSNavBar;
 import com.elisaxui.xui.core.widget.overlay.JSOverlay;
@@ -124,7 +125,7 @@ public class AppRoot extends XHTMLPart {
 					
 					 , 1000,  fct()
 					 .set("window.microlistener", jsSyllabe.createMicroListener())
-					 .__(jsHitoireMgr.getHistoire())
+					// .__(jsHitoireMgr.getHistoire())
 
 					))
 				/*************************************************************/
@@ -243,6 +244,22 @@ public class AppRoot extends XHTMLPart {
 				.set(jsNavBar, _new())
 				.set("jsonNavBar", jsNavBar.getData("'#NavBarActivity2'"))    // bug import mth jsNavBar car pas ajouer si pas appelé
 				
+				._if("!!window.Worker")
+					//.var("myWorker", "new Worker('/rest/js/t.js')")
+				.endif()
+				
+				._if("'serviceWorker' in navigator")
+					.__("navigator.serviceWorker.register('/rest/page/t.js', { scope: '/rest/page/'} ).then(",
+							fct("registration")
+								.consoleDebug(txt("ok registration scope"), "registration.scope")
+								.set("navigator.serviceWorker.onmessage", fct("e")
+										.consoleDebug(txt("onEventSW"), "e.data")
+										.__(JQuery.$(ViewLog.cLog, " textArea").val( JQuery.$(ViewLog.cLog, " textArea").val() , "+ e.data"  ))
+										)
+								,",",
+							fct("err").consoleDebug(txt("ServiceWorker registration failed"), "err") 
+						,")")
+				.endif()
 				;
 	}
 	
@@ -270,6 +287,8 @@ public class AppRoot extends XHTMLPart {
 			
 			XMLElement cntSyllabique =  xPart(new ViewSyllabisation());	
 			
+			XMLElement cntLogWorker =  xPart(new ViewLog());	
+			
 			return page( "Activity1", arr( 
 						factory("#NavBarActivity1", FACTORY_NAVBAR, arr( backgroundImage(listPhotos[4], 0.3),  
 																	 btnBurger(), 
@@ -285,8 +304,8 @@ public class AppRoot extends XHTMLPart {
 							 										card( arr( backgroundImage(listPhotos[7], 1),
 							 												    cardAction(EVT_DO_LOAD_HISTOIRE), 
 								 												text("Paconhontas")
-								 												))  //,
-							 										
+								 												)) ,
+							 										cardHtml( cntLogWorker )
 //							 										card( arr( backgroundImage(listPhotos[2], 1),  
 //					 															backgroundImage(listPhotos[8], 1), 
 //							 												text("un disque dur")

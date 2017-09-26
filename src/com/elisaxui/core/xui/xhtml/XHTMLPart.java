@@ -79,6 +79,10 @@ public abstract class XHTMLPart extends XMLPart {
 	public final static XMLElement xCanvas(Object... inner) {
 		return xElement("canvas", inner);
 	}
+	
+	public final static XMLElement xTextArea(Object... inner) {
+		return xElement("textarea", inner);
+	}
 
 	/*************************  META **************************************/
 	
@@ -165,6 +169,9 @@ public abstract class XHTMLPart extends XMLPart {
 	}
 	public final static XMLElement xLinkManifest(String url) {
 		return xElement("link", xAttr("rel", xTxt("manifest")), xAttr("href", xTxt(url)));
+	}
+	public final static XMLElement xLinkIcon(String url) {
+		return xElement("link", xAttr("rel", xTxt("icon")), xAttr("href", xTxt(url)));
 	}
 	
 	public final static XMLElement xLinkCssAsync(String url) {

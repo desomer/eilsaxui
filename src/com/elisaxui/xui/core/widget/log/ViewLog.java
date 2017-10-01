@@ -32,7 +32,7 @@ public class ViewLog extends XHTMLPart {
 	
 	@xTarget(CONTENT.class)
 	public XMLElement xContenu() {
-		return xDiv(  cLog , xTextArea(xAttr("rows", 10)) );  
+		return xDiv(  cLog , xTextArea(xAttr("aria-label", txt("log")),  xAttr("rows", 10)) );  
 	}
 	
 }

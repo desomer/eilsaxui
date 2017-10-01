@@ -4,6 +4,7 @@
 package com.elisaxui.core.xui.xhtml.builder.css;
 
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 
 /**
  * @author Bureau
@@ -20,14 +21,20 @@ public class CSSSelector {
 	
 	private CSSSelector(Object... sel)
 	{
-		for (Object object : sel) {
-			if (object instanceof XClass)
+		for (Object obj : sel) {
+			if (obj instanceof XClass)
 			{
 				selector.append(".");
-				selector.append(((XClass)object).getId());
+				selector.append(((XClass)obj).getId());
+			}
+			else if (obj instanceof JSVariable)
+			{
+				selector.append("'+");
+				selector.append(obj);
+				selector.append("+'");
 			}
 			else
-				selector.append(object.toString()); 		
+				selector.append(obj.toString()); 		
 		}
 	}
 	

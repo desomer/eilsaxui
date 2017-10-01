@@ -6,9 +6,10 @@ package com.elisaxui.xui.core.widget.overlay;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSFloat;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSInt;
+import com.elisaxui.xui.core.toolkit.JQuery;
 
-import static  com.elisaxui.xui.core.widget.overlay.ViewOverlay.*;
-
+import static com.elisaxui.xui.core.widget.overlay.ViewOverlay.*;
+import static com.elisaxui.xui.core.toolkit.JQuery.*;
 /**
  * @author Bureau
  *
@@ -20,25 +21,26 @@ public interface JSOverlay extends JSClass {
 	
 	default Object constructor(Object speed, Object opacity)
 	{
-		set(JSOverlay.speed, speed)
-		.set(JSOverlay.opacity, opacity)
-		;
-		return null;
+		set(JSOverlay.speed, speed);
+		set(JSOverlay.opacity, opacity);
+		return _void();
 	}
 	
 	
 	default Object doShow(Object act, Object phase)
 	{
-		var("overlay", "$(act+' ."+ cBlackOverlay.getId() +"')" )
-		._if(phase, "==1")
-			.__("overlay.css('display','block')")
-			.__("overlay.css('opacity','0')")
-		._elseif(phase, "==2")
-			.__("overlay.css('transition','opacity '+", speed ,"+'ms linear')")
-			.__("overlay.css('opacity',",opacity,")")
-		.endif()
+		JQuery overlay = new  JQuery().setName("overlay");
+		
+		var(overlay, $( jsvar(act), " ", cBlackOverlay) );
+		_if(phase, "==1");
+			__(overlay.css("display","block"));
+			__(overlay.css("opacity",0));
+		_elseif(phase, "==2");
+			__(overlay.css("transition", jsvar(txt("opacity ", opacity, "ms linear" ))));
+			__(overlay.css("opacity",opacity));
+		endif()
 		;
-		return null;
+		return _void();
 	}
 	
 	default Object doHide(Object phase)

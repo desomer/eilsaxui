@@ -121,10 +121,10 @@ public interface TKTransition extends JSClass {
 		._else()
 		.var("jqHamburger", "jqNavBar.find('.hamburger')")
 		// ouvre le menu
-		.__(TKQueue.startAnimQueued(
-				fct()
+		.__(TKQueue.startAnimQueued( fct()
+						.__("jqScene.css('height', '100vh')")
+					//	.__("$('body').css('overflow','hidden')") // plus de scroll		
 						.__(_overlay.doShow("'.active'", 1))		 	        		 			
-						.__("$('body').css('overflow','hidden')") // plus de scroll		
 						//---------------------------------------
 						.__("jqMenu.css('transition', '' )")   // fige le menu en haut sans animation
 						.__("jqMenu.css('transform', 'translate3d(-"+ XUIScene.widthMenu	+ "px,'+sct+'px,0px)' )")

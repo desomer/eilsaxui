@@ -25,11 +25,30 @@ public class JSClassMethod extends JSVariable {
 	
 	public Object[] addText(Object...classes)
 	{
-		Object[] ret =  new Object[3];
-		ret[0]="'";
-		ret[1]=classes[0];
-		ret[2]="'";
-		return ret;
+		
+		
+		if (classes.length==1)
+		{
+			Object[] ret =  new Object[3];
+			if (classes[0] instanceof JSVariable)
+			{
+				return new Object[] { classes[0] };
+			}
+			if (classes[0] instanceof Integer)
+			{
+				return new Object[] { classes[0] };
+			}	
+			else
+			{
+				ret[0]="'";
+				ret[1]=classes[0];
+				ret[2]="'";
+			}
+			return ret;
+		}
+		
+
+		return new Object[] {"... bug addtext..."};
 	}
 	
 	@Override

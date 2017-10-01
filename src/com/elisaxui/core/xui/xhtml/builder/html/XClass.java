@@ -40,7 +40,7 @@ public class XClass {
 	}
 	
 	/**
-	 * descendant
+	 * descendant  .cA .cB
 	 * @param desc
 	 * @return
 	 */

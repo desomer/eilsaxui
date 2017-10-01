@@ -43,6 +43,11 @@ public class CSSSelector {
 		return selector.toString();
 	}
 	
+	public CSSSelector directChildren(Object desc)
+	{
+		return CSSSelector.onPath(this, ">", desc);
+	}
+	
 	public CSSSelector pseudoClass(Object desc)
 	{
 		return CSSSelector.onPath(this, ":", desc);

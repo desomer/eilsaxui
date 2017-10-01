@@ -21,9 +21,11 @@ import static com.elisaxui.xui.core.widget.navbar.ViewNavBar.navbar;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSon;
 import com.elisaxui.xui.core.page.XUIScene;
 import com.elisaxui.xui.core.toolkit.JQuery;
 import com.elisaxui.xui.core.toolkit.TKQueue;
+import com.elisaxui.xui.core.widget.menu.ViewMenu;
 import com.elisaxui.xui.core.widget.overlay.JSOverlay;
 import com.elisaxui.xui.core.widget.overlay.ViewOverlayRipple;
 
@@ -51,58 +53,61 @@ public interface TKTransition extends JSClass {
 	TKTransition _self = null;
 
 	default Object doNavBarToActivity(Object sct) {
-		JQuery jqNavBar = new JQuery().setName("jqNavBar");
-		JQuery jqActivityActive = new JQuery().setName("jqActivityActive");
+		
+		JQuery jqActivityActive = let(JQuery.class, "jqActivityActive", $(activity.and(active)));
+		JQuery jqNavBar = let(JQuery.class, "jqNavBar", $("body>", navbar) );
 
-		var(jqNavBar, $("body>", navbar));
-		var(jqActivityActive, $(activity.and(active)));
 		// ----------- detache la barre nav en haut par rapport au scroll et ajoute a
 		// l'activité --------
 		__(jqNavBar.detach());
 		__(jqNavBar.css("transform", jsvar(txt("translate3d(0px,", jsvar(sct), "px,0px)"))));
 		__(jqNavBar.addClass(fixedToAbsolute)); // permet la nav de bouger
+		
 		__(jqActivityActive.prepend(jqNavBar));
 		return _void();
 	}
 
 	default Object doNavBarToBody() {
-		JQuery jqNavBar = new JQuery().setName("jqNavBar");
-
-		var(jqNavBar, $(activity.and(active).directChildren(navbar)));
+		JQuery jqNavBar = let(JQuery.class, "jqNavBar", $(activity.and(active).directChildren(navbar)));
+		
 		__(jqNavBar.detach());
 		__(jqNavBar.css("transform", "translate3d(0px,0px,0px)"));
 		__(jqNavBar.removeClass(fixedToAbsolute));
 		__($("body").prepend(jqNavBar));
-
 		return _void();
 	}
 
 	default Object doToggleBurgerMenu() {
-		var(_overlay, _new(CssTransition.SPEED_SHOW_MENU, XUIScene.OVERLAY_OPACITY_MENU))
-				.var("jqMenu", "$('.menu')")
-				.var("jqScene", "$('.scene')")
-				.var("jqNavBar", $("body>", navbar))
-				._if("jqNavBar.length==0")
-				.set("jqNavBar", $(activity.and(active).directChildren(navbar)))
-				.endif()
-				.var("jqActivityActive", "$('.activity.active')")
-				.var("sct", "$(document).scrollTop()")
+		//JSOverlay overlay = let( JSOverlay.class, "overlay", _new(CssTransition.SPEED_SHOW_MENU, XUIScene.OVERLAY_OPACITY_MENU) );
+		//JSOverlay 
+		var(_overlay, _new(CssTransition.SPEED_SHOW_MENU, XUIScene.OVERLAY_OPACITY_MENU));
+		
+		JQuery jqMenu = let( JQuery.class, "jqMenu", $(ViewMenu.menu) );
+		JQuery jqScene = let( JQuery.class, "jqScene", $(XUIScene.scene) );
 
-				.var(_self, _this)
+		JQuery jqNavBar = let( JQuery.class, "jqNavBar", $("body>", navbar) );
+		_if(jqNavBar.length(),"==", 0);
+			set(jqNavBar, $(activity.and(active).directChildren(navbar)));
+		endif();
+		
+		JQuery jqActivityActive = let( JQuery.class, "jqActivityActive", $(CssTransition.activity.and(CssTransition.active)) );
+		//.var("jqActivityActive", "$('.activity.active')")
+		var("sct", "$(document).scrollTop()");
 
-				// ferme le menu
-				._if("jqNavBar.hasClass('fixedToAbsolute')")
-				.var("jqHamburgerDetach", "$('.scene .hamburger.detach')")
+		var(_self, _this)
+
+		// ferme le menu
+		._if(jqNavBar.hasClass(fixedToAbsolute))
+			.var("jqHamburgerDetach", "$('.scene .hamburger.detach')")
 				.__(TKQueue.startAnimQueued(
 						fct()
 								// .__("$('.active .logo').toggleClass('animated shake')") // retire le shake
 								.__(_overlay.doHide(1))
 								// -------------------------- repositionne l'activity --------------------
-								.__("jqActivityActive.removeClass('activityMoveForShowMenu')")
-								.__("jqActivityActive.addClass('activityMoveForHideMenu')")
+								.__(jqActivityActive.removeClass("activityMoveForShowMenu"))
+								.__(jqActivityActive.addClass("activityMoveForHideMenu"))
 								// ----------------------------- cache le menu ------------------------
-								.__("jqMenu.css('transform', 'translate3d(-" + (XUIScene.widthMenu + 5)
-										+ "px,'+sct+'px,0px)' )")
+								.__(jqMenu.css("transform", "translate3d(-" + (XUIScene.widthMenu + 5)	+ "px,'+sct+'px,0px)"))
 								// ----------------------------- repasse en croix ----------------------
 								.__("jqHamburgerDetach.css('transition','transform " + CssTransition.SPEED_SHOW_MENU
 										+ "ms linear')")
@@ -129,7 +134,7 @@ public interface TKTransition extends JSClass {
 								.__("jqHamburgerDetach.removeClass('is-active')") // changeColorMenu.consoleDebug("'end
 																					// anim'")
 						, SPEED_BURGER_EFFECT, fct()))
-				._else()
+			._else()
 				.var("jqHamburger", "jqNavBar.find('.hamburger')")
 				// ouvre le menu
 				.__(TKQueue.startAnimQueued(fct()
@@ -150,7 +155,7 @@ public interface TKTransition extends JSClass {
 						.__("jqHamburger.css('transform', 'translate3d(0px,'+sct+'px,0px)' )") // positionne en haut
 						.__("jqHamburger.css('transition','transform " + SPEED_SHOW_MENU + "ms linear')") // prepare
 																											// transition
-						.__("jqScene.append(jqHamburger)")
+						.__(jqScene.append("jqHamburger"))
 
 						, NEXT_FRAME, fct()
 								// ------------ deplace l'activity a l ouverture du menu-------------

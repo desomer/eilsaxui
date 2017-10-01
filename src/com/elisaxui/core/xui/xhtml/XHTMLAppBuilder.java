@@ -143,8 +143,9 @@ public class XHTMLAppBuilder {
 					field.setAccessible(true);
 					try {
 						field.set(cl,classCss);
-					} catch (IllegalArgumentException | IllegalAccessException e) {
+					} catch (Throwable e) {
 						// TODO Auto-generated catch block
+						System.out.println("**** ERROR on "+ field.getName() + " of type " + field.getType().getName() + " on class "+cl.getName());
 						e.printStackTrace();
 					} 
 				}

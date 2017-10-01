@@ -8,6 +8,7 @@ import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassMethod;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSInt;
 
 /**
  * @author Bureau
@@ -62,6 +63,11 @@ public class JQuery extends JSClassMethod {
 		return callMth("get", value);
 	}
 	
+	public Object length()
+	{
+		return attr("length");
+	}
+	
 	public JQuery val(Object... value)
 	{
 		return callMth("val", value);
@@ -70,6 +76,11 @@ public class JQuery extends JSClassMethod {
 	public JQuery prepend(Object...html)
 	{
 		return callMth("prepend", html);
+	}
+	
+	public JQuery append(Object...html)
+	{
+		return callMth("append", html);
 	}
 	
 	public JQuery css(Object attr, Object value)

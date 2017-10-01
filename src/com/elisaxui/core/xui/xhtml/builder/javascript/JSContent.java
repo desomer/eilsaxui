@@ -471,5 +471,23 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 		return ret;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#let(java.lang.Class, java.lang.Object, java.lang.Object[])
+	 */
+	@Override
+	public <E extends JSVariable> E let(Class<? extends E > type, Object name, Object... content) {
+		var(name,content);
+		E v = null;
+
+		try {
+			v = (E) type.newInstance();
+			((JSVariable)v).setName(name);
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		
+		return v;
+	}
+
 
 }

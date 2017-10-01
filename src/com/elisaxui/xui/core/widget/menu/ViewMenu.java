@@ -30,13 +30,13 @@ import com.elisaxui.xui.core.transition.CssTransition;
 public class ViewMenu extends XHTMLPart {
 
 	
-	public static ViewMenu style =new ViewMenu();
-	static{
-	  xPart(style); 
-	}
+//	public static ViewMenu style =new ViewMenu();
+//	static{
+//	  xPart(style); 
+//	}
 	
-	@xComment("menu")
-	public XClass cMenu;
+//	@xComment("menu")
+	public static XClass menu;
 
 	@xComment("fixedLeft")
 	XClass cFixedLeft;
@@ -48,7 +48,7 @@ public class ViewMenu extends XHTMLPart {
 	public XMLElement xStyle() {
 
 		return xCss()
-				.on(cMenu, "z-index: "+XUIScene.ZINDEX_MENU+";background-color: #ffffff;height: 120%;width: " + XUIScene.widthMenu
+				.on(menu, "z-index: "+XUIScene.ZINDEX_MENU+";background-color: #ffffff;height: 120%;width: " + XUIScene.widthMenu
 						+ "px; color:black;"
 						+ XUIScene.PREF_3D
 						//+ "box-shadow: 4px 4px 2px 0 rgba(0,0,0,0.14);"
@@ -75,7 +75,7 @@ public class ViewMenu extends XHTMLPart {
 
 	@xTarget(CONTENT.class)
 	public XMLElement xContenu() {
-		return xDiv(cMenu, cFixedLeft,
+		return xDiv(menu, cFixedLeft,
 				xDiv(xDiv(cHeaderMenu),
 						xUl(this.getChildren())));
 	}

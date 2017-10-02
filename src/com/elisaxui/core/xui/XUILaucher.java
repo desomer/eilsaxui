@@ -158,8 +158,8 @@ public class XUILaucher {
 
 		
 		SslContextFactory sslContextFactory = new SslContextFactory();
-		sslContextFactory.setKeyStorePath("C:\\Users\\gauth\\git\\eilsaxui\\\\keystore.jks");
-//		sslContextFactory.setKeyStorePath("C:\\Users\\Bureau\\git\\eilsaxui\\keystore.jks"); // (EmbeddedServer.class.getResource("/keystore.jks").toExternalForm()
+//		sslContextFactory.setKeyStorePath("C:\\Users\\gauth\\git\\eilsaxui\\\\keystore.jks");
+		sslContextFactory.setKeyStorePath("C:\\Users\\Bureau\\git\\eilsaxui\\keystore.jks"); // (EmbeddedServer.class.getResource("/keystore.jks").toExternalForm()
 		sslContextFactory.setKeyStorePassword("123456");
 		sslContextFactory.setKeyManagerPassword("123456");
 		

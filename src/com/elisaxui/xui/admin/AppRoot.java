@@ -133,9 +133,12 @@ public class AppRoot extends XHTMLPart {
 				
 				/**************************************************************/
 				
-				.set("window.onCreateActivity1", fct()
+				.set("window.onCreateActivity1", fct("json")
 						.consoleDebug("'on Create Activity1'")
 						.__(TKQueue.startProcessQueued( 100,  fct()
+								.var(jsPageLayout, _new())
+								.__(jsPageLayout.hideOnScroll("json.param"))	
+								
 //							.var("jCanvasGranim", "$('#NavBarActivity1 .animatedBg')[0]")
 //							.__(NavBarAnimated1)
 								

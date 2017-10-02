@@ -134,7 +134,7 @@ public class SrvAdmin {
 
         byte[] imageData = null;
 		try {
-			BufferedImage image = ImageIO.read(new File("c:\\java\\brunette_princess1600.png"));
+			BufferedImage image = ImageIO.read(new File("C:\\Users\\Bureau\\git\\eilsaxui\\brunette_princess1600.png"));
 			
 			Image resizedImg=image.getScaledInstance(w,h,Image.SCALE_DEFAULT);
 		       

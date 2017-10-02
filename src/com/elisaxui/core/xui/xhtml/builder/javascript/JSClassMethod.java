@@ -6,6 +6,7 @@ package com.elisaxui.core.xui.xhtml.builder.javascript;
 import java.util.ArrayList;
 
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSString;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
 

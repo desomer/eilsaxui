@@ -11,6 +11,7 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassInvocationHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSArray;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSString;
 import com.elisaxui.core.xui.xml.builder.IXMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -381,7 +382,7 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 				str.append(param[i]);
 		}
 		str.append("\"");
-		return str.toString();
+		return new JSString().setValue(str.toString());
 	}
 
 	@Override

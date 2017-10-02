@@ -57,6 +57,7 @@ public class CssTransition extends XHTMLPart {
 	static XClass fixedForAnimated;
 	static XClass active;
 	static XClass animated;
+	public static XClass detach;
 	
 	@xTarget(HEADER.class)
 	@xRessource

@@ -121,4 +121,8 @@ public class JQuery extends JSClassMethod {
 		return callMth("hide", time, "," , fct);
 	}
 	
+	public Object scrollTop(Object...param) {
+		return callMth("scrollTop", param);
+	}
+	
 }

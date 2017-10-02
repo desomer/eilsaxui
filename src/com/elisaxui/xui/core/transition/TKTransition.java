@@ -10,21 +10,18 @@ import static com.elisaxui.xui.core.transition.CssTransition.SPEED_ACTIVITY_TRAN
 import static com.elisaxui.xui.core.transition.CssTransition.SPEED_BURGER_EFFECT;
 import static com.elisaxui.xui.core.transition.CssTransition.SPEED_SHOW_ACTIVITY;
 import static com.elisaxui.xui.core.transition.CssTransition.SPEED_SHOW_MENU;
-import static com.elisaxui.xui.core.transition.CssTransition.active;
-import static com.elisaxui.xui.core.transition.CssTransition.activity;
-/**
- * @author Bureau
- *
- */
+import static com.elisaxui.xui.core.transition.CssTransition.*;
+import static com.elisaxui.xui.core.page.XUIScene.*;
 import static com.elisaxui.xui.core.widget.navbar.ViewNavBar.fixedToAbsolute;
 import static com.elisaxui.xui.core.widget.navbar.ViewNavBar.navbar;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSon;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSInt;
 import com.elisaxui.xui.core.page.XUIScene;
 import com.elisaxui.xui.core.toolkit.JQuery;
 import com.elisaxui.xui.core.toolkit.TKQueue;
+import com.elisaxui.xui.core.widget.button.ViewBtnBurger;
 import com.elisaxui.xui.core.widget.menu.ViewMenu;
 import com.elisaxui.xui.core.widget.overlay.JSOverlay;
 import com.elisaxui.xui.core.widget.overlay.ViewOverlayRipple;
@@ -32,16 +29,13 @@ import com.elisaxui.xui.core.widget.overlay.ViewOverlayRipple;
 /**
  * TODO
  * 
- * 
- * - creer un layout intercalaire entre activity (ex ripple anim) - creer un
- * layout intercalaire au dessus des activity ( ex zoom image anim, overlay
- * layout) - gerer status de l'intention (route push or route pop meme page ou
- * autre page SEO) - ne pas reutiliser une activité deja dans l historique (ou
- * remettre dans l'etat animation du status de l'intention) - gerer le menu
- * burger comme une activity - gerer sur tous le animation les classes -
- * transitionSpeedx1 transitionSpeedx2 - class StateOpen , StateClose, StateXXX
- * - empecher ou differer le button back durant l'animation sinon pb execution
- * fin d'animation
+ * - creer un layout intercalaire entre activity (ex ripple anim) 
+ * - creer un layout intercalaire au dessus des activity ( ex zoom image anim, overlay layout) 
+ * - gerer status de l'intention (route push or route pop meme page ou autre page SEO) 
+ * - ne pas reutiliser une activité deja dans l historique (ouremettre dans l'etat animation du status de l'intention) 
+ * - gerer le menu burger comme une activity - gerer sur tous le animation les classes 
+ * - transitionSpeedx1 transitionSpeedx2 - class StateOpen , StateClose, StateXXX
+ * - empecher ou differer le button back durant l'animation sinon pb execution fin d'animation
  *
  */
 
@@ -83,35 +77,33 @@ public interface TKTransition extends JSClass {
 		var(_overlay, _new(CssTransition.SPEED_SHOW_MENU, XUIScene.OVERLAY_OPACITY_MENU));
 		
 		JQuery jqMenu = let( JQuery.class, "jqMenu", $(ViewMenu.menu) );
-		JQuery jqScene = let( JQuery.class, "jqScene", $(XUIScene.scene) );
+		JQuery jqScene = let( JQuery.class, "jqScene", $(scene) );
 
 		JQuery jqNavBar = let( JQuery.class, "jqNavBar", $("body>", navbar) );
 		_if(jqNavBar.length(),"==", 0);
 			set(jqNavBar, $(activity.and(active).directChildren(navbar)));
 		endif();
 		
-		JQuery jqActivityActive = let( JQuery.class, "jqActivityActive", $(CssTransition.activity.and(CssTransition.active)) );
-		//.var("jqActivityActive", "$('.activity.active')")
-		var("sct", "$(document).scrollTop()");
+		JQuery jqActivityActive = let( JQuery.class, "jqActivityActive", $(activity.and(active)) );
+		JSInt sct = let( JSInt.class, "sct",    $(jsvar("document")).scrollTop() );
 
 		var(_self, _this)
 
 		// ferme le menu
-		._if(jqNavBar.hasClass(fixedToAbsolute))
-			.var("jqHamburgerDetach", "$('.scene .hamburger.detach')")
-				.__(TKQueue.startAnimQueued(
-						fct()
+		._if(jqNavBar.hasClass(fixedToAbsolute));
+			JQuery jqHamburgerDetach = let( JQuery.class, "jqHamburgerDetach", $(scene.__(ViewBtnBurger.hamburger.and(detach))) );
+			//.var("jqHamburgerDetach", "$('.scene .hamburger.detach')")
+			__(TKQueue.startAnimQueued(	fct()
 								// .__("$('.active .logo').toggleClass('animated shake')") // retire le shake
 								.__(_overlay.doHide(1))
 								// -------------------------- repositionne l'activity --------------------
 								.__(jqActivityActive.removeClass("activityMoveForShowMenu"))
 								.__(jqActivityActive.addClass("activityMoveForHideMenu"))
 								// ----------------------------- cache le menu ------------------------
-								.__(jqMenu.css("transform", "translate3d(-" + (XUIScene.widthMenu + 5)	+ "px,'+sct+'px,0px)"))
+								.__(jqMenu.css("transform", jsvar(txt("translate3d(-" + (XUIScene.widthMenu + 5)	+ "px," , sct ,  "px,0px)"))))
 								// ----------------------------- repasse en croix ----------------------
-								.__("jqHamburgerDetach.css('transition','transform " + CssTransition.SPEED_SHOW_MENU
-										+ "ms linear')")
-								.__("jqHamburgerDetach.css('transform', 'translate3d(0px,'+sct+'px,0px) scale(1)' )")
+								.__(jqHamburgerDetach.css("transition","transform " + CssTransition.SPEED_SHOW_MENU	+ "ms linear"))
+								.__(jqHamburgerDetach.css("transform", "translate3d(0px,'+sct+'px,0px) scale(1)" ))
 
 						, SPEED_SHOW_MENU + DELAY_SURETE_END_ANIMATION, fct()
 								.__(_overlay.doHide(2))
@@ -139,7 +131,7 @@ public interface TKTransition extends JSClass {
 				// ouvre le menu
 				.__(TKQueue.startAnimQueued(fct()
 						// .__("jqScene.css('height', '100vh')")
-						// .__("$('body').css('overflow','hidden')") // plus de scroll
+						.__("$('body').css('overflow','hidden')") // plus de scroll
 						.__(_overlay.doShow("'.active'", 1))
 						// ---------------------------------------
 						.__("jqMenu.css('transition', '' )") // fige le menu en haut sans animation

@@ -10,6 +10,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 
 import javax.imageio.ImageIO;
 import javax.ws.rs.Consumes;
@@ -156,6 +157,9 @@ public class SrvAdmin {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return Response.serverError() //.status(HttpURLConnection.HTTP_NOT_FOUND).
+					.entity("Not found").
+					build();
 		}
 
         // uncomment line below to send streamed

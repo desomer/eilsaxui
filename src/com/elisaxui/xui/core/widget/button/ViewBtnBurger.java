@@ -23,7 +23,7 @@ public class ViewBtnBurger extends XHTMLPart {
 	XClass cLeftBtn;
 
 	@xComment("hamburger")
-	XClass hamburger;
+	public static XClass hamburger;
 	@xComment("hamburger-box")
 	XClass hamburger_box;
 	@xComment("hamburger-inner")

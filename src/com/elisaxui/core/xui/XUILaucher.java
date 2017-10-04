@@ -70,7 +70,7 @@ public class XUILaucher {
 		rewrite.setRewritePathInfo(false);
 		rewrite.setOriginalPathAttribute("requestedPath");
 
-		String[] redirectArray = { "", "/main", "/manager" };
+		String[] redirectArray = { /*"",*/ "/main", "/manager" };
 		for (String redirect : redirectArray) {
 			RedirectPatternRule rule = new RedirectPatternRule();
 			rule.setTerminating(true);
@@ -80,8 +80,22 @@ public class XUILaucher {
 		}
 
 		RewritePatternRule oldToNew = new RewritePatternRule();
-		oldToNew.setPattern("/fr/*");
-		oldToNew.setReplacement("/rest/page/fr/fra/id/");   // redirection interne
+//		oldToNew.setPattern("/fr/*");
+//		oldToNew.setReplacement("/rest/page/fr/fra/id/");   // redirection interne
+//		oldToNew.setTerminating(true);
+//		oldToNew.setHandling(false);
+//		rewrite.addRule(oldToNew);
+		
+		oldToNew = new RewritePatternRule();
+		oldToNew.setPattern("/index.html");
+		oldToNew.setReplacement("/rest/page/fr/fra/id/main");   // redirection interne
+		oldToNew.setTerminating(true);
+		oldToNew.setHandling(false);
+		rewrite.addRule(oldToNew);
+		
+		oldToNew = new RewritePatternRule();
+		oldToNew.setPattern("/sw.js");
+		oldToNew.setReplacement("/rest/js/sw.js");   // redirection interne
 		oldToNew.setTerminating(true);
 		oldToNew.setHandling(false);
 		rewrite.addRule(oldToNew);
@@ -130,7 +144,7 @@ public class XUILaucher {
         movedHandlerToHttps.setVirtualHosts(new String[]{"@unsecured"});   // uniquement en http
 		
 		HandlerCollection myhandlers2 = new HandlerCollection(true);
-		myhandlers2.addHandler(movedHandlerToHttps);
+		myhandlers2.addHandler(movedHandlerToHttps);   // redirection to https
 	//	myhandlers2.addHandler(new SecuredRedirectHandler());   // interdit le non secure
 		myhandlers2.addHandler(rewrite);
 		

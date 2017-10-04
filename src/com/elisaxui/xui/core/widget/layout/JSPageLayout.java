@@ -35,13 +35,15 @@ public interface JSPageLayout extends JSClass {
 	
 	default Object hideOnScroll(Object idActivity) {
 		
-		var("fps",30);
+		var("fps",60);
 		var("now",0);
 		var("then","Date.now()");
 		var("interval", "1000/fps");
 		var("delta",0);
 		var("$window","$(window)");
 		var("lastScrollTop","$window.scrollTop()");
+
+		JQuery $hearder = let(JQuery.class, "$hearder", JQuery.$("body>header"));
 		
 		Object fct = fragmentIf(true)
 				.__("requestAnimationFrame(draw)")
@@ -50,8 +52,25 @@ public interface JSPageLayout extends JSClass {
 				._if("delta > interval")
 					.var("scrollTop", "$window.scrollTop()")
 					._if("lastScrollTop!=scrollTop") 
-//						.consoleDebug(txt("anim "), "scrollTop")
-//						.__(JQuery.$(ViewLog.cLog, " textArea").val( JQuery.$(ViewLog.cLog, " textArea").val() , "+ scrollTop + '\\n'"  ))
+					
+						.var("deltas", "lastScrollTop-scrollTop")
+						.var("currentDelta",  $hearder.data("deltaY"))
+						.set("currentDelta", "currentDelta==null?0:currentDelta")
+					    .var("h", $hearder.outerHeight())
+						.var("deltaHeader", "currentDelta+deltas")
+						
+					    ._if("deltas<0 && -currentDelta<=h")
+							.consoleDebug(txt("deltaY "), "deltaHeader")
+							.set("deltaHeader", "deltaHeader<-h?-h:deltaHeader")
+							.__( $hearder.data("deltaY",  jsvar("deltaHeader")))
+							.__( $hearder.css("transform", txt("translate3d(0px, " , jsvar("deltaHeader") , "px, 0px)")) )
+						._elseif("deltas>0 && currentDelta<0")
+							.set("deltaHeader", "deltaHeader>0?0:deltaHeader")
+							.consoleDebug(txt("deltaY "), "deltaHeader")
+							.__( $hearder.data("deltaY",  jsvar("deltaHeader")))
+							.__( $hearder.css("transform", txt("translate3d(0px, " , jsvar("deltaHeader") , "px, 0px)")) )
+						.endif()	
+
 						.set("lastScrollTop", "scrollTop")
 					.endif()
 					
@@ -60,46 +79,8 @@ public interface JSPageLayout extends JSClass {
 				;
 		
 		__("function draw() {", fct , "}");
-		__("draw()")
-		;
+		__("draw()");
 		
-		
-
-  /*
-function draw() {
-     
-    requestAnimationFrame(draw);
-     
-    now = Date.now();
-    delta = now - then;
-     
-    if (delta > interval) {
-        // update time stuffs
-         
-        // Just `then = now` is not enough.
-        // Lets say we set fps at 10 which means
-        // each frame must take 100ms
-        // Now frame executes in 16ms (60fps) so
-        // the loop iterates 7 times (16*7 = 112ms) until
-        // delta > interval === true
-        // Eventually this lowers down the FPS as
-        // 112*10 = 1120ms (NOT 1000ms).
-        // So we have to get rid of that extra 12ms
-        // by subtracting delta (112) % interval (100).
-        // Hope that makes sense.
-         
-        then = now - (delta % interval);
-         
-        // ... Code for Drawing the Frame ...
-    }
-}
- 
-draw();
-		 
-		 * 
-		 * */
-		
-
 		//__(JQuery.$(jsvar("window")).on(txt("scroll"), ",", fct().consoleDebug(txt("onscroll")) ));
 		return _void();
 	}	

@@ -133,4 +133,18 @@ public class JQuery extends JSClassMethod {
 		return callMth("scrollTop", param);
 	}
 	
+	
+	public Object data(Object attr, Object value) {
+		return callMth("data", addText(attr), "," ,addText(value));
+	}
+	
+	public Object data(Object attr) {
+		return callMth("data", addText(attr));
+	}
+	/*
+	 * Padding + Border + (margin optionel)
+	 */
+	public Object outerHeight(Object...withMargin) {
+		return callMth("outerHeight", withMargin);
+	}
 }

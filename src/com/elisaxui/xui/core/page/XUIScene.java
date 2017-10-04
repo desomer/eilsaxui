@@ -307,7 +307,14 @@ public class XUIScene extends XHTMLPart {
 	{
 	  return fct()
 			   .consoleDebug("'ok EventManager'") 
+			   .__($("body").on(txt("touchstop"), ",", fct('e')
+					   .set("window.stopClientY", "e.originalEvent.touches[0].clientY")
+			   ))
 			   .__($("body").on(txt("touchstart"), ",", fct('e')
+					   .set("window.startClientY", "e.originalEvent.touches[0].clientY")
+					   .set("window.stopClientY", -1)
+					   .set("window.startScrollTop", $(jsvar("window")).scrollTop())
+					   
 					   .var(btn, $(jsvar("e.target")).closest("[data-x-action]"))
 					   
 					   .__(searchRipple())
@@ -346,6 +353,7 @@ public class XUIScene extends XHTMLPart {
 			//	.__("mc.get('pinch').set({ enable: true })")
 				.__("mc.get('pan').set({ enable: true, direction: Hammer.DIRECTION_HORIZONTAL })")  //DIRECTION_ALL
 				.__("mc.get('tap').set({ enable: true, time: 1000 })")
+				
 				.var("anim", true)
 				
 				.__("mc.on('tap',", fct("e")
@@ -370,23 +378,29 @@ public class XUIScene extends XHTMLPart {
 						, ")")
 				
 				.__("mc.on('hammer.input',", fct("ev")
-						//.consoleDebug("ev")
+//						.consoleDebug("ev.deltaX", "ev")
+//						.set("window.velocityY", "ev.velocityY")
+//						.set("window.deltaY", "ev.deltaY")
+						
 						
 //						.__("$('#content')[0].innerHTML = [ev.srcEvent.type, ev.pointers.length, ev.isFirst, ev.isFinal, ev.deltaX, ev.deltaY, ev.distance, ev.velocity, ev.deltaTime, ev.offsetDirection, ev.target].join('<br>');")
 						//**************************** gestion swipe anim du menu *************************/
 						._if("$(ev.target).closest('.menu').length > 0")
 							._if("ev.deltaX>-100 && ev.offsetDirection==2 && ev.velocity>-1 ")
 								._if("anim==true")
+									// bouge en fonction delta
 									.__("$('.menu').css('transition', '' )")
 									.__("$('.menu').css('transform', 'translate3d('+ev.deltaX+'px,'+$('body').scrollTop()+'px,0px)' )")
 								.endif()
 							._elseif("anim==true && ev.offsetDirection==2 ")
 								.set("anim", "false")
+								// ferme le menu par le doOverlay avec une animation
 								.__("$('.menu').css('transition', 'transform "+(CssTransition.SPEED_SHOW_MENU+50)+"ms ease-out' )")
 								.__($xui().tkrouter() .doEvent("'Overlay'"))
 							.endif()
 							
 							._if("ev.isFinal")
+								// lance l'animation de retour a l'ouverture
 								._if("anim==true")
 									.__("$('.menu').css('transition', 'transform "+(CssTransition.SPEED_SHOW_MENU+50)+"ms ease-out' )")
 									.__("$('.menu').css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px)' )")

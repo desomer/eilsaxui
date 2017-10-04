@@ -252,11 +252,11 @@ public class AppRoot extends XHTMLPart {
 				.endif()
 				
 				._if("'serviceWorker' in navigator")
-					.__("navigator.serviceWorker.register('/rest/page/t.js', { scope: '/rest/page/'} ).then(",
+					.__("navigator.serviceWorker.register('sw.js', { scope: '/'} ).then(",  //rest/page/
 							fct("registration")
 								.consoleDebug(txt("ok registration scope"), "registration.scope")
 								.set("navigator.serviceWorker.onmessage", fct("e")
-										.consoleDebug(txt("onEventSW"), "e.data")
+										//.consoleDebug(txt("onEventSW"), "e.data")
 										.__(JQuery.$(ViewLog.cLog, " textArea").val( JQuery.$(ViewLog.cLog, " textArea").val() , "+ e.data"  ))
 										)
 								,",",

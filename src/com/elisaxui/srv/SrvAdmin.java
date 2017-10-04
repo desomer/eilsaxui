@@ -101,7 +101,7 @@ public class SrvAdmin {
 					     v("display","standalone"),
 					     v("background_color",XUIScene.bgColorContent),
 					     v("theme_color",XUIScene.bgColorTheme),
-					     v("start_url","/"),
+					     v("start_url","/index.html"),
 					     v("description","Elisys, dyslexie pour parent, enfant et professeur"),
 					     v("orientation","portrait"),
 					     v("icons", arr( 

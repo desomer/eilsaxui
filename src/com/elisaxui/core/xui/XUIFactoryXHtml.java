@@ -1,5 +1,7 @@
 package com.elisaxui.core.xui;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +52,7 @@ public class XUIFactoryXHtml {
 			JSMethodInterface fctFetch = fct(response)
 					 // Check if we received a valid response
 		            ._if("!response || response.status !== 200 || response.type !== 'basic'") 
-		            	.consoleDebug(txt("ret error from net"), response)
+		            //	.consoleDebug(txt("************ ret error from net"), response)
 		               ._return(response)  // mauvaise reponse
 		            .endif()
 		            
@@ -60,7 +62,7 @@ public class XUIFactoryXHtml {
 		            		.consoleDebug(txt("add cache"), "cache")
 		            		.__("cache.put(event.request, responseToCache)"),")")
 		            
-		            .consoleDebug(txt("ret 200 from net "), response.get("url"))
+		            .consoleDebug(txt("************ ret 200 from net "), response.get("url"))
 		            ._return("response");
 					;
 			
@@ -71,8 +73,9 @@ public class XUIFactoryXHtml {
 				    .endif()
 				    
 				    .var("fetchRequest","event.request.clone()")
-				    
-				    ._return("fetch(fetchRequest).then(", fctFetch ,")")
+				    .consoleDebug(txt("******** fetch "), "event")
+				        // , mode: 'no-cors'  , { credentials: 'include' }
+				    ._return("fetch(fetchRequest).then(", fctFetch ,")")  // 
 				    
 					;
 			  
@@ -81,20 +84,42 @@ public class XUIFactoryXHtml {
 						.__("clients[0].postMessage(event.request.url)")
 					.endif();
 			
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
+
+			LocalDateTime dateBuild = XHTMLAppBuilder.dateBuild;
+			
+			String formatDateTimeBuild =   dateBuild.format(formatter);
+			
 			return xListElement(js()
-					.var("CACHE_NAME", txt("site-cache-v1"))
+					.var("CACHE_NAME", txt("site-cache-"+formatDateTimeBuild))
 					
+					.__("self.addEventListener('install',", fct("event")
+							
+							.__("event.waitUntil(caches.open(CACHE_NAME).then(", fct("cache")
+									._return("cache.addAll(['https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'])") ,"))")							
+							
+							.consoleDebug(txt("************* INSTALL ****************"))
+							
+							
+							,")" )
+							
 					
+					.__("this.addEventListener('activate',", fct("event")
+							.__("event.waitUntil(caches.keys().then(", fct("keyList") 
+										._return("Promise.all(keyList.map(", fct("key")
+												//.consoleDebug(txt("**** test cache "), "key")
+												._if("key!=CACHE_NAME")
+													//.consoleDebug(txt("**** delete cache "), "key")
+													._return("caches.delete(key)")
+												.endif()
+											,"))")
+									,"))")
+							, ")")
+										
 					.__("self.addEventListener('fetch',", fct("event") 
-							.consoleDebug(txt("event"), "event")
-							//.__("fetch(event.request)")
+							.consoleDebug(txt("******** event ****"), "event.request.url")
 							
 							.__("self.clients.matchAll(/* search options */).then(", fctPostMessage,"  )")
-//							    if (clients && clients.length) {
-//							        // you need to decide which clients you want to send the message to..
-//							        const client = clients[0];
-//							        client.postMessage("your message");
-//							    }
 							
 							.__("event.respondWith(caches.match(event.request).then(", fctCache  ,") )")
 							
@@ -132,7 +157,6 @@ public class XUIFactoryXHtml {
 			
 		if (htmlInCache == null) {
 			Map<String, Class<? extends XHTMLPart>> mapClass = XHTMLAppBuilder.getMapXHTMLPart();
-
 			Class<? extends XHTMLPart> pageClass = mapClass.get(id);
 			if (pageClass != null) {
 				XMLFile fileXML = createXHTMLFile();
@@ -170,7 +194,10 @@ public class XUIFactoryXHtml {
 
 
 				return Response.status(Status.OK) // .type(MediaType.TEXT_HTML)
-						.entity(html).header("XUI", "ok").build();
+						.entity(html)
+						.header("XUI", "ok")
+						//.header("Access-Control-Allow-Origin", "*")
+						.build();
 			} else {
 				return Response.status(Status.NOT_FOUND).entity("no found " + id).header("a", "b").build();
 			}
@@ -208,7 +235,7 @@ public class XUIFactoryXHtml {
 
 	
 	@GET
-	@Path("/page/{name}.js")
+	@Path("/js/{name}.js")
 	@Produces("application/javascript")
 	public Response getJS(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("name") String name) {
 		
@@ -217,6 +244,7 @@ public class XUIFactoryXHtml {
 			ReponseInCache = pageCache.get(name);
 		
 		if (ReponseInCache==null) {
+			Map<String, Class<? extends XHTMLPart>> mapClass = XHTMLAppBuilder.getMapXHTMLPart();
 			XMLFile fileXML = createXHTMLFile();
 			
 			XHTMLPart part = new XHTMLJSFile();

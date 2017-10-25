@@ -31,12 +31,13 @@ import com.elisaxui.xui.core.widget.log.ViewLog;
 import com.elisaxui.xui.core.widget.menu.JSMenu;
 import com.elisaxui.xui.core.widget.navbar.JSNavBar;
 import com.elisaxui.xui.core.widget.overlay.JSOverlay;
-import com.elisaxui.xui.elisys.app.JSHistoireManager;
-import com.elisaxui.xui.elisys.widget.JSSyllabisation;
-import com.elisaxui.xui.elisys.widget.ViewSyllabisation;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
 
 import static com.elisaxui.xui.core.toolkit.TKActivity.*;
+
+import com.elisaxui.app.elisys.xui.js.JSHistoireManager;
+import com.elisaxui.app.elisys.xui.widget.JSSyllabisation;
+import com.elisaxui.app.elisys.xui.widget.ViewSyllabisation;
 
 /**
  * @author Bureau

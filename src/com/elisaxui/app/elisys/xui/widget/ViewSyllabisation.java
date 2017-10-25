@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.xui.elisys.widget;
+package com.elisaxui.app.elisys.xui.widget;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;

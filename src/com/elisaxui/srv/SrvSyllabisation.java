@@ -18,7 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.elisaxui.core.data.json.JSONBuilder;
+import com.elisaxui.core.data.JSONBuilder;
 
 import javax.ws.rs.core.UriInfo;
 

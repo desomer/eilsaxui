@@ -1,14 +1,14 @@
 /**
  * 
  */
-package com.elisaxui.xui.elisys.app;
+package com.elisaxui.app.elisys.xui.js;
 
+import com.elisaxui.app.elisys.xui.widget.JSSyllabisation;
 import com.elisaxui.core.xui.xhtml.builder.javascript.Anonym;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSon;
-import com.elisaxui.xui.elisys.widget.JSSyllabisation;
 
 /**
  * @author Bureau

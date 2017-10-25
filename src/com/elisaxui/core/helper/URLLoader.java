@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.helper;
+package com.elisaxui.core.helper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,13 +11,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
+ * recuperer info d'une url distante
+ * 
  * @author Bureau
  *
  */
 public class URLLoader {
 
 	
-	public static final StringBuilder loadUrl(String u)
+	public static final StringBuilder loadTextFromUrl(String u)
 	{
 	    URL url;
 	    InputStream is = null;

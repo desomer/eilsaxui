@@ -19,8 +19,8 @@ import javax.ws.rs.core.HttpHeaders;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
+import com.elisaxui.core.helper.URLLoader;
 import com.elisaxui.core.xui.xhtml.builder.javascript.utility.JSMinifier;
-import com.elisaxui.helper.URLLoader;
 
 public class XUIFactoryBasic extends AbstractHandler {
 
@@ -37,7 +37,7 @@ public class XUIFactoryBasic extends AbstractHandler {
 		
 		if (content==null) {
 			
-			StringBuilder js = URLLoader.loadUrl(url);
+			StringBuilder js = URLLoader.loadTextFromUrl(url);
 			
 			content = JSMinifier.doMinifyJS(js.toString()).toString();
 						

@@ -11,6 +11,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.ws.rs.Consumes;
@@ -27,7 +28,10 @@ import javax.ws.rs.core.Response.Status;
 
 import javax.ws.rs.core.UriInfo;
 
-import com.elisaxui.core.data.json.JSONBuilder;
+import com.elisaxui.ResourceLoader;
+import com.elisaxui.app.elisys.xui.asset.AssetHandler;
+import com.elisaxui.core.data.JSONBuilder;
+import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.xui.core.page.XUIScene;
 import com.elisaxui.xui.core.widget.menu.JSONMenu;
 
@@ -36,7 +40,7 @@ import com.elisaxui.xui.core.widget.menu.JSONMenu;
  *
  */
 @Path("/json")
-public class SrvAdmin {
+public class SrvMain {
 	
 	
 	class JSONMenuAct1 extends JSONMenu
@@ -44,6 +48,7 @@ public class SrvAdmin {
 		@Override
 		public Object getJSON()
 		{
+			
 		  return arr(item("Paramètres", "settings", "setting"),
 				  	 item("Configuration","build","config"),
 				  	 divider(),
@@ -74,6 +79,7 @@ public class SrvAdmin {
     @POST
     @Path("/savemenu")
     @Consumes(MediaType.TEXT_PLAIN)
+    @Deprecated
     public Response myResourceMethod(String content) {
     	if (!content.equals("[]"))
     	{
@@ -134,8 +140,9 @@ public class SrvAdmin {
 
         byte[] imageData = null;
 		try {
+			URL icone = ResourceLoader.getResource(AssetHandler.URI_ICON);
 			
-			BufferedImage image = ImageIO.read(new File("C:\\Users\\Bureau\\git\\eilsaxui\\brunette_princess1600.png"));
+			BufferedImage image = ImageIO.read(icone);
 			
 			Image resizedImg=image.getScaledInstance(w,h,Image.SCALE_DEFAULT);
 		       
@@ -156,8 +163,7 @@ public class SrvAdmin {
 			ImageIO.write(rBimg, "png", baos);
 			imageData = baos.toByteArray();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ErrorNotificafionMgr.doError("pb get icone", e);
 			return Response.serverError() //.status(HttpURLConnection.HTTP_NOT_FOUND).
 					.entity("Not found").
 					build();

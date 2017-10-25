@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.core.data.json;
+package com.elisaxui.core.data;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;

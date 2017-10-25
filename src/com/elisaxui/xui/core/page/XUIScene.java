@@ -7,6 +7,8 @@ import static com.elisaxui.xui.core.transition.CssTransition.content;
 import static com.elisaxui.xui.core.widget.button.ViewRippleEffect.cRippleEffect;
 import static com.elisaxui.xui.core.widget.button.ViewRippleEffect.cRippleEffectShow;
 
+import com.elisaxui.app.elisys.xui.js.JSHistoireManager;
+import com.elisaxui.app.elisys.xui.widget.JSSyllabisation;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.AFTER_BODY;
@@ -41,8 +43,6 @@ import com.elisaxui.xui.core.widget.menu.JSMenu;
 import com.elisaxui.xui.core.widget.menu.ViewMenu;
 import com.elisaxui.xui.core.widget.navbar.ViewNavBar;
 import com.elisaxui.xui.core.widget.overlay.JSOverlay;
-import com.elisaxui.xui.elisys.app.JSHistoireManager;
-import com.elisaxui.xui.elisys.widget.JSSyllabisation;
 
 @xFile(id = "main")
 @xComment("activite standard")

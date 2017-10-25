@@ -15,6 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.elisaxui.core.helper.ClassLoaderHelper;
+import com.elisaxui.core.helper.ReflectionHelper;
+import com.elisaxui.core.helper.ClassLoaderHelper.FileEntry;
 import com.elisaxui.core.xui.XUILaucher;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
@@ -24,9 +27,6 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xFile;
-import com.elisaxui.helper.ClassLoaderHelper;
-import com.elisaxui.helper.ClassLoaderHelper.FileEntry;
-import com.elisaxui.helper.ReflectionHelper;
 
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 
@@ -72,9 +72,9 @@ public class XHTMLAppBuilder {
 		System.out.println("[XHTMLAppBuilder]********************************************* END SCAN FILE ****************************************");
 
 		
-		new FastClasspathScanner("com.elisaxui.xui").matchSubclassesOf(XHTMLPart.class, listXHTMLPart::add).scan();
+		new FastClasspathScanner("com.elisaxui").matchSubclassesOf(XHTMLPart.class, listXHTMLPart::add).scan();
 		new FastClasspathScanner("com.elisaxui").matchSubinterfacesOf(JSClass.class, listJSClass::add).scan();
-		new FastClasspathScanner("com.elisaxui.xui").matchSubclassesOf(JSClassMethod.class, listJSClassMethod::add).scan();
+		new FastClasspathScanner("com.elisaxui").matchSubclassesOf(JSClassMethod.class, listJSClassMethod::add).scan();
 		
 		System.out.println("[XHTMLAppBuilder]********************************************* START SCAN XHTMLPart ************************************");
 

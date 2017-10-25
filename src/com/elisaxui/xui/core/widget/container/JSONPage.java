@@ -3,7 +3,7 @@
  */
 package com.elisaxui.xui.core.widget.container;
 
-import com.elisaxui.core.data.json.JSONBuilder;
+import com.elisaxui.core.data.JSONBuilder;
 
 /**
  * @author Bureau

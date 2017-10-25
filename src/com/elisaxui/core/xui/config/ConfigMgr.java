@@ -1,4 +1,4 @@
-package com.elisaxui.core.config;
+package com.elisaxui.core.xui.config;
 
 public class ConfigMgr {
 	private boolean enableCrXML = true;   //true

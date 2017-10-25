@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.xui.elisys.widget;
+package com.elisaxui.app.elisys.xui.widget;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.defAttr;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.defVar;

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.xui.admin;
+package com.elisaxui.app.elisys.xui.page;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
@@ -9,7 +9,6 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
-import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.xui.admin.test.JSTestDataDriven;
 import com.elisaxui.xui.core.datadriven.JSDataCtx;
 import com.elisaxui.xui.core.datadriven.JSDataDriven;
@@ -21,10 +20,8 @@ import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.toolkit.TKRouterEvent;
 import com.elisaxui.xui.core.transition.CssTransition;
 import com.elisaxui.xui.core.transition.TKTransition;
-import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
 import com.elisaxui.xui.core.widget.chart.ViewJSChart;
 import com.elisaxui.xui.core.widget.container.JSContainer;
-import com.elisaxui.xui.core.widget.container.JSONPage;
 import com.elisaxui.xui.core.widget.container.JSViewCard;
 import com.elisaxui.xui.core.widget.layout.JSPageLayout;
 import com.elisaxui.xui.core.widget.log.ViewLog;
@@ -37,7 +34,6 @@ import static com.elisaxui.xui.core.toolkit.TKActivity.*;
 
 import com.elisaxui.app.elisys.xui.js.JSHistoireManager;
 import com.elisaxui.app.elisys.xui.widget.JSSyllabisation;
-import com.elisaxui.app.elisys.xui.widget.ViewSyllabisation;
 
 /**
  * @author Bureau
@@ -45,9 +41,6 @@ import com.elisaxui.app.elisys.xui.widget.ViewSyllabisation;
  */
 public class AppRoot extends XHTMLPart {
 
-	/**
-	 * 
-	 */
 	private static final String REST_JSON_MENU_ACTIVITY1 = "/rest/json/menu/activity1";
 	
 	static JSMenu jsMenu;
@@ -70,21 +63,21 @@ public class AppRoot extends XHTMLPart {
 	}; 
 	
 	
-	@xTarget(HEADER.class)  // TODO marche pas car composant
-	@xRessource
-	public XMLElement xImportAfter() {
-		return xListElement(
-				//xImport(JSSyllabisation.class)   //TODO A faire marcher et retire du XUIScene
-				//xImport(JSHistoireManager.class)  
-				);
-	}
+//	@xTarget(HEADER.class)  // TODO marche pas car composant
+//	@xRessource
+//	public XMLElement xImportAfter() {
+//		return xListElement(
+//				//xImport(JSSyllabisation.class)   //TODO A faire marcher et retire du XUIScene
+//				//xImport(JSHistoireManager.class)  
+//				);
+//	}
 	
 	
-	@xTarget(AFTER_CONTENT.class)  // dans le header
-	@xRessource
-	public XMLElement xInitJS() {
-		return xScriptJS(getJS())  ;
-	}
+//	@xTarget(AFTER_CONTENT.class)  // dans le header
+//	@xRessource
+//	public XMLElement xInitJS() {
+//		return xScriptJS(getJS())  ;
+//	}
 	
 	
 	static JSSyllabisation jsSyllabe;
@@ -109,6 +102,7 @@ public class AppRoot extends XHTMLPart {
 
 				/**************************************************************/
 				.__(TKQueue.startProcessQueued( 100,  fct()
+					// TODO a changer	
 					.__(" $.getScript({url:'https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js',  cache: true})") 
 	
 					.__("$.getJSON('"+REST_JSON_MENU_ACTIVITY1+"').done(", fct("a").consoleDebug("'json menu'", "a")
@@ -125,7 +119,7 @@ public class AppRoot extends XHTMLPart {
 				//	.__(tkActivity.setCurrentActivity("'Activity1'"))
 					
 					 , 1000,  fct()
-					 .set("window.microlistener", jsSyllabe.createMicroListener())
+					 		.set("window.microlistener", jsSyllabe.createMicroListener())
 					// .__(jsHitoireMgr.getHistoire())
 
 					))
@@ -265,161 +259,6 @@ public class AppRoot extends XHTMLPart {
 						,")")
 				.endif()
 				;
-	}
-	
-	/**********************************************************************/
-	public static class JSONPage1 extends JSONPage
-	{
-		public static final String EVT_CLEAR = "clear";
-		public static final String EVT_MORE = "more";
-		public static final String EVT_IDENTITY = "identity";
-		public static final String EVT_BTN_FLOAT = "BtnFloatMain";
-		public static final String EVT_DO_MOT = "doMot";
-		public static final String EVT_DO_PHRASE = "doPhrase";
-		public static final String EVT_DO_LOAD_HISTOIRE = "doLoadHistoire";
-		
-		public Object getJSON()
-		{
-			XMLElement cnt1 = xDiv( ViewRippleEffect.cRippleEffect,                             //6
-							xAttr("style", "\"width: 100%; height: 30vh; background:url(" +listPhotos[9] +") center / cover\""),
-							xId("test1"), 
-							xAttr("data-x-action", "\""+EVT_DO_PHRASE+"\"")
-					 );
-				 
-			
-			//XMLElement cnt2 = xPart(new ViewJSChart(xId("test2")));	
-			
-			XMLElement cntSyllabique =  xPart(new ViewSyllabisation());	
-			
-			XMLElement cntLogWorker =  xPart(new ViewLog());	
-			
-			return page( "Activity1", arr( 
-						factory("#NavBarActivity1", FACTORY_NAVBAR, arr( backgroundImage(listPhotos[4], 0.3),  
-																	 btnBurger(), 
-																	 title("Bonjour Elisa"),
-																	 btnActionIcon("delete", EVT_CLEAR),
-																	 btnActionIcon("mic", EVT_IDENTITY),
-																	 btnActionIcon("more_vert", EVT_MORE)
-																	) )
-					 ,  factory("#Activity1 .cArticle", FACTORY_CONTAINER, arr(
-							 										cardHtml( cnt1 ), 
-							 									//	cardHtml( cnt2 ),
-							 										cardHtml( cntSyllabique ),
-							 										card( arr( backgroundImage(listPhotos[7], 1),
-							 												    cardAction(EVT_DO_LOAD_HISTOIRE), 
-								 												text("Paconhontas")
-								 												)) ,
-							 										cardHtml( cntLogWorker )
-//							 										card( arr( backgroundImage(listPhotos[2], 1),  
-//					 															backgroundImage(listPhotos[8], 1), 
-//							 												text("un disque dur")
-//							 												)),
-//							 										card( arr( backgroundImage(listPhotos[5], 1),  
-//								 												text("De la monnaie")
-//								 												))
-							 										) )
-					 ,  factory("#Activity1 .content", FACTORY_CONTAINER, arr( 
-							 										floatAction()))
-					)
-						/// les event
-					, obj( 
-							v(EVT_MORE , routeTo( "!route/Activity2?p=1")),
-							v(EVT_BTN_FLOAT , routeTo( "!route/Activity3?p=1")),
-							v(ON_ACTIVITY_CREATE , callbackTo("onCreateActivity1", null)),
-							v(ON_ACTIVITY_RESUME , callbackTo("onResumeActivity1", null)),
-							v(EVT_IDENTITY, callbackTo("onMicro", null)),
-							v(EVT_CLEAR, callbackTo("onDelete", null)),
-							v(EVT_DO_MOT, callbackTo("onMot", null)),
-							v(EVT_DO_PHRASE, callbackTo("onPhrase", null)),
-							v(EVT_DO_LOAD_HISTOIRE, callbackTo("onLoadHistoire", null))
-							
-							));
-		}
-		
-	}
-	
-	/**********************************************************************************/
-	class JSONPage2 extends JSONPage
-	{
-		
-		public static final String EVT_MORE = "more";
-		public static final String EVT_SEARCH = "search";
-		public static final String EVT_BACK = "back";
-		public static final String EVT_BTN_FLOAT = "BtnFloatMain";
-		public static final String EVT_HEADER_SWIPE_DOWN =  "HeaderSwipeDown";
-				
-		public Object getJSON()
-		{
-			
-			return page( "Activity2", arr( 
-						factory("#NavBarActivity2", FACTORY_NAVBAR, arr( backgroundImage(listPhotos[5], 0.3),  
-																	 btnBurger(), 
-																	 title("Liste exercice"),
-																	 btnActionIcon("arrow_back", EVT_BACK),
-																	 btnActionIcon("search", EVT_SEARCH)
-																	) )
-					 ,  factory("#Activity2 .cArticle", FACTORY_CONTAINER, arr(
-							 										card( arr( backgroundImage(listPhotos[1], 1),  
-							 													text("Un café")
-							 												)),
-							 										card( arr( backgroundImage(listPhotos[2], 1),  
-						 													text("Un disque dur")
-						 												)),
-							 										card( arr( backgroundImage(listPhotos[0], 1),  
-						 													text("Un dessin")
-						 												))
-							 										) )
-					)
-						/// les event
-					, obj( 
-							v(EVT_SEARCH , routeTo( "!route/Activity3?p=12")),
-							v(EVT_HEADER_SWIPE_DOWN , goBack()),
-							v(EVT_BACK , goBack()),
-							v(ON_ACTIVITY_CREATE , callbackTo("onCreateActivityDown", "#NavBarActivity2"))
-							));
-		}
-		
-	}
-	
-	/**********************************************************************************/
-	class JSONPage3 extends JSONPage
-	{
-		
-		public static final String EVT_MORE = "more";
-		public static final String EVT_SEARCH = "search";
-		public static final String EVT_BACK = "back";
-		public static final String EVT_BTN_FLOAT = "BtnFloatMain";
-		public static final String EVT_HEADER_SWIPE_DOWN =  "HeaderSwipeDown";
-				
-		public Object getJSON()
-		{
-			
-			return page( "Activity3", arr( 
-						factory("#NavBarActivity3", FACTORY_NAVBAR, arr(  
-																	 btnBurger(), 
-																	 title("Recherche"),
-																	 btnActionIcon("arrow_back", EVT_BACK),
-																	 btnActionIcon("search", EVT_SEARCH)
-																	) )
-					 ,  factory("#Activity3 .cArticle", FACTORY_CONTAINER, arr(
-							 										card( arr( backgroundImage(listPhotos[3], 1),  
-							 													text("En construction")
-							 												))
-							 										) )
-					 
-					 ,  factory("#Activity3 .content", FACTORY_CONTAINER, arr( 
-								floatAction()))
-					)
-						/// les event
-					, obj( 
-							v(EVT_SEARCH , routeTo( "!route/Activity1")),
-							v(EVT_HEADER_SWIPE_DOWN , goBack()),
-							v(EVT_BACK , goBack()),
-							v(ON_ACTIVITY_CREATE , callbackTo("onCreateActivityDown", "#NavBarActivity3")),
-							v(EVT_BTN_FLOAT , routeTo( "!route/Activity2?p=ert"))
-							));
-		}
-		
 	}
 	
 	/**********************************************************************************************/

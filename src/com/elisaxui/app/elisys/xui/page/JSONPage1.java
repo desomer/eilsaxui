@@ -1,0 +1,84 @@
+/**
+ * 
+ */
+package com.elisaxui.app.elisys.xui.page;
+
+import static com.elisaxui.xui.core.toolkit.TKActivity.ON_ACTIVITY_CREATE;
+import static com.elisaxui.xui.core.toolkit.TKActivity.ON_ACTIVITY_RESUME;
+
+import com.elisaxui.app.elisys.xui.widget.ViewSyllabisation;
+import com.elisaxui.core.xui.xml.builder.XMLElement;
+import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
+import com.elisaxui.xui.core.widget.container.JSONPage;
+import com.elisaxui.xui.core.widget.log.ViewLog;
+
+/**********************************************************************/
+	public class JSONPage1 extends JSONPage
+	{
+		public static final String EVT_CLEAR = "clear";
+		public static final String EVT_MORE = "more";
+		public static final String EVT_IDENTITY = "identity";
+		public static final String EVT_BTN_FLOAT = "BtnFloatMain";
+		public static final String EVT_DO_MOT = "doMot";
+		public static final String EVT_DO_PHRASE = "doPhrase";
+		public static final String EVT_DO_LOAD_HISTOIRE = "doLoadHistoire";
+		
+		public Object getJSON()
+		{
+			XMLElement cnt1 = AppRoot.xDiv( ViewRippleEffect.cRippleEffect,                             //6
+							AppRoot.xAttr("style", "\"width: 100%; height: 30vh; background:url(" +AppRoot.listPhotos[9] +") center / cover\""),
+							AppRoot.xId("test1"), 
+							AppRoot.xAttr("data-x-action", "\""+EVT_DO_PHRASE+"\"")
+					 );
+				 
+			
+			//XMLElement cnt2 = xPart(new ViewJSChart(xId("test2")));	
+			
+			XMLElement cntSyllabique =  AppRoot.xPart(new ViewSyllabisation());	
+			
+			XMLElement cntLogWorker =  AppRoot.xPart(new ViewLog());	
+			
+			return page( "Activity1", arr( 
+						factory("#NavBarActivity1", FACTORY_NAVBAR, arr( backgroundImage(AppRoot.listPhotos[4], 0.3),  
+																	 btnBurger(), 
+																	 title("Bonjour Elisa"),
+																	 btnActionIcon("delete", EVT_CLEAR),
+																	 btnActionIcon("mic", EVT_IDENTITY),
+																	 btnActionIcon("more_vert", EVT_MORE)
+																	) )
+					 ,  factory("#Activity1 .cArticle", FACTORY_CONTAINER, arr(
+							 										cardHtml( cnt1 ), 
+							 									//	cardHtml( cnt2 ),
+							 										cardHtml( cntSyllabique ),
+							 										card( arr( backgroundImage(AppRoot.listPhotos[7], 1),
+							 												    cardAction(EVT_DO_LOAD_HISTOIRE), 
+								 												text("Paconhontas")
+								 												)) ,
+							 										cardHtml( cntLogWorker )
+//							 										card( arr( backgroundImage(listPhotos[2], 1),  
+//					 															backgroundImage(listPhotos[8], 1), 
+//							 												text("un disque dur")
+//							 												)),
+//							 										card( arr( backgroundImage(listPhotos[5], 1),  
+//								 												text("De la monnaie")
+//								 												))
+							 										) )
+					 ,  factory("#Activity1 .content", FACTORY_CONTAINER, arr( 
+							 										floatAction()))
+					)
+						/// les event
+					, obj( 
+							v(EVT_MORE , routeTo( "!route/Activity2?p=1")),
+							v(EVT_BTN_FLOAT , routeTo( "!route/Activity3?p=1")),
+							v(ON_ACTIVITY_CREATE , callbackTo("onCreateActivity1", null)),
+							v(ON_ACTIVITY_RESUME , callbackTo("onResumeActivity1", null)),
+							v(EVT_IDENTITY, callbackTo("onMicro", null)),
+							v(EVT_CLEAR, callbackTo("onDelete", null)),
+							v(EVT_DO_MOT, callbackTo("onMot", null)),
+							v(EVT_DO_PHRASE, callbackTo("onPhrase", null)),
+							v(EVT_DO_LOAD_HISTOIRE, callbackTo("onLoadHistoire", null))
+							
+							));
+		}
+		
+	}

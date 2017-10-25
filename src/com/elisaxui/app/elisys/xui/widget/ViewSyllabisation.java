@@ -3,13 +3,13 @@
  */
 package com.elisaxui.app.elisys.xui.widget;
 
+import com.elisaxui.app.elisys.xui.page.JSONPage1;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
-import com.elisaxui.xui.admin.AppRoot.JSONPage1;
 
 /**
  * @author Bureau

@@ -7,7 +7,9 @@ import static com.elisaxui.xui.core.transition.CssTransition.content;
 import static com.elisaxui.xui.core.widget.button.ViewRippleEffect.cRippleEffect;
 import static com.elisaxui.xui.core.widget.button.ViewRippleEffect.cRippleEffectShow;
 
+import com.elisaxui.AppConfig;
 import com.elisaxui.app.elisys.xui.js.JSHistoireManager;
+import com.elisaxui.app.elisys.xui.page.AppRoot;
 import com.elisaxui.app.elisys.xui.widget.JSSyllabisation;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
@@ -21,7 +23,6 @@ import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
-import com.elisaxui.xui.admin.AppRoot;
 import com.elisaxui.xui.admin.test.JSTestDataDriven;
 import com.elisaxui.xui.core.config.TKConfig;
 import com.elisaxui.xui.core.datadriven.JSDataCtx;
@@ -154,7 +155,7 @@ public class XUIScene extends XHTMLPart {
 		return xListElement(
 				xPart(new TKQueue()),   //TODO Remplacer
 				xImport(JSXHTMLPart.class),
-				xImport(JSTestDataDriven.class),
+			//	xImport(JSTestDataDriven.class),
 				xImport(JSDataDriven.class),
 				xImport(JSDataSet.class),
 				xImport(JSDataCtx.class),
@@ -167,6 +168,8 @@ public class XUIScene extends XHTMLPart {
 				xImport(JSMenu.class),
 				xImport(TKActivity.class),
 				xImport(JSViewCard.class),
+				
+				//TODO a changer
 				xImport(JSHistoireManager.class), 
 				xImport(JSSyllabisation.class)
 				
@@ -260,7 +263,7 @@ public class XUIScene extends XHTMLPart {
 								
 								._if("!$xui.resourceLoading.hammer && !$xui.resourceLoading.query&& !$xui.resourceLoading.navigo&& !$xui.resourceLoading.fastdom&& !$xui.resourceLoading.chart")
 									.__("(",getMoveManager(),")()")	
-									.__(new AppRoot().getJS())
+									.__(AppConfig.getJSApplication())
 								.endif()
 							)						
 					)	

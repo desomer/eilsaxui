@@ -32,33 +32,35 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 
+import com.elisaxui.AppConfig;
+
 
 public class XUILaucher {
 
 	
-    private static ConstraintSecurityHandler buildConstraintSecurityHandler() {
-        // this configures jetty to require HTTPS for all requests
-        Constraint constraint = new Constraint();
-        constraint.setDataConstraint(Constraint.DC_CONFIDENTIAL);
-        ConstraintMapping mapping = new ConstraintMapping();
-        mapping.setPathSpec("/*");
-        mapping.setConstraint(constraint);
-        ConstraintSecurityHandler security = new ConstraintSecurityHandler();
-        security.setConstraintMappings(Collections.singletonList(mapping));
-        return security;
-    }
-	
-    private static ContextHandler buildStaticResourceHandler() {
-        // if you want the static content to serve off a url like
-        // localhost:8080/files/.... then put 'files' in the constructor
-        // to the ContextHandler
-        ContextHandler ch = new ContextHandler("/");
-        ResourceHandler rh = new ResourceHandler();
-        rh.setWelcomeFiles(new String[]{"index.html"});
-        rh.setResourceBase(".");
-        ch.setHandler(rh);
-        return ch;
-    }
+//    private static ConstraintSecurityHandler buildConstraintSecurityHandler() {
+//        // this configures jetty to require HTTPS for all requests
+//        Constraint constraint = new Constraint();
+//        constraint.setDataConstraint(Constraint.DC_CONFIDENTIAL);
+//        ConstraintMapping mapping = new ConstraintMapping();
+//        mapping.setPathSpec("/*");
+//        mapping.setConstraint(constraint);
+//        ConstraintSecurityHandler security = new ConstraintSecurityHandler();
+//        security.setConstraintMappings(Collections.singletonList(mapping));
+//        return security;
+//    }
+//	
+//    private static ContextHandler buildStaticResourceHandler() {
+//        // if you want the static content to serve off a url like
+//        // localhost:8080/files/.... then put 'files' in the constructor
+//        // to the ContextHandler
+//        ContextHandler ch = new ContextHandler("/");
+//        ResourceHandler rh = new ResourceHandler();
+//        rh.setWelcomeFiles(new String[]{"index.html"});
+//        rh.setResourceBase(".");
+//        ch.setHandler(rh);
+//        return ch;
+//    }
     
 	public static void main(String[] args) throws Exception {
 
@@ -70,12 +72,12 @@ public class XUILaucher {
 		rewrite.setRewritePathInfo(false);
 		rewrite.setOriginalPathAttribute("requestedPath");
 
-		String[] redirectArray = { /*"",*/ "/main", "/manager" };
+		String[] redirectArray = { "", "/main", "/manager" };
 		for (String redirect : redirectArray) {
 			RedirectPatternRule rule = new RedirectPatternRule();
 			rule.setTerminating(true);
 			rule.setPattern(redirect);
-			rule.setLocation("/rest/page/fr/fra/id/main");    // redirection 302
+			rule.setLocation("/index.html");    // redirection 302
 			rewrite.addRule(rule);
 		}
 
@@ -115,7 +117,7 @@ public class XUILaucher {
 		jerseyServlet.setInitOrder(0);
 		jerseyServlet.setInitParameter("jersey.config.server.provider.classnames",
 				XUIFactoryXHtml.class.getCanonicalName());
-		jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "com.elisaxui.srv");
+		jerseyServlet.setInitParameter("jersey.config.server.provider.packages", AppConfig.getRestPackage());
 
 		/*********************************************************************/
 		ContextHandler basicHandler = new ContextHandler();
@@ -136,7 +138,7 @@ public class XUILaucher {
 
 		
         MovedContextHandler movedHandlerToHttps = new MovedContextHandler();
-        movedHandlerToHttps.setNewContextURL("https://www.elisys-dyslexie.com");
+        movedHandlerToHttps.setNewContextURL("https://www.elisys-dyslexie.com");    // force en https
         movedHandlerToHttps.setContextPath("/*");
         movedHandlerToHttps.setPermanent(true);
         movedHandlerToHttps.setDiscardPathInfo(false);

@@ -3,16 +3,16 @@
  */
 package com.elisaxui.xui.core.widget.menu;
 
+import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.XHTMLRoot.AFTER_BODY;
-import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
-import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
+import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
+import com.elisaxui.core.xui.xml.target.CONTENT;
 import com.elisaxui.xui.admin.test.JSTest2Class;
 import com.elisaxui.xui.admin.test.JSTestClass;
 import com.elisaxui.xui.admin.test.JSTestDataDriven;
@@ -55,7 +55,7 @@ public class ViewMenu extends XHTMLPart {
 						+ "will-change:transform;")
 				.on(cFixedLeft,
 						"position:absolute; top:0px; transform:translate3d(-" + (XUIScene.widthMenu+5) + "px,0px,0px)")
-				.on(cHeaderMenu, "height:53px; " + XUIScene.bgColorMenu)
+				.on(cHeaderMenu, "height:53px; " + XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorMenu())
 
 				.on(".menu ul", "padding-left: 0;  list-style-type: none; margin:0px;")
 

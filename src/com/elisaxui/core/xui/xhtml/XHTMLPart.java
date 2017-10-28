@@ -3,8 +3,6 @@ package com.elisaxui.core.xui.xhtml;
 import java.util.ArrayList;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
-import com.elisaxui.core.xui.xhtml.XHTMLRoot.AFTER_BODY;
-import com.elisaxui.core.xui.xhtml.XHTMLRoot.BODY;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
@@ -12,6 +10,8 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSListParameter;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
+import com.elisaxui.core.xui.xhtml.target.BODY;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.builder.XMLAttr;
 import com.elisaxui.core.xui.xml.builder.XMLElement;

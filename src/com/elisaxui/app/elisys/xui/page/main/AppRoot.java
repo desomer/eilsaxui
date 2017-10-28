@@ -1,45 +1,36 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.xui.page;
+package com.elisaxui.app.elisys.xui.page.main;
 
-import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.app.elisys.xui.js.JSHistoireManager;
+import com.elisaxui.app.elisys.xui.widget.JSSyllabisation;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
-import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
-import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
+import com.elisaxui.core.xui.xhtml.target.HEADER;
+import com.elisaxui.core.xui.xml.annotation.xComment;
+import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
-import com.elisaxui.xui.admin.test.JSTestDataDriven;
-import com.elisaxui.xui.core.datadriven.JSDataCtx;
-import com.elisaxui.xui.core.datadriven.JSDataDriven;
-import com.elisaxui.xui.core.datadriven.JSDataSet;
+import com.elisaxui.core.xui.xml.builder.XMLElement;
+import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
+import com.elisaxui.xui.core.page.ConfigScene;
 import com.elisaxui.xui.core.page.XUIScene;
 import com.elisaxui.xui.core.toolkit.JQuery;
 import com.elisaxui.xui.core.toolkit.TKActivity;
 import com.elisaxui.xui.core.toolkit.TKQueue;
-import com.elisaxui.xui.core.toolkit.TKRouterEvent;
-import com.elisaxui.xui.core.transition.CssTransition;
-import com.elisaxui.xui.core.transition.TKTransition;
-import com.elisaxui.xui.core.widget.chart.ViewJSChart;
-import com.elisaxui.xui.core.widget.container.JSContainer;
-import com.elisaxui.xui.core.widget.container.JSViewCard;
 import com.elisaxui.xui.core.widget.layout.JSPageLayout;
 import com.elisaxui.xui.core.widget.log.ViewLog;
 import com.elisaxui.xui.core.widget.menu.JSMenu;
 import com.elisaxui.xui.core.widget.navbar.JSNavBar;
-import com.elisaxui.xui.core.widget.overlay.JSOverlay;
-import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
-
-import static com.elisaxui.xui.core.toolkit.TKActivity.*;
-
-import com.elisaxui.app.elisys.xui.js.JSHistoireManager;
-import com.elisaxui.app.elisys.xui.widget.JSSyllabisation;
 
 /**
  * @author Bureau
  *
  */
-public class AppRoot extends XHTMLPart {
+
+@xFile(id = "main")
+@xComment("activite standard")
+public class AppRoot extends XUIScene {
 
 	private static final String REST_JSON_MENU_ACTIVITY1 = "/rest/json/menu/activity1";
 	
@@ -63,30 +54,22 @@ public class AppRoot extends XHTMLPart {
 	}; 
 	
 	
-//	@xTarget(HEADER.class)  // TODO marche pas car composant
-//	@xRessource
-//	public XMLElement xImportAfter() {
-//		return xListElement(
-//				//xImport(JSSyllabisation.class)   //TODO A faire marcher et retire du XUIScene
-//				//xImport(JSHistoireManager.class)  
-//				);
-//	}
-	
-	
-//	@xTarget(AFTER_CONTENT.class)  // dans le header
-//	@xRessource
-//	public XMLElement xInitJS() {
-//		return xScriptJS(getJS())  ;
-//	}
+	@xTarget(AFTER_CONTENT.class) 
+	@xRessource
+	public XMLElement xImportAfter() {
+		return xListElement(
+				xImport(JSSyllabisation.class),   //TODO A faire marcher et retire du XUIScene
+				xImport(JSHistoireManager.class)  
+				);
+	}
 	
 	
 	static JSSyllabisation jsSyllabe;
 	static JSHistoireManager jsHitoireMgr;
 	
-	
-	public JSMethodInterface getJS()
-	{
-		
+	@Override
+	public JSMethodInterface getScene()
+	{	
 		return js()				
 				//******************** construction du menu ****************************************************
 				.var(jsMenu, _new())
@@ -94,15 +77,19 @@ public class AppRoot extends XHTMLPart {
 				// TODO a changer par un data sur le menu
 				.set("window.jsonMainMenu", "jsonMenu")  // liste des nemu pour animation dans tkAnimation
 				
+				
+				//
 				.var(jsSyllabe, _new())
 				.var("jsonSyllabe", jsSyllabe.getData())
 				.var(jsHitoireMgr, _new())
+				
+				.var(jsPageLayout, _new())
 				
 				/***********************************************************************************************/		
 
 				/**************************************************************/
 				.__(TKQueue.startProcessQueued( 100,  fct()
-					// TODO a changer	
+					// TODO a changer : mettre dans une queue avec priorité (avec image) et gestion de promise d'attente 
 					.__(" $.getScript({url:'https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js',  cache: true})") 
 	
 					.__("$.getJSON('"+REST_JSON_MENU_ACTIVITY1+"').done(", fct("a").consoleDebug("'json menu'", "a")
@@ -112,15 +99,16 @@ public class AppRoot extends XHTMLPart {
 							,").fail(", fct("xhr","textStatus", "error").consoleDebug("error") ,")")
 						
 					.var(tkActivity, "$xui.tkrouter.activityMgr")
+					
+					// retire l app shell
 					.__("$('.",XUIScene.scene.getId(), "').children().remove()")
+					
 					.__(tkActivity.createActivity(new JSONPage1().getJSON()))
 					.__(tkActivity.prepareActivity(new JSONPage2().getJSON()))
 					.__(tkActivity.prepareActivity(new JSONPage3().getJSON()))
-				//	.__(tkActivity.setCurrentActivity("'Activity1'"))
 					
 					 , 1000,  fct()
 					 		.set("window.microlistener", jsSyllabe.createMicroListener())
-					// .__(jsHitoireMgr.getHistoire())
 
 					))
 				/*************************************************************/
@@ -161,10 +149,9 @@ public class AppRoot extends XHTMLPart {
 						)
 				
 				/**************************************************************/
-				
+				// gestion du slidedown pour fermer
 				.set("window.onCreateActivityDown", fct("json")
 						.__(TKQueue.startProcessQueued( 100,  fct()
-								.var(jsPageLayout, _new())
 								.__(jsPageLayout.setEnableCloseGesture("json.param"))
 							)
 						)
@@ -191,9 +178,9 @@ public class AppRoot extends XHTMLPart {
 						.__(TKQueue.startProcessQueued( fct()
 								.set("window.lastPhrase", "''")
 								.var(jsSyllabe, "window.microlistener")
-								.var("jsonSyllabe", jsvar(jsSyllabe, ".aDataSet.getData()"))
+								.var("jsonSyllabe2", jsvar(jsSyllabe, ".aDataSet.getData()"))
 								
-								._for("var i = jsonSyllabe.length-1; i >=0; i--")
+								._for("var i = jsonSyllabe2.length-1; i >=0; i--")
 									.__("setTimeout(", fct()
 													.__("jsonSyllabe.splice(0,1);")
 										, ",50*i)")			
@@ -241,11 +228,7 @@ public class AppRoot extends XHTMLPart {
 				/************************************************************/
 				.set(jsNavBar, _new())
 				.set("jsonNavBar", jsNavBar.getData("'#NavBarActivity2'"))    // bug import mth jsNavBar car pas ajouer si pas appelé
-				
-				._if("!!window.Worker")
-					//.var("myWorker", "new Worker('/rest/js/t.js')")
-				.endif()
-				
+								
 				._if("'serviceWorker' in navigator")
 					.__("navigator.serviceWorker.register('sw.js', { scope: '/'} ).then(",  //rest/page/
 							fct("registration")
@@ -312,4 +295,16 @@ public class AppRoot extends XHTMLPart {
 			" }\n"+
 			"});";
 	*/
+
+
+	ConfigScene conf = new ConfigScene();
+	
+	/* (non-Javadoc)
+	 * @see com.elisaxui.xui.core.page.XUIScene#getConfigScene()
+	 */
+	@Override
+	public ConfigScene getConfigScene() {
+		// TODO Auto-generated method stub
+		return conf;
+	}
 }

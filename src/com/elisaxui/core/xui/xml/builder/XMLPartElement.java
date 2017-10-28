@@ -7,8 +7,8 @@ import java.util.Arrays;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xml.XMLPart;
-import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
-import com.elisaxui.core.xui.xml.XMLPart.CONTENT;
+import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
+import com.elisaxui.core.xui.xml.target.CONTENT;
 
 public class XMLPartElement implements IXMLBuilder {
 	XMLPart part;

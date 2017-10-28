@@ -3,7 +3,7 @@
  */
 package com.elisaxui;
 
-import com.elisaxui.app.elisys.xui.page.AppRoot;
+import com.elisaxui.app.elisys.xui.page.main.AppRoot;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 
 /**
@@ -27,9 +27,5 @@ public class AppConfig {
 		return buf.toString();
 	}
 	
-	public static JSMethodInterface getJSApplication()
-	{
-		return new AppRoot().getJS();
-	}
-	
+		
 }

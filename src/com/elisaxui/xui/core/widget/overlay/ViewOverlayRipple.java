@@ -3,13 +3,14 @@
  */
 package com.elisaxui.xui.core.widget.overlay;
 
+import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
-import com.elisaxui.core.xui.xml.XMLPart.CONTENT;
+import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
+import com.elisaxui.core.xui.xml.target.CONTENT;
 import com.elisaxui.xui.core.page.XUIScene;
 import static  com.elisaxui.xui.core.transition.CssTransition.*;
 /**
@@ -29,7 +30,7 @@ public class ViewOverlayRipple extends XHTMLPart {
 		return xCss()
 				.on(".ripple_overlay","position: absolute;	"
 					+ "top: 0px;    left: 0px; "
-					+ "width: 100vw;  height: 100vh; background: "+ XUIScene.bgColorThemeOpacity +"; "
+					+ "width: 100vw;  height: 100vh; background: "+ XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorThemeOpacity() +"; "
 					)
 				
 				.on(".ripple_overlay.transitionx2","transition:all  "+SPEED_ACTIVITY_TRANSITION_EFFECT*2+"ms cubic-bezier(1, 0, 1, 1);")

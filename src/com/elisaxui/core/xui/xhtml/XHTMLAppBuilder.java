@@ -71,7 +71,7 @@ public class XHTMLAppBuilder {
 		
 		System.out.println("[XHTMLAppBuilder]********************************************* END SCAN FILE ****************************************");
 
-		
+		/** TODO a changer car scan deja au dessus pour calcul dateBuild **/ 
 		new FastClasspathScanner("com.elisaxui").matchSubclassesOf(XHTMLPart.class, listXHTMLPart::add).scan();
 		new FastClasspathScanner("com.elisaxui").matchSubinterfacesOf(JSClass.class, listJSClass::add).scan();
 		new FastClasspathScanner("com.elisaxui").matchSubclassesOf(JSClassMethod.class, listJSClassMethod::add).scan();
@@ -80,13 +80,13 @@ public class XHTMLAppBuilder {
 
 		Map<String, Class<? extends XHTMLPart>> mapClass = new HashMap<String, Class<? extends XHTMLPart>>(100);
 		for (Class<? extends XHTMLPart> pageClass : listXHTMLPart) {
-			
-			initXMLPartVarStatic(pageClass);
-			
 			xFile annPage = pageClass.getAnnotation(xFile.class);
-			if (annPage != null) {
+			if (annPage != null) { 
+				System.out.println("[XHTMLAppBuilder]##############################################################################################");
+				System.out.println("[XHTMLAppBuilder]#############################    PAGE   "+annPage.id()+"   ###################################"+ annPage.id());
 				mapClass.put(annPage.id(), pageClass);
 			}
+			initXMLPartVarStatic(pageClass);
 		}
 		
 		System.out.println("[XHTMLAppBuilder]********************************************* START SCAN JSClassMethod ************************************");

@@ -14,8 +14,8 @@ import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassImpl;
-import com.elisaxui.core.xui.xml.XMLPart.CONTENT;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Handle;
+import com.elisaxui.core.xui.xml.target.CONTENT;
 
 /**
  * un element XML

@@ -10,6 +10,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassImpl;
 import com.elisaxui.core.xui.xml.XMLFile;
+import com.elisaxui.xui.core.page.XUIScene;
 
 /**
  * @author Bureau
@@ -18,6 +19,22 @@ import com.elisaxui.core.xui.xml.XMLFile;
  * 
  */
 public class XHTMLFile extends XMLFile {
+
+	private XUIScene scene;
+	
+	/**
+	 * @return the scene
+	 */
+	public XUIScene getScene() {
+		return scene;
+	}
+
+	/**
+	 * @param scene the scene to set
+	 */
+	public void setScene(XUIScene scene) {
+		this.scene = scene;
+	}
 
 	public Map<String, JSClassImpl> listClass = new HashMap<String, JSClassImpl>();
 

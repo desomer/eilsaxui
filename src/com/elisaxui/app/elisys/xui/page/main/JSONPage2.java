@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.xui.page;
+package com.elisaxui.app.elisys.xui.page.main;
 
 import static com.elisaxui.xui.core.toolkit.TKActivity.ON_ACTIVITY_CREATE;
 

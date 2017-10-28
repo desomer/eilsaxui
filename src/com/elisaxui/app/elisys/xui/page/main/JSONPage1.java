@@ -1,12 +1,13 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.xui.page;
+package com.elisaxui.app.elisys.xui.page.main;
 
 import static com.elisaxui.xui.core.toolkit.TKActivity.ON_ACTIVITY_CREATE;
 import static com.elisaxui.xui.core.toolkit.TKActivity.ON_ACTIVITY_RESUME;
 
 import com.elisaxui.app.elisys.xui.widget.ViewSyllabisation;
+import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
 import com.elisaxui.xui.core.widget.container.JSONPage;
@@ -25,18 +26,18 @@ import com.elisaxui.xui.core.widget.log.ViewLog;
 		
 		public Object getJSON()
 		{
-			XMLElement cnt1 = AppRoot.xDiv( ViewRippleEffect.cRippleEffect,                             //6
-							AppRoot.xAttr("style", "\"width: 100%; height: 30vh; background:url(" +AppRoot.listPhotos[9] +") center / cover\""),
-							AppRoot.xId("test1"), 
-							AppRoot.xAttr("data-x-action", "\""+EVT_DO_PHRASE+"\"")
+			XMLElement cnt1 = XHTMLPart.xDiv( ViewRippleEffect.cRippleEffect,                             //6
+							XHTMLPart.xAttr("style", "\"width: 100%; height: 30vh; background:url(" +AppRoot.listPhotos[9] +") center / cover\""),
+							XHTMLPart.xId("test1"), 
+							XHTMLPart.xAttr("data-x-action", "\""+EVT_DO_PHRASE+"\"")
 					 );
 				 
 			
 			//XMLElement cnt2 = xPart(new ViewJSChart(xId("test2")));	
 			
-			XMLElement cntSyllabique =  AppRoot.xPart(new ViewSyllabisation());	
+			XMLElement cntSyllabique =  XHTMLPart.xPart(new ViewSyllabisation());	
 			
-			XMLElement cntLogWorker =  AppRoot.xPart(new ViewLog());	
+			XMLElement cntLogWorker =  XHTMLPart.xPart(new ViewLog());	
 			
 			return page( "Activity1", arr( 
 						factory("#NavBarActivity1", FACTORY_NAVBAR, arr( backgroundImage(AppRoot.listPhotos[4], 0.3),  

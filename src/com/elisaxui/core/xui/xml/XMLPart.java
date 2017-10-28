@@ -24,6 +24,8 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.builder.XMLPartElement;
 import com.elisaxui.core.xui.xml.builder.XMLTarget;
 import com.elisaxui.core.xui.xml.builder.XMLTarget.ITargetRoot;
+import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
+import com.elisaxui.core.xui.xml.target.CONTENT;
 
 /**
  * un bloc xml representant une vue
@@ -34,18 +36,6 @@ import com.elisaxui.core.xui.xml.builder.XMLTarget.ITargetRoot;
 public class XMLPart  {
 
 	
-	/**************************************************************************/
-	public static final class CONTENT extends XMLTarget {
-	};
-
-	public static final class AFTER_CONTENT extends XMLTarget {
-		@Override
-		public int getInitialNbTab() {
-			return 1;
-		}
-		
-	};
-
 	/**************************************************************************/
 	protected HashMap<Class<? extends XMLTarget>, ArrayList<XMLElement>> listPart = new HashMap<Class<? extends XMLTarget>, ArrayList<XMLElement>>();
 	protected HashMap<Object, Object> listProperties = new HashMap<Object, Object>(); 
@@ -106,17 +96,16 @@ public class XMLPart  {
 	/**************************************************************/
 	public final void doContent(XMLPart root) {
 		
+		
+		
 		System.out.println("[XMLPart]--------------- add content of ------------- " + this.getClass() );
-		
-		
-	//	doContent(root);
-		
+				
 		XMLFile file = XUIFactoryXHtml.getXHTMLFile();
 		boolean isfirstInit = !file.isXMLPartAlreadyInFile(this);
 		
 		initVar();
 		
-		Method[] listMth = this.getClass().getDeclaredMethods();
+		Method[] listMth = getXMLMethod();
 		for (Method method : listMth) {
 			boolean isResource = method.getAnnotation(xRessource.class)!=null;
 			// execute les methode target non ressource
@@ -129,8 +118,49 @@ public class XMLPart  {
 	}
 	
 	
+	private Method[] getXMLMethod()
+	{
+		ArrayList<Method> alf = new ArrayList<Method>(10);
+	//	Map<String, Method> dicoMeth = 
+		Class<?> c = this.getClass();
+		while (XMLPart.class.isAssignableFrom(c) && c!= XHTMLPart.class && c!= XMLPart.class) {
+			Method[] lf = c.getDeclaredMethods();
+			if (lf!=null)
+			{
+				for (Method field : lf) {
+					alf.add(field);
+				}
+			}
+			c=c.getSuperclass();
+		}
+		
+		Method[] a = new Method[alf.size()];
+		alf.toArray(a);
+		return a;
+	}
+	
+	private Field[] getXMLField()
+	{
+		ArrayList<Field> alf = new ArrayList<Field>(10);
+		Class c = this.getClass();
+		while (XMLPart.class.isAssignableFrom(c)) {
+			Field[] lf = c.getDeclaredFields();
+			if (lf!=null)
+			{
+				for (Field field : lf) {
+					alf.add(field);
+				}
+			}
+			c=c.getSuperclass();
+		}
+		
+		Field[] a = new Field[alf.size()];
+		alf.toArray(a);
+		return a;
+	}
+	
 	public void initVar() {
-		Field[] lf = this.getClass().getDeclaredFields();
+		Field[] lf = getXMLField();
 		if (lf!=null)
 		{
 			for (Field field : lf) {

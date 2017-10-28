@@ -96,6 +96,13 @@ public class XUILaucher {
 		rewrite.addRule(oldToNew);
 		
 		oldToNew = new RewritePatternRule();
+		oldToNew.setPattern("/shop.html");
+		oldToNew.setReplacement("/rest/page/fr/fra/id/shop");   // redirection interne
+		oldToNew.setTerminating(true);
+		oldToNew.setHandling(false);
+		rewrite.addRule(oldToNew);
+		
+		oldToNew = new RewritePatternRule();
 		oldToNew.setPattern("/sw.js");
 		oldToNew.setReplacement("/rest/js/sw.js");   // redirection interne
 		oldToNew.setTerminating(true);

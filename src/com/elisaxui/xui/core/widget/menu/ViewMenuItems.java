@@ -6,6 +6,8 @@ package com.elisaxui.xui.core.widget.menu;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
+import com.elisaxui.core.xui.xml.target.CONTENT;
+
 import static com.elisaxui.xui.core.widget.button.ViewRippleEffect.*;
 
 /**

@@ -6,12 +6,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import com.elisaxui.core.xui.xml.XMLPart;
+import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
+import com.elisaxui.core.xui.xhtml.target.BODY;
+import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
-import com.elisaxui.core.xui.xml.builder.XMLTarget;
-import com.elisaxui.core.xui.xml.builder.XMLTarget.ITargetRoot;
+import com.elisaxui.core.xui.xml.target.CONTENT;
 
 public class XHTMLRoot extends XHTMLPart {
 
@@ -26,14 +27,6 @@ public class XHTMLRoot extends XHTMLPart {
 		}
 	}
 
-	public static final class HEADER extends XMLTarget implements ITargetRoot {
-	};
-
-	public static final class BODY extends XMLTarget implements ITargetRoot {
-	};
-
-	public static final class AFTER_BODY extends XMLTarget implements ITargetRoot {
-	};
 
 	private Object lang;
 
@@ -49,7 +42,7 @@ public class XHTMLRoot extends XHTMLPart {
 ;
 	
 	
-	@xTarget(XMLPart.CONTENT.class)
+	@xTarget(CONTENT.class)
 	public XMLElement xGetContent() {
 		
 		LocalDateTime now = LocalDateTime.now();

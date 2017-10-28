@@ -1,12 +1,14 @@
 package com.elisaxui.xui.admin.test;
 
-import com.elisaxui.core.xui.xhtml.XHTMLRoot.BODY;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.target.BODY;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.annotation.xVersion;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
+import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
+import com.elisaxui.core.xui.xml.target.CONTENT;
 
 @xComment("activite liste des pages")
 public class ActListPage extends XHTMLPart {

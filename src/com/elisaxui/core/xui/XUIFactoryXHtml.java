@@ -1,7 +1,5 @@
 package com.elisaxui.core.xui;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,110 +22,17 @@ import com.elisaxui.core.xui.xhtml.XHTMLAppBuilder;
 import com.elisaxui.core.xui.xhtml.XHTMLFile;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSon;
 import com.elisaxui.core.xui.xml.XMLFile;
 import com.elisaxui.core.xui.xml.XMLPart;
-import com.elisaxui.core.xui.xml.XMLPart.AFTER_CONTENT;
-import com.elisaxui.core.xui.xml.XMLPart.CONTENT;
-import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
+import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
+import com.elisaxui.core.xui.xml.target.CONTENT;
+import com.elisaxui.xui.core.page.JSServiceWorker;
+import com.elisaxui.xui.core.page.XUIScene;
 
 @Path("/")
 public class XUIFactoryXHtml {
-
-	/**
-	 * @author Bureau
-	 *
-	 */
-	public final class XHTMLJSFile extends XHTMLPart {
-		@xTarget(CONTENT.class)
-		public XMLElement doJS()
-		{
-			
-			JSon response = new JSon().setName("response");
-			
-			JSMethodInterface fctFetch = fct(response)
-					 // Check if we received a valid response
-		            ._if("!response || response.status !== 200 || response.type !== 'basic'") 
-		            //	.consoleDebug(txt("************ ret error from net"), response)
-		               ._return(response)  // mauvaise reponse
-		            .endif()
-		            
-		            // mise en cache
-		            .var("responseToCache" , "response.clone()")
-		            .__("caches.open(CACHE_NAME).then(", fct("cache")
-		            		.consoleDebug(txt("add cache"), "cache")
-		            		.__("cache.put(event.request, responseToCache)"),")")
-		            
-		            .consoleDebug(txt("************ ret 200 from net "), response.get("url"))
-		            ._return("response");
-					;
-			
-			JSMethodInterface fctCache = fct(response)
-					._if(response)
-						.consoleDebug(txt("hit cache "), response.get("url"))
-				        ._return(response)  // Cache hit - return response
-				    .endif()
-				    
-				    .var("fetchRequest","event.request.clone()")
-				    .consoleDebug(txt("******** fetch "), "event")
-				        // , mode: 'no-cors'  , { credentials: 'include' }
-				    ._return("fetch(fetchRequest).then(", fctFetch ,")")  // 
-				    
-					;
-			  
-			JSMethodInterface fctPostMessage = fct("clients")
-					._if("clients && clients.length")
-						.__("clients[0].postMessage(event.request.url)")
-					.endif();
-			
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
-
-			LocalDateTime dateBuild = XHTMLAppBuilder.dateBuild;
-			
-			String formatDateTimeBuild =   dateBuild.format(formatter);
-			
-			return xListElement(js()
-					.var("CACHE_NAME", txt("site-cache-"+formatDateTimeBuild))
-					
-					.__("self.addEventListener('install',", fct("event")
-							
-							.__("event.waitUntil(caches.open(CACHE_NAME).then(", fct("cache")
-									._return("cache.addAll(['https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'])") ,"))")							
-							
-							.consoleDebug(txt("************* INSTALL ****************"))
-							
-							
-							,")" )
-							
-					
-					.__("this.addEventListener('activate',", fct("event")
-							.__("event.waitUntil(caches.keys().then(", fct("keyList") 
-										._return("Promise.all(keyList.map(", fct("key")
-												//.consoleDebug(txt("**** test cache "), "key")
-												._if("key!=CACHE_NAME")
-													//.consoleDebug(txt("**** delete cache "), "key")
-													._return("caches.delete(key)")
-												.endif()
-											,"))")
-									,"))")
-							, ")")
-										
-					.__("self.addEventListener('fetch',", fct("event") 
-							.consoleDebug(txt("******** event ****"), "event.request.url")
-							
-							.__("self.clients.matchAll(/* search options */).then(", fctPostMessage,"  )")
-							
-							.__("event.respondWith(caches.match(event.request).then(", fctCache  ,") )")
-							
-					,")")
-					);				
-		}
-	}
-
 
 	private static final ThreadLocal<XHTMLFile> ThreadLocalXUIFactoryPage = new ThreadLocal<XHTMLFile>();
 
@@ -156,6 +61,7 @@ public class XUIFactoryXHtml {
 			htmlInCache = pageCache.get(id);
 			
 		if (htmlInCache == null) {
+			// cherche les changements
 			Map<String, Class<? extends XHTMLPart>> mapClass = XHTMLAppBuilder.getMapXHTMLPart();
 			Class<? extends XHTMLPart> pageClass = mapClass.get(id);
 			if (pageClass != null) {
@@ -175,8 +81,7 @@ public class XUIFactoryXHtml {
 
 				// generation page
 				System.out.println("[XUIFactoryXHtml]");
-				System.out
-						.println("[XUIFactoryXHtml]********************************************* GENERATE XML File of "
+				System.out.println("[XUIFactoryXHtml]********************************************* GENERATE XML File of "
 								+ pageClass + "  ****************************************");
 
 				StringBuilder buf = new StringBuilder(1000);
@@ -215,6 +120,9 @@ public class XUIFactoryXHtml {
 					+ pageClass + "  ****************************************");
 
 			XHTMLPart page = pageClass.newInstance();
+			
+			((XHTMLFile)file).setScene((XUIScene) page);
+			
 			page.doContent(file.getRoot());
 			for (XMLElement elem : page.getListElement(CONTENT.class)) {
 				page.vBody(elem);
@@ -227,6 +135,10 @@ public class XUIFactoryXHtml {
 		}
 	}
 
+	/**
+	 * creer un XHTMLFile vide
+	 * @return
+	 */
 	private XHTMLFile createXHTMLFile() {
 		XHTMLFile file = new XHTMLFile();
 		ThreadLocalXUIFactoryPage.set(file);
@@ -244,10 +156,10 @@ public class XUIFactoryXHtml {
 			ReponseInCache = pageCache.get(name);
 		
 		if (ReponseInCache==null) {
-			Map<String, Class<? extends XHTMLPart>> mapClass = XHTMLAppBuilder.getMapXHTMLPart();
+			//Map<String, Class<? extends XHTMLPart>> mapClass = XHTMLAppBuilder.getMapXHTMLPart();
 			XMLFile fileXML = createXHTMLFile();
 			
-			XHTMLPart part = new XHTMLJSFile();
+			XHTMLPart part = new JSServiceWorker();
 			
 			fileXML.setRoot(part);
 			

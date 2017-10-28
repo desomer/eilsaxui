@@ -32,6 +32,8 @@ import com.elisaxui.ResourceLoader;
 import com.elisaxui.app.elisys.xui.asset.AssetHandler;
 import com.elisaxui.core.data.JSONBuilder;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
+import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.xui.core.page.ConfigScene;
 import com.elisaxui.xui.core.page.XUIScene;
 import com.elisaxui.xui.core.widget.menu.JSONMenu;
 
@@ -101,12 +103,14 @@ public class SrvMain {
 		{
 			public Object getJSON()
 			{
+			
+				ConfigScene conf = new ConfigScene();	
 				
 			  return obj(v("short_name","Elisys"),
 					     v("name","Elisys dyslexie"),
 					     v("display","standalone"),
-					     v("background_color",XUIScene.bgColorContent),
-					     v("theme_color",XUIScene.bgColorTheme),
+					     v("background_color", conf.getBgColorContent()),
+					     v("theme_color", conf.getBgColorTheme()),
 					     v("start_url","/index.html"),
 					     v("description","Elisys, dyslexie pour parent, enfant et professeur"),
 					     v("orientation","portrait"),

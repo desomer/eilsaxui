@@ -9,20 +9,22 @@ import static com.elisaxui.xui.core.widget.button.ViewRippleEffect.cRippleEffect
 
 import com.elisaxui.AppConfig;
 import com.elisaxui.app.elisys.xui.js.JSHistoireManager;
-import com.elisaxui.app.elisys.xui.page.AppRoot;
+import com.elisaxui.app.elisys.xui.page.main.AppRoot;
 import com.elisaxui.app.elisys.xui.widget.JSSyllabisation;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.XHTMLRoot.HEADER;
-import com.elisaxui.core.xui.xhtml.XHTMLRoot.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
+import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
+import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
+import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
+import com.elisaxui.core.xui.xml.target.CONTENT;
 import com.elisaxui.xui.admin.test.JSTestDataDriven;
 import com.elisaxui.xui.core.config.TKConfig;
 import com.elisaxui.xui.core.datadriven.JSDataCtx;
@@ -45,9 +47,7 @@ import com.elisaxui.xui.core.widget.menu.ViewMenu;
 import com.elisaxui.xui.core.widget.navbar.ViewNavBar;
 import com.elisaxui.xui.core.widget.overlay.JSOverlay;
 
-@xFile(id = "main")
-@xComment("activite standard")
-public class XUIScene extends XHTMLPart {
+public abstract class XUIScene extends XHTMLPart {
 
 	public static final int heightNavBar = 50*2;
 	public static final int widthMenu = 250;
@@ -64,13 +64,6 @@ public class XUIScene extends XHTMLPart {
 	public static final int ZINDEX_FLOAT = 3;
 	public static final int ZINDEX_OVERLAY = 4;
 
-	public static final String bgColorScene = "#ffffff"; // "#333333"
-	public static final String bgColorTheme = "#ff359d";
-	public static final String bgColorThemeOpacity = "rgba(255,0,136,1)";
-	public static final String bgColor = "background: linear-gradient(to right, rgba(253,94,176,1) 0%, rgba(255,0,136,1) 64%, rgba(239,1,124,1) 100%);";
-    public static final String bgColorMenu = "background: linear-gradient(to right, rgba(239,1,124,0.5) 0%, rgba(255,0,136,0.68) 36%, rgba(253,94,176,1) 100%);";
-    public static final String bgColorContent = "rgb(245, 243, 237)";
-    
     public static final String PREF_3D= "backface-visibility: hidden;"
     		//+ " transform-style:preserve-3d;"
     		;
@@ -79,12 +72,15 @@ public class XUIScene extends XHTMLPart {
     
 	public static XClass scene;
 	
+	public abstract JSMethodInterface getScene();
+	public abstract ConfigScene getConfigScene();
+	
 	//var oRect = oElement.getBoundingClientRect()
     
 	@xTarget(AFTER_BODY.class)
 	@xRessource
 	@xPriority(1)
-	public XMLElement xImportCss() {
+	public XMLElement xImportCssXUIScene() {
 		return xListElement(
 				xLinkCssAsync("https://fonts.googleapis.com/icon?family=Material+Icons"),
 				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"),
@@ -96,11 +92,11 @@ public class XUIScene extends XHTMLPart {
 	@xTarget(HEADER.class)
 	@xRessource
 	@xPriority(1)
-	public XMLElement xImport() {
+	public XMLElement xImportXUIScene() {
 		return xListElement(
 				
 				xTitle("Elisys"),
-				xMeta(xAttr("name", xTxt("theme-color")), xAttr("content", xTxt(bgColorTheme))),
+				xMeta(xAttr("name", xTxt("theme-color")), xAttr("content", xTxt(getConfigScene().getBgColorTheme()))),
 				xLinkIcon("/rest/json/icon-32x32.png"),  //TODO Config
 				xLinkManifest(REST_JSON_APP_MANIFEST),
 				//*<link rel="manifest" href="/manifest.json">
@@ -139,19 +135,21 @@ public class XUIScene extends XHTMLPart {
 				xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js", "resLoaded(this, "+XUICstRessource.ID_RES_FASTDOM+");"),
 				xScriptSrcAsync("/asset/?url=http://work.krasimirtsonev.com/git/navigo/navigo.js", "resLoaded(this, "+XUICstRessource.ID_RES_NAVIGO+");"),
 				xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js", "resLoaded(this, "+XUICstRessource.ID_RES_HAMMER+");"),
+				xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js", "resLoaded(this, "+XUICstRessource.ID_RES_JQUERY+");")
+
 				//xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js", "resLoaded(this, "+XUICstRessource.ID_RES_CHART+");"),
 				//xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/json-editor/0.7.28/jsoneditor.min.js"),
 				//xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/granim/1.0.6/granim.min.js"),
-				xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js", "resLoaded(this, "+XUICstRessource.ID_RES_JQUERY+");")
 				//xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js")
-				//		+ "<link rel='alternate stylesheet' title='main' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>"				
+				//+ "<link rel='alternate stylesheet' title='main' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>"				
 				);
 	}
 		
 	
 	@xTarget(AFTER_CONTENT.class)
 	@xRessource
-	public XMLElement xImportAfter() {
+	public XMLElement xImportAfterXUIScene() {
+		
 		return xListElement(
 				xPart(new TKQueue()),   //TODO Remplacer
 				xImport(JSXHTMLPart.class),
@@ -167,11 +165,11 @@ public class XUIScene extends XHTMLPart {
 				xImport(TKTransition.class),
 				xImport(JSMenu.class),
 				xImport(TKActivity.class),
-				xImport(JSViewCard.class),
+				xImport(JSViewCard.class)
 				
 				//TODO a changer
-				xImport(JSHistoireManager.class), 
-				xImport(JSSyllabisation.class)
+				//, xImport(JSHistoireManager.class), 
+				//xImport(JSSyllabisation.class)
 				
 				);
 	}
@@ -179,17 +177,17 @@ public class XUIScene extends XHTMLPart {
 	@xTarget(HEADER.class)
 	@xRessource
 	@xPriority(2)
-	public XMLElement xStyle() {
+	public XMLElement xStyleXUIScene() {
 		
 		return xCss()
 				.select("html").set("font-size: 14px; line-height: 1.5;"
 						+ "font-family: 'Roboto', sans-serif;font-weight: normal;")    //color: rgba(0,0,0,0.87)
 				
-				.select("body").set("background-color: "+bgColorScene+"; margin: 0; ")
+				.select("body").set("background-color: "+getConfigScene().getBgColorScene()+"; margin: 0; ")
 				.select("*").set("-webkit-tap-highlight-color: rgba(0,0,0,0);")  // pas de coulour au click => ripple a la place
 
 				//----------------------------------------------------------------
-				.select(scene).set("overflow-x: hidden; background-color: "+bgColorScene+";"   // overflow: auto; -webkit-overflow-scrolling: auto
+				.select(scene).set("overflow-x: hidden; background-color: "+getConfigScene().getBgColorScene()+";"   // overflow: auto; -webkit-overflow-scrolling: auto
 						+ "min-width: 100vw;  min-height: 100vh; "   //position: absolute
 						)
 					.path(xCss("#NavBarShell h1").set("text-align:center;color: inherit;  font-size: 2.1rem; margin-top: 50px"))
@@ -197,7 +195,7 @@ public class XUIScene extends XHTMLPart {
 				.select(activity).set("background-color: white;"+ PREF_3D+ " will-change:overflow,z-index;") //will-change:transform
 					.path(xCss(content)
 								.set(" min-height: 100vh; min-width: 100vw; "
-										+ "background-color:"+bgColorContent+";will-change:contents")  // changement durant le freeze du contenu de l'activity
+										+ "background-color:"+getConfigScene().getBgColorContent()+";will-change:contents")  // changement durant le freeze du contenu de l'activity
 								)
 				
 				//----------------------------------------------------------------
@@ -210,7 +208,7 @@ public class XUIScene extends XHTMLPart {
 	}
 
 	@xTarget(CONTENT.class)
-	public XMLElement xContenu() {
+	public XMLElement xContenuXUIScene() {
 		return 
 			xListElement(
 				xPart(new ViewMenu()),
@@ -224,7 +222,7 @@ public class XUIScene extends XHTMLPart {
 	@xTarget(AFTER_CONTENT.class)
 	@xPriority(500)
 	@xRessource
-	public XMLElement xImportStart() {
+	public XMLElement xImportStartXUIScene() {
 		return xListElement(
 				xScriptJS(js()
 						// a mettre dans TKConfig
@@ -263,7 +261,7 @@ public class XUIScene extends XHTMLPart {
 								
 								._if("!$xui.resourceLoading.hammer && !$xui.resourceLoading.query&& !$xui.resourceLoading.navigo&& !$xui.resourceLoading.fastdom&& !$xui.resourceLoading.chart")
 									.__("(",getMoveManager(),")()")	
-									.__(AppConfig.getJSApplication())
+									.__(getScene())
 								.endif()
 							)						
 					)	
@@ -271,6 +269,10 @@ public class XUIScene extends XHTMLPart {
 				);
 	}
 
+	
+
+	
+		
 	public JSMethodInterface getIntializeJSFct()
 	{
 		return js()

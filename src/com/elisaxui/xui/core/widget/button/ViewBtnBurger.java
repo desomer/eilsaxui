@@ -13,6 +13,7 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.CONTENT;
 import com.elisaxui.xui.core.page.XUIScene;
 import static  com.elisaxui.xui.core.transition.CssTransition.*;
+import static com.elisaxui.xui.core.transition.ConstTransition.*;
 /**
  * @author Bureau
  *

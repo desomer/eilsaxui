@@ -3,11 +3,13 @@
  */
 package com.elisaxui.xui.core.widget.menu;
 
+import static com.elisaxui.xui.core.transition.ConstTransition.DELAY_SURETE_END_ANIMATION;
+import static com.elisaxui.xui.core.transition.ConstTransition.SPEED_SHOW_MENU_ITEMS;
+
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.xui.core.datadriven.JSDataDriven;
 import com.elisaxui.xui.core.datadriven.JSDataSet;
-import com.elisaxui.xui.core.transition.CssTransition;
 
 /**
  * @author Bureau
@@ -53,7 +55,7 @@ public interface JSMenu extends JSClass {
 						.__("$(ctx.row['_dom_']).css('visibility','')")
 						.__("$(ctx.row['_dom_']).toggleClass('animated '+change)")
 						// remise a zero de l'animation
-						.__("setTimeout(\n", fct("elem").__("elem.toggleClass('animated '+change)") ,",", CssTransition.SPEED_SHOW_MENU_ITEMS+CssTransition.DELAY_SURETE_END_ANIMATION,", $(ctx.row['_dom_']))")
+						.__("setTimeout(\n", fct("elem").__("elem.toggleClass('animated '+change)") ,",", SPEED_SHOW_MENU_ITEMS + DELAY_SURETE_END_ANIMATION,", $(ctx.row['_dom_']))")
 					.endif()	
 				.endif() 
 				))

@@ -4,12 +4,7 @@
 package com.elisaxui.xui.core.transition;
 
 import static com.elisaxui.xui.core.toolkit.JQuery.$;
-import static com.elisaxui.xui.core.transition.CssTransition.DELAY_SURETE_END_ANIMATION;
-import static com.elisaxui.xui.core.transition.CssTransition.NEXT_FRAME;
-import static com.elisaxui.xui.core.transition.CssTransition.SPEED_ACTIVITY_TRANSITION_EFFECT;
-import static com.elisaxui.xui.core.transition.CssTransition.SPEED_BURGER_EFFECT;
-import static com.elisaxui.xui.core.transition.CssTransition.SPEED_SHOW_ACTIVITY;
-import static com.elisaxui.xui.core.transition.CssTransition.SPEED_SHOW_MENU;
+import static com.elisaxui.xui.core.transition.ConstTransition.*;
 import static com.elisaxui.xui.core.transition.CssTransition.*;
 import static com.elisaxui.xui.core.page.XUIScene.*;
 import static com.elisaxui.xui.core.widget.navbar.ViewNavBar.fixedToAbsolute;
@@ -74,7 +69,7 @@ public interface TKTransition extends JSClass {
 	default Object doToggleBurgerMenu() {
 		//JSOverlay overlay = let( JSOverlay.class, "overlay", _new(CssTransition.SPEED_SHOW_MENU, XUIScene.OVERLAY_OPACITY_MENU) );
 		//JSOverlay 
-		var(_overlay, _new(CssTransition.SPEED_SHOW_MENU, XUIScene.OVERLAY_OPACITY_MENU));
+		var(_overlay, _new(SPEED_SHOW_MENU, XUIScene.OVERLAY_OPACITY_MENU));
 		
 		JQuery jqMenu = let( JQuery.class, "jqMenu", $(ViewMenu.menu) );
 		JQuery jqScene = let( JQuery.class, "jqScene", $(scene) );
@@ -102,7 +97,7 @@ public interface TKTransition extends JSClass {
 								// ----------------------------- cache le menu ------------------------
 								.__(jqMenu.css("transform", txt("translate3d(-" + (XUIScene.widthMenu + 5)	+ "px," , sct ,  "px, 0px)")))
 								// ----------------------------- repasse en croix ----------------------
-								.__(jqHamburgerDetach.css("transition", "transform " + CssTransition.SPEED_SHOW_MENU	+ "ms linear"))
+								.__(jqHamburgerDetach.css("transition", "transform " + SPEED_SHOW_MENU	+ "ms linear"))
 								.__(jqHamburgerDetach.css("transform", txt("translate3d(0px,",sct, "px,0px) scale(1)" )))
 
 						, SPEED_SHOW_MENU + DELAY_SURETE_END_ANIMATION, fct()
@@ -167,7 +162,7 @@ public interface TKTransition extends JSClass {
 								.__("setTimeout(", fct("elem")
 										.__("elem.anim='fadeInLeft'")
 										.__("elem.anim=''"),
-										",(i*" + CssTransition.SPEED_SHOW_MENU_ITEMS_ANIM
+										",(i*" + SPEED_SHOW_MENU_ITEMS_ANIM
 												+ "), window.jsonMainMenu[i])")
 
 								.endfor()

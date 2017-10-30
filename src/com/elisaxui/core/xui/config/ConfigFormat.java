@@ -1,6 +1,6 @@
 package com.elisaxui.core.xui.config;
 
-public class ConfigMgr {
+public class ConfigFormat {
 	private boolean enableCrXML = true;   //true
 	private boolean enableTabXML = false;
 	private boolean enableCrXMLinJS = true;   //true

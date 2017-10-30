@@ -39,7 +39,7 @@ public class ViewNavBar extends XHTMLPart {
 	public XMLElement xStyle() {
 		
 		return xCss()    //"+ScnStandard.bgColor+"
-				.select(navbar).set("z-index: "+XUIScene.ZINDEX_NAV_BAR+";  "+XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColor()+" height: "+XUIScene.heightNavBar+"px;width: 100%; color:white; "
+				.select(navbar).set("z-index: "+XUIScene.ZINDEX_NAV_BAR+";  "+XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorNavBar()+" height: "+XUIScene.heightNavBar+"px;width: 100%; color:white; "
 						+ "box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);")
 				
 				.select(fixedTop).set("position:fixed; top:0px; transform:translate3d(0px,0px,0px); backface-visibility: hidden;")

@@ -46,6 +46,7 @@ import com.elisaxui.xui.core.widget.menu.JSMenu;
 import com.elisaxui.xui.core.widget.menu.ViewMenu;
 import com.elisaxui.xui.core.widget.navbar.ViewNavBar;
 import com.elisaxui.xui.core.widget.overlay.JSOverlay;
+import static com.elisaxui.xui.core.transition.ConstTransition.*;
 
 public abstract class XUIScene extends XHTMLPart {
 
@@ -68,9 +69,8 @@ public abstract class XUIScene extends XHTMLPart {
     		//+ " transform-style:preserve-3d;"
     		;
     
-	private static final String REST_JSON_APP_MANIFEST = "/rest/json/manifest.json";
-    
 	public static XClass scene;
+	public static XClass cShell;
 	
 	public abstract JSMethodInterface getScene();
 	public abstract ConfigScene getConfigScene();
@@ -98,8 +98,7 @@ public abstract class XUIScene extends XHTMLPart {
 				xTitle("Elisys"),
 				xMeta(xAttr("name", xTxt("theme-color")), xAttr("content", xTxt(getConfigScene().getBgColorTheme()))),
 				xLinkIcon("/rest/json/icon-32x32.png"),  //TODO Config
-				xLinkManifest(REST_JSON_APP_MANIFEST),
-				//*<link rel="manifest" href="/manifest.json">
+				xLinkManifest(getConfigScene().getAppManifest()),
 				
 				xScriptJS(js()
 						.set("window.doOnResLoadWait", fct("res", "id")
@@ -151,9 +150,8 @@ public abstract class XUIScene extends XHTMLPart {
 	public XMLElement xImportAfterXUIScene() {
 		
 		return xListElement(
-				xPart(new TKQueue()),   //TODO Remplacer
+				xPart(new TKQueue()),   //TODO Remplacer par une class js
 				xImport(JSXHTMLPart.class),
-			//	xImport(JSTestDataDriven.class),
 				xImport(JSDataDriven.class),
 				xImport(JSDataSet.class),
 				xImport(JSDataCtx.class),
@@ -161,16 +159,11 @@ public abstract class XUIScene extends XHTMLPart {
 				xImport(JSContainer.class),
 				xImport(JSPageLayout.class),
 				xImport(TKRouterEvent.class),
-				xPart(new CssTransition()),
+				xPart(new CssTransition()),  //TODO Remplacer
 				xImport(TKTransition.class),
 				xImport(JSMenu.class),
 				xImport(TKActivity.class),
-				xImport(JSViewCard.class)
-				
-				//TODO a changer
-				//, xImport(JSHistoireManager.class), 
-				//xImport(JSSyllabisation.class)
-				
+				xImport(JSViewCard.class)			
 				);
 	}
 				
@@ -190,9 +183,10 @@ public abstract class XUIScene extends XHTMLPart {
 				.select(scene).set("overflow-x: hidden; background-color: "+getConfigScene().getBgColorScene()+";"   // overflow: auto; -webkit-overflow-scrolling: auto
 						+ "min-width: 100vw;  min-height: 100vh; "   //position: absolute
 						)
+				    .path(xCss(cShell).set("background-color: "+getConfigScene().getBgColorContent()+ ";min-width: 100vw;  min-height: 100vh; "))
 					.path(xCss("#NavBarShell h1").set("text-align:center;color: inherit;  font-size: 2.1rem; margin-top: 50px"))
 				//----------------------------------------------------------------
-				.select(activity).set("background-color: white;"+ PREF_3D+ " will-change:overflow,z-index;") //will-change:transform
+				.select(activity).set("background-color: "+getConfigScene().getBgColorContent()+";"+ PREF_3D+ " will-change:overflow,z-index;") //will-change:transform
 					.path(xCss(content)
 								.set(" min-height: 100vh; min-width: 100vw; "
 										+ "background-color:"+getConfigScene().getBgColorContent()+";will-change:contents")  // changement durant le freeze du contenu de l'activity
@@ -212,9 +206,9 @@ public abstract class XUIScene extends XHTMLPart {
 		return 
 			xListElement(
 				xPart(new ViewMenu()),
-				xDiv(scene, 
+				xDiv(scene, xDiv(cShell, 
 						xPart(new ViewNavBar().addProperty(ViewNavBar.PROPERTY_NAME, "NavBarShell"), xH1("Loading...")),  
-						xPart(new ViewLoader()))                      
+						xPart(new ViewLoader())))                      
 		);
 	}
 	
@@ -334,9 +328,9 @@ public abstract class XUIScene extends XHTMLPart {
 						   ._else()
 						   	   // animation ripple 
 							   .__(TKQueue.startProcessQueued(fct()
-						   		      , CssTransition.NEXT_FRAME	, fct()  // attente ripple effect
+						   		      , NEXT_FRAME	, fct()  // attente ripple effect
 							   				.__(ripple.addClass(cRippleEffectShow))
-									  ,CssTransition.SPEED_RIPPLE_EFFECT, fct()  // attente ripple effect
+									  ,SPEED_RIPPLE_EFFECT, fct()  // attente ripple effect
 								   		    .__(ripple.removeClass(cRippleEffectShow))     	
     
 									   )
@@ -400,14 +394,14 @@ public abstract class XUIScene extends XHTMLPart {
 							._elseif("anim==true && ev.offsetDirection==2 ")
 								.set("anim", "false")
 								// ferme le menu par le doOverlay avec une animation
-								.__("$('.menu').css('transition', 'transform "+(CssTransition.SPEED_SHOW_MENU+50)+"ms ease-out' )")
+								.__("$('.menu').css('transition', 'transform "+(SPEED_SHOW_MENU+50)+"ms ease-out' )")
 								.__($xui().tkrouter() .doEvent("'Overlay'"))
 							.endif()
 							
 							._if("ev.isFinal")
 								// lance l'animation de retour a l'ouverture
 								._if("anim==true")
-									.__("$('.menu').css('transition', 'transform "+(CssTransition.SPEED_SHOW_MENU+50)+"ms ease-out' )")
+									.__("$('.menu').css('transition', 'transform "+(SPEED_SHOW_MENU+50)+"ms ease-out' )")
 									.__("$('.menu').css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px)' )")
 								.endif()
 								.set("anim", "true")

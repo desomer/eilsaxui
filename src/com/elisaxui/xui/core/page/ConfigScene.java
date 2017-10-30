@@ -9,6 +9,17 @@ package com.elisaxui.xui.core.page;
  */
 public class ConfigScene {
 
+
+	private String bgColorScene = "#333333"; // "#333333"
+	private String bgColorTheme = "#ff359d";  // rose
+	private String bgColorThemeOpacity = "rgba(255,0,136,1)";
+	private String bgColorNavBar = "background: linear-gradient(to right, rgba(253,94,176,1) 0%, rgba(255,0,136,1) 64%, rgba(239,1,124,1) 100%);";
+	private String bgColorMenu = "background: linear-gradient(to right, rgba(239,1,124,0.5) 0%, rgba(255,0,136,0.68) 36%, rgba(253,94,176,1) 100%);";
+	private String bgColorContent = "rgb(245, 243, 237)";   // gris
+	private String app_manifest = "/rest/json/manifest.json";
+	
+	
+
 	/**
 	 * @return the bgColorScene
 	 */
@@ -48,14 +59,14 @@ public class ConfigScene {
 	/**
 	 * @return the bgColor
 	 */
-	public String getBgColor() {
-		return bgColor;
+	public String getBgColorNavBar() {
+		return bgColorNavBar;
 	}
 	/**
 	 * @param bgColor the bgColor to set
 	 */
-	public void setBgColor(String bgColor) {
-		this.bgColor = bgColor;
+	public void setBgColorNavBar(String bgColor) {
+		this.bgColorNavBar = bgColor;
 	}
 	/**
 	 * @return the bgColorMenu
@@ -83,10 +94,16 @@ public class ConfigScene {
 	}
 	
 	
-	private String bgColorScene = "#ffffff"; // "#333333"
-	private String bgColorTheme = "#ff359d";
-	private String bgColorThemeOpacity = "rgba(255,0,136,1)";
-	private String bgColor = "background: linear-gradient(to right, rgba(253,94,176,1) 0%, rgba(255,0,136,1) 64%, rgba(239,1,124,1) 100%);";
-	private String bgColorMenu = "background: linear-gradient(to right, rgba(239,1,124,0.5) 0%, rgba(255,0,136,0.68) 36%, rgba(253,94,176,1) 100%);";
-	private String bgColorContent = "rgb(245, 243, 237)";
+	/**
+	 * @return the app_manifest
+	 */
+	public String getAppManifest() {
+		return app_manifest;
+	}
+	/**
+	 * @param app_manifest the app_manifest to set
+	 */
+	public void setAppManifest(String app_manifest) {
+		this.app_manifest = app_manifest;
+	}
 }

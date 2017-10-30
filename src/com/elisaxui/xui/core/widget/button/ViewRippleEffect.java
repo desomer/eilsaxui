@@ -3,6 +3,8 @@
  */
 package com.elisaxui.xui.core.widget.button;
 
+import static com.elisaxui.xui.core.transition.ConstTransition.SPEED_RIPPLE_EFFECT;
+
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
@@ -10,7 +12,6 @@ import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
-import static  com.elisaxui.xui.core.transition.CssTransition.*;
 /**
  * @author Bureau
  *

@@ -3,6 +3,8 @@
  */
 package com.elisaxui.xui.core.widget.overlay;
 
+import static com.elisaxui.xui.core.transition.ConstTransition.SPEED_ACTIVITY_TRANSITION_EFFECT;
+
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
@@ -11,8 +13,6 @@ import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.CONTENT;
-import com.elisaxui.xui.core.page.XUIScene;
-import static  com.elisaxui.xui.core.transition.CssTransition.*;
 /**
  * @author Bureau
  *

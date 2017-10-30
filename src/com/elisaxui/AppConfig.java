@@ -3,9 +3,6 @@
  */
 package com.elisaxui;
 
-import com.elisaxui.app.elisys.xui.page.main.AppRoot;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
-
 /**
  * @author gauth
  *

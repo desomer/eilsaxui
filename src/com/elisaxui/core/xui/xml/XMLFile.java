@@ -3,13 +3,13 @@ package com.elisaxui.core.xui.xml;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import com.elisaxui.core.xui.config.ConfigMgr;
+import com.elisaxui.core.xui.config.ConfigFormat;
 
 public class XMLFile {
 
 	private HashMap<Class<?>, Class<?>> mapResource = new HashMap<Class<?>, Class<?>>();
 	public LinkedList<Object> listParent = new LinkedList<Object>();
-	private ConfigMgr configMgr = new ConfigMgr();
+	private ConfigFormat configMgr = new ConfigFormat();
 
 
 
@@ -17,7 +17,7 @@ public class XMLFile {
 		return mapResource.put(part.getClass(), part.getClass()) != null;
 	}
 
-	public ConfigMgr getConfigMgr() {
+	public ConfigFormat getConfigMgr() {
 		return configMgr;
 	}
 

@@ -36,7 +36,7 @@ public interface JSOverlay extends JSClass {
 			__(overlay.css("display","block"));
 			__(overlay.css("opacity",0));
 		_elseif(phase, "==2");
-			__(overlay.css("transition", jsvar(txt("opacity ", opacity, "ms linear" ))));
+			__(overlay.css("transition", jsvar(txt("opacity ", speed, "ms linear" ))));
 			__(overlay.css("opacity",opacity));
 		endif()
 		;

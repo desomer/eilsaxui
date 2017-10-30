@@ -3,6 +3,9 @@
  */
 package com.elisaxui.xui.core.widget.button;
 
+import static com.elisaxui.xui.core.transition.ConstTransition.SPEED_SHOW_ACTIVITY;
+import static com.elisaxui.xui.core.widget.button.ViewRippleEffect.cRippleEffect;
+
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
@@ -13,9 +16,6 @@ import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.CONTENT;
-import com.elisaxui.xui.core.page.XUIScene;
-import static  com.elisaxui.xui.core.transition.CssTransition.*;
-import static  com.elisaxui.xui.core.widget.button.ViewRippleEffect.*;
 /**
  * @author Bureau
  *
@@ -37,7 +37,7 @@ public class ViewBtnCircle extends XHTMLPart {
 								"border-radius: 50%;  font-size: 24px; margin: auto;   cursor: pointer; "
 						 		+ "height: 56px; width: 56px; "
 								+ "min-width: 56px; padding: 0;  overflow: hidden; outline: 0 !important; " // pas																						// focus
-								+ XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColor()
+								+ XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorNavBar()
 								+ "box-shadow: 3px 3px 3px 0 rgba(0,0,0,.24);"
 								+ "transition:transform " + SPEED_SHOW_ACTIVITY +  "ms ease-out;"
 								+ " position: relative; line-height: normal; border:none; background-color:#ee6e73;"

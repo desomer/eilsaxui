@@ -21,6 +21,7 @@ import com.elisaxui.xui.core.datadriven.JSDataDriven;
 import com.elisaxui.xui.core.datadriven.JSDataSet;
 import com.elisaxui.xui.core.page.XUIScene;
 import com.elisaxui.xui.core.transition.CssTransition;
+import static com.elisaxui.xui.core.transition.ConstTransition.*;
 
 /**
  * @author Bureau
@@ -63,7 +64,7 @@ public class ViewMenu extends XHTMLPart {
 						+ "cursor: pointer;   min-height: 50px; line-height: 21px; "
 						+ "width: 100%;   text-align: left;   text-transform: none;"
 						+ XUIScene.PREF_3D
-						+ "animation-duration:" + CssTransition.SPEED_SHOW_MENU_ITEMS + "ms; transform:translate3d(0px,0px,0px);will-change:transform;"
+						+ "animation-duration:" + SPEED_SHOW_MENU_ITEMS + "ms; transform:translate3d(0px,0px,0px);will-change:transform;"
 						)
 
 				.on(".menu li>a", "font-size: 16px;  line-height: 26px;  padding: 14px 16px;  float: left;")

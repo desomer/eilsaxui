@@ -2,55 +2,20 @@ package com.elisaxui.xui.core.transition;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
-import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
-import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
-import com.elisaxui.xui.admin.test.JSTestDataDriven;
-import com.elisaxui.xui.core.datadriven.JSDataCtx;
-import com.elisaxui.xui.core.datadriven.JSDataDriven;
-import com.elisaxui.xui.core.datadriven.JSDataSet;
 import com.elisaxui.xui.core.page.XUIScene;
-import com.elisaxui.xui.core.toolkit.TKActivity;
-import com.elisaxui.xui.core.toolkit.TKQueue;
-import com.elisaxui.xui.core.toolkit.TKRouterEvent;
-import com.elisaxui.xui.core.transition.TKTransition;
-import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
-import com.elisaxui.xui.core.widget.chart.ViewJSChart;
-import com.elisaxui.xui.core.widget.container.JSContainer;
-import com.elisaxui.xui.core.widget.menu.JSMenu;
-import com.elisaxui.xui.core.widget.menu.ViewMenu;
-import com.elisaxui.xui.core.widget.navbar.JSNavBar;
-import com.elisaxui.xui.core.widget.overlay.JSOverlay;
+import static com.elisaxui.xui.core.transition.ConstTransition.*;
 
 @xComment("CssTransition")
 public class CssTransition extends XHTMLPart {
 
-
-	public static double coef = 1;
-	
 	public static final int widthMenu = 250;
-	
-	public static final int SPEED_SHOW_ACTIVITY = (int)(200*coef);
-	public static final int SPEED_ACTIVITY_TRANSITION_EFFECT = (int)(150*coef);
-	public static final int DELAY_SURETE_END_ANIMATION = 50;
-	
-	public static final String NEXT_FRAME = "'nextFrame'";
-	
-	public static final int SPEED_ANIMATED = (int)(1000*coef);
-	
-	public static final int SPEED_SHOW_MENU = (int)(150*coef);
-	public static final int SPEED_SHOW_MENU_ITEMS = (int)(400*coef);
-	public static final int SPEED_SHOW_MENU_ITEMS_ANIM = (int)(50*coef);
-	
-	public static final int SPEED_RIPPLE_EFFECT =  (int)(300*coef);
-	public static final int SPEED_BURGER_EFFECT =  (int)(200*coef);
-	
+
 	public static XClass activity;
 	public static XClass content;
 	
@@ -86,9 +51,9 @@ public class CssTransition extends XHTMLPart {
 				.on(".activity.zoom12", "transform:scale3d(1.2,1.2,1)")
 				.on(".activity.zoom10", "transform:scale3d(1,1,1)")
 
-				.on(".activity.transitionSpeedSlow", "transition:all "+ CssTransition.SPEED_SHOW_ACTIVITY*5 +"ms linear")
-				.on(".activity.transitionSpeed", "transition:all "+ CssTransition.SPEED_SHOW_ACTIVITY +"ms linear")
-				.on(".activity.transitionSpeedx2", "transition:all "+ CssTransition.SPEED_ACTIVITY_TRANSITION_EFFECT +"ms linear")
+				.on(".activity.transitionSpeedSlow", "transition:all "+ SPEED_SHOW_ACTIVITY*5 +"ms linear")
+				.on(".activity.transitionSpeed", "transition:all "+ SPEED_SHOW_ACTIVITY +"ms linear")
+				.on(".activity.transitionSpeedx2", "transition:all "+ SPEED_ACTIVITY_TRANSITION_EFFECT +"ms linear")
 				
 				.on(".activityMoveForShowMenu", "transition:transform "+SPEED_SHOW_MENU+"ms ease-out; transform: translate3d("+(widthMenu-100)+"px,0px,0px);")
 				.on(".activityMoveForHideMenu", "transition:transform "+SPEED_SHOW_MENU+"ms ease-out; transform: translate3d(0px,0px,0px);")

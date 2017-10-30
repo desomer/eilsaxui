@@ -15,11 +15,18 @@ public interface JSClass extends JSMethodInterface  {
 //		return XHTMLPart.jsBuilder.getProxy(cl);
 //	}
 	
-	
+	/**
+	 * sert a ne pas avoir de warning
+	 * @return
+	 */
 	public static <E> E defVar() {
 		return null;
 	}
 	
+	/**
+	 * sert a ne pas avoir de warning
+	 * @return
+	 */
 	public static <E> E defAttr() {
 		return null;
 	}

@@ -27,7 +27,7 @@ import com.elisaxui.xui.core.widget.log.ViewLog;
 		public Object getJSON()
 		{
 			XMLElement cnt1 = XHTMLPart.xDiv( ViewRippleEffect.cRippleEffect,                             //6
-							XHTMLPart.xAttr("style", "\"width: 100%; height: 30vh; background:url(" +AppRoot.listPhotos[9] +") center / cover\""),
+							XHTMLPart.xAttr("style", "\"width: 100%; height: 30vh; background:url(" +ScnRoot.listPhotos[9] +") center / cover\""),
 							XHTMLPart.xId("test1"), 
 							XHTMLPart.xAttr("data-x-action", "\""+EVT_DO_PHRASE+"\"")
 					 );
@@ -40,7 +40,7 @@ import com.elisaxui.xui.core.widget.log.ViewLog;
 			XMLElement cntLogWorker =  XHTMLPart.xPart(new ViewLog());	
 			
 			return page( "Activity1", arr( 
-						factory("#NavBarActivity1", FACTORY_NAVBAR, arr( backgroundImage(AppRoot.listPhotos[4], 0.3),  
+						factory("#NavBarActivity1", FACTORY_NAVBAR, arr( backgroundImage(ScnRoot.listPhotos[4], 0.3),  
 																	 btnBurger(), 
 																	 title("Bonjour Elisa"),
 																	 btnActionIcon("delete", EVT_CLEAR),
@@ -51,7 +51,7 @@ import com.elisaxui.xui.core.widget.log.ViewLog;
 							 										cardHtml( cnt1 ), 
 							 									//	cardHtml( cnt2 ),
 							 										cardHtml( cntSyllabique ),
-							 										card( arr( backgroundImage(AppRoot.listPhotos[7], 1),
+							 										card( arr( backgroundImage(ScnRoot.listPhotos[7], 1),
 							 												    cardAction(EVT_DO_LOAD_HISTOIRE), 
 								 												text("Paconhontas")
 								 												)) ,

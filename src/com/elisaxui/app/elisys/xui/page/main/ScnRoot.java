@@ -30,14 +30,9 @@ import com.elisaxui.xui.core.widget.navbar.JSNavBar;
 
 @xFile(id = "main")
 @xComment("activite standard")
-public class AppRoot extends XUIScene {
+public class ScnRoot extends XUIScene {
 
 	private static final String REST_JSON_MENU_ACTIVITY1 = "/rest/json/menu/activity1";
-	
-	static JSMenu jsMenu;
-	static JSNavBar jsNavBar;
-	static TKActivity tkActivity;
-	static JSPageLayout jsPageLayout;
 	
 
 	public static final String[] listPhotos= new String[] {
@@ -68,51 +63,41 @@ public class AppRoot extends XUIScene {
 	static JSHistoireManager jsHitoireMgr;
 	
 	@Override
+	public JSMethodInterface searchMenu()
+	{
+	  return fragment()
+			  	// TODO a changer 
+				.__("$.getJSON('"+REST_JSON_MENU_ACTIVITY1+"')"
+					+ ".done(", fct("a").consoleDebug("'json menu'", "a")
+						._for("var i = 0, l = a.length; i < l; i++")
+							.__("jsonMenu.push(a[i])")
+						.endfor()
+						,")"
+					+ ".fail(", fct("xhr","textStatus", "error").consoleDebug("error") ,")")
+			  ;
+	}
+	
+	@Override
+	public JSMethodInterface loadPage()
+	{
+	  return fragment()
+				.__(tkActivity.createActivity(new JSONPage1().getJSON()))
+				.__(tkActivity.prepareActivity(new JSONPage2().getJSON()))
+				.__(tkActivity.prepareActivity(new JSONPage3().getJSON()))
+			  ;
+	}
+	
+	
+	@Override
 	public JSMethodInterface getScene()
 	{	
 		return js()				
-				//******************** construction du menu ****************************************************
-				.var(jsMenu, _new())
-				.var("jsonMenu", jsMenu.getData())
-				// TODO a changer par un data sur le menu
-				.set("window.jsonMainMenu", "jsonMenu")  // liste des nemu pour animation dans tkAnimation
-				
-				
-				//
-				.var(jsSyllabe, _new())
-				.var("jsonSyllabe", jsSyllabe.getData())
-				.var(jsHitoireMgr, _new())
-				
-				.var(jsPageLayout, _new())
-				
-				/***********************************************************************************************/		
-
-				/**************************************************************/
-				.__(TKQueue.startProcessQueued( 100,  fct()
-					// TODO a changer : mettre dans une queue avec priorité (avec image) et gestion de promise d'attente 
-					.__(" $.getScript({url:'https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js',  cache: true})") 
-	
-					.__("$.getJSON('"+REST_JSON_MENU_ACTIVITY1+"').done(", fct("a").consoleDebug("'json menu'", "a")
-							._for("var i = 0, l = a.length; i < l; i++")
-								.__("jsonMenu.push(a[i])")
-							.endfor()
-							,").fail(", fct("xhr","textStatus", "error").consoleDebug("error") ,")")
-						
-					.var(tkActivity, "$xui.tkrouter.activityMgr")
-					
-					// retire l app shell
-					.__("$('.",XUIScene.scene.getId(), "').children().remove()")
-					
-					.__(tkActivity.createActivity(new JSONPage1().getJSON()))
-					.__(tkActivity.prepareActivity(new JSONPage2().getJSON()))
-					.__(tkActivity.prepareActivity(new JSONPage3().getJSON()))
-					
-					 , 1000,  fct()
-					 		.set("window.microlistener", jsSyllabe.createMicroListener())
-
-					))
+				.__(initializeScene())
 				/*************************************************************/
 				
+				.var(jsHitoireMgr, _new())
+				.var(jsSyllabe, _new())
+				.var("jsonSyllabe", jsSyllabe.getData())
 				
 				/**************************************************************/
 				
@@ -120,27 +105,29 @@ public class AppRoot extends XUIScene {
 						.consoleDebug("'on Create Activity1'")
 						.__(TKQueue.startProcessQueued( 100,  fct()
 								.var(jsPageLayout, _new())
-								.__(jsPageLayout.hideOnScroll("json.param"))	
+								.__(jsPageLayout.hideOnScroll("json.param"))
+														
+//								.var("jCanvasGranim", "$('#NavBarActivity1 .animatedBg')[0]")
+//								.__(NavBarAnimated1)
+									
+//								.__("JSONEditor.defaults.options.theme = 'bootstrap3';")	
+//								.__("var editor = new JSONEditor(document.getElementById(\"editor\"), { schema: {} } )")
+//								.__("editor.setValue(window.jsonMainMenu)")
+//								.__("editor.on('change',", fct()
+//										.var("content", "editor.getValue()")
+//										.consoleDebug("content")
+//										.__("$.post( {"+ 
+//												"  type: 'POST'," + 
+//												"  url: '/rest/json/save'," + 
+//												"  data: JSON.stringify(content)," + 
+//												//"  success: success,\r\n" + 
+//												"  dataType: 'text'," + 
+//											    "  contentType: 'text/plain; charset=utf-8'"+
+//												"})")
+//									, ")")
 								
-//							.var("jCanvasGranim", "$('#NavBarActivity1 .animatedBg')[0]")
-//							.__(NavBarAnimated1)
-								
-//							.__("JSONEditor.defaults.options.theme = 'bootstrap3';")	
-//							.__("var editor = new JSONEditor(document.getElementById(\"editor\"), { schema: {} } )")
-//							.__("editor.setValue(window.jsonMainMenu)")
-//							.__("editor.on('change',", fct()
-//									.var("content", "editor.getValue()")
-//									.consoleDebug("content")
-//									.__("$.post( {"+ 
-//											"  type: 'POST'," + 
-//											"  url: '/rest/json/save'," + 
-//											"  data: JSON.stringify(content)," + 
-//											//"  success: success,\r\n" + 
-//											"  dataType: 'text'," + 
-//										    "  contentType: 'text/plain; charset=utf-8'"+
-//											"})")
-//								, ")")
-							
+							, 500,  fct()
+						 		.set("window.microlistener", jsSyllabe.createMicroListener())								
 							)
 						)
 				)
@@ -152,6 +139,7 @@ public class AppRoot extends XUIScene {
 				// gestion du slidedown pour fermer
 				.set("window.onCreateActivityDown", fct("json")
 						.__(TKQueue.startProcessQueued( 100,  fct()
+								.var(jsPageLayout, _new())
 								.__(jsPageLayout.setEnableCloseGesture("json.param"))
 							)
 						)
@@ -227,20 +215,9 @@ public class AppRoot extends XUIScene {
 				
 				/************************************************************/
 				.set(jsNavBar, _new())
-				.set("jsonNavBar", jsNavBar.getData("'#NavBarActivity2'"))    // bug import mth jsNavBar car pas ajouer si pas appelé
+				.set("jsonNavBar", jsNavBar.getData("'#NavBarActivity2'"))    // bug import mth jsNavBar car pas ajouter si pas appelé
 								
-				._if("'serviceWorker' in navigator")
-					.__("navigator.serviceWorker.register('sw.js', { scope: '/'} ).then(",  //rest/page/
-							fct("registration")
-								.consoleDebug(txt("ok registration scope"), "registration.scope")
-								.set("navigator.serviceWorker.onmessage", fct("e")
-										//.consoleDebug(txt("onEventSW"), "e.data")
-										.__(JQuery.$(ViewLog.cLog, " textArea").val( JQuery.$(ViewLog.cLog, " textArea").val() , "+ e.data"  ))
-										)
-								,",",
-							fct("err").consoleDebug(txt("ServiceWorker registration failed"), "err") 
-						,")")
-				.endif()
+				/*********************************************************/
 				;
 	}
 	
@@ -296,15 +273,11 @@ public class AppRoot extends XUIScene {
 			"});";
 	*/
 
-
+    /****************************************************************************************/
 	ConfigScene conf = new ConfigScene();
 	
-	/* (non-Javadoc)
-	 * @see com.elisaxui.xui.core.page.XUIScene#getConfigScene()
-	 */
 	@Override
 	public ConfigScene getConfigScene() {
-		// TODO Auto-generated method stub
 		return conf;
 	}
 }

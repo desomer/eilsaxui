@@ -21,9 +21,18 @@ public class ScnShop extends XUIScene {
 	@Override
 	public JSMethodInterface getScene()
 	{
-		return null;
+		return js().__(initializeScene());
 	}
 
+	@Override
+	public JSMethodInterface loadPage()
+	{
+	  return fragment()
+				.__(tkActivity.createActivity(new JSONPageMain().getJSON()))
+				;
+	}
+	
+	
 	ConfigScene conf = new ConfigScene();
 	
 

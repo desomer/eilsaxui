@@ -2,30 +2,26 @@ package com.elisaxui.xui.core.page;
 
 import static com.elisaxui.xui.core.toolkit.JQuery.$;
 import static com.elisaxui.xui.core.toolkit.json.JXui.$xui;
+import static com.elisaxui.xui.core.transition.ConstTransition.NEXT_FRAME;
+import static com.elisaxui.xui.core.transition.ConstTransition.SPEED_RIPPLE_EFFECT;
+import static com.elisaxui.xui.core.transition.ConstTransition.SPEED_SHOW_MENU;
 import static com.elisaxui.xui.core.transition.CssTransition.activity;
 import static com.elisaxui.xui.core.transition.CssTransition.content;
 import static com.elisaxui.xui.core.widget.button.ViewRippleEffect.cRippleEffect;
 import static com.elisaxui.xui.core.widget.button.ViewRippleEffect.cRippleEffectShow;
 
-import com.elisaxui.AppConfig;
-import com.elisaxui.app.elisys.xui.js.JSHistoireManager;
-import com.elisaxui.app.elisys.xui.page.main.AppRoot;
-import com.elisaxui.app.elisys.xui.widget.JSSyllabisation;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
-import com.elisaxui.core.xui.xml.annotation.xComment;
-import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.target.CONTENT;
-import com.elisaxui.xui.admin.test.JSTestDataDriven;
 import com.elisaxui.xui.core.config.TKConfig;
 import com.elisaxui.xui.core.datadriven.JSDataCtx;
 import com.elisaxui.xui.core.datadriven.JSDataDriven;
@@ -42,11 +38,12 @@ import com.elisaxui.xui.core.widget.container.JSContainer;
 import com.elisaxui.xui.core.widget.container.JSViewCard;
 import com.elisaxui.xui.core.widget.layout.JSPageLayout;
 import com.elisaxui.xui.core.widget.loader.ViewLoader;
+import com.elisaxui.xui.core.widget.log.ViewLog;
 import com.elisaxui.xui.core.widget.menu.JSMenu;
 import com.elisaxui.xui.core.widget.menu.ViewMenu;
+import com.elisaxui.xui.core.widget.navbar.JSNavBar;
 import com.elisaxui.xui.core.widget.navbar.ViewNavBar;
 import com.elisaxui.xui.core.widget.overlay.JSOverlay;
-import static com.elisaxui.xui.core.transition.ConstTransition.*;
 
 public abstract class XUIScene extends XHTMLPart {
 
@@ -255,7 +252,9 @@ public abstract class XUIScene extends XHTMLPart {
 								
 								._if("!$xui.resourceLoading.hammer && !$xui.resourceLoading.query&& !$xui.resourceLoading.navigo&& !$xui.resourceLoading.fastdom&& !$xui.resourceLoading.chart")
 									.__("(",getMoveManager(),")()")	
+									/***************************************************************/
 									.__(getScene())
+									/***************************************************************/
 								.endif()
 							)						
 					)	
@@ -265,8 +264,86 @@ public abstract class XUIScene extends XHTMLPart {
 
 	
 
+	public JSMethodInterface removeAppShell()
+	{
+	  return fragment()
+			// retire l app shell
+				.__("$('.",XUIScene.scene.getId(), "').children().remove()")
+				;
+	}
 	
+	public JSMethodInterface registerServiceWorker()
+	{
+	  return fragment()
+			._if("'serviceWorker' in navigator")
+				.__("navigator.serviceWorker.register('sw.js', { scope: '/'} ).then(",  //rest/page/
+						fct("registration")
+							.consoleDebug(txt("ok registration scope"), "registration.scope")
+							.set("navigator.serviceWorker.onmessage", fct("e")
+									//.consoleDebug(txt("onEventSW"), "e.data")
+									.__(JQuery.$(ViewLog.cLog, " textArea").val( JQuery.$(ViewLog.cLog, " textArea").val() , "+ e.data"  ))
+									)
+							,",",
+						fct("err").consoleDebug(txt("ServiceWorker registration failed"), "err") 
+					,")")
+			.endif();
+	}
 		
+	static JSMenu jsMenu;
+	protected static JSNavBar jsNavBar;
+	protected static TKActivity tkActivity;
+	protected static JSPageLayout jsPageLayout;
+	
+	public JSMethodInterface initializeScene()
+	{
+	  return fragment()   
+			//******************** construction du menu ****************************************************
+				.var(jsMenu, _new())
+				.var("jsonMenu", jsMenu.getData())
+				// TODO a changer par un data sur le menu
+				.set("window.jsonMainMenu", "jsonMenu")  // liste des nemu pour animation dans tkAnimation
+				.var(tkActivity, "$xui.tkrouter.activityMgr")
+				
+				/***********************************************************************************************/		
+
+				/**************************************************************/
+				.__(TKQueue.startProcessQueued( 100,  fct()
+							.__(removeAppShell())
+							.__(loadPage())						
+					 , 200, fct()
+							// TODO a changer : mettre dans une queue avec priorité (avec image) et gestion de promise d'attente 
+					 		.__(loadExtendScript()) 
+							.__(searchMenu()) 
+					 , 500,  fct()
+							.__(registerServiceWorker())
+
+					))
+				/*************************************************************/
+			  ;
+	}
+	
+	
+	public JSMethodInterface searchMenu()
+	{
+	  return fragment()
+			  ;
+	}
+	
+
+	public JSMethodInterface loadPage()
+	{
+	  return fragment()
+			  ;
+	}
+	
+	public JSMethodInterface loadExtendScript()
+	{
+	  return fragment()   
+		 		// load script notify
+				.__(" $.getScript({url:'https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js',  cache: true})") 
+			  ;
+	}
+	
 	public JSMethodInterface getIntializeJSFct()
 	{
 		return js()

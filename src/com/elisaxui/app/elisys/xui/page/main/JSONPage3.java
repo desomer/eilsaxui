@@ -28,7 +28,7 @@ class JSONPage3 extends JSONPage
 																 btnActionIcon("search", EVT_SEARCH)
 																) )
 				 ,  factory("#Activity3 .cArticle", FACTORY_CONTAINER, arr(
-						 										card( arr( backgroundImage(AppRoot.listPhotos[3], 1),  
+						 										card( arr( backgroundImage(ScnRoot.listPhotos[3], 1),  
 						 													text("En construction")
 						 												))
 						 										) )

@@ -119,6 +119,10 @@ public abstract class XHTMLPart extends XMLPart {
 		return jsBuilder.createJSFunction().setParam(param);
 	}
 	
+	/**
+	 *     ou js()
+	 * @return
+	 */
 	public final static JSFunction fragment()
 	{
 		return jsBuilder.createJSFunction().setFragment(true);

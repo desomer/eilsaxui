@@ -89,10 +89,9 @@ public class ScnRoot extends XUIScene {
 	
 	
 	@Override
-	public JSMethodInterface getScene()
+	public JSMethodInterface createScene()
 	{	
-		return js()				
-				.__(initializeScene())
+		return fragment()				
 				/*************************************************************/
 				
 				.var(jsHitoireMgr, _new())
@@ -210,15 +209,7 @@ public class ScnRoot extends XUIScene {
 						.var(jsHitoireMgr, _new())
 						.__(jsHitoireMgr.getHistoire())
 				)
-
-				
-				
-				/************************************************************/
-				.set(jsNavBar, _new())
-				.set("jsonNavBar", jsNavBar.getData("'#NavBarActivity2'"))    // bug import mth jsNavBar car pas ajouter si pas appelé
-								
-				/*********************************************************/
-				;
+		;
 	}
 	
 	/**********************************************************************************************/

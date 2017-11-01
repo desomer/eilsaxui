@@ -5,9 +5,15 @@ package com.elisaxui.core.xui.xhtml.builder.javascript.jsclass;
 
 import java.lang.reflect.Method;
 
-public final class MethodInvocationHandle
+/**
+ * identifie un appel appel a une meth js 
+ * utiliser dans les getListHandleFuntionPrivate
+ * @author gauth
+ *
+ */
+public final class MethodDesc
 {
-	public MethodInvocationHandle(JSClassImpl implcl, Object proxy, Method method, Object[] args) {
+	public MethodDesc(JSClassImpl implcl, Object proxy, Method method, Object[] args) {
 		super();
 		this.implcl = implcl;
 		this.proxy = proxy;

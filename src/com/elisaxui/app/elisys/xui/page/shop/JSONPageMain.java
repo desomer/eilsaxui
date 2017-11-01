@@ -13,7 +13,14 @@ public class JSONPageMain extends JSONPage {
 
 	@Override
 	public Object getJSON() {
-		return page( "Activity1", arr(), obj());
+		return page( "Activity1", arr(
+				
+				factory("#NavBarActivity1", FACTORY_NAVBAR, arr(  // backgroundImage(ScnRoot.listPhotos[4], 0.3),  
+						 btnBurger(), 
+						 title("Elisys Memo")
+						) )
+				
+				), obj());
 	}
 
 }

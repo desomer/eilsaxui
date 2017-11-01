@@ -50,7 +50,6 @@ public abstract class XUIScene extends XHTMLPart {
 	public static final int heightNavBar = 50*2;
 	public static final int widthMenu = 250;
 	
-
 	public static final double OVERLAY_OPACITY_MENU = 0.5;
 	public static final double OVERLAY_OPACITY_BACK = 0.7;
 	
@@ -69,11 +68,9 @@ public abstract class XUIScene extends XHTMLPart {
 	public static XClass scene;
 	public static XClass cShell;
 	
-	public abstract JSMethodInterface getScene();
+	public abstract JSMethodInterface createScene();
 	public abstract ConfigScene getConfigScene();
-	
-	//var oRect = oElement.getBoundingClientRect()
-    
+	   
 	@xTarget(AFTER_BODY.class)
 	@xRessource
 	@xPriority(1)
@@ -82,7 +79,6 @@ public abstract class XUIScene extends XHTMLPart {
 				xLinkCssAsync("https://fonts.googleapis.com/icon?family=Material+Icons"),
 				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"),
 				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css")
-//				xLinkCssAsync("https://fonts.googleapis.com/css?family=Open+Sans")
 				);
 	}
 	
@@ -253,7 +249,8 @@ public abstract class XUIScene extends XHTMLPart {
 								._if("!$xui.resourceLoading.hammer && !$xui.resourceLoading.query&& !$xui.resourceLoading.navigo&& !$xui.resourceLoading.fastdom&& !$xui.resourceLoading.chart")
 									.__("(",getMoveManager(),")()")	
 									/***************************************************************/
-									.__(getScene())
+									.__(initializeScene())
+									.__(createScene())
 									/***************************************************************/
 								.endif()
 							)						
@@ -267,8 +264,9 @@ public abstract class XUIScene extends XHTMLPart {
 	public JSMethodInterface removeAppShell()
 	{
 	  return fragment()
-			// retire l app shell
-				.__("$('.",XUIScene.scene.getId(), "').children().remove()")
+			  //	.setTimeout(fct()
+			  			.__($(XUIScene.scene).children(XUIScene.cShell).remove())
+			  			//, 100)
 				;
 	}
 	
@@ -308,10 +306,9 @@ public abstract class XUIScene extends XHTMLPart {
 
 				/**************************************************************/
 				.__(TKQueue.startProcessQueued( 100,  fct()
+							.__(loadPage())	
 							.__(removeAppShell())
-							.__(loadPage())						
 					 , 200, fct()
-							// TODO a changer : mettre dans une queue avec priorité (avec image) et gestion de promise d'attente 
 					 		.__(loadExtendScript()) 
 							.__(searchMenu()) 
 					 , 500,  fct()
@@ -337,7 +334,7 @@ public abstract class XUIScene extends XHTMLPart {
 	}
 	
 	public JSMethodInterface loadExtendScript()
-	{
+	{  	// TODO a changer : mettre dans une queue avec priorité (avec image) et gestion de promise d'attente 
 	  return fragment()   
 		 		// load script notify
 				.__(" $.getScript({url:'https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js',  cache: true})") 
@@ -350,15 +347,15 @@ public abstract class XUIScene extends XHTMLPart {
 		
 	   	.set("navigator.vibrate", "navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate")
 	   	
-		.__("$.fn.insertAt = function(elements, index){\n"+   // utiliser dans le core 
-				"\tvar children = this.children();\n"+
-				"\tif(index >= children.length){\n"+
-				"\t\tthis.append(elements);\n"+
-				"\t\treturn this;\n"+
-				"\t}\n"+
-				"\tvar before = children.eq(index);\n"+
-				"\t$(elements).insertBefore(before);\n"+
-				"\treturn this;\n"+
+		.__("$.fn.insertAt = function(elements, index){"+   // utiliser dans le core 
+				"var children = this.children();"+
+				"if(index >= children.length){"+
+				"this.append(elements);"+
+				"return this;"+
+				"}"+
+				"var before = children.eq(index);"+
+				"$(elements).insertBefore(before);"+
+				"return this;"+
 				"}")
 		;
 	}

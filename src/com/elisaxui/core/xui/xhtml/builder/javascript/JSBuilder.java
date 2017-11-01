@@ -10,7 +10,9 @@ import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassImpl;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassInvocationHandler;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodInvocationHandler;
+import com.elisaxui.core.xui.xml.annotation.xFile;
+import com.elisaxui.core.xui.xml.annotation.xForceInclude;
 import com.elisaxui.core.xui.xml.builder.XUIFormatManager;
 
 
@@ -30,7 +32,7 @@ public class JSBuilder extends XUIFormatManager {
 	}
 
 	public void setNameOfProxy(String prefix, Object inst, Object name) {
-		JSClassInvocationHandler mh = (JSClassInvocationHandler) Proxy.getInvocationHandler(inst);
+		MethodInvocationHandler mh = (MethodInvocationHandler) Proxy.getInvocationHandler(inst);
 		mh.setName(prefix + name);
 	}
 
@@ -38,7 +40,7 @@ public class JSBuilder extends XUIFormatManager {
 	@SuppressWarnings("unchecked")
 	public final <E extends JSClass> E getProxy(final Class<? extends JSClass> cl) {
 
-		Object proxy = Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[] { cl }, new JSClassInvocationHandler(cl, this));
+		Object proxy = Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[] { cl }, new MethodInvocationHandler(cl, this));
 		return (E) proxy;
 	}
 
@@ -66,9 +68,19 @@ public class JSBuilder extends XUIFormatManager {
 		// init constructor
 		JSClass inst = XHTMLPart.jsBuilder.getProxy(cl);
 		Method[] lism = cl.getDeclaredMethods();
+		
+		xForceInclude annInclude = cl.getAnnotation(xForceInclude.class);
+		boolean includeAllMth = annInclude != null;
+		
 		if (lism != null) {
 			for (Method method : lism) {
-				if (method.getName().equals("constructor")) {
+				boolean isPublic = method.isDefault();
+				xForceInclude annIncludeMth = method.getAnnotation(xForceInclude.class);
+				
+				boolean isForceIncluded = annIncludeMth != null;
+				boolean includeMth = isPublic && (isForceIncluded || includeAllMth);
+				
+				if (includeMth || method.getName().equals("constructor")) {
 //					System.out.println("[JSBuilder]  include default constructor of class " + name);
 					try {
 						method.invoke(inst, new Object[method.getParameterCount()]);
@@ -84,14 +96,14 @@ public class JSBuilder extends XUIFormatManager {
 	}
 	
 		
-	public JSClassImpl getJSClassImpl(Class<? extends JSClass> cl, Object proxy) throws IllegalAccessException {
-		JSClassImpl ImplClass = XUIFactoryXHtml.getXHTMLFile().getClassImpl(JSBuilder.this, cl);
-//		if (!ImplClass.isInitialized()) {
-//
-//			ImplClass.setInitialized(true);
-//		}
-		return ImplClass;
-	}
+//	public JSClassImpl getJSClassImpl(Class<? extends JSClass> cl) throws IllegalAccessException {
+//		JSClassImpl ImplClass = XUIFactoryXHtml.getXHTMLFile().getClassImpl(JSBuilder.this, cl);
+////		if (!ImplClass.isInitialized()) {
+////
+////			ImplClass.setInitialized(true);
+////		}
+//		return ImplClass;
+//	}
 	
 	public JSClassImpl createJSClass() {
 		return new JSClassImpl(this);

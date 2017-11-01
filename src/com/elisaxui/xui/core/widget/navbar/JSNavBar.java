@@ -5,6 +5,7 @@ package com.elisaxui.xui.core.widget.navbar;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
+import com.elisaxui.core.xui.xml.annotation.xForceInclude;
 import com.elisaxui.xui.core.datadriven.JSDataDriven;
 import com.elisaxui.xui.core.datadriven.JSDataSet;
 import com.elisaxui.xui.core.page.XUIScene;
@@ -15,13 +16,13 @@ import com.elisaxui.xui.core.widget.menu.ViewMenu;
  * @author Bureau
  *
  */
+
+@xForceInclude
 public interface JSNavBar extends JSClass {
 
 	JSDataDriven aDataDriven = null;
 	JSDataSet aDataSet = null;
 	JSXHTMLPart template = null;
-
-	
 
 	default Object getData(Object selector) {
 

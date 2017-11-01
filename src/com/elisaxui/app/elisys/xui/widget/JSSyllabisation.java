@@ -48,7 +48,7 @@ public interface JSSyllabisation extends JSClass {
 	}
 	
 	
-	@xAnonymous
+	@xAnonymous    //TODO a faire fonctionner
 	default Object fRecognitionEnd(Object event)
 	{
 		return  (Anonym) ()-> {

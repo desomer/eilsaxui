@@ -9,7 +9,7 @@ import java.util.List;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassInvocationHandler;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodInvocationHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSString;
 import com.elisaxui.core.xui.xml.builder.IXMLBuilder;
@@ -144,7 +144,7 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 */
 	private void addElem(Object name, Object object) {
 		if (object instanceof JSListParameter && name instanceof JSClass) {
-			JSClassInvocationHandler inv = (JSClassInvocationHandler) Proxy.getInvocationHandler(name);
+			MethodInvocationHandler inv = (MethodInvocationHandler) Proxy.getInvocationHandler(name);
 			getListElem().add(JSClass._new(inv.getImplementClass(), ((JSListParameter) object).param));
 		} else
 			addElem(object);

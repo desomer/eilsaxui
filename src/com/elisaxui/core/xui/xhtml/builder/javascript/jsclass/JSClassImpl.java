@@ -20,12 +20,12 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder;
  */
 public class JSClassImpl extends JSContent {
 	
-	Object name;
+	Object name;   // nom de la class
 
 	LinkedList<JSFunction> listFuntion = new LinkedList<>();
 	private Map<String, String> listDistinctFct = new HashMap<String, String>();
 	
-	private LinkedList<MethodInvocationHandle> listHandleFuntionPrivate = new LinkedList<>();
+	private LinkedList<MethodDesc> listHandleFuntionPrivate = new LinkedList<>();
 	
 	public JSClassImpl(JSBuilder jsBuilder) {
 		super(jsBuilder);
@@ -170,7 +170,7 @@ public class JSClassImpl extends JSContent {
 	/**
 	 * @return the listHandleFuntionPrivate
 	 */
-	public LinkedList<MethodInvocationHandle> getListHandleFuntionPrivate() {
+	public LinkedList<MethodDesc> getListHandleFuntionPrivate() {
 		return listHandleFuntionPrivate;
 	}
 

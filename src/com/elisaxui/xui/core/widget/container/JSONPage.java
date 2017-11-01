@@ -28,6 +28,7 @@ public abstract class JSONPage extends JSONBuilder
 	 */
 	private static final String ATTR_ACTION = "action";
 	
+	
 	public static final String FACTORY_NAVBAR = "JSNavBar";
 	public static final String FACTORY_CONTAINER = "JSContainer";
 	

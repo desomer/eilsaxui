@@ -80,6 +80,14 @@ public class JQuery extends JSClassMethod {
 		return callMth("append", html);
 	}
 	
+	/**
+	 * @return
+	 */
+	public JQuery remove(Object...selector) {
+		// TODO Auto-generated method stub
+		return callMth("remove", addText(CSSSelector.onPath(selector)));
+	}
+	
 	public JQuery css(Object attr, Object value)
 	{
 		return callMth("css", addText(attr), "," ,addText(value));
@@ -110,7 +118,7 @@ public class JQuery extends JSClassMethod {
 	 * @param selector
 	 * @return
 	 */
-	public Object children(Object...selector) {
+	public JQuery children(Object...selector) {
 		return callMth("children", addText(CSSSelector.onPath(selector)));
 	}
 	
@@ -118,7 +126,7 @@ public class JQuery extends JSClassMethod {
 	 * @param selector
 	 * @return
 	 */
-	public Object find(Object...selector) {
+	public JQuery find(Object...selector) {
 		return callMth("find", addText(CSSSelector.onPath(selector)));
 	}
 	
@@ -144,4 +152,6 @@ public class JQuery extends JSClassMethod {
 	public Object outerHeight(Object...withMargin) {
 		return callMth("outerHeight", withMargin);
 	}
+
+
 }

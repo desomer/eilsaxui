@@ -16,6 +16,11 @@ public class JSArray extends JSClassMethod {
 		return callMth("push", value);
 	}
 	
+	public JSArray splice(Object debut, Object nbASupprimer)
+	{
+		return callMth("splice", debut, ",", nbASupprimer);
+	}
+	
 	public JSArray get(Object idx)
 	{
 		JSArray ret = new JSArray().setName(this.getName());

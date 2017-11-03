@@ -115,9 +115,9 @@ public class SrvMain {
 					     v("description","Elisys, dyslexie pour parent, enfant et professeur"),
 					     v("orientation","portrait"),
 					     v("icons", arr( 
-					    		 obj( v("src","/rest/json/icon-144x144.png"), v("sizes","144x144"), v("type","image/png")),
-					    		 obj( v("src","/rest/json/icon-196x196.png"), v("sizes","196x196"), v("type","image/png")),
-					    		 obj( v("src","/rest/json/icon-512x512.png"), v("sizes","512x512"), v("type","image/png"))
+					    		 obj( v("src", AssetHandler.getIconUri("elisys", 144, 144)), v("sizes","144x144"), v("type","image/png")),
+					    		 obj( v("src", AssetHandler.getIconUri("elisys", 196, 195)), v("sizes","196x196"), v("type","image/png")),
+					    		 obj( v("src", AssetHandler.getIconUri("elisys", 512, 512)), v("sizes","512x512"), v("type","image/png"))
 					    		 ) )
 					  ); 
 			}
@@ -138,13 +138,13 @@ public class SrvMain {
      * @return
      */
 	@GET
-    @Path("/icon-{h}x{w}.png")
+    @Path("/icon-{id}-{h}x{w}.png")
     @Produces("image/png")
-    public Response getIcone(@Context HttpHeaders headers, @Context UriInfo uri,  @PathParam("h") int h,  @PathParam("w") int w) {
+    public Response getIcone(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("id") String id,  @PathParam("h") int h,  @PathParam("w") int w) {
 
         byte[] imageData = null;
 		try {
-			URL icone = ResourceLoader.getResource(AssetHandler.URI_ICON);
+			URL icone = ResourceLoader.getResource(AssetHandler.dicoAsset.get(id));
 			
 			BufferedImage image = ImageIO.read(icone);
 			

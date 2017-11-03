@@ -3,6 +3,8 @@
  */
 package com.elisaxui.app.elisys.xui.js;
 
+import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.defVar;
+
 import com.elisaxui.app.elisys.xui.widget.JSSyllabisation;
 import com.elisaxui.core.xui.xhtml.builder.javascript.Anonym;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
@@ -16,7 +18,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSon;
  */
 public interface JSHistoireManager extends JSClass {
 	
-	JSSyllabisation _jsSyllabe = null;
+	JSSyllabisation _jsSyllabe = defVar();
 	
 	default Object getHistoire()
 	{

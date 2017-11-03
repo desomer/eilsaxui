@@ -17,7 +17,6 @@ public class CssTransition extends XHTMLPart {
 	public static final int widthMenu = 250;
 
 	public static XClass activity;
-	public static XClass content;
 	
 	static XClass fixedForAnimated;
 	static XClass active;

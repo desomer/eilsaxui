@@ -255,7 +255,7 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 			}
 
 		getListElem().add(");");
-		return null;
+		return this;
 	}
 	
 	@Override

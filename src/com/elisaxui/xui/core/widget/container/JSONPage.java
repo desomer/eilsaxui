@@ -106,6 +106,11 @@ public abstract class JSONPage extends JSONBuilder
 		return  obj( v(ATTR_TYPE, "cardAction"),v("idAction", idAction));
 	}
 	
+	public Object backgroundGradiant()
+	{
+		return  obj( v(ATTR_TYPE, "background"), v("mode", "granim"));
+	}
+	
 	public Object backgroundImage(String url, double opacity)
 	{
 		return  obj( v(ATTR_TYPE, "background"), v("mode", "css"), v("css", "url(" +url +") center / cover no-repeat"), v("opacity", opacity));

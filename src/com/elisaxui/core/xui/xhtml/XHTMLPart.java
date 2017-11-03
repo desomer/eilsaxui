@@ -120,7 +120,7 @@ public abstract class XHTMLPart extends XMLPart {
 	}
 	
 	/**
-	 *     ou js()
+	 *     ou js()   mais fragment peux etre conditionnel
 	 * @return
 	 */
 	public final static JSFunction fragment()

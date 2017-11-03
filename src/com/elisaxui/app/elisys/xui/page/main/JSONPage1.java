@@ -40,7 +40,9 @@ import com.elisaxui.xui.core.widget.log.ViewLog;
 			XMLElement cntLogWorker =  XHTMLPart.xPart(new ViewLog());	
 			
 			return page( "Activity1", arr( 
-						factory("#NavBarActivity1", FACTORY_NAVBAR, arr( backgroundImage(ScnRoot.listPhotos[4], 0.3),  
+						factory("#NavBarActivity1", FACTORY_NAVBAR, arr( 
+																	 //backgroundGradiant(),
+																	 backgroundImage(ScnRoot.listPhotos[4], 0.3),  
 																	 btnBurger(), 
 																	 title("Bonjour Elisa"),
 																	 btnActionIcon("delete", EVT_CLEAR),

@@ -6,6 +6,9 @@ package com.elisaxui.app.elisys.xui.page.main;
 import com.elisaxui.app.elisys.xui.js.JSHistoireManager;
 import com.elisaxui.app.elisys.xui.widget.JSSyllabisation;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSArray;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSInt;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSon;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xFile;
@@ -53,24 +56,26 @@ public class ScnRoot extends XUIScene {
 	@xRessource
 	public XMLElement xImportAfter() {
 		return xListElement(
-				xImport(JSSyllabisation.class),   //TODO A faire marcher et retire du XUIScene
+				xImport(JSSyllabisation.class), 
 				xImport(JSHistoireManager.class)  
 				);
 	}
 	
 	
-	static JSSyllabisation jsSyllabe;
-	static JSHistoireManager jsHitoireMgr;
-	
+
 	@Override
 	public JSMethodInterface searchMenu()
 	{
+	  JSArray jsonMenu = new JSArray().setName("jsonMenu");	
+	  JSArray jsonApi = new JSArray().setName("jsonApi");	
+	  JSInt idx = new JSInt().setName("idx");
+	  
 	  return fragment()
 			  	// TODO a changer 
 				.__("$.getJSON('"+REST_JSON_MENU_ACTIVITY1+"')"
-					+ ".done(", fct("a").consoleDebug("'json menu'", "a")
-						._for("var i = 0, l = a.length; i < l; i++")
-							.__("jsonMenu.push(a[i])")
+					+ ".done(", fct(jsonApi)    //.consoleDebug("'json menu'", "a")
+						._forIdx(idx, jsonApi)
+							.__(jsonMenu.push(jsonApi.get(idx)))
 						.endfor()
 						,")"
 					+ ".fail(", fct("xhr","textStatus", "error").consoleDebug("error") ,")")
@@ -87,16 +92,20 @@ public class ScnRoot extends XUIScene {
 			  ;
 	}
 	
+	static JSSyllabisation jsSyllabe;
+	static JSHistoireManager jsHitoireMgr;
+	
 	
 	@Override
 	public JSMethodInterface createScene()
 	{	
+		JSArray jsonSyllabe = new JSArray().setName("jsonSyllabe");
 		return fragment()				
 				/*************************************************************/
 				
 				.var(jsHitoireMgr, _new())
 				.var(jsSyllabe, _new())
-				.var("jsonSyllabe", jsSyllabe.getData())
+				.var(jsonSyllabe, jsSyllabe.getData())
 				
 				/**************************************************************/
 				
@@ -105,26 +114,14 @@ public class ScnRoot extends XUIScene {
 						.__(TKQueue.startProcessQueued( 100,  fct()
 								.var(jsPageLayout, _new())
 								.__(jsPageLayout.hideOnScroll("json.param"))
-														
-//								.var("jCanvasGranim", "$('#NavBarActivity1 .animatedBg')[0]")
-//								.__(NavBarAnimated1)
-									
-//								.__("JSONEditor.defaults.options.theme = 'bootstrap3';")	
-//								.__("var editor = new JSONEditor(document.getElementById(\"editor\"), { schema: {} } )")
-//								.__("editor.setValue(window.jsonMainMenu)")
-//								.__("editor.on('change',", fct()
-//										.var("content", "editor.getValue()")
-//										.consoleDebug("content")
-//										.__("$.post( {"+ 
-//												"  type: 'POST'," + 
-//												"  url: '/rest/json/save'," + 
-//												"  data: JSON.stringify(content)," + 
-//												//"  success: success,\r\n" + 
-//												"  dataType: 'text'," + 
-//											    "  contentType: 'text/plain; charset=utf-8'"+
-//												"})")
-//									, ")")
 								
+// 					TODO a changer : mettre dans une queue avec priorité (avec image) et gestion de promise d'attente 								
+//								.__(" $.getScript({url:'https://cdnjs.cloudflare.com/ajax/libs/granim/1.0.6/granim.min.js',  cache: true}).done("
+//								    , fct() 
+//								    	.var("jCanvasGranim", "$('#NavBarActivity1 .animatedBg')[0]")
+//								    	.__(NavBarAnimated1)
+//								    ,")") 
+
 							, 500,  fct()
 						 		.set("window.microlistener", jsSyllabe.createMicroListener())								
 							)
@@ -163,16 +160,15 @@ public class ScnRoot extends XUIScene {
 				
 				.set("window.onDelete", fct("json")
 						.__(TKQueue.startProcessQueued( fct()
-								.set("window.lastPhrase", "''")
+								.set("window.lastPhrase", txt(""))
 								.var(jsSyllabe, "window.microlistener")
 								.var("jsonSyllabe2", jsvar(jsSyllabe, ".aDataSet.getData()"))
 								
 								._for("var i = jsonSyllabe2.length-1; i >=0; i--")
 									.__("setTimeout(", fct()
-													.__("jsonSyllabe.splice(0,1);")
+													.__(jsonSyllabe.splice(0,1))
 										, ",50*i)")			
-								.endfor()
-								
+								.endfor()	
 							)
 						)
 				)
@@ -264,6 +260,23 @@ public class ScnRoot extends XUIScene {
 			"});";
 	*/
 
+	
+//	.__("JSONEditor.defaults.options.theme = 'bootstrap3';")	
+//	.__("var editor = new JSONEditor(document.getElementById(\"editor\"), { schema: {} } )")
+//	.__("editor.setValue(window.jsonMainMenu)")
+//	.__("editor.on('change',", fct()
+//			.var("content", "editor.getValue()")
+//			.consoleDebug("content")
+//			.__("$.post( {"+ 
+//					"  type: 'POST'," + 
+//					"  url: '/rest/json/save'," + 
+//					"  data: JSON.stringify(content)," + 
+//					//"  success: success,\r\n" + 
+//					"  dataType: 'text'," + 
+//				    "  contentType: 'text/plain; charset=utf-8'"+
+//					"})")
+//		, ")")
+	
     /****************************************************************************************/
 	ConfigScene conf = new ConfigScene();
 	

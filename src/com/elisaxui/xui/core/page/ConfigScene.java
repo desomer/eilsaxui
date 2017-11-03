@@ -17,9 +17,35 @@ public class ConfigScene {
 	private String bgColorMenu = "background: linear-gradient(to right, rgba(239,1,124,0.5) 0%, rgba(255,0,136,0.68) 36%, rgba(253,94,176,1) 100%);";
 	private String bgColorContent = "rgb(245, 243, 237)";   // gris
 	private String app_manifest = "/rest/json/manifest.json";
+	private String idicon = "elisys";
+	private String title = "Elisys";
 	
 	
 
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	/**
+	 * @return the id_icon
+	 */
+	public String getIdIcon() {
+		return idicon;
+	}
+	/**
+	 * @param id_icon the id_icon to set
+	 */
+	public void setIdIcon(String id_icon) {
+		this.idicon = id_icon;
+	}
 	/**
 	 * @return the bgColorScene
 	 */

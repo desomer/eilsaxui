@@ -39,24 +39,32 @@ public class XUIFactoryBasic extends AbstractHandler {
 			
 			StringBuilder js = URLLoader.loadTextFromUrl(url);
 			
-			content = JSMinifier.doMinifyJS(js.toString()).toString();
-						
-			cache.put(url, content);
+			if (js.length()>0)
+			{
+				content = JSMinifier.doMinifyJS(js.toString()).toString();	
+				cache.put(url, content);
+			}
 		}
 		
-		
-		response.setHeader(HttpHeaders.CACHE_CONTROL, "max-age=315360000, public");
-		response.setHeader(HttpHeaders.CONTENT_ENCODING,"gzip");
-		response.setCharacterEncoding("utf-8");
-		response.setContentType("application/javascript;charset=utf-8");   
-		
-        GZIPOutputStream gzip = new GZIPOutputStream(response.getOutputStream());
-        gzip.write(content.getBytes("UTF-8"));
-        gzip.flush();
-        gzip.close();
-		
-		baseRequest.setHandled(true);
-		response.setStatus(HttpServletResponse.SC_OK);
+		if (content==null) {
+			baseRequest.setHandled(true);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+		}
+		else
+		{
+			response.setHeader(HttpHeaders.CACHE_CONTROL, "max-age=315360000, public");
+			response.setHeader(HttpHeaders.CONTENT_ENCODING,"gzip");
+			response.setCharacterEncoding("utf-8");
+			response.setContentType("application/javascript;charset=utf-8");   
+			
+	        GZIPOutputStream gzip = new GZIPOutputStream(response.getOutputStream());
+	        gzip.write(content.getBytes("UTF-8"));
+	        gzip.flush();
+	        gzip.close();
+			
+			baseRequest.setHandled(true);
+			response.setStatus(HttpServletResponse.SC_OK);
+		}
 	}
 
 

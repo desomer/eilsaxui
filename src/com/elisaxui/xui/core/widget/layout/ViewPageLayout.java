@@ -10,6 +10,7 @@ import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.CONTENT;
+import com.elisaxui.xui.core.transition.CssTransition;
 import com.elisaxui.xui.core.widget.menu.ViewMenu;
 import com.elisaxui.xui.core.widget.navbar.ViewNavBar;
 import com.elisaxui.xui.core.widget.overlay.ViewOverlay;
@@ -28,7 +29,7 @@ import com.elisaxui.xui.core.widget.overlay.ViewOverlay;
 public class ViewPageLayout extends XHTMLPart { 
 	
 	public static XClass cArticle;
-	public static XClass cContent;
+	public static XClass content;
 	
 	public static final String ID = "ID";
 	
@@ -42,15 +43,15 @@ public class ViewPageLayout extends XHTMLPart {
 	public XMLElement xStyle() {
 
 		return xCss().select(cArticle)
-						.set("overflow:hidden; min-height:100vh")
+						.set("overflow:hidden;")   //min-height:100vh
 		;
 	}
 	
 	@xTarget(CONTENT.class)
 	public XMLElement xViewPanel() {
-		return xDiv(xId(getProperty(ID)), xAttr("class", txt("activity inactive nodisplay"))
+		return xDiv(xId(getProperty(ID)), xAttr("class", txt("activity inactive nodisplay"))  //TODO changer par les class
 				, xPart(new ViewNavBar().addProperty(ViewNavBar.PROPERTY_NAME, "NavBar"+getProperty(ID)))
-				, xDiv(xAttr("class", txt("content")) 	
+				, xDiv(content 	
 						, xDiv(cArticle, vHandle("children"+getProperty(ID)))
 				, xPart(new ViewOverlay())
 			   )	

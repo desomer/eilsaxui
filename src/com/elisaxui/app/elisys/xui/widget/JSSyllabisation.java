@@ -48,7 +48,7 @@ public interface JSSyllabisation extends JSClass {
 	}
 	
 	
-	@xAnonymous    //TODO a faire fonctionner
+	@xAnonymous    //TODO a faire fonctionner ou documenter
 	default Object fRecognitionEnd(Object event)
 	{
 		return  (Anonym) ()-> {
@@ -84,8 +84,8 @@ public interface JSSyllabisation extends JSClass {
 	
 					JSon param = new JSon().setName("param");
 					var(param, "{text:",textEvent,"}");
-					JSon data = new JSon().setName("data"); 
 					
+					JSon data = new JSon().setName("data"); 
 					
 					Anonym onJsonSyllabysation = (/*data*/)->{	
 						JSArray lesmots = new JSArray().setName("lesmots");
@@ -116,15 +116,21 @@ public interface JSSyllabisation extends JSClass {
 		Anonym onEnter = (/*ctx*/)->{
 			_if("ctx.row['_dom_']==null");				
 				set(template, ViewSyllabisation.getMot(XHTMLPart.xVar("ctx.row.text")));
+				
 				JQuery jqdom = new JQuery().setName("jqdom");
 				var(jqdom, template.appendInto(JQuery.$(ViewSyllabisation.cDivSyllabisation)));
+				
 				set("ctx.row['_dom_']", jqdom.get(0));
+				
 				JSArray sylb = new JSArray().setName("sylb");
 				var(sylb, "ctx.row.syllabes");
+				
 	            _forIdx("j", sylb);
 	            	set(template, ViewSyllabisation.getSyl(XHTMLPart.xVar(sylb.get("j").attr("text"))));
+	            	
 	        		JQuery jqdomSyl = new JQuery().setName("jqdomSyl");
 	            	var(jqdomSyl, template.appendInto("jqdom"));
+	            	
 	            	_if("j%2==1");
 	            		__(jqdomSyl.addClass(ViewSyllabisation.cSyllabeImpaire)  );
 	            	endif();

@@ -6,10 +6,10 @@ import static com.elisaxui.xui.core.transition.ConstTransition.NEXT_FRAME;
 import static com.elisaxui.xui.core.transition.ConstTransition.SPEED_RIPPLE_EFFECT;
 import static com.elisaxui.xui.core.transition.ConstTransition.SPEED_SHOW_MENU;
 import static com.elisaxui.xui.core.transition.CssTransition.activity;
-import static com.elisaxui.xui.core.transition.CssTransition.content;
 import static com.elisaxui.xui.core.widget.button.ViewRippleEffect.cRippleEffect;
 import static com.elisaxui.xui.core.widget.button.ViewRippleEffect.cRippleEffectShow;
 
+import com.elisaxui.app.elisys.xui.asset.AssetHandler;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
@@ -37,6 +37,7 @@ import com.elisaxui.xui.core.widget.button.ViewBtnCircle;
 import com.elisaxui.xui.core.widget.container.JSContainer;
 import com.elisaxui.xui.core.widget.container.JSViewCard;
 import com.elisaxui.xui.core.widget.layout.JSPageLayout;
+import com.elisaxui.xui.core.widget.layout.ViewPageLayout;
 import com.elisaxui.xui.core.widget.loader.ViewLoader;
 import com.elisaxui.xui.core.widget.log.ViewLog;
 import com.elisaxui.xui.core.widget.menu.JSMenu;
@@ -88,9 +89,9 @@ public abstract class XUIScene extends XHTMLPart {
 	public XMLElement xImportXUIScene() {
 		return xListElement(
 				
-				xTitle("Elisys"),
+				xTitle(getConfigScene().getTitle()),
 				xMeta(xAttr("name", xTxt("theme-color")), xAttr("content", xTxt(getConfigScene().getBgColorTheme()))),
-				xLinkIcon("/rest/json/icon-32x32.png"),  //TODO Config
+				xLinkIcon(AssetHandler.getIconUri(getConfigScene().getIdIcon(), 32, 32)), 
 				xLinkManifest(getConfigScene().getAppManifest()),
 				
 				xScriptJS(js()
@@ -180,13 +181,13 @@ public abstract class XUIScene extends XHTMLPart {
 					.path(xCss("#NavBarShell h1").set("text-align:center;color: inherit;  font-size: 2.1rem; margin-top: 50px"))
 				//----------------------------------------------------------------
 				.select(activity).set("background-color: "+getConfigScene().getBgColorContent()+";"+ PREF_3D+ " will-change:overflow,z-index;") //will-change:transform
-					.path(xCss(content)
+					.path(xCss(ViewPageLayout.content)
 								.set(" min-height: 100vh; min-width: 100vw; "
 										+ "background-color:"+getConfigScene().getBgColorContent()+";will-change:contents")  // changement durant le freeze du contenu de l'activity
 								)
 				
 				//----------------------------------------------------------------
-				.select(content).set("box-sizing: border-box;"  // ne pas ajouter a cActivity
+				.select(ViewPageLayout.content).set("box-sizing: border-box;"  // ne pas ajouter a cActivity
 						+ "min-height:100%; min-width: 100%;"
 						+ " max-width: 100%; "
 						+ "padding-top: " + (heightNavBar) + "px")	  //position:absolute		
@@ -264,9 +265,9 @@ public abstract class XUIScene extends XHTMLPart {
 	public JSMethodInterface removeAppShell()
 	{
 	  return fragment()
-			  //	.setTimeout(fct()
-			  			.__($(XUIScene.scene).children(XUIScene.cShell).remove())
-			  			//, 100)
+			  .__(TKQueue.startProcessQueued( 200,  fct()  //TODO a gerer dans un event appli ready
+			  			 .__($(XUIScene.scene).children(XUIScene.cShell).remove())
+			  		))
 				;
 	}
 	

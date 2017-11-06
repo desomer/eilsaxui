@@ -29,7 +29,8 @@ public class ScnShop extends XUIScene {
 	public JSMethodInterface loadPage()
 	{
 		return fragment()
-		.__(tkActivity.createActivity(new JSONPageMain().getJSON()))
+		.__(tkActivity.createActivity(new JSONPageHome().getJSON()))
+		.__(tkActivity.prepareActivity(new JSONPageDetail().getJSON()))
 		;
 	}
 	

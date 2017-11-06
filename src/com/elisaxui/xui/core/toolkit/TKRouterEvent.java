@@ -8,8 +8,10 @@ import static com.elisaxui.xui.core.toolkit.json.JXui.$xui;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.xui.core.config.TKConfig;
+import com.elisaxui.xui.core.toolkit.json.JIntent;
 import com.elisaxui.xui.core.transition.ConstTransition;
 import com.elisaxui.xui.core.transition.TKTransition;
+import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.defVar;
 
 /**
  * @author Bureau
@@ -125,22 +127,22 @@ public interface TKRouterEvent extends JSClass {
 	default TKActivity activityMgr()
 	{
 		_return(activityMgr);
-		
-		//attr("activityMgr");
 		return null;
 	}
 	
 	
+	JIntent _intent = defVar();
 	default Object doInitialize()
 	{
-		 __()
-		.__(navigo,".nextenable=", false)  // DISABLE PUSH STATE
-		.__(doNavigate(txt("!route/Activity1")))   // premier etat
-		.var("intent", "{ url:'route/Activity1', nextActivityAnim : 'fromBottom' }")
-		.__(historyIntent,".push(intent)")   // ajoute a l historique interne)
-		.__(navigo,".resolve()")
-		;
+		__(navigo,".nextenable=", false);  // DISABLE PUSH STATE
+		__(doNavigate(txt("!route/Activity1")));   // premier etat
+		var("intent", "{ url:'route/Activity1', nextActivityAnim : 'fromBottom' }");
+		__(historyIntent,".push(intent)");   // ajoute a l historique interne)
+		__(navigo,".resolve()");
 		
+//		var(_intent,   historyIntent, "[", historyIntent, ".length-1]");
+//		var("urlinent", _intent.url());
+//		var("urlinent2", _intent.activity().name());
 		return _void();
 	}
 		
@@ -198,19 +200,17 @@ public interface TKRouterEvent extends JSClass {
 	
 	default Object doNavigate(Object uri)
 	{
-		systemDebugIf(TKConfig.debugDoNavigate , txt("doNavigate"), "uri")
-		.__(navigo,".navigate(uri)")
-		;
+		systemDebugIf(TKConfig.debugDoNavigate , txt("doNavigate"), "uri");
+		__(navigo,".navigate(uri)");
 		return _void();
 	}
 	
 	
 	default Object isBack(Object change)
 	{
-		__()
-		._if(historyIntent,".length>1 && ",historyIntent, "[",historyIntent,".length-2].url==", change )
-			.__("return ",historyIntent,".pop()")
-		.endif()
+		_if(historyIntent,".length>1 && ",historyIntent, "[",historyIntent,".length-2].url==", change );
+			__("return ",historyIntent,".pop()");
+		endif();
 		;
 		return _null();
 	}
@@ -231,19 +231,18 @@ public interface TKRouterEvent extends JSClass {
 	
 	default Object doCancel()
 	{
- 		systemDebugIf(TKConfig.debugDoAction, txt("REMOVE HISTORY'", "$xui.intent"))
-		.__("this.navigo.nextenable=false")
- 		.__(historyIntent,".pop()")
- 		.__("history.go(-1)")
+ 		systemDebugIf(TKConfig.debugDoAction, txt("REMOVE HISTORY'", "$xui.intent"));
+		__("this.navigo.nextenable=false");
+ 		__(historyIntent,".pop()");
+ 		__("history.go(-1)");
 		;
 		return _void();
 	}
 	
 	default Object doTraceHisto()
 	{
-		var("currentActivity", $xui().tkrouter().activityMgr().getCurrentActivity())
- 		.systemDebugIf(TKConfig.debugPushState, txt("DO TRACE HISTORY'"), "currentActivity", txt(" histo intent "), historyIntent )
-		;
+		var("currentActivity", $xui().tkrouter().activityMgr().getCurrentActivity());
+ 		systemDebugIf(TKConfig.debugPushState, txt("DO TRACE HISTORY'"), "currentActivity", txt(" histo intent "), historyIntent );
 		return _void();
 	}
 	

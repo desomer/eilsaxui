@@ -21,7 +21,7 @@ public class JSArray extends JSClassMethod {
 		return callMth("splice", debut, ",", nbASupprimer);
 	}
 	
-	public JSArray get(Object idx)
+	public JSArray at(Object idx)
 	{
 		JSArray ret = new JSArray().setName(this.getName());
 		ret.addContent("[");

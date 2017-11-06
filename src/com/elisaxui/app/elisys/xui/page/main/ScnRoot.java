@@ -75,7 +75,7 @@ public class ScnRoot extends XUIScene {
 				.__("$.getJSON('"+REST_JSON_MENU_ACTIVITY1+"')"
 					+ ".done(", fct(jsonApi)    //.consoleDebug("'json menu'", "a")
 						._forIdx(idx, jsonApi)
-							.__(jsonMenu.push(jsonApi.get(idx)))
+							.__(jsonMenu.push(jsonApi.at(idx)))
 						.endfor()
 						,")"
 					+ ".fail(", fct("xhr","textStatus", "error").consoleDebug("error") ,")")

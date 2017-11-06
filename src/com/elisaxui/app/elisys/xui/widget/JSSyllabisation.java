@@ -29,7 +29,8 @@ public interface JSSyllabisation extends JSClass {
 	public static final String REST_JSON_SYLLABISATION = "/rest/json/syllabisation/pacahontas";
 	
 	JSDataDriven aDataDriven = defAttr(); 
-	JSDataSet aDataSet =  defAttr();
+	//JSDataSet aDataSet =  defAttr();
+	JSDataSet aDataSet();
 	JSXHTMLPart template =  defAttr();
 	JSInt lastResult =  defAttr();
 	JSon recognition =  defAttr();
@@ -41,7 +42,7 @@ public interface JSSyllabisation extends JSClass {
 	
 	
 	default Object constructor() {
-		set(aDataSet, _new());
+		set(aDataSet(), _new());
 		set(stop, false);
 		set(isRunning, false);
 		return set(lastResult, 0);
@@ -70,7 +71,7 @@ public interface JSSyllabisation extends JSClass {
 		var(_self, _this);
 		
 		JSArray jsonSyllable = new JSArray().setName("jsonSyllable");
-		var(jsonSyllable, aDataSet.getData());
+		var(jsonSyllable, aDataSet().getData());
 
 		Anonym onresult = (/*event*/)->{ 			
 			_for("var i = event.resultIndex; i < event.results.length; i++");
@@ -92,7 +93,7 @@ public interface JSSyllabisation extends JSClass {
 						var(lesmots, data.attr("mots"));
 						JSInt num = new JSInt().setName("num");
 						_forIdx(num, lesmots);
-							setTimeout(fct(num).__(jsonSyllable.push(lesmots.get(num))), "50+(20*"+num+")", num);
+							setTimeout(fct(num).__(jsonSyllable.push(lesmots.at(num))), "50+(20*"+num+")", num);
 						endfor();
 					};
 
@@ -110,8 +111,8 @@ public interface JSSyllabisation extends JSClass {
 		
 	default Object getData()
 	{
-		__(aDataSet.setData("[]"));
-		set(aDataDriven, _new(aDataSet));
+		__(aDataSet().setData("[]"));
+		set(aDataDriven, _new(aDataSet()));
 		
 		Anonym onEnter = (/*ctx*/)->{
 			_if("ctx.row['_dom_']==null");				
@@ -126,7 +127,7 @@ public interface JSSyllabisation extends JSClass {
 				var(sylb, "ctx.row.syllabes");
 				
 	            _forIdx("j", sylb);
-	            	set(template, ViewSyllabisation.getSyl(XHTMLPart.xVar(sylb.get("j").attr("text"))));
+	            	set(template, ViewSyllabisation.getSyl(XHTMLPart.xVar(sylb.at("j").attr("text"))));
 	            	
 	        		JQuery jqdomSyl = new JQuery().setName("jqdomSyl");
 	            	var(jqdomSyl, template.appendInto("jqdom"));
@@ -147,6 +148,6 @@ public interface JSSyllabisation extends JSClass {
 		__(aDataDriven.onEnter(fct("ctx").__(onEnter)));
 		__(aDataDriven.onExit(fct("ctx").__(onExit)));	
 		
-		return aDataSet.getData();
+		return aDataSet().getData();
 	}
 }

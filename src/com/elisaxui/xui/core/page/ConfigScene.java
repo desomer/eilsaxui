@@ -10,12 +10,11 @@ package com.elisaxui.xui.core.page;
 public class ConfigScene {
 
 
-	private String bgColorScene = "#333333"; // "#333333"
+	private String bgColorScene = "#333333"; // gris noir
 	private String bgColorTheme = "#ff359d";  // rose
-	private String bgColorThemeOpacity = "rgba(255,0,136,1)";
 	private String bgColorNavBar = "background: linear-gradient(to right, rgba(253,94,176,1) 0%, rgba(255,0,136,1) 64%, rgba(239,1,124,1) 100%);";
 	private String bgColorMenu = "background: linear-gradient(to right, rgba(239,1,124,0.5) 0%, rgba(255,0,136,0.68) 36%, rgba(253,94,176,1) 100%);";
-	private String bgColorContent = "rgb(245, 243, 237)";   // gris
+	private String bgColorContent = "rgb(245, 243, 237)";   // gris clair
 	private String app_manifest = "/rest/json/manifest.json";
 	private String idicon = "elisys";
 	private String title = "Elisys";
@@ -69,18 +68,6 @@ public class ConfigScene {
 	 */
 	public void setBgColorTheme(String bgColorTheme) {
 		this.bgColorTheme = bgColorTheme;
-	}
-	/**
-	 * @return the bgColorThemeOpacity
-	 */
-	public String getBgColorThemeOpacity() {
-		return bgColorThemeOpacity;
-	}
-	/**
-	 * @param bgColorThemeOpacity the bgColorThemeOpacity to set
-	 */
-	public void setBgColorThemeOpacity(String bgColorThemeOpacity) {
-		this.bgColorThemeOpacity = bgColorThemeOpacity;
 	}
 	/**
 	 * @return the bgColor

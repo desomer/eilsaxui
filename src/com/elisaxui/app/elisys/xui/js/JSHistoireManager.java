@@ -3,13 +3,11 @@
  */
 package com.elisaxui.app.elisys.xui.js;
 
-import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.defVar;
-
 import com.elisaxui.app.elisys.xui.widget.JSSyllabisation;
 import com.elisaxui.core.xui.xhtml.builder.javascript.Anonym;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSArray;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSon;
 
 /**
@@ -18,28 +16,33 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSon;
  */
 public interface JSHistoireManager extends JSClass {
 	
-	JSSyllabisation _jsSyllabe = defVar();
+	JSSyllabisation jsSyllabe();
 	
 	default Object getHistoire()
 	{
 		JSon json = new JSon().setName("json");
-		JSArray lesMots = new JSArray().setName("lesMots");
 		JSArray jsonSyllable = new JSArray().setName("jsonSyllable");
-		
-		Anonym onJson = ()->{
-			var(lesMots, json.attr("mots"));
+
+		Anonym onJson = (/*json*/)->{
 			
-			_forIdx("i", lesMots)
-				.__("setTimeout(", fct("num")
-						.__(jsonSyllable.push(lesMots.get("num")))
-					, ",50+(20*i), i)")			
+			JSArray lesMots = new JSArray().setName("lesMots");
+			JSInt i = new JSInt().setName("i");
+			JSInt num = new JSInt().setName("num");
+			
+			var(lesMots, json.get("mots"));
+			
+			_forIdx(i, lesMots)
+				.setTimeout( 
+						fct(num).__(jsonSyllable.push(lesMots.at(num)))
+					,"50+(20*i)", i)			
 			.endfor();
 			
-			set("window.lastPhrase", json.attr("text"));			
+			set("window.lastPhrase", json.get("text"));			
 		};
 		
-		var(_jsSyllabe, "window.microlistener");
-		var(jsonSyllable, jsvar(_jsSyllabe, ".aDataSet.getData()"));
+		set(jsSyllabe(), "window.microlistener");
+		var(jsonSyllable, jsSyllabe().aDataSet().getData());
+		
 		__("$.getJSON('"+JSSyllabisation.REST_JSON_SYLLABISATION+"').done(", fct(json).__(onJson) ,")");
 				
 		return _void();	

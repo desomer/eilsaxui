@@ -67,7 +67,7 @@ import com.elisaxui.xui.core.widget.log.ViewLog;
 //								 												))
 							 										) )
 					 ,  factory("#Activity1 .content", FACTORY_CONTAINER, arr( 
-							 										floatAction()))
+							 										floatAction(null,null)))
 					)
 						/// les event
 					, obj( 

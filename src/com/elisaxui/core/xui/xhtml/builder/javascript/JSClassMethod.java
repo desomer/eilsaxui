@@ -13,6 +13,7 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 /**
  * @author Bureau
  *
+ * class JS d'interface vers un JS externe sans implementation interne
  */
 public class JSClassMethod extends JSVariable {
 

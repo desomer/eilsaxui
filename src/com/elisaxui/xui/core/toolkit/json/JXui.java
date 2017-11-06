@@ -12,7 +12,7 @@ import com.elisaxui.xui.core.toolkit.TKRouterEvent;
  *
  */
 public class JXui extends JSClassMethod {
-	@xComment("_$xui.tkrouter")    ////////
+	@xComment("_$xui.tkrouter")    //   _ retire le this de  this.$ui  => donne juste $xui.
 	static TKRouterEvent _tkrouter;
 	
 	public static final JXui $xui()

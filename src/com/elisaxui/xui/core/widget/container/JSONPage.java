@@ -16,6 +16,16 @@ public abstract class JSONPage extends JSONBuilder
 	/**
 	 * 
 	 */
+	private static final String ATTR_ID_ACTION = "idAction";
+
+	/**
+	 * 
+	 */
+	private static final String ATTR_ICON = "icon";
+
+	/**
+	 * 
+	 */
 	private static final String ATTR_HTML = "html";
 
 	/**
@@ -65,9 +75,9 @@ public abstract class JSONPage extends JSONBuilder
 	
 	/**********************************************************************************/
 	
-	public Object floatAction()
+	public Object floatAction(String icon, String idAction)
 	{
-		return  obj( v(ATTR_TYPE, "floatAction"));
+		return  obj( v(ATTR_TYPE, "floatAction"), v(ATTR_ICON, icon), v(ATTR_ID_ACTION, idAction));
 	}
 	
 	
@@ -88,7 +98,7 @@ public abstract class JSONPage extends JSONBuilder
 	
 	public Object btnActionIcon(String icon, String idAction)
 	{
-		return  obj( v(ATTR_TYPE, ATTR_ACTION), v("icon", icon), v("idAction", idAction));
+		return  obj( v(ATTR_TYPE, ATTR_ACTION), v(ATTR_ICON, icon), v(ATTR_ID_ACTION, idAction));
 	}
 		
 	public Object title(String title)
@@ -103,7 +113,7 @@ public abstract class JSONPage extends JSONBuilder
 	
 	public Object cardAction(String idAction)
 	{
-		return  obj( v(ATTR_TYPE, "cardAction"),v("idAction", idAction));
+		return  obj( v(ATTR_TYPE, "cardAction"),v(ATTR_ID_ACTION, idAction));
 	}
 	
 	public Object backgroundGradiant()

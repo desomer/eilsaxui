@@ -30,7 +30,7 @@ public class ViewOverlayRipple extends XHTMLPart {
 		return xCss()
 				.on(".ripple_overlay","position: absolute;	"
 					+ "top: 0px;    left: 0px; "
-					+ "width: 100vw;  height: 100vh; background: "+ XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorThemeOpacity() +"; "
+					+ "width: 100vw;  height: 100vh; background: "+ XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorTheme() +"; "
 					)
 				
 				.on(".ripple_overlay.transitionx2","transition:all  "+SPEED_ACTIVITY_TRANSITION_EFFECT*2+"ms cubic-bezier(1, 0, 1, 1);")

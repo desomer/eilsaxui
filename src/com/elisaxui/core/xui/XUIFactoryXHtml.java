@@ -49,7 +49,6 @@ public class XUIFactoryXHtml {
 	
 	boolean enableCache = false;
 	
-	@SuppressWarnings("deprecation")
 	@GET
 	@Path("/page/{pays}/{lang}/id/{id}")
 	@Produces(MediaType.TEXT_HTML)

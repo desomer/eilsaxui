@@ -8,18 +8,23 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.Anonym;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 
 public class MethodInvocationHandler implements InvocationHandler {
 	
@@ -50,9 +55,9 @@ public class MethodInvocationHandler implements InvocationHandler {
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
 		if (method.getName().equals("toString")) {
-			if (getName() == null)
+			if (getVarName() == null)
 				return "???";
-			return getName().toString();
+			return getVarName().toString();
 		}
 
 		String id = JSClassImpl.getMethodId(method, args);
@@ -66,7 +71,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 			if (method.isDefault()) {
 				
 				if (testAnonymousInProgress)
-					return JSClassImpl.toJSCallInner(getName(), method, args);
+					return JSClassImpl.toJSCallInner(getVarName(), method, args);
 				
 				/*****  APPEL DES FUNCTION DE LA CLASSE *****/ 
 				MethodDesc MthInvoke = new MethodDesc(implcl, proxy, method, args);
@@ -114,13 +119,43 @@ public class MethodInvocationHandler implements InvocationHandler {
 					
 					implcl.getListHandleFuntionPrivate().add(MthInvoke);
 					
-					return JSClassImpl.toJSCallInner(getName(), method, args);
+					return JSClassImpl.toJSCallInner(getVarName(), method, args);
 				}
-			} else {
-				/*****  APPEL DES FUNCTION INTERNE (var, set, if) *****/ 
+			} 
+			else if (! checkMethodExist(method) )
+			{
+				
+				boolean retJSVariable=JSVariable.class.isAssignableFrom(method.getReturnType());
+				boolean retJSClass=JSClass.class.isAssignableFrom(method.getReturnType());
+				
+				if (retJSVariable)
+				{
+					JSVariable retJSVar = (JSVariable)method.getReturnType().newInstance();
+					retJSVar.setName(getVarName() + "." + method.getName());
+					return retJSVar;
+				}
+				else if (retJSClass)
+				{
+					
+					JSClass prox = XHTMLPart.jsBuilder.getProxy( (Class<? extends JSClass>) method.getReturnType());
+					XHTMLPart.jsBuilder.setNameOfProxy(getVarName()+".", prox, method.getName());
+					return prox;
+				}
+				else
+				{
+					// genere le code de call json	
+					List<Object> buf = new ArrayList<Object>();
+					buf.add(getVarName() + "." + method.getName());
+					return buf;
+				}
+			}
+			else	
+				{
+				/*****  APPEL DES FUNCTION INTERNE (var, set, if) sur la class JSContent*****/ 
 				
 				// creer le JSContent
 				JSContent currentJSContent = mapContent.get(currentFctJSName);
+				
 				if (currentJSContent==null)
 				{
 					currentJSContent= jsbuilder.createJSContent();
@@ -151,13 +186,28 @@ public class MethodInvocationHandler implements InvocationHandler {
 						System.out.println("[JSBuilder]"+System.identityHashCode(currentJSContent)+ " - [no JSContent] appel de la mth "+id+" of class " + implcl.getName() +" => "+ret );
 
 					System.out.println("[JSBuilder]"+System.identityHashCode(currentJSContent)+ " - value = " +currentJSContent.getListElem());
-				}						
+				}
+				
 				return ret;
 			}
 		}
 
 		//  creer le js du call de la fct
-		return JSClassImpl.toJSCall(getName(), method, args);
+		return JSClassImpl.toJSCall(getVarName(), method, args);
+	}
+
+	/**
+	 * @param method
+	 * @return
+	 * @throws NoSuchMethodException
+	 */
+	private boolean checkMethodExist(Method method) {
+		try {
+			return JSContent.class.getMethod(method.getName(), method.getParameterTypes())!=null;
+		} catch (NoSuchMethodException | SecurityException e) {
+			// TODO Auto-generated catch block
+			return false;
+		}
 	}
 
 	
@@ -245,14 +295,14 @@ public class MethodInvocationHandler implements InvocationHandler {
 	/**
 	 * @return the name
 	 */
-	public Object getName() {
+	public Object getVarName() {
 		return varname;
 	}
 
 	/**
 	 * @param name the name to set
 	 */
-	public void setName(Object name) {
+	public void setVarName(Object name) {
 		this.varname = name;
 	}
 

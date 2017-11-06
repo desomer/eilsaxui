@@ -34,7 +34,7 @@ class JSONPage3 extends JSONPage
 						 										) )
 				 
 				 ,  factory("#Activity3 .content", FACTORY_CONTAINER, arr( 
-							floatAction()))
+							floatAction(null,null)))
 				)
 					/// les event
 				, obj( 

@@ -2,6 +2,7 @@ package com.elisaxui.core.xui.xhtml.builder.javascript.jsclass;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 
 /**
  * interface proxy de class JS
@@ -21,6 +22,39 @@ public interface JSClass extends JSMethodInterface  {
 	 */
 	public static <E> E defVar() {
 		return null;
+	}
+	
+	/**
+	 * sert a ne pas avoir de warning
+	 * @return
+	 */
+	public static <E> E declareType(Class type, String name) {
+		
+		boolean retJSVariable=JSVariable.class.isAssignableFrom(type);
+		boolean retJSClass=JSClass.class.isAssignableFrom(type);
+		
+		if (retJSVariable)
+		{
+			JSVariable v =null;
+			try {
+				v = ((JSVariable)type.newInstance());
+				v.setName(name) ;
+			} catch (InstantiationException | IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	
+			return (E)v;
+		}
+		
+		if (retJSClass)
+		{
+			JSClass prox = XHTMLPart.jsBuilder.getProxy( (Class<? extends JSClass>) type);
+			XHTMLPart.jsBuilder.setNameOfProxy("", prox, name);	
+			return (E)prox;
+		}
+		
+		return (E)name;
 	}
 	
 	/**

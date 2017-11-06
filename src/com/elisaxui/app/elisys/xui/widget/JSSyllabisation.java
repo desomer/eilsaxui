@@ -29,7 +29,6 @@ public interface JSSyllabisation extends JSClass {
 	public static final String REST_JSON_SYLLABISATION = "/rest/json/syllabisation/pacahontas";
 	
 	JSDataDriven aDataDriven = defAttr(); 
-	//JSDataSet aDataSet =  defAttr();
 	JSDataSet aDataSet();
 	JSXHTMLPart template =  defAttr();
 	JSInt lastResult =  defAttr();

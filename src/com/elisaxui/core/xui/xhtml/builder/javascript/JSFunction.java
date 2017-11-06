@@ -79,7 +79,7 @@ public class JSFunction extends JSContent
 		return this;
 	}
 
-	public JSFunction __( Runnable c)
+	public JSFunction __( Anonym c)
 	{
 		JSBuilder.classfct(this , c);
 		return this;

@@ -6,6 +6,7 @@ package com.elisaxui.xui.core.widget.container;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSString;
 import com.elisaxui.xui.core.datadriven.JSDataDriven;
 import com.elisaxui.xui.core.datadriven.JSDataSet;
 import com.elisaxui.xui.core.toolkit.TKActivity;
@@ -94,9 +95,9 @@ public interface JSContainer extends JSClass {
 						.endif()
 						
 						.__("var backupId=", _tkrouter, ".", _activityMgr.getCurrentIDActivity())
-						.__(_tkrouter, ".", _activityMgr.setCurrentActivity("ctx.row.id"))
+						.__(_tkrouter, ".", _activityMgr.setCurrentActivity(new JSString().setValue("ctx.row.id")))
 						.__(_tkrouter.doEvent(txt(TKActivity.ON_ACTIVITY_CREATE)))	
-						.__(_tkrouter, ".", _activityMgr.setCurrentActivity("backupId"))
+						.__(_tkrouter, ".", _activityMgr.setCurrentActivity(new JSString().setValue("backupId")))
 						
 					._elseif("ctx.row.type=='card'")
 						.var("subData", "{html:'', js:''}")

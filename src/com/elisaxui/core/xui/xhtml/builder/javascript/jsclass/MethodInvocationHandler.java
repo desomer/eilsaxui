@@ -90,8 +90,6 @@ public class MethodInvocationHandler implements InvocationHandler {
 					mh.varname = "this"; // force a this pour appel interne d'autre fct de la classe JS
 					
 					JSFunction fct = createJSFunctionImpl(MthInvoke, false);    // creer le code
-//					JSClassImpl ImplClass = jsbuilder.getJSClassImpl(getImplementClass());
-					//ImplClass.addFunction(fct);
 					implcl.addFunction(fct);
 					
 					mh.varname = nameProxy;
@@ -124,30 +122,8 @@ public class MethodInvocationHandler implements InvocationHandler {
 			} 
 			else if (! checkMethodExist(method) )
 			{
-				
-				boolean retJSVariable=JSVariable.class.isAssignableFrom(method.getReturnType());
-				boolean retJSClass=JSClass.class.isAssignableFrom(method.getReturnType());
-				
-				if (retJSVariable)
-				{
-					JSVariable retJSVar = (JSVariable)method.getReturnType().newInstance();
-					retJSVar.setName(getVarName() + "." + method.getName());
-					return retJSVar;
-				}
-				else if (retJSClass)
-				{
-					
-					JSClass prox = XHTMLPart.jsBuilder.getProxy( (Class<? extends JSClass>) method.getReturnType());
-					XHTMLPart.jsBuilder.setNameOfProxy(getVarName()+".", prox, method.getName());
-					return prox;
-				}
-				else
-				{
-					// genere le code de call json	
-					List<Object> buf = new ArrayList<Object>();
-					buf.add(getVarName() + "." + method.getName());
-					return buf;
-				}
+				/***** INSERT le nom de la methode de type Interface de variable  ****/ 
+				return getObjectJS(method.getReturnType(),getVarName() + ".", method.getName());				
 			}
 			else	
 				{
@@ -223,7 +199,9 @@ public class MethodInvocationHandler implements InvocationHandler {
 
 		if (handle.args != null) {
 			for (int i = 0; i < handle.args.length; i++) {
-				p[i] = param[i].getName();
+				
+				p[i] = getObjectJS(param[i].getType(),"", param[i].getName());
+				
 			}
 		}
 		
@@ -263,6 +241,9 @@ public class MethodInvocationHandler implements InvocationHandler {
 			//ajouter en fin de methode JS
 			if (ret!=null && !(ret instanceof JSContent))
 			{
+				if (code==null)
+					code= jsbuilder.createJSContent();
+					
 				code._return(ret);
 			}
 		    
@@ -290,6 +271,40 @@ public class MethodInvocationHandler implements InvocationHandler {
 		}
 		
 		return fct;
+	}
+
+	/**
+	 * @param param
+	 * @param p
+	 * @param i
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 */
+	private Object getObjectJS(Class type, String prefix, Object name){
+		
+		boolean retJSVariable=JSVariable.class.isAssignableFrom(type);
+		boolean retJSClass=JSClass.class.isAssignableFrom(type);
+		if (retJSVariable)
+		{
+			JSVariable retJSVar = null;
+			try {
+				retJSVar = (JSVariable)type.newInstance();
+			} catch (InstantiationException | IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			retJSVar.setName(prefix+name);
+			return retJSVar;
+		}
+		else if (retJSClass)
+		{
+			
+			JSClass prox = XHTMLPart.jsBuilder.getProxy( (Class<? extends JSClass>) type);
+			XHTMLPart.jsBuilder.setNameOfProxy(prefix, prox, name);
+			return prox;
+		}
+		else
+			return prefix+name;
 	}
 
 	/**

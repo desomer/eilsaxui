@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSon;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
 
@@ -117,6 +118,28 @@ public class JSClassMethod extends JSVariable {
 		ret.addContent(")");
 		return ret;
 	}
+	
+    public <E extends JSClassMethod> E attrByString(Object attr)
+    {
+     E ret = (E)this;
+   	 
+   	 if (listContent.size()==0 && this.name!=null)
+		{
+			// gestion premier appel de variable
+			try {
+				ret = (E) this.getClass().newInstance();
+			} catch (InstantiationException | IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			ret.setName(this.getName());
+		}
+   	 
+   	 ret.addContent("[");
+   	 ret.addContent(attr);
+   	 ret.addContent("]");
+   	 return ret; 
+    }
 	
 	//TODO
 	public <E extends JSClassMethod> E  attr(String att)

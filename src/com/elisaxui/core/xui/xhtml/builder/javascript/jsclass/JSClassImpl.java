@@ -81,10 +81,11 @@ public class JSClassImpl extends JSContent {
 		
 		if (JSClass.class.isAssignableFrom(method.getReturnType() ))
 		{
-			// chainage d'attribut
-			JSClass prox = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) method.getReturnType());
-			XHTMLPart.jsBuilder.setNameOfProxy("", prox, name + "." + method.getName());
-			return prox;
+//			// chainage d'attribut
+//			JSClass prox = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) method.getReturnType());
+//			XHTMLPart.jsBuilder.setNameOfProxy("", prox, name + "." + method.getName());
+//			return prox;
+			return null;
 		}
 		else
 		{
@@ -120,9 +121,10 @@ public class JSClassImpl extends JSContent {
 		if (JSClass.class.isAssignableFrom(method.getReturnType() ))
 		{
 			// chainage d'attribut
-			JSClass prox = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) method.getReturnType());
-			XHTMLPart.jsBuilder.setNameOfProxy("", prox, name + "." + method.getName());
-			return prox;
+//			JSClass prox = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) method.getReturnType());
+//			XHTMLPart.jsBuilder.setNameOfProxy("", prox, name + "." + method.getName());
+//			return prox;
+			return null;
 		}
 		else
 		{
@@ -135,12 +137,28 @@ public class JSClassImpl extends JSContent {
 				for (Object p : args) {
 					if (i > 0)
 						buf.add(", ");
-					buf.add(p);
+					buf.add(p);  // peut etre des string, fct, etc...
 					i++;
 				}
 			}
 			buf.add(")");
 			return buf;
+			
+			
+//			StringBuilder buf = new StringBuilder();
+//			buf.append(name + "." + method.getName() + "(");
+//
+//			int i = 0;
+//			if (args != null) {
+//				for (Object p : args) {
+//					if (i > 0)
+//						buf.append(", ");
+//					buf.append(p);
+//					i++;
+//				}
+//			}
+//			buf.append(")");
+//			return buf;
 		}
 
 			

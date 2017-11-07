@@ -8,4 +8,5 @@ public class JSon extends JSClassMethod {
      {
     	 return attr(""+attr);
      }
+     
 }

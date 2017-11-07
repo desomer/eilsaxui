@@ -25,7 +25,7 @@ public interface JSHistoireManager extends JSClass {
 		JSArray jsonSyllable = declareType(JSArray.class, "jsonSyllable"); 
 		JSSyllabisation jsSyllabe = declareType(JSSyllabisation.class, "jsSyllabe"); 
 
-		set(jsSyllabe, "window.microlistener");
+		var(jsSyllabe, "window.microlistener");
 		var(jsonSyllable, jsSyllabe.aDataSet().getData());
 		
 		// TODO   JSArray jsonSyllable =  let(jsSyllabe.aDataSet().getData())

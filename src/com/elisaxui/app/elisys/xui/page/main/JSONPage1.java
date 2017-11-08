@@ -3,18 +3,21 @@
  */
 package com.elisaxui.app.elisys.xui.page.main;
 
+import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.declareType;
 import static com.elisaxui.xui.core.toolkit.TKActivity.ON_ACTIVITY_CREATE;
 import static com.elisaxui.xui.core.toolkit.TKActivity.ON_ACTIVITY_RESUME;
 
+import com.elisaxui.app.elisys.xui.widget.JSSyllabisation;
 import com.elisaxui.app.elisys.xui.widget.ViewSyllabisation;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
+import com.elisaxui.xui.core.toolkit.json.JActivity;
 import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
-import com.elisaxui.xui.core.widget.container.JSONPage;
+import com.elisaxui.xui.core.widget.container.JSONActivity;
 import com.elisaxui.xui.core.widget.log.ViewLog;
 
 /**********************************************************************/
-	public class JSONPage1 extends JSONPage
+	public class JSONPage1 extends JSONActivity
 	{
 		public static final String EVT_CLEAR = "clear";
 		public static final String EVT_MORE = "more";
@@ -24,8 +27,11 @@ import com.elisaxui.xui.core.widget.log.ViewLog;
 		public static final String EVT_DO_PHRASE = "doPhrase";
 		public static final String EVT_DO_LOAD_HISTOIRE = "doLoadHistoire";
 		
-		public Object getJSON()
+		public JActivity getJSON()
 		{
+			
+
+			
 			XMLElement cnt1 = XHTMLPart.xDiv( ViewRippleEffect.cRippleEffect,                             //6
 							XHTMLPart.xAttr("style", "\"width: 100%; height: 30vh; background:url(" +ScnRoot.listPhotos[9] +") center / cover\""),
 							XHTMLPart.xId("test1"), 
@@ -39,7 +45,8 @@ import com.elisaxui.xui.core.widget.log.ViewLog;
 			
 			XMLElement cntLogWorker =  XHTMLPart.xPart(new ViewLog());	
 			
-			return page( "Activity1", arr( 
+			JActivity activity = declareType(JActivity.class, "activity"); 
+			activity._setContent( activity( "Activity1", arr( 
 						factory("#NavBarActivity1", FACTORY_NAVBAR, arr( 
 																	 //backgroundGradiant(),
 																	 backgroundImage(ScnRoot.listPhotos[4], 0.3),  
@@ -81,7 +88,9 @@ import com.elisaxui.xui.core.widget.log.ViewLog;
 							v(EVT_DO_PHRASE, callbackTo("onPhrase", null)),
 							v(EVT_DO_LOAD_HISTOIRE, callbackTo("onLoadHistoire", null))
 							
-							));
+							)));
+			
+			return activity;
 		}
 		
 	}

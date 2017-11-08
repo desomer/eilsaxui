@@ -84,4 +84,6 @@ public interface JSClass extends JSMethodInterface  {
 	}
 	
 	
+	Object _setContent(Object value);
+	Object _getContent();
 }

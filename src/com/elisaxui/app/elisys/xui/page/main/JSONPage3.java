@@ -3,12 +3,14 @@
  */
 package com.elisaxui.app.elisys.xui.page.main;
 
+import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.declareType;
 import static com.elisaxui.xui.core.toolkit.TKActivity.ON_ACTIVITY_CREATE;
 
-import com.elisaxui.xui.core.widget.container.JSONPage;
+import com.elisaxui.xui.core.toolkit.json.JActivity;
+import com.elisaxui.xui.core.widget.container.JSONActivity;
 
 /**********************************************************************************/
-class JSONPage3 extends JSONPage
+class JSONPage3 extends JSONActivity
 {
 	
 	public static final String EVT_MORE = "more";
@@ -17,10 +19,10 @@ class JSONPage3 extends JSONPage
 	public static final String EVT_BTN_FLOAT = "BtnFloatMain";
 	public static final String EVT_HEADER_SWIPE_DOWN =  "HeaderSwipeDown";
 			
-	public Object getJSON()
+	public JActivity getJSON()
 	{
-		
-		return page( "Activity3", arr( 
+		JActivity activity = declareType(JActivity.class, "activity"); 
+		activity._setContent(activity( "Activity3", arr( 
 					factory("#NavBarActivity3", FACTORY_NAVBAR, arr(  
 																 btnBurger(), 
 																 title("Recherche"),
@@ -43,7 +45,9 @@ class JSONPage3 extends JSONPage
 						v(EVT_BACK , goBack()),
 						v(ON_ACTIVITY_CREATE , callbackTo("onCreateActivityDown", "#NavBarActivity3")),
 						v(EVT_BTN_FLOAT , routeTo( "!route/Activity2?p=ert"))
-						));
+						)));
+		
+		return activity;
 	}
 	
 }

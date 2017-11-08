@@ -3,8 +3,6 @@
  */
 package com.elisaxui.xui.core.toolkit.json;
 
-import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.defAttr;
-
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSString;
 

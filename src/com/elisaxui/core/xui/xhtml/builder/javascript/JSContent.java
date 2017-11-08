@@ -93,7 +93,16 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 //				JSContent c = (JSContent) object;
 //				c.toXML(buf);
 			} else if (object instanceof JSVariable) {	
-				buf.addContent(((JSVariable)object).toString());
+				Object v = ((JSVariable)object).getString();
+				if (v instanceof ArrayList)
+				{
+					ArrayList arr = (ArrayList)v;
+					for (Object object2 : arr) {
+						buf.addContent(object2);
+					}
+				}
+				else
+					buf.addContent(v);
 			} 
 			else if (object instanceof JSContent) {	
 				((JSContent)object).toXML(buf);

@@ -6,15 +6,11 @@ package com.elisaxui.core.xui.xhtml.builder.javascript.jsclass;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
@@ -37,6 +33,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 	private Class<? extends JSClass> implementClass;   // type js de la class
 	private Map<String, JSContent> mapContent = new HashMap<>(); // contenu de la methode
 	private JSBuilder jsbuilder;
+	private Object varContent; // nom de la variable qui contient le proxy
 	
 	private String currentFctJSName = null;
 	private static boolean testAnonymousInProgress = false;
@@ -55,11 +52,24 @@ public class MethodInvocationHandler implements InvocationHandler {
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
 		if (method.getName().equals("toString")) {
+			
+			if (varContent != null)
+				return varContent.toString();
+			
 			if (getVarName() == null)
 				return "???";
 			return getVarName().toString();
 		}
 
+		if (method.getName().equals("_getContent")) {
+			return varContent;
+		}
+		
+		if (method.getName().equals("_setContent")) {
+			varContent=args[0];
+			return proxy;
+		}
+		
 		String id = JSClassImpl.getMethodId(method, args);
 		JSClassImpl implcl = XUIFactoryXHtml.getXHTMLFile().getClassImpl(jsbuilder, getImplementClass());
 		boolean isMthAlreadyInClass = implcl.getListDistinctFct().containsKey(id);

@@ -4,12 +4,13 @@
 package com.elisaxui.xui.core.widget.container;
 
 import com.elisaxui.core.data.JSONBuilder;
+import com.elisaxui.xui.core.toolkit.json.JActivity;
 
 /**
  * @author Bureau
  *
  */
-public abstract class JSONPage extends JSONBuilder
+public abstract class JSONActivity extends JSONBuilder
 {
 	
 
@@ -43,7 +44,7 @@ public abstract class JSONPage extends JSONBuilder
 	public static final String FACTORY_CONTAINER = "JSContainer";
 	
 	/**************************************************************************************/
-	public Object page(String id, Object children, Object events)
+	public Object activity(String id, Object children, Object events)
 	{
 		return  obj( v(ATTR_TYPE, "page"), 
 					 v("id", id), 

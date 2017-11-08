@@ -65,6 +65,16 @@ public class JSClassMethod extends JSVariable {
 		return sb.toString();
 	}
 	
+	@Override
+	public Object getString() {
+		StringBuilder sb = new StringBuilder(super.toString());
+		
+		for (Object object : listContent) {
+			sb.append(object);
+		}
+		
+		return sb.toString();
+	}
 	
 	@SuppressWarnings("unchecked")
 	public <E extends JSClassMethod> E addContent(Object content) {

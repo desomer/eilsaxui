@@ -7,10 +7,11 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSCallBack;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.*;
 /**
  * 
- * - gestion par proxy sur json - gestion MutationObserver ?
+ * - gestion par proxy sur json 
+ * - gestion MutationObserver ?
  * 
- * - enter (object) - exit (object) - change (attribut d'un object) - gestion de
- * plage d'affichage
+ * - enter (object) - exit (object) - change (attribut d'un object) 
+ * - gestion de plage d'affichage
  * 
  * @author Bureau
  *

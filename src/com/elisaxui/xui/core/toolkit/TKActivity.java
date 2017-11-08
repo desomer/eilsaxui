@@ -3,9 +3,13 @@
  */
 package com.elisaxui.xui.core.toolkit;
 
+import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.declareType;
+
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSon;
+import com.elisaxui.xui.core.toolkit.json.JActivity;
 import com.elisaxui.xui.core.widget.container.JSContainer;
 
 /**
@@ -36,7 +40,7 @@ public interface TKActivity extends JSClass {
 		return listRegisterActivity.attrByString(idCurrentActivity);
 	}
 	
-	default Object getCurrentIDActivity()
+	default JSString getCurrentIDActivity()
 	{
 		return idCurrentActivity;
 	}
@@ -44,39 +48,38 @@ public interface TKActivity extends JSClass {
 	default Object setCurrentActivity(JSString id)
 	{
 	    set(idCurrentActivity, id);
-
-	    _return(listRegisterActivity.attrByString(idCurrentActivity));
-	    
-	    return null;
+	    return listRegisterActivity.attrByString(idCurrentActivity);
 	}
 	
-	default Object createActivity(Object json)
+	default Object createActivity(JActivity json)
 	{
-
-		var("jsonContainer", jsContainer.getData("'.scene'"))
-		.set("json.active", true)
-		.__("jsonContainer.push(json)")
-		.__(listRegisterActivity,"[json.id] = json;")
-		.set(idCurrentActivity, "json.id")
-		;
+		JSArray jsonContainer = declareType(JSArray.class, "jsonContainer"); 
+		
+		var(jsonContainer, jsContainer.getData("'.scene'"));
+		set(json.active(), true);
+		__(jsonContainer.push(json));
+		set(listRegisterActivity.attrByString(json.id()), json);
+		set(idCurrentActivity, json.id());
+		
 		return _void();
 	}
 	
-	default Object prepareActivity(Object json)
+	default Object prepareActivity(JActivity json)
 	{
-		var("jsonContainer", jsContainer.getData("'.scene'"))
-		.set("json.active", false)
-		.__("jsonContainer.push(json)")
-		.__(listRegisterActivity,"[json.id] = json;")
-		;
+		JSArray jsonContainer = declareType(JSArray.class, "jsonContainer"); 
+		
+		var(jsonContainer, jsContainer.getData("'.scene'"));
+		set(json.active(), false);
+		__(jsonContainer.push(json));
+		set(listRegisterActivity.attrByString(json.id()), json);
+		
 		return _void();
 	}
 	
-	default Object registerActivity(Object json)
-	{
-		__(listRegisterActivity,"[json.id] = json;")
-		;
-		return _void();
-	}
+//	default Object registerActivity(JActivity json)
+//	{
+//		set(listRegisterActivity.attrByString(json.id()), json);
+//		return _void();
+//	}
 	
 }

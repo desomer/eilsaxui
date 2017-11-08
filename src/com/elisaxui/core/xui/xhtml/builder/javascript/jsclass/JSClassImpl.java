@@ -11,6 +11,8 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSString;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
 /**
@@ -118,47 +120,45 @@ public class JSClassImpl extends JSContent {
 //		if (method.getName().equals("activityMgr"))
 //			System.out.println("activityMgr activityMgr ok");
 		
+		List<Object> buf = new ArrayList<Object>();
+		buf.add(name + "." + method.getName() + "(");
+
+		int i = 0;
+		if (args != null) {
+			for (Object p : args) {
+				if (i > 0)
+					buf.add(", ");
+				buf.add(p);  // peut etre des string, fct, etc...
+				i++;
+			}
+		}
+		buf.add(")");
+		
 		if (JSClass.class.isAssignableFrom(method.getReturnType() ))
 		{
 			// chainage d'attribut
-//			JSClass prox = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) method.getReturnType());
+			JSClass prox = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) method.getReturnType());
 //			XHTMLPart.jsBuilder.setNameOfProxy("", prox, name + "." + method.getName());
 //			return prox;
-			return null;
+			prox._setContent(buf);
+			return prox;
+		}
+		else if (JSVariable.class.isAssignableFrom(method.getReturnType() ))
+		{
+			JSVariable ret=null;
+			try {
+				ret = ((JSVariable)method.getReturnType().newInstance());
+			} catch (InstantiationException | IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			ret.setValue(buf);
+			return ret;
 		}
 		else
 		{
 			// appel de methode
-			List<Object> buf = new ArrayList<Object>();
-			buf.add(name + "." + method.getName() + "(");
-
-			int i = 0;
-			if (args != null) {
-				for (Object p : args) {
-					if (i > 0)
-						buf.add(", ");
-					buf.add(p);  // peut etre des string, fct, etc...
-					i++;
-				}
-			}
-			buf.add(")");
 			return buf;
-			
-			
-//			StringBuilder buf = new StringBuilder();
-//			buf.append(name + "." + method.getName() + "(");
-//
-//			int i = 0;
-//			if (args != null) {
-//				for (Object p : args) {
-//					if (i > 0)
-//						buf.append(", ");
-//					buf.append(p);
-//					i++;
-//				}
-//			}
-//			buf.append(")");
-//			return buf;
 		}
 
 			

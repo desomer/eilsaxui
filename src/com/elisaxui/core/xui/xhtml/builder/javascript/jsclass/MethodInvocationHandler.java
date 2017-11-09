@@ -3,6 +3,8 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.javascript.jsclass;
 
+import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.declareType;
+
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
@@ -21,6 +23,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
+import com.elisaxui.xui.core.toolkit.json.JActivity;
 
 public class MethodInvocationHandler implements InvocationHandler {
 	
@@ -68,6 +71,13 @@ public class MethodInvocationHandler implements InvocationHandler {
 		if (method.getName().equals("_setContent")) {
 			varContent=args[0];
 			return proxy;
+		}
+		
+		if (method.getName().equals("cast"))
+		{
+			JSClass jc = declareType((Class)args[0], "");
+			jc._setContent(args[1]);
+			return jc;
 		}
 		
 		String id = JSClassImpl.getMethodId(method, args);

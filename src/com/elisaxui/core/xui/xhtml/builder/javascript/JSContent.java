@@ -12,6 +12,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodInvocationHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSVoid;
 import com.elisaxui.core.xui.xml.builder.IXMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -92,7 +93,8 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 //			} else if (object instanceof JSContent && (this != object)) {
 //				JSContent c = (JSContent) object;
 //				c.toXML(buf);
-			} else if (object instanceof JSVariable) {	
+			} 
+			else if (object instanceof JSVariable) {	
 				Object v = ((JSVariable)object).getString();
 				if (v instanceof ArrayList)
 				{
@@ -104,6 +106,20 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 				else
 					buf.addContent(v);
 			} 
+			else if (object instanceof JSClass) {	
+				Object v = ((JSClass)object)._getContent();  // recup de la valeur du proxy
+				if (v instanceof ArrayList)
+				{
+					ArrayList arr = (ArrayList)v;
+					for (Object object2 : arr) {
+						buf.addContent(object2);
+					}
+				}
+				else if (v!=null)
+					buf.addContent(v);
+				else
+					buf.addContent(object.toString());  // recup du nom du proxy
+			}
 			else if (object instanceof JSContent) {	
 				((JSContent)object).toXML(buf);
 			} 
@@ -435,7 +451,7 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSInterface#_void()
 	 */
 	@Override
-	public JSMethodInterface _void() {
+	public JSVoid _void() {
 		// TODO Auto-generated method stub
 		return null;
 	}

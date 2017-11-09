@@ -28,6 +28,14 @@ public interface JSClass extends JSMethodInterface  {
 	 * sert a ne pas avoir de warning
 	 * @return
 	 */
+	public static <E> E defAttr() {
+		return null;
+	}
+	
+	/**
+	 * sert a ne pas avoir de warning
+	 * @return
+	 */
 	public static <E> E declareType(Class type, String name) {
 		
 		boolean retJSVariable=JSVariable.class.isAssignableFrom(type);
@@ -57,14 +65,6 @@ public interface JSClass extends JSMethodInterface  {
 		return (E)name;
 	}
 	
-	/**
-	 * sert a ne pas avoir de warning
-	 * @return
-	 */
-	public static <E> E defAttr() {
-		return null;
-	}
-	
 	
 	static Object _new(Class<? extends JSClass> cl, Object...param ) {
 		StringBuilder buf = new StringBuilder();
@@ -86,4 +86,6 @@ public interface JSClass extends JSMethodInterface  {
 	
 	Object _setContent(Object value);
 	Object _getContent();
+	<E> E cast(Class<? extends JSClass> cl, Object obj);
+	
 }

@@ -8,6 +8,7 @@ import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.dec
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSVoid;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSon;
 import com.elisaxui.xui.core.toolkit.json.JActivity;
 import com.elisaxui.xui.core.widget.container.JSContainer;
@@ -27,17 +28,17 @@ public interface TKActivity extends JSClass {
 	JSString idCurrentActivity = null;
 	TKRouterEvent _tkrouter =null;
 	
-	default Object constructor()
+	default JSVoid constructor()
 	{
 		set(listRegisterActivity, "{}");
 		set(jsContainer, _new());
-		set(idCurrentActivity, "''");
+		set(idCurrentActivity, txt());
 		return  _void();
 	}
 	
-	default Object getCurrentActivity()
+	default JActivity getCurrentActivity()
 	{
-		return listRegisterActivity.attrByString(idCurrentActivity);
+		return cast(JActivity.class,  listRegisterActivity.attrByString(idCurrentActivity));
 	}
 	
 	default JSString getCurrentIDActivity()
@@ -45,13 +46,13 @@ public interface TKActivity extends JSClass {
 		return idCurrentActivity;
 	}
 	
-	default Object setCurrentActivity(JSString id)
+	default JActivity setCurrentActivity(JSString id)
 	{
 	    set(idCurrentActivity, id);
-	    return listRegisterActivity.attrByString(idCurrentActivity);
+	    return cast(JActivity.class,  listRegisterActivity.attrByString(idCurrentActivity));
 	}
 	
-	default Object createActivity(JActivity json)
+	default JSVoid createActivity(JActivity json)
 	{
 		JSArray jsonContainer = declareType(JSArray.class, "jsonContainer"); 
 		
@@ -64,7 +65,7 @@ public interface TKActivity extends JSClass {
 		return _void();
 	}
 	
-	default Object prepareActivity(JActivity json)
+	default JSVoid prepareActivity(JActivity json)
 	{
 		JSArray jsonContainer = declareType(JSArray.class, "jsonContainer"); 
 		

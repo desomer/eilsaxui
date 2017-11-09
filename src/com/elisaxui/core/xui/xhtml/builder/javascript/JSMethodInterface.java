@@ -1,6 +1,7 @@
 package com.elisaxui.core.xui.xhtml.builder.javascript;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSArray;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSVoid;
 
 public interface JSMethodInterface  {
 	
@@ -62,10 +63,11 @@ public interface JSMethodInterface  {
 	JSMethodInterface setTimeout(Object... content);
 	
 	/**********************************************************************/
-	Object _void();
+	JSVoid _void();
 	Object _null();
 	Object _this();
 	/*******************************************************************/
 	Object $$subContent();
 	Object $$gosubContent(Object content);
+
 }

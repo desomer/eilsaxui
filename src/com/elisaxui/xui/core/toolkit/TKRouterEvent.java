@@ -41,15 +41,14 @@ public interface TKRouterEvent extends JSClass {
 	
 
 	default Object constructor(Object nav) {
-		__()
-		.set(tkAnimation, _new())
-	    .set(activityMgr, _new())
+		set(tkAnimation, _new());
+	    set(activityMgr, _new());
 	    
 //	.__("router.resolve()")
-		.set(navigo, nav)
-		.var(_self, _this())
+		set(navigo, nav);
+		var(_self, _this());
 		
-		.var("doPushState", fct("params","query")   // ecoute l'history back
+		var("doPushState", fct("params","query")   // ecoute l'history back
 				._if(_self,".navigo.nextenable")
 				
 				    .var("toRoute", _self,".navigo._lastRouteResolved")
@@ -108,11 +107,11 @@ public interface TKRouterEvent extends JSClass {
 				.endif()
 			)
 
-		/**TODO change la ligne menu */
+
 		.__("nav.on("
 				+ "{"
 				+ " 'route/:url': { as: 'route', uses: doPushState.bind('"+STATE_ROUTE+"') },"  
-				+ " 'menu': { as: 'menu', uses: doPushState.bind('menu') },"  
+				+ " 'menu': { as: 'menu', uses: doPushState.bind('menu') },"	/**TODO change la ligne menu */
 			//	+ " 'home' : { as: 'home', uses: doPushState.bind('home') }"   
 				+ "})")
 		

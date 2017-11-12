@@ -6,6 +6,7 @@ package com.elisaxui.xui.core.toolkit;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassMethod;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSInt;
 
 /**
  * @author Bureau
@@ -60,9 +61,9 @@ public class JQuery extends JSClassMethod {
 		return callMth("get", value);
 	}
 	
-	public Object length()
+	public JSInt length()
 	{
-		return attr("length");
+		return  new JSInt()._setContent(attr("length"));
 	}
 	
 	public JQuery val(Object... value)

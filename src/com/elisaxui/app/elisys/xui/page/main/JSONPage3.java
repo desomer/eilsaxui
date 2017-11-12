@@ -6,8 +6,8 @@ package com.elisaxui.app.elisys.xui.page.main;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.declareType;
 import static com.elisaxui.xui.core.toolkit.TKActivity.ON_ACTIVITY_CREATE;
 
-import com.elisaxui.xui.core.toolkit.json.JActivity;
-import com.elisaxui.xui.core.widget.container.JSONActivity;
+import com.elisaxui.xui.core.widget.activity.JActivity;
+import com.elisaxui.xui.core.widget.activity.JSONActivity;
 
 /**********************************************************************************/
 class JSONPage3 extends JSONActivity

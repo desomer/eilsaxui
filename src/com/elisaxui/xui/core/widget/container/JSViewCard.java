@@ -3,22 +3,25 @@
  */
 package com.elisaxui.xui.core.widget.container;
 
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.xui.core.datadriven.JSDataDriven;
 import com.elisaxui.xui.core.datadriven.JSDataSet;
-import com.elisaxui.xui.core.page.XUIScene;
 import com.elisaxui.xui.core.toolkit.JQuery;
-import com.elisaxui.xui.core.toolkit.TKQueue;
+import com.elisaxui.xui.core.toolkit.JSFactory;
 import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
-import com.elisaxui.xui.core.widget.menu.ViewMenu;
 
 /**
  * @author Bureau
  *
  */
-public interface JSViewCard extends JSClass {
+public interface JSViewCard extends JSFactory {
 
+	
+	static final String TYPE_BACKGROUND = "background";
+	static final String TYPE_TEXT = "text";
+	static final String TYPE_CARD_ACTION = "cardAction";
+	
+	
 	JSDataDriven aDataDriven = null;
 	JSDataSet aDataSet = null;
 	JSXHTMLPart template = null;
@@ -32,7 +35,7 @@ public interface JSViewCard extends JSClass {
 		
 		.__(aDataDriven.onEnter(fct("ctx")
 				._if("ctx.row['_dom_']==null")
-					._if("ctx.row.type=='background'")
+					._if("ctx.row.type== "+txt(TYPE_BACKGROUND))
 							._if("ctx.row.mode=='css'")
 								.set(template, ViewCard.getTemplateRichMedia())
 								.var("jqdom", template.appendInto("$(selector)"))
@@ -40,12 +43,12 @@ public interface JSViewCard extends JSClass {
 								.__("jqdom.css('opacity', ctx.row.opacity)")
 								.__("ctx.row['_dom_']=jqdom[0]")
 							.endif()
-					._elseif("ctx.row.type=='text'")
+					._elseif("ctx.row.type=="+txt(TYPE_TEXT))
 						.set(template, ViewCard.getTemplateText("ctx.row.html"))
 						.var("jqdom", template.appendInto("$(selector)"))
 						.__("ctx.row['_dom_']=jqdom[0]")
 						
-					._elseif("ctx.row.type=='cardAction'")
+					._elseif("ctx.row.type=="+txt(TYPE_CARD_ACTION))
 						.__("$(selector).attr('data-x-action', ctx.row.idAction )")
 						.__(JQuery.$(jsvar("selector")).addClass(ViewRippleEffect.cRippleEffect))
 					.endif()	
@@ -62,10 +65,9 @@ public interface JSViewCard extends JSClass {
 				.endif()
 			))
 
-		.var("jsonComponent", aDataSet.getData())
 		;
 
-		return "jsonComponent";
+		return aDataSet.getData();
 	}
 
 }

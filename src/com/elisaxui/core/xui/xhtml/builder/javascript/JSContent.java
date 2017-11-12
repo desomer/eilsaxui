@@ -1,5 +1,7 @@
 package com.elisaxui.core.xui.xhtml.builder.javascript;
 
+import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.declareType;
+
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,72 +68,80 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
 		for (Object object : getListElem()) {
-			if (object == JSNewLine.class) {
-				this.jsBuilder.newLine(buf);
-				this.jsBuilder.newTabulation(buf);
-			} else if (object == JSAddTab.class) {
+			addXML(buf, object);
+		}
+		return buf;
+	}
+
+	/**
+	 * @param buf
+	 * @param object
+	 */
+	private void addXML(XMLBuilder buf, Object object) {
+		if (object == JSNewLine.class) {
+			this.jsBuilder.newLine(buf);
+			this.jsBuilder.newTabulation(buf);
+		} else if (object == JSAddTab.class) {
+			jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab() + 1);
+		} else if (object == JSRemoveTab.class) {
+			jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab() - 1);
+		} else if (object instanceof XMLElement) {
+			doXMLElement(buf, ((XMLElement) object));
+		} else if (object instanceof JSFunction) {
+			JSFunction fct = (JSFunction) object;
+			if (fct.isFragment())
+			{
+				fct.toXML(buf);
+			}
+			else
+			{
 				jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab() + 1);
-			} else if (object == JSRemoveTab.class) {
+				fct.toXML(buf);
 				jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab() - 1);
-			} else if (object instanceof XMLElement) {
-				doXMLElement(buf, ((XMLElement) object));
-			} else if (object instanceof JSFunction) {
-				JSFunction fct = (JSFunction) object;
-				if (fct.isFragment())
-				{
-					fct.toXML(buf);
-				}
-				else
-				{
-					jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab() + 1);
-					fct.toXML(buf);
-					jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab() - 1);
-					jsBuilder.newLine(buf);
-					this.jsBuilder.newTabulation(buf);
-				}
-				
+				jsBuilder.newLine(buf);
+				this.jsBuilder.newTabulation(buf);
+			}
+			
 //			} else if (object instanceof JSContent && (this != object)) {
 //				JSContent c = (JSContent) object;
 //				c.toXML(buf);
-			} 
-			else if (object instanceof JSVariable) {	
-				Object v = ((JSVariable)object).getString();
-				if (v instanceof ArrayList)
-				{
-					ArrayList arr = (ArrayList)v;
-					for (Object object2 : arr) {
-						buf.addContent(object2);
-					}
+		} 
+		else if (object instanceof JSVariable) {	
+			Object v = ((JSVariable)object).getString();
+			if (v instanceof ArrayList)
+			{
+				ArrayList arr = (ArrayList)v;
+				for (Object object2 : arr) {
+					addXML(buf, object2);
 				}
-				else
-					buf.addContent(v);
-			} 
-			else if (object instanceof JSClass) {	
-				Object v = ((JSClass)object)._getContent();  // recup de la valeur du proxy
-				if (v instanceof ArrayList)
-				{
-					ArrayList arr = (ArrayList)v;
-					for (Object object2 : arr) {
-						buf.addContent(object2);
-					}
+			}
+			else
+				buf.addContent(v);
+		} 
+		else if (object instanceof JSClass) {	
+			Object v = ((JSClass)object)._getContent();  // recup de la valeur du proxy
+			if (v instanceof ArrayList)
+			{
+				ArrayList arr = (ArrayList)v;
+				for (Object object2 : arr) {
+					addXML(buf, object2);
 				}
-				else if (v!=null)
-					buf.addContent(v);
-				else
-					buf.addContent(object.toString());  // recup du nom du proxy
 			}
-			else if (object instanceof JSContent) {	
-				((JSContent)object).toXML(buf);
-			} 
-			else {
-				if (buf.isJS())
-					// ajout d'un JS sous forme de text
-					buf.addContent(object.toString().replaceAll("'", "\\\\'"));
-				else
-					buf.addContent(object);
-			}
+			else if (v!=null)
+				buf.addContent(v);
+			else
+				buf.addContent(object.toString());  // recup du nom du proxy
 		}
-		return buf;
+		else if (object instanceof JSContent) {	
+			((JSContent)object).toXML(buf);
+		} 
+		else {
+			if (buf.isJS())
+				// ajout d'un JS sous forme de text
+				buf.addContent(object.toString().replaceAll("'", "\\\\'"));
+			else
+				buf.addContent(object);
+		}
 	}
 
 	/**
@@ -180,11 +190,11 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 * @param object
 	 */
 	private void addElem(Object object) {
-		if (object instanceof List && ! (object instanceof JSMethodInterface)) {
+		if (object instanceof List /*&& ! (object instanceof JSMethodInterface)*/) {
 			@SuppressWarnings("unchecked")
 			List<Object> list = (List<Object>) object;
 			for (Object object2 : list) {
-				getListElem().add(object2);
+				addElem(object2);
 			}
 		} else
 			getListElem().add(object);
@@ -407,7 +417,7 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 				str.append(param[i]);
 		}
 		str.append("\"");
-		return new JSString().setValue(str.toString());
+		return new JSString()._setContent(str.toString());
 	}
 
 	@Override
@@ -501,17 +511,23 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#let(java.lang.Class, java.lang.Object, java.lang.Object[])
 	 */
 	@Override
-	public <E extends JSVariable> E let(Class<? extends E > type, Object name, Object... content) {
+	public <E> E let(Class<? extends E >  type, Object name, Object... content) {
 		var(name,content);
 		E v = null;
 
-		try {
-			v = (E) type.newInstance();
-			((JSVariable)v).setName(name);
-		} catch (InstantiationException | IllegalAccessException e) {
-			e.printStackTrace();
+		if (type.isAssignableFrom(JSVariable.class))
+		{
+			try {
+				v = (E) type.newInstance();
+				((JSVariable)v).setName(name);
+			} catch (InstantiationException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
 		}
-		
+		else
+		{
+			v = declareType(type, name);
+		}
 		return v;
 	}
 

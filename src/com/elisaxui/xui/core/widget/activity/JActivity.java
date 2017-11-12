@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.xui.core.toolkit.json;
+package com.elisaxui.xui.core.widget.activity;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSArray;

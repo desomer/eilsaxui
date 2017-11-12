@@ -5,12 +5,14 @@ package com.elisaxui.xui.core.toolkit;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.declareType;
 
+import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSVoid;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSon;
-import com.elisaxui.xui.core.toolkit.json.JActivity;
+import com.elisaxui.xui.core.page.XUIScene;
+import com.elisaxui.xui.core.widget.activity.JActivity;
 import com.elisaxui.xui.core.widget.container.JSContainer;
 
 /**
@@ -56,7 +58,7 @@ public interface TKActivity extends JSClass {
 	{
 		JSArray jsonContainer = declareType(JSArray.class, "jsonContainer"); 
 		
-		var(jsonContainer, jsContainer.getData("'.scene'"));
+		var(jsonContainer, jsContainer.getData(txt(CSSSelector.onPath(XUIScene.scene))));
 		set(json.active(), true);
 		__(jsonContainer.push(json));
 		set(listRegisterActivity.attrByString(json.id()), json);
@@ -69,7 +71,7 @@ public interface TKActivity extends JSClass {
 	{
 		JSArray jsonContainer = declareType(JSArray.class, "jsonContainer"); 
 		
-		var(jsonContainer, jsContainer.getData("'.scene'"));
+		var(jsonContainer, jsContainer.getData(txt(CSSSelector.onPath(XUIScene.scene))));
 		set(json.active(), false);
 		__(jsonContainer.push(json));
 		set(listRegisterActivity.attrByString(json.id()), json);

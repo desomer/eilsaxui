@@ -9,6 +9,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSString;
 import com.elisaxui.xui.core.datadriven.JSDataDriven;
 import com.elisaxui.xui.core.datadriven.JSDataSet;
+import com.elisaxui.xui.core.toolkit.JSFactory;
 import com.elisaxui.xui.core.toolkit.TKActivity;
 import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.toolkit.TKRouterEvent;
@@ -22,7 +23,7 @@ import com.elisaxui.xui.core.widget.navbar.ViewNavBar;
  * @author Bureau
  *
  */
-public interface JSContainer extends JSClass {
+public interface JSContainer extends JSFactory {
 
 	JSDataDriven aDataDriven = null;
 	JSDataSet aDataSet = null;
@@ -95,9 +96,9 @@ public interface JSContainer extends JSClass {
 						.endif()
 						
 						.__("var backupId=", _tkrouter, ".", _activityMgr.getCurrentIDActivity())
-						.__(_tkrouter, ".", _activityMgr.setCurrentActivity(new JSString().setValue("ctx.row.id")))
+						.__(_tkrouter, ".", _activityMgr.setCurrentActivity(new JSString()._setContent("ctx.row.id")))
 						.__(_tkrouter.doEvent(txt(TKActivity.ON_ACTIVITY_CREATE)))	
-						.__(_tkrouter, ".", _activityMgr.setCurrentActivity(new JSString().setValue("backupId")))
+						.__(_tkrouter, ".", _activityMgr.setCurrentActivity(new JSString()._setContent("backupId")))
 						
 					._elseif("ctx.row.type=='card'")
 						.var("subData", "{html:'', js:''}")

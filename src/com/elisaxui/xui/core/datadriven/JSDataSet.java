@@ -2,13 +2,15 @@ package com.elisaxui.xui.core.datadriven;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSCallBack;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSInt;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSVoid;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSon;
 
 public interface JSDataSet extends JSClass {
 
-	JSon data = null;
+	JSArray data = null;
 	JSCallBack callBackChange = null;
 	JSInt delayEvent = null;
 	JSVariable myProxySet = null;    //WeakSet
@@ -16,12 +18,12 @@ public interface JSDataSet extends JSClass {
 	JSDataSet _that = null;
 //	Object synchroneEvent = null;   // toDo
 
-	default Object constructor(Object d) {
-		return set(data, d)
-				.set(callBackChange, "$.Callbacks()")
-				.set(delayEvent, 0)
-				.set(myProxySet, "new WeakSet()")
-				;
+	default JSVoid constructor(Object d) {
+		 set(data, d);
+		 set(callBackChange, "$.Callbacks()");
+		 set(delayEvent, 0);
+		 set(myProxySet, "new WeakSet()");
+		 return _void();
 	}
 
 	default Object onChange(Object callback) {
@@ -136,10 +138,8 @@ public interface JSDataSet extends JSClass {
 //				.set(data, "new Proxy(d, changeHandler)");
 	}
 
-	default Object getData() {
-		 __()
-		 .__("return ", data);		  
-		 return null;
+	default Object getData() {	  //TODO JSArray
+		 return data;
 	}
 
 }

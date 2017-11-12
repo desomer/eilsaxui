@@ -31,6 +31,7 @@ public class ViewNavBar extends XHTMLPart {
 	public static XClass fixedToAbsolute;
 	public static XClass navbar;
 	public static XClass fixedTop;
+	public static XClass rightAction;
 	
 	public static final String PROPERTY_NAME = "PROPERTY_NAME";
 	
@@ -45,7 +46,8 @@ public class ViewNavBar extends XHTMLPart {
 				.select(fixedTop).set("position:fixed; top:0px; transform:translate3d(0px,0px,0px); backface-visibility: hidden;")
 				.select(fixedToAbsolute).set("position:absolute;")  // permet de deplacement
 				
-				.on(".rightAction", "position: absolute; right: 0px;  top: 0px;  height: 100%;  width: auto;")
+				.select(rightAction).set("position: absolute; right: 0px;  top: 0px;  height: 100%;  width: auto;")
+				
 				.on(".actionBtn", "margin: 0; padding: 8px;  font-size: 36px !important;  cursor: pointer;")
 				
 				.on(".center", "z-index:"+(XUIScene.ZINDEX_NAV_BAR+1)+";height:100%; display: flex; align-items: center;justify-content: center")
@@ -76,7 +78,7 @@ public class ViewNavBar extends XHTMLPart {
 	}
 	
 	public static XMLElement getTemplateActionBar() {
-		return xDiv(xAttr("class", "\"rightAction\""));
+		return xDiv(rightAction);
 	}
 	
 	public static XMLElement getTemplateName(Object name) {
@@ -94,15 +96,6 @@ public class ViewNavBar extends XHTMLPart {
 	public static XMLElement getTemplateBgDiv() {
 		return xElement("div", animatedBg); 
 	}
-	
-//	@xTarget(AFTER_CONTENT.class)
-//	public Element xAddJS() {
-//		return xScriptJS(js().__("$('body').on('scroll',", fct("e")
-//				.consoleDebug("e.currentTarget.scrollTop", "e") 
-//				//.__("$('.fixedTop').css('transform', 'translate3d(0px,'+e.currentTarget.scrollTop+'px,0px)' )")
-//				,")")
-//			);
-//	}
-	
+		
 
 }

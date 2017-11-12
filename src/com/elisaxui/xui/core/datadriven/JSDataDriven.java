@@ -1,10 +1,12 @@
 package com.elisaxui.xui.core.datadriven;
 
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
+import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.defAttr;
+import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.defVar;
+
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSCallBack;
-import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.*;
+import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSVoid;
 /**
  * 
  * - gestion par proxy sur json 
@@ -18,16 +20,16 @@ import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.*;
  */
 public interface JSDataDriven extends JSClass {
 
-	JSDataSet dataSet = defAttr();
+	JSDataSet dataSet = null;
 
-	JSCallBack callBackEnter = defAttr();
-	JSCallBack callBackExit = defAttr();
-	JSCallBack callBackChange = defAttr();
+	JSCallBack callBackEnter = null;
+	JSCallBack callBackExit = null;
+	JSCallBack callBackChange = null;
 	
-	JSDataDriven _this = defVar();
-	JSDataDriven _self = defVar();
+	JSDataDriven _this = null;
+	JSDataDriven _self = null;
 
-	default Object constructor(Object data) {
+	default JSVoid constructor(Object data) {
 		set(dataSet, data)
 				.set(callBackEnter, "$.Callbacks()")
 				.set(callBackExit, "$.Callbacks()")
@@ -36,37 +38,37 @@ public interface JSDataDriven extends JSClass {
 		return _void();
 	}
 
-	default Object onEnter(Object callback) {
+	default JSVoid onEnter(Object callback) {
 		__(callBackEnter, ".add(", callback, ")");
 		return  _void();
 	}
 
-	default Object onExit(Object callback) {
+	default JSVoid onExit(Object callback) {
 		__(callBackExit, ".add(", callback, ")");
 		return  _void();
 	}
 
-	default Object onChange(Object callback) {
+	default JSVoid onChange(Object callback) {
 		__(callBackChange, ".add(", callback, ")");
 		return  _void();
 	}
 
-	default Object doEnter(Object row) {
+	default JSVoid doEnter(Object row) {
 		__(callBackEnter, ".fire(row)");
 		return  _void();
 	}
 
-	default Object doExit(Object row) {
+	default JSVoid doExit(Object row) {
 		__(callBackExit, ".fire(row)");
 		return  _void();
 	}
 
-	default Object doChange(Object row) {
+	default JSVoid doChange(Object row) {
 		__(callBackChange, ".fire(row)");
 		return  _void();
 	}
 
-	default Object start() {
+	default JSVoid start() {
 		
 		JSMethodInterface fctChange =  fct("value")
 			._if("value.ope=='enter'")

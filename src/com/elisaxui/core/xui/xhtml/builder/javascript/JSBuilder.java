@@ -33,7 +33,7 @@ public class JSBuilder extends XUIFormatManager {
 
 	public void setNameOfProxy(String prefix, Object inst, Object name) {
 		MethodInvocationHandler mh = (MethodInvocationHandler) Proxy.getInvocationHandler(inst);
-		mh.setVarName(prefix + name);
+		mh.setVarName(prefix==null?name :( prefix + name));
 	}
 
 

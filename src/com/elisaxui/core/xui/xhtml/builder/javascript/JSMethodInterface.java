@@ -12,7 +12,7 @@ public interface JSMethodInterface  {
 	JSMethodInterface set(Object name, Object... content);
 
 	JSMethodInterface var(Object name, Object... content);
-	<E extends JSVariable> E let(Class<? extends E > type, Object name, Object... content);
+	<E> E let(Class<? extends E > type, Object name, Object... content);
 	
 	JSMethodInterface consoleDebug(Object... content);
 	JSMethodInterface systemDebugIf(Object cond, Object... content);

@@ -32,7 +32,7 @@ public class JSVariable {
 		return value;
 	}
 
-	public <E extends JSVariable> E setValue(Object value) {
+	public <E extends JSVariable> E _setContent(Object value) {
 		this.value = value;
 		return (E)this;
 	}

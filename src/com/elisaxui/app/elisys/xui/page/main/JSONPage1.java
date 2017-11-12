@@ -11,9 +11,9 @@ import com.elisaxui.app.elisys.xui.widget.JSSyllabisation;
 import com.elisaxui.app.elisys.xui.widget.ViewSyllabisation;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
-import com.elisaxui.xui.core.toolkit.json.JActivity;
+import com.elisaxui.xui.core.widget.activity.JActivity;
+import com.elisaxui.xui.core.widget.activity.JSONActivity;
 import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
-import com.elisaxui.xui.core.widget.container.JSONActivity;
 import com.elisaxui.xui.core.widget.log.ViewLog;
 
 /**********************************************************************/

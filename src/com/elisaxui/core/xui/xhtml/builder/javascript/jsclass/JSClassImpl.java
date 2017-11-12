@@ -81,32 +81,76 @@ public class JSClassImpl extends JSContent {
 	 */
 	public static final  Object toJSCallInner(Object name , Method method, Object[] args) {
 		
+//		if (JSClass.class.isAssignableFrom(method.getReturnType() ))
+//		{
+////			// chainage d'attribut
+////			JSClass prox = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) method.getReturnType());
+////			XHTMLPart.jsBuilder.setNameOfProxy("", prox, name + "." + method.getName());
+////			return prox;
+//			return null;
+//		}
+//		else
+//		{
+//			List<Object> buf = new ArrayList<Object>();
+//			buf.add("this." + method.getName() + "(");
+//	
+//			int i = 0;
+//			if (args != null) {
+//				for (Object p : args) {
+//					if (i > 0)
+//						buf.add(", ");
+//					buf.add(p);
+//					i++;
+//				}
+//			}
+//			buf.add(")");
+//			return buf;
+//		}
+		
+//		return toJSCall("this", method, args);
+		
+		
+		List<Object> buf = new ArrayList<Object>();
+		buf.add("this" + "." + method.getName() + "(");
+
+		int i = 0;
+		if (args != null) {
+			for (Object p : args) {
+				if (i > 0)
+					buf.add(", ");
+				buf.add(p);  // peut etre des string, fct, etc...
+				i++;
+			}
+		}
+		buf.add(")");
+		
 		if (JSClass.class.isAssignableFrom(method.getReturnType() ))
 		{
-//			// chainage d'attribut
-//			JSClass prox = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) method.getReturnType());
-//			XHTMLPart.jsBuilder.setNameOfProxy("", prox, name + "." + method.getName());
-//			return prox;
-			return null;
+			// chainage d'attribut
+			JSClass prox = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) method.getReturnType());
+			prox._setContent(buf);
+			return prox;
+		}
+		else if (JSVariable.class.isAssignableFrom(method.getReturnType() ))
+		{
+			JSVariable ret=null;
+			try {
+				ret = ((JSVariable)method.getReturnType().newInstance());
+			} catch (InstantiationException | IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			ret._setContent(buf);
+			return ret;
 		}
 		else
 		{
-			List<Object> buf = new ArrayList<Object>();
-			buf.add("this." + method.getName() + "(");
-	
-			int i = 0;
-			if (args != null) {
-				for (Object p : args) {
-					if (i > 0)
-						buf.add(", ");
-					buf.add(p);
-					i++;
-				}
-			}
-			buf.add(")");
+			// appel de methode
 			return buf;
 		}
 	}
+	
+
 	
 	/**
 	 * retourne le call
@@ -138,8 +182,6 @@ public class JSClassImpl extends JSContent {
 		{
 			// chainage d'attribut
 			JSClass prox = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) method.getReturnType());
-//			XHTMLPart.jsBuilder.setNameOfProxy("", prox, name + "." + method.getName());
-//			return prox;
 			prox._setContent(buf);
 			return prox;
 		}
@@ -152,7 +194,7 @@ public class JSClassImpl extends JSContent {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			ret.setValue(buf);
+			ret._setContent(buf);
 			return ret;
 		}
 		else

@@ -36,7 +36,7 @@ public interface JSClass extends JSMethodInterface  {
 	 * sert a ne pas avoir de warning
 	 * @return
 	 */
-	public static <E> E declareType(Class type, String name) {
+	public static <E> E declareType(Class type, Object name) {
 		
 		boolean retJSVariable=JSVariable.class.isAssignableFrom(type);
 		boolean retJSClass=JSClass.class.isAssignableFrom(type);
@@ -58,7 +58,7 @@ public interface JSClass extends JSMethodInterface  {
 		if (retJSClass)
 		{
 			JSClass prox = XHTMLPart.jsBuilder.getProxy( (Class<? extends JSClass>) type);
-			XHTMLPart.jsBuilder.setNameOfProxy("", prox, name);	
+			XHTMLPart.jsBuilder.setNameOfProxy(null, prox, name);	
 			return (E)prox;
 		}
 		
@@ -86,6 +86,6 @@ public interface JSClass extends JSMethodInterface  {
 	
 	Object _setContent(Object value);
 	Object _getContent();
-	<E> E cast(Class<? extends JSClass> cl, Object obj);
+	<E> E cast(Class<?> cl, Object obj);
 	
 }

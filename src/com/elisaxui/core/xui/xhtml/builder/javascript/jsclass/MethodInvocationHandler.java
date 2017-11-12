@@ -23,7 +23,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
-import com.elisaxui.xui.core.toolkit.json.JActivity;
+import com.elisaxui.xui.core.widget.activity.JActivity;
 
 public class MethodInvocationHandler implements InvocationHandler {
 	
@@ -56,12 +56,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 
 		if (method.getName().equals("toString")) {
 			
-			if (varContent != null)
-				return varContent.toString();
-			
-			if (getVarName() == null)
-				return "???";
-			return getVarName().toString();
+			return getProxyContent();
 		}
 
 		if (method.getName().equals("_getContent")) {
@@ -75,7 +70,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 		
 		if (method.getName().equals("cast"))
 		{
-			JSClass jc = declareType((Class)args[0], "");
+			JSClass jc = declareType((Class)args[0], null);
 			jc._setContent(args[1]);
 			return jc;
 		}
@@ -91,7 +86,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 			if (method.isDefault()) {
 				
 				if (testAnonymousInProgress)
-					return JSClassImpl.toJSCallInner(getVarName(), method, args);
+					return JSClassImpl.toJSCallInner(getProxyContent(), method, args);
 				
 				/*****  APPEL DES FUNCTION DE LA CLASSE *****/ 
 				MethodDesc MthInvoke = new MethodDesc(implcl, proxy, method, args);
@@ -137,13 +132,13 @@ public class MethodInvocationHandler implements InvocationHandler {
 					
 					implcl.getListHandleFuntionPrivate().add(MthInvoke);
 					
-					return JSClassImpl.toJSCallInner(getVarName(), method, args);
+					return JSClassImpl.toJSCallInner(getProxyContent(), method, args);
 				}
 			} 
 			else if (! checkMethodExist(method) )
 			{
 				/***** INSERT le nom de la methode de type Interface de variable  ****/ 
-				return getObjectJS(method.getReturnType(),getVarName() + ".", method.getName());				
+				return getObjectJS(method.getReturnType(), getProxyContent() + ".", method.getName());				
 			}
 			else	
 				{
@@ -189,7 +184,19 @@ public class MethodInvocationHandler implements InvocationHandler {
 		}
 
 		//  creer le js du call de la fct
-		return JSClassImpl.toJSCall(getVarName(), method, args);
+		return JSClassImpl.toJSCall(getProxyContent(), method, args);
+	}
+
+	/**
+	 * @return
+	 */
+	private Object getProxyContent() {
+		if (varContent != null)
+			return varContent.toString();
+		
+		if (getVarName() == null)
+			return "???";
+		return getVarName().toString();
 	}
 
 	/**

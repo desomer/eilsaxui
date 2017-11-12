@@ -266,7 +266,7 @@ public interface TKRouterEvent extends JSClass {
 //		    .__(_self.doEvent(TKActivity.ON_ACTIVITY_RESUME))
 		 	
 			 .systemDebugIf(TKConfig.debugDoAction, txt("doAction anim=<"), "actAnim", "'> to intent '", "$xui.intent")
-			 .__(activityMgr.setCurrentActivity(new JSString().setValue("$xui.intent.activity")))  
+			 .__(activityMgr.setCurrentActivity(new JSString()._setContent("$xui.intent.activity")))  
 			 
 			 
 		    ._if("actAnim=='"+ConstTransition.ANIM_FROM_BOTTOM+"'")
@@ -280,7 +280,7 @@ public interface TKRouterEvent extends JSClass {
 		 	.var("actAnim", "$xui.intent.nextActivityAnim")
 		 	
 		 	.systemDebugIf(TKConfig.debugDoAction, txt("doAction "), "action", "' to intent '", "$xui.intent")
-		 	.__(activityMgr.setCurrentActivity(new JSString().setValue("$xui.intent.prevActivity")))   
+		 	.__(activityMgr.setCurrentActivity(new JSString()._setContent("$xui.intent.prevActivity")))   
 //		    .__(_self.doEvent(TKActivity.ON_ACTIVITY_RESUME))
 			
 		 	._if("actAnim=='"+ConstTransition.ANIM_FROM_BOTTOM+"'")

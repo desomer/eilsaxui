@@ -66,9 +66,9 @@ public class ScnRoot extends XUIScene {
 	@Override
 	public JSMethodInterface searchMenu()
 	{
-	  JSArray jsonMenu = new JSArray().setName("jsonMenu");	
-	  JSArray jsonApi = new JSArray().setName("jsonApi");	
-	  JSInt idx = new JSInt().setName("idx");
+	  JSArray jsonMenu = new JSArray()._setName("jsonMenu");	
+	  JSArray jsonApi = new JSArray()._setName("jsonApi");	
+	  JSInt idx = new JSInt()._setName("idx");
 	  
 	  return fragment()
 			  	// TODO a changer 
@@ -99,7 +99,7 @@ public class ScnRoot extends XUIScene {
 	@Override
 	public JSMethodInterface createScene()
 	{	
-		JSArray jsonSyllabe = new JSArray().setName("jsonSyllabe");
+		JSArray jsonSyllabe = new JSArray()._setName("jsonSyllabe");
 		return fragment()				
 				/*************************************************************/
 				

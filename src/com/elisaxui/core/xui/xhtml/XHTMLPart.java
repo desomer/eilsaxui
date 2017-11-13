@@ -138,7 +138,7 @@ public abstract class XHTMLPart extends XMLPart {
 			str.append(param[i]);
 		}
 		JSVariable var = new JSVariable();
-		var.setName(str.toString());
+		var._setName(str.toString());
 		return var;
 	}
 	

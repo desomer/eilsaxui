@@ -3,13 +3,13 @@ package com.elisaxui.core.xui.xhtml.builder.javascript;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.declareType;
 
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.Array;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodInvocationHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSArray;
@@ -107,22 +107,22 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 //				c.toXML(buf);
 		} 
 		else if (object instanceof JSVariable) {	
-			Object v = ((JSVariable)object).getString();
-			if (v instanceof ArrayList)
+			Object v = ((JSVariable)object)._getString();
+			if (v instanceof Array)
 			{
-				ArrayList arr = (ArrayList)v;
+				Array arr = (Array)v;
 				for (Object object2 : arr) {
 					addXML(buf, object2);
 				}
 			}
 			else
-				buf.addContent(v);
+				buf.addContent(((JSVariable)object).toString());
 		} 
 		else if (object instanceof JSClass) {	
 			Object v = ((JSClass)object)._getContent();  // recup de la valeur du proxy
-			if (v instanceof ArrayList)
+			if (v instanceof Array)
 			{
-				ArrayList arr = (ArrayList)v;
+				Array arr = (Array)v;
 				for (Object object2 : arr) {
 					addXML(buf, object2);
 				}
@@ -310,7 +310,7 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	
 	@Override
 	public JSMethodInterface systemDebugIf(Object cond, Object... content) {
-		ArrayList<Object> p = new ArrayList<Object>();
+		Array<Object> p = new Array<Object>();
 		p.add("'<SYSTEM>'");
 		p.addAll(Arrays.asList(content));
 		
@@ -519,7 +519,7 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 		{
 			try {
 				v = (E) type.newInstance();
-				((JSVariable)v).setName(name);
+				((JSVariable)v)._setName(name);
 			} catch (InstantiationException | IllegalAccessException e) {
 				e.printStackTrace();
 			}

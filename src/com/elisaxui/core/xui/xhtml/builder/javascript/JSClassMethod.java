@@ -3,11 +3,8 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.javascript;
 
-import java.util.ArrayList;
-
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSString;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSon;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.Array;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
 
@@ -18,9 +15,9 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder;
  */
 public class JSClassMethod extends JSVariable {
 
-	ArrayList<Object> listContent = new ArrayList<Object>();
+	// TODO a retirer et a gerer par le _setContent    (voir equal sur JSString)
+	Array<Object> listContent = new Array<Object>();
 
-	
 	public void reinit()
 	{
 		listContent.clear();
@@ -66,14 +63,16 @@ public class JSClassMethod extends JSVariable {
 	}
 	
 	@Override
-	public Object getString() {
-		StringBuilder sb = new StringBuilder(super.toString());
+	public Object _getString() {
+		Array<Object> list = new Array<Object>();
+		Object arr = super._getString();
+		if (arr instanceof Array )
+			list.addAll((Array<?>)arr);
+		else
+			list.add(arr);
 		
-		for (Object object : listContent) {
-			sb.append(object);
-		}
-		
-		return sb.toString();
+		list.addAll(listContent);
+		return list;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -120,7 +119,7 @@ public class JSClassMethod extends JSVariable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			ret.setName(this.getName());
+			ret._setName(this._getName());
 		}
 		
 		ret.addContent("."+mth+"(");
@@ -142,7 +141,7 @@ public class JSClassMethod extends JSVariable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			ret.setName(this.getName());
+			ret._setName(this._getName());
 		}
    	 
    	 ret.addContent("[");
@@ -151,7 +150,7 @@ public class JSClassMethod extends JSVariable {
    	 return ret; 
     }
 	
-	//TODO
+    @Deprecated
 	public <E extends JSClassMethod> E  attr(String att)
 	{
 		E ret = (E)this;
@@ -164,13 +163,14 @@ public class JSClassMethod extends JSVariable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			ret.setName(this.getName());
+			ret._setName(this._getName());
 		}
 		
 		ret.addContent("."+att);
 		return ret;
 	}
 	
+	@Deprecated
 	public <E extends JSClassMethod> E  attrOfType(JSClassMethod cl, String att)
 	{
 		if (listContent.size()==0 && this.name!=null)
@@ -182,7 +182,7 @@ public class JSClassMethod extends JSVariable {
 //				// TODO Auto-generated catch block
 //				e.printStackTrace();
 //			}
-			cl.setName(this.getName());
+			cl._setName(this._getName());
 		}
 		
 		cl.addContent("."+att);

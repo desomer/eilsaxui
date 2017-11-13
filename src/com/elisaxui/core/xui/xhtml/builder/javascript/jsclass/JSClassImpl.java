@@ -1,7 +1,6 @@
 package com.elisaxui.core.xui.xhtml.builder.javascript.jsclass;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -79,75 +78,11 @@ public class JSClassImpl extends JSContent {
 	 * @param args
 	 * @return
 	 */
+	@Deprecated
 	public static final  Object toJSCallInner(Object name , Method method, Object[] args) {
+				
+		return toJSCall("this", method, args);
 		
-//		if (JSClass.class.isAssignableFrom(method.getReturnType() ))
-//		{
-////			// chainage d'attribut
-////			JSClass prox = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) method.getReturnType());
-////			XHTMLPart.jsBuilder.setNameOfProxy("", prox, name + "." + method.getName());
-////			return prox;
-//			return null;
-//		}
-//		else
-//		{
-//			List<Object> buf = new ArrayList<Object>();
-//			buf.add("this." + method.getName() + "(");
-//	
-//			int i = 0;
-//			if (args != null) {
-//				for (Object p : args) {
-//					if (i > 0)
-//						buf.add(", ");
-//					buf.add(p);
-//					i++;
-//				}
-//			}
-//			buf.add(")");
-//			return buf;
-//		}
-		
-//		return toJSCall("this", method, args);
-		
-		
-		List<Object> buf = new ArrayList<Object>();
-		buf.add("this" + "." + method.getName() + "(");
-
-		int i = 0;
-		if (args != null) {
-			for (Object p : args) {
-				if (i > 0)
-					buf.add(", ");
-				buf.add(p);  // peut etre des string, fct, etc...
-				i++;
-			}
-		}
-		buf.add(")");
-		
-		if (JSClass.class.isAssignableFrom(method.getReturnType() ))
-		{
-			// chainage d'attribut
-			JSClass prox = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) method.getReturnType());
-			prox._setContent(buf);
-			return prox;
-		}
-		else if (JSVariable.class.isAssignableFrom(method.getReturnType() ))
-		{
-			JSVariable ret=null;
-			try {
-				ret = ((JSVariable)method.getReturnType().newInstance());
-			} catch (InstantiationException | IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			ret._setContent(buf);
-			return ret;
-		}
-		else
-		{
-			// appel de methode
-			return buf;
-		}
 	}
 	
 
@@ -164,7 +99,7 @@ public class JSClassImpl extends JSContent {
 //		if (method.getName().equals("activityMgr"))
 //			System.out.println("activityMgr activityMgr ok");
 		
-		List<Object> buf = new ArrayList<Object>();
+		List<Object> buf = new Array<Object>();
 		buf.add(name + "." + method.getName() + "(");
 
 		int i = 0;

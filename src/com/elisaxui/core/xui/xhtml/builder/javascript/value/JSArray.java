@@ -23,7 +23,7 @@ public class JSArray extends JSClassMethod {
 	
 	public JSArray at(Object idx)
 	{
-		JSArray ret = new JSArray().setName(this.getName());
+		JSArray ret = new JSArray()._setName(this._getName());
 		ret.addContent("[");
 		ret.addContent(idx);
 		ret.addContent("]");

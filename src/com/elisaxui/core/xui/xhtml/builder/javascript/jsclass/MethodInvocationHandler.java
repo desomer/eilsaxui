@@ -86,7 +86,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 			if (method.isDefault()) {
 				
 				if (testAnonymousInProgress)
-					return JSClassImpl.toJSCallInner(getProxyContent(), method, args);
+					return JSClassImpl.toJSCallInner(getProxyContent(), method, args);  //TODO toJSCall
 				
 				/*****  APPEL DES FUNCTION DE LA CLASSE *****/ 
 				MethodDesc MthInvoke = new MethodDesc(implcl, proxy, method, args);
@@ -132,7 +132,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 					
 					implcl.getListHandleFuntionPrivate().add(MthInvoke);
 					
-					return JSClassImpl.toJSCallInner(getProxyContent(), method, args);
+					return JSClassImpl.toJSCallInner(getProxyContent(), method, args);  //TODO toJSCall
 				}
 			} 
 			else if (! checkMethodExist(method) )
@@ -320,7 +320,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			retJSVar.setName(prefix+name);
+			retJSVar._setName(prefix+name);
 			return retJSVar;
 		}
 		else if (retJSClass)

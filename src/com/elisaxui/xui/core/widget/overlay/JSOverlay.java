@@ -29,7 +29,7 @@ public interface JSOverlay extends JSClass {
 	
 	default Object doShow(Object act, Object phase)
 	{
-		JQuery overlay = new  JQuery().setName("overlay");
+		JQuery overlay = new  JQuery()._setName("overlay");
 		
 		var(overlay, $( jsvar(act), " ", cBlackOverlay) );
 		_if(phase, "==1");

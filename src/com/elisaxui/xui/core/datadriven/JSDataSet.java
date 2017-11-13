@@ -132,13 +132,9 @@ public interface JSDataSet extends JSClass {
 				)
 			   .set(data, "d")	 
 				;
-
-
-
-//				.set(data, "new Proxy(d, changeHandler)");
 	}
 
-	default Object getData() {	  //TODO JSArray
+	default JSArray getData() {	  //TODO JSArray
 		 return data;
 	}
 

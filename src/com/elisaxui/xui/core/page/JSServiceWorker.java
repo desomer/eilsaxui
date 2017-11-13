@@ -23,7 +23,7 @@ public final class JSServiceWorker extends XHTMLPart {
 	public XMLElement doJS()
 	{
 		
-		JSon response = new JSon().setName("response");
+		JSon response = new JSon()._setName("response");
 		
 		JSMethodInterface fctFetch = fct(response)
 				 // Check if we received a valid response

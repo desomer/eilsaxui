@@ -2,6 +2,6 @@ package com.elisaxui.core.xui.xhtml.builder.javascript.value;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 
-public class JSBoolean extends JSVariable {
+public class JSBool extends JSVariable {
 
 }

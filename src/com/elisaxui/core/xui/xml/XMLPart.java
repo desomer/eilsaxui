@@ -213,7 +213,7 @@ public class XMLPart  {
 					if (comment != null) {
 						name = comment.value();
 					}
-					variablejs.setName(name);
+					variablejs._setName(name);
 					field.setAccessible(true);
 					try {
 						field.set(this,variablejs);

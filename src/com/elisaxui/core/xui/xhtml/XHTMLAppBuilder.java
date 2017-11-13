@@ -240,9 +240,9 @@ public class XHTMLAppBuilder {
 			name = comment.value();
 		}
 		if (name.startsWith("_"))
-			var.setName(name.substring(1));
+			var._setName(name.substring(1));
 		else
-			var.setName("this." + name);
+			var._setName("this." + name);
 	}
 	
 }

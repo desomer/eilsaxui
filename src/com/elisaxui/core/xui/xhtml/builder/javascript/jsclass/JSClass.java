@@ -46,7 +46,7 @@ public interface JSClass extends JSMethodInterface  {
 			JSVariable v =null;
 			try {
 				v = ((JSVariable)type.newInstance());
-				v.setName(name) ;
+				v._setName(name) ;
 			} catch (InstantiationException | IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

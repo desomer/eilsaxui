@@ -69,7 +69,7 @@ public interface JSSyllabisation extends JSClass {
 		set(recognition.attr("lang"), txt("fr-FR"));
 		var(_self, _this);
 		
-		JSArray jsonSyllable = new JSArray().setName("jsonSyllable");
+		JSArray jsonSyllable = new JSArray()._setName("jsonSyllable");
 		var(jsonSyllable, aDataSet().getData());
 
 		Anonym onresult = (/*event*/)->{ 			
@@ -78,19 +78,19 @@ public interface JSSyllabisation extends JSClass {
 				_if("event.results[i].isFinal && time>500");
 					set("self.lastResult", "event.timeStamp");
 					
-					JSString textEvent = new JSString().setName("textEvent");
+					JSString textEvent = new JSString()._setName("textEvent");
 					var(textEvent, "event.results[i][0].transcript");
 					__("window.lastPhrase", "+=' '+", textEvent);
 	
-					JSon param = new JSon().setName("param");
+					JSon param = new JSon()._setName("param");
 					var(param, "{text:",textEvent,"}");
 					
-					JSon data = new JSon().setName("data"); 
+					JSon data = new JSon()._setName("data"); 
 					
 					Anonym onJsonSyllabysation = (/*data*/)->{	
-						JSArray lesmots = new JSArray().setName("lesmots");
+						JSArray lesmots = new JSArray()._setName("lesmots");
 						var(lesmots, data.attr("mots"));
-						JSInt num = new JSInt().setName("num");
+						JSInt num = new JSInt()._setName("num");
 						_forIdx(num, lesmots);
 							setTimeout(fct(num).__(jsonSyllable.push(lesmots.at(num))), "50+(20*"+num+")", num);
 						endfor();
@@ -117,18 +117,18 @@ public interface JSSyllabisation extends JSClass {
 			_if("ctx.row['_dom_']==null");				
 				set(template, ViewSyllabisation.getMot(XHTMLPart.xVar("ctx.row.text")));
 				
-				JQuery jqdom = new JQuery().setName("jqdom");
+				JQuery jqdom = new JQuery()._setName("jqdom");
 				var(jqdom, template.appendInto(JQuery.$(ViewSyllabisation.cDivSyllabisation)));
 				
 				set("ctx.row['_dom_']", jqdom.get(0));
 				
-				JSArray sylb = new JSArray().setName("sylb");
+				JSArray sylb = new JSArray()._setName("sylb");
 				var(sylb, "ctx.row.syllabes");
 				
 	            _forIdx("j", sylb);
 	            	set(template, ViewSyllabisation.getSyl(XHTMLPart.xVar(sylb.at("j").attr("text"))));
 	            	
-	        		JQuery jqdomSyl = new JQuery().setName("jqdomSyl");
+	        		JQuery jqdomSyl = new JQuery()._setName("jqdomSyl");
 	            	var(jqdomSyl, template.appendInto("jqdom"));
 	            	
 	            	_if("j%2==1");

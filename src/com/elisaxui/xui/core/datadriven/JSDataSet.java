@@ -10,6 +10,9 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSon;
 
 public interface JSDataSet extends JSClass {
 
+
+	public static final String _DOM = "_dom_";
+	
 	JSArray data = null;
 	JSCallBack callBackChange = null;
 	JSInt delayEvent = null;
@@ -59,7 +62,7 @@ public interface JSDataSet extends JSClass {
 						" },"+
 					"set:", fct("target", "property", "value", "receiver")
 	
-					       ._if("property!='_dom_' && target[property]!==value")
+					       ._if("property!='"+_DOM+"' && target[property]!==value")
 					       		//.consoleDebug("'setting'", "property" , "' for '" , "target" , "' with value '" , "value")
 								.var("row", "{ ope:'change', row:target, idx:target.idx, property:property, value: value, old: target[property] }")
 								.var("fct"," function() {\nfastdom.mutate(function() {\nthat.callBackChange.fire(row); })}")

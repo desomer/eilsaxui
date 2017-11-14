@@ -48,6 +48,7 @@ import com.elisaxui.xui.core.widget.overlay.JSOverlay;
 
 public abstract class XUIScene extends XHTMLPart {
 
+	public static final int heightTabBar = 50*1;
 	public static final int heightNavBar = 50*2;
 	public static final int widthMenu = 250;
 	

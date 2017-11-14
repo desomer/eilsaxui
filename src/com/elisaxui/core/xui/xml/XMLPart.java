@@ -305,10 +305,13 @@ public class XMLPart  {
 		addElement(AFTER_CONTENT.class, part);
 	}
 
-//	public final static XMLPartElement xPartElement(XMLPart part, Object... inner) {
-//		return XMLBuilder.createPart(part, inner);
-//	}
-	
+
+	/**
+	 * xPart( part, children) 
+	 * @param part
+	 * @param inner
+	 * @return
+	 */
 	public final static XMLElement xPart(XMLPart part, Object... inner) {
 		return xElement(null, XMLBuilder.createPart(part, inner));
 	}
@@ -332,6 +335,11 @@ public class XMLPart  {
 		return attr;
 	}
 	
+	/**
+	 * ajout d'enfant par un .addProperty(name, xxxx) 
+	 * @param name
+	 * @return
+	 */
 	public final static Handle vHandle(String name) {
 		Handle attr = XMLBuilder.createHandle(name);
 		return attr;

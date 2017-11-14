@@ -39,7 +39,7 @@ public class ViewNavBar extends XHTMLPart {
 	@xRessource
 	public XMLElement xStyle() {
 		
-		return xCss()    //"+ScnStandard.bgColor+"
+		return xCss()  
 				.select(navbar).set("z-index: "+XUIScene.ZINDEX_NAV_BAR+";  "+XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorNavBar()+" height: "+XUIScene.heightNavBar+"px;width: 100%; color:white; "
 						+ "box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);")
 				
@@ -53,9 +53,9 @@ public class ViewNavBar extends XHTMLPart {
 				.on(".center", "z-index:"+(XUIScene.ZINDEX_NAV_BAR+1)+";height:100%; display: flex; align-items: center;justify-content: center")
 				.on(".logo", "z-index:"+(XUIScene.ZINDEX_NAV_BAR+1)+"; margin-top:" + XUIScene.heightNavBar/2 +"px; color: inherit; font-size: 2.1rem; animation-duration: 700ms;")
 				
-				.on(animatedBg, "position: absolute; display: block;  width: 100%; height: 100%; top: 0; right: 0; bottom: 0; left: 0;")
+				.select(animatedBg).set("position: absolute; display: block;  width: 100%; height: 100%; top: 0; right: 0; bottom: 0; left: 0;")
 				
-				.on(actionBtnContainer, "cursor: pointer; position: relative; background-color: Transparent; color:white;"
+				.select(actionBtnContainer).set("cursor: pointer; position: relative; background-color: Transparent; color:white;"
 						+ "padding: 0;  overflow: hidden; outline: 0 !important; " // pas de bordure au focus
 						+ "border:none")
 				;

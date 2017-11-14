@@ -38,6 +38,10 @@ public abstract class XHTMLPart extends XMLPart {
 	public final static XMLElement xHeader(Object... inner) {
 		return xElement("header", inner);
 	}
+	
+	public final static XMLElement xFooter(Object... inner) {
+		return xElement("footer", inner);
+	}
 
 	public final static XMLElement xSpan(Object... inner) {
 		return xElement("span", inner);

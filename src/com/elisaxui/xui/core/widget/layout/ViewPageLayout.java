@@ -14,6 +14,7 @@ import com.elisaxui.xui.core.transition.CssTransition;
 import com.elisaxui.xui.core.widget.menu.ViewMenu;
 import com.elisaxui.xui.core.widget.navbar.ViewNavBar;
 import com.elisaxui.xui.core.widget.overlay.ViewOverlay;
+import com.elisaxui.xui.core.widget.tabbar.ViewTabBar;
 
 /**
  * @author Bureau
@@ -43,7 +44,7 @@ public class ViewPageLayout extends XHTMLPart {
 	public XMLElement xStyle() {
 
 		return xCss().select(cArticle)
-						.set("overflow:hidden;")   //min-height:100vh
+						.set("overflow:hidden;")
 		;
 	}
 	
@@ -53,8 +54,12 @@ public class ViewPageLayout extends XHTMLPart {
 				, xPart(new ViewNavBar().addProperty(ViewNavBar.PROPERTY_NAME, "NavBar"+getProperty(ID)))
 				, xDiv(content 	
 						, xDiv(cArticle, vHandle("children"+getProperty(ID)))
-				, xPart(new ViewOverlay())
-			   )	
+						, xPart(new ViewOverlay())
+						)
+				, xPart(new ViewTabBar().addProperty(ViewNavBar.PROPERTY_NAME, "TabBar"+getProperty(ID)), xUl( 
+						xLi (ViewTabBar.getTemplateAction("'schedule'", "''")),  
+						xLi (ViewTabBar.getTemplateAction("'today'", "''")),  
+						xLi (ViewTabBar.getTemplateAction("'mic'", "''")) ) )
 		     );
 	}
 

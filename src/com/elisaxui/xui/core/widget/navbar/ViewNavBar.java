@@ -26,7 +26,7 @@ import static  com.elisaxui.xui.core.widget.button.ViewRippleEffect.*;
 @xComment("ViewNavBar")
 public class ViewNavBar extends XHTMLPart {
 	
-	static XClass actionBtnContainer;
+	public static XClass actionBtnContainer;
 	static XClass animatedBg;
 	public static XClass fixedToAbsolute;
 	public static XClass navbar;

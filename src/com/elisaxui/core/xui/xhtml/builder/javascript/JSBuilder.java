@@ -3,15 +3,12 @@ package com.elisaxui.core.xui.xhtml.builder.javascript;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.concurrent.Callable;
 
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
-import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassImpl;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodInvocationHandler;
-import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.core.xui.xml.annotation.xForceInclude;
 import com.elisaxui.core.xui.xml.builder.XUIFormatManager;
 

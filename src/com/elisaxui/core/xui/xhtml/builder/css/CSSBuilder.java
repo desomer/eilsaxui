@@ -69,13 +69,7 @@ public class CSSBuilder  extends XMLElement {
 	public CSSBuilder set(Object content)
 	{
 		Object cssContent = listStyle.getLast().content;
-	//	if (cssContent==null)
-			listStyle.getLast().content = content;
-	//	else
-//		{
-//			
-//		}
-			
+		listStyle.getLast().content = content;
 		return this;	
 	}
 }

@@ -168,7 +168,7 @@ public abstract class XUIScene extends XHTMLPart {
 	public XMLElement xStyleXUIScene() {
 		
 		return xCss()
-				.select("html").set("font-size: 14px; line-height: 1.5;"
+				.select("html").set("font-size: 0.4cm; line-height: 1.5;"
 						+ "font-family: 'Roboto', sans-serif;font-weight: normal;")    //color: rgba(0,0,0,0.87)
 				
 				.select("body").set("background-color: "+getConfigScene().getBgColorScene()+"; margin: 0; ")
@@ -191,7 +191,8 @@ public abstract class XUIScene extends XHTMLPart {
 				.select(ViewPageLayout.content).set("box-sizing: border-box;"  // ne pas ajouter a cActivity
 						+ "min-height:100%; min-width: 100%;"
 						+ " max-width: 100%; "
-						+ "padding-top: " + (heightNavBar) + "px")	  //position:absolute		
+						+ "padding-top: " + (heightNavBar) + "px; "
+						+ "padding-bottom: " + (heightTabBar) + "px")	 
 				
 				;
 	}
@@ -324,15 +325,13 @@ public abstract class XUIScene extends XHTMLPart {
 	
 	public JSMethodInterface searchMenu()
 	{
-	  return fragment()
-			  ;
+	  return fragment();
 	}
 	
 
 	public JSMethodInterface loadPage()
 	{
-	  return fragment()
-			  ;
+	  return fragment();
 	}
 	
 	public JSMethodInterface loadExtendScript()

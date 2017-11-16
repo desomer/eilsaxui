@@ -56,10 +56,12 @@ public class ViewPageLayout extends XHTMLPart {
 						, xDiv(cArticle, vHandle("children"+getProperty(ID)))
 						, xPart(new ViewOverlay())
 						)
-				, xPart(new ViewTabBar().addProperty(ViewNavBar.PROPERTY_NAME, "TabBar"+getProperty(ID)), xUl( 
-						xLi (ViewTabBar.getTemplateAction("'schedule'", "''")),  
-						xLi (ViewTabBar.getTemplateAction("'today'", "''")),  
-						xLi (ViewTabBar.getTemplateAction("'mic'", "''")) ) )
+				, xPart(new ViewTabBar().addProperty(ViewNavBar.PROPERTY_NAME, "TabBar"+getProperty(ID)) ,
+						xLi (ViewTabBar.cFlex_1, ViewTabBar.cTextAlignCenter, ViewTabBar.getTemplateAction("'schedule'", "''")),  
+						xLi (ViewTabBar.cFlex_1, ViewTabBar.cTextAlignCenter, ViewTabBar.getTemplateAction("'today'", "''")),  
+						xLi (ViewTabBar.cFlex_1, ViewTabBar.cTextAlignCenter, ViewTabBar.getTemplateAction("'mic'", "''")) , 
+						xLi (ViewTabBar.cFlex_1, ViewTabBar.cTextAlignCenter, ViewTabBar.getTemplateAction("'apps'", "''"))
+						)
 		     );
 	}
 

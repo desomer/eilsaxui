@@ -45,7 +45,7 @@ public interface JSPageLayout extends JSClass {
 
 		JQuery $hearder = let(JQuery.class, "$hearder", JQuery.$("body>header"));
 		
-		Object fct = fragmentIf(true)
+		Object fctdraw = fragmentIf(true)
 				.__("requestAnimationFrame(draw)")
 				.set("now", "Date.now()")
 				.set("delta", "now - then")
@@ -78,7 +78,7 @@ public interface JSPageLayout extends JSClass {
 				.endif()
 				;
 		
-		__("function draw() {", fct , "}");
+		__("function draw() {", fctdraw , "}");
 		__("draw()");
 		
 		//__(JQuery.$(jsvar("window")).on(txt("scroll"), ",", fct().consoleDebug(txt("onscroll")) ));

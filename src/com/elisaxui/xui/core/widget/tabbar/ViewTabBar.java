@@ -15,6 +15,7 @@ import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.CONTENT;
 import com.elisaxui.xui.core.page.XUIScene;
+import com.elisaxui.xui.core.widget.navbar.ViewNavBar;
 
 /**
  * @author Bureau
@@ -26,8 +27,12 @@ public class ViewTabBar extends XHTMLPart {
 
 	public static final String PROPERTY_NAME = "PROPERTY_NAME";
 	
-	public static XClass tabbar;
-	public static XClass fixedBottom;
+	public static XClass cTabbar;
+	public static XClass cFixedBottom;
+	private static XClass cListReset;
+	private static XClass cFlex;
+	public static XClass cFlex_1;
+	public static XClass cTextAlignCenter;
 	
 //	  display: block;
 //	  float: left;
@@ -47,20 +52,24 @@ public class ViewTabBar extends XHTMLPart {
 	public XMLElement xStyle() {
 		
 		return xCss()    //"+ScnStandard.bgColor+"
-				.select(tabbar).set("z-index: "+XUIScene.ZINDEX_NAV_BAR+";  "+XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorNavBar()+" height: "+XUIScene.heightTabBar+"px;width: 100%; color:white; "
+				.select(cTabbar).set("z-index: "+XUIScene.ZINDEX_NAV_BAR+";  "+XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorNavBar()+" height: "+XUIScene.heightTabBar+"px;width: 100%; color:white; "
 						+ "box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);")
 				
-				.select(fixedBottom).set("position:fixed; bottom:0px; transform:translate3d(0px,0px,0px); backface-visibility: hidden;")
+				.select(cFixedBottom).set("position:fixed; bottom:0px; transform:translate3d(0px,0px,0px); backface-visibility: hidden;")
+				.select(cListReset).set("list-style: none;margin: 0; padding: 0;")
+				.select(cFlex).set("display:flex;")
+				.select(cFlex_1).set("flex:1;")
+				.select(cTextAlignCenter).set("text-align: center;")
 				;
 	}
 	
 	@xTarget(CONTENT.class)
 	public XMLElement xContenu() {  
-		return xFooter( xId(this.getProperty(PROPERTY_NAME)), tabbar, fixedBottom,
-				this.getChildren());
+		return xFooter( xId(this.getProperty(PROPERTY_NAME)), cTabbar, cFixedBottom,
+				xUl(cListReset, cFlex, this.getChildren()));
 	}
 	
 	public static XMLElement getTemplateAction(Object name, Object action) {
-		return xElement("button", xAttr("data-x-action", txt(xVar(action)))/*, actionBtnContainer*/, cRippleEffect , xAttr("type", "\"button\""),  "<i class=\"actionBtn material-icons\">",xVar(name),"</i>");
+		return xElement("button", xAttr("data-x-action", txt(xVar(action))), ViewNavBar.actionBtnContainer, cRippleEffect , xAttr("type", "\"button\""),  "<i class=\"actionBtn material-icons\">",xVar(name),"</i>");
 	}
 }

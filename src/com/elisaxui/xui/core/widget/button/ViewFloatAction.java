@@ -41,7 +41,7 @@ public class ViewFloatAction extends XHTMLPart {
 	public XMLElement xStyle() {
 
 		return xCss().select(cFloatAction)
-						.set("z-index:"+XUIScene.ZINDEX_FLOAT+"; position: fixed; left: calc(100vw - "+ViewBtnCircle.SIZE_BTN+" - 5vw); top: calc(100vh - "+ViewBtnCircle.SIZE_BTN+" - "+XUIScene.heightTabBar+"px - 5vw); "
+						.set("z-index:"+XUIScene.ZINDEX_FLOAT+"; position: fixed; left: calc(100vw - "+ViewBtnCircle.SIZE_CIRCLE+" - 5vw); top: calc(100vh - "+ViewBtnCircle.SIZE_CIRCLE+" - "+XUIScene.heightTabBar+" - 5vw); "
 								+ "transform: translate3d(0px,0px,0px);")
 		;
 	}

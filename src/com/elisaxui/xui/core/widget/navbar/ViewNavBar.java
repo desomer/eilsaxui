@@ -40,7 +40,7 @@ public class ViewNavBar extends XHTMLPart {
 	public XMLElement xStyle() {
 		
 		return xCss()  
-				.select(navbar).set("z-index: "+XUIScene.ZINDEX_NAV_BAR+";  "+XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorNavBar()+" height: "+XUIScene.heightNavBar+"px;width: 100%; color:white; "
+				.select(navbar).set("z-index: "+XUIScene.ZINDEX_NAV_BAR+";  "+XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorNavBar()+" height: "+XUIScene.heightNavBar+";width: 100%; color:white; "
 						+ "box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);")
 				
 				.select(fixedTop).set("position:fixed; top:0px; transform:translate3d(0px,0px,0px); backface-visibility: hidden;")
@@ -48,10 +48,10 @@ public class ViewNavBar extends XHTMLPart {
 				
 				.select(rightAction).set("position: absolute; right: 0px;  top: 0px;  height: 100%;  width: auto;")
 				
-				.on(".actionBtn", "margin: 0; padding: 8px;  font-size: 36px !important;  cursor: pointer;")
+				.on(".actionBtn", "margin: 0; padding: 8px;  font-size: 2.5rem;  cursor: pointer;")
 				
 				.on(".center", "z-index:"+(XUIScene.ZINDEX_NAV_BAR+1)+";height:100%; display: flex; align-items: center;justify-content: center")
-				.on(".logo", "z-index:"+(XUIScene.ZINDEX_NAV_BAR+1)+"; margin-top:" + XUIScene.heightNavBar/2 +"px; color: inherit; font-size: 2.1rem; animation-duration: 700ms;")
+				.on(".logo", "z-index:"+(XUIScene.ZINDEX_NAV_BAR+1)+"; margin-top:calc(" + XUIScene.heightNavBar +" /2); color: inherit; font-size: 2.1rem; animation-duration: 700ms;")
 				
 				.select(animatedBg).set("position: absolute; display: block;  width: 100%; height: 100%; top: 0; right: 0; bottom: 0; left: 0;")
 				

@@ -48,8 +48,8 @@ import com.elisaxui.xui.core.widget.overlay.JSOverlay;
 
 public abstract class XUIScene extends XHTMLPart {
 
-	public static final int heightTabBar = 50*1;
-	public static final int heightNavBar = 50*2;
+	public static final String heightTabBar = 3.5 + "rem";
+	public static final String heightNavBar = 7 + "rem";
 	public static final int widthMenu = 250;
 	
 	public static final double OVERLAY_OPACITY_MENU = 0.5;
@@ -191,8 +191,8 @@ public abstract class XUIScene extends XHTMLPart {
 				.select(ViewPageLayout.content).set("box-sizing: border-box;"  // ne pas ajouter a cActivity
 						+ "min-height:100%; min-width: 100%;"
 						+ " max-width: 100%; "
-						+ "padding-top: " + (heightNavBar) + "px; "
-						+ "padding-bottom: " + (heightTabBar) + "px")	 
+						+ "padding-top: " + heightNavBar + "; "
+						+ "padding-bottom: " + heightTabBar)	 
 				
 				;
 	}

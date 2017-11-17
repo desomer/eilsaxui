@@ -11,10 +11,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
  */
 public interface JSClass extends JSMethodInterface  {
 
-//	@Deprecated
-//	static <E extends JSClass> E initVar(Class<E> cl) {
-//		return XHTMLPart.jsBuilder.getProxy(cl);
-//	}
+
 	
 	/**
 	 * sert a ne pas avoir de warning

@@ -24,7 +24,9 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 public class ViewBtnCircle extends XHTMLPart {
 
 	public static final String PROPERTY_ICON = "PROPERTY_ICON";
-	public static final String SIZE_BTN = "56px" ;
+	public static final String SIZE_CIRCLE = "4rem" ;
+	public static final String SIZE_BTN = "2.5rem" ;
+	//public static final String SIZE_BTN_2 = "1.25rem" ;
 
 	public static XClass cBtnCircle;
 	XClass cBtnCircleChangeForm;
@@ -36,8 +38,9 @@ public class ViewBtnCircle extends XHTMLPart {
 		return xCss()
 				.on(cBtnCircle,
 								"border-radius: 50%;  font-size: 24px; margin: auto;   cursor: pointer; "
-						 		+ "height: "+SIZE_BTN+"; width: "+SIZE_BTN+"; "
-								+ "min-width: 56px; padding: 0;  overflow: hidden; outline: 0 !important; " // pas																						// focus
+						 		+ "height: "+SIZE_CIRCLE+"; width: "+SIZE_CIRCLE+"; "
+								//+ "/*min-width: 56px;*/ "
+								+ "padding: 0;  overflow: hidden; outline: 0 !important; " // pas																						// focus
 								+ XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorNavBar()
 								+ "box-shadow: 3px 3px 3px 0 rgba(0,0,0,.24);"
 								+ "transition:transform " + SPEED_SHOW_ACTIVITY +  "ms ease-out;"
@@ -46,8 +49,12 @@ public class ViewBtnCircle extends XHTMLPart {
 								//+ "transform: scale3d(1,1,1); will-change: transform;"
 								)
 					
-				.on(CSSSelector.onPath(cBtnCircle, " .material-icons"), "color:white; position: absolute; top: 50%;  left: 50%;"
-						+ " transform: translate(-12px,-12px);  line-height: 24px;  width: 24px;")
+				.on(CSSSelector.onPath(cBtnCircle, " .material-icons"), "color:white;"
+					//	+ " position: absolute;"
+					//	+ " top: 50%;  left: 50%;"
+						+ " transform: translate(0px,3px); "
+					//	+ " line-height: 24px;  width: 24px; "
+						+ "font-size:"+SIZE_BTN)
 
 	
 //				.on(CSSSelector.onPath(cBtnCircle, cBtnCircleChangeForm), "transform: scale3d(40,40,1)")    //-webkit-backface-visibility: hidden; transform: scale3d(30,30,1);

@@ -49,7 +49,7 @@ public class ViewMenu extends XHTMLPart {
 	public XMLElement xStyle() {
 
 		return xCss()
-				.on(menu, "z-index: "+XUIScene.ZINDEX_MENU+";background-color: #ffffff;height: 120%;width: " + XUIScene.widthMenu
+				.on(menu, "z-index: "+XUIScene.ZINDEX_MENU+";background-color: #ffffff;height: 100vh;width: " + XUIScene.widthMenu
 						+ "px; color:black;"
 						+ XUIScene.PREF_3D
 						//+ "box-shadow: 4px 4px 2px 0 rgba(0,0,0,0.14);"

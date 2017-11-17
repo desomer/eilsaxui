@@ -3,7 +3,7 @@
  */
 package com.elisaxui.xui.core.widget.navbar;
 
-import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.declareType;
+import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.*;
 import static com.elisaxui.xui.core.toolkit.JQuery.$;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
@@ -32,9 +32,9 @@ public interface JSNavBar extends JSFactory {
 	static final String TYPE_BTN_ACTION = "action";
 	static final String TYPE_BACKGROUND = "background";
 	
-	JSDataDriven aDataDriven = null;
-	JSDataSet aDataSet = null;
-	JSXHTMLPart template = null;
+	JSDataDriven aDataDriven = defVar();
+	JSDataSet aDataSet = defVar();
+	JSXHTMLPart template = defVar();
 
 	default Object getData(JSVariable selector) {
 
@@ -52,46 +52,50 @@ public interface JSNavBar extends JSFactory {
 			
 			    JSonNavBarRow jsnavRow = let(JSonNavBarRow.class, "jsnavRow", ctx.row());
 			    
-				_if(jsnavRow.type().isEqual(txt(TYPE_BURGER)));
+				_if (jsnavRow.type().isEqual(txt(TYPE_BURGER)));
 					set(template, ViewNavBar.getTemplateBtnBurger());
 					var(jqdom, template.appendInto($(selector)));
 					set(ctx.row().attrByString(txt(JSDataSet._DOM)), jqdom.get(0));
 					
-				_elseif(jsnavRow.type().isEqual(txt(TYPE_TITLE)));
+				_elseif (jsnavRow.type().isEqual(txt(TYPE_TITLE)));
 					JSonNavBarTitle jsnavTitle= cast(JSonNavBarTitle.class,  ctx.row());
 				
 					set(template, ViewNavBar.getTemplateName(jsnavTitle.title()));
 					var(jqdom, template.appendInto($(selector)));
 					set(ctx.row().attrByString(txt(JSDataSet._DOM)), jqdom.get(0));
 					
-				_elseif(jsnavRow.type().isEqual(txt(TYPE_BTN_ACTION)));
+				_elseif (jsnavRow.type().isEqual(txt(TYPE_BTN_ACTION)));
 					JSonNavBarBtnAction jsnavBtn= cast(JSonNavBarBtnAction.class,  ctx.row());
 					
 					_if($(selector," ", ViewNavBar.rightAction).length().isEqual(0)); 
 						set(template, ViewNavBar.getTemplateActionBar());
 						var(jqdom, template.appendInto($(selector)));
 					endif();
+					
 					set(template, ViewNavBar.getTemplateAction(jsnavBtn.icon(), jsnavBtn.idAction()));
 					var(jqdom, template.appendInto($(selector," ", ViewNavBar.rightAction)));
 					set(ctx.row().attrByString(txt(JSDataSet._DOM)), jqdom.get(0));
 				
-				_elseif(jsnavRow.type().isEqual(txt(TYPE_BACKGROUND)));	
+				_elseif (jsnavRow.type().isEqual(txt(TYPE_BACKGROUND)));	
 				    JSonNavBarBackground jsnavRowBg= cast(JSonNavBarBackground.class,  ctx.row());
 				    
-				    _if(jsnavRowBg.mode().isEqual(txt("granim")));
+				    _if (jsnavRowBg.mode().isEqual(txt("granim")));
 						set(template, ViewNavBar.getTemplateBgCanvas());
 						var(jqdom, template.appendInto($(selector)));
 						set(ctx.row().attrByString(txt(JSDataSet._DOM)), jqdom.get(0));
-					_elseif(jsnavRowBg.mode().isEqual(txt("css")));
+						
+					_elseif (jsnavRowBg.mode().isEqual(txt("css")));
 						set(template, ViewNavBar.getTemplateBgDiv());
 						var(jqdom, template.appendInto($(selector)));
 						__(jqdom.css("background", jsnavRowBg.css()));
 						__(jqdom.css("opacity", jsnavRowBg.opacity()));
 						set(ctx.row().attrByString(txt(JSDataSet._DOM)), jqdom.get(0));
-					endif();
-				endif();
+						
+					endif ();
+					
+				endif ();
 				
-			endif();
+			endif ();
 		}
 		)))
 		

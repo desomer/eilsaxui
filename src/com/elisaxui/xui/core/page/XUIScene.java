@@ -51,6 +51,7 @@ public abstract class XUIScene extends XHTMLPart {
 	public static final String heightTabBar = 3.5 + "rem";
 	public static final String heightNavBar = 7 + "rem";
 	public static final int widthMenu = 250;
+	public static final String widthScene = "100vw";
 	
 	public static final double OVERLAY_OPACITY_MENU = 0.5;
 	public static final double OVERLAY_OPACITY_BACK = 0.7;
@@ -168,7 +169,10 @@ public abstract class XUIScene extends XHTMLPart {
 	public XMLElement xStyleXUIScene() {
 		
 		return xCss()
-				.select("html").set("font-size: 0.4cm; line-height: 1.5;"
+				.select("html").set("font-size: 16px;"
+						//+"overflow-y: scroll;"
+						//+ "overflow-x: hidden;" // pour que le 100vw ne prennent pas en compte la largueur du scrollbar
+						+ " line-height: 1.5;"
 						+ "font-family: 'Roboto', sans-serif;font-weight: normal;")    //color: rgba(0,0,0,0.87)
 				
 				.select("body").set("background-color: "+getConfigScene().getBgColorScene()+"; margin: 0; ")
@@ -176,21 +180,27 @@ public abstract class XUIScene extends XHTMLPart {
 
 				//----------------------------------------------------------------
 				.select(scene).set("overflow-x: hidden; background-color: "+getConfigScene().getBgColorScene()+";"   // overflow: auto; -webkit-overflow-scrolling: auto
-						+ "min-width: 100vw;  min-height: 100vh; "   //position: absolute
+						//+ "min-width: 100vw;  "
+						+ "min-height: 100vh; " 
 						)
-				    .path(xCss(cShell).set("background-color: "+getConfigScene().getBgColorContent()+ ";min-width: 100vw;  min-height: 100vh; "))
+				    .path(xCss(cShell).set("background-color: "+getConfigScene().getBgColorContent()+ ";"
+				    		+ "width: "+widthScene+";"
+				    		+ "  min-height: 100vh; "))
 					.path(xCss("#NavBarShell h1").set("text-align:center;color: inherit;  font-size: 2.1rem; margin-top: 50px"))
 				//----------------------------------------------------------------
-				.select(activity).set("background-color: "+getConfigScene().getBgColorContent()+";"+ PREF_3D+ " will-change:overflow,z-index;") //will-change:transform
+				.select(activity).set("background-color: "+getConfigScene().getBgColorContent()+";"+ PREF_3D+ 
+					"width:"+widthScene+"; will-change:overflow,z-index;") //will-change:transform
 					.path(xCss(ViewPageLayout.content)
-								.set(" min-height: 100vh; min-width: 100vw; "
-										+ "background-color:"+getConfigScene().getBgColorContent()+";will-change:contents")  // changement durant le freeze du contenu de l'activity
+								.set(" min-height: 100vh; "
+									+ "min-width: "+widthScene+"; "
+									+ "background-color:"+getConfigScene().getBgColorContent()+";will-change:contents")  // changement durant le freeze du contenu de l'activity
 								)
 				
 				//----------------------------------------------------------------
 				.select(ViewPageLayout.content).set("box-sizing: border-box;"  // ne pas ajouter a cActivity
-						+ "min-height:100%; min-width: 100%;"
-						+ " max-width: 100%; "
+						//+ "min-height:100%;"
+						//+ " min-width: 100%;"
+						//+ " max-width: 100%; "
 						+ "padding-top: " + heightNavBar + "; "
 						+ "padding-bottom: " + heightTabBar)	 
 				

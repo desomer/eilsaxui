@@ -24,7 +24,7 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 public class ViewBtnCircle extends XHTMLPart {
 
 	public static final String PROPERTY_ICON = "PROPERTY_ICON";
-	public static final String SIZE_CIRCLE = "4rem" ;
+	public static final String SIZE_CIRCLE = "3.5rem" ;
 	public static final String SIZE_BTN = "2.5rem" ;
 	//public static final String SIZE_BTN_2 = "1.25rem" ;
 
@@ -37,7 +37,9 @@ public class ViewBtnCircle extends XHTMLPart {
 
 		return xCss()
 				.on(cBtnCircle,
-								"border-radius: 50%;  font-size: 24px; margin: auto;   cursor: pointer; "
+								"border-radius: 50%;  "
+								//+ "font-size: 24px; "
+								+ "margin: auto;   cursor: pointer; "
 						 		+ "height: "+SIZE_CIRCLE+"; width: "+SIZE_CIRCLE+"; "
 								//+ "/*min-width: 56px;*/ "
 								+ "padding: 0;  overflow: hidden; outline: 0 !important; " // pas																						// focus
@@ -52,7 +54,7 @@ public class ViewBtnCircle extends XHTMLPart {
 				.on(CSSSelector.onPath(cBtnCircle, " .material-icons"), "color:white;"
 					//	+ " position: absolute;"
 					//	+ " top: 50%;  left: 50%;"
-						+ " transform: translate(0px,3px); "
+						+ " transform: translate(-1px,3px); "
 					//	+ " line-height: 24px;  width: 24px; "
 						+ "font-size:"+SIZE_BTN)
 

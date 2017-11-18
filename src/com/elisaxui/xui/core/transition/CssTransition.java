@@ -9,6 +9,8 @@ import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.xui.core.page.XUIScene;
+import com.elisaxui.xui.core.widget.overlay.ViewOverlayRipple;
+
 import static com.elisaxui.xui.core.transition.ConstTransition.*;
 
 @xComment("CssTransition")
@@ -44,7 +46,7 @@ public class CssTransition extends XHTMLPart {
 				.on(".activity.tofront", "transform: translate3d(0px,0px,0px);")  
 				.on(".activity.nodisplay", "display:none;")
 				
-				.on(".activity.circleAnim0prt", "clip-path:circle(0.0% at 85vw 90vh); -webkit-clip-path:circle(0.0% at 85vw 90vh); ")
+				.on(".activity.circleAnim0prt", "clip-path:circle(0.0% at "+ViewOverlayRipple.START_POINT+"); -webkit-clip-path:circle(0.0% at "+ViewOverlayRipple.START_POINT+"); ")
 				.on(".activity.circleAnim100prt", "clip-path:circle(80% at center); -webkit-clip-path:circle(80% at center); ")
 
 				.on(".activity.zoom12", "transform:scale3d(1.2,1.2,1)")

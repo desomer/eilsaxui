@@ -11,7 +11,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
 /**

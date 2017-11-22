@@ -123,6 +123,11 @@ public class JSFunction extends JSContent
 			
 			jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab()+1);
 	    }
+		else
+		{
+			if (!isActived())
+				return buf;
+		}
 	
 		if (code!=null)
 			code.toXML(buf);

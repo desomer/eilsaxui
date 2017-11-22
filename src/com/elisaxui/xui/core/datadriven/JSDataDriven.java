@@ -5,8 +5,8 @@ import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.def
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSCallBack;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSVoid;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSCallBack;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 /**
  * 
  * - gestion par proxy sur json 

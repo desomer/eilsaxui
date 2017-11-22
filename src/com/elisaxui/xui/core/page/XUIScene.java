@@ -22,7 +22,7 @@ import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.target.CONTENT;
-import com.elisaxui.xui.core.config.TKConfig;
+import com.elisaxui.xui.core.config.TKCoreConfig;
 import com.elisaxui.xui.core.datadriven.JSDataCtx;
 import com.elisaxui.xui.core.datadriven.JSDataDriven;
 import com.elisaxui.xui.core.datadriven.JSDataSet;
@@ -234,7 +234,7 @@ public abstract class XUIScene extends XHTMLPart {
 						.set("$xui.resourceLoading.chart", false)
 						
 						.set("window.doOnResLoad", fct("res", "id")
-								.systemDebugIf(TKConfig.debugAsyncResource, txt("ressource loaded ="), "id")   //res.src.split('/').pop()
+								.systemDebugIf(TKCoreConfig.debugAsyncResource, txt("ressource loaded ="), "id")   //res.src.split('/').pop()
 								.__()
 								._if("id=="+XUICstRessource.ID_RES_JQUERY)
 									.__(getIntializeJSFct())

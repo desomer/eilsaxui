@@ -7,10 +7,10 @@ import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.dec
 
 import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSArray;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSString;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSVoid;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSon;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.xui.core.page.XUIScene;
 import com.elisaxui.xui.core.widget.activity.JActivity;
 import com.elisaxui.xui.core.widget.container.JSContainer;

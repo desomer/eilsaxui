@@ -34,7 +34,7 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
  *
  */
 public class XMLPart  {
-
+	private static final boolean debug = false;
 	
 	/**************************************************************************/
 	protected HashMap<Class<? extends XMLTarget>, ArrayList<XMLElement>> listPart = new HashMap<Class<? extends XMLTarget>, ArrayList<XMLElement>>();
@@ -97,8 +97,8 @@ public class XMLPart  {
 	public final void doContent(XMLPart root) {
 		
 		
-		
-		System.out.println("[XMLPart]--------------- add content of ------------- " + this.getClass() );
+		if (debug)
+			System.out.println("[XMLPart]--------------- add content of ------------- " + this.getClass() );
 				
 		XMLFile file = XUIFactoryXHtml.getXHTMLFile();
 		boolean isfirstInit = !file.isXMLPartAlreadyInFile(this);
@@ -168,7 +168,8 @@ public class XMLPart  {
 				boolean isStatic = java.lang.reflect.Modifier.isStatic(field.getModifiers());
 				if (!isStatic && JSClass.class.isAssignableFrom(field.getType()))
 				{
-					System.out.println("[XMLPart] init var JSClass on " + this.getClass() + " name "+ field.getName() );
+					if (debug)
+						System.out.println("[XMLPart] init var JSClass on " + this.getClass() + " name "+ field.getName() );
 					field.setAccessible(true);
 					@SuppressWarnings("unchecked")
 					JSClass inst = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) field.getType());
@@ -182,7 +183,8 @@ public class XMLPart  {
 				}
 				else if (!isStatic && XClass.class.isAssignableFrom(field.getType()))
 				{
-					System.out.println("[XMLPart] init var CSSClass on " + this.getClass() + " name "+ field.getName() );
+					if (debug)
+						System.out.println("[XMLPart] init var CSSClass on " + this.getClass() + " name "+ field.getName() );
 					XClass classCss = new XClass();
 					String name = field.getName();
 					xComment comment = field.getAnnotation(xComment.class);
@@ -200,7 +202,8 @@ public class XMLPart  {
 				}
 				else if (!isStatic && JSVariable.class.isAssignableFrom(field.getType()))
 				{
-					System.out.println("[XMLPart] init var JSVariable on " + this.getClass() + " name "+ field.getName() );
+					if (debug)
+						System.out.println("[XMLPart] init var JSVariable on " + this.getClass() + " name "+ field.getName() );
 					JSVariable variablejs=null;
 					try {
 						variablejs = (JSVariable) field.getType().newInstance();
@@ -245,7 +248,8 @@ public class XMLPart  {
 				elem.setComment(comment!=null?comment+ " priority "+elem.getPriority() : null );
 				
 				Class<? extends XMLTarget> targetClass = target.value();
-				System.out.println("[XMLPart] add Target mth "+ this.getClass().getSimpleName() + " # " + method.getName() + " priority " + elem.getPriority() );
+				if (debug)
+					System.out.println("[XMLPart] add Target mth "+ this.getClass().getSimpleName() + " # " + method.getName() + " priority " + elem.getPriority() );
 				if (elem != null && targetClass!=null ) {
 					int nbTab = targetClass.newInstance().getInitialNbTab();
 					if (ITargetRoot.class.isAssignableFrom(targetClass))

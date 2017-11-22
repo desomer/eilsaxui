@@ -18,12 +18,12 @@ public class JSClassMethod extends JSVariable {
 	// TODO a retirer et a gerer par le _setContent    (voir equal sur JSString)
 	Array<Object> listContent = new Array<Object>();
 
-	public void reinit()
+	protected void reinit()
 	{
 		listContent.clear();
 	}
 	
-	public Object[] addText(Object...classes)
+	protected Object[] addText(Object...classes)
 	{
 		
 		
@@ -63,7 +63,7 @@ public class JSClassMethod extends JSVariable {
 	}
 	
 	@Override
-	public Object _getString() {
+	protected Object _getString() {
 		Array<Object> list = new Array<Object>();
 		Object arr = super._getString();
 		if (arr instanceof Array )
@@ -76,7 +76,7 @@ public class JSClassMethod extends JSVariable {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <E extends JSClassMethod> E addContent(Object content) {
+	protected <E extends JSClassMethod> E addContent(Object content) {
 		
 		if ( content instanceof Object[])
 		{
@@ -107,7 +107,7 @@ public class JSClassMethod extends JSVariable {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <E extends JSClassMethod> E  callMth(String mth, Object...classes)
+	protected <E extends JSClassMethod> E  callMth(String mth, Object...classes)
 	{
 		E ret = (E)this;
 		if (listContent.size()==0 && this.name!=null)

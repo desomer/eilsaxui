@@ -40,6 +40,8 @@ public class XHTMLAppBuilder {
 	public static long lastOlderFile = 0;
 	public static LocalDateTime dateBuild = null;
 	
+	private static final boolean debug = false;
+	
 	public static Map<String, Class<? extends XHTMLPart>> getMapXHTMLPart() {
 		
 		List<Class<? extends XHTMLPart>> listXHTMLPart = new ArrayList<>(100);
@@ -51,7 +53,8 @@ public class XHTMLAppBuilder {
 			Iterable<FileEntry> list = ClassLoaderHelper.listFilesRelativeToClass(XUILaucher.class,	"com"); ///elisaxui/core/xui/xml
 			for (FileEntry fileEntry : list) {
 				long lm = fileEntry.file.lastModified();
-				System.out.println("[XHTMLAppBuilder]file scan for date " +  fileEntry.file);
+				if (debug)
+					System.out.println("[XHTMLAppBuilder]file scan for date " +  fileEntry.file);
 				if (lm > olderFile)
 					olderFile = lm;
 			}
@@ -68,48 +71,56 @@ public class XHTMLAppBuilder {
 		Instant instant = input.toInstant();
 		ZonedDateTime zdt = instant.atZone(ZoneId.systemDefault());
 		dateBuild = zdt.toLocalDateTime();
-		
-		System.out.println("[XHTMLAppBuilder]********************************************* END SCAN FILE ****************************************");
+		if (debug)
+			System.out.println("[XHTMLAppBuilder]********************************************* END SCAN FILE ****************************************");
 
 		/** TODO a changer car scan deja au dessus pour calcul dateBuild **/ 
 		new FastClasspathScanner("com.elisaxui").matchSubclassesOf(XHTMLPart.class, listXHTMLPart::add).scan();
 		new FastClasspathScanner("com.elisaxui").matchSubinterfacesOf(JSClass.class, listJSClass::add).scan();
 		new FastClasspathScanner("com.elisaxui").matchSubclassesOf(JSClassMethod.class, listJSClassMethod::add).scan();
 		
-		System.out.println("[XHTMLAppBuilder]********************************************* START SCAN XHTMLPart ************************************");
+		if (debug)
+			System.out.println("[XHTMLAppBuilder]********************************************* START SCAN XHTMLPart ************************************");
 
 		Map<String, Class<? extends XHTMLPart>> mapClass = new HashMap<String, Class<? extends XHTMLPart>>(100);
 		for (Class<? extends XHTMLPart> pageClass : listXHTMLPart) {
 			xFile annPage = pageClass.getAnnotation(xFile.class);
 			if (annPage != null) { 
-				System.out.println("[XHTMLAppBuilder]##############################################################################################");
-				System.out.println("[XHTMLAppBuilder]#############################    PAGE   "+annPage.id()+"   ###################################"+ annPage.id());
+				if (debug) {
+					System.out.println("[XHTMLAppBuilder]##############################################################################################");
+					System.out.println("[XHTMLAppBuilder]#############################    PAGE   "+annPage.id()+"   ###################################"+ annPage.id());
+				}
 				mapClass.put(annPage.id(), pageClass);
 			}
 			initXMLPartVarStatic(pageClass);
 		}
 		
-		System.out.println("[XHTMLAppBuilder]********************************************* START SCAN JSClassMethod ************************************");
+		if (debug)
+			System.out.println("[XHTMLAppBuilder]********************************************* START SCAN JSClassMethod ************************************");
 
 		for (Class<? extends JSClassMethod> class1 : listJSClassMethod) {
-			System.out.println("[XHTMLAppBuilder]------------ START SCAN FIELD OF JSClassMethod -----"+ class1);
+			if (debug)
+				System.out.println("[XHTMLAppBuilder]------------ START SCAN FIELD OF JSClassMethod -----"+ class1);
 			initJSClassVar(XHTMLPart.jsBuilder, class1);
 		}
 		
-		System.out.println("[XHTMLAppBuilder]********************************************* START SCAN JSClass ************************************");
+		if (debug)
+			System.out.println("[XHTMLAppBuilder]********************************************* START SCAN JSClass ************************************");
 
 		for (Class<? extends JSClass> class1 : listJSClass) {
-			System.out.println("[XHTMLAppBuilder]------------ START SCAN FIELD OF JSClass -----"+ class1);
+			if (debug)
+				System.out.println("[XHTMLAppBuilder]------------ START SCAN FIELD OF JSClass -----"+ class1);
 			initJSClassVar(XHTMLPart.jsBuilder, class1);
 		}
-
-		System.out.println("[XHTMLAppBuilder]********************************************* END SCAN JSClass ****************************************");
+		if (debug)
+			System.out.println("[XHTMLAppBuilder]********************************************* END SCAN JSClass ****************************************");
 		return mapClass;
 	}
 	
 	
 	private static void initXMLPartVarStatic(Class<? extends XMLPart>  cl) {
-		System.out.println("[XHTMLAppBuilder]---------START SCAN FIELD OF XHTMLPart  [JSClass, CSSClass]---- "+ cl);
+		if (debug)
+			System.out.println("[XHTMLAppBuilder]---------START SCAN FIELD OF XHTMLPart  [JSClass, CSSClass]---- "+ cl);
 		
 		Field[] lf = cl.getDeclaredFields();
 		if (lf!=null)
@@ -118,7 +129,8 @@ public class XHTMLAppBuilder {
 				boolean isStatic = java.lang.reflect.Modifier.isStatic(field.getModifiers());
 				if (isStatic && JSClass.class.isAssignableFrom(field.getType()))
 				{
-					System.out.println("[XHTMLAppBuilder] init XMLPart var static <JSClass> name "+ field.getName() );
+					if (debug)
+						System.out.println("[XHTMLAppBuilder] init XMLPart var static <JSClass> name "+ field.getName() );
 					field.setAccessible(true);
 					@SuppressWarnings("unchecked")
 					JSClass inst = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) field.getType());
@@ -132,7 +144,8 @@ public class XHTMLAppBuilder {
 				}
 				else if (isStatic && XClass.class.isAssignableFrom(field.getType()))
 				{
-					System.out.println("[XHTMLAppBuilder] init XMLPart var static <CSSClass> name "+ field.getName() );
+					if (debug)
+						System.out.println("[XHTMLAppBuilder] init XMLPart var static <CSSClass> name "+ field.getName() );
 					XClass classCss = new XClass();
 					String name = field.getName();
 					xComment comment = field.getAnnotation(xComment.class);
@@ -174,8 +187,8 @@ public class XHTMLAppBuilder {
 //		boolean isFinal =  Modifier.isFinal(mod);
 //		boolean isNative =  Modifier.isNative(mod);
 		
-		
-		System.out.print("[XHTMLAppBuilder]init JSClass/JSClassMethod var "+ field.getName() + " de type "+ field.getType());
+		if (debug)
+			System.out.print("[XHTMLAppBuilder]init JSClass/JSClassMethod var "+ field.getName() + " de type "+ field.getType());
 		
 		if (JSClass.class.isAssignableFrom(field.getType())) {
 			// gestion particuliere d'un proxy pour affecter le nom
@@ -203,7 +216,8 @@ public class XHTMLAppBuilder {
 			}
 		} else
 		{
-			System.out.print(" ************* NO JAVASCRIPT ************* ");
+			if (debug)
+				System.out.print(" ************* NO JAVASCRIPT ************* ");
 //			// affecte le nom de la variable
 //			try {
 //				if (field.getName().startsWith("_"))
@@ -215,8 +229,8 @@ public class XHTMLAppBuilder {
 //				e.printStackTrace();
 //			}
 		}
-		
-		System.out.println("");
+		if (debug)
+			System.out.println("");
 	}
 
 

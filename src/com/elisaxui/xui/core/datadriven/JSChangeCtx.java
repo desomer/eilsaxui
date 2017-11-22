@@ -5,9 +5,9 @@ package com.elisaxui.xui.core.datadriven;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSInt;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSString;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSon;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 
 /**
  * @author gauth

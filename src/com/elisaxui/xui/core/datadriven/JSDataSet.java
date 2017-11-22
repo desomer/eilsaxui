@@ -2,11 +2,11 @@ package com.elisaxui.xui.core.datadriven;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSArray;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSCallBack;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSInt;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSVoid;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSon;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSCallBack;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 
 public interface JSDataSet extends JSClass {
 

@@ -1,4 +1,4 @@
-package com.elisaxui.core.xui.xhtml.builder.javascript.value;
+package com.elisaxui.core.xui.xhtml.builder.javascript.lang;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassMethod;
 

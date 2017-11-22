@@ -20,6 +20,8 @@ import com.elisaxui.xui.core.page.XUIScene;
  */
 public class XHTMLFile extends XMLFile {
 
+	private static final boolean debug = false;
+	
 	private XUIScene scene;
 	
 	/**
@@ -42,7 +44,8 @@ public class XHTMLFile extends XMLFile {
 		String name = cl.getSimpleName();
 		JSClassImpl impl = listClass.get(name);
 		if (impl == null) {
-			System.out.println("[XHTMLFile] import JSClass " + name);
+			if (debug)
+				System.out.println("[XHTMLFile] import JSClass " + name);
 			impl = jsBuilder.createJSClass();
 			impl.setName(cl.getSimpleName());
 

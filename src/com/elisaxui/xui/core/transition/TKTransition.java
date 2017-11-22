@@ -11,8 +11,8 @@ import static com.elisaxui.xui.core.widget.navbar.ViewNavBar.fixedToAbsolute;
 import static com.elisaxui.xui.core.widget.navbar.ViewNavBar.navbar;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSInt;
 import com.elisaxui.xui.core.page.XUIScene;
 import com.elisaxui.xui.core.toolkit.JQuery;
 import com.elisaxui.xui.core.toolkit.TKQueue;
@@ -27,9 +27,9 @@ import com.elisaxui.xui.core.widget.overlay.ViewOverlayRipple;
  * - creer un layout intercalaire entre activity (ex ripple anim) 
  * - creer un layout intercalaire au dessus des activity ( ex zoom image anim, overlay layout) 
  * - gerer status de l'intention (route push or route pop meme page ou autre page SEO) 
- * - ne pas reutiliser une activité deja dans l historique (ouremettre dans l'etat animation du status de l'intention) 
+ * - ne pas reutiliser une activité deja dans l historique (ou remettre dans l'etat animation du status de l'intention) 
  * - gerer le menu burger comme une activity - gerer sur tous le animation les classes 
- * - transitionSpeedx1 transitionSpeedx2 - class StateOpen , StateClose, StateXXX
+ * - transitionSpeedx1 transitionSpeedx2 - class StateOpen , StateClose, StateXXX   (voir ViewOverlayRipple)
  * - empecher ou differer le button back durant l'animation sinon pb execution fin d'animation
  *
  */
@@ -127,7 +127,7 @@ public interface TKTransition extends JSClass {
 				// ouvre le menu
 				__(TKQueue.startAnimQueued(fct()
 						// .__("jqScene.css('height', '100vh')")
-						.__("$('body').css('overflow','hidden')") // plus de scroll
+						.__("$('body').css('overflow','hidden')") // plus de scroll du body sur l'ouverture du menu
 						.__(_overlay.doShow("'.active'", 1))
 						// ---------------------------------------
 						.__("jqMenu.css('transition', '' )") // fige le menu en haut sans animation

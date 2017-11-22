@@ -5,6 +5,8 @@ package com.elisaxui.core.xui.xhtml.builder.javascript.jsclass;
 
 import java.lang.reflect.Method;
 
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
+
 /**
  * identifie un appel appel a une meth js 
  * utiliser dans les getListHandleFuntionPrivate
@@ -25,4 +27,45 @@ public final class MethodDesc
 	Object proxy; 
 	Method method;
 	Object[] args;
+	
+	JSContent content;
+	int currentLine = -1;
+	String currentMthNoInserted = null;
+	
+	/**
+	 * @return the currentLine
+	 */
+	public int getCurrentLine() {
+		return currentLine;
+	}
+
+	/**
+	 * @param currentLine the currentLine to set
+	 */
+	public void setCurrentLine(int currentLine) {
+		this.currentLine = currentLine;
+	}
+
+	/**
+	 * @return the currentMthNoInserted
+	 */
+	public String getCurrentMthNoInserted() {
+		return currentMthNoInserted;
+	}
+
+	/**
+	 * @param currentMthNoInserted the currentMthNoInserted to set
+	 */
+	public void setCurrentMthNoInserted(String currentMthNoInserted) {
+		this.currentMthNoInserted = currentMthNoInserted;
+	}
+
+	/**
+	 * @param content
+	 */
+	public MethodDesc(JSContent content) {
+		super();
+		this.content = content;
+	}
+	
 }

@@ -1,7 +1,7 @@
 package com.elisaxui.core.xui.xhtml.builder.javascript;
 
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSArray;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSVoid;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 
 public interface JSMethodInterface  {
 	
@@ -53,8 +53,10 @@ public interface JSMethodInterface  {
 	JSFunction fragmentIf(Object condition);
 
 	JSMethodInterface _if(Object... content);
-
+	JSMethodInterface then(Anonym content);
+	
 	JSMethodInterface _else();
+	JSMethodInterface _else(Anonym content);
 	
 	JSMethodInterface endif();
 

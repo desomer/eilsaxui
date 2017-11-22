@@ -12,9 +12,9 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.Array;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodInvocationHandler;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSArray;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSString;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSVoid;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 import com.elisaxui.core.xui.xml.builder.IXMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -215,8 +215,8 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 			if (content.length==1 && content[0] instanceof JSFunction)
 			{
 				JSFunction fct = ((JSFunction)  content[0] );
-				if (!fct.isActived()) 
-						return this;
+//				if (!fct.isActived()) 
+//						return this;
 				
 				fct.setFragment(true);
 			}
@@ -529,6 +529,24 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 			v = declareType(type, name);
 		}
 		return v;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#then(com.elisaxui.core.xui.xhtml.builder.javascript.Anonym)
+	 */
+	@Override
+	public JSMethodInterface then(Anonym content) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#_else(com.elisaxui.core.xui.xhtml.builder.javascript.Anonym)
+	 */
+	@Override
+	public JSMethodInterface _else(Anonym content) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

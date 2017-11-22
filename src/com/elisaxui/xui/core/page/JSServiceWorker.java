@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 import com.elisaxui.core.xui.xhtml.XHTMLAppBuilder;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSon;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.CONTENT;

@@ -7,8 +7,8 @@ import static com.elisaxui.xui.core.toolkit.json.JXui.$xui;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSString;
-import com.elisaxui.xui.core.config.TKConfig;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
+import com.elisaxui.xui.core.config.TKCoreConfig;
 import com.elisaxui.xui.core.toolkit.json.JIntent;
 import com.elisaxui.xui.core.transition.ConstTransition;
 import com.elisaxui.xui.core.transition.TKTransition;
@@ -58,7 +58,7 @@ public interface TKRouterEvent extends JSClass {
 	
 					.var("backFromIntent", _self.isBack("toRoute.url"))
 					.var("fromIntent", _self.geCurrentIntention())
-					.systemDebugIf(TKConfig.debugPushState, "'pushState ENABLE action=', this.toString() , ' toRoute =',toRoute,' backFromIntent =', backFromIntent, 'fromIntent=', fromIntent")					
+					.systemDebugIf(TKCoreConfig.debugPushState, "'pushState ENABLE action=', this.toString() , ' toRoute =',toRoute,' backFromIntent =', backFromIntent, 'fromIntent=', fromIntent")					
 					/**************** gestion toogle menu  **********************/
 					._if("backFromIntent!=null && backFromIntent.url=='menu'")
 						.__(_self.doAction(txt("toggleMenu")))
@@ -102,7 +102,7 @@ public interface TKRouterEvent extends JSClass {
 					.endif()
 					/******************************************/
 				._else()
-					.systemDebugIf(TKConfig.debugPushState,txt("pushState DISABLE param=<"), "params, '> query =<', query, '> action=', this, ' nextEnable='", _self+".navigo.nextenable")
+					.systemDebugIf(TKCoreConfig.debugPushState,txt("pushState DISABLE param=<"), "params, '> query =<', query, '> action=', this, ' nextEnable='", _self+".navigo.nextenable")
 					.__(_self,".navigo.nextenable=", true)
 				.endif()
 			)
@@ -155,7 +155,7 @@ public interface TKRouterEvent extends JSClass {
 			   .var("currentIntent",   historyIntent, "[", historyIntent, ".length-1]")
 			   
 			   .var("jsonAct", activityMgr.getCurrentActivity())
-			   .systemDebugIf(TKConfig.debugDoEvent, txt("do event <", jsvar("event"), "> on"), "jsonAct", txt(" intent is"), "currentIntent") 
+			   .systemDebugIf(TKCoreConfig.debugDoEvent, txt("do event <", jsvar("event"), "> on"), "jsonAct", txt(" intent is"), "currentIntent") 
 			   .var("jsonAction", "jsonAct.events[event]")
 			   
 			   ._if("jsonAction!=null &&jsonAction.action=='route' ")
@@ -163,15 +163,15 @@ public interface TKRouterEvent extends JSClass {
 //					.__("$.notify('doNavigate to '+jsonAction.url, {globalPosition: 'bottom left', className:'info', autoHideDelay: 2000})")
 			   		.__(doNavigate("jsonAction.url"))  
 			   		.__("retEvent.cancelRipple=true")
-			   .endif()
+			   .endif();
 			   
-			   ._if("jsonAction!=null &&jsonAction.action=='back' ")
-			   		.__("if (navigator.vibrate) { navigator.vibrate(30); }")    // je vibre
-			   		.__( doBack())  
-			   		.__("retEvent.cancelRipple=true")
-			   .endif()
+			   _if("jsonAction!=null &&jsonAction.action=='back' ");
+			   		__("if (navigator.vibrate) { navigator.vibrate(30); }") ;   // je vibre
+			   		__( doBack()) ; 
+			   		__("retEvent.cancelRipple=true");
+			   endif();
 	   		
-		   	   ._if("jsonAction!=null &&jsonAction.action=='callback' ")
+		   	   _if("jsonAction!=null &&jsonAction.action=='callback' ")
 			   		.__("window[jsonAction.fct].call(this, jsonAction, currentIntent)")  
 			   .endif()
 		   
@@ -181,15 +181,16 @@ public interface TKRouterEvent extends JSClass {
 //					.__(_this.doNavigate(txt("open/Activity2?p=1"))) // ajoute history pour le back   /test/act1/read?p=1
 //			.endif()
 			
-			._if("event=='burger' || event=='Overlay'")
-				.__("if (navigator.vibrate) { navigator.vibrate(30); }")    // je vibre
-				._if(historyIntent, "[",historyIntent,".length-1].url=='menu'")  // a ameliorer
-					.__(doBack()) 
-				._else()
-					.__(doNavigate(txt("menu")))
-				.endif()
-			.endif()
-		._else()
+			._if("event=='burger' || event=='Overlay'");
+				__("if (navigator.vibrate) { navigator.vibrate(30); }") ;   // je vibre
+				_if(historyIntent, "[",historyIntent,".length-1].url=='menu'");  // a ameliorer
+					__(doBack()); 
+				_else();
+					__(doNavigate(txt("menu")));
+				endif();
+			endif();
+			
+		_else()
 		    ._if("event!=null")
 //				.__("$.notify('pb event anim prog '+window.animInProgess+' event='+event, {globalPosition: 'bottom left', className:'error', autoHideDelay: 2000})")
 		    .endif()
@@ -200,7 +201,7 @@ public interface TKRouterEvent extends JSClass {
 	
 	default Object doNavigate(Object uri)
 	{
-		systemDebugIf(TKConfig.debugDoNavigate , txt("doNavigate"), "uri");
+		systemDebugIf(TKCoreConfig.debugDoNavigate , txt("doNavigate"), "uri");
 		__(navigo,".navigate(uri)");
 		return _void();
 	}
@@ -231,7 +232,7 @@ public interface TKRouterEvent extends JSClass {
 	
 	default Object doCancel()
 	{
- 		systemDebugIf(TKConfig.debugDoAction, txt("REMOVE HISTORY'", "$xui.intent"));
+ 		systemDebugIf(TKCoreConfig.debugDoAction, txt("REMOVE HISTORY'", "$xui.intent"));
 		__("this.navigo.nextenable=false");
  		__(historyIntent,".pop()");
  		__("history.go(-1)");
@@ -242,7 +243,7 @@ public interface TKRouterEvent extends JSClass {
 	default Object doTraceHisto()
 	{
 		var("currentActivity", $xui().tkrouter().activityMgr().getCurrentActivity());
- 		systemDebugIf(TKConfig.debugPushState, txt("DO TRACE HISTORY'"), "currentActivity", txt(" histo intent "), historyIntent );
+ 		systemDebugIf(TKCoreConfig.debugPushState, txt("DO TRACE HISTORY'"), "currentActivity", txt(" histo intent "), historyIntent );
 		return _void();
 	}
 	
@@ -255,17 +256,18 @@ public interface TKRouterEvent extends JSClass {
 		 	.var("actAnim", geCurrentIntention(), ".nextActivityAnim")
 		 	
 		 	.var("act1", "'#'+$xui.intent.activity")
-		 	.var("jqAct1", "$(act1)")
-		 	._if("jqAct1.hasClass('backActivity')")
-		 		.systemDebugIf(TKConfig.debugDoAction, txt("PB doAction Activity used to intent '", "$xui.intent"))
-				.__("$.notify('pb activity is used '+act1, {globalPosition: 'bottom left', className:'error', autoHideDelay: 2000})")
-		 		.__(doCancel())
-	 			.__("return")
-		 	.endif()
+		 	.var("jqAct1", "$(act1)");
+		 
+		 	_if("jqAct1.hasClass('backActivity')");
+		 		systemDebugIf(TKCoreConfig.debugDoAction, txt("PB doAction Activity used to intent '", "$xui.intent"));
+				__("$.notify('pb activity is used '+act1, {globalPosition: 'bottom left', className:'error', autoHideDelay: 2000})");
+		 		__(doCancel());
+	 			__("return");
+		 	endif();
 		 	
 //		    .__(_self.doEvent(TKActivity.ON_ACTIVITY_RESUME))
 		 	
-			 .systemDebugIf(TKConfig.debugDoAction, txt("doAction anim=<"), "actAnim", "'> to intent '", "$xui.intent")
+			 systemDebugIf(TKCoreConfig.debugDoAction, txt("doAction anim=<"), "actAnim", "'> to intent '", "$xui.intent")
 			 .__(activityMgr.setCurrentActivity(new JSString()._setContent("$xui.intent.activity")))  
 			 
 			 
@@ -279,7 +281,7 @@ public interface TKRouterEvent extends JSClass {
 		 ._if("action==",txt(ACTION_PREV_ROUTE))  
 		 	.var("actAnim", "$xui.intent.nextActivityAnim")
 		 	
-		 	.systemDebugIf(TKConfig.debugDoAction, txt("doAction "), "action", "' to intent '", "$xui.intent")
+		 	.systemDebugIf(TKCoreConfig.debugDoAction, txt("doAction "), "action", "' to intent '", "$xui.intent")
 		 	.__(activityMgr.setCurrentActivity(new JSString()._setContent("$xui.intent.prevActivity")))   
 //		    .__(_self.doEvent(TKActivity.ON_ACTIVITY_RESUME))
 			
@@ -291,7 +293,7 @@ public interface TKRouterEvent extends JSClass {
 	     .endif()
 	     /**************************************************************/
 		 ._if("action=='toggleMenu'")
-		 	.systemDebugIf(TKConfig.debugDoAction, txt("doAction"), "action")
+		 	.systemDebugIf(TKCoreConfig.debugDoAction, txt("doAction"), "action")
 		 	.__(tkAnimation.doToggleBurgerMenu())
 		 .endif();
 		 

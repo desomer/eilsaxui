@@ -8,8 +8,8 @@ import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.dec
 import com.elisaxui.app.elisys.xui.widget.JSSyllabisation;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSArray;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSInt;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 
 /**
  * @author Bureau

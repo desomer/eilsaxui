@@ -4,7 +4,7 @@
 package com.elisaxui.xui.core.widget.navbar;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 
 /**
  * @author gauth

@@ -11,11 +11,11 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.Anonym;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSArray;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSInt;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSString;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSon;
 import com.elisaxui.core.xui.xml.annotation.xAnonymous;
 import com.elisaxui.xui.core.datadriven.JSDataDriven;
 import com.elisaxui.xui.core.datadriven.JSDataSet;
@@ -48,7 +48,7 @@ public interface JSSyllabisation extends JSClass {
 	}
 	
 	
-	@xAnonymous    //TODO a faire fonctionner ou documenter
+	@xAnonymous    //TODO a faire fonctionner     pour retirer le boolean testAnonymInProgress dans la class MethodInvocationHandler
 	default Object fRecognitionEnd(Object event)
 	{
 		return  (Anonym) ()-> {
@@ -102,9 +102,17 @@ public interface JSSyllabisation extends JSClass {
 			endfor();
 		};
 		
+		Anonym fRecognitionEnd = (/*event*/)->{ 	
+			_if("window.microlistener.stop");
+				set("window.microlistener.stop", false);
+			_else();
+				__("window.microlistener.recognition.start()");
+			endif();		
+		};	
+		
 		set(recognition.attr("onresult"), fct("event") .__(onresult));
-		set(recognition.attr("onend"), fRecognitionEnd("event"));
-
+		//set(recognition.attr("onend"), fRecognitionEnd("event"));
+		set(recognition.attr("onend"), fct("event") .__(fRecognitionEnd));
 		return _this;
 	}
 		

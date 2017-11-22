@@ -4,8 +4,8 @@
 package com.elisaxui.xui.core.widget.overlay;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSFloat;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSInt;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSFloat;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.xui.core.toolkit.JQuery;
 
 import static com.elisaxui.xui.core.widget.overlay.ViewOverlay.*;

@@ -5,8 +5,8 @@ package com.elisaxui.xui.core.widget.container;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSString;
 import com.elisaxui.xui.core.datadriven.JSDataDriven;
 import com.elisaxui.xui.core.datadriven.JSDataSet;
 import com.elisaxui.xui.core.toolkit.JSFactory;

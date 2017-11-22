@@ -6,7 +6,7 @@ package com.elisaxui.xui.core.toolkit;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassMethod;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
-import com.elisaxui.core.xui.xhtml.builder.javascript.value.JSInt;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 
 /**
  * @author Bureau

@@ -35,8 +35,9 @@ public interface JSPageLayout extends JSClass {
 	
 	
 	default JSVoid hideOnScroll(Object idActivity) {
-				
-		JSInt interval = let(JSInt.class, "interval", "1000/30");	// 60 image seconde
+		
+		int nbImageParSecond = 30;
+		JSInt interval = let(JSInt.class, "interval", "1000/"+nbImageParSecond);	// 60 image seconde
 		
 		JSInt now = let(JSInt.class, "now", 0);	
 		JSInt then = let(JSInt.class, "then", "Date.now()");	
@@ -73,7 +74,7 @@ public interface JSPageLayout extends JSClass {
 							$header.data("deltaY",  deltaHeader);
 							$header.css("transform", txt("translate3d(0px, " , deltaHeader , "px, 0px)") );
 							
-						_elseif("deltas>0 && currentDelta<0");
+						_elseif(deltas, ">0","&&", currentDelta, "<0");
 							deltaHeader.set("deltaHeader>0?0:deltaHeader");
 							$header.data("deltaY", deltaHeader);
 							$header.css("transform", txt("translate3d(0px, " , deltaHeader , "px, 0px)"));

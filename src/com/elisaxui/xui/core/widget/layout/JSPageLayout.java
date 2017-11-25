@@ -66,11 +66,12 @@ public interface JSPageLayout extends JSClass {
 						
 						set( currentDelta, currentDelta,"==null?0:",currentDelta);
 						
-						JSInt h = let(JSInt.class, "h", $header.outerHeight());
 						JSInt deltaHeader = let(JSInt.class, "deltaHeader", currentDelta.add(deltas) );
-						
-					    _if(deltas, "<0", "&&", "-",currentDelta, "<=", h);
-							deltaHeader.set("deltaHeader<-h?-h:deltaHeader");
+						JSInt hHeader = let(JSInt.class, "hHeader", $header.outerHeight());
+						hHeader.set(hHeader.add(3));
+		
+					    _if(deltas, "<0", "&&", "-",currentDelta, "<=", hHeader);
+							deltaHeader.set("deltaHeader<-hHeader?-hHeader:deltaHeader");
 							$header.data("deltaY",  deltaHeader);
 							$header.css("transform", txt("translate3d(0px, " , deltaHeader , "px, 0px)") );
 							

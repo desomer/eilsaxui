@@ -42,21 +42,6 @@ public class JSValue extends JSVariable {
 		return ret;
 	}
 	
-	public JSVoid set(Object obj)
-	{
-		JSVoid ret = new JSVoid();
-		Array arr = new Array();
-		Object content = _getString();
-		if (content instanceof Array )
-			arr.addAll((Array<?>)content);
-		else
-			arr.add(content);
-		arr.add("=");
-		arr.add(obj);
-		ret._setContent(arr);
-		registerMethod(ret);
-		return ret;
-	}
 	
 	public JSInt modulo(Object obj)
 	{

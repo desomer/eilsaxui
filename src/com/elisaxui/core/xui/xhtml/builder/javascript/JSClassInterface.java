@@ -158,7 +158,7 @@ public class JSClassInterface extends JSVariable {
 		}
    	 
    	 ret.addContent("[");
-   	 ret.addContent(attr);
+   	 ret.addContent(addText(attr));
    	 ret.addContent("]");
    	 return ret; 
     }

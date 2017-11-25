@@ -3,7 +3,7 @@
  */
 package com.elisaxui.xui.core.toolkit.json;
 
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassMethod;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassInterface;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.xui.core.toolkit.TKRouterEvent;
 
@@ -11,7 +11,7 @@ import com.elisaxui.xui.core.toolkit.TKRouterEvent;
  * @author Bureau
  *
  */
-public class JXui extends JSClassMethod {
+public class JXui extends JSClassInterface {
 	@xComment("_$xui.tkrouter")    //   _ retire le this de  this.$ui  => donne juste $xui.
 	static TKRouterEvent _tkrouter;
 	

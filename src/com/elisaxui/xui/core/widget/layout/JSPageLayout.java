@@ -33,14 +33,6 @@ public interface JSPageLayout extends JSClass {
 	   return _void();
 	}	
 	
-	default JSVoid testA(Object param) {
-		return _void();
-	}
-	
-	default JSVoid testB(Object param) {
-		return _void();
-	}
-	
 	
 	default JSVoid hideOnScroll(Object idActivity) {
 				
@@ -54,18 +46,17 @@ public interface JSPageLayout extends JSClass {
 		JSInt lastScrollTop = let(JSInt.class, "lastScrollTop", $window.scrollTop());	
 		JSInt scrollTop = let(JSInt.class, "scrollTop", $window.scrollTop());
 		
+		//_if(true).then(()->{})._else(()->{});
+		
 		Object fctdraw = fragmentIf(true).__(()->{
 							
-				//window().requestAnimationFrame("draw");
-			
-				__(window().requestAnimationFrame("draw"));
-				set(now, "Date.now()");
-				__(deltaTime.set(now.substact(then)) );
+				window().requestAnimationFrame("draw");	
 				
-				//_if(true).then(()->{})._else(()->{});
+				now.set("Date.now()");
+				deltaTime.set(now.substact(then));
 				
 				_if( deltaTime,">", interval);
-					__( scrollTop.set($window.scrollTop()));
+					scrollTop.set($window.scrollTop());
 						
 					_if(lastScrollTop.isNotEqual(scrollTop)); 
 					
@@ -78,30 +69,25 @@ public interface JSPageLayout extends JSClass {
 						JSInt deltaHeader = let(JSInt.class, "deltaHeader", currentDelta.add(deltas) );
 						
 					    _if(deltas, "<0", "&&", "-",currentDelta, "<=", h);
-							__( deltaHeader.set("deltaHeader<-h?-h:deltaHeader"));
-							__( $header.data("deltaY",  deltaHeader) );
-							__( $header.css("transform", txt("translate3d(0px, " , deltaHeader , "px, 0px)")) );
+							deltaHeader.set("deltaHeader<-h?-h:deltaHeader");
+							$header.data("deltaY",  deltaHeader);
+							$header.css("transform", txt("translate3d(0px, " , deltaHeader , "px, 0px)") );
+							
 						_elseif("deltas>0 && currentDelta<0");
-							__( deltaHeader.set("deltaHeader>0?0:deltaHeader"));
-							__( $header.data("deltaY", deltaHeader));
-							__( $header.css("transform", txt("translate3d(0px, " , deltaHeader , "px, 0px)")) );
+							deltaHeader.set("deltaHeader>0?0:deltaHeader");
+							$header.data("deltaY", deltaHeader);
+							$header.css("transform", txt("translate3d(0px, " , deltaHeader , "px, 0px)"));
 						endif();	
 
-						__(lastScrollTop.set(scrollTop));
+						lastScrollTop.set(scrollTop);
 					endif();
 					
-					__(then.set(now.substact(deltaTime.modulo(interval))));
+					then.set(now.substact(deltaTime.modulo(interval)));
 				endif();
 			});
 		
 		__("function draw() {", fctdraw , "}");
 		__("draw()");  // start
-		
-		testB("");
-//		testB("");
-//		testA(testB(""));
-//	//	testA(testB(""));
-//		__(testA(""));
 		
 		return _void();
 	}	

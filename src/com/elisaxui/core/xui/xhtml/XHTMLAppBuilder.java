@@ -21,7 +21,7 @@ import com.elisaxui.core.helper.ClassLoaderHelper.FileEntry;
 import com.elisaxui.core.xui.XUILaucher;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassMethod;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xml.XMLPart;
@@ -46,7 +46,7 @@ public class XHTMLAppBuilder {
 		
 		List<Class<? extends XHTMLPart>> listXHTMLPart = new ArrayList<>(100);
 		List<Class<? extends JSClass>> listJSClass = new ArrayList<>(100);
-		List<Class<? extends JSClassMethod>> listJSClassMethod = new ArrayList<>(100);
+		List<Class<? extends JSClassInterface>> listJSClassMethod = new ArrayList<>(100);
 		
 		long olderFile = 0;
 		try {
@@ -77,7 +77,7 @@ public class XHTMLAppBuilder {
 		/** TODO a changer car scan deja au dessus pour calcul dateBuild **/ 
 		new FastClasspathScanner("com.elisaxui").matchSubclassesOf(XHTMLPart.class, listXHTMLPart::add).scan();
 		new FastClasspathScanner("com.elisaxui").matchSubinterfacesOf(JSClass.class, listJSClass::add).scan();
-		new FastClasspathScanner("com.elisaxui").matchSubclassesOf(JSClassMethod.class, listJSClassMethod::add).scan();
+		new FastClasspathScanner("com.elisaxui").matchSubclassesOf(JSClassInterface.class, listJSClassMethod::add).scan();
 		
 		if (debug)
 			System.out.println("[XHTMLAppBuilder]********************************************* START SCAN XHTMLPart ************************************");
@@ -98,7 +98,7 @@ public class XHTMLAppBuilder {
 		if (debug)
 			System.out.println("[XHTMLAppBuilder]********************************************* START SCAN JSClassMethod ************************************");
 
-		for (Class<? extends JSClassMethod> class1 : listJSClassMethod) {
+		for (Class<? extends JSClassInterface> class1 : listJSClassMethod) {
 			if (debug)
 				System.out.println("[XHTMLAppBuilder]------------ START SCAN FIELD OF JSClassMethod -----"+ class1);
 			initJSClassVar(XHTMLPart.jsBuilder, class1);

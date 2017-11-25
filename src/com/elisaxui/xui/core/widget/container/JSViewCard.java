@@ -28,46 +28,50 @@ public interface JSViewCard extends JSFactory {
 
 	default Object getData(Object selector) {
 
-		set(aDataSet, _new())
-		.__(aDataSet.setData("[]"))
+		set(aDataSet, _new());
+		__(aDataSet.setData("[]"));
 
-		.set(aDataDriven, _new(aDataSet))
+		set(aDataDriven, _new(aDataSet));
 		
-		.__(aDataDriven.onEnter(fct("ctx")
-				._if("ctx.row['_dom_']==null")
-					._if("ctx.row.type== "+txt(TYPE_BACKGROUND))
-							._if("ctx.row.mode=='css'")
-								.set(template, ViewCard.getTemplateRichMedia())
-								.var("jqdom", template.appendInto("$(selector)"))
-								.__("jqdom.css('background', ctx.row.css)")
-								.__("jqdom.css('opacity', ctx.row.opacity)")
-								.__("ctx.row['_dom_']=jqdom[0]")
-							.endif()
-					._elseif("ctx.row.type=="+txt(TYPE_TEXT))
-						.set(template, ViewCard.getTemplateText("ctx.row.html"))
-						.var("jqdom", template.appendInto("$(selector)"))
-						.__("ctx.row['_dom_']=jqdom[0]")
+		__(aDataDriven.onEnter(fct("ctx").__(()->{
+				_if("ctx.row['_dom_']==null");
+					_if("ctx.row.type== "+txt(TYPE_BACKGROUND));
+							_if("ctx.row.mode=='css'");
+								set(template, ViewCard.getTemplateRichMedia());
+								var("jqdom", template.appendInto("$(selector)"));
+								__("jqdom.css('background', ctx.row.css)");
+								__("jqdom.css('opacity', ctx.row.opacity)");
+								__("ctx.row['_dom_']=jqdom[0]");
+							endif();
+					_elseif("ctx.row.type=="+txt(TYPE_TEXT));
+						set(template, ViewCard.getTemplateText("ctx.row.html"));
+						var("jqdom", template.appendInto("$(selector)"));
+						__("ctx.row['_dom_']=jqdom[0]");
 						
-					._elseif("ctx.row.type=="+txt(TYPE_CARD_ACTION))
-						.__("$(selector).attr('data-x-action', ctx.row.idAction )")
-						.__(JQuery.$(jsvar("selector")).addClass(ViewRippleEffect.cRippleEffect))
-					.endif()	
-				.endif()))
+					_elseif("ctx.row.type=="+txt(TYPE_CARD_ACTION));
+						__("$(selector).attr('data-x-action', ctx.row.idAction )");
+						__(JQuery.$(jsvar("selector")).addClass(ViewRippleEffect.cRippleEffect));
+					endif()	;
+				endif();
+				})
+				));
 		
-		.__(aDataDriven.onExit(fct("value")
-				._if("value!=null && value.row['_dom_']!=null")
+		__(aDataDriven.onExit(fct("value").__(()->{
+				_if("value!=null && value.row['_dom_']!=null");
 
-				.endif()))
+				endif();
+		})
+				));
 
-		.__(aDataDriven.onChange(fct("value")
-				._if("value.row['_dom_']!=null && value.property=='idx'")
+		__(aDataDriven.onChange(fct("value").__(()->{
+				_if("value.row['_dom_']!=null && value.property=='idx'");
 
-				.endif()
-			))
+				endif();
+		})
+			));
 
-		;
-
-		return aDataSet.getData();
+		_return(aDataSet.getData());
+		return null;
 	}
 
 }

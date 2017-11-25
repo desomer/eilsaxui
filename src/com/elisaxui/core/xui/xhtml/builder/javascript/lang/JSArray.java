@@ -3,13 +3,13 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.javascript.lang;
 
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassMethod;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassInterface;
 
 /**
  * @author Bureau
  *
  */
-public class JSArray extends JSClassMethod {
+public class JSArray extends JSClassInterface {
 
 	public JSArray push(Object value)
 	{
@@ -32,7 +32,7 @@ public class JSArray extends JSClassMethod {
 	
 	public JSInt length()
 	{
-		return attrOfType(new JSInt(), "length");
+		return castAttr(new JSInt(), "length");
 	}
 	
 }

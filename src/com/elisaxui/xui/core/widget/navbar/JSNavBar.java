@@ -97,20 +97,21 @@ public interface JSNavBar extends JSFactory {
 				
 			endif ();
 		}
-		)))
+		)));
 		
-		.__(aDataDriven.onExit(fct("value")
-				._if("value!=null && value.row['_dom_']!=null")
+		__(aDataDriven.onExit(fct("value").__(()->{
+				_if("value!=null && value.row['_dom_']!=null");
 
-				.endif()))
+				endif();
+		})
+		));
+		
+		__(aDataDriven.onChange(fct("value").__(()->{
+				_if("value.row['_dom_']!=null && value.property=='idx'");
 
-		.__(aDataDriven.onChange(fct("value")
-				._if("value.row['_dom_']!=null && value.property=='idx'")
-
-				.endif()
-			))
-
-		;
+				endif();
+		})
+		));
 		
 		return aDataSet.getData();
 	}

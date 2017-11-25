@@ -29,8 +29,8 @@ public final class MethodDesc
 	Object[] args;
 	
 	JSContent content;
-	int currentLine = -1;
-	String currentMthNoInserted = null;
+	public int currentLine = -1;
+	public Object currentMthNoInserted = null;
 	
 	/**
 	 * @return the currentLine
@@ -49,7 +49,7 @@ public final class MethodDesc
 	/**
 	 * @return the currentMthNoInserted
 	 */
-	public String getCurrentMthNoInserted() {
+	public Object getCurrentMthNoInserted() {
 		return currentMthNoInserted;
 	}
 

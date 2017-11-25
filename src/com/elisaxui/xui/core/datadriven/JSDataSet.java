@@ -109,29 +109,30 @@ public interface JSDataSet extends JSClass {
 						.__("setTimeout(fct, t)")
 						.__("return ret")
 				)
-				.set("d.splice", fct()
+				.set("d.splice", fct().__(()->{
 						
-						._if("arguments.length>2 && !", _that.isProxy("arguments[2]") )
-							.__("arguments[2]=new Proxy(arguments[2], changeHandler)")
-							.__(_that.addProxy("arguments[2]"))
-						.endif()
+						_if("arguments.length>2 && !", _that.isProxy("arguments[2]") );
+							__("arguments[2]=new Proxy(arguments[2], changeHandler)");
+							__(_that.addProxy("arguments[2]"));
+						endif();
 						
-						.var("ret","Array.prototype.splice.apply(this, arguments)")
-						.var("row", "null")
-						._if("arguments.length>2")
-							.set("row", "{ ope:'enter', row:arguments[2], idx:arguments[0] }")
-						._else()
-							.set("row", "{ ope:'exit', row:ret[0], idx:this.length }")
-						.endif()
+						var("ret","Array.prototype.splice.apply(this, arguments)");
+						var("row", "null");
+						_if("arguments.length>2");
+							set("row", "{ ope:'enter', row:arguments[2], idx:arguments[0] }");
+						_else();
+							set("row", "{ ope:'exit', row:ret[0], idx:this.length }");
+						endif();
 						
-						.var("fct"," function() {\nfastdom.mutate(function() {\nthat.callBackChange.fire(row); })}")
-						.var("t", "that.delayEvent")
-						._if("t==0")
-							.__("setTimeout(",fct().set("that.delayEvent",0) ,", 0)")   // remise a zero apres la boucle
-						.endif()
-						.set("that.delayEvent", "that.delayEvent+2")
-						.__("setTimeout(fct, t)")
-						.__("return ret")
+						var("fct"," function() {\nfastdom.mutate(function() {\nthat.callBackChange.fire(row); })}");
+						var("t", "that.delayEvent");
+						_if("t==0");
+							__("setTimeout(",fct().set("that.delayEvent",0) ,", 0)") ;  // remise a zero apres la boucle
+						endif();
+						set("that.delayEvent", "that.delayEvent+2");
+						__("setTimeout(fct, t)");
+						__("return ret");
+					})
 				)
 			   .set(data, "d")	 
 				;

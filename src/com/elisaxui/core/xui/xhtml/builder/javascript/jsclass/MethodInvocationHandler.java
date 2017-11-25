@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.xhtml.XHTMLFile;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.Anonym;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
@@ -36,16 +37,15 @@ public class MethodInvocationHandler implements InvocationHandler {
 	private Object varname; // nom de la variable qui contient le proxy
 	private Class<? extends JSClass> implementClass;   // type js de la class
 	private Map<String, MethodDesc> mapContentMth = new HashMap<>(); // contenu de la methode
-	private JSBuilder jsbuilder;
 	private Object varContent; // nom de la variable qui contient le proxy
 	
 	private String currentFctJSName = null;  
 	private boolean testAnonymInProgress = false;  // test si la methode doit retourner une fonction anonym
 	
+	public static final ThreadLocal<MethodDesc> ThreadLocalMethodDesc = new ThreadLocal<MethodDesc>();
 
-	public MethodInvocationHandler(Class<? extends JSClass> impl, JSBuilder jsbuilder) {
+	public MethodInvocationHandler(Class<? extends JSClass> impl) {
 		this.setImplementClass(impl);
-		this.jsbuilder=jsbuilder;
 	}
 	
 	/**
@@ -76,23 +76,33 @@ public class MethodInvocationHandler implements InvocationHandler {
 			return jc;
 		}
 		
-		if (  method.getName().equals("testA") || method.getName().equals("testB"))
-		{
-			// registerMethod(method);
-		}
+//		if (  method.getName().equals("testA") || method.getName().equals("testB"))
+//		{
+//			// registerMethod(method);
+//		}
 		
 		String id = JSClassImpl.getMethodId(method, args);
-		JSClassImpl implcl = XUIFactoryXHtml.getXHTMLFile().getClassImpl(jsbuilder, getImplementClass());
+		JSClassImpl implcl = XUIFactoryXHtml.getXHTMLFile().getClassImpl(XHTMLPart.jsBuilder, getImplementClass());
 		boolean isMthAlreadyInClass = implcl.getListDistinctFct().containsKey(id);
 
-		if (!isMthAlreadyInClass) {
+		if (isMthAlreadyInClass) {
+			//  creer le js du call de la fct
+			Object ret = JSClassImpl.toJSCall(getProxyContent(), method, args);
+			if (!testAnonymInProgress) {
+			    registerMethod(ret, ThreadLocalMethodDesc.get());
+			}
+			return ret;
+		}
+		else
+		{
 			/********************************************************************/
 			/* 		CREATION DU CODE DANS LA FCT								*/
 			/********************************************************************/
 			if (method.isDefault()) {
 				
 				if (testAnonymInProgress)
-					return JSClassImpl.toJSCallInner(getProxyContent(), method, args);  //TODO toJSCall
+					return JSClassImpl.toJSCall("this", method, args);  // ne creer pas la fct en testAnonymInProgress
+					//return JSClassImpl.toJSCallInner(getProxyContent(), method, args);  //TODO toJSCall
 				
 				
 				/*****  APPEL DES FUNCTION DE LA CLASSE *****/ 
@@ -103,6 +113,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 					implcl.getListDistinctFct().put(id, id);
 					
 					currentFctJSName=id;
+					
 					if (debug)
 						System.out.println("[JSBuilder]   include mth "+id+" of class " + implcl.getName());
 					
@@ -111,26 +122,31 @@ public class MethodInvocationHandler implements InvocationHandler {
 					Object nameProxy = mh.varname;   // recupere le nom de la varibale du proxy
 					mh.varname = "this"; // force a this pour appel interne d'autre fct de la classe JS
 					
+					// creer le JSContent
+					MethodDesc currentMethodDesc = getMethodDesc(implcl.getName(), currentFctJSName);
+					ThreadLocalMethodDesc.set(currentMethodDesc);
+					
 					JSFunction fct = createJSFunctionImpl(MthInvoke, false);    // creer le code
 					implcl.addFunction(fct);
 					
 					mh.varname = nameProxy;
+					
+					//  creer le js du call de la fct
+					return JSClassImpl.toJSCall(getProxyContent(), method, args);
 				}
 				else
 				{
 					
 					/*********************** APPEL A UNE AUTRE FCT INTERNE => AJOUTE DANS getListHandleFuntionPrivate **************************/
-					if (!testAnonymInProgress)
-					{
-						MethodDesc currentMethodDesc = getMethodDesc(implcl, currentFctJSName);
-						registerMethod(method, currentMethodDesc);	
-					}
 					
 					/**************************     test si utilisation class Anonym **********************************/	
 					MethodInvocationHandler mh = (MethodInvocationHandler) Proxy.getInvocationHandler(proxy);
 					Object nameProxy = mh.varname;
 					mh.varname = "this"; // force a this pour appel interne d'autre fct de la classe JS
 					
+					/*******************************************************************************/
+					// test si utilisation class Anonym
+					/*******************************************************************************/
 					JSFunction fctAnomyn = createJSFunctionImpl(MthInvoke, true);    // test si utilisation class Anonym
 					
 					mh.varname = nameProxy;
@@ -144,7 +160,15 @@ public class MethodInvocationHandler implements InvocationHandler {
 					
 					implcl.getListHandleFuntionPrivate().add(MthInvoke);
 					
-					return JSClassImpl.toJSCallInner(getProxyContent(), method, args);  //TODO toJSCall
+					Object ret = JSClassImpl.toJSCall("this", method, args);  //.toJSCallInner(getProxyContent(), method, args);  //TODO toJSCall
+				
+					// registerMethod
+					if (!testAnonymInProgress)
+					{
+					//	MethodDesc currentMethodDesc = getMethodDesc(implcl.getName(), currentFctJSName);
+						registerMethod(ret, ThreadLocalMethodDesc.get());	
+					}
+					return ret;
 				}
 			} 
 			else if (! checkMethodExist(method) )
@@ -157,11 +181,11 @@ public class MethodInvocationHandler implements InvocationHandler {
 				/*****  APPEL DES FUNCTION INTERNE (var, set, if) sur la class JSContent*****/ 
 								
 				// creer le JSContent
-				MethodDesc currentMethodDesc = getMethodDesc(implcl, currentFctJSName);	
+				MethodDesc currentMethodDesc = getMethodDesc(implcl.getName(), currentFctJSName);	
 				JSContent currentJSContent = currentMethodDesc.content;
 				
 				if (!testAnonymInProgress)
-					doSourceRowInsered(currentMethodDesc);
+					doSourceRowInsered(ThreadLocalMethodDesc.get());
 				
 				if (debug2)
 					System.out.println("[JSBuilder]"+System.identityHashCode(currentJSContent)+ " - appel meth "+ method.getName() + "  du JSContent "+currentFctJSName+" of class " + implcl.getName());
@@ -170,15 +194,11 @@ public class MethodInvocationHandler implements InvocationHandler {
 				// appel l'implementation le methode JSInterface
 				Object ret =  method.invoke(currentJSContent, args);
 
-				if (ret instanceof JSFunction)   // gestion appel fct anonyme par fct()
+				if (ret instanceof JSFunction)   // gestion appel fct anonyme par fct() ou fragment()
 				{
 					((JSFunction)ret).proxy=(JSMethodInterface) proxy; 
 				}
 				
-//				if (method.getName().equals("fct"))   // gestion appel fct anonyme par fct()
-//				{
-//					((JSFunction)ret).proxy=(JSMethodInterface) proxy; 
-//				}
 				
 				if (debug2)
 				{
@@ -197,8 +217,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 			}
 		}
 
-		//  creer le js du call de la fct
-		return JSClassImpl.toJSCall(getProxyContent(), method, args);
+
 	}
 
 	/**
@@ -206,31 +225,31 @@ public class MethodInvocationHandler implements InvocationHandler {
 	 * @return
 	 * @throws ClassNotFoundException 
 	 */
-	private MethodDesc getMethodDesc(JSClassImpl implcl, String mthName ) throws ClassNotFoundException {
+	private MethodDesc getMethodDesc(Object nameClass, String mthName ) throws ClassNotFoundException {
 		
 		MethodDesc currentMethodDesc = null;
 		
-		if (mthName==null)
-		{
-			 StackTraceElement[]  stack = Thread.currentThread().getStackTrace();
-			 // test si la methode est la méthode en cours de construction	
-			 for (StackTraceElement stackTraceElement : stack) {
-				if (JSClass.class.isAssignableFrom(Class.forName(stackTraceElement.getClassName()))  && stackTraceElement.getLineNumber()!=-1 )
-				{
-					if (currentFctJSName.startsWith(stackTraceElement.getMethodName()))
-						currentMethodDesc = mapContentMth.get(currentFctJSName);
-					break;
-				}
-			 }
-		}
-		else
+//		if (mthName==null)
+//		{
+//			 StackTraceElement[]  stack = Thread.currentThread().getStackTrace();
+//			 // test si la methode est la méthode en cours de construction	
+//			 for (StackTraceElement stackTraceElement : stack) {
+//				if (JSClass.class.isAssignableFrom(Class.forName(stackTraceElement.getClassName()))  && stackTraceElement.getLineNumber()!=-1 )
+//				{
+//					if (currentFctJSName.startsWith(stackTraceElement.getMethodName()))
+//						currentMethodDesc = mapContentMth.get(currentFctJSName);
+//					break;
+//				}
+//			 }
+//		}
+//		else
 			currentMethodDesc = mapContentMth.get(mthName);
 		
-		if (currentMethodDesc==null && mthName!=null)
+		if (currentMethodDesc==null /*&& mthName!=null*/)
 		{
-			JSContent jsc= jsbuilder.createJSContent();
+			JSContent jsc= XHTMLPart.jsBuilder.createJSContent();
 			if (debug2)
-				System.out.println("[JSBuilder]"+System.identityHashCode(jsc)+ " - createJSContent "+mthName+" of class " + implcl.getName());
+				System.out.println("[JSBuilder]"+System.identityHashCode(jsc)+ " - createJSContent "+mthName+" of class " + nameClass);
 			
 			currentMethodDesc =  new  MethodDesc(jsc);
 			mapContentMth.put(mthName, currentMethodDesc); // creer le contenu
@@ -243,7 +262,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 	 * @param method
 	 * @throws ClassNotFoundException
 	 */
-	private void registerMethod(Method method, MethodDesc currentMethodDesc) throws ClassNotFoundException {
+	private void registerMethod(Object method, MethodDesc currentMethodDesc) throws ClassNotFoundException {
 		 doSourceRowInsered(currentMethodDesc);
 		 
 		 StackTraceElement[]  stack = Thread.currentThread().getStackTrace();
@@ -254,35 +273,16 @@ public class MethodInvocationHandler implements InvocationHandler {
 			{
 				numLigne = stackTraceElement.getLineNumber();
 				currentMethodDesc.currentLine = numLigne;
+				currentMethodDesc.currentMthNoInserted = method;
 				break;
 			}
 		 }
-		
-		 if (numLigne>=0)
-		 {
-			 
-			 currentMethodDesc.currentMthNoInserted = method.getName();
-	//	 System.out.println("*************"+  method.getName() +"***********************"); 
-			 int nbProxy = 0;
-			 for (StackTraceElement stackTraceElement : stack) {
-	//			System.out.println(stackTraceElement.getMethodName()+ " : " + stackTraceElement.getLineNumber() + "<-" + stackTraceElement.getClassName());
-				if (stackTraceElement.getClassName().startsWith("com.sun.proxy"))
-					nbProxy++;
-				
-				if (JSClass.class.isAssignableFrom(Class.forName(stackTraceElement.getClassName()))  && stackTraceElement.getLineNumber()!=-1 )
-				{
-					numLigne = stackTraceElement.getLineNumber();
-					break;
-				}
-			 }
-	//		 System.out.println("=======> "+ nbProxy + " =>" + numLigne);
-		 }
 	}
-
+	
 	/**
 	 * @throws ClassNotFoundException
 	 */
-	private void doSourceRowInsered(MethodDesc currentMethodDesc) throws ClassNotFoundException {
+	public static void doSourceRowInsered(MethodDesc currentMethodDesc) throws ClassNotFoundException {
 		
 		if (currentMethodDesc.currentLine>0)
 		{
@@ -298,9 +298,10 @@ public class MethodInvocationHandler implements InvocationHandler {
 				}
 			 }
 			
-			 if (numLigne==currentMethodDesc.currentLine)
+			 if (numLigne<=currentMethodDesc.currentLine)
 			 {
 				 currentMethodDesc.currentMthNoInserted=null;   // plus 
+				 ThreadLocalMethodDesc.get().currentMthNoInserted=null;
 			 }
 			 else
 			 {
@@ -308,6 +309,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 				 
 				 if (currentMethodDesc.currentMthNoInserted!=null  ) {
 					 
+					 currentMethodDesc.content.__(currentMethodDesc.currentMthNoInserted);
 //					 if (currentMethodDesc.currentMthNoInserted.equals("testB")) 
 //					if (currentFctJSName!=null &&   ! currentFctJSName.startsWith(currentMethodDesc.currentMthNoInserted))
 						 System.out.println("################## " + currentMethodDesc.currentMthNoInserted);
@@ -316,6 +318,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 			 
  
 			 currentMethodDesc.currentLine=-1;
+			 ThreadLocalMethodDesc.get().currentLine=-1;
 		}
 	}
 
@@ -386,9 +389,9 @@ public class MethodInvocationHandler implements InvocationHandler {
 			((Runnable)ret).run();   // executue la function qui retourne l'Anonym;
 			Object aCode = code.$$gosubContent(prevCode);
 			prevCode=null;
-			JSContent cont = jsbuilder.createJSContent();
+			JSContent cont = XHTMLPart.jsBuilder.createJSContent();
 			cont.$$gosubContent(aCode);
-			fct = jsbuilder.createJSFunction().setParam(p).setCode(cont);
+			fct = XHTMLPart.jsBuilder.createJSFunction().setParam(p).setCode(cont);
 			
 		}
 		else if (testAnonymous==false)
@@ -403,7 +406,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 			if (ret!=null && !(ret instanceof JSContent))
 			{
 				if (code==null)
-					code= jsbuilder.createJSContent();
+					code= XHTMLPart.jsBuilder.createJSContent();
 					
 				code._return(ret);
 			}
@@ -411,7 +414,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 			if (debug2)
 				System.out.println(System.identityHashCode(code)+ " - return JSFunction " + id);
 			
-			fct = jsbuilder.createJSFunction().setName(handle.method.getName()).setParam(p)
+			fct = XHTMLPart.jsBuilder.createJSFunction().setName(handle.method.getName()).setParam(p)
 					.setCode(code);
 			
 			// function en cours terminé 

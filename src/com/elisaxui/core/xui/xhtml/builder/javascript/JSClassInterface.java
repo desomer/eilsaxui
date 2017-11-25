@@ -3,8 +3,13 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.javascript;
 
+import java.lang.reflect.Method;
+
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.Array;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodDesc;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodInvocationHandler;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
 
@@ -13,7 +18,7 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder;
  *
  * class JS d'interface vers un JS externe sans implementation interne
  */
-public class JSClassMethod extends JSVariable {
+public class JSClassInterface extends JSVariable {
 
 	// TODO a retirer et a gerer par le _setContent    (voir equal sur JSString)
 	Array<Object> listContent = new Array<Object>();
@@ -76,7 +81,7 @@ public class JSClassMethod extends JSVariable {
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected <E extends JSClassMethod> E addContent(Object content) {
+	protected <E extends JSClassInterface> E addContent(Object content) {
 		
 		if ( content instanceof Object[])
 		{
@@ -107,7 +112,7 @@ public class JSClassMethod extends JSVariable {
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected <E extends JSClassMethod> E  callMth(String mth, Object...classes)
+	protected <E extends JSClassInterface> E  callMth(String mth, Object...classes)
 	{
 		E ret = (E)this;
 		if (listContent.size()==0 && this.name!=null)
@@ -125,10 +130,18 @@ public class JSClassMethod extends JSVariable {
 		ret.addContent("."+mth+"(");
 		ret.addContent(classes);
 		ret.addContent(")");
+		
+		registerMethod(ret);
+		
 		return ret;
 	}
 	
-    public <E extends JSClassMethod> E attrByString(Object attr)
+	
+	/**********************************************************************/
+	
+	
+	/**********************************************************************/
+    public <E extends JSClassInterface> E attrByString(Object attr)
     {
      E ret = (E)this;
    	 
@@ -151,7 +164,7 @@ public class JSClassMethod extends JSVariable {
     }
 	
     @Deprecated
-	public <E extends JSClassMethod> E  attr(String att)
+	public <E extends JSClassInterface> E  attr(String att)
 	{
 		E ret = (E)this;
 		if (listContent.size()==0 && this.name!=null)
@@ -170,22 +183,9 @@ public class JSClassMethod extends JSVariable {
 		return ret;
 	}
 	
-	@Deprecated
-	public <E extends JSClassMethod> E  attrOfType(JSClassMethod cl, String att)
-	{
-		if (listContent.size()==0 && this.name!=null)
-		{
-//			// gestion premier appel de variable
-//			try {
-//				ret = (E) this.getClass().newInstance();
-//			} catch (InstantiationException | IllegalAccessException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-			cl._setName(this._getName());
-		}
-		
-		cl.addContent("."+att);
+	public <E extends JSVariable> E  castAttr(JSVariable cl, String att)
+	{		
+		cl._setContent(this._getName()+"."+att);
 		return (E) cl;
 	}
 }

@@ -71,19 +71,19 @@ public class JSClassImpl extends JSContent {
 	}
 
 	
-	/**
-	 * retourne le call
-	 * 
-	 * @param method
-	 * @param args
-	 * @return
-	 */
-	@Deprecated
-	public static final  Object toJSCallInner(Object name , Method method, Object[] args) {
-				
-		return toJSCall("this", method, args);
-		
-	}
+//	/**
+//	 * retourne le call
+//	 * 
+//	 * @param method
+//	 * @param args
+//	 * @return
+//	 */
+//	@Deprecated
+//	public static final  Object toJSCallInner(Object name , Method method, Object[] args) {
+//				
+//		return toJSCall("this", method, args);
+//		
+//	}
 	
 
 	

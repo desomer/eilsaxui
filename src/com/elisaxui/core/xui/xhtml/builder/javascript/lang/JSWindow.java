@@ -3,13 +3,13 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.javascript.lang;
 
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassMethod;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassInterface;
 
 /**
  * @author gauth
  *
  */
-public class JSWindow extends JSClassMethod {
+public class JSWindow extends JSClassInterface {
 
 	
 	public static final JSWindow window()

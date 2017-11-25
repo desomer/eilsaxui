@@ -54,7 +54,7 @@ public class ViewBtnCircle extends XHTMLPart {
 				.on(CSSSelector.onPath(cBtnCircle, " .material-icons"), "color:white;"
 					//	+ " position: absolute;"
 					//	+ " top: 50%;  left: 50%;"
-						+ " transform: translate(-1px,3px); "
+						+ " transform: translate(-1px, 1px); "
 					//	+ " line-height: 24px;  width: 24px; "
 						+ "font-size:"+SIZE_BTN)
 

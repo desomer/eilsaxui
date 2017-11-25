@@ -37,7 +37,7 @@ public class JSBuilder extends XUIFormatManager {
 	@SuppressWarnings("unchecked")
 	public final <E extends JSClass> E getProxy(final Class<? extends JSClass> cl) {
 
-		Object proxy = Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[] { cl }, new MethodInvocationHandler(cl, this));
+		Object proxy = Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[] { cl }, new MethodInvocationHandler(cl));
 		return (E) proxy;
 	}
 

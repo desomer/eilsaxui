@@ -12,6 +12,7 @@ import static com.elisaxui.xui.core.widget.navbar.ViewNavBar.navbar;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.xui.core.page.XUIScene;
 import com.elisaxui.xui.core.toolkit.JQuery;
@@ -55,7 +56,32 @@ public interface TKTransition extends JSClass {
 		__(jqActivityActive.prepend(jqNavBar));
 		return _void();
 	}
+	
+	default JSVoid doTabBarToActivity(JSInt sct) {
+		
+		JQuery $activity = let(JQuery.class, "$activity", $(activity.and(active)));
+		JQuery $tabbar = let(JQuery.class, "$tabbar", $activity.find("footer"));
 
+		JSInt posTop = let(JSInt.class, "posTop", sct);
+		posTop.set(posTop.add($tabbar.get(0), ".getBoundingClientRect().y"));
+		// retirer la transform translate3d
+		$tabbar.css("top", txt(posTop,"px"));
+		$tabbar.css("position","absolute"); // permet la nav de bouger
+
+		return _void();
+	}
+
+	default Object doTabBarToBody() {
+		
+		JQuery $activity = let(JQuery.class, "$activity", $(activity.and(active)));
+		JQuery $tabbar = let(JQuery.class, "$tabbar", $activity.find("footer"));
+
+		$tabbar.css("top", "");
+		$tabbar.css("position","");
+
+		return null;
+	}
+	
 	default Object doNavBarToBody() {
 		JQuery jqNavBar = let(JQuery.class, "jqNavBar", $(activity.and(active).directChildren(navbar)));
 		
@@ -104,6 +130,7 @@ public interface TKTransition extends JSClass {
 								__("$('body').css('overflow','')"); // remet de scroll
 
 								// ----------- fige la barre nav en haut (fixed) --------
+								__(_self.doTabBarToBody());
 								__(_self.doNavBarToBody());
 
 								// anime le burger et le passe de la scene vers l'activity
@@ -125,8 +152,7 @@ public interface TKTransition extends JSClass {
 				//.var("jqHamburger", "jqNavBar.find('.hamburger')")
 				// ouvre le menu
 				__(TKQueue.startAnimQueued(fct().__(()->{
-							// .__("jqScene.css('height', '100vh')")
-							__("$('body').css('overflow','hidden')"); // plus de scroll du body sur l'ouverture du menu
+							__($("body").css("overflow","hidden")); // plus de scroll du body sur l'ouverture du menu
 							__(_overlay.doShow("'.active'", 1));
 							// ---------------------------------------
 							__("jqMenu.css('transition', '' )"); // fige le menu en haut sans animation
@@ -135,6 +161,9 @@ public interface TKTransition extends JSClass {
 							// ----------- detache la barre nav en haut par rapport au scroll et ajoute a
 							// l'activité --------
 							__(_self.doNavBarToActivity("sct"));
+							// TODO a faire marche
+							//__(_self.doTabBarToActivity(cast(JSInt.class, "sct")));   
+							__(_self.doTabBarToActivity(new JSInt()._setContent("sct")));
 	
 							// ---------- anime le burger et le passe sur la scene---------------
 							__("jqHamburger.detach()");

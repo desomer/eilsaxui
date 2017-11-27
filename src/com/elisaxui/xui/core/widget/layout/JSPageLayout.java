@@ -7,10 +7,12 @@ import static com.elisaxui.xui.core.toolkit.json.JXui.$xui;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSWindow.*;
 import com.elisaxui.xui.core.toolkit.JQuery;
+import com.elisaxui.xui.core.transition.CssTransition;
 /**
  * @author Bureau
  *
@@ -34,7 +36,7 @@ public interface JSPageLayout extends JSClass {
 	}	
 	
 	
-	default JSVoid hideOnScroll(Object idActivity) {
+	default JSVoid hideOnScroll(JSString idActivity) {
 		
 		int nbImageParSecond = 30;
 		JSInt interval = let(JSInt.class, "interval", "1000/"+nbImageParSecond);	// 60 image seconde
@@ -42,10 +44,16 @@ public interface JSPageLayout extends JSClass {
 		JSInt now = let(JSInt.class, "now", 0);	
 		JSInt then = let(JSInt.class, "then", "Date.now()");	
 		JSInt deltaTime = let(JSInt.class, "deltaTime", 0);	
+		
+		JQuery $activity = let(JQuery.class, "$activity", JQuery.$(idActivity));
+		
 		JQuery $header = let(JQuery.class, "$header", JQuery.$("body>header"));
+		JQuery $footer = let(JQuery.class, "$footer", $activity.find("footer"));
+		
 		JQuery $window = let(JQuery.class, "$window", JQuery.$(jsvar("window")));
 		JSInt lastScrollTop = let(JSInt.class, "lastScrollTop", $window.scrollTop());	
 		JSInt scrollTop = let(JSInt.class, "scrollTop", $window.scrollTop());
+
 		
 		//_if(true).then(()->{})._else(()->{});
 		
@@ -57,29 +65,48 @@ public interface JSPageLayout extends JSClass {
 				deltaTime.set(now.substact(then));
 				
 				_if( deltaTime,">", interval);
-					scrollTop.set($window.scrollTop());
+					scrollTop.set($window.scrollTop()); //position du scroll
 						
-					_if(lastScrollTop.isNotEqual(scrollTop)); 
+					_if(lastScrollTop.isNotEqual(scrollTop), "&&", $activity.hasClass(CssTransition.active) ); 
 					
 						JSInt deltas = let(JSInt.class, "deltas", lastScrollTop.substact(scrollTop));
-						JSInt currentDelta = let(JSInt.class, "currentDelta", $header.data("deltaY"));
+						JSInt currentHeaderDelta = let(JSInt.class, "currentHeaderDelta", $header.data("deltaY"));
+						JSInt currentFooterDelta = let(JSInt.class, "currentFooterDelta", $footer.data("deltaY"));
 						
-						set( currentDelta, currentDelta,"==null?0:",currentDelta);
+						currentHeaderDelta.set(currentHeaderDelta,"==null?0:",currentHeaderDelta);
+						currentFooterDelta.set(currentFooterDelta,"==null?0:",currentFooterDelta);
 						
-						JSInt deltaHeader = let(JSInt.class, "deltaHeader", currentDelta.add(deltas) );
+						JSInt deltaHeader = let(JSInt.class, "deltaHeader", currentHeaderDelta.add(deltas) );
+						JSInt deltaFooter = let(JSInt.class, "deltaFooter", currentFooterDelta.add(deltas) );
+						
 						JSInt hHeader = let(JSInt.class, "hHeader", $header.outerHeight());
-						hHeader.set(hHeader.add(3));
+						hHeader.set(hHeader.add(3));  // hauteur de l'hombre 
+						
+						JSInt hFooter = let(JSInt.class, "hFooter", $footer.outerHeight());
 		
-					    _if(deltas, "<0", "&&", "-",currentDelta, "<=", hHeader);
-							deltaHeader.set("deltaHeader<-hHeader?-hHeader:deltaHeader");
+					    _if(deltas, "<0", "&&", "-",currentHeaderDelta, "<=", hHeader);
+							deltaHeader.set(deltaHeader,"< -",hHeader,"?-",hHeader,":", deltaHeader);
 							$header.data("deltaY",  deltaHeader);
 							$header.css("transform", txt("translate3d(0px, " , deltaHeader , "px, 0px)") );
 							
-						_elseif(deltas, ">0","&&", currentDelta, "<0");
-							deltaHeader.set("deltaHeader>0?0:deltaHeader");
+						_elseif(deltas, ">0","&&", currentHeaderDelta, "<0");
+							deltaHeader.set(deltaHeader,">0?0:",deltaHeader);
 							$header.data("deltaY", deltaHeader);
 							$header.css("transform", txt("translate3d(0px, " , deltaHeader , "px, 0px)"));
 						endif();	
+						
+						_if(deltas, "<0", "&&", "-",currentFooterDelta, "<=", hFooter);
+							deltaFooter.set(deltaFooter,">",hFooter,"?",hFooter,":", deltaFooter);
+							$footer.data("deltaY",  deltaFooter);
+							deltaFooter.set("-",deltaFooter);
+							$footer.css("transform", txt("translate3d(0px, " , deltaFooter , "px, 0px)") );
+							
+						_elseif(deltas, ">0","&&", currentFooterDelta, "<0");
+							deltaFooter.set(deltaFooter,">0?0:",deltaFooter);
+							$footer.data("deltaY", deltaFooter);
+							deltaFooter.set("-",deltaFooter);
+							$footer.css("transform", txt("translate3d(0px, " , deltaFooter , "px, 0px)"));
+						endif();
 
 						lastScrollTop.set(scrollTop);
 					endif();

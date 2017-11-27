@@ -12,18 +12,19 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.Array;
  */
 public class JSValue extends JSVariable {
 
-	public JSBool add(Object obj)
+	public JSBool add(Object... objs)
 	{
 		JSBool ret = new JSBool();
-		Array arr = new Array();
-		Object content = _getString();
-		if (content instanceof Array )
-			arr.addAll((Array<?>)content);
-		else
-			arr.add(content);
-		arr.add("+");
-		arr.add(obj);
-		ret._setContent(arr);
+//		Array arr = new Array();
+//		Object content = _getString();
+//		if (content instanceof Array )
+//			arr.addAll((Array<?>)content);
+//		else
+//			arr.add(content);
+//		arr.add("+");
+//		arr.add(obj);
+//		ret._setContent(arr);
+		_doOperator(ret, "+", objs);
 		return ret;
 	}
 	

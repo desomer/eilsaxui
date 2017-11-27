@@ -8,6 +8,7 @@ import com.elisaxui.app.elisys.xui.widget.JSSyllabisation;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
@@ -113,7 +114,7 @@ public class ScnRoot extends XUIScene {
 						.consoleDebug("'on Create Activity1'")
 						.__(TKQueue.startProcessQueued( 100,  fct()
 								.var(jsPageLayout, _new())
-								.__(jsPageLayout.hideOnScroll("json.param"))
+								.__(jsPageLayout.hideOnScroll(new JSString()._setContent("'#Activity1'")))
 								
 // 					TODO a changer : mettre dans une queue avec priorité (avec image) et gestion de promise d'attente 								
 //								.__(" $.getScript({url:'https://cdnjs.cloudflare.com/ajax/libs/granim/1.0.6/granim.min.js',  cache: true}).done("

@@ -21,7 +21,7 @@ public class CssTransition extends XHTMLPart {
 	public static XClass activity;
 	
 	static XClass fixedForAnimated;
-	static XClass active;
+	public static XClass active;
 	static XClass animated;
 	public static XClass detach;
 	

@@ -106,24 +106,36 @@ public class JSVariable {
 		return ret;
 	}
 	
-	public JSVoid set(Object obj)
+	public JSVoid set(Object... objs)
 	{
 		JSVoid ret = new JSVoid();
+		_doOperator(ret, "=", objs);
+		return ret;
+	}
+
+	/**
+	 * @param ret
+	 * @param objs
+	 */
+	protected void _doOperator(JSVariable ret, String operator,  Object... objs) {
 		Array arr = new Array();
 		Object content = _getString();
 		if (content instanceof Array )
 			arr.addAll((Array<?>)content);
 		else
 			arr.add(content);
-		arr.add("=");
-		if (obj instanceof Array )
-			arr.addAll((Array<?>)obj);
-		else
-			arr.add(obj);
 		
+		arr.add(operator);
+		
+		for (Object obj : objs) {
+			if (obj instanceof Array )
+				arr.addAll((Array<?>)obj);
+			else
+				arr.add(obj);
+		}
+
 		ret._setContent(arr);
 		registerMethod(ret);
-		return ret;
 	}
 	
 }

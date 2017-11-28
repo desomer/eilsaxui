@@ -9,6 +9,7 @@ import static com.elisaxui.xui.core.transition.CssTransition.*;
 import static com.elisaxui.xui.core.page.XUIScene.*;
 import static com.elisaxui.xui.core.widget.navbar.ViewNavBar.fixedToAbsolute;
 import static com.elisaxui.xui.core.widget.navbar.ViewNavBar.navbar;
+import static com.elisaxui.xui.core.widget.tabbar.ViewTabBar.cTabbar;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
@@ -42,25 +43,30 @@ public interface TKTransition extends JSClass {
 	TKTransition _this = null;
 	TKTransition _self = null;
 
-	default Object doNavBarToActivity(Object sct) {
+	default JSVoid doNavBarToAbsolute(JSInt sct) {
 		
-		JQuery jqActivityActive = let(JQuery.class, "jqActivityActive", $(activity.and(active)));
-		JQuery jqNavBar = let(JQuery.class, "jqNavBar", $("body>", navbar) );
+		JQuery $NavBar = let(JQuery.class, "$NavBar", $(activity.and(active).directChildren(navbar)));
 
-		// ----------- detache la barre nav en haut par rapport au scroll et ajoute a
-		// l'activité --------
-		__(jqNavBar.detach());
-		__(jqNavBar.css("transform", txt("translate3d(0px,", jsvar(sct), "px,0px)")));
-		__(jqNavBar.addClass(fixedToAbsolute)); // permet la nav de bouger
-		
-		__(jqActivityActive.prepend(jqNavBar));
+		JSInt posTop = let(JSInt.class, "posTop", sct);
+	//	posTop.set(posTop.add($NavBar.get(0), ".getBoundingClientRect().y"));
+		// retirer la transform translate3d
+		$NavBar.css("top", txt(posTop,"px"));
+		$NavBar.css("position","absolute"); // permet la nav de bouger
+		$NavBar.addClass(fixedToAbsolute);
 		return _void();
 	}
 	
-	default JSVoid doTabBarToActivity(JSInt sct) {
+	default JSVoid doNavBarToFixe() {
+		JQuery $NavBar = let(JQuery.class, "$NavBar", $(activity.and(active).directChildren(navbar)));
+		$NavBar.removeClass(fixedToAbsolute);
+		$NavBar.css("top", "");
+		$NavBar.css("position","");
+		return _void();
+	}
+	
+	default JSVoid doTabBarToAbsolute(JSInt sct) {
 		
-		JQuery $activity = let(JQuery.class, "$activity", $(activity.and(active)));
-		JQuery $tabbar = let(JQuery.class, "$tabbar", $activity.find("footer"));
+		JQuery $tabbar = let(JQuery.class, "$tabbar", $(activity.and(active).directChildren(cTabbar)));
 
 		JSInt posTop = let(JSInt.class, "posTop", sct);
 		posTop.set(posTop.add($tabbar.get(0), ".getBoundingClientRect().y"));
@@ -71,7 +77,7 @@ public interface TKTransition extends JSClass {
 		return _void();
 	}
 
-	default Object doTabBarToBody() {
+	default JSVoid doTabBarToFixe() {
 		
 		JQuery $activity = let(JQuery.class, "$activity", $(activity.and(active)));
 		JQuery $tabbar = let(JQuery.class, "$tabbar", $activity.find("footer"));
@@ -79,18 +85,10 @@ public interface TKTransition extends JSClass {
 		$tabbar.css("top", "");
 		$tabbar.css("position","");
 
-		return null;
-	}
-	
-	default Object doNavBarToBody() {
-		JQuery jqNavBar = let(JQuery.class, "jqNavBar", $(activity.and(active).directChildren(navbar)));
-		
-		__(jqNavBar.detach());
-		__(jqNavBar.css("transform", "translate3d(0px,0px,0px)"));
-		__(jqNavBar.removeClass(fixedToAbsolute));
-		__($("body").prepend(jqNavBar));
 		return _void();
 	}
+	
+
 
 	default Object doToggleBurgerMenu() {
 		//JSOverlay overlay = let( JSOverlay.class, "overlay", _new(CssTransition.SPEED_SHOW_MENU, XUIScene.OVERLAY_OPACITY_MENU) );
@@ -99,13 +97,10 @@ public interface TKTransition extends JSClass {
 		
 		JQuery jqMenu = let( JQuery.class, "jqMenu", $(ViewMenu.menu) );
 		JQuery jqScene = let( JQuery.class, "jqScene", $(scene) );
-
-		JQuery jqNavBar = let( JQuery.class, "jqNavBar", $("body>", navbar) );
-		_if(jqNavBar.length(),"==", 0);
-			set(jqNavBar, $(activity.and(active).directChildren(navbar)));
-		endif();
-		
+	
 		JQuery jqActivityActive = let( JQuery.class, "jqActivityActive", $(activity.and(active)) );
+		JQuery jqNavBar = let( JQuery.class, "jqNavBar", $(activity.and(active).directChildren(navbar)) );
+
 		JSInt sct = let( JSInt.class, "sct",    $(jsvar("document")).scrollTop() );
 
 		var(_self, _this);
@@ -130,8 +125,8 @@ public interface TKTransition extends JSClass {
 								__("$('body').css('overflow','')"); // remet de scroll
 
 								// ----------- fige la barre nav en haut (fixed) --------
-								__(_self.doTabBarToBody());
-								__(_self.doNavBarToBody());
+								__(_self.doTabBarToFixe());
+								__(_self.doNavBarToFixe());
 
 								// anime le burger et le passe de la scene vers l'activity
 								var("hamburger", "jqHamburgerDetach.detach()");
@@ -149,10 +144,9 @@ public interface TKTransition extends JSClass {
 						, SPEED_BURGER_EFFECT, fct()))
 			._else();
 				JQuery jqHamburger = let( JQuery.class, "jqHamburger", jqNavBar.find(ViewBtnBurger.hamburger) );
-				//.var("jqHamburger", "jqNavBar.find('.hamburger')")
 				// ouvre le menu
 				__(TKQueue.startAnimQueued(fct().__(()->{
-							__($("body").css("overflow","hidden")); // plus de scroll du body sur l'ouverture du menu
+							__($("body").css("overflow","hidden")); //???? plus de scroll du body sur l'ouverture du menu
 							__(_overlay.doShow("'.active'", 1));
 							// ---------------------------------------
 							__("jqMenu.css('transition', '' )"); // fige le menu en haut sans animation
@@ -160,10 +154,10 @@ public interface TKTransition extends JSClass {
 	
 							// ----------- detache la barre nav en haut par rapport au scroll et ajoute a
 							// l'activité --------
-							__(_self.doNavBarToActivity("sct"));
+							__(_self.doNavBarToAbsolute(sct));
 							// TODO a faire marche
 							//__(_self.doTabBarToActivity(cast(JSInt.class, "sct")));   
-							__(_self.doTabBarToActivity(new JSInt()._setContent("sct")));
+							__(_self.doTabBarToAbsolute(sct));
 	
 							// ---------- anime le burger et le passe sur la scene---------------
 							__("jqHamburger.detach()");
@@ -272,7 +266,7 @@ public interface TKTransition extends JSClass {
 				._if("jqAct1.hasClass('active')")
 				// ouverture activity 2
 				.__(TKQueue.startAnimQueued( fct() .__(()->{ 
-								__(_self.doNavBarToActivity(0));
+								__(_self.doNavBarToAbsolute(new JSInt()._setContent(0)));
 								__(_overlay.doShow("act1", 1)); // init
 								__(_self.doActivityInactive("act1"));
 								__(_self.doActivityFreeze("act1", "sct")); // freeze 1
@@ -298,7 +292,7 @@ public interface TKTransition extends JSClass {
 								__("jqAct2.removeClass('toHidden')");
 								__("jqAct2.removeClass('frontActivity')");
 								__(_self.doActivityDeFreeze("act2")); // defrezze 2
-								__(_self.doNavBarToBody());
+								__(_self.doNavBarToFixe());
 
 								__(_self.doInitScrollTo("act2"));
 							})
@@ -309,7 +303,7 @@ public interface TKTransition extends JSClass {
 				// fermeture activity 2
 				.__(TKQueue.startAnimQueued(
 						fct().__(()->{ 
-								__(_self.doNavBarToActivity(0));
+								__(_self.doNavBarToAbsolute(new JSInt()._setContent(0)));
 								__(_self.doActivityInactive("act2"));
 								__(_self.doActivityActive("act1"));
 								__(_self.doActivityFreeze("act2", "sct")); // frezze 2
@@ -326,7 +320,7 @@ public interface TKTransition extends JSClass {
 								__(_overlay.doHide(2));
 								__(_self.doActivityNoDisplay("act2"));
 								__(_self.doActivityDeFreeze("act2")); // defrezze 2
-								__(_self.doNavBarToBody());
+								__(_self.doNavBarToFixe());
 
 								__("jqAct1.removeClass('backToFront')");
 								__("jqAct2.removeClass('toHidden')");
@@ -361,7 +355,7 @@ public interface TKTransition extends JSClass {
 				.__(TKQueue.startAnimQueued(
 						fct().__(()->{
 								__(_overlay.doShow("act1", 1));
-								__(_self.doNavBarToActivity(0));
+								__(_self.doNavBarToAbsolute(new JSInt()._setContent(0)));
 								__(_self.doActivityFreeze("act1", "sct")); // frezze 1
 								__("jqAct1.addClass('backActivity')");
 
@@ -407,7 +401,7 @@ public interface TKTransition extends JSClass {
 
 						, SPEED_SHOW_ACTIVITY + DELAY_SURETE_END_ANIMATION, fct().__(()->{
 
-								__(_self.doNavBarToBody());
+								__(_self.doNavBarToFixe());
 								__(_self.doActivityNoDisplay("act1"));
 								__(_self.doActivityDeFreeze("act2")); // defrezze 2
 
@@ -429,7 +423,7 @@ public interface TKTransition extends JSClass {
 				._else()
 				// fermeture activity 2
 				.__(TKQueue.startAnimQueued(fct() .__(()->{
-						__(_self.doNavBarToActivity(0));
+						__(_self.doNavBarToAbsolute(new JSInt()._setContent(0)));
 						__(_self.doActivityInactive("act2"));
 						__(_self.doActivityActive("act1"));
 						__(_self.doActivityFreeze("act2", "sct")); // frezze 2
@@ -471,7 +465,7 @@ public interface TKTransition extends JSClass {
 						fct().__(()->{ 
 								__(_overlay.doHide(2));
 								__(_self.doActivityNoDisplay("act2"));
-								__(_self.doNavBarToBody());
+								__(_self.doNavBarToFixe());
 								__(_self.doActivityDeFreeze("act1")); // defrezze 1
 
 								__("jqAct1.removeClass('backToFront')");

@@ -92,7 +92,7 @@ public interface JSContainer extends JSFactory {
 						
 						_if("ctx.row.active");
 						  	__(_tkrouter, ".", _tkAnimation.doActivityActive("'#'+ctx.row.id"));
-						  	__(_tkrouter, ".", _tkAnimation.doNavBarToBody());
+						  	__(_tkrouter, ".", _tkAnimation.doNavBarToFixe());
 						endif();
 						
 						__("var backupId=", _tkrouter, ".", _activityMgr.getCurrentIDActivity());

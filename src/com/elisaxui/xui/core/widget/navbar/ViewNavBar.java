@@ -47,7 +47,7 @@ public class ViewNavBar extends XHTMLPart {
 						+ "box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);")
 				
 				.select(fixedTop).set("position:fixed; top:0px; transform:translate3d(0px,0px,0px); backface-visibility: hidden;")
-				.select(fixedToAbsolute).set("position:absolute;")  // permet de deplacement
+			//	.select(fixedToAbsolute).set("position:absolute;")  // permet de deplacement
 				
 				.select(rightAction).set("position: absolute; right: 0px;  top: 0px;  height: 100%;  width: auto;")
 				

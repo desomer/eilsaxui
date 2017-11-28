@@ -47,7 +47,7 @@ public interface JSPageLayout extends JSClass {
 		
 		JQuery $activity = let(JQuery.class, "$activity", JQuery.$(idActivity));
 		
-		JQuery $header = let(JQuery.class, "$header", JQuery.$("body>header"));
+		JQuery $header = let(JQuery.class, "$header", $activity.find("header"));
 		JQuery $footer = let(JQuery.class, "$footer", $activity.find("footer"));
 		
 		JQuery $window = let(JQuery.class, "$window", JQuery.$(jsvar("window")));

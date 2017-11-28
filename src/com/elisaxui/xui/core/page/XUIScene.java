@@ -13,6 +13,7 @@ import com.elisaxui.app.elisys.xui.asset.AssetHandler;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
@@ -470,11 +471,13 @@ public abstract class XUIScene extends XHTMLPart {
 //						.__("$('#content')[0].innerHTML = [ev.srcEvent.type, ev.pointers.length, ev.isFirst, ev.isFinal, ev.deltaX, ev.deltaY, ev.distance, ev.velocity, ev.deltaTime, ev.offsetDirection, ev.target].join('<br>');")
 						//**************************** gestion swipe anim du menu *************************/
 						._if("$(ev.target).closest('.menu').length > 0")
+							//JSInt sct = let( JSInt.class, "sct",    $(jsvar("document")).scrollTop() );
+							.var("sct", $(jsvar("document")).scrollTop())
 							._if("ev.deltaX>-100 && ev.offsetDirection==2 && ev.velocity>-1 ")
 								._if("anim==true")
 									// bouge en fonction delta
 									.__("$('.menu').css('transition', '' )")
-									.__("$('.menu').css('transform', 'translate3d('+ev.deltaX+'px,'+$('body').scrollTop()+'px,0px)' )")
+									.__("$('.menu').css('transform', 'translate3d('+ev.deltaX+'px,'+sct+'px,0px)' )")
 								.endif()
 							._elseif("anim==true && ev.offsetDirection==2 ")
 								.set("anim", "false")
@@ -487,7 +490,7 @@ public abstract class XUIScene extends XHTMLPart {
 								// lance l'animation de retour a l'ouverture
 								._if("anim==true")
 									.__("$('.menu').css('transition', 'transform "+(SPEED_SHOW_MENU+50)+"ms ease-out' )")
-									.__("$('.menu').css('transform', 'translate3d(0px,'+$('body').scrollTop()+'px,0px)' )")
+									.__("$('.menu').css('transform', 'translate3d(0px,'+sct+'px,0px)' )")
 								.endif()
 								.set("anim", "true")
 							.endif()

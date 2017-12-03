@@ -17,6 +17,7 @@ public interface JSClass extends JSMethodInterface  {
 	 * sert a ne pas avoir de warning
 	 * @return
 	 */
+	@Deprecated
 	public static <E> E defVar() {
 		return null;
 	}
@@ -25,6 +26,7 @@ public interface JSClass extends JSMethodInterface  {
 	 * sert a ne pas avoir de warning
 	 * @return
 	 */
+	@Deprecated
 	public static <E> E defAttr() {
 		return null;
 	}
@@ -33,6 +35,7 @@ public interface JSClass extends JSMethodInterface  {
 	 * sert a ne pas avoir de warning
 	 * @return
 	 */
+	@Deprecated
 	public static <E> E declareType(Class type, Object name) {
 		
 		boolean retJSVariable=JSVariable.class.isAssignableFrom(type);
@@ -45,7 +48,6 @@ public interface JSClass extends JSMethodInterface  {
 				v = ((JSVariable)type.newInstance());
 				v._setName(name) ;
 			} catch (InstantiationException | IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	

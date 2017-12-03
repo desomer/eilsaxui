@@ -85,14 +85,20 @@ public interface JSPageLayout extends JSClass {
 						JSInt hFooter = let(JSInt.class, "hFooter", $footer.outerHeight());
 		
 					    _if(deltas, "<0", "&&", "-",currentHeaderDelta, "<=", hHeader);
+					   // _if(deltas, "<0", "&&", hHeader, ">0");
+					    	//ferme
 							deltaHeader.set(deltaHeader,"< -",hHeader,"?-",hHeader,":", deltaHeader);
 							$header.data("deltaY",  deltaHeader);
 							$header.css("transform", txt("translate3d(0px, " , deltaHeader , "px, 0px)") );
+							//__($header, ".css( {'max-height':", jsvar(192, "+", deltaHeader, "-3") ,"+'px'})");
 							
 						_elseif(deltas, ">0","&&", currentHeaderDelta, "<0");
+						//_elseif(deltas, ">0","&&", hHeader, "<200");
+							//ouvre
 							deltaHeader.set(deltaHeader,">0?0:",deltaHeader);
 							$header.data("deltaY", deltaHeader);
 							$header.css("transform", txt("translate3d(0px, " , deltaHeader , "px, 0px)"));
+							//__($header, ".css( {'max-height':", jsvar(192, "+", deltaHeader, "-3") ,"+'px'})");
 						endif();	
 						
 						_if(deltas, "<0", "&&", "-",currentFooterDelta, "<=", hFooter);

@@ -29,36 +29,9 @@ public final class MethodDesc
 	Object[] args;
 	
 	JSContent content;
-	public int currentLine = -1;
-	public Object currentMthNoInserted = null;
+	public int lastLineNoInsered = -1;
+	public Object lastMthNoInserted = null;
 	
-	/**
-	 * @return the currentLine
-	 */
-	public int getCurrentLine() {
-		return currentLine;
-	}
-
-	/**
-	 * @param currentLine the currentLine to set
-	 */
-	public void setCurrentLine(int currentLine) {
-		this.currentLine = currentLine;
-	}
-
-	/**
-	 * @return the currentMthNoInserted
-	 */
-	public Object getCurrentMthNoInserted() {
-		return currentMthNoInserted;
-	}
-
-	/**
-	 * @param currentMthNoInserted the currentMthNoInserted to set
-	 */
-	public void setCurrentMthNoInserted(String currentMthNoInserted) {
-		this.currentMthNoInserted = currentMthNoInserted;
-	}
 
 	/**
 	 * @param content

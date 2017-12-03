@@ -1,6 +1,18 @@
 package com.elisaxui.core.xui;
 
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+
+import javax.script.Compilable;
+import javax.script.CompiledScript;
+import javax.script.Invocable;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.SimpleBindings;
+
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
 import org.eclipse.jetty.http2.HTTP2Cipher;
 import org.eclipse.jetty.http2.server.HTTP2ServerConnectionFactory;
@@ -24,6 +36,9 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 import com.elisaxui.AppConfig;
+import com.elisaxui.ResourceLoader;
+import com.elisaxui.app.elisys.xui.asset.AssetHandler;
+import com.elisaxui.core.helper.JSExecutorHelper;
 
 
 public class XUILaucher {
@@ -54,6 +69,9 @@ public class XUILaucher {
 //    }
     
 	public static void main(String[] args) throws Exception {
+		
+		JSExecutorHelper.initGlobal();
+
 
 		Server server = new Server();
 		

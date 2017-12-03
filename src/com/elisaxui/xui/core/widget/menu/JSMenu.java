@@ -58,7 +58,7 @@ public interface JSMenu extends JSClass {
 						__("$(ctx.row['_dom_']).css('visibility','')");
 						__("$(ctx.row['_dom_']).toggleClass('animated '+change)");
 						// remise a zero de l'animation
-						__("setTimeout(\n", fct("elem").__("elem.toggleClass('animated '+change)") ,",", SPEED_SHOW_MENU_ITEMS + DELAY_SURETE_END_ANIMATION,", $(ctx.row['_dom_']))");
+						__("setTimeout(", fct("elem").__("elem.toggleClass('animated '+change)") ,",", SPEED_SHOW_MENU_ITEMS + DELAY_SURETE_END_ANIMATION,", $(ctx.row['_dom_']))");
 					endif();
 				endif();
 		 })

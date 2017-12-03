@@ -70,10 +70,8 @@ public interface TKTransition extends JSClass {
 
 		JSInt posTop = let(JSInt.class, "posTop", sct);
 		posTop.set(posTop.add($tabbar.get(0), ".getBoundingClientRect().y"));
-		// retirer la transform translate3d
 		$tabbar.css("top", txt(posTop,"px"));
-		$tabbar.css("position","absolute"); // permet la nav de bouger
-
+		$tabbar.css("position","absolute");
 		return _void();
 	}
 
@@ -84,13 +82,13 @@ public interface TKTransition extends JSClass {
 
 		$tabbar.css("top", "");
 		$tabbar.css("position","");
-
 		return _void();
 	}
 	
 
 
 	default Object doToggleBurgerMenu() {
+		//TODO
 		//JSOverlay overlay = let( JSOverlay.class, "overlay", _new(CssTransition.SPEED_SHOW_MENU, XUIScene.OVERLAY_OPACITY_MENU) );
 		//JSOverlay 
 		var(_overlay, _new(SPEED_SHOW_MENU, XUIScene.OVERLAY_OPACITY_MENU));
@@ -107,50 +105,52 @@ public interface TKTransition extends JSClass {
 
 		// ferme le menu
 		_if(jqNavBar.hasClass(fixedToAbsolute));
-			JQuery jqHamburgerDetach = let( JQuery.class, "jqHamburgerDetach", $(scene.__(ViewBtnBurger.hamburger.and(detach))) );
-			//.var("jqHamburgerDetach", "$('.scene .hamburger.detach')")
+		
+			JQuery jqHamburgerDetach = let( JQuery.class, "jqHamburgerDetach", $(scene.descendant(ViewBtnBurger.hamburger.and(detach))) );
 			__(TKQueue.startAnimQueued(	fct().__(()->{
-								__(_overlay.doHide(1));
+								_overlay.doHide(1);
 								// -------------------------- repositionne l'activity --------------------
-								__(jqActivityActive.removeClass("activityMoveForShowMenu"));
-								__(jqActivityActive.addClass("activityMoveForHideMenu"));
+								jqActivityActive.removeClass("activityMoveForShowMenu");
+								jqActivityActive.addClass("activityMoveForHideMenu");
 								// ----------------------------- cache le menu ------------------------
-								__(jqMenu.css("transform", txt("translate3d(-" + (XUIScene.widthMenu + 5)	+ "px," , sct ,  "px, 0px)")));
+								jqMenu.css("transform", txt("translate3d(-" + (XUIScene.widthMenu + 5)	+ "px," , sct ,  "px, 0px)"));
 								// ----------------------------- repasse en croix ----------------------
-								__(jqHamburgerDetach.css("transition", "transform " + SPEED_SHOW_MENU	+ "ms linear"));
-								__(jqHamburgerDetach.css("transform", txt("translate3d(0px,",sct, "px,0px) scale(1)" )));
+								jqHamburgerDetach.css("transition", "transform " + SPEED_SHOW_MENU	+ "ms linear");
+								jqHamburgerDetach.css("transform", txt("translate3d(0px,",sct, "px,0px) scale(1)" ));
 								})
 						, SPEED_SHOW_MENU + DELAY_SURETE_END_ANIMATION, fct().__(()->{
-								__(_overlay.doHide(2));
-								__("$('body').css('overflow','')"); // remet de scroll
+								_overlay.doHide(2);
+								$("body").css("overflow",""); // remet de scroll
 
 								// ----------- fige la barre nav en haut (fixed) --------
-								__(_self.doTabBarToFixe());
-								__(_self.doNavBarToFixe());
+								_self.doTabBarToFixe();
+								_self.doNavBarToFixe();
 
 								// anime le burger et le passe de la scene vers l'activity
-								var("hamburger", "jqHamburgerDetach.detach()");
-								__("hamburger.removeClass('detach')");
-								__("jqNavBar.append(hamburger)");
-								__("hamburger.css('transition','')");
-								__("hamburger.css('transform', '' )");
+								JQuery hamburger = let(JQuery.class, "hamburger", jqHamburgerDetach.detach() ) ;
+								hamburger.removeClass(detach);
+								jqNavBar.append(hamburger);
+								hamburger.css("transition", "");
+								hamburger.css("transform", "");
+								
 								// -------------------------- fin du repositionnement l'activity
-								// --------------------
-								__("jqActivityActive.removeClass('activityMoveForHideMenu')");
+								jqActivityActive.removeClass("activityMoveForHideMenu");
 								})
-						, NEXT_FRAME, fct()
-								.__("jqHamburgerDetach.removeClass('is-active')") // changeColorMenu.consoleDebug("'end
+						, NEXT_FRAME, fct().__(()->{
+								jqHamburgerDetach.removeClass("is-active"); // changeColorMenu.consoleDebug("'end
 																					// anim'")
+						})
 						, SPEED_BURGER_EFFECT, fct()))
+			
 			._else();
 				JQuery jqHamburger = let( JQuery.class, "jqHamburger", jqNavBar.find(ViewBtnBurger.hamburger) );
 				// ouvre le menu
 				__(TKQueue.startAnimQueued(fct().__(()->{
-							__($("body").css("overflow","hidden")); //???? plus de scroll du body sur l'ouverture du menu
-							__(_overlay.doShow("'.active'", 1));
+							$("body").css("overflow","hidden"); //???? plus de scroll du body sur l'ouverture du menu
+							_overlay.doShow("'.active'", 1);
 							// ---------------------------------------
-							__("jqMenu.css('transition', '' )"); // fige le menu en haut sans animation
-							__("jqMenu.css('transform', 'translate3d(-" + XUIScene.widthMenu + "px,'+sct+'px,0px)' )");
+							jqMenu.css("transition", ""); // fige le menu en haut sans animation
+							jqMenu.css("transform", txt("translate3d(-" + XUIScene.widthMenu + "px,",sct,"px,0px)" ));
 	
 							// ----------- detache la barre nav en haut par rapport au scroll et ajoute a
 							// l'activité --------

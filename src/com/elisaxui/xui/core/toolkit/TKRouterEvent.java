@@ -7,6 +7,7 @@ import static com.elisaxui.xui.core.toolkit.json.JXui.$xui;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.xui.core.config.TKCoreConfig;
 import com.elisaxui.xui.core.toolkit.json.JIntent;
@@ -105,7 +106,12 @@ public interface TKRouterEvent extends JSClass {
 					systemDebugIf(TKCoreConfig.debugPushState,txt("pushState DISABLE param=<"), "params, '> query =<', query, '> action=', this, ' nextEnable='", _self+".navigo.nextenable");
 					__(_self,".navigo.nextenable=", true);
 				endif();
-				
+//				JSInt waw = let(JSInt.class, "waw", 0);
+//				waw.set(waw.add(10));
+//				waw.set(waw.add(10));
+//				waw.set(waw.add(10));
+//				waw.set(waw.add(10));
+		//		_void();
 				})
 			);
 

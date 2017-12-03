@@ -46,7 +46,7 @@ public class XUIFormatManager {
 	
 		if (buf.isJS()) {
 			if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCrXMLinJS())
-				buf.addContent("'+\n'");
+				buf.addContent("'+\n");
 		} else {
 			if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCrXML())
 				buf.addContent("\n");
@@ -54,6 +54,11 @@ public class XUIFormatManager {
 	
 		for (int i = 0; i < nbInitialTab; i++) {
 			buf.addContent("\t");
+		}
+		
+		if (buf.isJS()) {
+			if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCrXMLinJS())
+				buf.addContent("'");
 		}
 	}
 

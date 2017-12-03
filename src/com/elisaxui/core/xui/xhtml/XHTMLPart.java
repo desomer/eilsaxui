@@ -2,6 +2,9 @@ package com.elisaxui.core.xui.xhtml;
 
 import java.util.ArrayList;
 
+import javax.script.ScriptException;
+
+import com.elisaxui.core.helper.JSExecutorHelper;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
@@ -10,6 +13,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSListParameter;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassImpl;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.target.BODY;
 import com.elisaxui.core.xui.xml.XMLPart;
@@ -200,7 +204,9 @@ public abstract class XHTMLPart extends XMLPart {
 	
 	
 	public final static XMLElement xImport(Class<? extends JSClass> cl) {
-		XMLElement t = xElement("script", xAttr("type", "\"text/javascript\""), XUIFactoryXHtml.getXHTMLFile().getClassImpl(jsBuilder, cl));
+		JSClassImpl script = XUIFactoryXHtml.getXHTMLFile().getClassImpl(jsBuilder, cl);
+		
+		XMLElement t = xElement("script", xAttr("type", "\"text/javascript\""), script);
 		return t;
 	}
 	

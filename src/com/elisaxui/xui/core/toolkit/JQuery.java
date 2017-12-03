@@ -147,6 +147,10 @@ public class JQuery extends JSClassInterface {
 	public Object data(Object attr) {
 		return callMth("data", addText(attr));
 	}
+	
+	public Object height(Object... attr) {
+		return callMth("height", addText(attr));
+	}
 	/*
 	 * Padding + Border + (margin optionel)
 	 */

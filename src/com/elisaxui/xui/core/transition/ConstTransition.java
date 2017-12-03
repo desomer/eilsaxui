@@ -27,4 +27,6 @@ public class ConstTransition {
 	
 	public static final int SPEED_RIPPLE_EFFECT =  (int)(300*coef);
 	public static final int SPEED_BURGER_EFFECT =  (int)(200*coef);
+	
+	public static final int SPEED_ANIM_SCROLL =  (int)(150*coef);
 }

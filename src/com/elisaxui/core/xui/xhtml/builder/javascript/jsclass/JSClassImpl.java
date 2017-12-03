@@ -6,6 +6,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.script.ScriptException;
+
+import com.elisaxui.core.helper.JSExecutorHelper;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
@@ -48,6 +51,20 @@ public class JSClassImpl extends JSContent {
 
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
+		
+		XMLBuilder oldBuf = null;
+		StringBuilder txtJS = null;
+		if (JSExecutorHelper.WITH_BABEL)
+		{
+			txtJS = new StringBuilder(1000);
+			StringBuilder txtJSAfter = new StringBuilder();
+			
+			XMLBuilder bufJS =  new XMLBuilder("js", txtJS, txtJSAfter);
+			//this.setNbInitialTab(jsBuilder.getNbInitialTab());
+			oldBuf = buf;
+			buf = bufJS;
+		}
+		
 		jsBuilder.newLine(buf);
 		jsBuilder.newTabulation(buf);
 		buf.addContent("class ");
@@ -67,6 +84,19 @@ public class JSClassImpl extends JSContent {
 		jsBuilder.newLine(buf);
 		jsBuilder.newTabulation(buf);
 		buf.addContent("}");
+		
+		if (txtJS!=null)
+		{
+			try {
+				String str = JSExecutorHelper.doBabel(txtJS.toString());
+				
+				oldBuf.addContent(str);
+			} catch (ScriptException | NoSuchMethodException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		return null;
 	}
 

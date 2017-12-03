@@ -64,6 +64,11 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCrJS())
 			buf.addContent("\n");
 	}
+	
+	protected final void newTab(XMLBuilder buf) {
+		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCrJS())
+			buf.addContent("\t");
+	}
 
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
@@ -101,10 +106,6 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 				jsBuilder.newLine(buf);
 				this.jsBuilder.newTabulation(buf);
 			}
-			
-//			} else if (object instanceof JSContent && (this != object)) {
-//				JSContent c = (JSContent) object;
-//				c.toXML(buf);
 		} 
 		else if (object instanceof JSVariable) {	
 			Object v = ((JSVariable)object)._getString();
@@ -152,8 +153,11 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	private void doXMLElement(XMLBuilder buf, XMLElement elem) {
 		StringBuilder txtXML = new StringBuilder(1000);
 		StringBuilder txtXMLAfter = new StringBuilder(1000);
-
-		elem.toXML(new XMLBuilder("js", txtXML, txtXMLAfter).setJS(true));
+		
+		XMLBuilder elemJS =  new XMLBuilder("js", txtXML, txtXMLAfter);
+		elem.setNbInitialTab(jsBuilder.getNbInitialTab()+2);
+		
+		elem.toXML(elemJS.setJS(true));  // charge les string
 		
 		String txtJS = txtXMLAfter.toString().replace("</script>", "<\\/script>");
 		
@@ -167,7 +171,10 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 		buf.addContent(txtXML);
 		buf.addContent("',");
 		newLine(buf);
-		buf.addContent("'");
+			for (int i = 0; i < jsBuilder.getNbInitialTab()+2; i++) {
+				newTab(buf);
+			}
+		buf.addContent("/*JS Template*/'");
 		buf.addContent(txtJS);
 		buf.addContent("')");
 	}

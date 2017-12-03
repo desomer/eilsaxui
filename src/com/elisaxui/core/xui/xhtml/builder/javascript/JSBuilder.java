@@ -8,6 +8,7 @@ import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassImpl;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodDesc;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodInvocationHandler;
 import com.elisaxui.core.xui.xml.annotation.xForceInclude;
 import com.elisaxui.core.xui.xml.builder.XUIFormatManager;
@@ -42,16 +43,19 @@ public class JSBuilder extends XUIFormatManager {
 	}
 
 	
-	public static JSFunction classfct(JSFunction f,  Runnable c)
+	public static JSFunction doFctAnonym(JSFunction f,  Runnable c)
 	{
 		Object ret = f.proxy.$$subContent();
 		
 		try {
 			 c.run();
+			MethodDesc currentMethodDesc = MethodInvocationHandler.ThreadLocalMethodDesc.get();
+			MethodInvocationHandler.doLastSourceLineInsered(currentMethodDesc, true);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		
 		Object sub = f.proxy.$$gosubContent(ret);
 		JSContent cont = f.jsBuilder.createJSContent();
 		cont.$$gosubContent(sub);

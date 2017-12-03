@@ -13,6 +13,7 @@ import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.CONTENT;
 import com.elisaxui.xui.core.page.XUIScene;
+import com.elisaxui.xui.core.transition.ConstTransition;
 import com.elisaxui.xui.core.widget.button.ViewBtnBurger;
 import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
 import com.elisaxui.xui.core.widget.menu.JSMenu;
@@ -43,7 +44,8 @@ public class ViewNavBar extends XHTMLPart {
 				.select(navbar).set("z-index: "+XUIScene.ZINDEX_NAV_BAR+";  "+XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorNavBar()+" height: "+XUIScene.heightNavBar+";"
 						+ "width: "+XUIScene.widthScene+"; "
 						+ "color:white; "
-						+ "transition: transform 150ms ease-in-out;" 
+						+ "transition: transform "+ConstTransition.SPEED_ANIM_SCROLL+"ms ease-in-out;" 
+					//	+ "transition: max-height 250ms linear;" 
 						+ "box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);")
 				
 				.select(fixedTop).set("position:fixed; top:0px; transform:translate3d(0px,0px,0px); backface-visibility: hidden;")

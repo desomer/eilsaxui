@@ -90,6 +90,8 @@ public class ScnRoot extends XUIScene {
 				.__(tkActivity.createActivity(new JSONPage1().getJSON()))
 				.__(tkActivity.prepareActivity(new JSONPage2().getJSON()))
 				.__(tkActivity.prepareActivity(new JSONPage3().getJSON()))
+				
+//			  	.__(tkActivity.createActivity(new JSONPage2().getJSON()))
 			  ;
 	}
 	

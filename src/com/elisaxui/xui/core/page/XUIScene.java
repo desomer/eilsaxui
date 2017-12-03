@@ -50,7 +50,7 @@ import com.elisaxui.xui.core.widget.overlay.JSOverlay;
 public abstract class XUIScene extends XHTMLPart {
 
 	public static final String heightTabBar = 3.5 + "rem";
-	public static final String heightNavBar = 7 + "rem";
+	public static final String heightNavBar = 12 + "rem";    //7
 	public static final int widthMenu = 250;
 	public static final String widthScene = "100vw";
 	
@@ -174,7 +174,7 @@ public abstract class XUIScene extends XHTMLPart {
 						//+"overflow-y: scroll;"
 						//+ "overflow-x: hidden;" // pour que le 100vw ne prennent pas en compte la largueur du scrollbar
 						+ " line-height: 1.5;"
-						+ "font-family: 'Roboto', sans-serif;font-weight: normal;")    //color: rgba(0,0,0,0.87)
+						+ "font-family: 'Roboto', sans-serif;font-weight: normal;")
 				
 				.select("body").set("background-color: "+getConfigScene().getBgColorScene()+"; margin: 0; ")
 				.select("*").set("-webkit-tap-highlight-color: rgba(0,0,0,0);")  // pas de coulour au click => ripple a la place
@@ -190,7 +190,7 @@ public abstract class XUIScene extends XHTMLPart {
 					.path(xCss("#NavBarShell h1").set("text-align:center;color: inherit;  font-size: 2.1rem; margin-top: 50px"))
 				//----------------------------------------------------------------
 				.select(activity).set("background-color: "+getConfigScene().getBgColorContent()+";"+ PREF_3D+ 
-					"width:"+widthScene+"; will-change:overflow,z-index;") //will-change:transform
+					"width:"+widthScene+"; will-change:overflow,z-index;") //will-change:transform   =bug : les header et footer ne se fixe plus au body
 					.path(xCss(ViewPageLayout.content)
 								.set(" min-height: 100vh; "
 									+ "min-width: "+widthScene+"; "
@@ -199,9 +199,6 @@ public abstract class XUIScene extends XHTMLPart {
 				
 				//----------------------------------------------------------------
 				.select(ViewPageLayout.content).set("box-sizing: border-box;"  // ne pas ajouter a cActivity
-						//+ "min-height:100%;"
-						//+ " min-width: 100%;"
-						//+ " max-width: 100%; "
 						+ "padding-top: " + heightNavBar + "; "
 						+ "padding-bottom: " + heightTabBar)	 
 				

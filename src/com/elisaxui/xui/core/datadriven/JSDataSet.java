@@ -138,7 +138,7 @@ public interface JSDataSet extends JSClass {
 				;
 	}
 
-	default JSArray getData() {	  //TODO JSArray
+	default JSArray getData() {
 		 return data;
 	}
 

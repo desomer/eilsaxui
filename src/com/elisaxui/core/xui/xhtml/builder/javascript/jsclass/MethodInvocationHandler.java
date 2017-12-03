@@ -32,7 +32,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 	
 	static boolean debug = false;
 	static boolean debug2 = false;
-	
+	static boolean debug3 = true;
 	
 	private Object varname; // nom de la variable qui contient le proxy
 	private Class<? extends JSClass> implementClass;   // type js de la class
@@ -124,11 +124,20 @@ public class MethodInvocationHandler implements InvocationHandler {
 					
 					// creer le JSContent
 					MethodDesc currentMethodDesc = getMethodDesc(implcl.getName(), currentFctJSName);
+					MethodDesc lastMethodDesc = ThreadLocalMethodDesc.get();
 					ThreadLocalMethodDesc.set(currentMethodDesc);
+					
+					if (debug3) 
+						System.out.println("[JSBuilder]"+System.identityHashCode(currentMethodDesc.content)+ " -add ThreadLocalMethodDesc meth "+ method.getName() + "  du JSContent "+currentFctJSName+" of class " + implcl.getName());
+
 					
 					JSFunction fct = createJSFunctionImpl(MthInvoke, false);    // creer le code
 					implcl.addFunction(fct);
 					
+					ThreadLocalMethodDesc.set(lastMethodDesc);
+					if (debug3) 
+						System.out.println("[JSBuilder]"+System.identityHashCode(currentMethodDesc.content)+ " -restore ThreadLocalMethodDesc meth "+ method.getName() + "  du JSContent "+currentFctJSName+" of class " + implcl.getName());
+
 					mh.varname = nameProxy;
 					
 					//  creer le js du call de la fct
@@ -185,7 +194,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 				JSContent currentJSContent = currentMethodDesc.content;
 				
 				if (!testAnonymInProgress)
-					doSourceRowInsered(ThreadLocalMethodDesc.get());
+					doLastSourceLineInsered(ThreadLocalMethodDesc.get(), false);
 				
 				if (debug2)
 					System.out.println("[JSBuilder]"+System.identityHashCode(currentJSContent)+ " - appel meth "+ method.getName() + "  du JSContent "+currentFctJSName+" of class " + implcl.getName());
@@ -263,7 +272,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 	 * @throws ClassNotFoundException
 	 */
 	private void registerMethod(Object method, MethodDesc currentMethodDesc) throws ClassNotFoundException {
-		 doSourceRowInsered(currentMethodDesc);
+		 doLastSourceLineInsered(currentMethodDesc, false);
 		 
 		 StackTraceElement[]  stack = Thread.currentThread().getStackTrace();
 		
@@ -272,8 +281,8 @@ public class MethodInvocationHandler implements InvocationHandler {
 			if (JSClass.class.isAssignableFrom(Class.forName(stackTraceElement.getClassName()))  && stackTraceElement.getLineNumber()!=-1 )
 			{
 				numLigne = stackTraceElement.getLineNumber();
-				currentMethodDesc.currentLine = numLigne;
-				currentMethodDesc.currentMthNoInserted = method;
+				currentMethodDesc.lastLineNoInsered = numLigne;
+				currentMethodDesc.lastMthNoInserted = method;
 				break;
 			}
 		 }
@@ -282,43 +291,51 @@ public class MethodInvocationHandler implements InvocationHandler {
 	/**
 	 * @throws ClassNotFoundException
 	 */
-	public static void doSourceRowInsered(MethodDesc currentMethodDesc) throws ClassNotFoundException {
+	public static void doLastSourceLineInsered(MethodDesc currentMethodDesc, boolean isInFct) throws ClassNotFoundException {
 		
-		if (currentMethodDesc.currentLine>0)
+		if (currentMethodDesc!=null && currentMethodDesc.lastLineNoInsered>0)
 		{
 			
 			 StackTraceElement[]  stack = Thread.currentThread().getStackTrace();
-				
+			
+			 String className = null;
 			 int numLigne = -1;
 			 for (StackTraceElement stackTraceElement : stack) {
 				if (JSClass.class.isAssignableFrom(Class.forName(stackTraceElement.getClassName()))  && stackTraceElement.getLineNumber()!=-1 )
 				{
+					className = stackTraceElement.getClassName();
 					numLigne = stackTraceElement.getLineNumber();
 					break;
 				}
 			 }
 			
-			 if (numLigne<=currentMethodDesc.currentLine)
+			 if (isInFct && numLigne<currentMethodDesc.lastLineNoInsered)
 			 {
-				 currentMethodDesc.currentMthNoInserted=null;   // plus 
-				 ThreadLocalMethodDesc.get().currentMthNoInserted=null;
+				 numLigne=currentMethodDesc.lastLineNoInsered+1;  // permet d'inserer la derniere ligne d'une fct anonym
+			 }
+			 
+			 if (numLigne<=currentMethodDesc.lastLineNoInsered)
+			 {
+				 currentMethodDesc.lastMthNoInserted=null;   // plus 
+				 ThreadLocalMethodDesc.get().lastMthNoInserted=null;
 			 }
 			 else
 			 {
 
-				 
-				 if (currentMethodDesc.currentMthNoInserted!=null  ) {
-					 
-					 currentMethodDesc.content.__(currentMethodDesc.currentMthNoInserted);
+				 if (currentMethodDesc.lastMthNoInserted!=null  ) {
+					 // INSERE LA LIGNE
+					 currentMethodDesc.content.__(currentMethodDesc.lastMthNoInserted);
 //					 if (currentMethodDesc.currentMthNoInserted.equals("testB")) 
-//					if (currentFctJSName!=null &&   ! currentFctJSName.startsWith(currentMethodDesc.currentMthNoInserted))
-						 System.out.println("################## " + currentMethodDesc.currentMthNoInserted);
+					 if (debug3) 
+						 System.out.println("--------- add source line "+className + ":" + currentMethodDesc.lastLineNoInsered + " > " + currentMethodDesc.lastMthNoInserted);
+					 
+					 currentMethodDesc.lastMthNoInserted=null;
 				 }
 			 }
 			 
  
-			 currentMethodDesc.currentLine=-1;
-			 ThreadLocalMethodDesc.get().currentLine=-1;
+			 currentMethodDesc.lastLineNoInsered=-1;
+			 ThreadLocalMethodDesc.get().lastLineNoInsered=-1;
 		}
 	}
 
@@ -387,6 +404,9 @@ public class MethodInvocationHandler implements InvocationHandler {
 		{
 			testAnonymInProgress = false;
 			((Runnable)ret).run();   // executue la function qui retourne l'Anonym;
+		//	MethodDesc currentMethodDesc = MethodInvocationHandler.ThreadLocalMethodDesc.get();
+		//	MethodInvocationHandler.doSourceRowInsered(currentMethodDesc);
+			
 			Object aCode = code.$$gosubContent(prevCode);
 			prevCode=null;
 			JSContent cont = XHTMLPart.jsBuilder.createJSContent();

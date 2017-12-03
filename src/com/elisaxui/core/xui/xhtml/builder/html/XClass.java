@@ -44,6 +44,7 @@ public class XClass {
 	 * @param desc
 	 * @return
 	 */
+	@Deprecated
 	public CSSSelector __(Object desc)
 	{
 		return descendant(desc) ;

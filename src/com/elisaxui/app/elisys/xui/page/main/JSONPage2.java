@@ -21,11 +21,13 @@ class JSONPage2 extends JSONActivity
 			
 	public JActivity getJSON()
 	{
-
+		/*TODO */
 		JActivity activity = declareType(JActivity.class, "activity"); 
+		
 		activity._setContent(
 		  activity( "Activity2", arr( 
-					factory("#NavBarActivity2", FACTORY_NAVBAR, arr( backgroundImage(ScnRoot.listPhotos[5], 0.3),  
+					factory("#NavBarActivity2", FACTORY_NAVBAR, arr( 
+																 backgroundImage(ScnRoot.listPhotos[5], 0.3),  
 																 btnBurger(), 
 																 title("Liste exercice"),
 																 btnActionIcon("arrow_back", EVT_BACK),

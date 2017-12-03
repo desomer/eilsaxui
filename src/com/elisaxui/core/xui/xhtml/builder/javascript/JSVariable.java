@@ -53,8 +53,8 @@ public class JSVariable {
 	/*************************************************************/
 	protected void registerMethod(Object obj ) {
 		 try {
-			MethodDesc currentMethodDesc = MethodInvocationHandler.ThreadLocalMethodDesc.get();
-			 MethodInvocationHandler.doSourceRowInsered(currentMethodDesc);
+			 MethodDesc currentMethodDesc = MethodInvocationHandler.ThreadLocalMethodDesc.get();
+			 MethodInvocationHandler.doLastSourceLineInsered(currentMethodDesc, false);
 			 
 			 StackTraceElement[]  stack = Thread.currentThread().getStackTrace();
 			
@@ -63,8 +63,8 @@ public class JSVariable {
 				if (JSClass.class.isAssignableFrom(Class.forName(stackTraceElement.getClassName()))  && stackTraceElement.getLineNumber()!=-1 )
 				{
 					numLigne = stackTraceElement.getLineNumber();
-					currentMethodDesc.currentLine = numLigne;
-					currentMethodDesc.currentMthNoInserted = obj;
+					currentMethodDesc.lastLineNoInsered = numLigne;
+					currentMethodDesc.lastMthNoInserted = obj;
 					break;
 				}
 			 }

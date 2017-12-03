@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
+import com.elisaxui.core.helper.JSExecutorHelper;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.xhtml.XHTMLAppBuilder;
 import com.elisaxui.core.xui.xhtml.XHTMLFile;
@@ -35,7 +36,6 @@ import com.elisaxui.xui.core.page.XUIScene;
 public class XUIFactoryXHtml {
 
 	private static final ThreadLocal<XHTMLFile> ThreadLocalXUIFactoryPage = new ThreadLocal<XHTMLFile>();
-
 	private static final HashMap<String, String> pageCache = new HashMap<String, String>();
 
 	public static final XMLPart getXMLRoot() {
@@ -64,6 +64,10 @@ public class XUIFactoryXHtml {
 			Map<String, Class<? extends XHTMLPart>> mapClass = XHTMLAppBuilder.getMapXHTMLPart();
 			Class<? extends XHTMLPart> pageClass = mapClass.get(id);
 			if (pageClass != null) {
+				
+				JSExecutorHelper.initThread();
+				
+				
 				XMLFile fileXML = createXHTMLFile();
 
 				fileXML.setRoot(new XHTMLRoot());
@@ -96,6 +100,7 @@ public class XUIFactoryXHtml {
 				String html = buf.toString();
 				pageCache.put(id, html);
 
+				JSExecutorHelper.stopThread();
 
 				return Response.status(Status.OK) // .type(MediaType.TEXT_HTML)
 						.entity(html)

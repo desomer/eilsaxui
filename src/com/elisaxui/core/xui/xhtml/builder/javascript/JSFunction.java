@@ -90,7 +90,7 @@ public class JSFunction extends JSContent
 
 	public JSFunction __( Anonym c)
 	{
-		JSBuilder.classfct(this , c);
+		JSBuilder.doFctAnonym(this , c);
 		return this;
 	}
 	

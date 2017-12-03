@@ -6,6 +6,7 @@ package com.elisaxui.xui.core.toolkit;
 import java.util.ArrayList;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent.JSNewLine;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -95,7 +96,8 @@ public class TKQueue extends XHTMLPart {
 	public static final Object[] startAnimQueued(Object... param)
 	{
 		ArrayList<Object> ret = new ArrayList<>();
-		ret.add("window.animInProgess=true;\n");
+		ret.add("window.animInProgess=true;");
+		ret.add(JSNewLine.class);
 		ret.add("TKQueue()");
 		for (Object  object: param) {
 			ret.add("(");

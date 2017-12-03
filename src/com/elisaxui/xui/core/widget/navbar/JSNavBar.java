@@ -87,9 +87,9 @@ public interface JSNavBar extends JSFactory {
 					_elseif (jsnavRowBg.mode().isEqual(txt("css")));
 						set(template, ViewNavBar.getTemplateBgDiv());
 						var(jqdom, template.appendInto($(selector)));
-						jqdom.css("background", jsnavRowBg.css());
-						jqdom.css("opacity", jsnavRowBg.opacity());
-						ctx.row().attrByString(JSDataSet._DOM).set(jqdom.get(0));
+						__(jqdom.css("background", jsnavRowBg.css()));   //TODO retirer le __
+						__(jqdom.css("opacity", jsnavRowBg.opacity()));
+						__(ctx.row().attrByString(JSDataSet._DOM).set(jqdom.get(0)));
 						
 					endif ();
 					

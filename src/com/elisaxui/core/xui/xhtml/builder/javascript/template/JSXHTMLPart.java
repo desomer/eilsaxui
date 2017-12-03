@@ -28,7 +28,7 @@ public interface JSXHTMLPart extends JSClass {
 		var("jqdom", "$(this.html)")		
 		.__(parent,".append(jqdom)")
 		.var("c", "$(this.js)")
-		.__("$.each( c, function( i, el ) {\n  if (el.nodeName=='SCRIPT') eval(el.text)\n })")
+		.__("$.each( c, function( i, el ) {  if (el.nodeName=='SCRIPT') eval(el.text) })")
 		.__("return jqdom")
 		;
 	}
@@ -44,7 +44,4 @@ public interface JSXHTMLPart extends JSClass {
 		;
 	}
 	
-//	static Object _new() {
-//		return JSClass._new(JSXHTMLPart.class);
-//	}
 }

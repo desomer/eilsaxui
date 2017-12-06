@@ -461,6 +461,10 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 		return XHTMLPart.jsvar(param);
 	}
 
+	public JSVariable calc(Object... param)
+	{
+		return jsvar(param);
+	}
 
 	/**************************** FORMATAGE  ********************************/
 

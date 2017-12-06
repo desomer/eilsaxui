@@ -51,7 +51,7 @@ public class XHTMLFile extends XMLFile {
 
 			listClass.put(name, impl);
 
-
+			// initialise le constructor
 			JSBuilder.initJSConstructor(cl, name);
 		}
 		return impl;

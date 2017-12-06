@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 import javax.ws.rs.Consumes;
@@ -36,6 +37,8 @@ import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.xui.core.page.ConfigScene;
 import com.elisaxui.xui.core.page.XUIScene;
 import com.elisaxui.xui.core.widget.menu.JSONMenu;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 
 /**
  * @author Bureau
@@ -44,12 +47,41 @@ import com.elisaxui.xui.core.widget.menu.JSONMenu;
 @Path("/json")
 public class SrvMain {
 	
+    static class DataObject {
+	    private String data=null;
+	 
+	    private static int objectCounter = 0;
+
+		@Override
+		public String toString() {
+			return "DataObject [data=" + data + "]";
+		}
+
+		public DataObject(String data2) {
+			this.data=data2;
+		}
+		// standard constructors/getters
+	     
+	    public static DataObject get(String data) {
+	        objectCounter++;
+	        return new DataObject(data);
+	    }
+	}
+	
 	
 	class JSONMenuAct1 extends JSONMenu
 	{
 		@Override
 		public Object getJSON()
 		{
+			
+			Cache<String, DataObject> cache = Caffeine.newBuilder()
+					  .expireAfterWrite(1, TimeUnit.MINUTES)
+					  .maximumSize(100)
+					  .build();
+			
+			System.out.println(cache.get("toto", k -> DataObject.get("Data for " + k)));
+				
 			
 		  return arr(item("Paramètres", "settings", "setting"),
 				  	 item("Configuration","build","config"),
@@ -93,12 +125,13 @@ public class SrvMain {
     	
     	return Response.status(Status.OK).build();
     }
-	
+    
     /***************************************************************************************/
 	@GET
 	@Path("/manifest.json")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getManifest(@Context HttpHeaders headers, @Context UriInfo uri) {
+	public Response getManifest(@Context HttpHeaders headers, @Context UriInfo uri) {		
+		
 		class JSONManifest extends JSONBuilder
 		{
 			public Object getJSON()

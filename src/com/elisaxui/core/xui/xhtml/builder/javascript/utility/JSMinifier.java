@@ -21,7 +21,8 @@ public class JSMinifier {
 	{
 		StringBuilder buf = new StringBuilder();
 	try {
-
+		System.out.print("javascript-minifier => ");
+		
 		final URL url = new URL("https://javascript-minifier.com/raw");
 
 		// JS File you want to compress
@@ -47,8 +48,6 @@ public class JSMinifier {
 		}
 
 		final int code = conn.getResponseCode();
-		
-	//	conn.
 
 		System.out.println("Status: " + code);
 
@@ -64,7 +63,8 @@ public class JSMinifier {
 
 		  //  System.out.println("\n----");
 		} else {
-		    System.out.println("Oops");
+		    System.out.println("erreur acces https://javascript-minifier.com/raw");
+		    return null;
 		}
 	} catch (IOException e) {
 		// TODO Auto-generated catch block

@@ -40,7 +40,8 @@ public interface JSMethodInterface  {
 	 * @return
 	 */
 	Object jsvar(Object... param);
-
+	Object calc(Object... param);
+	
 	JSFunction fct(Object... param);
 	
 	/**

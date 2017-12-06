@@ -13,6 +13,7 @@ import static com.elisaxui.xui.core.widget.tabbar.ViewTabBar.cTabbar;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.xui.core.page.XUIScene;
@@ -48,8 +49,6 @@ public interface TKTransition extends JSClass {
 		JQuery $NavBar = let(JQuery.class, "$NavBar", $(activity.and(active).directChildren(navbar)));
 
 		JSInt posTop = let(JSInt.class, "posTop", sct);
-	//	posTop.set(posTop.add($NavBar.get(0), ".getBoundingClientRect().y"));
-		// retirer la transform translate3d
 		$NavBar.css("top", txt(posTop,"px"));
 		$NavBar.css("position","absolute"); // permet la nav de bouger
 		$NavBar.addClass(fixedToAbsolute);
@@ -87,11 +86,10 @@ public interface TKTransition extends JSClass {
 	
 
 
-	default Object doToggleBurgerMenu() {
-		//TODO
-		//JSOverlay overlay = let( JSOverlay.class, "overlay", _new(CssTransition.SPEED_SHOW_MENU, XUIScene.OVERLAY_OPACITY_MENU) );
-		//JSOverlay 
-		var(_overlay, _new(SPEED_SHOW_MENU, XUIScene.OVERLAY_OPACITY_MENU));
+	default JSVoid doToggleBurgerMenu() {
+		
+		JSOverlay overlay = let( JSOverlay.class, "overlay2", "null" /*, _new(SPEED_SHOW_MENU, OVERLAY_OPACITY_MENU)*/ );
+		set(overlay, _new(SPEED_SHOW_MENU, XUIScene.OVERLAY_OPACITY_MENU));  /* TODO a faire marcher*/
 		
 		JQuery jqMenu = let( JQuery.class, "jqMenu", $(ViewMenu.menu) );
 		JQuery jqScene = let( JQuery.class, "jqScene", $(scene) );
@@ -107,111 +105,107 @@ public interface TKTransition extends JSClass {
 		_if(jqNavBar.hasClass(fixedToAbsolute));
 		
 			JQuery jqHamburgerDetach = let( JQuery.class, "jqHamburgerDetach", $(scene.descendant(ViewBtnBurger.hamburger.and(detach))) );
-			__(TKQueue.startAnimQueued(	fct().__(()->{
-								_overlay.doHide(1);
-								// -------------------------- repositionne l'activity --------------------
-								jqActivityActive.removeClass("activityMoveForShowMenu");
-								jqActivityActive.addClass("activityMoveForHideMenu");
-								// ----------------------------- cache le menu ------------------------
-								jqMenu.css("transform", txt("translate3d(-" + (XUIScene.widthMenu + 5)	+ "px," , sct ,  "px, 0px)"));
-								// ----------------------------- repasse en croix ----------------------
-								jqHamburgerDetach.css("transition", "transform " + SPEED_SHOW_MENU	+ "ms linear");
-								jqHamburgerDetach.css("transform", txt("translate3d(0px,",sct, "px,0px) scale(1)" ));
-								})
-						, SPEED_SHOW_MENU + DELAY_SURETE_END_ANIMATION, fct().__(()->{
-								_overlay.doHide(2);
-								$("body").css("overflow",""); // remet de scroll
+			__(TKQueue.startAnimQueued(	fct().__(()->{  // TODO   callback(()->{})
+							overlay.doHide(1);
+							// -------------------------- repositionne l'activity --------------------
+							jqActivityActive.removeClass("activityMoveForShowMenu");
+							jqActivityActive.addClass("activityMoveForHideMenu");
+							// ----------------------------- cache le menu ------------------------
+							jqMenu.css("transform", txt("translate3d(-" + (XUIScene.widthMenu + 5)	+ "px," , sct ,  "px, 0px)"));
+							// ----------------------------- repasse en croix ----------------------
+							jqHamburgerDetach.css("transition", "transform " + SPEED_SHOW_MENU	+ "ms linear");
+							jqHamburgerDetach.css("transform", txt("translate3d(0px,", sct, "px,0px) scale(1)" ));
+							})
+					, SPEED_SHOW_MENU + DELAY_SURETE_END_ANIMATION, fct().__(()->{
+							overlay.doHide(2);
+							$("body").css("overflow",""); // remet de scroll
 
-								// ----------- fige la barre nav en haut (fixed) --------
-								_self.doTabBarToFixe();
-								_self.doNavBarToFixe();
-
-								// anime le burger et le passe de la scene vers l'activity
-								JQuery hamburger = let(JQuery.class, "hamburger", jqHamburgerDetach.detach() ) ;
-								hamburger.removeClass(detach);
-								jqNavBar.append(hamburger);
-								hamburger.css("transition", "");
-								hamburger.css("transform", "");
-								
-								// -------------------------- fin du repositionnement l'activity
-								jqActivityActive.removeClass("activityMoveForHideMenu");
-								})
-						, NEXT_FRAME, fct().__(()->{
-								jqHamburgerDetach.removeClass("is-active"); // changeColorMenu.consoleDebug("'end
-																					// anim'")
-						})
-						, SPEED_BURGER_EFFECT, fct()))
-			
+							// ----------- fige la barre nav en haut (fixed) --------
+							_self.doTabBarToFixe(); 
+							_self.doNavBarToFixe();
+							// anime le burger et le passe de la scene vers l'activity
+							JQuery hamburger = let(JQuery.class, "hamburger", jqHamburgerDetach.detach() ) ;
+							hamburger.removeClass(detach);
+							jqNavBar.append(hamburger);
+							hamburger.css("transition", "");
+							hamburger.css("transform", "");
+							
+							// -------------------------- fin du repositionnement l'activity
+							jqActivityActive.removeClass("activityMoveForHideMenu");
+							})
+					, NEXT_FRAME, fct().__(()->{
+							jqHamburgerDetach.removeClass("is-active"); 
+					})
+					, SPEED_BURGER_EFFECT, fct()
+				))
 			._else();
 				JQuery jqHamburger = let( JQuery.class, "jqHamburger", jqNavBar.find(ViewBtnBurger.hamburger) );
 				// ouvre le menu
 				__(TKQueue.startAnimQueued(fct().__(()->{
 							$("body").css("overflow","hidden"); //???? plus de scroll du body sur l'ouverture du menu
-							_overlay.doShow("'.active'", 1);
+							overlay.doShow("'.active'", 1);
 							// ---------------------------------------
 							jqMenu.css("transition", ""); // fige le menu en haut sans animation
 							jqMenu.css("transform", txt("translate3d(-" + XUIScene.widthMenu + "px,",sct,"px,0px)" ));
 	
-							// ----------- detache la barre nav en haut par rapport au scroll et ajoute a
-							// l'activité --------
-							__(_self.doNavBarToAbsolute(sct));
-							// TODO a faire marche
-							//__(_self.doTabBarToActivity(cast(JSInt.class, "sct")));   
-							__(_self.doTabBarToAbsolute(sct));
+							// ----------- detache la barre nav en haut par rapport au scroll et ajoute a l'activité --------
+							_self.doNavBarToAbsolute(sct);
+							_self.doTabBarToAbsolute(sct);
 	
 							// ---------- anime le burger et le passe sur la scene---------------
-							__("jqHamburger.detach()");
-							__(jqHamburger.addClass(detach));
-							__("jqHamburger.css('transform', 'translate3d(0px,'+sct+'px,0px)' )"); // positionne en haut
-							__(jqHamburger.css("transition", "transform " + SPEED_SHOW_MENU + "ms linear") );   // prepare
+							jqHamburger.detach();
+							jqHamburger.addClass(detach);
+							jqHamburger.css("transform", txt("translate3d(0px,",sct,"px,0px)")); // positionne en haut
+							jqHamburger.css("transition", "transform " + SPEED_SHOW_MENU + "ms linear");   // prepare
 																												// transition
-							__(jqScene.append("jqHamburger"));
+							jqScene.append("jqHamburger");
 						})
 						, NEXT_FRAME, fct().__(()->{
 								// ------------ deplace l'activity a l ouverture du menu-------------
-								__("jqActivityActive.addClass('activityMoveForShowMenu')");
+								jqActivityActive.addClass("activityMoveForShowMenu");
 								// ------------ ouvre le menu avec animation---------
-								__("jqMenu.css('transition', 'transform " + SPEED_SHOW_MENU + "ms linear' )");
-								__("jqMenu.css('transform', 'translate3d(0px,'+sct+'px,0px)' )");
+								jqMenu.css("transition", "transform " + SPEED_SHOW_MENU + "ms linear");
+								jqMenu.css("transform", txt("translate3d(0px,",sct,"px,0px"));
 								// -------------------------------------------------
-								__(_overlay.doShow("'.active'", 2));
+								overlay.doShow("'.active'", 2);
 								// ------------ deplace le hamburger---------
-								__("jqHamburger.css('transform', 'translate3d(-15px,'+(-3+sct)+'px,0px) scale(0.6)' )");
-
-								// ------------- anim des item de menu----------
+								jqHamburger.css("transform", txt("translate3d(-15px,",calc("(",sct,"-3)"),"px,0px) scale(0.6)"));
+								// ------------- anim des item de menu---------
 								_for("var i in window.jsonMainMenu");
-									__("$(window.jsonMainMenu[i]['_dom_']).css('visibility','hidden')");
-									__("setTimeout(", fct("elem")
-										.__("elem.anim='fadeInLeft'")
-										.__("elem.anim=''"),
-										",(i*" + SPEED_SHOW_MENU_ITEMS_ANIM
-												+ "), window.jsonMainMenu[i])");
+									$(jsvar("window.jsonMainMenu[i]['_dom_']")).css("visibility","hidden");
+									//__("$(window.jsonMainMenu[i]['_dom_']).css('visibility','hidden')");
+									setTimeout( fct("elem").__(()->{
+													__("elem.anim='fadeInLeft'");
+													__("elem.anim=''");
+												})
+										, calc("i*" + SPEED_SHOW_MENU_ITEMS_ANIM)
+										, jsvar("window.jsonMainMenu[i]"));
 
 								endfor();
 						})
-						, SPEED_SHOW_MENU + DELAY_SURETE_END_ANIMATION, fct()
-								.__("jqHamburger.addClass('is-active')") // passe en croix
-						// .__("$('.active .logo').toggleClass('animated shake')")
+						, SPEED_SHOW_MENU + DELAY_SURETE_END_ANIMATION, fct().__(()->{
+								jqHamburger.addClass("is-active"); // passe en croix
+								})
 						, SPEED_BURGER_EFFECT, fct()))
 				.endif();
-		return null;
+		return _void();
 	}
 
-	default Object doActivityFreeze(Object act, Object sct) {
+	default JSVoid doActivityFreeze(JSString act, JSInt sct) {
 		__("$(act).addClass('fixedForAnimated')")
 
-				._if("sct==-1")
+		._if("sct==-1")
 				.set("sct", "$(act).data('scrolltop')")
 				.set("sct", "sct==null?0:sct")
-				.endif()
+		.endif()
 
-				.__("$(act).data('scrolltop', sct ) ")
-				.var("actContent", "$(act+' .content')")
-				// freeze
-				.__("actContent.css('overflow', 'hidden')") // fait clignoter en ios
-				.__("actContent.css('height', '100vh')")
-				.__("actContent.scrollTop(sct)");
-		return null;
+		.__("$(act).data('scrolltop', sct ) ")
+		.var("actContent", "$(act+' .content')")
+		// freeze
+		.__("actContent.css('overflow', 'hidden')") // fait clignoter en ios
+		.__("actContent.css('height', '100vh')")
+		.__("actContent.scrollTop(sct)");
+		return _void();
 	}
 
 	default Object doActivityDeFreeze(Object act) {
@@ -255,85 +249,89 @@ public interface TKTransition extends JSClass {
 
 	default Object doOpenActivityFromBottom() {
 
-		var(_overlay, _new(SPEED_SHOW_ACTIVITY, XUIScene.OVERLAY_OPACITY_BACK))
-				.var("sct", "$(document).scrollTop()")
-				.var(_self, _this)
-				.var("act1", "'#'+$xui.intent.prevActivity")
-				.var("act2", "'#'+$xui.intent.activity")
-				.var("jqAct1", "$(act1)")
-				.var("jqAct2", "$(act2)")
+		var(_overlay, _new(SPEED_SHOW_ACTIVITY, XUIScene.OVERLAY_OPACITY_BACK));
+		JSInt sct = let(JSInt.class, "sct", $(jsvar("document")).scrollTop());
+		
+		//.var("sct", "$(document).scrollTop()")
+		var(_self, _this)
+		.var("act1", "'#'+$xui.intent.prevActivity")
+		.var("act2", "'#'+$xui.intent.activity")
+		.var("jqAct1", "$(act1)")
+		.var("jqAct2", "$(act2)");
 
-				._if("jqAct1.hasClass('active')")
-				// ouverture activity 2
-				.__(TKQueue.startAnimQueued( fct() .__(()->{ 
-								__(_self.doNavBarToAbsolute(new JSInt()._setContent(0)));
-								__(_overlay.doShow("act1", 1)); // init
-								__(_self.doActivityInactive("act1"));
-								__(_self.doActivityFreeze("act1", "sct")); // freeze 1
-								__(_self.doActivityActive("act2"));
-
-								__("jqAct1.addClass('backActivity')");
-
-								__("jqAct2.addClass('frontActivity')");
-								__("jqAct2.addClass('toHidden')"); // prepare l'animation top 0 fixed
-								})
-						, NEXT_FRAME, fct() .__(()->{ 
-								// lance les anim
-								__(_overlay.doShow("act1", 2));
-								__(_self.doActivityFreeze("act2", -1)); // freeze 2
-
-								__("jqAct1.addClass('toback')");
-								__("jqAct2.addClass('tofront')");
+		JSInt MEM_SCROLL = cast(JSInt.class,"-1");
+		
+		_if("jqAct1.hasClass('active')")
+			// ouverture activity 2
+			.__(TKQueue.startAnimQueued( fct() .__(()->{ 
+							__(_self.doNavBarToAbsolute(cast(JSInt.class, 0)));
+							__(_overlay.doShow("act1", 1)); // init
+							__(_self.doActivityInactive("act1"));
+							__(_self.doActivityFreeze(cast(JSString.class,"act1"), sct)); // freeze 1
+							__(_self.doActivityActive("act2"));
+	
+							__("jqAct1.addClass('backActivity')");
+	
+							__("jqAct2.addClass('frontActivity')");
+							__("jqAct2.addClass('toHidden')"); // prepare l'animation top 0 fixed
 							})
-						, SPEED_SHOW_ACTIVITY + DELAY_SURETE_END_ANIMATION, fct().__(()->{ 
-								__(_self.doActivityNoDisplay("act1"));
-
-								__("jqAct2.removeClass('tofront')");
-								__("jqAct2.removeClass('toHidden')");
-								__("jqAct2.removeClass('frontActivity')");
-								__(_self.doActivityDeFreeze("act2")); // defrezze 2
-								__(_self.doNavBarToFixe());
-
-								__(_self.doInitScrollTo("act2"));
-							})
-						, NEXT_FRAME, fct()
-				// .consoleDebug("'end activity anim'")
-				))
-				._else()
-				// fermeture activity 2
-				.__(TKQueue.startAnimQueued(
-						fct().__(()->{ 
-								__(_self.doNavBarToAbsolute(new JSInt()._setContent(0)));
-								__(_self.doActivityInactive("act2"));
-								__(_self.doActivityActive("act1"));
-								__(_self.doActivityFreeze("act2", "sct")); // frezze 2
-								__("jqAct2.addClass('frontActivity')");
+					, NEXT_FRAME, fct() .__(()->{ 
+							// lance les anim
+							__(_overlay.doShow("act1", 2));
+							__(_self.doActivityFreeze(cast(JSString.class,"act2"), MEM_SCROLL)); // freeze 2
+	
+							__("jqAct1.addClass('toback')");
+							__("jqAct2.addClass('tofront')");
 						})
-						, NEXT_FRAME, fct().__(()->{  // lance les anim
-								__(_overlay.doHide(1));
-
-								__("jqAct1.removeClass('toback')");
-								__("jqAct1.addClass('backToFront')");
-								__("jqAct2.addClass('toHidden')");
+					, SPEED_SHOW_ACTIVITY + DELAY_SURETE_END_ANIMATION, fct().__(()->{ 
+							__(_self.doActivityNoDisplay("act1"));
+	
+							__("jqAct2.removeClass('tofront')");
+							__("jqAct2.removeClass('toHidden')");
+							__("jqAct2.removeClass('frontActivity')");
+							__(_self.doActivityDeFreeze("act2")); // defrezze 2
+							__(_self.doNavBarToFixe());
+	
+							__(_self.doInitScrollTo("act2"));
 						})
-						, SPEED_SHOW_ACTIVITY + DELAY_SURETE_END_ANIMATION, fct().__(()->{
-								__(_overlay.doHide(2));
-								__(_self.doActivityNoDisplay("act2"));
-								__(_self.doActivityDeFreeze("act2")); // defrezze 2
-								__(_self.doNavBarToFixe());
-
-								__("jqAct1.removeClass('backToFront')");
-								__("jqAct2.removeClass('toHidden')");
-								__("jqAct2.removeClass('frontActivity')");
-								__("jqAct1.removeClass('backActivity')");
-
-								__(_self.doActivityDeFreeze("act1")); // defrezze 1
-								__(_self.doInitScrollTo("act1"));
-						})
-						, NEXT_FRAME, fct()
-				// .consoleDebug("'end activity anim'")
-				))
-				.endif();
+					, NEXT_FRAME, fct()
+			// .consoleDebug("'end activity anim'")
+			))
+		._else()
+		// fermeture activity 2
+			.__(TKQueue.startAnimQueued(
+					fct().__(()->{ 
+							__(_self.doNavBarToAbsolute(new JSInt()._setContent(0)));
+							__(_self.doActivityInactive("act2"));
+							__(_self.doActivityActive("act1"));
+							__(_self.doActivityFreeze(cast(JSString.class,"act2"), sct)); // frezze 2
+							__("jqAct2.addClass('frontActivity')");
+					})
+					, NEXT_FRAME, fct().__(()->{  // lance les anim
+							__(_overlay.doHide(1));
+	
+							__("jqAct1.removeClass('toback')");
+							__("jqAct1.addClass('backToFront')");
+							__("jqAct2.addClass('toHidden')");
+					})
+					, SPEED_SHOW_ACTIVITY + DELAY_SURETE_END_ANIMATION, fct().__(()->{
+							__(_overlay.doHide(2));
+							__(_self.doActivityNoDisplay("act2"));
+							__(_self.doActivityDeFreeze("act2")); // defrezze 2
+							__(_self.doNavBarToFixe());
+	
+							__("jqAct1.removeClass('backToFront')");
+							__("jqAct2.removeClass('toHidden')");
+							__("jqAct2.removeClass('frontActivity')");
+							__("jqAct1.removeClass('backActivity')");
+	
+							__(_self.doActivityDeFreeze("act1")); // defrezze 1
+							__(_self.doInitScrollTo("act1"));
+					})
+					, NEXT_FRAME, fct()
+			// .consoleDebug("'end activity anim'")
+			))
+		.endif();
 
 		return null;
 	}
@@ -342,10 +340,14 @@ public interface TKTransition extends JSClass {
 
 	default Object doOpenActivityFromRipple() {
 
+		JSInt MEM_SCROLL = cast(JSInt.class,"-1");
+		
 		var(_overlay, _new(SPEED_SHOW_ACTIVITY, 0.6))
-				.var(_self, _this)
-				.var("sct", "$(document).scrollTop()")
-				.var("act1", "'#'+$xui.intent.prevActivity")
+				.var(_self, _this);
+		
+				JSInt sct = let(JSInt.class, "sct", $(jsvar("document")).scrollTop());
+				
+				var("act1", "'#'+$xui.intent.prevActivity")
 				.var("act2", "'#'+$xui.intent.activity")
 				.var("jqAct1", "$(act1)")
 				.var("jqAct2", "$(act2)")
@@ -356,7 +358,7 @@ public interface TKTransition extends JSClass {
 						fct().__(()->{
 								__(_overlay.doShow("act1", 1));
 								__(_self.doNavBarToAbsolute(new JSInt()._setContent(0)));
-								__(_self.doActivityFreeze("act1", "sct")); // frezze 1
+								__(_self.doActivityFreeze(cast(JSString.class,"act1"), sct)); // frezze 1
 								__("jqAct1.addClass('backActivity')");
 
 								var(_template, ViewOverlayRipple.xTemplate());
@@ -382,7 +384,7 @@ public interface TKTransition extends JSClass {
 								__("jqAct2.addClass('circleAnim0prt')");
 								__("jqAct2.addClass('zoom12')");
 
-								__(_self.doActivityFreeze("act2", -1)); // frezze 2
+								__(_self.doActivityFreeze(cast(JSString.class,"act2"), MEM_SCROLL)); // frezze 2
 						})
 						, NEXT_FRAME, fct() // lance animation
 								.__("jqAct2.removeClass('circleAnim0prt')")
@@ -426,7 +428,7 @@ public interface TKTransition extends JSClass {
 						__(_self.doNavBarToAbsolute(new JSInt()._setContent(0)));
 						__(_self.doActivityInactive("act2"));
 						__(_self.doActivityActive("act1"));
-						__(_self.doActivityFreeze("act2", "sct")); // frezze 2
+						__(_self.doActivityFreeze(cast(JSString.class,"act2"), sct)); // frezze 2
 
 						// // recherche ripple
 						// ._if(true)
@@ -483,7 +485,8 @@ public interface TKTransition extends JSClass {
 								__(_self.doInitScrollTo("act1"));
 						})
 						, NEXT_FRAME, fct()
-								.consoleDebug("'end activity anim'")))
+								//.consoleDebug("'end activity anim'")
+						))
 				.endif();
 
 		return null;

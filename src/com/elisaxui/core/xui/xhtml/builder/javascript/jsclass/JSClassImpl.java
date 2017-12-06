@@ -25,7 +25,7 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 public class JSClassImpl extends JSContent {
 	
 	Object name;   // nom de la class
-
+	
 	LinkedList<JSFunction> listFuntion = new LinkedList<>();
 	private Map<String, String> listDistinctFct = new HashMap<String, String>();
 	

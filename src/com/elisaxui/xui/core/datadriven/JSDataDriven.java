@@ -30,11 +30,11 @@ public interface JSDataDriven extends JSClass {
 	JSDataDriven _self = null;
 
 	default JSVoid constructor(Object data) {
-		set(dataSet, data)
-				.set(callBackEnter, "$.Callbacks()")
-				.set(callBackExit, "$.Callbacks()")
-				.set(callBackChange, "$.Callbacks()")
-				.__(_this.start());
+		set(dataSet, data);
+		set(callBackEnter, "$.Callbacks()");
+		set(callBackExit, "$.Callbacks()");
+		set(callBackChange, "$.Callbacks()");
+		start();
 		return _void();
 	}
 
@@ -70,24 +70,24 @@ public interface JSDataDriven extends JSClass {
 
 	default JSVoid start() {
 		
-		JSMethodInterface fctChange =  fct("value")
-			._if("value.ope=='enter'")
-				.__(_self.doEnter("value"))
-			.endif()
-			._if("value.ope=='exit'")
-				.__(_self.doExit("value"))
-			.endif()
-			._if("value.ope=='change'")
-				.__(_self.doChange("value"))
-			.endif()
-			;
+		JSMethodInterface fctChange =  fct("value").__(()->{
+			_if("value.ope=='enter'");
+				__(_self.doEnter("value"));
+			endif();
+			_if("value.ope=='exit'");
+				__(_self.doExit("value"));
+			endif();
+			_if("value.ope=='change'");
+				__(_self.doChange("value"));
+			endif();
+		});
 		
 		/******************************************/
-		var("data", dataSet.getData())
-		.var(_self, _this)
-		.var("fctChange", fctChange)
+		var("data", dataSet.getData());
+		var(_self, _this);
+		var("fctChange", fctChange);
 		
-		.__(dataSet.onChange("fctChange"));
+		dataSet.onChange("fctChange");
 		
 		return _void();
 	}

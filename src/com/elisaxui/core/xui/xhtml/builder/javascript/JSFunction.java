@@ -18,8 +18,10 @@ public class JSFunction extends JSContent
 	 */
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return super.toString();
+		StringBuilder strBuf = new StringBuilder();
+		XMLBuilder buf = new XMLBuilder("????", strBuf, null);
+		this.toXML(buf);
+		return strBuf.toString();
 	}
 
 	JSFunction(JSBuilder jsBuilder) {

@@ -53,7 +53,9 @@ public class ViewTabBar extends XHTMLPart {
 	public XMLElement xStyle() {
 		
 		return xCss()    //"+ScnStandard.bgColor+"
-				.select(cTabbar).set("z-index: "+XUIScene.ZINDEX_NAV_BAR+";  "+XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorNavBar()+" height: "+XUIScene.heightTabBar+";"
+				.select(cTabbar).set("z-index: "+XUIScene.ZINDEX_NAV_BAR+";"
+						+ "background:"+XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorNavBar()+";"
+						+ "height: "+XUIScene.heightTabBar+";"
 						+ "width: "+XUIScene.widthScene+"; "
 						+ "color:white; "
 						+ "transition: transform "+ConstTransition.SPEED_ANIM_SCROLL+"ms ease-in-out;" 

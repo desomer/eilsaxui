@@ -61,7 +61,7 @@ public interface JSNavBar extends JSFactory {
 					JSonNavBarTitle jsnavTitle= cast(JSonNavBarTitle.class,  ctx.row());
 				
 					set(template, ViewNavBar.getTemplateName(jsnavTitle.title()));
-					var(jqdom, template.appendInto($(selector)));
+					var(jqdom, template.appendInto($(selector," ", ViewNavBar.descBar)));
 					ctx.row().attrByString(JSDataSet._DOM).set(jqdom.get(0));
 					
 				_elseif (jsnavRow.type().isEqual(txt(TYPE_BTN_ACTION)));
@@ -86,7 +86,7 @@ public interface JSNavBar extends JSFactory {
 						
 					_elseif (jsnavRowBg.mode().isEqual(txt("css")));
 						set(template, ViewNavBar.getTemplateBgDiv());
-						var(jqdom, template.appendInto($(selector)));
+						var(jqdom, template.appendInto($(selector," ", ViewNavBar.descBar)));
 						__(jqdom.css("background", jsnavRowBg.css()));   //TODO retirer le __
 						__(jqdom.css("opacity", jsnavRowBg.opacity()));
 						__(ctx.row().attrByString(JSDataSet._DOM).set(jqdom.get(0)));

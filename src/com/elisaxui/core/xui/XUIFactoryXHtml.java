@@ -61,12 +61,11 @@ public class XUIFactoryXHtml {
 			
 		if (htmlInCache == null) {
 			// cherche les changements
-			Map<String, Class<? extends XHTMLPart>> mapClass = XHTMLAppBuilder.getMapXHTMLPart();
+			Map<String, Class<? extends XHTMLPart>> mapClass = XHTMLAppBuilder.getMapXHTMLPart();  // synchronized
 			Class<? extends XHTMLPart> pageClass = mapClass.get(id);
 			if (pageClass != null) {
 				
 				JSExecutorHelper.initThread();
-				
 				
 				XMLFile fileXML = createXHTMLFile();
 

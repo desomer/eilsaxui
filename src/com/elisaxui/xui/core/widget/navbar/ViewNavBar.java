@@ -33,6 +33,12 @@ public class ViewNavBar extends XHTMLPart {
 	public static XClass navbar;
 	public static XClass fixedTop;
 	public static XClass rightAction;
+	public static XClass center;
+	public static XClass logo;
+	public static XClass actionBtn;
+	@xComment("material-icons")
+	public static XClass material_icons;
+	public static XClass descBar;
 	
 	public static final String PROPERTY_NAME = "PROPERTY_NAME";
 	
@@ -41,28 +47,38 @@ public class ViewNavBar extends XHTMLPart {
 	public XMLElement xStyle() {
 		
 		return xCss()  
-				.select(navbar).set("z-index: "+XUIScene.ZINDEX_NAV_BAR+";  "+XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorNavBar()+" height: "+XUIScene.heightNavBar+";"
+				.select(navbar).set("z-index: "+XUIScene.ZINDEX_NAV_BAR+";"
+						+ "height: "+XUIScene.heightNavBar+";"
 						+ "width: "+XUIScene.widthScene+"; "
 						+ "color:white; "
 						+ "transition: transform "+ConstTransition.SPEED_ANIM_SCROLL+"ms ease-in-out;" 
 					//	+ "transition: max-height 250ms linear;" 
-						+ "box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);")
+					)
 				
 				.select(fixedTop).set("position:fixed; top:0px; transform:translate3d(0px,0px,0px); backface-visibility: hidden;")
 			//	.select(fixedToAbsolute).set("position:absolute;")  // permet de deplacement
 				
 				.select(rightAction).set("position: absolute; right: 0px;  top: 0px;  height: 100%;  width: auto;")
 				
-				.on(".actionBtn", "margin: 0; padding: 8px;  font-size: 2.5rem;  cursor: pointer;")
+				.select(actionBtn).set("margin: 0; padding: 8px;  font-size: 2.5rem;  cursor: pointer;")
 				
-				.on(".center", "z-index:"+(XUIScene.ZINDEX_NAV_BAR+1)+";height:100%; display: flex; align-items: center;justify-content: center")
-				.on(".logo", "z-index:"+(XUIScene.ZINDEX_NAV_BAR+1)+"; margin-top:calc(" + XUIScene.heightNavBar +" /2); color: inherit; font-size: 2.1rem; animation-duration: 700ms;")
+				.select(center).set("z-index:"+(XUIScene.ZINDEX_NAV_BAR+1)+";height:100%; display: flex; align-items: center;justify-content: center")
+				.select(logo).set("z-index:"+(XUIScene.ZINDEX_NAV_BAR+1)+"; margin-top:calc(" + XUIScene.heightNavBar +" /2); color: inherit; font-size: 2.1rem; animation-duration: 700ms;")
 				
-				.select(animatedBg).set("position: absolute; display: block;  width: 100%; height: 100%; top: 0; right: 0; bottom: 0; left: 0;")
+				.select(animatedBg).set("position: absolute; display: block;  width: 100%; height: 100%;"
+						+ " top: 0; right: 0; bottom: 0; left: 0;"
+						+ "background:"+XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorNavBar()+"; "
+						)
 				
 				.select(actionBtnContainer).set("cursor: pointer; position: relative; background-color: Transparent; color:white;"
 						+ "padding: 0;  overflow: hidden; outline: 0 !important; " // pas de bordure au focus
 						+ "border:none")
+				
+				.select(descBar).set(
+						"height: 100%; transform:translate3d(0px,0px,0px);"
+						+ "background:"+XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorNavBar()+"; "
+						+ "box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);"
+						)
 				;
 	}
 	
@@ -75,7 +91,8 @@ public class ViewNavBar extends XHTMLPart {
 	@xTarget(CONTENT.class)
 	public XMLElement xContenu() {  
 		return xHeader( xId(this.getProperty(PROPERTY_NAME)), navbar, fixedTop,
-				this.getChildren());
+			    xDiv(descBar, this.getChildren())
+				);
 	}
 	
 	public static XMLElement getTemplateBtnBurger() {
@@ -87,11 +104,12 @@ public class ViewNavBar extends XHTMLPart {
 	}
 	
 	public static XMLElement getTemplateName(Object name) {
-		return xDiv(xAttr("class", "\"center\""), xDiv(xAttr("class", "\"logo\""), xVar(name)));
+		return xDiv(center, xDiv(logo, xVar(name)));
 	}
 	
 	public static XMLElement getTemplateAction(Object name, Object action) {
-		return xElement("button", xAttr("data-x-action", txt(xVar(action))), actionBtnContainer, cRippleEffect , xAttr("type", "\"button\""),  "<i class=\"actionBtn material-icons\">",xVar(name),"</i>");
+		return xElement("button", actionBtnContainer, cRippleEffect , xAttr("data-x-action", txt(xVar(action))), xAttr("type", "\"button\""), 
+				xI(actionBtn, material_icons, xVar(name)));
 	}
 	
 	public static XMLElement getTemplateBgCanvas() {

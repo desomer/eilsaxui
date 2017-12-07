@@ -43,7 +43,7 @@ public class ViewBtnCircle extends XHTMLPart {
 						 		+ "height: "+SIZE_CIRCLE+"; width: "+SIZE_CIRCLE+"; "
 								//+ "/*min-width: 56px;*/ "
 								+ "padding: 0;  overflow: hidden; outline: 0 !important; " // pas																						// focus
-								+ XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorNavBar()
+								+ "background:"+ XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorNavBar()+";"
 								+ "box-shadow: 3px 3px 3px 0 rgba(0,0,0,.24);"
 								+ "transition:transform " + SPEED_SHOW_ACTIVITY +  "ms ease-out;"
 								+ " position: relative; line-height: normal; border:none; background-color:#ee6e73;"

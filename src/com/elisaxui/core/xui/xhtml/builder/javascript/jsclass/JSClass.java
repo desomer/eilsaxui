@@ -35,7 +35,6 @@ public interface JSClass extends JSMethodInterface  {
 	 * sert a ne pas avoir de warning
 	 * @return
 	 */
-	@Deprecated
 	public static <E> E declareType(Class type, Object name) {
 		
 		boolean retJSVariable=JSVariable.class.isAssignableFrom(type);

@@ -8,9 +8,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
@@ -26,16 +24,13 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
 import javax.ws.rs.core.UriInfo;
 
 import com.elisaxui.ResourceLoader;
 import com.elisaxui.app.elisys.xui.asset.AssetHandler;
 import com.elisaxui.core.data.JSONBuilder;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
-import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.xui.core.page.ConfigScene;
-import com.elisaxui.xui.core.page.XUIScene;
 import com.elisaxui.xui.core.widget.menu.JSONMenu;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;

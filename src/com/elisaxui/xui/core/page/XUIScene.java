@@ -33,7 +33,7 @@ import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.toolkit.TKRouterEvent;
 import com.elisaxui.xui.core.transition.ConstTransition;
 import com.elisaxui.xui.core.transition.CssTransition;
-import com.elisaxui.xui.core.transition.TKTransition;
+import com.elisaxui.xui.core.transition.JSTransition;
 import com.elisaxui.xui.core.widget.button.ViewBtnCircle;
 import com.elisaxui.xui.core.widget.container.JSContainer;
 import com.elisaxui.xui.core.widget.container.JSViewCard;
@@ -157,7 +157,7 @@ public abstract class XUIScene extends XHTMLPart {
 				xImport(JSPageLayout.class),
 				xImport(TKRouterEvent.class),
 				xPart(new CssTransition()),  //TODO Remplacer
-				xImport(TKTransition.class),
+				xImport(JSTransition.class),
 				xImport(JSMenu.class),
 				xImport(TKActivity.class),
 				xImport(JSViewCard.class)			
@@ -170,6 +170,11 @@ public abstract class XUIScene extends XHTMLPart {
 	public XMLElement xStyleXUIScene() {
 		
 		return xCss()
+				.select("*, *:before, *:after").set(
+						"-webkit-tap-highlight-color: rgba(0,0,0,0); "  // pas de coulour au click => ripple a la place
+						+ "box-sizing: border-box;   "
+						+ "margin: 0;" + 
+						"  padding: 0;")  
 				.select("html").set("font-size: 16px;"
 						//+"overflow-y: scroll;"
 						//+ "overflow-x: hidden;" // pour que le 100vw ne prennent pas en compte la largueur du scrollbar
@@ -177,7 +182,7 @@ public abstract class XUIScene extends XHTMLPart {
 						+ "font-family: 'Roboto', sans-serif;font-weight: normal;")
 				
 				.select("body").set("background-color: "+getConfigScene().getBgColorScene()+"; margin: 0; ")
-				.select("*").set("-webkit-tap-highlight-color: rgba(0,0,0,0);")  // pas de coulour au click => ripple a la place
+				
 
 				//----------------------------------------------------------------
 				.select(scene).set("overflow-x: hidden; background-color: "+getConfigScene().getBgColorScene()+";"   // overflow: auto; -webkit-overflow-scrolling: auto
@@ -189,8 +194,10 @@ public abstract class XUIScene extends XHTMLPart {
 				    		+ "  min-height: 100vh; "))
 					.path(xCss("#NavBarShell h1").set("text-align:center;color: inherit;  font-size: 2.1rem; margin-top: 50px"))
 				//----------------------------------------------------------------
-				.select(activity).set("background-color: "+getConfigScene().getBgColorContent()+";"+ PREF_3D+ 
-					"width:"+widthScene+"; will-change:overflow,z-index;") //will-change:transform   =bug : les header et footer ne se fixe plus au body
+				.select(activity)
+					.set("background-color: "+getConfigScene().getBgColorContent()+";"+ PREF_3D 
+					+ " width:"+widthScene+";"
+					+ " will-change:overflow,z-index;") //will-change:transform   =bug : les header et footer ne se fixe plus au body
 					.path(xCss(ViewPageLayout.content)
 								.set(" min-height: 100vh; "
 									+ "min-width: "+widthScene+"; "

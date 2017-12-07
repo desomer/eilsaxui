@@ -79,7 +79,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 			return jc;
 		}
 		
-		if (  method.getName().equals("doTabBarToFixe"))
+		if (  method.getName().equals("doActivityFreeze"))
 		{
 			// registerMethod(method);
 			method=method;
@@ -139,7 +139,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 					// creer le code
 					JSFunction fct = createJSFunctionImpl(implcl, MthInvoke, false);    
 					implcl.addFunction(fct);
-					
+										
 					ThreadLocalMethodDesc.set(lastMethodDesc);
 					if (debug3) 
 						System.out.println("[JSBuilder]"+System.identityHashCode(currentMethodDesc.content)+ " -restore ThreadLocalMethodDesc meth "+ method.getName() + "  du JSContent "+currentFctBuildByProxy+" of class " + implcl.getName());
@@ -443,7 +443,6 @@ public class MethodInvocationHandler implements InvocationHandler {
 					.setCode(code);
 			
 			// function en cours terminé 
-//			implcl.currentFctJSName = null;
 			currentFctBuildByProxy=null;
 			
 			// invoke les methodes interne private a la fin de la creation de la methode

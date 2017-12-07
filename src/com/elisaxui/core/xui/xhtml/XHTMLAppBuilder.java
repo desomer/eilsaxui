@@ -42,8 +42,9 @@ public class XHTMLAppBuilder {
 	
 	private static final boolean debug = false;
 	
-	public static Map<String, Class<? extends XHTMLPart>> getMapXHTMLPart() {
-		
+	// TODO mettre en cache
+	public static synchronized Map<String, Class<? extends XHTMLPart>>  getMapXHTMLPart() {
+				
 		List<Class<? extends XHTMLPart>> listXHTMLPart = new ArrayList<>(100);
 		List<Class<? extends JSClass>> listJSClass = new ArrayList<>(100);
 		List<Class<? extends JSClassInterface>> listJSClassMethod = new ArrayList<>(100);

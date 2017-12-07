@@ -7,9 +7,16 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+
+import org.mozilla.javascript.ErrorReporter;
+import org.mozilla.javascript.EvaluatorException;
+
+import com.yahoo.platform.yui.compressor.JavaScriptCompressor;
 
 /**
  * @author Bureau
@@ -17,6 +24,61 @@ import java.net.URLEncoder;
  */
 public class JSMinifier {
 
+	private static class YuiCompressorErrorReporter implements ErrorReporter {
+
+		@Override
+		public void error(String message, String sourceName, int line, String lineSource, int lineOffset) {
+			// TODO Auto-generated method stub
+			System.out.println(message+ ">"+ line + ">"+ lineSource);
+		}
+
+
+		@Override
+		public EvaluatorException runtimeError(String message, String sourceName, int line, String lineSource, int lineOffset) {
+			error(message, sourceName, line, lineSource, lineOffset);
+	        return new EvaluatorException(message);
+		}
+
+		/* (non-Javadoc)
+		 * @see org.mozilla.javascript.ErrorReporter#warning(java.lang.String, java.lang.String, int, java.lang.String, int)
+		 */
+		@Override
+		public void warning(String message, String sourceName, int line, String lineSource, int lineOffset) {
+			// TODO Auto-generated method stub
+			System.out.println(message);
+		}
+		
+	}
+	
+	private static class Options {
+	    public String charset = "UTF-8";
+	    public int lineBreakPos = -1;
+	    public boolean munge = false;
+	    public boolean verbose = true;
+	    public boolean preserveAllSemiColons = true;
+	    public boolean disableOptimizations = true;
+	}
+	
+	public static final StringBuilder doMinifyJS2(String js)
+	{
+		Options o =new Options();
+		
+		StringReader reader = new StringReader(js);
+		StringWriter out = new StringWriter(js.length());
+		try {
+			JavaScriptCompressor compressor = new JavaScriptCompressor(reader, new YuiCompressorErrorReporter());
+			
+			compressor.compress(out, o.lineBreakPos, o.munge, o.verbose, o.preserveAllSemiColons, o.disableOptimizations);
+			
+			
+		} catch (EvaluatorException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return new StringBuilder( out.getBuffer());
+	}
+	
 	public static final StringBuilder doMinifyJS(String js)
 	{
 		StringBuilder buf = new StringBuilder();

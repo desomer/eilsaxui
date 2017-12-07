@@ -9,12 +9,13 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.xui.core.datadriven.JSDataDriven;
 import com.elisaxui.xui.core.datadriven.JSDataSet;
+import com.elisaxui.xui.core.toolkit.JQuery;
 import com.elisaxui.xui.core.toolkit.JSFactory;
 import com.elisaxui.xui.core.toolkit.TKActivity;
 import com.elisaxui.xui.core.toolkit.TKQueue;
 import com.elisaxui.xui.core.toolkit.TKRouterEvent;
 import com.elisaxui.xui.core.transition.CssTransition;
-import com.elisaxui.xui.core.transition.TKTransition;
+import com.elisaxui.xui.core.transition.JSTransition;
 import com.elisaxui.xui.core.widget.button.ViewFloatAction;
 import com.elisaxui.xui.core.widget.layout.ViewPageLayout;
 import com.elisaxui.xui.core.widget.navbar.ViewNavBar;
@@ -32,7 +33,7 @@ public interface JSContainer extends JSFactory {
 	JSContainer _self=null;
 	
 	TKRouterEvent _tkrouter =null;
-	TKTransition _tkAnimation = null;
+	JSTransition _tkAnimation = null;
 	TKActivity _activityMgr = null;
 	
 	default Object getSubData(Object ctx)
@@ -90,8 +91,8 @@ public interface JSContainer extends JSFactory {
 						
 						var(_tkrouter, "$xui.tkrouter");
 						
-						_if("ctx.row.active");
-						  	__(_tkrouter, ".", _tkAnimation.doActivityActive("'#'+ctx.row.id"));
+						_if("ctx.row.active");		
+						  	__(_tkrouter, ".", _tkAnimation.doActivityActive(JQuery.$(jsvar("'#'+ctx.row.id"))));
 						  	__(_tkrouter, ".", _tkAnimation.doNavBarToFixe());
 						endif();
 						

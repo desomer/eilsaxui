@@ -12,7 +12,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.xui.core.config.TKCoreConfig;
 import com.elisaxui.xui.core.toolkit.json.JIntent;
 import com.elisaxui.xui.core.transition.ConstTransition;
-import com.elisaxui.xui.core.transition.TKTransition;
+import com.elisaxui.xui.core.transition.JSTransition;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.defVar;
 
 /**
@@ -31,7 +31,7 @@ public interface TKRouterEvent extends JSClass {
 	public static final String ACTION_NEXT_ROUTE = "ACTION_NEXT_ROUTE";
 	public static final String STATE_ROUTE = "STATE_ROUTE";
 	
-	TKTransition tkAnimation = null;
+	JSTransition tkAnimation = null;
 	JSVariable navigo = null;
 	TKActivity activityMgr= null;
 	

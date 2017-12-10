@@ -21,9 +21,36 @@ public class CssTransition extends XHTMLPart {
 	public static XClass activity;
 	
 	static XClass fixedForAnimated;
-	public static XClass active;
 	static XClass animated;
+	
+	public static XClass active;
+	public static XClass inactive;
 	public static XClass detach;
+	
+	public static XClass circleAnim0prt;
+	public static XClass circleAnim100prt;
+	
+	public static XClass zoom09;
+	public static XClass zoom10;
+	public static XClass zoom12;
+	
+	public static XClass transitionSpeedSlow;
+	public static XClass transitionSpeed;
+	public static XClass transitionSpeedx2;
+	
+	public static XClass transformSpeed;
+
+	public static XClass activityMoveForShowMenu;
+	public static XClass activityMoveForHideMenu;
+	
+//	public static XClass backToFront;
+//	public static XClass toback;
+	public static XClass frontActivity;
+	public static XClass backActivity;
+	
+	public static XClass toBottom;
+	public static XClass tofront;
+	public static XClass nodisplay;
 	
 	@xTarget(HEADER.class)
 	@xRessource
@@ -31,33 +58,34 @@ public class CssTransition extends XHTMLPart {
 	public XMLElement xStyle() {
 
 		return xCss()
-				.select(activity.and(fixedForAnimated)).set("top:0px; position: fixed; transition:transform "+SPEED_SHOW_ACTIVITY +"ms linear;")
 				.select(animated).set("animation-duration:"+SPEED_ANIMATED+"ms")
 				
-				.on(".activity.backToFront", "transition:transform "+(SPEED_SHOW_ACTIVITY+100)+"ms linear;")
+				.select(activity.and(fixedForAnimated)).set("top:0px; position: fixed; transition:transform "+SPEED_SHOW_ACTIVITY +"ms linear;")
 				
-				.on(".activity.toback", "transition:transform "+(SPEED_SHOW_ACTIVITY+100)+"ms linear; "
-						+ "transform:translate3d(0px,0px,0px) scale(0.9); ")
+//				.select(activity.and(backToFront)).set("transition:all "+(SPEED_SHOW_ACTIVITY+100)+"ms linear;")		
+//				.select(activity.and(toback)).set("transition:all "+(SPEED_SHOW_ACTIVITY+100)+"ms linear; ")
 				
-				.on(".activity.frontActivity", "z-index:"+XUIScene.ZINDEX_ANIM_FRONT+";")
-				.on(".activity.backActivity", "z-index:"+XUIScene.ZINDEX_ANIM_BACK+";")
+				.select(activity.and(frontActivity)).set("z-index:"+XUIScene.ZINDEX_ANIM_FRONT+";")
+				.select(activity.and(backActivity)).set("z-index:"+XUIScene.ZINDEX_ANIM_BACK+";")
 				
-				.on(".activity.toHidden", "transform: translate3d(0px,100%,0px);")				
-				.on(".activity.tofront", "transform: translate3d(0px,0px,0px);")  
-				.on(".activity.nodisplay", "display:none;")
+				//.on(".activity.toBottom", "transform: translate3d(100%,0px,0px);")	
+				.select(activity.and(toBottom)).set("transform: translate3d(0px,100%,0px);")	
+				.select(activity.and(tofront)).set("transform: translate3d(0px,0px,0px);")  
+				.select(activity.and(nodisplay)).set("display:none;")
 				
-				.on(".activity.circleAnim0prt", "clip-path:circle(0.0% at "+ViewOverlayRipple.START_POINT+"); -webkit-clip-path:circle(0.0% at "+ViewOverlayRipple.START_POINT+"); ")
-				.on(".activity.circleAnim100prt", "clip-path:circle(80% at center); -webkit-clip-path:circle(80% at center); ")
+				.select(activity.and(circleAnim0prt)).set("clip-path:circle(0.0% at "+ViewOverlayRipple.START_POINT+"); -webkit-clip-path:circle(0.0% at "+ViewOverlayRipple.START_POINT+"); ")
+				.select(activity.and(circleAnim100prt)).set("clip-path:circle(80% at center); -webkit-clip-path:circle(80% at center); ")
 
-				.on(".activity.zoom12", "transform:scale3d(1.2,1.2,1)")
-				.on(".activity.zoom10", "transform:scale3d(1,1,1)")
+				.select(activity.and(zoom12)).set("transform:translate3d(0px,0px,0px) scale3d(1.2,1.2,1)")
+				.select(activity.and(zoom10)).set("transform:translate3d(0px,0px,0px) scale3d(1,1,1)")
+				 .select(activity.and(zoom09)).set("transform:translate3d(0px,0px,0px) scale3d(0.9,0.9,1)")
 
-				.on(".activity.transitionSpeedSlow", "transition:all "+ SPEED_SHOW_ACTIVITY*5 +"ms linear")
-				.on(".activity.transitionSpeed", "transition:all "+ SPEED_SHOW_ACTIVITY +"ms linear")
-				.on(".activity.transitionSpeedx2", "transition:all "+ SPEED_ACTIVITY_TRANSITION_EFFECT +"ms linear")
+				.select(activity.and(transitionSpeedSlow)).set("transition:all "+ SPEED_SHOW_ACTIVITY*5 +"ms linear")
+				.select(activity.and(transitionSpeed)).set("transition:all "+ SPEED_SHOW_ACTIVITY +"ms linear")
+				.select(activity.and(transitionSpeedx2)).set("transition:all "+ SPEED_ACTIVITY_TRANSITION_EFFECT +"ms linear")
 				
-				.on(".activityMoveForShowMenu", "transition:transform "+SPEED_SHOW_MENU+"ms ease-out; transform: translate3d("+(widthMenu-100)+"px,0px,0px);")
-				.on(".activityMoveForHideMenu", "transition:transform "+SPEED_SHOW_MENU+"ms ease-out; transform: translate3d(0px,0px,0px);")
+				.select(activityMoveForShowMenu).set("transition:transform "+SPEED_SHOW_MENU+"ms ease-out; transform: translate3d("+(widthMenu-100)+"px,0px,0px);")
+				.select(activityMoveForHideMenu).set("transition:transform "+SPEED_SHOW_MENU+"ms ease-out; transform: translate3d(0px,0px,0px);")
 				;
 				
 	}

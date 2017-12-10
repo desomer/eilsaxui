@@ -63,8 +63,8 @@ public class ViewMenu extends XHTMLPart {
 				.on(".menu li", "list-style-type: none;clear: both;  color: rgba(0,0,0,0.87);   "
 						+ "cursor: pointer;   min-height: 50px; line-height: 21px; "
 						+ "width: 100%;   text-align: left;   text-transform: none;"
-						+ XUIScene.PREF_3D
-						+ "animation-duration:" + SPEED_SHOW_MENU_ITEMS + "ms; transform:translate3d(0px,0px,0px);will-change:transform;"
+						+ XUIScene.PREFORM_3D
+						+ "animation-duration:" + SPEED_SHOW_MENU_ITEMS + "ms;will-change:transform;"
 						)
 
 				.on(".menu li>a", "font-size: 16px;  line-height: 26px;  padding: 14px 16px;  float: left;")

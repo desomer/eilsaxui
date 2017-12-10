@@ -24,7 +24,7 @@ public final class MethodDesc
 	}
 	
 	JSClassImpl implcl;
-	Object proxy; 
+	public Object proxy; 
 	Method method;
 	Object[] args;
 	

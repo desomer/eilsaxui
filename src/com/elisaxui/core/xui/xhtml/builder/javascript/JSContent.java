@@ -32,6 +32,17 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 */
 	protected final JSBuilder jsBuilder;
 	public JSMethodInterface proxy;
+	
+	/**************************************************************/
+	// new line 
+	public static final class JSNewLine {
+	};
+	public static final class JSAddTab {
+	};
+	public static final class JSRemoveTab {
+	}
+	/**************************************************************/
+	
 	/**
 	 * @param jsBuilder
 	 */
@@ -427,9 +438,27 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 		return new JSString()._setContent(str.toString());
 	}
 
+	/***************************************************************/
+	
 	@Override
 	public JSFunction fct(Object... param) {
 		return jsBuilder.createJSFunction().setParam(param);
+	}
+	
+	@Override
+	public JSFunction callback(Anonym call) {
+		JSFunction ret =  jsBuilder.createJSFunction();
+		ret.proxy = (JSMethodInterface) MethodInvocationHandler.ThreadLocalMethodDesc.get().proxy;
+		ret.__(call);
+		return ret;
+	}
+	
+	@Override
+	public JSFunction callback(Object param, Anonym call) {
+		JSFunction ret =  jsBuilder.createJSFunction();
+		ret.proxy = (JSMethodInterface) MethodInvocationHandler.ThreadLocalMethodDesc.get().proxy;
+		ret.__(call);
+		return ret;
 	}
 	
 	@Override
@@ -438,6 +467,8 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 		return jsBuilder.createJSFunction().setFragment(true).setActivatedCondition(cond);
 	}
 
+	/************************************************************************/
+	
 	/* (non-Javadoc)
 	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#_return(java.lang.Object[])
 	 */
@@ -494,15 +525,6 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 		return "this";
 	}
 	
-	// new line 
-	public static final class JSNewLine {
-	};
-	public static final class JSAddTab {
-	};
-	public static final class JSRemoveTab {
-	}
-
-	
 	/****************************************************************/
 	@Override
 	public Object $$subContent() {
@@ -547,8 +569,7 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 */
 	@Override
 	public JSMethodInterface then(Anonym content) {
-		// TODO Auto-generated method stub
-		return null;
+		return null;  //TODO a terminer
 	}
 
 	/* (non-Javadoc)
@@ -556,9 +577,9 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 */
 	@Override
 	public JSMethodInterface _else(Anonym content) {
-		// TODO Auto-generated method stub
-		return null;
+		return null; //TODO a terminer
 	}
+
 
 
 }

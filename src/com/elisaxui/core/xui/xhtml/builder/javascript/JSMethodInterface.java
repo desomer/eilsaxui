@@ -7,23 +7,23 @@ public interface JSMethodInterface  {
 	
 	JSMethodInterface __(Object... content);
 	
-	JSMethodInterface _return(Object... content);
-
+	/**********************************************************************/
 	JSMethodInterface set(Object name, Object... content);
-
 	JSMethodInterface var(Object name, Object... content);
+	
 	<E> E let(Class<? extends E > type, Object name, Object... content);
 	
 	JSMethodInterface consoleDebug(Object... content);
 	JSMethodInterface systemDebugIf(Object cond, Object... content);
-	
+	/**********************************************************************/
 	JSMethodInterface _for(Object... content);
 	JSMethodInterface _forIdx(Object idx, JSArray array);
 	
 	JSMethodInterface endfor();
-
+	/**********************************************************************/
 	Object _new(Object... param);
 	
+	/**********************************************************************/
 	/**
 	 * exemple <br>  
 	 * txt("do ", jsvar("event"), "on", jsvar("variable")) <br>
@@ -42,7 +42,11 @@ public interface JSMethodInterface  {
 	Object jsvar(Object... param);
 	Object calc(Object... param);
 	
+	/**********************************************************************/
+	
 	JSFunction fct(Object... param);
+	JSFunction callback( Anonym c);
+	JSFunction callback(Object param, Anonym c);
 	
 	/**
 	 * exemple <br>
@@ -53,6 +57,7 @@ public interface JSMethodInterface  {
 	 */
 	JSFunction fragmentIf(Object condition);
 
+	/**********************************************************************/
 	JSMethodInterface _if(Object... content);
 	JSMethodInterface then(Anonym content);
 	
@@ -63,9 +68,11 @@ public interface JSMethodInterface  {
 
 	JSMethodInterface _elseif(Object... content);
 
+	/**********************************************************************/
 	JSMethodInterface setTimeout(Object... content);
 	
 	/**********************************************************************/
+	JSMethodInterface _return(Object... content);
 	JSVoid _void();
 	Object _null();
 	Object _this();

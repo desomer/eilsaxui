@@ -67,7 +67,10 @@ public abstract class XUIScene extends XHTMLPart {
 
     public static final String PREF_3D= "backface-visibility: hidden;"
     		//+ " transform-style:preserve-3d;"
+    		//transform: translate3d(0px,0px,0px);   =bug : les header et footer ne se fixe plus au body
     		;
+    
+    public static final String PREFORM_3D= "backface-visibility: hidden;transform: translate3d(0px,0px,0px);";
     
 	public static XClass scene;
 	public static XClass cShell;
@@ -171,18 +174,22 @@ public abstract class XUIScene extends XHTMLPart {
 		
 		return xCss()
 				.select("*, *:before, *:after").set(
-						"-webkit-tap-highlight-color: rgba(0,0,0,0); "  // pas de coulour au click => ripple a la place
+						  "-webkit-tap-highlight-color: rgba(0,0,0,0); "  // pas de coulour au click => ripple a la place
 						+ "box-sizing: border-box;   "
 						+ "margin: 0;" + 
 						"  padding: 0;")  
-				.select("html").set("font-size: 16px;"
-						//+"overflow-y: scroll;"
-						//+ "overflow-x: hidden;" // pour que le 100vw ne prennent pas en compte la largueur du scrollbar
-						+ " line-height: 1.5;"
-						+ "font-family: 'Roboto', sans-serif;font-weight: normal;")
 				
-				.select("body").set("background-color: "+getConfigScene().getBgColorScene()+"; margin: 0; ")
+//				.select("html").set("font-size: 16px;"
+//						//+"overflow-y: scroll;"
+//						//+ "overflow-x: hidden;" // pour que le 100vw ne prennent pas en compte la largueur du scrollbar
+//						+ " line-height: 1.5;"
+//						+ "font-family: 'Roboto', sans-serif;font-weight: normal;")
 				
+				.select("body")	.set("background-color: "+getConfigScene().getBgColorScene()+";"
+							+ "font-size: 16px; "
+							+ "line-height: 1.5;"
+							+ "font-family: 'Roboto', sans-serif;"
+							+ "font-weight: normal;")
 
 				//----------------------------------------------------------------
 				.select(scene).set("overflow-x: hidden; background-color: "+getConfigScene().getBgColorScene()+";"   // overflow: auto; -webkit-overflow-scrolling: auto

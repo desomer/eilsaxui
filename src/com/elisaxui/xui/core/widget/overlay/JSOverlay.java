@@ -10,6 +10,7 @@ import com.elisaxui.xui.core.toolkit.JQuery;
 
 import static com.elisaxui.xui.core.widget.overlay.ViewOverlay.*;
 import static com.elisaxui.xui.core.toolkit.JQuery.*;
+import static com.elisaxui.xui.core.transition.CssTransition.*;
 /**
  * @author Bureau
  *
@@ -27,16 +28,15 @@ public interface JSOverlay extends JSClass {
 	}
 	
 	
-	default Object doShow(Object act, Object phase)
+	default Object doShow(JQuery act, Object phase)
 	{
-		JQuery overlay = new  JQuery()._setName("overlay");
 		
-		var(overlay, $( jsvar(act), " ", cBlackOverlay) );
+		JQuery overlay = let(JQuery.class, "overlay", act.find(cBlackOverlay) );
 		_if(phase, "==1");
 			__(overlay.css("display","block"));
 			__(overlay.css("opacity",0));
 		_elseif(phase, "==2");
-			__(overlay.css("transition", jsvar(txt("opacity ", speed, "ms linear" ))));
+			__(overlay.css("transition", txt("opacity ", speed, "ms linear" )));
 			__(overlay.css("opacity",opacity));
 		endif()
 		;
@@ -45,8 +45,10 @@ public interface JSOverlay extends JSClass {
 	
 	default Object doHide(Object phase)
 	{
-		var("overlay", "$('.active ."+cBlackOverlay.getId()+"')" )
-		._if(phase, "==1")
+
+		JQuery overlay = let(JQuery.class, "overlay", $(active.descendant(cBlackOverlay)) );
+		
+		_if(phase, "==1")
 			.__("overlay.css('opacity','0')")
 //			.__("overlay.one('transitionend',", fct()
 //					.__("overlay.css('display','none')")

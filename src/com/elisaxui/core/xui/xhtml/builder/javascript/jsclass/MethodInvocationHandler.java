@@ -79,11 +79,11 @@ public class MethodInvocationHandler implements InvocationHandler {
 			return jc;
 		}
 		
-		if (  method.getName().equals("doActivityFreeze"))
-		{
-			// registerMethod(method);
-			method=method;
-		}
+//		if (  method.getName().equals("doActivityFreeze"))
+//		{
+//			// registerMethod(method);
+//			method=method;
+//		}
 		
 		String id = JSClassImpl.getMethodId(method, args);
 		JSClassImpl implcl = XUIFactoryXHtml.getXHTMLFile().getClassImpl(XHTMLPart.jsBuilder, getImplementClass());
@@ -129,7 +129,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 					mh.varname = "/*ww2*/this"; // force a this pour appel interne d'autre fct de la classe JS
 					
 					// creer le JSContent
-					MethodDesc currentMethodDesc = getMethodDesc(implcl, implcl.getName(), currentFctBuildByProxy);
+					MethodDesc currentMethodDesc = getMethodDesc(implcl, proxy, currentFctBuildByProxy);
 					MethodDesc lastMethodDesc = ThreadLocalMethodDesc.get();
 					ThreadLocalMethodDesc.set(currentMethodDesc);
 					
@@ -196,7 +196,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 				/*****  APPEL DES FUNCTION INTERNE (var, set, if) sur la class JSContent*****/ 
 								
 				// creer le JSContent
-				MethodDesc currentMethodDesc = getMethodDesc(implcl, implcl.getName(), currentFctBuildByProxy);	
+				MethodDesc currentMethodDesc = getMethodDesc(implcl, proxy, currentFctBuildByProxy);	
 				JSContent currentJSContent = currentMethodDesc.content;
 				
 				if (!testAnonymInProgress)
@@ -241,7 +241,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 	 * @throws ClassNotFoundException 
 	 */
 	@Deprecated
-	private MethodDesc getMethodDesc(JSClassImpl implcl, Object nameClass, String mthName ) throws ClassNotFoundException {
+	private MethodDesc getMethodDesc(JSClassImpl implcl, Object proxy, String mthName ) throws ClassNotFoundException {
 		
 		MethodDesc currentMethodDesc = null;
 		
@@ -265,9 +265,10 @@ public class MethodInvocationHandler implements InvocationHandler {
 		{
 			JSContent jsc= XHTMLPart.jsBuilder.createJSContent();
 			if (debug2)
-				System.out.println("[JSBuilder]"+System.identityHashCode(jsc)+ " - createJSContent "+mthName+" of class " + nameClass);
+				System.out.println("[JSBuilder]"+System.identityHashCode(jsc)+ " - createJSContent "+mthName+" of class " + implcl.getName());
 			
 			currentMethodDesc =  new  MethodDesc(jsc);
+			currentMethodDesc.proxy=proxy;
 			mapContentMthBuildByProxy.put(mthName, currentMethodDesc); // creer le contenu
 		}
 		

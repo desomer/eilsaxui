@@ -27,7 +27,11 @@ public class XClass {
 		this.id = id;
 	}
 	
-	
+	/**
+	 * 
+	 * @param desc
+	 * @return
+	 */
 	public CSSSelector and(Object desc)
 	{
 		return CSSSelector.onPath(this, desc);

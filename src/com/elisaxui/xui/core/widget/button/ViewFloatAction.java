@@ -43,7 +43,7 @@ public class ViewFloatAction extends XHTMLPart {
 		return xCss().select(cFloatAction)
 						.set("z-index:"+XUIScene.ZINDEX_FLOAT+"; position: fixed; "
 								+ "left: calc("+XUIScene.widthScene+" - "+ViewBtnCircle.SIZE_CIRCLE+" - 1rem); top: calc(100vh - "+ViewBtnCircle.SIZE_CIRCLE+" - "+XUIScene.heightTabBar+" - 1rem); "
-								+ "transform: translate3d(0px,0px,0px);")
+								+ XUIScene.PREFORM_3D)
 		;
 	}
 	

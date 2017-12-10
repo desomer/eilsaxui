@@ -114,11 +114,12 @@ public class JSFunction extends JSContent
 				buf.addContent(name);
 			}
 			buf.addContent("(");
-	
-			for (int i = 0; i < param.length; i++) {
-				if (i > 0)
-					buf.addContent(", ");
-				buf.addContent(param[i]);
+			if (param!=null) {
+				for (int i = 0; i < param.length; i++) {
+					if (i > 0)
+						buf.addContent(", ");
+					buf.addContent(param[i]);
+				}
 			}
 			buf.addContent(")");
 			buf.addContent(" {");

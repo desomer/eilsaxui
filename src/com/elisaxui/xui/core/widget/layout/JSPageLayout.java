@@ -6,6 +6,7 @@ package com.elisaxui.xui.core.widget.layout;
 import static com.elisaxui.xui.core.toolkit.json.JXui.$xui;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSFloat;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
@@ -13,6 +14,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSWindow.*;
 import com.elisaxui.xui.core.toolkit.JQuery;
 import com.elisaxui.xui.core.transition.CssTransition;
+import com.elisaxui.xui.core.widget.navbar.ViewNavBar;
 /**
  * @author Bureau
  *
@@ -47,7 +49,8 @@ public interface JSPageLayout extends JSClass {
 		
 		JQuery $activity = let(JQuery.class, "$activity", JQuery.$(idActivity));
 		
-		JQuery $header = let(JQuery.class, "$header", $activity.find("header"));
+		JQuery $header = let(JQuery.class, "$header", $activity.find("header"));  //.find(ViewNavBar.descBar));
+		JQuery $headerDesc = let(JQuery.class, "$headerDesc", $activity.find("header").find(ViewNavBar.descBar));
 		JQuery $footer = let(JQuery.class, "$footer", $activity.find("footer"));
 		
 		JQuery $window = let(JQuery.class, "$window", JQuery.$(jsvar("window")));
@@ -70,44 +73,67 @@ public interface JSPageLayout extends JSClass {
 					_if(lastScrollTop.isNotEqual(scrollTop), "&&", $activity.hasClass(CssTransition.active) ); 
 					
 						JSInt deltas = let(JSInt.class, "deltas", lastScrollTop.substact(scrollTop));
+						
+						JSInt currentHeaderDescDelta = let(JSInt.class, "currentHeaderDescDelta", $headerDesc.data("deltaY"));
 						JSInt currentHeaderDelta = let(JSInt.class, "currentHeaderDelta", $header.data("deltaY"));
 						JSInt currentFooterDelta = let(JSInt.class, "currentFooterDelta", $footer.data("deltaY"));
 						
+						currentHeaderDescDelta.set(currentHeaderDescDelta,"==null?0:",currentHeaderDescDelta);
 						currentHeaderDelta.set(currentHeaderDelta,"==null?0:",currentHeaderDelta);
 						currentFooterDelta.set(currentFooterDelta,"==null?0:",currentFooterDelta);
 						
-						JSInt deltaHeader = let(JSInt.class, "deltaHeader", currentHeaderDelta.add(deltas) );
+						JSInt deltaDescHeader = let(JSInt.class, "deltaDescHeader", currentHeaderDescDelta.add(deltas) );
+						JSInt deltaTopHeader= let(JSInt.class, "deltaTopHeader", currentHeaderDelta.add(deltas) );
 						JSInt deltaFooter = let(JSInt.class, "deltaFooter", currentFooterDelta.add(deltas) );
 						
-						JSInt hHeader = let(JSInt.class, "hHeader", $header.outerHeight());
-						hHeader.set(hHeader.add(3));  // hauteur de l'hombre 
+						JSInt hHeaderDesc = let(JSInt.class, "hHeaderDesc", $headerDesc.outerHeight());
+						hHeaderDesc.set(hHeaderDesc.add(3));  // hauteur de l'hombre 
+						
+						JSInt hHeaderTop = let(JSInt.class, "hHeaderTop", $header.find(ViewNavBar.topBar).outerHeight());
 						
 						JSInt hFooter = let(JSInt.class, "hFooter", $footer.outerHeight());
 		
-					    _if(deltas, "<0", "&&", "-",currentHeaderDelta, "<=", hHeader);
-					   // _if(deltas, "<0", "&&", hHeader, ">0");
-					    	//ferme
-							deltaHeader.set(deltaHeader,"< -",hHeader,"?-",hHeader,":", deltaHeader);
-							$header.data("deltaY",  deltaHeader);
-							$header.css("transform", txt("translate3d(0px, " , deltaHeader , "px, 0px)") );
-							//__($header, ".css( {'max-height':", jsvar(192, "+", deltaHeader, "-3") ,"+'px'})");
-							
-						_elseif(deltas, ">0","&&", currentHeaderDelta, "<0");
-						//_elseif(deltas, ">0","&&", hHeader, "<200");
-							//ouvre
-							deltaHeader.set(deltaHeader,">0?0:",deltaHeader);
-							$header.data("deltaY", deltaHeader);
-							$header.css("transform", txt("translate3d(0px, " , deltaHeader , "px, 0px)"));
-							//__($header, ".css( {'max-height':", jsvar(192, "+", deltaHeader, "-3") ,"+'px'})");
+						/***********************************************************/
+					    _if(deltas, "<0", "&&", "-",currentHeaderDescDelta, "<=", hHeaderDesc);
+					    	//cache
+					    	deltaDescHeader.set(deltaDescHeader,"< -",hHeaderDesc,"?-",hHeaderDesc,":", deltaDescHeader);
+							$headerDesc.data("deltaY",  deltaDescHeader);
+							$headerDesc.css("transform", txt("translate3d(0px, " , deltaDescHeader , "px, 0px)") );
+							JSFloat f = let(JSFloat.class, "f", calc("1+(", deltaDescHeader, "/", hHeaderDesc ,")"  ));
+							$headerDesc.css("opacity", f);
+						_elseif(deltas, ">0","&&", currentHeaderDescDelta, "<0", "&&", scrollTop, "<", hHeaderDesc);
+							//affiche
+							deltaDescHeader.set(deltaDescHeader,">0?0:",deltaDescHeader);
+							$headerDesc.data("deltaY", deltaDescHeader);
+							$headerDesc.css("transform", txt("translate3d(0px, " , deltaDescHeader , "px, 0px)"));
+							f = let(JSFloat.class, "f", calc("1+(", deltaDescHeader, "/", hHeaderDesc ,")"  ));
+							$headerDesc.css("opacity", f);
 						endif();	
 						
+						/*************************/
+						 _if(deltas, "<0", "&&", "-",currentHeaderDelta, "<=", hHeaderTop, "&&", scrollTop, ">", hHeaderDesc, "+50");
+					    	//cache
+						 	deltaTopHeader.set(deltaTopHeader,"< -",hHeaderTop,"?-",hHeaderTop,":", deltaTopHeader);
+							$header.data("deltaY",  deltaTopHeader);
+							$header.css("transform", txt("translate3d(0px, " , deltaTopHeader , "px, 0px)") );
+							
+						_elseif(deltas, ">0","&&", currentHeaderDelta, "<0");
+							//affiche
+							deltaTopHeader.set(deltaTopHeader,">0?0:",deltaTopHeader);
+							$header.data("deltaY", deltaTopHeader);
+							$header.css("transform", txt("translate3d(0px, " , deltaTopHeader , "px, 0px)"));
+						endif();	
+						
+						/************************************/
 						_if(deltas, "<0", "&&", "-",currentFooterDelta, "<=", hFooter);
+							//cache
 							deltaFooter.set(deltaFooter,">",hFooter,"?",hFooter,":", deltaFooter);
 							$footer.data("deltaY",  deltaFooter);
 							deltaFooter.set("-",deltaFooter);
 							$footer.css("transform", txt("translate3d(0px, " , deltaFooter , "px, 0px)") );
 							
 						_elseif(deltas, ">0","&&", currentFooterDelta, "<0");
+							//affiche
 							deltaFooter.set(deltaFooter,">0?0:",deltaFooter);
 							$footer.data("deltaY", deltaFooter);
 							deltaFooter.set("-",deltaFooter);

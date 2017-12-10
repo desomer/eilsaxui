@@ -39,6 +39,7 @@ public class ViewNavBar extends XHTMLPart {
 	@xComment("material-icons")
 	public static XClass material_icons;
 	public static XClass descBar;
+	public static XClass topBar;
 	
 	public static final String PROPERTY_NAME = "PROPERTY_NAME";
 	
@@ -48,14 +49,15 @@ public class ViewNavBar extends XHTMLPart {
 		
 		return xCss()  
 				.select(navbar).set("z-index: "+XUIScene.ZINDEX_NAV_BAR+";"
-						+ "height: "+XUIScene.heightNavBar+";"
+						+ "height: 3rem;"
 						+ "width: "+XUIScene.widthScene+"; "
 						+ "color:white; "
 						+ "transition: transform "+ConstTransition.SPEED_ANIM_SCROLL+"ms ease-in-out;" 
+						+ XUIScene.PREF_3D
 					//	+ "transition: max-height 250ms linear;" 
 					)
 				
-				.select(fixedTop).set("position:fixed; top:0px; transform:translate3d(0px,0px,0px); backface-visibility: hidden;")
+				.select(fixedTop).set("position:fixed; top:0px;"+ XUIScene.PREFORM_3D)
 			//	.select(fixedToAbsolute).set("position:absolute;")  // permet de deplacement
 				
 				.select(rightAction).set("position: absolute; right: 0px;  top: 0px;  height: 100%;  width: auto;")
@@ -74,10 +76,19 @@ public class ViewNavBar extends XHTMLPart {
 						+ "padding: 0;  overflow: hidden; outline: 0 !important; " // pas de bordure au focus
 						+ "border:none")
 				
+				.select(topBar).set("background:"+"linear-gradient(to bottom, #00000061 0%, rgba(0, 0, 0, 0.23) 64%, rgba(0, 0, 0, 0) 100%);"
+						+ "position: absolute;" + 
+						"    top: 0px;" + 
+						"    height: 4rem;" + 
+						"    width: 100%;"
+						+ "z-index:-1;"
+						)
+				
 				.select(descBar).set(
-						"height: 100%; transform:translate3d(0px,0px,0px);"
+					    "top: 0px; width: 100%;  position: absolute; height:"+ XUIScene.heightNavBar+";"+XUIScene.PREFORM_3D
 						+ "background:"+XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorNavBar()+"; "
 						+ "box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);"
+						+ "transition: all "+ConstTransition.SPEED_ANIM_SCROLL+"ms linear;"    //ease-in-out
 						)
 				;
 	}
@@ -91,7 +102,8 @@ public class ViewNavBar extends XHTMLPart {
 	@xTarget(CONTENT.class)
 	public XMLElement xContenu() {  
 		return xHeader( xId(this.getProperty(PROPERTY_NAME)), navbar, fixedTop,
-			    xDiv(descBar, this.getChildren())
+			    xDiv(descBar, this.getChildren()),
+				xDiv(topBar)
 				);
 	}
 	

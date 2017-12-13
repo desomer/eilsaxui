@@ -117,9 +117,9 @@ public abstract class XHTMLPart extends XMLPart {
 
 	
 	/***********************************************************************/
-	public final static <E> E declare() {
-		return null;
-	}
+//	public final static <E> E declare() {
+//		return null;
+//	}
 	
 	public final static JSMethodInterface js() {
 		return jsBuilder.createJSContent();

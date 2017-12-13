@@ -179,14 +179,14 @@ public abstract class XUIScene extends XHTMLPart {
 						+ "margin: 0;" + 
 						"  padding: 0;")  
 				
-//				.select("html").set("font-size: 16px;"
+				.select("html").set("font-size: 16px;")
+				
 //						//+"overflow-y: scroll;"
 //						//+ "overflow-x: hidden;" // pour que le 100vw ne prennent pas en compte la largueur du scrollbar
 //						+ " line-height: 1.5;"
 //						+ "font-family: 'Roboto', sans-serif;font-weight: normal;")
 				
 				.select("body")	.set("background-color: "+getConfigScene().getBgColorScene()+";"
-							+ "font-size: 16px; "
 							+ "line-height: 1.5;"
 							+ "font-family: 'Roboto', sans-serif;"
 							+ "font-weight: normal;")

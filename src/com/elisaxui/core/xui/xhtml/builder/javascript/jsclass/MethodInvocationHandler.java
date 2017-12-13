@@ -286,7 +286,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 		
 		 int numLigne = -1;
 		 for (StackTraceElement stackTraceElement : stack) {
-			if (JSClass.class.isAssignableFrom(Class.forName(stackTraceElement.getClassName()))  && stackTraceElement.getLineNumber()!=-1 )
+			if (stackTraceElement.getLineNumber()!=-1  && JSClass.class.isAssignableFrom(Class.forName(stackTraceElement.getClassName())) )
 			{
 				numLigne = stackTraceElement.getLineNumber();
 				currentMethodDesc.lastLineNoInsered = numLigne;
@@ -309,7 +309,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 			 String className = null;
 			 int numLigne = -1;
 			 for (StackTraceElement stackTraceElement : stack) {
-				if (JSClass.class.isAssignableFrom(Class.forName(stackTraceElement.getClassName()))  && stackTraceElement.getLineNumber()!=-1 )
+				if (stackTraceElement.getLineNumber()!=-1 && JSClass.class.isAssignableFrom(Class.forName(stackTraceElement.getClassName())) )
 				{
 					className = stackTraceElement.getClassName();
 					numLigne = stackTraceElement.getLineNumber();

@@ -51,6 +51,7 @@ public interface JSPageLayout extends JSClass {
 		
 		JQuery $header = let(JQuery.class, "$header", $activity.find("header"));  //.find(ViewNavBar.descBar));
 		JQuery $headerDesc = let(JQuery.class, "$headerDesc", $activity.find("header").find(ViewNavBar.descBar));
+		JQuery $headerLogo = let(JQuery.class, "$headerLogo", $activity.find("header").find(ViewNavBar.logo));
 		JQuery $footer = let(JQuery.class, "$footer", $activity.find("footer"));
 		
 		JQuery $window = let(JQuery.class, "$window", JQuery.$(jsvar("window")));
@@ -93,24 +94,32 @@ public interface JSPageLayout extends JSClass {
 						
 						JSInt hFooter = let(JSInt.class, "hFooter", $footer.outerHeight());
 		
-						/***********************************************************/
+						/************************* HEADER DESC + IMAGE et TITRE**************************/
 					    _if(deltas, "<0", "&&", "-",currentHeaderDescDelta, "<=", hHeaderDesc);
 					    	//cache
 					    	deltaDescHeader.set(deltaDescHeader,"< -",hHeaderDesc,"?-",hHeaderDesc,":", deltaDescHeader);
 							$headerDesc.data("deltaY",  deltaDescHeader);
 							$headerDesc.css("transform", txt("translate3d(0px, " , deltaDescHeader , "px, 0px)") );
-							JSFloat f = let(JSFloat.class, "f", calc("1+(", deltaDescHeader, "/", hHeaderDesc ,")"  ));
-							$headerDesc.css("opacity", f);
+							JSFloat opacityHeaderDesc = let(JSFloat.class, "opacityHeaderDesc", calc("1+(", deltaDescHeader, "/", hHeaderDesc ,")"  ));
+							$headerDesc.css("opacity", opacityHeaderDesc);
+							
+							JSFloat scale = let(JSFloat.class, "scale", calc("1+0.3*(", deltaDescHeader, "/", hHeaderDesc ,")"  ));
+							$headerLogo.css("transform", txt("scale(",scale,")"));
+							
+							 
 						_elseif(deltas, ">0","&&", currentHeaderDescDelta, "<0", "&&", scrollTop, "<", hHeaderDesc);
 							//affiche
 							deltaDescHeader.set(deltaDescHeader,">0?0:",deltaDescHeader);
 							$headerDesc.data("deltaY", deltaDescHeader);
 							$headerDesc.css("transform", txt("translate3d(0px, " , deltaDescHeader , "px, 0px)"));
-							f = let(JSFloat.class, "f", calc("1+(", deltaDescHeader, "/", hHeaderDesc ,")"  ));
-							$headerDesc.css("opacity", f);
+							opacityHeaderDesc = let(JSFloat.class, "opacityHeaderDesc", calc("1+(", deltaDescHeader, "/", hHeaderDesc ,")"  ));
+							$headerDesc.css("opacity", opacityHeaderDesc);
+							
+							scale = let(JSFloat.class, "scale", calc("1+0.3*(", deltaDescHeader, "/", hHeaderDesc ,")"  ));
+							$headerLogo.css("transform", txt("scale(",scale,")"));
 						endif();	
 						
-						/*************************/
+						/**************HEADER ACTION   ***********/
 						 _if(deltas, "<0", "&&", "-",currentHeaderDelta, "<=", hHeaderTop, "&&", scrollTop, ">", hHeaderDesc, "+50");
 					    	//cache
 						 	deltaTopHeader.set(deltaTopHeader,"< -",hHeaderTop,"?-",hHeaderTop,":", deltaTopHeader);

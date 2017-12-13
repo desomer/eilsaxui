@@ -32,6 +32,7 @@ public class ViewLoader extends XHTMLPart {
 					 .select(cLoaderLoader) .set(" transition: all 0.7s ease-in-out;"
 					 		+ "border:10px solid #ebebeb; border-bottom-color:"+XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorTheme()+";"
 					 		+ "width:100%;height:100%;border-radius:50%;"
+					 		+ "box-shadow: 0px 13px 20px 0px #fd42a430;"
 					 		//+ "-webkit-font-smoothing: antialiased !important; margin:30px 0px;"
 					 		+ "-webkit-animation: spin2 3s ease-in-out infinite;")
 					 .on("@keyframes spin2", 

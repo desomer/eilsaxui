@@ -59,7 +59,7 @@ public class ViewTabBar extends XHTMLPart {
 						+ "width: "+XUIScene.widthScene+"; "
 						+ "color:white; "
 						+ "transition: transform "+ConstTransition.SPEED_ANIM_SCROLL+"ms ease-in-out;" 
-						+ "box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);")
+						+ "box-shadow: 16px -14px 20px 0 rgba(0, 0, 0, 0.21), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);")
 				
 				.select(cFixedBottom).set("position:fixed; bottom:0px; "+XUIScene.PREFORM_3D)
 				.select(cListReset).set("list-style: none;margin: 0; padding: 0;")

@@ -26,32 +26,32 @@ public class ViewOverlayRipple extends XHTMLPart {
 
 	public static final String START_POINT ="85vw 80vh";
 	public static XClass ripple_overlay;
-	public static XClass transition;
+	public static XClass transitionOpacity;
 	
 	@xTarget(HEADER.class)
 	@xRessource
 	public XMLElement xStyle() {
 		
 		return xCss()
-				.select(ripple_overlay).set(
-					"position: absolute;"
-					+ "top: 0px;    left: 0px; "
+				.select(ripple_overlay).set(""
+					+ "position: absolute;"
+					+ "top: 0px; left: 0px; "
 					+ "width: 100vw;  height: 100vh; "
 					+ "z-index:"+XUIScene.ZINDEX_OVERLAY+ ";"
 					+ "background: "+ XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorTheme() +"; "
+					+ "transition: all "+SPEED_ACTIVITY_TRANSITION_EFFECT+"ms linear;"
+					+ XUIScene.PREFORM_CHANGE_OPACITY
 					)
-				
-				//.on(".ripple_overlay.transitionx2","transition:all  "+SPEED_ACTIVITY_TRANSITION_EFFECT*2+"ms cubic-bezier(1, 0, 1, 1);")
-				.select(ripple_overlay.and(transition)).set("transition: all "+SPEED_ACTIVITY_TRANSITION_EFFECT+"ms cubic-bezier(1, 0, 1, 1);")
-				
-			//	.on(".ripple_overlay.t0prct","clip-path: circle(0px at "+START_POINT+");  -webkit-clip-path: circle(0px at "+START_POINT+");  ")
-			//	.on(".ripple_overlay.t100prct","clip-path: circle(80% at center);-webkit-clip-path: circle(80% at center);")
+
+				.select(ripple_overlay.and(transitionOpacity))
+			//		.set("transition: opacity "+SPEED_ACTIVITY_TRANSITION_EFFECT+"ms linear;")  //cubic-bezier(1, 0, 1, 1)
+					.set("opacity:0;") 
 				;
 	}
 	
 	@xTarget(CONTENT.class)
 	public XMLElement xContenu() {
-		return xDiv(xAttr("class", "\"ripple_overlay\""), this.getChildren());
+		return xDiv(ripple_overlay, this.getChildren());
 	}
 	
 	public static XMLElement xTemplate() {

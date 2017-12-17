@@ -3,6 +3,9 @@
  */
 package com.elisaxui.xui.core.widget.navbar;
 
+import static com.elisaxui.xui.core.widget.button.ViewRippleEffect.cRippleEffect;
+import static com.elisaxui.xui.core.transition.CssTransition.*;
+
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
@@ -15,11 +18,6 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 import com.elisaxui.xui.core.page.XUIScene;
 import com.elisaxui.xui.core.transition.ConstTransition;
 import com.elisaxui.xui.core.widget.button.ViewBtnBurger;
-import com.elisaxui.xui.core.widget.button.ViewRippleEffect;
-import com.elisaxui.xui.core.widget.menu.JSMenu;
-import com.elisaxui.xui.core.widget.menu.ViewMenuDivider;
-import com.elisaxui.xui.core.widget.menu.ViewMenuItems;
-import static  com.elisaxui.xui.core.widget.button.ViewRippleEffect.*;
 /**
  * @author Bureau
  *
@@ -29,7 +27,7 @@ public class ViewNavBar extends XHTMLPart {
 	
 	public static XClass actionBtnContainer;
 	static XClass animatedBg;
-	public static XClass fixedToAbsolute;
+	public static XClass isOpenMenu;
 	public static XClass navbar;
 	public static XClass fixedTop;
 	public static XClass rightAction;
@@ -53,41 +51,57 @@ public class ViewNavBar extends XHTMLPart {
 						+ "width: "+XUIScene.widthScene+"; "
 						+ "color:white; "
 						+ "transition: transform "+ConstTransition.SPEED_ANIM_SCROLL+"ms ease-in-out;" 
-						+ XUIScene.PREF_3D
-					//	+ "transition: max-height 250ms linear;" 
+						+ XUIScene.PREFORM_3D_2
 					)
 				
-				.select(fixedTop).set("position:fixed; top:0px;"+ XUIScene.PREFORM_3D)
-			//	.select(fixedToAbsolute).set("position:absolute;")  // permet de deplacement
+				.select(fixedTop).set("position:fixed; top:0px;"
+						+ XUIScene.PREFORM_3D_2
+						 )
+			//----------------	.select(fixedToAbsolute).set("position:absolute;")  // permet de deplacement
 				
 				.select(rightAction).set("position: absolute; right: 0px;  top: 0px;  height: 100%;  width: auto;")
 				
 				.select(actionBtn).set("margin: 0; padding: 8px;  font-size: 2.5rem;  cursor: pointer;")
 				
-				.select(center).set("z-index:"+(XUIScene.ZINDEX_NAV_BAR+1)+";height:100%; display: flex; align-items: center;justify-content: center")
-				.select(logo).set("z-index:"+(XUIScene.ZINDEX_NAV_BAR+1)+"; margin-top:calc(" + XUIScene.heightNavBar +" /2); color: inherit; font-size: 2.1rem; animation-duration: 700ms;")
+				.select(center).set(""
+						+ ";height:100%; "
+						+ "display: flex; align-items: center;justify-content: center"
+						)
+				.select(logo).set( ""
+						+ "z-index: "+(XUIScene.ZINDEX_NAV_BAR+1)+";"  // pour opacity
+						+ " margin-top:calc(" + XUIScene.heightNavBar +" /2); "
+						+ "color: inherit; "
+						+ "font-size: 2.1rem; "
+						+ "transition: all "+ConstTransition.SPEED_ANIM_SCROLL+"ms linear;"    //ease-in-out
+						 )
 				
-				.select(animatedBg).set("position: absolute; display: block;  width: 100%; height: 100%;"
+				.select(animatedBg).set("position: absolute; display: block;"
+						+ "  width: 100%; height: 100%;"
 						+ " top: 0; right: 0; bottom: 0; left: 0;"
-						+ "background:"+XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorNavBar()+"; "
+					//	+ "background:"+XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorNavBar()+"; "
 						)
 				
 				.select(actionBtnContainer).set("cursor: pointer; position: relative; background-color: Transparent; color:white;"
 						+ "padding: 0;  overflow: hidden; outline: 0 !important; " // pas de bordure au focus
 						+ "border:none")
 				
-				.select(topBar).set("background:"+"linear-gradient(to bottom, #00000061 0%, rgba(0, 0, 0, 0.23) 64%, rgba(0, 0, 0, 0) 100%);"
-						+ "position: absolute;" + 
-						"    top: 0px;" + 
-						"    height: 4rem;" + 
-						"    width: 100%;"
+				.select(topBar).set(""
+						+ "background:"+"linear-gradient(to bottom, #00000061 0%, rgba(0, 0, 0, 0.23) 64%, rgba(0, 0, 0, 0) 100%);"
+						+ "position: absolute;" 
+						+ "top: 0px;" 
+						+ "height: 4rem;" 
+						+ "width: 100%;"
 						+ "z-index:-1;"
+						+ XUIScene.PREFORM_3D_2
 						)
 				
-				.select(descBar).set(
-					    "top: 0px; width: 100%;  position: absolute; height:"+ XUIScene.heightNavBar+";"+XUIScene.PREFORM_3D
+				.select(descBar).set( ""
+					    + "top: 0px; width: 100%;"
+					    + "position: absolute; "
+					    + "height:"+ XUIScene.heightNavBar+";"
+					    + XUIScene.PREFORM_3D_2
 						+ "background:"+XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorNavBar()+"; "
-						//+ "box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);"
+						//--------------------+ "box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);"
 						+ "box-shadow: 20px 6px 12px 9px rgba(0, 0, 0, 0.22), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);"
 						+ "transition: all "+ConstTransition.SPEED_ANIM_SCROLL+"ms linear;"    //ease-in-out
 						)
@@ -102,7 +116,7 @@ public class ViewNavBar extends XHTMLPart {
 	
 	@xTarget(CONTENT.class)
 	public XMLElement xContenu() {  
-		return xHeader( xId(this.getProperty(PROPERTY_NAME)), navbar, fixedTop,
+		return xHeader( xId(this.getProperty(PROPERTY_NAME)), navbar, fixedTop, cFixedElement,
 			    xDiv(descBar, this.getChildren()),
 				xDiv(topBar)
 				);

@@ -93,7 +93,7 @@ public interface JSContainer extends JSFactory {
 						
 						_if("ctx.row.active");		
 						  	__(_tkrouter, ".", _tkAnimation.doActivityActive(JQuery.$(jsvar("'#'+ctx.row.id"))));
-						  	__(_tkrouter, ".", _tkAnimation.doNavBarToFixe());
+						  	__(_tkrouter, ".", _tkAnimation.doFixedElemToFixe(JQuery.$(jsvar("'#'+ctx.row.id"))));
 						endif();
 						
 						__("var backupId=", _tkrouter, ".", _activityMgr.getCurrentIDActivity());
@@ -153,8 +153,8 @@ public interface JSContainer extends JSFactory {
 					consoleDebug(txt("JSContainer change "), "ctx.value", "ctx");
 					_if("!ctx.value==''");
 						__("$(ctx.row['_dom_']).css('visibility','')");
-						__("$(ctx.row['_dom_']).toggleClass('animated '+ctx.value)");
-						//__("setTimeout(\n", fct("elem").__("elem.toggleClass('animated '+ctx.value)") ,",500, $(ctx.row['_dom_']))")
+					//	__("$(ctx.row['_dom_']).toggleClass('animated '+ctx.value)");
+						
 					endif();	
 				endif();
 			})

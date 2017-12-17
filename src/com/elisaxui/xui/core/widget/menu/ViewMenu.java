@@ -51,9 +51,10 @@ public class ViewMenu extends XHTMLPart {
 		return xCss()
 				.on(menu, "z-index: "+XUIScene.ZINDEX_MENU+";background-color: #ffffff;height: 100vh;width: " + XUIScene.widthMenu
 						+ "px; color:black;"
-						+ XUIScene.PREF_3D
+						+ XUIScene.PREFORM_3D
 						//+ "box-shadow: 4px 4px 2px 0 rgba(0,0,0,0.14);"
-						+ "will-change:transform;")
+						//+ "will-change:transform;"
+						)
 				.on(cFixedLeft,
 						"position:absolute; top:0px; transform:translate3d(-" + (XUIScene.widthMenu+5) + "px,0px,0px)")
 				.on(cHeaderMenu, "height:53px; " + XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorMenu()
@@ -65,7 +66,8 @@ public class ViewMenu extends XHTMLPart {
 						+ "cursor: pointer;   min-height: 50px; line-height: 21px; "
 						+ "width: 100%;   text-align: left;   text-transform: none;"
 						+ XUIScene.PREFORM_3D
-						+ "animation-duration:" + SPEED_SHOW_MENU_ITEMS + "ms;will-change:transform;"
+						+ "animation-duration:" + SPEED_SHOW_MENU_ITEMS + "ms;"
+						//+ "will-change:transform;"
 						)
 
 				.on(".menu li>a", "font-size: 1rem;  line-height: 26px;  padding: 14px 16px;  float: left;")

@@ -13,7 +13,6 @@ import com.elisaxui.app.elisys.xui.asset.AssetHandler;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
@@ -65,12 +64,15 @@ public abstract class XUIScene extends XHTMLPart {
 	public static final int ZINDEX_FLOAT = 3;
 	public static final int ZINDEX_OVERLAY = 4;
 
-    public static final String PREF_3D= "backface-visibility: hidden;"
+  //  public static final String PREF_3D= ""; //"backface-visibility: hidden;"
     		//+ " transform-style:preserve-3d;"
     		//transform: translate3d(0px,0px,0px);   =bug : les header et footer ne se fixe plus au body
     		;
     
-    public static final String PREFORM_3D= "backface-visibility: hidden;transform: translate3d(0px,0px,0px);";
+    public static final String PREFORM_3D_2= "";
+    public static final String PREFORM_3D= "backface-visibility: hidden; transform: translate3d(0px,0px,0px); will-change:transform;";
+    
+    public static final String PREFORM_CHANGE_OPACITY= "will-change:opacity, display;";
     
 	public static XClass scene;
 	public static XClass cShell;
@@ -202,7 +204,8 @@ public abstract class XUIScene extends XHTMLPart {
 					.path(xCss("#NavBarShell h1").set("text-align:center;color: inherit;  font-size: 2.1rem; margin-top: 50px"))
 				//----------------------------------------------------------------
 				.select(activity)
-					.set("background-color: "+getConfigScene().getBgColorContent()+";"+ PREF_3D 
+					.set("background-color: "+getConfigScene().getBgColorContent()+";"
+				//    +PREF_3D 
 					+ " width:"+widthScene+";"
 					+ " will-change:overflow,z-index;") //will-change:transform   =bug : les header et footer ne se fixe plus au body
 					.path(xCss(ViewPageLayout.content)

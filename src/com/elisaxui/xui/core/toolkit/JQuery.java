@@ -99,6 +99,11 @@ public class JQuery extends JSClassInterface {
 		return callMth("on", classes);
 	}
 
+	public JQuery each(Object...classes)
+	{
+		return callMth("each", classes);
+	}
+	
 	/**
 	 * @param selector
 	 * @return

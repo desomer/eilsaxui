@@ -58,9 +58,23 @@ public class SrvMain {
 		// standard constructors/getters
 	     
 	    public static DataObject get(String data) {
-	        objectCounter++;
+	        setObjectCounter(getObjectCounter() + 1);
 	        return new DataObject(data);
 	    }
+
+		/**
+		 * @return the objectCounter
+		 */
+		public static int getObjectCounter() {
+			return objectCounter;
+		}
+
+		/**
+		 * @param objectCounter the objectCounter to set
+		 */
+		public static void setObjectCounter(int objectCounter) {
+			DataObject.objectCounter = objectCounter;
+		}
 	}
 	
 	

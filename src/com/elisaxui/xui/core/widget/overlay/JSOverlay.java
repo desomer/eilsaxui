@@ -50,9 +50,6 @@ public interface JSOverlay extends JSClass {
 		
 		_if(phase, "==1")
 			.__("overlay.css('opacity','0')")
-//			.__("overlay.one('transitionend',", fct()
-//					.__("overlay.css('display','none')")
-//					.__("overlay.css('transition','')") ,")")
 		._elseif(phase, "==2")
 			.__("overlay.css('display','none')")
 			.__("overlay.css('transition','')")

@@ -74,6 +74,7 @@ public class SrvSyllabisation {
 			 */
 			@Override
 			public Object getJSON() {
+				@SuppressWarnings("resource")
 				Scanner s = new Scanner(unePhrase).useDelimiter(" ");
 				List<Object> jsonMot = new ArrayList<Object>();
 				while (s.hasNext()) {

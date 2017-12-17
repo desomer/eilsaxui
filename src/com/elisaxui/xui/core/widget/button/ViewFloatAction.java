@@ -11,6 +11,7 @@ import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.CONTENT;
 import com.elisaxui.xui.core.page.XUIScene;
+import static com.elisaxui.xui.core.transition.CssTransition.*;
 
 /**
  * @author Bureau
@@ -41,15 +42,18 @@ public class ViewFloatAction extends XHTMLPart {
 	public XMLElement xStyle() {
 
 		return xCss().select(cFloatAction)
-						.set("z-index:"+XUIScene.ZINDEX_FLOAT+"; position: fixed; "
-								+ "left: calc("+XUIScene.widthScene+" - "+ViewBtnCircle.SIZE_CIRCLE+" - 1rem); top: calc(100vh - "+ViewBtnCircle.SIZE_CIRCLE+" - "+XUIScene.heightTabBar+" - 1rem); "
-								+ XUIScene.PREFORM_3D)
+						.set(""
+							//+ "z-index:"+XUIScene.ZINDEX_FLOAT+";"
+							+ " position: fixed; "
+							+ "left: calc("+XUIScene.widthScene+" - "+ViewBtnCircle.SIZE_CIRCLE+" - 1rem); "
+							+ "top: calc(100vh - "+ViewBtnCircle.SIZE_CIRCLE+" - "+XUIScene.heightTabBar+" - 1rem); "
+								)
 		;
 	}
 	
 	@xTarget(CONTENT.class)
 	public static XMLElement getTemplateBtnFloat() {
-		return xDiv(cFloatAction, xIdAction("\"BtnFloatMain\""),	xPart(new ViewBtnCircle().addProperty(ViewBtnCircle.PROPERTY_ICON, "history")));
+		return xDiv(cFloatAction, cFixedElement, xIdAction("\"BtnFloatMain\""),	xPart(new ViewBtnCircle().addProperty(ViewBtnCircle.PROPERTY_ICON, "history")));
 	}
 	
 	public static XMLElement getTemplate() {

@@ -130,7 +130,7 @@ public interface JSTransition extends JSClass {
 		
 			JQuery jqHamburgerDetach = let( JQuery.class, "jqHamburgerDetach", $(scene.descendant(ViewBtnBurger.hamburger.and(detach))) );
 			__(TKQueue.startAnimQueued(	 callback(()->{  
-							overlay.doHide(1);
+							overlay.doHideOverlay(1);
 							// -------------------------- repositionne l'activity --------------------
 							jqActivityActive.removeClass(activityMoveForShowMenu);
 							jqActivityActive.addClass(activityMoveForHideMenu);
@@ -141,12 +141,13 @@ public interface JSTransition extends JSClass {
 							jqHamburgerDetach.css(TRANSFORM, txt("translate3d(0px,", sct, "px,0px) scale(1)" ));
 							})
 					, SPEED_SHOW_MENU + DELAY_SURETE_END_ANIMATION, callback(()->{
-							overlay.doHide(2);
-							$("body").css(OVERFLOW, ""); // remet de scroll
+							overlay.doHideOverlay(2);
+//							$("body").css(OVERFLOW, ""); // remet de scroll
 
 							// ----------- fige la barre nav en haut (fixed) --------
-//							self.doTabBarToFixe(); 
+							self.doActivityDeFreeze(jqActivityActive);
 							self.doFixedElemToFixe(jqActivityActive);
+							
 							// anime le burger et le passe de la scene vers l'activity
 							JQuery hamburger = let(JQuery.class, "hamburger", jqHamburgerDetach.detach() ) ;
 							hamburger.removeClass(detach);
@@ -171,16 +172,16 @@ public interface JSTransition extends JSClass {
 				// ouvre le menu
 				/*************************************************/
 				__(TKQueue.startAnimQueued(callback("param", ()->{
-							$("body").css(OVERFLOW,HIDDEN); //???? plus de scroll du body sur l'ouverture du menu
-							overlay.doShow(jqActivityActive, 1);
+//							$("body").css(OVERFLOW,HIDDEN); //???? plus de scroll du body sur l'ouverture du menu
+							overlay.doShowOverlay(jqActivityActive, 1);
 							// ---------------------------------------
 							jqMenu.css(TRANSITION, ""); // fige le menu en haut sans animation
 							jqMenu.css(TRANSFORM, txt("translate3d(-" + XUIScene.widthMenu + "px," ,sct, "px,0px)" ));
 	
-							// ----------- detache la barre nav en haut par rapport au scroll et ajoute a l'activité --------
+							// ----------- detache les barres et float action --------
 							self.doFixedElemToAbsolute(jqActivityActive, sct);
-//							self.doTabBarToAbsolute(sct);
 	
+							self.doActivityFreeze(jqActivityActive, sct);
 							// ---------- anime le burger et le passe sur la scene---------------
 							jqHamburger.detach();
 							jqHamburger.addClass(detach);
@@ -190,13 +191,14 @@ public interface JSTransition extends JSClass {
 							jqScene.append(jqHamburger);
 						})
 						, NEXT_FRAME, callback(()->{
+							
 								// ------------ deplace l'activity a l ouverture du menu-------------
 								jqActivityActive.addClass(activityMoveForShowMenu);
 								// ------------ ouvre le menu avec animation---------
 								jqMenu.css(TRANSITION, "transform " + SPEED_SHOW_MENU + "ms linear");
 								jqMenu.css(TRANSFORM, txt("translate3d(0px,",sct,"px,0px"));
 								// -------------------------------------------------
-								overlay.doShow(jqActivityActive, 2);
+								overlay.doShowOverlay(jqActivityActive, 2);
 								// ------------ deplace le hamburger---------
 								jqHamburger.css(TRANSFORM, txt("translate3d(-15px,",calc("(",sct,"-3)"),"px,0px) scale(0.6)"));
 								// ------------- anim des item de menu---------
@@ -222,7 +224,7 @@ public interface JSTransition extends JSClass {
 	}
 
 	default JSVoid doActivityFreeze(JQuery act, JSInt sct) {
-		act.addClass(fixedForAnimated);
+		act.addClass(fixedForFreeze);
 
 		_if(sct.isEqual(-1));
 				sct.set(act.data(DATA_SCROLLTOP));
@@ -242,11 +244,11 @@ public interface JSTransition extends JSClass {
 		JQuery actContent = let(JQuery.class, "actContent", act.find(ViewPageLayout.content));
 		actContent.css(OVERFLOW, "");
 		actContent.css(HEIGHT, "");
-		$(act).removeClass(fixedForAnimated);
+		$(act).removeClass(fixedForFreeze);
 		return _void();
 	}
 
-	default JSVoid doActivityInactive(JQuery act) // Object sct
+	default JSVoid doActivityInactive(JQuery act)
 	{
 		act.removeClass(active);
 		act.addClass(inactive);
@@ -260,6 +262,11 @@ public interface JSTransition extends JSClass {
 		return _void();
 	}
 
+	/**
+	 * peux etre inactif mais encore visible durant la transistion
+	 * @param act
+	 * @return
+	 */
 	default JSVoid doActivityNoDisplay(JQuery act) {
 		act.removeClass(active);
 		act.addClass(nodisplay);
@@ -291,7 +298,7 @@ public interface JSTransition extends JSClass {
 			// ouverture activity 2
 			.__(TKQueue.startAnimQueued( callback(()->{
 							self.doFixedElemToAbsolute(jqAct1, ZERO);
-							overlay.doShow(jqAct1, 1); // init
+							overlay.doShowOverlay(jqAct1, 1); // init
 							self.doActivityInactive(jqAct1);
 							self.doActivityFreeze(jqAct1, sct); // freeze 1
 							self.doActivityActive(jqAct2);
@@ -303,7 +310,7 @@ public interface JSTransition extends JSClass {
 							})
 					, NEXT_FRAME, callback(()->{
 							// lance les anim
-							overlay.doShow(jqAct1, 2);
+							overlay.doShowOverlay(jqAct1, 2);
 							self.doActivityFreeze(jqAct2, MEM_SCROLL); // freeze 2
 	
 							jqAct1.addClass(transitionSpeed);
@@ -337,12 +344,12 @@ public interface JSTransition extends JSClass {
 							jqAct2.addClass(toBottom);	
 					})
 					, DELAY_SURETE_END_ANIMATION, callback(()->{  // lance les anim
-							overlay.doHide(1);
+							overlay.doHideOverlay(1);
 							jqAct1.removeClass(zoom09);  // revient en zoom 1
 
 					})
 					, SPEED_SHOW_ACTIVITY + DELAY_SURETE_END_ANIMATION, callback(()->{
-							overlay.doHide(2);
+							overlay.doHideOverlay(2);
 							self.doActivityNoDisplay(jqAct2);
 							self.doActivityDeFreeze(jqAct2); // defrezze 2
 							self.doFixedElemToFixe(jqAct1);
@@ -366,7 +373,7 @@ public interface JSTransition extends JSClass {
 	default JSVoid doOpenActivityFromRipple() {
 
 		JSInt MEM_SCROLL = cast(JSInt.class,"-1");
-		JSInt ZERO = cast(JSInt.class,"0");
+		JSInt SCROLL_TOP = cast(JSInt.class,"0");
 		
 		JSOverlay overlay = let(JSOverlay.class, "overlay", NULL);
 		set(overlay, _new(SPEED_SHOW_ACTIVITY, 0.6));
@@ -385,12 +392,12 @@ public interface JSTransition extends JSClass {
 		// ouverture activity 2
 		.__(TKQueue.startAnimQueued(
 				callback(()->{
-						overlay.doShow(jqAct1, 1);   // met en gris
-						self.doFixedElemToAbsolute(jqAct1, ZERO);
+						overlay.doShowOverlay(jqAct1, 1);   // met en gris
+						self.doFixedElemToAbsolute(jqAct1, SCROLL_TOP);
 						self.doActivityFreeze(jqAct1, sct); // frezze 1
 						jqAct1.addClass(backActivity);
 						
-						self.doFixedElemToAbsolute(jqAct2, ZERO);   // fixe pour ripple
+						self.doFixedElemToAbsolute(jqAct2, SCROLL_TOP);   // fixe pour ripple
 						
 						// ajoute le template du ripple overlay
 //						JSXHTMLPart template = let(JSXHTMLPart.class, "template", ViewOverlayRipple.xTemplate());
@@ -407,7 +414,7 @@ public interface JSTransition extends JSClass {
 						self.doActivityFreeze(jqAct2, MEM_SCROLL); // frezze 2
 				})
 				, NEXT_FRAME, callback(()->{ // lance animation dezoom
-						overlay.doShow(jqAct1, 2);
+						overlay.doShowOverlay(jqAct1, 2);
 						jqAct1.addClass(transitionSpeed);
 						jqAct1.addClass(zoom09);     // reduit
 						self.doActivityInactive(jqAct1);
@@ -455,10 +462,10 @@ public interface JSTransition extends JSClass {
 		._else()
 		// fermeture activity 2
 		.__(TKQueue.startAnimQueued(callback(()->{
-					self.doFixedElemToAbsolute(jqAct2, ZERO);
+					self.doFixedElemToAbsolute(jqAct2, SCROLL_TOP);
 					self.doActivityInactive(jqAct2);
 					self.doActivityActive(jqAct1);
-					self.doActivityFreeze(jqAct2, sct); // frezze 2
+					self.doActivityFreeze(jqAct2, sct);
 
 					jqAct2.addClass(circleAnim100prt);
 					jqAct2.addClass(frontActivity);
@@ -474,11 +481,11 @@ public interface JSTransition extends JSClass {
 				, SPEED_ACTIVITY_TRANSITION_EFFECT / 2, callback(()->{ // lance animation activity 1
 					jqAct1.removeClass(zoom09);
 					jqAct1.addClass(transitionSpeed);
-					overlay.doHide(1);
+					overlay.doHideOverlay(1);
 				})
 				, Math.max(SPEED_SHOW_ACTIVITY, SPEED_ACTIVITY_TRANSITION_EFFECT) + DELAY_SURETE_END_ANIMATION,
 					callback(()->{ 
-					overlay.doHide(2);
+					overlay.doHideOverlay(2);
 					self.doActivityNoDisplay(jqAct2);
 					self.doFixedElemToFixe(jqAct1);
 					self.doActivityDeFreeze(jqAct1); // defrezze 1

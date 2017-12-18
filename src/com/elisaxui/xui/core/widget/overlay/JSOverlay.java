@@ -28,7 +28,7 @@ public interface JSOverlay extends JSClass {
 	}
 	
 	
-	default Object doShow(JQuery act, Object phase)
+	default Object doShowOverlay(JQuery act, Object phase)
 	{
 		
 		JQuery overlay = let(JQuery.class, "overlay", act.find(cBlackOverlay) );
@@ -43,7 +43,7 @@ public interface JSOverlay extends JSClass {
 		return _void();
 	}
 	
-	default Object doHide(Object phase)
+	default Object doHideOverlay(Object phase)
 	{
 
 		JQuery overlay = let(JQuery.class, "overlay", $(active.descendant(cBlackOverlay)) );

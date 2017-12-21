@@ -32,8 +32,7 @@ public class ViewOverlay extends XHTMLPart {
 				.select(cBlackOverlay).set("display: none;"
 						+ "position: absolute;	"
 						+ "top: 0px; left: 0px;"
-					//	+ " min-width:100% ; min-height:100%;"   //TODO changer par 100vw 100vh et translate3d
-						+ " width:100vw ; height:100vh;"   //TODO changer par 100vw 100vh et translate3d
+						+ " width:100vw ; height:101vh;" 
 						+ "background-color: black;"
 						+ XUIScene.PREFORM_CHANGE_OPACITY
 						+ "opacity:0; z-index:"+XUIScene.ZINDEX_OVERLAY+";")

@@ -41,7 +41,7 @@ public class ViewRippleEffect extends XHTMLPart {
 						+"50% {transform: scale(30, 25); opacity: 1;  } "
 						+"100% {opacity: 0;transform: scale(80, 40);  }")
 				
-				.on(CSSSelector.onPath(cRippleEffect,cRippleEffectShow,":after"),"animation: rippleanim "+ SPEED_RIPPLE_EFFECT +"ms ease-out;" )
+				.on(CSSSelector.onPath(cRippleEffect, cRippleEffectShow, ":after"),"animation: rippleanim "+ SPEED_RIPPLE_EFFECT +"ms ease-out;" )
 				
 				;
 	}	

@@ -59,7 +59,7 @@ public interface JSPageLayout extends JSClass {
 		JSInt scrollTop = let(JSInt.class, "scrollTop", $window.scrollTop());
 
 		
-		//_if(true).then(()->{})._else(()->{});
+		//_if(true).then(()->{})._else(()->{});   //TODO a faire if then else
 		
 		Object fctdraw = fragmentIf(true).__(()->{
 							
@@ -68,7 +68,7 @@ public interface JSPageLayout extends JSClass {
 				now.set("Date.now()");
 				deltaTime.set(now.substact(then));
 				
-				_if( deltaTime,">", interval);
+				_if( deltaTime,">", interval, "&&", "window.disableScrollEvent==null");
 					scrollTop.set($window.scrollTop()); //position du scroll
 						
 					_if(lastScrollTop.isNotEqual(scrollTop), "&&", $activity.hasClass(CssTransition.active) ); 

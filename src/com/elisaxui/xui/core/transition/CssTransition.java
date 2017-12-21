@@ -20,8 +20,9 @@ public class CssTransition extends XHTMLPart {
 
 	public static XClass activity;
 	
-	static XClass fixedForFreeze;
 	static XClass animated;
+	
+	static XClass cStateFixedForFreeze;
 	public static XClass cFixedElement;
 	
 	public static XClass active;
@@ -31,9 +32,9 @@ public class CssTransition extends XHTMLPart {
 	public static XClass circleAnim0prt;
 	public static XClass circleAnim100prt;
 	
-	public static XClass zoom09;
-	public static XClass zoom10;
-	public static XClass zoom12;
+	public static XClass cStateZoom09;
+	public static XClass cStateZoom1;
+	public static XClass cStateZoom12;
 	
 	public static XClass transitionSpeed;
 	public static XClass transitionSpeedx2;
@@ -42,12 +43,12 @@ public class CssTransition extends XHTMLPart {
 	public static XClass activityMoveForShowMenu;
 	public static XClass activityMoveForHideMenu;
 	
-	public static XClass frontActivity;
-	public static XClass backActivity;
+	public static XClass cStateFrontActivity;
+	public static XClass cStateBackActivity;
 	
-	public static XClass toBottom;
-	public static XClass tofront;
-	public static XClass nodisplay;
+	public static XClass cStateMoveToBottom;
+	public static XClass cStateMoveToFront;
+	public static XClass cStateNoDisplay;
 	
 	@xTarget(HEADER.class)
 	@xRessource
@@ -57,26 +58,32 @@ public class CssTransition extends XHTMLPart {
 		return xCss()
 				.select(animated).set("animation-duration:"+SPEED_ANIMATED+"ms")
 				
-				.select(activity.and(fixedForFreeze)).set("top:0px; position: fixed; ")
-				
-				.select(activity.and(frontActivity)).set("z-index:"+XUIScene.ZINDEX_ANIM_FRONT+";")
-				.select(activity.and(backActivity)).set("z-index:"+XUIScene.ZINDEX_ANIM_BACK+";")
-				
-				.select(activity.and(toBottom)).set("transform: translate3d(0px,100%,0px);"
+				.select(activity)
+						.and(xCss(cStateFixedForFreeze).set("top:0px; position: fixed; overflow:hidden "))
+						.and(xCss(cStateFrontActivity).set("z-index:"+XUIScene.ZINDEX_ANIM_FRONT+";"))	
+						.and(xCss(cStateBackActivity).set("z-index:"+XUIScene.ZINDEX_ANIM_BACK+";"))		
+	
+				.select(activity.and(cStateMoveToBottom)).set(
+						"transform: translate3d(0px,100%,0px);"
 						+ "transition:transform "+SPEED_SHOW_ACTIVITY +"ms ease-in-out;")	
-				.select(activity.and(tofront)).set("transform: translate3d(0px,0px,0px);"
+				.select(activity.and(cStateMoveToFront)).set(
+						"transform: translate3d(0px,0px,0px);"
 						+ "transition:transform "+SPEED_SHOW_ACTIVITY +"ms ease-in-out;")  
-				.select(activity.and(nodisplay)).set("display:none;")
+				.select(activity.and(cStateNoDisplay)).set("display:none;")
 				
-				.select(activityMoveForShowMenu).set("transition:transform "+SPEED_SHOW_MENU+"ms ease-out; transform: translate3d("+(widthMenu-100)+"px,0px,0px) "
-						+ "scale3d(0.97,0.97,1);")
-				.select(activityMoveForHideMenu).set("transition:transform "+SPEED_SHOW_MENU+"ms ease-out; transform: translate3d(0px,0px,0px);")
+				.select(activity)
+						.and(xCss(cStateZoom12).set("transform: scale3d(1.2,1.2,1)"))
+						.and(xCss(cStateZoom1).set("transform: scale3d(1,1,1)"))	
+						.and(xCss(cStateZoom09).set("transform: scale3d(0.9,0.9,1)"))
+				
+				.select(activityMoveForShowMenu).set(
+						"transition:transform "+SPEED_SHOW_MENU+"ms ease-out;"
+						+ " transform: translate3d("+(widthMenu-100)+"px,0px,0px) "
+						+ "scale3d(0.95,0.95,1);")
+				.select(activityMoveForHideMenu).set(
+						"transition:transform "+SPEED_SHOW_MENU+"ms ease-out;"
+						+ " transform: translate3d(0px,0px,0px);")
 
-				.select(activity.and(zoom12)).set("transform: scale3d(1.2,1.2,1)")
-				.select(activity.and(zoom10)).set("transform: scale3d(1,1,1)")
-				.select(activity.and(zoom09)).set("transform: scale3d(0.9,0.9,1)")
-
-//				.select(activity.and(transitionSpeedSlow)).set("transition:all "+ SPEED_SHOW_ACTIVITY*5 +"ms linear")
 				.select(activity.and(transitionSpeed)).set("transition:all "+ SPEED_SHOW_ACTIVITY +"ms ease-in-out")
 				.select(activity.and(transitionSpeedx2)).set("transition:all "+ SPEED_ACTIVITY_TRANSITION_EFFECT +"ms ease-in-out")
 								

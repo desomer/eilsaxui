@@ -32,7 +32,7 @@ import com.elisaxui.xui.core.widget.log.ViewLog;
 			
 
 			
-			XMLElement cnt1 = XHTMLPart.xDiv( ViewRippleEffect.cRippleEffect,                             //6
+			XMLElement cnt1 = XHTMLPart.xDiv(   ViewRippleEffect.cRippleEffect,                             //6
 							XHTMLPart.xAttr("style", "\"width: 100%; height: 30vh; background:url(" +ScnRoot.listPhotos[9] +") center / cover\""),
 							XHTMLPart.xId("test1"), 
 							XHTMLPart.xAttr("data-x-action", "\""+EVT_DO_PHRASE+"\"")

@@ -198,17 +198,16 @@ public abstract class XUIScene extends XHTMLPart {
 						//+ "min-width: 100vw;  "
 						+ "min-height: 100vh; " 
 						)
-				    .path(xCss(cShell).set("background-color: "+getConfigScene().getBgColorContent()+ ";"
+				    .children(xCss(cShell).set("background-color: "+getConfigScene().getBgColorContent()+ ";"
 				    		+ "width: "+widthScene+";"
 				    		+ "  min-height: 100vh; "))
-					.path(xCss("#NavBarShell h1").set("text-align:center;color: inherit;  font-size: 2.1rem; margin-top: 50px"))
+					.children(xCss("#NavBarShell h1").set("text-align:center;color: inherit;  font-size: 2.1rem; margin-top: 50px"))
 				//----------------------------------------------------------------
 				.select(activity)
 					.set("background-color: "+getConfigScene().getBgColorContent()+";"
-				//    +PREF_3D 
 					+ " width:"+widthScene+";"
 					+ " will-change:overflow,z-index;") //will-change:transform   =bug : les header et footer ne se fixe plus au body
-					.path(xCss(ViewPageLayout.content)
+					.children(xCss(ViewPageLayout.content)
 								.set(" min-height: 100vh; "
 									+ "min-width: "+widthScene+"; "
 									+ "background-color:"+getConfigScene().getBgColorContent()+";will-change:contents")  // changement durant le freeze du contenu de l'activity
@@ -412,7 +411,7 @@ public abstract class XUIScene extends XHTMLPart {
 			   .__($("body").on(txt("touchstart"), ",", fct('e')
 					   .set("window.startClientY", "e.originalEvent.touches[0].clientY")
 					   .set("window.stopClientY", -1)
-					   .set("window.startScrollTop", $(jsvar("window")).scrollTop())
+					   .set("window.startScrollTop", $(jsvar("document")).scrollTop())
 					   
 					   .var(btn, $(jsvar("e.target")).closest("[data-x-action]"))
 					   

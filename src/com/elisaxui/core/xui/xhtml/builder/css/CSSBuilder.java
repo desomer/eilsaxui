@@ -24,6 +24,7 @@ public class CSSBuilder  extends XMLElement {
 
 
 	private LinkedList<CSSStyle> listStyle = new LinkedList<CSSStyle>();
+	private CSSStyle currentCSSStyle =null;
 
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
@@ -51,16 +52,28 @@ public class CSSBuilder  extends XMLElement {
 	public CSSBuilder select(Object... path)
 	{
 		listStyle.add(new CSSStyle(CSSSelector.onPath(path), null));
+		currentCSSStyle = listStyle.getLast();
 		return this;
 	}
 	
 	
-	public CSSBuilder path(CSSBuilder content)
+	public CSSBuilder children(CSSBuilder content)
 	{
 		LinkedList<CSSStyle> path = content.listStyle;
 		
 		for (CSSStyle cssStyle : path) {
-			listStyle.add(new CSSStyle(CSSSelector.onPath(listStyle.getLast().path, " ", cssStyle.path), cssStyle.content));
+			listStyle.add(new CSSStyle(CSSSelector.onPath(currentCSSStyle.path, " ", cssStyle.path), cssStyle.content));
+		}
+		
+		return this;
+	}
+	
+	public CSSBuilder and(CSSBuilder content)
+	{
+		LinkedList<CSSStyle> path = content.listStyle;
+		
+		for (CSSStyle cssStyle : path) {
+			listStyle.add(new CSSStyle(CSSSelector.onPath(currentCSSStyle.path, cssStyle.path), cssStyle.content));
 		}
 		
 		return this;
@@ -68,7 +81,7 @@ public class CSSBuilder  extends XMLElement {
 	
 	public CSSBuilder set(Object content)
 	{
-		Object cssContent = listStyle.getLast().content;
+		//Object cssContent = listStyle.getLast().content;
 		listStyle.getLast().content = content;
 		return this;	
 	}

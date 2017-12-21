@@ -50,7 +50,7 @@ public class ViewPageLayout extends XHTMLPart {
 	
 	@xTarget(CONTENT.class)
 	public XMLElement xViewPanel() {
-		return xDiv(xId(getProperty(ID)), xAttr("class", txt("activity inactive nodisplay"))  //TODO changer par les class
+		return xDiv(xId(getProperty(ID)), CssTransition.activity, CssTransition.inactive, CssTransition.cStateNoDisplay 
 				, xPart(new ViewNavBar().addProperty(ViewNavBar.PROPERTY_NAME, "NavBar"+getProperty(ID)))
 				, xDiv(content 	
 						, xDiv(cArticle, vHandle("children"+getProperty(ID)))

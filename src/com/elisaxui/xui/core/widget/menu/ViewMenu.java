@@ -57,8 +57,8 @@ public class ViewMenu extends XHTMLPart {
 						)
 				.on(cFixedLeft,
 						"position:absolute; top:0px; transform:translate3d(-" + (XUIScene.widthMenu+5) + "px,0px,0px)")
-				.on(cHeaderMenu, "height:53px; " + XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorMenu()
-						+ "box-shadow: 5px 2px 13px 0px #b14980;")
+				.on(cHeaderMenu, "height:53px; background:" + XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorMenu()
+						+ "box-shadow: 0px 5px 13px 0px #969696;")
 
 				.on(".menu ul", "padding-left: 0;  list-style-type: none; margin:0px;")
 
@@ -67,7 +67,6 @@ public class ViewMenu extends XHTMLPart {
 						+ "width: 100%;   text-align: left;   text-transform: none;"
 						+ XUIScene.PREFORM_3D
 						+ "animation-duration:" + SPEED_SHOW_MENU_ITEMS + "ms;"
-						//+ "will-change:transform;"
 						)
 
 				.on(".menu li>a", "font-size: 1rem;  line-height: 26px;  padding: 14px 16px;  float: left;")

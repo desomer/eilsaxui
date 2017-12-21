@@ -12,6 +12,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.xui.core.config.TKCoreConfig;
 import com.elisaxui.xui.core.toolkit.json.JIntent;
 import com.elisaxui.xui.core.transition.ConstTransition;
+import com.elisaxui.xui.core.transition.CssTransition;
 import com.elisaxui.xui.core.transition.JSTransition;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.defVar;
 
@@ -264,13 +265,13 @@ public interface TKRouterEvent extends JSClass {
 		 	var("actAnim", geCurrentIntention(), ".nextActivityAnim");
 		 	
 		 	var("act1", "'#'+$xui.intent.activity");
-		 	var("jqAct1", "$(act1)");
+		 	JQuery jqAct1 = let(JQuery.class, "jqAct1", JQuery.$(jsvar("act1")));
 		 
-		 	_if("jqAct1.hasClass('backActivity')");
+		 	_if(jqAct1.hasClass(CssTransition.cStateBackActivity));
 		 		systemDebugIf(TKCoreConfig.debugDoAction, txt("PB doAction Activity used to intent '", "$xui.intent"));
 				__("$.notify('pb activity is used '+act1, {globalPosition: 'bottom left', className:'error', autoHideDelay: 2000})");
 		 		__(doCancel());
-	 			__("return");
+	 			_return();
 		 	endif();
 		 	
 //		    .__(_self.doEvent(TKActivity.ON_ACTIVITY_RESUME))

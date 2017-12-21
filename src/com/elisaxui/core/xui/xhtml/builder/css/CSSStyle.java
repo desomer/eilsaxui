@@ -14,6 +14,10 @@ public final class CSSStyle extends XUIFormatManager implements IXMLBuilder {
 
 	@Override
 	public String toString() {
+		
+		if (content==null)
+			return null;
+		
 		if (path instanceof XClass)
 			return  "."+((XClass)path).getId() + " { " +content +" }";
 		else
@@ -28,9 +32,13 @@ public final class CSSStyle extends XUIFormatManager implements IXMLBuilder {
 	
 	public XMLBuilder toXML(XMLBuilder buf)
 	{
-		newLine(buf);
-		newTabulation(buf);
-		buf.addContent(toString());
+		String style = toString();
+		if (style!=null)
+		{
+			newLine(buf);
+			newTabulation(buf);
+			buf.addContent(style);
+		}
 		return buf;
 	}
 	

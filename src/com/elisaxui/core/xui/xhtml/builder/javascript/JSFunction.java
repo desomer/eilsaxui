@@ -2,6 +2,7 @@ package com.elisaxui.core.xui.xhtml.builder.javascript;
 
 import java.util.concurrent.Callable;
 
+import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
 /**
@@ -102,13 +103,15 @@ public class JSFunction extends JSContent
 		if (!isFragment) {
 			if (name==null)
 			{
-				buf.addContent("/******** anonymous *******/");
+				if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS())
+					buf.addContent("/******** anonymous *******/");
 				buf.addContent("function");
 			}
 			else
 			{
 				jsBuilder.newTabulation(buf);
-				buf.addContent("/******** start "+ name + " *******/");
+				if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS())
+					buf.addContent("/******** start "+ name + " *******/");
 				jsBuilder.newLine(buf);
 				jsBuilder.newTabulation(buf);
 				buf.addContent(name);
@@ -147,7 +150,8 @@ public class JSFunction extends JSContent
 			{
 				jsBuilder.newLine(buf);
 				jsBuilder.newTabulation(buf);
-				buf.addContent("/******** end anonymous *******/");
+				if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS())
+					buf.addContent("/******** end anonymous *******/");
 			}
 		}
 		

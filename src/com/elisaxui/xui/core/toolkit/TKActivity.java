@@ -28,7 +28,6 @@ public interface TKActivity extends JSClass {
 	JSContainer jsContainer = null;
 	JSon listRegisterActivity = null;
 	JSString idCurrentActivity = null;
-	TKRouterEvent _tkrouter =null;
 	
 	default JSVoid constructor()
 	{
@@ -51,20 +50,30 @@ public interface TKActivity extends JSClass {
 	default JActivity setCurrentActivity(JSString id)
 	{
 	    set(idCurrentActivity, id);
-	    return cast(JActivity.class,  listRegisterActivity.attrByString(idCurrentActivity));
+	    return cast(JActivity.class,  listRegisterActivity.attrByString(idCurrentActivity)); 
+	  //  idCurrentActivity.set(id); 
+	  //  return getCurrentActivity();   // TODO a faire marcher
 	}
 	
-	default JSVoid createActivity(JActivity json)
+	default JSVoid createActivity(JActivity activity)
 	{
-		JSArray jsonContainer = declareType(JSArray.class, "jsonContainer"); 
 		
-		var(jsonContainer, jsContainer.getData(txt(CSSSelector.onPath(XUIScene.scene))));
-		set(json.active(), true);
-		__(jsonContainer.push(json));
-		set(listRegisterActivity.attrByString(json.id()), json);
-		set(idCurrentActivity, json.id());
-		
+		JSArray jsonContainer = let(JSArray.class, "jsonContainer", jsContainer.getData(txt(CSSSelector.onPath(XUIScene.scene))));
+		activity.active().set(true);
+		jsonContainer.push(activity);
+		listRegisterActivity.attrByString(activity.id()).set(activity);
+		idCurrentActivity.set(activity.id());	
 		return _void();
+	}
+	
+	default void createActivity2(JActivity activity)    // TODO a faire marcher
+	{
+		
+		JSArray jsonContainer = let(JSArray.class, "jsonContainer", jsContainer.getData(txt(CSSSelector.onPath(XUIScene.scene))));
+		activity.active().set(true);
+		jsonContainer.push(activity);
+		listRegisterActivity.attrByString(activity.id()).set(activity);
+		idCurrentActivity.set(activity.id());	
 	}
 	
 	default JSVoid prepareActivity(JActivity json)
@@ -74,6 +83,9 @@ public interface TKActivity extends JSClass {
 		var(jsonContainer, jsContainer.getData(txt(CSSSelector.onPath(XUIScene.scene))));
 		set(json.active(), false);
 		__(jsonContainer.push(json));
+		
+//		createActivity2(json);    // TODO a faire marcher
+		
 		set(listRegisterActivity.attrByString(json.id()), json);
 		
 		return _void();

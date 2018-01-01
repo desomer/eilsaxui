@@ -6,7 +6,20 @@ public class ConfigFormat {
 	private boolean enableCrXMLinJS = true;   //true
 	private boolean enableTabXMLinJS = false;
 	private boolean enableCrJS = true;    //true
+	private boolean enableCommentFctJS = true;    //true
 	
+	/**
+	 * @return the enableCommentFctJS
+	 */
+	public boolean isEnableCommentFctJS() {
+		return enableCommentFctJS;
+	}
+	/**
+	 * @param enableCommentFctJS the enableCommentFctJS to set
+	 */
+	public void setEnableCommentFctJS(boolean enableCommentFctJS) {
+		this.enableCommentFctJS = enableCommentFctJS;
+	}
 	public boolean isEnableCrXML() {
 		return enableCrXML;
 	}

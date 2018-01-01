@@ -130,7 +130,7 @@ public class JSExecutorHelper {
 		
 		
 		if (VERSION_V8)
-			script += "function doBabel(input) { return Babel.transform(input, { presets: ['es2015'] }).code; }";
+			script += "function doBabel(input) { return Babel.transform(input, { presets: ['es2015'], minified: false, comments: false}).code; }";
 		else
 			script += "function doBabel() { return Babel.transform(input, { presets: ['es2015'] }).code; }";
 		return script;

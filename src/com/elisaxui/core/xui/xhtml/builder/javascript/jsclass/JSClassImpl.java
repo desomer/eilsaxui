@@ -92,7 +92,6 @@ public class JSClassImpl extends JSContent {
 				
 				oldBuf.addContent(str);
 			} catch (ScriptException | NoSuchMethodException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

@@ -3,14 +3,13 @@
  */
 package com.elisaxui.xui.core.widget.tabbar;
 
+import static com.elisaxui.xui.core.transition.CssTransition.cFixedElement;
 import static com.elisaxui.xui.core.widget.button.ViewRippleEffect.cRippleEffect;
-import static com.elisaxui.xui.core.transition.CssTransition.*;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
-import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;

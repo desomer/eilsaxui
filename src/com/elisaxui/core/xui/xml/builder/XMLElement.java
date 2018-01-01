@@ -82,7 +82,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 
 		XUIFactoryXHtml.getXHTMLFile().listParent.add(this);
 
-		if (comment != null /* && !buf.isJS() */) {
+		if (comment != null && XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS()) {
 			newLine(buf);
 			newTabulation(buf);
 			buf.addContent("<!--" + comment + "-->");
@@ -115,7 +115,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			buf.addContent("</" + name + ">");
 		}
 
-		if (comment != null /* && !buf.isJS() */) {
+		if (comment != null && XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS()) {
 			newLine(buf);
 			newTabulation(buf);
 			buf.addContent("<!--end of " + comment + "-->");

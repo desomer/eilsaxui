@@ -185,7 +185,9 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 			for (int i = 0; i < jsBuilder.getNbInitialTab()+2; i++) {
 				newTab(buf);
 			}
-		buf.addContent("/*JS Template*/'");
+	    if ( XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS() )
+	    	buf.addContent("/*JS Template*/");
+	    buf.addContent("'");
 		buf.addContent(txtJS);
 		buf.addContent("')");
 	}

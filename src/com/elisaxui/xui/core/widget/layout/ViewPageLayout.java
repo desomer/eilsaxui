@@ -41,9 +41,9 @@ public class ViewPageLayout extends XHTMLPart {
 
 	@xTarget(HEADER.class)
 	@xRessource
-	public XMLElement xStyle() {
+	public XMLElement xStylePart() {
 
-		return xCss().select(cArticle)
+		return xStyle().path(cArticle)
 						.set("overflow:hidden;")
 		;
 	}

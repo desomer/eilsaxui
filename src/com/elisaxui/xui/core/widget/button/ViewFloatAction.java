@@ -39,9 +39,9 @@ public class ViewFloatAction extends XHTMLPart {
 	
 	@xTarget(HEADER.class)
 	@xRessource
-	public XMLElement xStyle() {
+	public XMLElement xStylePart() {
 
-		return xCss().select(cFloatAction)
+		return xStyle().path(cFloatAction)
 						.set(""
 							//+ "z-index:"+XUIScene.ZINDEX_FLOAT+";"
 							+ " position: fixed; "

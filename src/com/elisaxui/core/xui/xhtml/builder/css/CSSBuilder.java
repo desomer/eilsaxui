@@ -49,7 +49,7 @@ public class CSSBuilder  extends XMLElement {
 		return this;
 	}
 	
-	public CSSBuilder select(Object... path)
+	public CSSBuilder path(Object... path)
 	{
 		listStyle.add(new CSSStyle(CSSSelector.onPath(path), null));
 		currentCSSStyle = listStyle.getLast();
@@ -57,7 +57,7 @@ public class CSSBuilder  extends XMLElement {
 	}
 	
 	
-	public CSSBuilder children(CSSBuilder content)
+	public CSSBuilder childPath(CSSBuilder content)
 	{
 		LinkedList<CSSStyle> path = content.listStyle;
 		
@@ -68,7 +68,7 @@ public class CSSBuilder  extends XMLElement {
 		return this;
 	}
 	
-	public CSSBuilder and(CSSBuilder content)
+	public CSSBuilder andPath(CSSBuilder content)
 	{
 		LinkedList<CSSStyle> path = content.listStyle;
 		

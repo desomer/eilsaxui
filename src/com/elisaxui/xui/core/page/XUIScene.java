@@ -174,47 +174,47 @@ public abstract class XUIScene extends XHTMLPart {
 	@xPriority(2)
 	public XMLElement xStyleXUIScene() {
 		
-		return xCss()
-				.select("*, *:before, *:after").set(
+		return xStyle()
+				.path("*, *:before, *:after").set(
 						  "-webkit-tap-highlight-color: rgba(0,0,0,0); "  // pas de coulour au click => ripple a la place
 						+ "box-sizing: border-box;   "
 						+ "margin: 0;" + 
 						"  padding: 0;")  
 				
-				.select("html").set("font-size: 16px;")
+				.path("html").set("font-size: 16px;")
 				
 //						//+"overflow-y: scroll;"
 //						//+ "overflow-x: hidden;" // pour que le 100vw ne prennent pas en compte la largueur du scrollbar
 //						+ " line-height: 1.5;"
 //						+ "font-family: 'Roboto', sans-serif;font-weight: normal;")
 				
-				.select("body")	.set("background-color: "+getConfigScene().getBgColorScene()+";"
+				.path("body")	.set("background-color: "+getConfigScene().getBgColorScene()+";"
 							+ "line-height: 1.5;"
 							+ "font-family: 'Roboto', sans-serif;"
 							+ "font-weight: normal;")
 
 				//----------------------------------------------------------------
-				.select(scene).set("overflow-x: hidden; background-color: "+getConfigScene().getBgColorScene()+";"   // overflow: auto; -webkit-overflow-scrolling: auto
+				.path(scene).set("overflow-x: hidden; background-color: "+getConfigScene().getBgColorScene()+";"   // overflow: auto; -webkit-overflow-scrolling: auto
 						//+ "min-width: 100vw;  "
 						+ "min-height: 100vh; " 
 						)
-				    .children(xCss(cShell).set("background-color: "+getConfigScene().getBgColorContent()+ ";"
+				    .childPath(xStyle(cShell).set("background-color: "+getConfigScene().getBgColorContent()+ ";"
 				    		+ "width: "+widthScene+";"
 				    		+ "  min-height: 100vh; "))
-					.children(xCss("#NavBarShell h1").set("text-align:center;color: inherit;  font-size: 2.1rem; margin-top: 50px"))
+					.childPath(xStyle("#NavBarShell h1").set("text-align:center;color: inherit;  font-size: 2.1rem; margin-top: 50px"))
 				//----------------------------------------------------------------
-				.select(activity)
+				.path(activity)
 					.set("background-color: "+getConfigScene().getBgColorContent()+";"
 					+ " width:"+widthScene+";"
 					+ " will-change:overflow,z-index;") //will-change:transform   =bug : les header et footer ne se fixe plus au body
-					.children(xCss(ViewPageLayout.content)
+					.childPath(xStyle(ViewPageLayout.content)
 								.set(" min-height: 100vh; "
 									+ "min-width: "+widthScene+"; "
 									+ "background-color:"+getConfigScene().getBgColorContent()+";will-change:contents")  // changement durant le freeze du contenu de l'activity
 								)
 				
 				//----------------------------------------------------------------
-				.select(ViewPageLayout.content).set("box-sizing: border-box;"  // ne pas ajouter a cActivity
+				.path(ViewPageLayout.content).set("box-sizing: border-box;"  // ne pas ajouter a cActivity
 						+ "padding-top: " + heightNavBar + "; "
 						+ "padding-bottom: " + heightTabBar)	 
 				

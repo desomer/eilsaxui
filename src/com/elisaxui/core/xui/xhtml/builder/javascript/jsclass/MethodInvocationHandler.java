@@ -406,6 +406,8 @@ public class MethodInvocationHandler implements InvocationHandler {
 		Object ret = constructor.newInstance(declaringClass, MethodHandles.Lookup.PRIVATE)
 				.unreflectSpecial(handle.method, declaringClass).bindTo(handle.proxy).invokeWithArguments(p);
 		
+		doLastSourceLineInsered(ThreadLocalMethodDesc.get(), true);
+		
 		JSFunction fct= null;
 		
 		if (testAnonymous && ret instanceof Anonym)
@@ -436,7 +438,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 					
 				code._return(ret);
 			}
-		    
+			
 			if (debug2)
 				System.out.println(System.identityHashCode(code)+ " - return JSFunction " + id);
 			

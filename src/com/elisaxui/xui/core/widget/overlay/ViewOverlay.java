@@ -24,12 +24,12 @@ public class ViewOverlay extends XHTMLPart {
 	
 	@xTarget(AFTER_BODY.class)
 	@xRessource
-	public XMLElement xStyle() {
+	public XMLElement xStylePart() {
 		
 		
 		
-		return xCss()
-				.select(cBlackOverlay).set("display: none;"
+		return xStyle()
+				.path(cBlackOverlay).set("display: none;"
 						+ "position: absolute;	"
 						+ "top: 0px; left: 0px;"
 						+ " width:100vw ; height:101vh;" 

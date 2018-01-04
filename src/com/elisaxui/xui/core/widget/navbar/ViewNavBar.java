@@ -43,10 +43,10 @@ public class ViewNavBar extends XHTMLPart {
 	
 	@xTarget(AFTER_BODY.class)
 	@xRessource
-	public XMLElement xStyle() {
+	public XMLElement xStylePart() {
 		
-		return xCss()  
-				.select(navbar).set("z-index: "+XUIScene.ZINDEX_NAV_BAR+";"
+		return xStyle()  
+				.path(navbar).set("z-index: "+XUIScene.ZINDEX_NAV_BAR+";"
 						+ "height: 3rem;"
 						+ "width: "+XUIScene.widthScene+"; "
 						+ "color:white; "
@@ -54,20 +54,20 @@ public class ViewNavBar extends XHTMLPart {
 						+ XUIScene.PREFORM_3D_2
 					)
 				
-				.select(fixedTop).set("position:fixed; top:0px;"
+				.path(fixedTop).set("position:fixed; top:0px;"
 						+ XUIScene.PREFORM_3D_2
 						 )
 			//----------------	.select(fixedToAbsolute).set("position:absolute;")  // permet de deplacement
 				
-				.select(rightAction).set("position: absolute; right: 0px;  top: 0px;  height: 100%;  width: auto;")
+				.path(rightAction).set("position: absolute; right: 0px;  top: 0px;  height: 100%;  width: auto;")
 				
-				.select(actionBtn).set("margin: 0; padding: 8px;  font-size: 2.5rem;  cursor: pointer;")
+				.path(actionBtn).set("margin: 0; padding: 8px;  font-size: 2.5rem;  cursor: pointer;")
 				
-				.select(center).set(""
+				.path(center).set(""
 						+ ";height:100%; "
 						+ "display: flex; align-items: center;justify-content: center"
 						)
-				.select(logo).set( ""
+				.path(logo).set( ""
 						+ "z-index: "+(XUIScene.ZINDEX_NAV_BAR+1)+";"  // pour opacity
 						+ " margin-top:calc(" + XUIScene.heightNavBar +" /2); "
 						+ "color: inherit; "
@@ -75,17 +75,17 @@ public class ViewNavBar extends XHTMLPart {
 						+ "transition: all "+ConstTransition.SPEED_ANIM_SCROLL+"ms linear;"    //ease-in-out
 						 )
 				
-				.select(animatedBg).set("position: absolute; display: block;"
+				.path(animatedBg).set("position: absolute; display: block;"
 						+ "  width: 100%; height: 100%;"
 						+ " top: 0; right: 0; bottom: 0; left: 0;"
 					//	+ "background:"+XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorNavBar()+"; "
 						)
 				
-				.select(actionBtnContainer).set("cursor: pointer; position: relative; background-color: Transparent; color:white;"
+				.path(actionBtnContainer).set("cursor: pointer; position: relative; background-color: Transparent; color:white;"
 						+ "padding: 0;  overflow: hidden; outline: 0 !important; " // pas de bordure au focus
 						+ "border:none")
 				
-				.select(topBar).set(""
+				.path(topBar).set(""
 						+ "background:"+"linear-gradient(to bottom, #00000061 0%, rgba(0, 0, 0, 0.23) 64%, rgba(0, 0, 0, 0) 100%);"
 						+ "position: absolute;" 
 						+ "top: 0px;" 
@@ -95,7 +95,7 @@ public class ViewNavBar extends XHTMLPart {
 						+ XUIScene.PREFORM_3D_2
 						)
 				
-				.select(descBar).set( ""
+				.path(descBar).set( ""
 					    + "top: 0px; width: 100%;"
 					    + "position: absolute; "
 					    + "height:"+ XUIScene.heightNavBar+";"

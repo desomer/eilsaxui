@@ -153,6 +153,7 @@ public abstract class XHTMLPart extends XMLPart {
 		return var;
 	}
 	
+	//@Deprecated
 	public final static XMLElement xScriptJS(Object js) {
 		XMLElement t = xElement("script", xAttr("type", "\"text/javascript\""), js);
 		return t;
@@ -197,12 +198,12 @@ public abstract class XHTMLPart extends XMLPart {
 		return xElement("link", xAttr("rel", xTxt("stylesheet")), xAttr("media", xTxt("async")), xAttr("onload", txt(fctTxt)), xAttr("href", xTxt(url)));
 	}
 	
-	public final static CSSBuilder xCss() {
+	public final static CSSBuilder xStyle() {
 		return new CSSBuilder();
 	}
 	
-	public final static CSSBuilder xCss(Object...path ) {
-		return new CSSBuilder().select(path);
+	public final static CSSBuilder xStyle(Object...path ) {
+		return new CSSBuilder().path(path);
 	}
 	
 	

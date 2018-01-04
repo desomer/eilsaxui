@@ -16,6 +16,11 @@ public class JSArray extends JSClassInterface {
 		return callMth("push", value);
 	}
 	
+	public JSArray pop()
+	{
+		return callMth("pop");
+	}
+	
 	public JSArray splice(Object debut, Object nbASupprimer)
 	{
 		return callMth("splice", debut, ",", nbASupprimer);

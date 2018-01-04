@@ -40,7 +40,7 @@ public class XHTMLAppBuilder {
 	public static long lastOlderFile = 0;
 	public static LocalDateTime dateBuild = null;
 	
-	private static final boolean debug = false;
+	private static final boolean debug = true;
 	
 	// TODO mettre en cache
 	public static synchronized Map<String, Class<? extends XHTMLPart>>  getMapXHTMLPart() {

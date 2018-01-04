@@ -21,11 +21,11 @@ public class ViewLog extends XHTMLPart {
 	
 	@xTarget(HEADER.class)
 	@xRessource
-	public XMLElement xStyle() {
+	public XMLElement xStylePart() {
 
-		return xCss().select(cLog)
+		return xStyle().path(cLog)
 						.set("min-height:20vh; line-height: 45px;")
-						.children(xCss().select("textarea").set("width:100%"))
+						.childPath(xStyle().path("textarea").set("width:100%"))
 						;
 	}
 	

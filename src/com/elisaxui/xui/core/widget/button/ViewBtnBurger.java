@@ -39,11 +39,11 @@ public class ViewBtnBurger extends XHTMLPart {
 
 	@xTarget(HEADER.class)
 	@xRessource
-	public XMLElement xStyle() {
+	public XMLElement xStylePart() {
 
-		return xCss()
-				.select(hamburger).set("will-change:transform")
-				.select(	hamburger.__(hamburger_inner)
+		return xStyle()
+				.path(hamburger).set("will-change:transform")
+				.path(	hamburger.__(hamburger_inner)
 						.or(hamburger.__(hamburger_inner).pseudoClass("after"))
 						.or(hamburger.__(hamburger_inner).pseudoClass("before"))
 						)
@@ -56,7 +56,7 @@ public class ViewBtnBurger extends XHTMLPart {
 //						+ ".hamburger.changeColorMenu .hamburger-inner:before",
 //						"background-color: #fff; transition-property:all !important; transition-duration:500ms !important;")
 
-				.select(cLeftBtn).set("position: absolute;top: 0px; left: 0px; "
+				.path(cLeftBtn).set("position: absolute;top: 0px; left: 0px; "
 						+ "z-index: "+XUIScene.ZINDEX_MENU+"; outline:0 !important") 
 								// pas de bord bleu au click
 		;

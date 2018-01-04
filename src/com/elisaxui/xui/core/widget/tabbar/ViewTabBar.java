@@ -38,10 +38,10 @@ public class ViewTabBar extends XHTMLPart {
 
 	@xTarget(AFTER_BODY.class)
 	@xRessource
-	public XMLElement xStyle() {
+	public XMLElement xStylePart() {
 		
-		return xCss()   
-				.select(cTabbar).set("z-index: "+XUIScene.ZINDEX_NAV_BAR+";"
+		return xStyle()   
+				.path(cTabbar).set("z-index: "+XUIScene.ZINDEX_NAV_BAR+";"
 						+ "background:"+XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorNavBar()+";"
 						+ "height: "+XUIScene.heightTabBar+";"
 						+ "width: "+XUIScene.widthScene+"; "
@@ -50,11 +50,11 @@ public class ViewTabBar extends XHTMLPart {
 						+ "transition: transform "+ConstTransition.SPEED_ANIM_SCROLL+"ms ease-in-out;" 
 						+ "box-shadow: 16px -14px 20px 0 rgba(0, 0, 0, 0.21), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);")
 				
-				.select(cFixedBottom).set("position:fixed; bottom:0px; "+XUIScene.PREFORM_3D)
-				.select(cListReset).set("list-style: none;margin: 0; padding: 0;")
-				.select(cFlex).set("display:flex;")
-				.select(cFlex_1).set("flex:1;")
-				.select(cTextAlignCenter).set("text-align: center;")
+				.path(cFixedBottom).set("position:fixed; bottom:0px; "+XUIScene.PREFORM_3D)
+				.path(cListReset).set("list-style: none;margin: 0; padding: 0;")
+				.path(cFlex).set("display:flex;")
+				.path(cFlex_1).set("flex:1;")
+				.path(cTextAlignCenter).set("text-align: center;")
 				;
 	}
 	

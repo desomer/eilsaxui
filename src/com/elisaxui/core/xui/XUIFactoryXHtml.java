@@ -123,8 +123,8 @@ public class XUIFactoryXHtml {
 					+ pageClass + "  ****************************************");
 
 			XHTMLPart page = pageClass.newInstance();
-			
-			((XHTMLFile)file).setScene((XUIScene) page);
+			if (page instanceof XUIScene)
+				((XHTMLFile)file).setScene((XUIScene) page);
 			
 			page.doContent(file.getRoot());
 			for (XMLElement elem : page.getListElement(CONTENT.class)) {

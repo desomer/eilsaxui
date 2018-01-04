@@ -15,5 +15,8 @@ public interface JIntent extends JSClass {
 	
 	JSString url();
 	JSString action();
-	JActivity activity();
+	JSString activity();
+	
+	JSString nextActivityAnim();
+	JSString prevActivity();
 }

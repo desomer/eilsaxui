@@ -15,31 +15,23 @@ public class JSValue extends JSVariable {
 	public JSBool add(Object... objs)
 	{
 		JSBool ret = new JSBool();
+		_doOperator(ret, "+", objs);
+		return ret;
+	}
+	
+	public JSBool substact(Object... objs)
+	{
+		JSBool ret = new JSBool();
 //		Array arr = new Array();
 //		Object content = _getString();
 //		if (content instanceof Array )
 //			arr.addAll((Array<?>)content);
 //		else
 //			arr.add(content);
-//		arr.add("+");
+//		arr.add("-");
 //		arr.add(obj);
 //		ret._setContent(arr);
-		_doOperator(ret, "+", objs);
-		return ret;
-	}
-	
-	public JSBool substact(Object obj)
-	{
-		JSBool ret = new JSBool();
-		Array arr = new Array();
-		Object content = _getString();
-		if (content instanceof Array )
-			arr.addAll((Array<?>)content);
-		else
-			arr.add(content);
-		arr.add("-");
-		arr.add(obj);
-		ret._setContent(arr);
+		_doOperator(ret, "-", objs);
 		return ret;
 	}
 	

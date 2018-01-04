@@ -30,10 +30,10 @@ public class ViewOverlayRipple extends XHTMLPart {
 	
 	@xTarget(HEADER.class)
 	@xRessource
-	public XMLElement xStyle() {
+	public XMLElement xStylePart() {
 		
-		return xCss()
-				.select(ripple_overlay).set(""
+		return xStyle()
+				.path(ripple_overlay).set(""
 					+ "position: absolute;"
 					+ "top: 0px; left: 0px; "
 					+ "width: 100vw;  height: 100vh; "
@@ -43,7 +43,7 @@ public class ViewOverlayRipple extends XHTMLPart {
 					+ XUIScene.PREFORM_CHANGE_OPACITY
 					)
 
-				.select(ripple_overlay.and(transitionOpacity))
+				.path(ripple_overlay.and(transitionOpacity))
 			//		.set("transition: opacity "+SPEED_ACTIVITY_TRANSITION_EFFECT+"ms linear;")  //cubic-bezier(1, 0, 1, 1)
 					.set("opacity:0;") 
 				;

@@ -27,22 +27,22 @@ public class ViewSyllabisation extends XHTMLPart {
 	
 	@xTarget(HEADER.class)
 	@xRessource
-	public XMLElement xStyle() {
+	public XMLElement xStylePart() {
 
-		return xCss().select(cDivSyllabisation)
+		return xStyle().path(cDivSyllabisation)
 						.set("min-height:20vh; line-height: 45px;"
 							//*	+ "font-family: 'Open Sans', sans-serif;"
 								+ "    font-size: 25px; font-stretch: expanded;"
 								+ " background-color: #feffc7;"
 								)
 					
-					 .select(cSyllabeMot)
+					 .path(cSyllabeMot)
 					 	.set("margin:10px")
 					 	
 //					 .select(cMicro)
 //					 	.set("width:100%")
 						
-					 .select(cSyllabeImpaire)
+					 .path(cSyllabeImpaire)
 						.set("border: 1px solid rgba(255, 0, 239, 0.56);background: rgba(255, 53, 157, 0.14);") 	
 								    
 		;

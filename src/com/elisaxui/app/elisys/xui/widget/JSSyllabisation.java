@@ -63,33 +63,33 @@ public interface JSSyllabisation extends JSClass {
 	
 	default Object createMicroListener()
 	{
-		var("f", "webkitSpeechRecognition || SpeechRecognition");
+		_var("f", "webkitSpeechRecognition || SpeechRecognition");
 		set(recognition, "new f()");
 		set(recognition.attr("continuous"), true);
 		set(recognition.attr("lang"), txt("fr-FR"));
-		var(_self, _this);
+		_var(_self, _this);
 		
 		JSArray jsonSyllable = new JSArray()._setName("jsonSyllable");
-		var(jsonSyllable, aDataSet().getData());
+		_var(jsonSyllable, aDataSet().getData());
 
 		Anonym onresult = (/*event*/)->{ 			
 			_for("var i = event.resultIndex; i < event.results.length; i++");
-				var("time", "event.timeStamp-", "self.lastResult");
+				_var("time", "event.timeStamp-", "self.lastResult");
 				_if("event.results[i].isFinal && time>500");
 					set("self.lastResult", "event.timeStamp");
 					
 					JSString textEvent = new JSString()._setName("textEvent");
-					var(textEvent, "event.results[i][0].transcript");
+					_var(textEvent, "event.results[i][0].transcript");
 					__("window.lastPhrase", "+=' '+", textEvent);
 	
 					JSon param = new JSon()._setName("param");
-					var(param, "{text:",textEvent,"}");
+					_var(param, "{text:",textEvent,"}");
 					
 					JSon data = new JSon()._setName("data"); 
 					
 					Anonym onJsonSyllabysation = (/*data*/)->{	
 						JSArray lesmots = new JSArray()._setName("lesmots");
-						var(lesmots, data.attr("mots"));
+						_var(lesmots, data.attr("mots"));
 						JSInt num = new JSInt()._setName("num");
 						_forIdx(num, lesmots);
 							setTimeout(fct(num).__(jsonSyllable.push(lesmots.at(num))), "50+(20*"+num+")", num);
@@ -126,18 +126,18 @@ public interface JSSyllabisation extends JSClass {
 				set(template, ViewSyllabisation.getMot(XHTMLPart.xVar("ctx.row.text")));
 				
 				JQuery jqdom = new JQuery()._setName("jqdom");
-				var(jqdom, template.appendInto(JQuery.$(ViewSyllabisation.cDivSyllabisation)));
+				_var(jqdom, template.appendInto(JQuery.$(ViewSyllabisation.cDivSyllabisation)));
 				
 				set("ctx.row['_dom_']", jqdom.get(0));
 				
-				JSArray sylb = new JSArray()._setName("sylb");
-				var(sylb, "ctx.row.syllabes");
+				JSArray<JSArray> sylb = new JSArray()._setName("sylb");
+				_var(sylb, "ctx.row.syllabes");
 				
 	            _forIdx("j", sylb);
 	            	set(template, ViewSyllabisation.getSyl(XHTMLPart.xVar(sylb.at("j").attr("text"))));
 	            	
 	        		JQuery jqdomSyl = new JQuery()._setName("jqdomSyl");
-	            	var(jqdomSyl, template.appendInto("jqdom"));
+	            	_var(jqdomSyl, template.appendInto("jqdom"));
 	            	
 	            	_if("j%2==1");
 	            		__(jqdomSyl.addClass(ViewSyllabisation.cSyllabeImpaire)  );
@@ -148,7 +148,7 @@ public interface JSSyllabisation extends JSClass {
 								
 		Anonym onExit = (/*ctx*/)->{
 			_if("ctx!=null && ctx.row['_dom_']!=null");
-				__($(jsvar("ctx.row['_dom_']")).hide("50+(ctx.idx*20)", fct().__("$(this).remove()") ));
+				__($(var("ctx.row['_dom_']")).hide("50+(ctx.idx*20)", fct().__("$(this).remove()") ));
 			endif();
 			};
 		

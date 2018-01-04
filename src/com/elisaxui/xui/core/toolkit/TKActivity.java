@@ -80,7 +80,7 @@ public interface TKActivity extends JSClass {
 	{
 		JSArray jsonContainer = declareType(JSArray.class, "jsonContainer"); 
 		
-		var(jsonContainer, jsContainer.getData(txt(CSSSelector.onPath(XUIScene.scene))));
+		_var(jsonContainer, jsContainer.getData(txt(CSSSelector.onPath(XUIScene.scene))));
 		set(json.active(), false);
 		__(jsonContainer.push(json));
 		

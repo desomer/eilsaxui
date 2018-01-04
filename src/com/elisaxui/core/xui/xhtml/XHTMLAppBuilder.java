@@ -40,7 +40,7 @@ public class XHTMLAppBuilder {
 	public static long lastOlderFile = 0;
 	public static LocalDateTime dateBuild = null;
 	
-	private static final boolean debug = true;
+	private static final boolean debug = false;
 	
 	// TODO mettre en cache
 	public static synchronized Map<String, Class<? extends XHTMLPart>>  getMapXHTMLPart() {
@@ -174,14 +174,14 @@ public class XHTMLAppBuilder {
 		Field[] listField = cl.getDeclaredFields();
 		if (listField != null) {
 			for (Field field : listField) {
-				initJSClassField(field);
+				initJSClassField(cl, field);
 			}
 			
 		}
 	}
 	
 
-	private static void initJSClassField(Field field) {
+	private static void initJSClassField(Class<?> cl, Field field) {
 		
 //		int mod = field.getModifiers();
 //		boolean isTransient =  Modifier.isTransient(mod);
@@ -207,10 +207,16 @@ public class XHTMLAppBuilder {
 			}
 		} else if (JSVariable.class.isAssignableFrom(field.getType())) {
 			try {
-				JSVariable var =(JSVariable) field.getType().newInstance();
-				setVarName(field, var);
+				
+				Object v = field.get(cl);
+				
+				if (v==null)
+				{
+					JSVariable var =(JSVariable) field.getType().newInstance();
+					setVarName(field, var);
 					  
-			    ReflectionHelper.setFinalStatic(field, var);
+					ReflectionHelper.setFinalStatic(field, var);
+				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

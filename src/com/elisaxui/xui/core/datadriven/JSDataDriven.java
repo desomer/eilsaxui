@@ -83,9 +83,9 @@ public interface JSDataDriven extends JSClass {
 		});
 		
 		/******************************************/
-		var("data", dataSet.getData());
-		var(_self, _this);
-		var("fctChange", fctChange);
+		_var("data", dataSet.getData());
+		_var(_self, _this);
+		_var("fctChange", fctChange);
 		
 		dataSet.onChange("fctChange");
 		

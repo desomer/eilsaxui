@@ -106,16 +106,16 @@ public class ScnRoot extends XUIScene {
 		return fragment()				
 				/*************************************************************/
 				
-				.var(jsHitoireMgr, _new())
-				.var(jsSyllabe, _new())
-				.var(jsonSyllabe, jsSyllabe.getData())
+				._var(jsHitoireMgr, _new())
+				._var(jsSyllabe, _new())
+				._var(jsonSyllabe, jsSyllabe.getData())
 				
 				/**************************************************************/
 				
 				.set("window.onCreateActivity1", fct("json")
 						.consoleDebug("'on Create Activity1'")
 						.__(TKQueue.startProcessQueued( 100,  fct()
-								.var(jsPageLayout, _new())
+								._var(jsPageLayout, _new())
 								.__(jsPageLayout.hideOnScroll(new JSString()._setContent("'#Activity1'")))
 								
 // 					TODO a changer : mettre dans une queue avec priorité (avec image) et gestion de promise d'attente 								
@@ -138,7 +138,7 @@ public class ScnRoot extends XUIScene {
 				// gestion du slidedown pour fermer
 				.set("window.onCreateActivityDown", fct("json")
 						.__(TKQueue.startProcessQueued( 100,  fct()
-								.var(jsPageLayout, _new())
+								._var(jsPageLayout, _new())
 								.__(jsPageLayout.setEnableCloseGesture("json.param"))
 							)
 						)
@@ -148,7 +148,7 @@ public class ScnRoot extends XUIScene {
 				
 				.set("window.onMicro", fct("json")
 						.__(TKQueue.startProcessQueued( fct()
-								.var(jsSyllabe, "window.microlistener")
+								._var(jsSyllabe, "window.microlistener")
 								._if(jsSyllabe,".isRunning==false")
 									.set(jsvar(jsSyllabe,".isRunning"), true)
 							    	.__(jsSyllabe,".recognition.start()")
@@ -164,8 +164,8 @@ public class ScnRoot extends XUIScene {
 				.set("window.onDelete", fct("json")
 						.__(TKQueue.startProcessQueued( fct()
 								.set("window.lastPhrase", txt(""))
-								.var(jsSyllabe, "window.microlistener")
-								.var("jsonSyllabe2", jsvar(jsSyllabe, ".aDataSet.getData()"))
+								._var(jsSyllabe, "window.microlistener")
+								._var("jsonSyllabe2", jsvar(jsSyllabe, ".aDataSet.getData()"))
 								
 								._for("var i = jsonSyllabe2.length-1; i >=0; i--")
 									.__("setTimeout(", fct()
@@ -177,14 +177,14 @@ public class ScnRoot extends XUIScene {
 				)
 				
 				.set("window.onMot", fct("json")
-						.var("leMot", "$(window.lastBtn).data('mot')")
-						.var("msg", "new SpeechSynthesisUtterance(leMot)")
+						._var("leMot", "$(window.lastBtn).data('mot')")
+						._var("msg", "new SpeechSynthesisUtterance(leMot)")
 						.set("msg.lang", "'fr-FR'")
 						.__("window.speechSynthesis.speak(msg)")
 				)
 				
 				.set("window.onPhrase", fct("json")
-						.var(jsSyllabe, "window.microlistener")
+						._var(jsSyllabe, "window.microlistener")
 						._if(jsSyllabe,".isRunning")
 							.set(jsvar(jsSyllabe,".isRunning"), false)
 							.set(jsvar(jsSyllabe,".stop"), true)
@@ -196,7 +196,7 @@ public class ScnRoot extends XUIScene {
 						  	.__("$.notify('stop', {globalPosition: 'bottom left', className:'success', autoHideDelay: 2000})")
 
 						._else()
-							.var("msg", "new SpeechSynthesisUtterance(window.lastPhrase)")
+							._var("msg", "new SpeechSynthesisUtterance(window.lastPhrase)")
 							.set("msg.lang", "'fr-FR'")
 							.set("msg.rate", 0.9)
 							//.set("msg.pitch", 1)
@@ -205,7 +205,7 @@ public class ScnRoot extends XUIScene {
 				)
 				
 				.set("window.onLoadHistoire", fct("json")
-						.var(jsHitoireMgr, _new())
+						._var(jsHitoireMgr, _new())
 						.__(jsHitoireMgr.getHistoire())
 				)
 		;

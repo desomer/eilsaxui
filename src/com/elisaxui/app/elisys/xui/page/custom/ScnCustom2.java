@@ -34,7 +34,7 @@ public class ScnCustom2 extends XHTMLPart {
 		return xListElement(   // ajout plusieur element sans balise parent
 					xImport(JSClass1.class),
 					xScriptJS(js()
-							.var(jsClass1, _new())
+							._var(jsClass1, _new())
 							.__(jsClass1.doSomething())
 							)
 					);

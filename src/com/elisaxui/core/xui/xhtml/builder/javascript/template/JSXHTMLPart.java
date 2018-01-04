@@ -25,9 +25,9 @@ public interface JSXHTMLPart extends JSClass {
 	default Object appendInto(Object parent)
 	{
 		return 
-		var("jqdom", "$(this.html)")		
+		_var("jqdom", "$(this.html)")		
 		.__(parent,".append(jqdom)")
-		.var("c", "$(this.js)")
+		._var("c", "$(this.js)")
 		.__("$.each( c, function( i, el ) {  if (el.nodeName=='SCRIPT') eval(el.text) })")
 		.__("return jqdom")
 		;
@@ -36,9 +36,9 @@ public interface JSXHTMLPart extends JSClass {
 	default Object insertAt(Object parent, Object idx)
 	{
 		return 
-		var("jqdom", "$(this.html)")		
+		_var("jqdom", "$(this.html)")		
 		.__(parent,".insertAt(jqdom, idx)")
-		.var("c", "$(this.js)")
+		._var("c", "$(this.js)")
 		.__("$.each( c, function( i, el ) {\n  if (el.nodeName=='SCRIPT') eval(el.text)\n })")
 		.__("return jqdom")
 		;

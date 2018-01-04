@@ -1,6 +1,18 @@
 package com.elisaxui.core.xui.xhtml.builder.javascript.lang;
 
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
+
 public class JSString extends JSValue {
 	
 
+	public static final JSString value(String v)
+	{
+		return  new JSString()._setContent("\""+ v + "\"");
+	}
+	
+	public static final JSString value(JSVariable v)
+	{
+		return  new JSString()._setContent(v._getValue());
+	}
+	
 }

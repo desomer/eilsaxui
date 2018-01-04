@@ -38,19 +38,19 @@ public interface JSViewCard extends JSFactory {
 					_if("ctx.row.type== "+txt(TYPE_BACKGROUND));
 							_if("ctx.row.mode=='css'");
 								set(template, ViewCard.getTemplateRichMedia());
-								var("jqdom", template.appendInto("$(selector)"));
+								_var("jqdom", template.appendInto("$(selector)"));
 								__("jqdom.css('background', ctx.row.css)");
 								__("jqdom.css('opacity', ctx.row.opacity)");
 								__("ctx.row['_dom_']=jqdom[0]");
 							endif();
 					_elseif("ctx.row.type=="+txt(TYPE_TEXT));
 						set(template, ViewCard.getTemplateText("ctx.row.html"));
-						var("jqdom", template.appendInto("$(selector)"));
+						_var("jqdom", template.appendInto("$(selector)"));
 						__("ctx.row['_dom_']=jqdom[0]");
 						
 					_elseif("ctx.row.type=="+txt(TYPE_CARD_ACTION));
 						__("$(selector).attr('data-x-action', ctx.row.idAction )");
-						__(JQuery.$(jsvar("selector")).addClass(ViewRippleEffect.cRippleEffect));
+						__(JQuery.$(var("selector")).addClass(ViewRippleEffect.cRippleEffect));
 					endif()	;
 				endif();
 				})

@@ -281,9 +281,9 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 * Object, java.lang.Object)
 	 */
 	@Override
-	public JSMethodInterface var(Object name, Object... content) {
+	public JSMethodInterface _var(Object name, Object... content) {
 		getListElem().add(JSNewLine.class);
-		getListElem().add("var ");
+		getListElem().add("let ");
 		getListElem().add(name);
 		getListElem().add("=");
 		for (Object object : content) {
@@ -490,13 +490,13 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#jsvar(java.lang.Object[])
 	 */
 	@Override
-	public JSVariable jsvar(Object... param) {
+	public JSVariable var(Object... param) {
 		return XHTMLPart.jsvar(param);
 	}
 
 	public JSVariable calc(Object... param)
 	{
-		return jsvar(param);
+		return var(param);
 	}
 
 	/**************************** FORMATAGE  ********************************/
@@ -547,7 +547,7 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 */
 	@Override
 	public <E> E let(Class<? extends E >  type, Object name, Object... content) {
-		var(name,content);
+		_var(name,content);
 		E v = null;
 
 		if (type.isAssignableFrom(JSVariable.class))
@@ -564,6 +564,12 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 			v = declareType(type, name);
 		}
 		return v;
+	}
+	
+	@Override
+	public <E> E let(String name, E content)
+	{
+		return (E) let(content.getClass(), name, content);
 	}
 
 	/* (non-Javadoc)

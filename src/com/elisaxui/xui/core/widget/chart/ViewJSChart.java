@@ -75,10 +75,10 @@ public class ViewJSChart extends XHTMLPart {
 	public XMLElement xAddJS() {
 		return xScriptJS(js()
 				//  .__("Chart.defaults.global.maintainAspectRatio = false") 
-				  .var("options", doughnutOptions)
-				  .var("data", doughnutData)
-				  .var("ctx", "document.getElementById('" + getPropertyXID(ID).getValue()+"').getContext('2d')")
-				  .var("mydoughnutChart", "new Chart(ctx, {type: 'doughnut', data: data, options : options })")	
+				  ._var("options", doughnutOptions)
+				  ._var("data", doughnutData)
+				  ._var("ctx", "document.getElementById('" + getPropertyXID(ID).getValue()+"').getContext('2d')")
+				  ._var("mydoughnutChart", "new Chart(ctx, {type: 'doughnut', data: data, options : options })")	
 				);
 	}
 	

@@ -65,9 +65,9 @@ public interface JSTransition extends JSClass {
 
 		$FixedElem.each(callback(()->{
 			JSInt posTop = let(JSInt.class, "posTop", sct);
-			posTop.set(posTop.add($(jsvar("this")).get(0), ".getBoundingClientRect().y"));   //TODO add JSElement
+			posTop.set(posTop.add($(var("this")).get(0), ".getBoundingClientRect().y"));   //TODO add JSElement
 			_if(posTop, ">0");
-				$(jsvar("this")).css(TOP, txt(posTop,"px"));	
+				$(var("this")).css(TOP, txt(posTop,"px"));	
 			endif();
 		}));
 		

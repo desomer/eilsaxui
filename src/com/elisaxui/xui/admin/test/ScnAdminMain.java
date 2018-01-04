@@ -89,29 +89,29 @@ public class ScnAdminMain extends XHTMLPart {
 							"\treturn this;\n"+
 							"};")
 						
-						.var("a", txt("dyna 1"))
-						.var("c", txt("dyna 2"))
-						.var("t1", txt("bizaroid que ca marche"))
+						._var("a", txt("dyna 1"))
+						._var("c", txt("dyna 2"))
+						._var("t1", txt("bizaroid que ca marche"))
 						
 						// creation d'un template
-						.var(template, xDiv(xPart(new ActListPage().addProperty(ViewItem.TEST_HANDLE, xSpan(xVar("t1")))
+						._var(template, xDiv(xPart(new ActListPage().addProperty(ViewItem.TEST_HANDLE, xSpan(xVar("t1")))
 								, xLi(xAttr("data-d", "d"), "ligne ",  xVar("a"))
 								, xLi("ligne ", xVar("c"))
 								), xDiv(xAttr("style", txt("height: 800px; width:400px")),xAttr("id",txt("content")))))
 						.__(template.appendInto("$('body')"))	
 						
-						.var(ab , _new(15))
-						.var(abc, _new())
+						._var(ab , _new(15))
+						._var(abc, _new())
 						
 						.__(ab.console("a", "c"))
 						.__(abc.console("c", "a"))
 						.__(ab.test("'eer'"))
 						
-						.var(testDataDriven, _new())
+						._var(testDataDriven, _new())
 						.__(testDataDriven.startTest())
 						
 						
-						.var(template, xElement("input", xId("\"test\""), xAttr("type","\"text\"")))
+						._var(template, xElement("input", xId("\"test\""), xAttr("type","\"text\"")))
 						.__(template.appendInto("$('body')"))	
 						
 				);		

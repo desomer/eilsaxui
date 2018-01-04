@@ -47,7 +47,7 @@ public interface JSDataSet extends JSClass {
 	default Object setData(Object d) {
 		//JSDataSet that = i
 		return  
-				var("changeHandler", "{\n" +
+				_var("changeHandler", "{\n" +
 					" get: function(target, property) {\n" +
 		//				" console.log(\'getting \' , property , \' for \' , target);\n" +
 						" // property is index in this case\n" +
@@ -64,8 +64,8 @@ public interface JSDataSet extends JSClass {
 	
 					       ._if("property!='"+_DOM+"' && target[property]!==value")
 					       		//.consoleDebug("'setting'", "property" , "' for '" , "target" , "' with value '" , "value")
-								.var("row", "{ ope:'change', row:target, idx:target.idx, property:property, value: value, old: target[property] }")
-								.var("fct"," function() {\nfastdom.mutate(function() {\nthat.callBackChange.fire(row); })}")
+								._var("row", "{ ope:'change', row:target, idx:target.idx, property:property, value: value, old: target[property] }")
+								._var("fct"," function() {\nfastdom.mutate(function() {\nthat.callBackChange.fire(row); })}")
 								.__("setTimeout(fct, 1)")
 					       .endif()
 				       	   .set("target[property]", "value")
@@ -80,17 +80,17 @@ public interface JSDataSet extends JSClass {
 				,"};")
 				
 				
-				.var("that", "this")
+				._var("that", "this")
 				// observe le push du tableau
 				.set("d.push", fct()
 						.__("arguments[0]=new Proxy(arguments[0], changeHandler)")
 						.__(_that.addProxy("arguments[0]"))
 						.__("Array.prototype.push.apply(this, arguments)")		
-						.var("row", "{ ope:'enter', row:arguments[0], idx:this.length-1 }")
+						._var("row", "{ ope:'enter', row:arguments[0], idx:this.length-1 }")
 						// les push sont lancé dans le fast dom 
-						.var("fct"," function() {\nfastdom.mutate(function() {\nthat.callBackChange.fire(row); })}")
+						._var("fct"," function() {\nfastdom.mutate(function() {\nthat.callBackChange.fire(row); })}")
 						// les push sont executé de facon echelonné dans le temps par intervalle de 2 ms
-						.var("t", "that.delayEvent")
+						._var("t", "that.delayEvent")
 						._if("t==0")
 							.__("setTimeout(",fct().set("that.delayEvent",0) ,", 0)")   // remise a zero apres la boucle
 						.endif()
@@ -98,10 +98,10 @@ public interface JSDataSet extends JSClass {
 						.__("setTimeout(fct, t)")
 						//.__("window.requestAnimationFrame(fct)")
 				)
-				.set("d.pop", fct().var("ret","Array.prototype.pop.apply(this, arguments)")
-						.var("row", "{ ope:'exit', row:ret, idx:this.length }")
-						.var("fct"," function() {\nfastdom.mutate(function() {\nthat.callBackChange.fire(row); })}")
-						.var("t", "that.delayEvent")
+				.set("d.pop", fct()._var("ret","Array.prototype.pop.apply(this, arguments)")
+						._var("row", "{ ope:'exit', row:ret, idx:this.length }")
+						._var("fct"," function() {\nfastdom.mutate(function() {\nthat.callBackChange.fire(row); })}")
+						._var("t", "that.delayEvent")
 						._if("t==0")
 							.__("setTimeout(",fct().set("that.delayEvent",0) ,", 0)")   // remise a zero apres la boucle
 						.endif()
@@ -116,16 +116,16 @@ public interface JSDataSet extends JSClass {
 							__(_that.addProxy("arguments[2]"));
 						endif();
 						
-						var("ret","Array.prototype.splice.apply(this, arguments)");
-						var("row", "null");
+						_var("ret","Array.prototype.splice.apply(this, arguments)");
+						_var("row", "null");
 						_if("arguments.length>2");
 							set("row", "{ ope:'enter', row:arguments[2], idx:arguments[0] }");
 						_else();
 							set("row", "{ ope:'exit', row:ret[0], idx:this.length }");
 						endif();
 						
-						var("fct"," function() {\nfastdom.mutate(function() {\nthat.callBackChange.fire(row); })}");
-						var("t", "that.delayEvent");
+						_var("fct"," function() {\nfastdom.mutate(function() {\nthat.callBackChange.fire(row); })}");
+						_var("t", "that.delayEvent");
 						_if("t==0");
 							__("setTimeout(",fct().set("that.delayEvent",0) ,", 0)") ;  // remise a zero apres la boucle
 						endif();

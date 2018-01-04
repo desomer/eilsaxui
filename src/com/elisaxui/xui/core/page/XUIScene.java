@@ -115,12 +115,12 @@ public abstract class XUIScene extends XHTMLPart {
 						.set("window.resLoadedCss", fct("res", "media").__("res.media=media"))  
 						
 						.set("window.onerror", fct("msg", "url", "noLigne", "noColonne", "erreur") 
-								.var("chaine", "msg.toLowerCase()")
-								.var("souschaine", txt("script error"))
+								._var("chaine", "msg.toLowerCase()")
+								._var("souschaine", txt("script error"))
 								._if("chaine.indexOf(souschaine) > -1")
 									.__("alert('Script Error : voir la Console du Navigateur pour les Détails')")
 								._else()
-									.var("message", "["
+									._var("message", "["
 											+ "'Message : ' + msg,"
 											+ "'URL : ' + url,"
 											+ "'Ligne : ' + noLigne,"
@@ -323,11 +323,11 @@ public abstract class XUIScene extends XHTMLPart {
 	{
 	  return fragment()   
 			//******************** construction du menu ****************************************************
-				.var(jsMenu, _new())
-				.var("jsonMenu", jsMenu.getData())
+				._var(jsMenu, _new())
+				._var("jsonMenu", jsMenu.getData())
 				// TODO a changer par un data sur le menu
 				.set("window.jsonMainMenu", "jsonMenu")  // liste des nemu pour animation dans tkAnimation
-				.var(tkActivity, "$xui.tkrouter.activityMgr")
+				._var(tkActivity, "$xui.tkrouter.activityMgr")
 				
 				/***********************************************************************************************/		
 
@@ -392,7 +392,7 @@ public abstract class XUIScene extends XHTMLPart {
 	{
 	  return fragment()
 			 // recherche le ripple btn
-			   .var(ripple, btn)
+			   ._var(ripple, btn)
 			   ._if( "!", ripple.hasClass(cRippleEffect))
 			   		.set(ripple, btn.closest(cRippleEffect))
 					._if( "!", ripple.hasClass(cRippleEffect))
@@ -413,7 +413,7 @@ public abstract class XUIScene extends XHTMLPart {
 					   .set("window.stopClientY", -1)
 					   .set("window.startScrollTop", $(jsvar("document")).scrollTop())
 					   
-					   .var(btn, $(jsvar("e.target")).closest("[data-x-action]"))
+					   ._var(btn, $(jsvar("e.target")).closest("[data-x-action]"))
 					   
 					   .__(searchRipple())
 					   					   
@@ -452,12 +452,12 @@ public abstract class XUIScene extends XHTMLPart {
 				.__("mc.get('pan').set({ enable: true, direction: Hammer.DIRECTION_HORIZONTAL })")  //DIRECTION_ALL
 				.__("mc.get('tap').set({ enable: true, time: 1000 })")
 				
-				.var("anim", true)
+				._var("anim", true)
 				
 				.__("mc.on('tap',", fct("e")
 
-							.var("btn", $(jsvar("e.target")).closest("[data-x-action]"))
-							.var("event", "btn.data('x-action')")
+							._var("btn", $(jsvar("e.target")).closest("[data-x-action]"))
+							._var("event", "btn.data('x-action')")
 							.set("window.lastBtn", btn)  // TODO a virer
 							
 							//.__("$.notify('do Event '+event, {globalPosition: 'bottom left', className:'warn', autoHideDelay: 2000})")
@@ -466,7 +466,7 @@ public abstract class XUIScene extends XHTMLPart {
 							
 							 // TODO passer un context d'event au doEvent  (ripple, btn, e,  event)
 							 .__(TKQueue.startProcessQueued(fct()
-									 .var("retEvent", $xui().tkrouter().doEvent("event"))
+									 ._var("retEvent", $xui().tkrouter().doEvent("event"))
 									 ._if("retEvent.cancelRipple")
 										 ._if( "ripple.length>0") 
 										 	.__("ripple.removeClass('", cRippleEffectShow.getId() ,"')")   
@@ -485,7 +485,7 @@ public abstract class XUIScene extends XHTMLPart {
 						//**************************** gestion swipe anim du menu *************************/
 						._if("$(ev.target).closest('.menu').length > 0")
 							//JSInt sct = let( JSInt.class, "sct",    $(jsvar("document")).scrollTop() );
-							.var("sct", $(jsvar("document")).scrollTop())
+							._var("sct", $(jsvar("document")).scrollTop())
 							._if("ev.deltaX>-100 && ev.offsetDirection==2 && ev.velocity>-1 ")
 								._if("anim==true")
 									// bouge en fonction delta
@@ -519,7 +519,7 @@ public abstract class XUIScene extends XHTMLPart {
 	  return fct()
 //		.consoleDebug("'ok StateManager'") 
 		.set("nav", "new Navigo(null,true,'#!')")   //   null,true,'!#')")
-		.var(tkrouter , _new("nav"))
+		._var(tkrouter , _new("nav"))
 		.set($xui().tkrouter(), tkrouter) 
 		;
 			  

@@ -33,7 +33,7 @@ public final class JSServiceWorker extends XHTMLPart {
 	            .endif()
 	            
 	            // mise en cache
-	            .var("responseToCache" , "response.clone()")
+	            ._var("responseToCache" , "response.clone()")
 	            .__("caches.open(CACHE_NAME).then(", fct("cache")
 	            		.consoleDebug(txt("add cache"), "cache")
 	            		.__("cache.put(event.request, responseToCache)"),")")
@@ -48,7 +48,7 @@ public final class JSServiceWorker extends XHTMLPart {
 			        ._return(response)  // Cache hit - return response
 			    .endif()
 			    
-			    .var("fetchRequest","event.request.clone()")
+			    ._var("fetchRequest","event.request.clone()")
 			    .consoleDebug(txt("******** fetch "), "event")
 			        // , mode: 'no-cors'  , { credentials: 'include' }
 			    ._return("fetch(fetchRequest).then(", fctFetch ,")")  // 
@@ -67,7 +67,7 @@ public final class JSServiceWorker extends XHTMLPart {
 		String formatDateTimeBuild =   dateBuild.format(formatter);
 		
 		return xListElement(js()
-				.var("CACHE_NAME", txt("site-cache-"+formatDateTimeBuild))
+				._var("CACHE_NAME", txt("site-cache-"+formatDateTimeBuild))
 				
 				.__("self.addEventListener('install',", fct("event")
 						

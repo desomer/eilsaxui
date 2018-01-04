@@ -54,14 +54,14 @@ public interface JSNavBar extends JSFactory {
 			    
 				_if (jsnavRow.type().isEqual(txt(TYPE_BURGER)));
 					set(template, ViewNavBar.getTemplateBtnBurger());
-					var(jqdom, template.appendInto($(selector)));
+					_var(jqdom, template.appendInto($(selector)));
 					ctx.row().attrByString(JSDataSet._DOM).set(jqdom.get(0));
 					
 				_elseif (jsnavRow.type().isEqual(txt(TYPE_TITLE)));
 					JSonNavBarTitle jsnavTitle= cast(JSonNavBarTitle.class,  ctx.row());
 				
 					set(template, ViewNavBar.getTemplateName(jsnavTitle.title()));
-					var(jqdom, template.appendInto($(selector," ", ViewNavBar.descBar)));
+					_var(jqdom, template.appendInto($(selector," ", ViewNavBar.descBar)));
 					ctx.row().attrByString(JSDataSet._DOM).set(jqdom.get(0));
 					
 				_elseif (jsnavRow.type().isEqual(txt(TYPE_BTN_ACTION)));
@@ -69,11 +69,11 @@ public interface JSNavBar extends JSFactory {
 					
 					_if($(selector," ", ViewNavBar.rightAction).length().isEqual(0)); 
 						set(template, ViewNavBar.getTemplateActionBar());
-						var(jqdom, template.appendInto($(selector)));
+						_var(jqdom, template.appendInto($(selector)));
 					endif();
 					
 					set(template, ViewNavBar.getTemplateAction(jsnavBtn.icon(), jsnavBtn.idAction()));
-					var(jqdom, template.appendInto($(selector," ", ViewNavBar.rightAction)));
+					_var(jqdom, template.appendInto($(selector," ", ViewNavBar.rightAction)));
 					ctx.row().attrByString(JSDataSet._DOM).set(jqdom.get(0));
 				
 				_elseif (jsnavRow.type().isEqual(txt(TYPE_BACKGROUND)));	
@@ -81,12 +81,12 @@ public interface JSNavBar extends JSFactory {
 				    
 				    _if (jsnavRowBg.mode().isEqual(txt("granim")));
 						set(template, ViewNavBar.getTemplateBgCanvas());
-						var(jqdom, template.appendInto($(selector)));
+						_var(jqdom, template.appendInto($(selector)));
 						ctx.row().attrByString(JSDataSet._DOM).set(jqdom.get(0));
 						
 					_elseif (jsnavRowBg.mode().isEqual(txt("css")));
 						set(template, ViewNavBar.getTemplateBgDiv());
-						var(jqdom, template.appendInto($(selector," ", ViewNavBar.descBar)));
+						_var(jqdom, template.appendInto($(selector," ", ViewNavBar.descBar)));
 						__(jqdom.css("background", jsnavRowBg.css()));   //TODO retirer le __
 						__(jqdom.css("opacity", jsnavRowBg.opacity()));
 						__(ctx.row().attrByString(JSDataSet._DOM).set(jqdom.get(0)));

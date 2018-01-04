@@ -54,7 +54,7 @@ public interface JSPageLayout extends JSClass {
 		JQuery $headerLogo = let(JQuery.class, "$headerLogo", $activity.find("header").find(ViewNavBar.logo));
 		JQuery $footer = let(JQuery.class, "$footer", $activity.find("footer"));
 		
-		JQuery $window = let(JQuery.class, "$window", JQuery.$(jsvar("window")));
+		JQuery $window = let(JQuery.class, "$window", JQuery.$(var("window")));
 		JSInt lastScrollTop = let(JSInt.class, "lastScrollTop", $window.scrollTop());	
 		JSInt scrollTop = let(JSInt.class, "scrollTop", $window.scrollTop());
 
@@ -65,7 +65,7 @@ public interface JSPageLayout extends JSClass {
 							
 				window().requestAnimationFrame("draw");	
 				
-				now.set("Date.now()");
+				now.set(calc("Date.now()"));
 				deltaTime.set(now.substact(then));
 				
 				_if( deltaTime,">", interval, "&&", "window.disableScrollEvent==null");

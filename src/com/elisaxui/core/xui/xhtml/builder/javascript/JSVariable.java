@@ -9,6 +9,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodDesc;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodInvocationHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSBool;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSValue;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 
 /**
@@ -127,7 +128,12 @@ public class JSVariable {
 		
 		arr.add(operator);
 		
+		int i = objs.length;
+		
 		for (Object obj : objs) {
+			if (i==1 && obj instanceof String && this instanceof JSValue)
+				obj = "\""+ obj + "\"";
+			
 			if (obj instanceof Array )
 				arr.addAll((Array<?>)obj);
 			else

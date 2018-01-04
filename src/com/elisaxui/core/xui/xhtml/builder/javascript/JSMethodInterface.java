@@ -9,9 +9,10 @@ public interface JSMethodInterface  {
 	
 	/**********************************************************************/
 	JSMethodInterface set(Object name, Object... content);
-	JSMethodInterface var(Object name, Object... content);
+	JSMethodInterface _var(Object name, Object... content);
 	
 	<E> E let(Class<? extends E > type, Object name, Object... content);
+	<E> E let(String name, E content);
 	
 	JSMethodInterface consoleDebug(Object... content);
 	JSMethodInterface systemDebugIf(Object cond, Object... content);
@@ -39,7 +40,7 @@ public interface JSMethodInterface  {
 	 * @param param
 	 * @return
 	 */
-	Object jsvar(Object... param);
+	Object var(Object... param);
 	Object calc(Object... param);
 	
 	/**********************************************************************/

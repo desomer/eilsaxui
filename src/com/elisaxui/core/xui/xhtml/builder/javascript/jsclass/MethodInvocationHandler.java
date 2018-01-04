@@ -11,7 +11,9 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -25,13 +27,14 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.xui.core.widget.activity.JActivity;
 
 public class MethodInvocationHandler implements InvocationHandler {
 	
 	static boolean debug = false;
 	static boolean debug2 = false;
-	static boolean debug3 = true;
+	static boolean debug3 = false;
 	
 	private Object varname; // nom de la variable du proxy
 	private Object varContent; // contenu code du proxy
@@ -53,6 +56,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 	 * 	- creer une JSClassImpl si n'existe pas
 	 *  - creer les fct javascript
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
 		if (method.getName().equals("toString")) {
@@ -121,7 +125,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 					currentFctBuildByProxy = id; 
 					
 					if (debug)
-						System.out.println("[JSBuilder]   include mth "+id+" of class " + implcl.getName());
+						System.out.println("[MethodInvocationHandler]   include mth "+id+" of class " + implcl.getName());
 					
 					// initialise le proxy
 					MethodInvocationHandler mh = (MethodInvocationHandler) Proxy.getInvocationHandler(proxy);
@@ -134,7 +138,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 					ThreadLocalMethodDesc.set(currentMethodDesc);
 					
 					if (debug3) 
-						System.out.println("[JSBuilder]"+System.identityHashCode(currentMethodDesc.content)+ " -add ThreadLocalMethodDesc meth "+ method.getName() + "  du JSContent "+currentFctBuildByProxy+" of class " + implcl.getName());
+						System.out.println("[MethodInvocationHandler]"+System.identityHashCode(currentMethodDesc.content)+ " -add ThreadLocalMethodDesc meth "+ method.getName() + "  du JSContent "+currentFctBuildByProxy+" of class " + implcl.getName());
 
 					// creer le code
 					JSFunction fct = createJSFunctionImpl(implcl, MthInvoke, false);    
@@ -142,7 +146,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 										
 					ThreadLocalMethodDesc.set(lastMethodDesc);
 					if (debug3) 
-						System.out.println("[JSBuilder]"+System.identityHashCode(currentMethodDesc.content)+ " -restore ThreadLocalMethodDesc meth "+ method.getName() + "  du JSContent "+currentFctBuildByProxy+" of class " + implcl.getName());
+						System.out.println("[MethodInvocationHandler]"+System.identityHashCode(currentMethodDesc.content)+ " -restore ThreadLocalMethodDesc meth "+ method.getName() + "  du JSContent "+currentFctBuildByProxy+" of class " + implcl.getName());
 
 					mh.varname = nameProxy;
 					
@@ -175,7 +179,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 					
 				    // appel d'une function js de la même class
 					if (debug2)
-						System.out.println("[JSBuilder]******************************** mth "+id+" of class " + implcl.getName() + " next = "+currentFctBuildByProxy);
+						System.out.println("[MethodInvocationHandler]******************************** mth "+id+" of class " + implcl.getName() + " next = "+currentFctBuildByProxy);
 					
 					implcl.getListHandleFuntionPrivate().add(MthInvoke);
 					
@@ -189,7 +193,25 @@ public class MethodInvocationHandler implements InvocationHandler {
 			else if (! checkMethodExist(method) )
 			{
 				/***** INSERT le nom de la methode abstract de type Interface de variable  ****/ 
-				return getObjectJS(method.getReturnType(), getProxyContent() + ".", method.getName());				
+				
+
+				
+				
+				Object ret =  getObjectJS(method.getReturnType(), getProxyContent() + ".", method.getName());	
+				
+				if (ret instanceof JSArray)
+				{
+					Type returnType = method.getGenericReturnType();
+	                if (returnType instanceof ParameterizedType) {
+	                    ParameterizedType paramType = (ParameterizedType) returnType;
+	                    Type[] argTypes = paramType.getActualTypeArguments();
+	                    if (argTypes.length > 0) {
+	                    	((JSArray)ret)._type = Class.forName( argTypes[0].getTypeName());
+	                    }
+	                }
+					 
+				}
+				return ret;
 			}
 			else	
 				{
@@ -203,7 +225,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 					doLastSourceLineInsered(ThreadLocalMethodDesc.get(), false);
 				
 				if (debug2)
-					System.out.println("[JSBuilder]"+System.identityHashCode(currentJSContent)+ " - appel meth "+ method.getName() + "  du JSContent "+currentFctBuildByProxy+" of class " + implcl.getName());
+					System.out.println("[MethodInvocationHandler]"+System.identityHashCode(currentJSContent)+ " - appel meth "+ method.getName() + "  du JSContent "+currentFctBuildByProxy+" of class " + implcl.getName());
 
 				
 				// appel l'implementation le methode JSInterface
@@ -220,12 +242,12 @@ public class MethodInvocationHandler implements InvocationHandler {
 					// trace du retour
 					if (ret instanceof JSContent )
 					{
-						System.out.println("[JSBuilder]"+System.identityHashCode(currentJSContent)+ " - appel de la mth "+id+" of class " + implcl.getName() +" => "+((JSContent)ret).getListElem() );
+						System.out.println("[MethodInvocationHandler]"+System.identityHashCode(currentJSContent)+ " - appel de la mth "+id+" of class " + implcl.getName() +" => "+((JSContent)ret).getListElem() );
 					}	
 					else
-						System.out.println("[JSBuilder]"+System.identityHashCode(currentJSContent)+ " - [no JSContent] appel de la mth "+id+" of class " + implcl.getName() +" => "+ret );
+						System.out.println("[MethodInvocationHandler]"+System.identityHashCode(currentJSContent)+ " - [no JSContent] appel de la mth "+id+" of class " + implcl.getName() +" => "+ret );
 
-					System.out.println("[JSBuilder]"+System.identityHashCode(currentJSContent)+ " - value = " +currentJSContent.getListElem());
+					System.out.println("[MethodInvocationHandler]"+System.identityHashCode(currentJSContent)+ " - value = " +currentJSContent.getListElem());
 				}
 				
 				return ret;
@@ -265,7 +287,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 		{
 			JSContent jsc= XHTMLPart.jsBuilder.createJSContent();
 			if (debug2)
-				System.out.println("[JSBuilder]"+System.identityHashCode(jsc)+ " - createJSContent "+mthName+" of class " + implcl.getName());
+				System.out.println("[MethodInvocationHandler]"+System.identityHashCode(jsc)+ " - createJSContent "+mthName+" of class " + implcl.getName());
 			
 			currentMethodDesc =  new  MethodDesc(jsc);
 			currentMethodDesc.proxy=proxy;
@@ -335,7 +357,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 					 currentMethodDesc.content.__(currentMethodDesc.lastMthNoInserted);
 //					 if (currentMethodDesc.currentMthNoInserted.equals("testB")) 
 					 if (debug3) 
-						 System.out.println("--------- add source line "+className + ":" + currentMethodDesc.lastLineNoInsered + " > " + currentMethodDesc.lastMthNoInserted);
+						 System.out.println("[MethodInvocationHandler]--------- add source line "+className + ":" + currentMethodDesc.lastLineNoInsered + " > " + currentMethodDesc.lastMthNoInserted);
 					 
 					 currentMethodDesc.lastMthNoInserted=null;
 				 }

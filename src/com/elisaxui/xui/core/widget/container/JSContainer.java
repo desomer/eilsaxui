@@ -40,13 +40,13 @@ public interface JSContainer extends JSFactory {
 	{
 		__()
 		._if("ctx.row.html instanceof JSXHTMLPart")
-			.var("part", "ctx.row.html")
-			.var("ret", XHTMLPart.xDiv(XHTMLPart.xVar("part.html")))
+			._var("part", "ctx.row.html")
+			._var("ret", XHTMLPart.xDiv(XHTMLPart.xVar("part.html")))
 			.__("ret.js+=part.js")
 			.__("return ret")
 		._else()
-			.var("ret", XHTMLPart.xDiv(XHTMLPart.xVar("ctx.row.html")))
-			.var("js", "ctx.row.js.replace('<script type=\\\"text\\\\/javascript\\\">', '')")
+			._var("ret", XHTMLPart.xDiv(XHTMLPart.xVar("ctx.row.html")))
+			._var("js", "ctx.row.js.replace('<script type=\\\"text\\\\/javascript\\\">', '')")
 			.set("js", "js.replace('<\\\\/script>', '')")
 			.__("ret.js=\"<script>\"+js+\"<\\/script>\"")
 			.__("return ret")
@@ -65,23 +65,23 @@ public interface JSContainer extends JSFactory {
 		__(aDataSet.setData("[]"));
 
 		set(aDataDriven, _new(aDataSet));
-		var(_self, _this);
+		_var(_self, _this);
 		
 		__(aDataDriven.onEnter(fct("ctx").__(()->{
 				_if("ctx.row['_dom_']==null");
 				
 				 	_if("ctx.row.type=='page'");
 						set(template, XHTMLPart.xPart(new ViewPageLayout(XHTMLPart.xVar("ctx.row.id"))));
-						var("jqdom", template.appendInto("$(selector)"));
+						_var("jqdom", template.appendInto("$(selector)"));
 						__("ctx.row['_dom_']=jqdom[0]");
 						
 						// ajoute les enfant
 						_for("var i in ctx.row.children");
-							var("child", "ctx.row.children[i]");
-							var("factory", "new (eval(child.factory))()" );
-							var("data", "factory.getData(child.selector)");
+							_var("child", "ctx.row.children[i]");
+							_var("factory", "new (eval(child.factory))()" );
+							_var("data", "factory.getData(child.selector)");
 							_for("var j in child.rows");
-								var("row", "child.rows[j]");
+								_var("row", "child.rows[j]");
 								set("row.idx", "j");
 //								var("param", "{'data':data, 'row':row , 'idx':j }")
 //								__("setTimeout(", fct("param").__("param.data.push(param.row)") , ", 100*j, param)")	
@@ -89,11 +89,11 @@ public interface JSContainer extends JSFactory {
 							endfor();
 						endfor();
 						
-						var(_tkrouter, "$xui.tkrouter");
+						_var(_tkrouter, "$xui.tkrouter");
 						
 						_if("ctx.row.active");		
-						  	__(_tkrouter, ".", _tkAnimation.doActivityActive(JQuery.$(jsvar("'#'+ctx.row.id"))));
-						  	__(_tkrouter, ".", _tkAnimation.doFixedElemToFixe(JQuery.$(jsvar("'#'+ctx.row.id"))));
+						  	__(_tkrouter, ".", _tkAnimation.doActivityActive(JQuery.$(var("'#'+ctx.row.id"))));
+						  	__(_tkrouter, ".", _tkAnimation.doFixedElemToFixe(JQuery.$(var("'#'+ctx.row.id"))));
 						endif();
 						
 						__("var backupId=", _tkrouter, ".", _activityMgr.getCurrentIDActivity());
@@ -102,7 +102,7 @@ public interface JSContainer extends JSFactory {
 						__(_tkrouter, ".", _activityMgr.setCurrentActivity(new JSString()._setContent("backupId")));
 						
 					_elseif("ctx.row.type=='card'");
-						var("subData", "{html:'', js:''}");
+						_var("subData", "{html:'', js:''}");
 					    _if("ctx.row.html!=null") ;
 					    	set("subData", _self.getSubData("ctx"));
 					    endif();
@@ -110,15 +110,15 @@ public interface JSContainer extends JSFactory {
 						set(template, ViewCard.getTemplate((ViewCard)card.addProperty("childrenCard", XHTMLPart.xVar("subData.html") )));
 						__(template, ".js+=subData.js");
 						
-						var("jqdom", template.appendInto("$(selector)"));
+						_var("jqdom", template.appendInto("$(selector)"));
 						__("ctx.row['_dom_']=jqdom[0]");
 						__("$(ctx.row['_dom_']).css('visibility','hidden')");
 						
-						var(_cardFactory, _new() );
-						var("data", _cardFactory.getData("jqdom"));
+						_var(_cardFactory, _new() );
+						_var("data", _cardFactory.getData("jqdom"));
 						
 						_for("var j in ctx.row.rows");
-							var("row", "ctx.row.rows[j]");
+							_var("row", "ctx.row.rows[j]");
 							__("data.push(row)")	;
 						endfor();
 						
@@ -131,7 +131,7 @@ public interface JSContainer extends JSFactory {
 						
 					_elseif("ctx.row.type=='floatAction'");
 						set(template, ViewFloatAction.getTemplate());
-						var("jqdom", template.appendInto("$(selector)"));
+						_var("jqdom", template.appendInto("$(selector)"));
 						__("ctx.row['_dom_']=jqdom[0]");
 	
 					_elseif("ctx.row.type=='action'");
@@ -160,7 +160,7 @@ public interface JSContainer extends JSFactory {
 			})
 			));
 
-		var("json", aDataSet.getData());
+		_var("json", aDataSet.getData());
 		__("return json");
 
 		;

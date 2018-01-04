@@ -28,7 +28,7 @@ public interface JSTestDataDriven extends JSClass {
 	
 	default Object startTest()
 	{
-		 var("v", " []")    // {a:15, b:'12'},{a:21, b:'22'} 
+		 _var("v", " []")    // {a:15, b:'12'},{a:21, b:'22'} 
 				
 				.set(aDataSet, _new())
 				.__(aDataSet.setData("v"))
@@ -37,7 +37,7 @@ public interface JSTestDataDriven extends JSClass {
 				.__(aDataDriven.onEnter(fct("value")
 						._if("value.row['_dom_']==null")
 				            .set(template, ScnAdminMain.xTemplateDataDriven("value.row.a", "value.row.b"))
-				            .var("jqdom", template.insertAt("$('#content')", "value.idx"))
+				            ._var("jqdom", template.insertAt("$('#content')", "value.idx"))
 				            .__("value.row['_dom_']=jqdom[0]")
 		            		.__("jqdom.css('position','absolute')")
 		            		.__("jqdom.css('right','0px')")
@@ -80,7 +80,7 @@ public interface JSTestDataDriven extends JSClass {
 							.__("$(value.row['_dom_']).css('transform','translate3d(0px,' + value.value*35 + 'px,0px)')")
 						.endif() 
 						._if("value.row['_dom_']!=null && value.property=='b'")
-							.var("span","$(value.row['_dom_']).find('span:nth-child(2)')")
+							._var("span","$(value.row['_dom_']).find('span:nth-child(2)')")
 							.__("span.text(value.value)")
 						.endif() 
 						))

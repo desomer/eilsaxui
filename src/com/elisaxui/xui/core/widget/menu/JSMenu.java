@@ -32,11 +32,11 @@ public interface JSMenu extends JSClass {
 				_if("ctx.row['_dom_']==null");
 					_if("ctx.row.type=='divider'");
 						set(template, ViewMenu.getTemplateMenuDivider());
-			            var("jqdom", template.appendInto("$('.menu ul')"));
+			            _var("jqdom", template.appendInto("$('.menu ul')"));
 			            __("ctx.row['_dom_']=jqdom[0]");
 					_else();
 			            set(template, ViewMenu.getTemplateMenu("ctx.row.name", "ctx.row.icon", "ctx.row.idAction"));
-			            var("jqdom", template.appendInto("$('.menu ul')"));
+			            _var("jqdom", template.appendInto("$('.menu ul')"));
 			            __("jqdom.css('visibility','hidden')");  // invisible par defaut avant animation
 			            __("ctx.row['_dom_']=jqdom[0]");
 		            endif();
@@ -53,7 +53,7 @@ public interface JSMenu extends JSClass {
 		
 		__(aDataDriven.onChange(fct("ctx").__(()->{
 				_if("ctx.row['_dom_']!=null && ctx.property=='anim'");
-					var("change", "ctx.value");
+					_var("change", "ctx.value");
 					_if("!change==''");
 						__("$(ctx.row['_dom_']).css('visibility','')");
 						__("$(ctx.row['_dom_']).toggleClass('animated '+change)");
@@ -64,7 +64,7 @@ public interface JSMenu extends JSClass {
 		 })
 				));
 		
-		var("jsonMenu", aDataSet.getData());
+		_var("jsonMenu", aDataSet.getData());
 		__("return jsonMenu");
 		
 		;

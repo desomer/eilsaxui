@@ -12,25 +12,16 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.Array;
  */
 public class JSValue extends JSVariable {
 
-	public JSBool add(Object... objs)
+	public JSValue add(Object... objs)
 	{
-		JSBool ret = new JSBool();
+		JSValue ret = declareType();
 		_doOperator(ret, "+", objs);
 		return ret;
 	}
 	
-	public JSBool substact(Object... objs)
+	public JSValue substact(Object... objs)
 	{
-		JSBool ret = new JSBool();
-//		Array arr = new Array();
-//		Object content = _getString();
-//		if (content instanceof Array )
-//			arr.addAll((Array<?>)content);
-//		else
-//			arr.add(content);
-//		arr.add("-");
-//		arr.add(obj);
-//		ret._setContent(arr);
+		JSValue ret = declareType();
 		_doOperator(ret, "-", objs);
 		return ret;
 	}
@@ -51,4 +42,19 @@ public class JSValue extends JSVariable {
 		return ret;
 	}
 	
+	/*******************************************************/
+	/**
+	 * @param ret
+	 * @return
+	 */
+	private JSValue declareType() {
+		JSValue ret =  null;
+		try {
+			ret = this.getClass().newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ret;
+	}
 }

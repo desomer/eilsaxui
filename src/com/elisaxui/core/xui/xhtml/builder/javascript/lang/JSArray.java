@@ -17,17 +17,17 @@ public class JSArray<E> extends JSClassInterface {
 	
 	public JSArray push(E value)
 	{
-		return callMth("push", value);
+		return (JSArray) _callMethod(null, "push", value);
 	}
 	
 	public JSArray pop()
 	{
-		return callMth("pop");
+		return  (JSArray) _callMethod(null, "pop", value);
 	}
 	
 	public JSArray splice(Object debut, Object nbASupprimer)
 	{
-		return callMth("splice", debut, ",", nbASupprimer);
+		return (JSArray) _callMethod(null, "splice", debut, SEP, nbASupprimer);
 	}
 	
 	public E at(Object idx)

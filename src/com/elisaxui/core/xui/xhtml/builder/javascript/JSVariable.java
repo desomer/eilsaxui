@@ -3,20 +3,23 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.javascript;
 
+import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.Array;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodDesc;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodInvocationHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSBool;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSValue;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
 /**
  * @author Bureau
  *
  */
 public class JSVariable {
+	
+	protected String SEP = ",";
 	protected Object name;
 	protected Object value;
 
@@ -52,7 +55,7 @@ public class JSVariable {
 		return value.toString();
 	}
 	/*************************************************************/
-	protected void registerMethod(Object obj ) {
+	protected void _registerMethod(Object obj ) {
 		 try {
 			 MethodDesc currentMethodDesc = MethodInvocationHandler.ThreadLocalMethodDesc.get();
 			 MethodInvocationHandler.doLastSourceLineInsered(currentMethodDesc, false);
@@ -80,30 +83,14 @@ public class JSVariable {
 	public JSBool isEqual(Object obj)
 	{
 		JSBool ret = new JSBool();
-		Array arr = new Array();
-		Object content = _getString();
-		if (content instanceof Array )
-			arr.addAll((Array<?>)content);
-		else
-			arr.add(content);
-		arr.add("==");
-		arr.add(obj);
-		ret._setContent(arr);
+		_doOperator(ret, "==", obj);
 		return ret;
 	}
 	
 	public JSBool isNotEqual(Object obj)
 	{
 		JSBool ret = new JSBool();
-		Array arr = new Array();
-		Object content = _getString();
-		if (content instanceof Array )
-			arr.addAll((Array<?>)content);
-		else
-			arr.add(content);
-		arr.add("!=");
-		arr.add(obj);
-		ret._setContent(arr);
+		_doOperator(ret, "!=", obj);
 		return ret;
 	}
 	
@@ -114,6 +101,7 @@ public class JSVariable {
 		return ret;
 	}
 
+	/*******************************************************************************/
 	/**
 	 * @param ret
 	 * @param objs
@@ -141,7 +129,83 @@ public class JSVariable {
 		}
 
 		ret._setContent(arr);
-		registerMethod(ret);
+		_registerMethod(ret);
 	}
 	
+	protected Object _callMethod(JSVariable ret, String mth,  Object... objs) {
+		if (ret==null)
+		{
+			ret = this;
+			if (value==null && this.name!=null)
+			{
+				// gestion premier appel de variable pour chainage
+				ret = ret.declareType();
+				ret._setName(this._getName());
+			}
+		}
+		
+		Array arr = new Array();
+		Object content = _getString();
+		if (content instanceof Array )
+			arr.addAll((Array<?>)content);
+		else
+			arr.add(content);
+		
+		arr.add("."+mth+"(");
+		_addContent(arr, objs);
+		arr.add(")");
+		
+		ret._setContent(arr);
+		_registerMethod(ret);
+		return ret;
+	}
+
+	
+	protected <E> E _addContent(Array inner, Object content) {
+		
+		if ( content instanceof Object[])
+		{
+			Object[] arr = (Object[])content;
+			for (Object object : arr) {
+				
+				if (object instanceof XClass)
+					inner.add(((XClass)object).getId());
+				
+				else if (object instanceof JSFunction)
+				{
+					StringBuilder strBuf = new StringBuilder();
+					XMLBuilder buf = new XMLBuilder("????", strBuf, null);
+					((JSFunction)object).toXML(buf);
+					inner.add(strBuf.toString());
+				}
+				else if ( object instanceof Object[])
+				{
+					_addContent(inner, object);
+				}
+				else if ( object instanceof String && object != SEP )
+					inner.add("'"+object+"'");
+				else
+					inner.add(object);
+			}
+		}
+		else if (content!=null)
+			inner.add(content);
+		return (E)this;
+	}
+	
+	/*******************************************************/
+	/**
+	 * @param ret
+	 * @return
+	 */
+	protected JSVariable declareType() {
+		JSVariable ret =  null;
+		try {
+			ret = this.getClass().newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ret;
+	}
 }

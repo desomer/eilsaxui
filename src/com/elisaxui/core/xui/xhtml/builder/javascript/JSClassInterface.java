@@ -3,13 +3,8 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.javascript;
 
-import java.lang.reflect.Method;
-
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.Array;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodDesc;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodInvocationHandler;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
 
@@ -23,10 +18,10 @@ public class JSClassInterface extends JSVariable {
 	// TODO a retirer et a gerer par le _setContent    (voir equal sur JSString)
 	Array<Object> listContent = new Array<Object>();
 
-	protected void reinit()
-	{
-		listContent.clear();
-	}
+//	protected void reinit()
+//	{
+//		listContent.clear();
+//	}
 	
 	protected Object[] addText(Object...classes)
 	{
@@ -117,7 +112,7 @@ public class JSClassInterface extends JSVariable {
 		E ret = (E)this;
 		if (listContent.size()==0 && this.name!=null)
 		{
-			// gestion premier appel de variable
+			// gestion premier appel de variable pour chainage
 			try {
 				ret = (E) this.getClass().newInstance();
 			} catch (InstantiationException | IllegalAccessException e) {
@@ -131,7 +126,7 @@ public class JSClassInterface extends JSVariable {
 		ret.addContent(classes);
 		ret.addContent(")");
 		
-		registerMethod(ret);
+		_registerMethod(ret);
 		
 		return ret;
 	}
@@ -164,6 +159,11 @@ public class JSClassInterface extends JSVariable {
     }
 	
     @Deprecated
+    /**
+     * use get
+     * @param att
+     * @return
+     */
 	public <E extends JSClassInterface> E  attr(String att)
 	{
 		E ret = (E)this;

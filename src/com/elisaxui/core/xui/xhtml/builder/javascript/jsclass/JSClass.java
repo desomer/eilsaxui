@@ -1,5 +1,7 @@
 package com.elisaxui.core.xui.xhtml.builder.javascript.jsclass;
 
+import java.lang.reflect.Proxy;
+
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;

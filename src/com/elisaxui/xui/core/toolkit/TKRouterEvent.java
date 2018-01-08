@@ -3,15 +3,17 @@
  */
 package com.elisaxui.xui.core.toolkit;
 
-import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.defVar;
 import static com.elisaxui.xui.core.toolkit.json.JXui.$xui;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSCallBack;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.xui.core.config.TKCoreConfig;
 import com.elisaxui.xui.core.toolkit.json.JIntent;
+import com.elisaxui.xui.core.toolkit.json.JRoute;
 import com.elisaxui.xui.core.transition.ConstTransition;
 import com.elisaxui.xui.core.transition.CssTransition;
 import com.elisaxui.xui.core.transition.JSTransition;
@@ -28,53 +30,62 @@ import com.elisaxui.xui.core.transition.JSTransition;
  */
 public interface TKRouterEvent extends JSClass {
 
+	/**
+	 * 
+	 */
+	public static final String ACTION_TOGGLE_MENU = "ACTION_TOGGLE_MENU";
 	public static final String ACTION_PREV_ROUTE = "ACTION_PREV_ROUTE";
 	public static final String ACTION_NEXT_ROUTE = "ACTION_NEXT_ROUTE";
 	public static final String STATE_ROUTE = "STATE_ROUTE";
+	public static final String STATE_MENU = "STATE_MENU";
+	public static final String URL_MENU = "menu";
 	
 	JSTransition tkAnimation = null;
 	TKActivity activityMgr= null;
 	
 	JSArray<JIntent> historyIntent();    //   gestion des historique d'intention
-	JSVariable navigo();
+	JSon navigo();
 
 	default Object constructor(Object nav) {
 		set(tkAnimation, _new());
 	    set(activityMgr, _new());
 	    
 //	.__("nav.resolve()")
-		set( navigo(), nav);
+		navigo().set(nav);
 		TKRouterEvent self = let(TKRouterEvent.class, "self", "this");
 		
-		_var("doPushState", fct("params","query").__(()->{   // ecoute l'history back
-				_if(self,".navigo.nextenable");
+		// this est un string (bind)
+		// ecoute l'history back
+		JSCallBack doPushState = let(JSCallBack.class, "doPushState", fct("params","query").__(()->{   
+				_if(self.navigo().get("nextenable"));
 				
-				    _var("toRoute", self.navigo(),"._lastRouteResolved");
-				    _if("toRoute.url.substring(0, 1) == '!'");
-				    	__("toRoute.url = toRoute.url.substring(1)");
+				    JRoute toRoute = let(JRoute.class, "toRoute", self.navigo().get("_lastRouteResolved"));
+				    _if(toRoute.url().substring(0, 1).isEqual("!"));
+				    	toRoute.url().set(toRoute.url().substring(1));
 				    endif();
 	
-					_var("backFromIntent", self.isBackIntention("toRoute.url"));
-					_var("fromIntent", self.geCurrentIntention());
-					systemDebugIf(TKCoreConfig.debugPushState, "'pushState ENABLE action=', this.toString() , ' toRoute =',toRoute,' backFromIntent =', backFromIntent, 'fromIntent=', fromIntent")	;				
-					/**************** gestion toogle menu  **********************/
-					_if("backFromIntent!=null && backFromIntent.url=='menu'");
-						__(self.doAction(txt("toggleMenu")));
-						__("return") ;   // exit 
-					_elseif("this.toString()=='menu'"); // is next
+					JIntent fromIntent =  let("fromIntent", self.geCurrentIntention());
+				    JIntent backFromIntent = let("backFromIntent", self.isBackIntention(toRoute.url()));
 					
-						set("$xui.intent.action", "'toggleMenu'");
-						set("$xui.intent.url", "'menu'");
+					systemDebugIf(TKCoreConfig.debugPushState, "'pushState ENABLE action=', this.toString() , ' toRoute =',toRoute,' backFromIntent =', backFromIntent, 'fromIntent='", fromIntent)	;				
+					/**************** gestion toogle menu  **********************/
+					_if(backFromIntent,"!=null &&", backFromIntent.url().isEqual(URL_MENU));
+						self.doAction(txt(ACTION_TOGGLE_MENU));
+						_return() ;   // exit 
+					_elseif("this.toString()==",txt(STATE_MENU)); // is next
+					
+						set("$xui.intent.action", txt(ACTION_TOGGLE_MENU));
+						set("$xui.intent.url", txt(URL_MENU));
 						_var("intent", "{}");
 						__("$.extend(intent, $xui.intent)");
 						
 						__(self.historyIntent().push(cast(JIntent.class, "intent"))) ;  // ajoute a l historique interne
 //						.consoleDebug("'intent='", "intent")
-						__(self.doAction(txt("toggleMenu")));
+						__(self.doAction(txt(ACTION_TOGGLE_MENU)));
 					endif();
 				
 					/**************** gestion route activity  **********************/
-					_if("backFromIntent!=null && this.toString()==", txt(STATE_ROUTE));
+					_if(backFromIntent,"!=null && this.toString()==", txt(STATE_ROUTE));
 						 // to Prev Route
 						set("$xui.intent.prevActivity", "params.url") ;    //TODO a changer
 					    set("$xui.intent.activity", "$xui.tkrouter.activityMgr.idCurrentActivity");
@@ -110,16 +121,17 @@ public interface TKRouterEvent extends JSClass {
 
 		__("nav.on("
 				+ "{"
-				+ " 'route/:url': { as: 'route', uses: doPushState.bind('"+STATE_ROUTE+"') },"  
-				+ " 'menu': { as: 'menu', uses: doPushState.bind('menu') },"	/**TODO change la ligne menu */
+				+ " 'route/:url': { as: 'route', uses: "+doPushState+".bind('"+STATE_ROUTE+"') },"  
+				+ " 'menu': { as: '"+URL_MENU+"', uses: "+doPushState+".bind('"+STATE_MENU+"') },"	/**TODO change la ligne menu */
 			//	+ " 'home' : { as: 'home', uses: doPushState.bind('home') }"   
 				+ "})");
 		
 		/**TODO change par un affichage user */
 		__("nav.notFound(", fct("query").consoleDebug("'notFound navigo ='", "query") ,")");
 		
-		set(historyIntent(),"[]");
-		__(self.doInitialize());
+		// set(historyIntent(),"[]");
+		historyIntent().set("[]");
+		self.doInitialize();
 		;
 		return _void();
 	}
@@ -249,7 +261,7 @@ public interface TKRouterEvent extends JSClass {
 		 /*******************************************************************/
 		 _if("action==",txt(ACTION_NEXT_ROUTE));
 
-		 	JIntent currentIntent = let(JIntent.class, "currentIntent", geCurrentIntention());
+		 	JIntent currentIntent = let("currentIntent", geCurrentIntention());
 //		 	var("act1", "'#'+$xui.intent.activity");
 		 	JQuery jqAct1 = let(JQuery.class, "jqAct1", JQuery.$(calc("'#'+",currentIntent.activity())));
 		 
@@ -287,7 +299,7 @@ public interface TKRouterEvent extends JSClass {
 		    endif();
 	     endif();
 	     /**************************************************************/
-		 _if("action=='toggleMenu'");
+		 _if("action==",txt(ACTION_TOGGLE_MENU));
 		 	systemDebugIf(TKCoreConfig.debugDoAction, txt("doAction"), "action");
 		 	__(tkAnimation.doToggleBurgerMenu());
 		 endif();

@@ -214,8 +214,8 @@ public abstract class XUIScene extends XHTMLPart {
 								)
 				
 				//----------------------------------------------------------------
-				.path(ViewPageLayout.content).set("box-sizing: border-box;"  // ne pas ajouter a cActivity
-						+ "padding-top: " + heightNavBar + "; "
+				.path(ViewPageLayout.content).set(  // ne pas ajouter a cActivity
+						 "padding-top: " + heightNavBar + "; "
 						+ "padding-bottom: " + heightTabBar)	 
 				
 				;

@@ -11,6 +11,7 @@ import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.Array;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodDesc;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodInvocationHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
@@ -505,6 +506,7 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSInterface#_void()
 	 */
 	@Override
+	@Deprecated
 	public JSVoid _void() {
 		// TODO Auto-generated method stub
 		return null;
@@ -514,6 +516,7 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSInterface#_null()
 	 */
 	@Override
+	@Deprecated
 	public JSMethodInterface _null() {
 		// TODO Auto-generated method stub
 		return null;
@@ -548,28 +551,20 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	@Override
 	public <E> E let(Class<? extends E >  type, Object name, Object... content) {
 		_var(name,content);
-		E v = null;
-
-		if (type.isAssignableFrom(JSVariable.class))
-		{
-			try {
-				v = (E) type.newInstance();
-				((JSVariable)v)._setName(name);
-			} catch (InstantiationException | IllegalAccessException e) {
-				e.printStackTrace();
-			}
-		}
-		else
-		{
-			v = declareType(type, name);
-		}
+		E v = declareType(type, name);
 		return v;
 	}
 	
 	@Override
 	public <E> E let(String name, E content)
 	{
-		return (E) let(content.getClass(), name, content);
+		Class t = content.getClass();
+		if (content instanceof Proxy)
+		{
+			MethodInvocationHandler mh = (MethodInvocationHandler) Proxy.getInvocationHandler(content);
+			t = mh.getImplementClass();
+		}
+		return (E) let(t, name, content);
 	}
 
 	/* (non-Javadoc)
@@ -577,7 +572,18 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 */
 	@Override
 	public JSMethodInterface then(Anonym content) {
-		return null;  //TODO a terminer
+
+		try {
+			content.run();
+			MethodDesc currentMethodDesc = MethodInvocationHandler.ThreadLocalMethodDesc.get();
+			MethodInvocationHandler.doLastSourceLineInsered(currentMethodDesc, true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		
+		endif();
+		return this;  //TODO a terminer
 	}
 
 	/* (non-Javadoc)
@@ -585,7 +591,19 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 */
 	@Override
 	public JSMethodInterface _else(Anonym content) {
-		return null; //TODO a terminer
+		getListElem().add(" else {");
+		getListElem().add(JSAddTab.class);
+		
+		try {
+			content.run();
+			MethodDesc currentMethodDesc = MethodInvocationHandler.ThreadLocalMethodDesc.get();
+			MethodInvocationHandler.doLastSourceLineInsered(currentMethodDesc, true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		endif();
+		return this; //TODO a terminer
 	}
 
 

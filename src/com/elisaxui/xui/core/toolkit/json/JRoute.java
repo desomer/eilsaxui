@@ -11,12 +11,8 @@ import com.elisaxui.xui.core.widget.activity.JActivity;
  * @author gauth
  *
  */
-public interface JIntent extends JSClass {
+public interface JRoute extends JSClass {
 	
-	JSString url();	
-	JSString action();
-	JSString activity();
-	
-	JSString nextActivityAnim();
-	JSString prevActivity();
+	JSString url();
+	JSString query();
 }

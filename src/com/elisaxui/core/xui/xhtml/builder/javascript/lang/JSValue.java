@@ -14,14 +14,14 @@ public class JSValue extends JSVariable {
 
 	public JSValue add(Object... objs)
 	{
-		JSValue ret = declareType();
+		JSValue ret = (JSValue) declareType();
 		_doOperator(ret, "+", objs);
 		return ret;
 	}
 	
 	public JSValue substact(Object... objs)
 	{
-		JSValue ret = declareType();
+		JSValue ret = (JSValue) declareType();
 		_doOperator(ret, "-", objs);
 		return ret;
 	}
@@ -39,22 +39,6 @@ public class JSValue extends JSVariable {
 		arr.add("%");
 		arr.add(obj);
 		ret._setContent(arr);
-		return ret;
-	}
-	
-	/*******************************************************/
-	/**
-	 * @param ret
-	 * @return
-	 */
-	private JSValue declareType() {
-		JSValue ret =  null;
-		try {
-			ret = this.getClass().newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		return ret;
 	}
 }

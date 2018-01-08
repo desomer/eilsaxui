@@ -15,4 +15,14 @@ public class JSString extends JSValue {
 		return  new JSString()._setContent(v._getValue());
 	}
 	
+	public JSString substring(Object start)
+	{
+		return (JSString) _callMethod(null, "substring", start);
+	}
+	
+	public JSString substring(Object start, Object end)
+	{
+		return (JSString) _callMethod(null, "substring", start, ",", end);
+	}
+	
 }

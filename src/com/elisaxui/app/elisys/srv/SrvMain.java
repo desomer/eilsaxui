@@ -28,10 +28,10 @@ import javax.ws.rs.core.UriInfo;
 
 import com.elisaxui.ResourceLoader;
 import com.elisaxui.app.elisys.xui.asset.AssetHandler;
+import com.elisaxui.component.page.ConfigScene;
+import com.elisaxui.component.widget.menu.JSONMenu;
 import com.elisaxui.core.data.JSONBuilder;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
-import com.elisaxui.xui.core.page.ConfigScene;
-import com.elisaxui.xui.core.widget.menu.JSONMenu;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 

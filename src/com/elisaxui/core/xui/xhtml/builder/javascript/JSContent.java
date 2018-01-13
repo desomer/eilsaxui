@@ -260,7 +260,7 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 * Object, java.lang.Object)
 	 */
 	@Override
-	public JSMethodInterface set(Object name, Object... content) {
+	public JSMethodInterface _set(Object name, Object... content) {
 		getListElem().add(JSNewLine.class);
 		getListElem().add(name);
 		getListElem().add("=");

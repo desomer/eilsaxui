@@ -45,7 +45,7 @@ public interface JSHistoireManager extends JSClass {
 				
 			endfor();
 			
-			set("window.lastPhrase", aJPhrase.text());			
+			_set("window.lastPhrase", aJPhrase.text());			
 		});
 		
 		__("$.getJSON('"+JSSyllabisation.REST_JSON_SYLLABISATION+"').done(", onJson ,")");

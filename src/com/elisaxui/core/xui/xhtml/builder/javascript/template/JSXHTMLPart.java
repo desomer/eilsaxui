@@ -16,8 +16,8 @@ public interface JSXHTMLPart extends JSClass {
 	JSString js=null;
 	
 	default Object constructor(Object h, Object j) {
-		return set(html, h)
-			  .set(js, j)
+		return _set(html, h)
+			  ._set(js, j)
 				;
 	}
 	

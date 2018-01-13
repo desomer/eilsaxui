@@ -5,8 +5,8 @@ package com.elisaxui.app.elisys.xui.page.shop;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.declareType;
 
-import com.elisaxui.xui.core.widget.activity.JActivity;
-import com.elisaxui.xui.core.widget.activity.JSONActivity;
+import com.elisaxui.component.widget.activity.JActivity;
+import com.elisaxui.component.widget.activity.JSONActivity;
 
 /**
  * @author gauth

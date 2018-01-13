@@ -8,7 +8,7 @@ public interface JSMethodInterface  {
 	JSMethodInterface __(Object... content);
 	
 	/**********************************************************************/
-	JSMethodInterface set(Object name, Object... content);
+	JSMethodInterface _set(Object name, Object... content);
 	JSMethodInterface _var(Object name, Object... content);
 	
 	<E> E let(Class<? extends E > type, Object name, Object... content);
@@ -19,7 +19,7 @@ public interface JSMethodInterface  {
 	JSMethodInterface systemDebugIf(Object cond, Object... content);
 	/**********************************************************************/
 	JSMethodInterface _for(Object... content);
-	JSMethodInterface _forIdx(Object idx, JSArray array);
+	JSMethodInterface _forIdx(Object idx, JSArray<?> array);
 	JSMethodInterface _do(Anonym c);
 	JSMethodInterface endfor();
 	/**********************************************************************/
@@ -65,19 +65,25 @@ public interface JSMethodInterface  {
 	
 	JSMethodInterface _else();
 	JSMethodInterface _else(Anonym content);
-	
-	JSMethodInterface endif();
-
-	JSMethodInterface _elseif_(Object... content);
 	JSMethodInterface _elseif(Object... content);
+	
+	@Deprecated
+	JSMethodInterface endif();
+	@Deprecated
+	JSMethodInterface _elseif_(Object... content);
+
 
 	/**********************************************************************/
 	JSMethodInterface setTimeout(Object... content);
 	
 	/**********************************************************************/
 	JSMethodInterface _return(Object... content);
+	
+	@Deprecated
 	JSVoid _void();
+	@Deprecated
 	Object _null();
+	@Deprecated
 	Object _this();
 	/*******************************************************************/
 	Object $$subContent();

@@ -64,9 +64,7 @@ public interface JSClass1 extends JSClass {
 		p.substring(1).substring(0, 2);
 		p.set(calc(b, "+", 5, "+", OK)); // calcule complexe js
 		
-
-		
-		// for
+		// boucle for
 		JSInt idx = declareType(JSInt.class, "idx"); // declare type sans let
 		_forIdx(idx, tableau())._do(() -> {
 			b.set(tableau().at(idx));

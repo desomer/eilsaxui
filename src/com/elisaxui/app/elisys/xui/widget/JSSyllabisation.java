@@ -3,10 +3,13 @@
  */
 package com.elisaxui.app.elisys.xui.widget;
 
+import static com.elisaxui.component.toolkit.JQuery.$;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.defAttr;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.defVar;
-import static com.elisaxui.xui.core.toolkit.JQuery.$;
 
+import com.elisaxui.component.datadriven.JSDataDriven;
+import com.elisaxui.component.datadriven.JSDataSet;
+import com.elisaxui.component.toolkit.JQuery;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.Anonym;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
@@ -17,9 +20,6 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.core.xui.xml.annotation.xAnonymous;
-import com.elisaxui.xui.core.datadriven.JSDataDriven;
-import com.elisaxui.xui.core.datadriven.JSDataSet;
-import com.elisaxui.xui.core.toolkit.JQuery;
 /**
  * @author Bureau
  *
@@ -41,10 +41,10 @@ public interface JSSyllabisation extends JSClass {
 	
 	
 	default Object constructor() {
-		set(aDataSet(), _new());
-		set(stop, false);
-		set(isRunning, false);
-		return set(lastResult, 0);
+		_set(aDataSet(), _new());
+		_set(stop, false);
+		_set(isRunning, false);
+		return _set(lastResult, 0);
 	}
 	
 	
@@ -53,7 +53,7 @@ public interface JSSyllabisation extends JSClass {
 	{
 		return  (Anonym) ()-> {
 			_if("window.microlistener.stop");
-				set("window.microlistener.stop", false);
+				_set("window.microlistener.stop", false);
 			_else();
 				__("window.microlistener.recognition.start()");
 			endif();
@@ -64,9 +64,9 @@ public interface JSSyllabisation extends JSClass {
 	default Object createMicroListener()
 	{
 		_var("f", "webkitSpeechRecognition || SpeechRecognition");
-		set(recognition, "new f()");
-		set(recognition.attr("continuous"), true);
-		set(recognition.attr("lang"), txt("fr-FR"));
+		_set(recognition, "new f()");
+		_set(recognition.attr("continuous"), true);
+		_set(recognition.attr("lang"), txt("fr-FR"));
 		_var(_self, _this);
 		
 		JSArray jsonSyllable = new JSArray()._setName("jsonSyllable");
@@ -76,7 +76,7 @@ public interface JSSyllabisation extends JSClass {
 			_for("var i = event.resultIndex; i < event.results.length; i++");
 				_var("time", "event.timeStamp-", "self.lastResult");
 				_if("event.results[i].isFinal && time>500");
-					set("self.lastResult", "event.timeStamp");
+					_set("self.lastResult", "event.timeStamp");
 					
 					JSString textEvent = new JSString()._setName("textEvent");
 					_var(textEvent, "event.results[i][0].transcript");
@@ -104,37 +104,37 @@ public interface JSSyllabisation extends JSClass {
 		
 		Anonym fRecognitionEnd = (/*event*/)->{ 	
 			_if("window.microlistener.stop");
-				set("window.microlistener.stop", false);
+				_set("window.microlistener.stop", false);
 			_else();
 				__("window.microlistener.recognition.start()");
 			endif();		
 		};	
 		
-		set(recognition.attr("onresult"), fct("event") .__(onresult));
+		_set(recognition.attr("onresult"), fct("event") .__(onresult));
 		//set(recognition.attr("onend"), fRecognitionEnd("event"));
-		set(recognition.attr("onend"), fct("event") .__(fRecognitionEnd));
+		_set(recognition.attr("onend"), fct("event") .__(fRecognitionEnd));
 		return _this;
 	}
 		
 	default Object getData()
 	{
 		__(aDataSet().setData("[]"));
-		set(aDataDriven, _new(aDataSet()));
+		_set(aDataDriven, _new(aDataSet()));
 		
 		Anonym onEnter = (/*ctx*/)->{
 			_if("ctx.row['_dom_']==null");				
-				set(template, ViewSyllabisation.getMot(XHTMLPart.xVar("ctx.row.text")));
+				_set(template, ViewSyllabisation.getMot(XHTMLPart.xVar("ctx.row.text")));
 				
 				JQuery jqdom = new JQuery()._setName("jqdom");
 				_var(jqdom, template.appendInto(JQuery.$(ViewSyllabisation.cDivSyllabisation)));
 				
-				set("ctx.row['_dom_']", jqdom.get(0));
+				_set("ctx.row['_dom_']", jqdom.get(0));
 				
 				JSArray<JSArray> sylb = new JSArray()._setName("sylb");
 				_var(sylb, "ctx.row.syllabes");
 				
 	            _forIdx("j", sylb);
-	            	set(template, ViewSyllabisation.getSyl(XHTMLPart.xVar(sylb.at("j").attr("text"))));
+	            	_set(template, ViewSyllabisation.getSyl(XHTMLPart.xVar(sylb.at("j").attr("text"))));
 	            	
 	        		JQuery jqdomSyl = new JQuery()._setName("jqdomSyl");
 	            	_var(jqdomSyl, template.appendInto("jqdom"));

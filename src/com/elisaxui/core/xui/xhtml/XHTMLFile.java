@@ -6,11 +6,11 @@ package com.elisaxui.core.xui.xhtml;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassImpl;
 import com.elisaxui.core.xui.xml.XMLFile;
-import com.elisaxui.xui.core.page.XUIScene;
 
 /**
  * @author Bureau

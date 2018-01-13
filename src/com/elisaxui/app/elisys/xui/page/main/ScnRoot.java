@@ -5,6 +5,15 @@ package com.elisaxui.app.elisys.xui.page.main;
 
 import com.elisaxui.app.elisys.xui.js.JSHistoireManager;
 import com.elisaxui.app.elisys.xui.widget.JSSyllabisation;
+import com.elisaxui.component.page.ConfigScene;
+import com.elisaxui.component.page.XUIScene;
+import com.elisaxui.component.toolkit.JQuery;
+import com.elisaxui.component.toolkit.TKActivity;
+import com.elisaxui.component.toolkit.TKQueue;
+import com.elisaxui.component.widget.layout.JSPageLayout;
+import com.elisaxui.component.widget.log.ViewLog;
+import com.elisaxui.component.widget.menu.JSMenu;
+import com.elisaxui.component.widget.navbar.JSNavBar;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
@@ -17,15 +26,6 @@ import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
-import com.elisaxui.xui.core.page.ConfigScene;
-import com.elisaxui.xui.core.page.XUIScene;
-import com.elisaxui.xui.core.toolkit.JQuery;
-import com.elisaxui.xui.core.toolkit.TKActivity;
-import com.elisaxui.xui.core.toolkit.TKQueue;
-import com.elisaxui.xui.core.widget.layout.JSPageLayout;
-import com.elisaxui.xui.core.widget.log.ViewLog;
-import com.elisaxui.xui.core.widget.menu.JSMenu;
-import com.elisaxui.xui.core.widget.navbar.JSNavBar;
 
 /**
  * @author Bureau
@@ -58,7 +58,8 @@ public class ScnRoot extends XUIScene {
 	public XMLElement xImportAfter() {
 		return xListElement(
 				xImport(JSSyllabisation.class), 
-				xImport(JSHistoireManager.class)  
+				xImport(JSHistoireManager.class),
+				xImport(JSRoot.class)  
 				);
 	}
 	
@@ -97,7 +98,7 @@ public class ScnRoot extends XUIScene {
 	
 	static JSSyllabisation jsSyllabe;
 	static JSHistoireManager jsHitoireMgr;
-	
+	static JSRoot jsRoot;
 	
 	@Override
 	public JSMethodInterface createScene()
@@ -112,58 +113,28 @@ public class ScnRoot extends XUIScene {
 				
 				/**************************************************************/
 				
-				.set("window.onCreateActivity1", fct("json")
-						.consoleDebug("'on Create Activity1'")
-						.__(TKQueue.startProcessQueued( 100,  fct()
-								._var(jsPageLayout, _new())
-								.__(jsPageLayout.hideOnScroll(new JSString()._setContent("'#Activity1'")))
-								
-// 					TODO a changer : mettre dans une queue avec priorité (avec image) et gestion de promise d'attente 								
-//								.__(" $.getScript({url:'https://cdnjs.cloudflare.com/ajax/libs/granim/1.0.6/granim.min.js',  cache: true}).done("
-//								    , fct() 
-//								    	.var("jCanvasGranim", "$('#NavBarActivity1 .animatedBg')[0]")
-//								    	.__(NavBarAnimated1)
-//								    ,")") 
-
-							, 500,  fct()
-						 		.set("window.microlistener", jsSyllabe.createMicroListener())								
-							)
-						)
-				)
-				
-				.set("window.onResumeActivity1", fct().__("alert('ok')") 
-						)
-				
-				/**************************************************************/
-				// gestion du slidedown pour fermer
-				.set("window.onCreateActivityDown", fct("json")
-						.__(TKQueue.startProcessQueued( 100,  fct()
-								._var(jsPageLayout, _new())
-								.__(jsPageLayout.setEnableCloseGesture("json.param"))
-							)
-						)
-				)
+				._var(jsRoot, _new(jsonSyllabe, jsSyllabe))
 				
 				/**************************************************************/
 				
-				.set("window.onMicro", fct("json")
+				._set("window.onMicro", fct("json")
 						.__(TKQueue.startProcessQueued( fct()
 								._var(jsSyllabe, "window.microlistener")
 								._if(jsSyllabe,".isRunning==false")
-									.set(jsvar(jsSyllabe,".isRunning"), true)
+									._set(jsvar(jsSyllabe,".isRunning"), true)
 							    	.__(jsSyllabe,".recognition.start()")
 							    ._else()
-									.set(jsvar(jsSyllabe,".isRunning"), false)
-									.set(jsvar(jsSyllabe,".stop"), true)
+									._set(jsvar(jsSyllabe,".isRunning"), false)
+									._set(jsvar(jsSyllabe,".stop"), true)
 									.__(jsSyllabe,".recognition.stop()")
 							    .endif()
 							)
 						)
 				)
 				
-				.set("window.onDelete", fct("json")
+				._set("window.onDelete", fct("json")
 						.__(TKQueue.startProcessQueued( fct()
-								.set("window.lastPhrase", txt(""))
+								._set("window.lastPhrase", txt(""))
 								._var(jsSyllabe, "window.microlistener")
 								._var("jsonSyllabe2", jsvar(jsSyllabe, ".aDataSet.getData()"))
 								
@@ -176,18 +147,18 @@ public class ScnRoot extends XUIScene {
 						)
 				)
 				
-				.set("window.onMot", fct("json")
+				._set("window.onMot", fct("json")
 						._var("leMot", "$(window.lastBtn).data('mot')")
 						._var("msg", "new SpeechSynthesisUtterance(leMot)")
-						.set("msg.lang", "'fr-FR'")
+						._set("msg.lang", "'fr-FR'")
 						.__("window.speechSynthesis.speak(msg)")
 				)
 				
-				.set("window.onPhrase", fct("json")
+				._set("window.onPhrase", fct("json")
 						._var(jsSyllabe, "window.microlistener")
 						._if(jsSyllabe,".isRunning")
-							.set(jsvar(jsSyllabe,".isRunning"), false)
-							.set(jsvar(jsSyllabe,".stop"), true)
+							._set(jsvar(jsSyllabe,".isRunning"), false)
+							._set(jsvar(jsSyllabe,".stop"), true)
 							.__(jsSyllabe,".recognition.stop()")
 					    .endif()
 						
@@ -197,14 +168,14 @@ public class ScnRoot extends XUIScene {
 
 						._else()
 							._var("msg", "new SpeechSynthesisUtterance(window.lastPhrase)")
-							.set("msg.lang", "'fr-FR'")
-							.set("msg.rate", 0.9)
+							._set("msg.lang", "'fr-FR'")
+							._set("msg.rate", 0.9)
 							//.set("msg.pitch", 1)
 							.__("window.speechSynthesis.speak(msg)")
 						.endif()
 				)
 				
-				.set("window.onLoadHistoire", fct("json")
+				._set("window.onLoadHistoire", fct("json")
 						._var(jsHitoireMgr, _new())
 						.__(jsHitoireMgr.getHistoire())
 				)

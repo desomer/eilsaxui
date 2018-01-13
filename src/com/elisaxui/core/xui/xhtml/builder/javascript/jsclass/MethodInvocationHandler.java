@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.elisaxui.component.widget.activity.JActivity;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLFile;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
@@ -28,7 +29,6 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
-import com.elisaxui.xui.core.widget.activity.JActivity;
 
 public class MethodInvocationHandler implements InvocationHandler {
 	

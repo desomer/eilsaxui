@@ -17,6 +17,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
+import com.elisaxui.component.page.JSServiceWorker;
+import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.core.helper.JSExecutorHelper;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.xhtml.XHTMLAppBuilder;
@@ -29,8 +31,6 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.target.CONTENT;
-import com.elisaxui.xui.core.page.JSServiceWorker;
-import com.elisaxui.xui.core.page.XUIScene;
 
 @Path("/")
 public class XUIFactoryXHtml {

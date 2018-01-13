@@ -175,46 +175,46 @@ public abstract class XUIScene extends XHTMLPart {
 	public XMLElement xStyleXUIScene() {
 		
 		return xStyle()
-				.path("*, *:before, *:after").set(
+				.path("*, *:before, *:after").add(
 						  "-webkit-tap-highlight-color: rgba(0,0,0,0); "  // pas de coulour au click => ripple a la place
 						+ "box-sizing: border-box;   "
 						+ "margin: 0;" + 
 						"  padding: 0;")  
 				
-				.path("html").set("font-size: 16px;")
+				.path("html").add("font-size: 16px;")
 				
 //						//+"overflow-y: scroll;"
 //						//+ "overflow-x: hidden;" // pour que le 100vw ne prennent pas en compte la largueur du scrollbar
 //						+ " line-height: 1.5;"
 //						+ "font-family: 'Roboto', sans-serif;font-weight: normal;")
 				
-				.path("body")	.set("background-color: "+getConfigScene().getBgColorScene()+";"
+				.path("body")	.add("background-color: "+getConfigScene().getBgColorScene()+";"
 							+ "line-height: 1.5;"
 							+ "font-family: 'Roboto', sans-serif;"
 							+ "font-weight: normal;")
 
 				//----------------------------------------------------------------
-				.path(scene).set("overflow-x: hidden; background-color: "+getConfigScene().getBgColorScene()+";"   // overflow: auto; -webkit-overflow-scrolling: auto
+				.path(scene).add("overflow-x: hidden; background-color: "+getConfigScene().getBgColorScene()+";"   // overflow: auto; -webkit-overflow-scrolling: auto
 						//+ "min-width: 100vw;  "
 						+ "min-height: 100vh; " 
 						)
-				    .childPath(xStyle(cShell).set("background-color: "+getConfigScene().getBgColorContent()+ ";"
+				    .childPath(xStyle(cShell).add("background-color: "+getConfigScene().getBgColorContent()+ ";"
 				    		+ "width: "+widthScene+";"
 				    		+ "  min-height: 100vh; "))
-					.childPath(xStyle("#NavBarShell h1").set("text-align:center;color: inherit;  font-size: 2.1rem; margin-top: 50px"))
+					.childPath(xStyle("#NavBarShell h1").add("text-align:center;color: inherit;  font-size: 2.1rem; margin-top: 50px"))
 				//----------------------------------------------------------------
 				.path(activity)
-					.set("background-color: "+getConfigScene().getBgColorContent()+";"
+					.add("background-color: "+getConfigScene().getBgColorContent()+";"
 					+ " width:"+widthScene+";"
 					+ " will-change:overflow,z-index;") //will-change:transform   =bug : les header et footer ne se fixe plus au body
 					.childPath(xStyle(ViewPageLayout.content)
-								.set(" min-height: 100vh; "
+								.add(" min-height: 100vh; "
 									+ "min-width: "+widthScene+"; "
 									+ "background-color:"+getConfigScene().getBgColorContent()+";will-change:contents")  // changement durant le freeze du contenu de l'activity
 								)
 				
 				//----------------------------------------------------------------
-				.path(ViewPageLayout.content).set(  // ne pas ajouter a cActivity
+				.path(ViewPageLayout.content).add(  // ne pas ajouter a cActivity
 						 "padding-top: " + heightNavBar + "; "
 						+ "padding-bottom: " + heightTabBar)	 
 				
@@ -492,7 +492,7 @@ public abstract class XUIScene extends XHTMLPart {
 									.__("$('.menu').css('transition', '' )")
 									.__("$('.menu').css('transform', 'translate3d('+ev.deltaX+'px,'+sct+'px,0px)' )")
 								.endif()
-							._elseif("anim==true && ev.offsetDirection==2 ")
+							._elseif_("anim==true && ev.offsetDirection==2 ")
 								.set("anim", "false")
 								// ferme le menu par le doOverlay avec une animation
 								.__("$('.menu').css('transition', 'transform "+(SPEED_SHOW_MENU+50)+"ms ease-out' )")

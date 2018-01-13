@@ -388,10 +388,21 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	}
 	
 	@Override
-	public JSMethodInterface _elseif(Object... content) {
+	public JSMethodInterface _elseif_(Object... content) {
 		getListElem().add(JSRemoveTab.class);
 		getListElem().add(JSNewLine.class);
 		getListElem().add("} else if(");
+		for (Object object : content) {
+			addElem(object);
+		}
+		getListElem().add(") {");
+		getListElem().add(JSAddTab.class);
+		return this;
+	}
+	
+	@Override
+	public JSMethodInterface _elseif(Object... content) {
+		getListElem().add(" else if(");
 		for (Object object : content) {
 			addElem(object);
 		}
@@ -568,6 +579,16 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	}
 
 	/* (non-Javadoc)
+	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#let(java.lang.Object, java.lang.Object[])
+	 */
+	@Override
+	public void let(Object name, Object... content) {
+		
+		_var(name, content);
+		
+	}
+	
+	/* (non-Javadoc)
 	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#then(com.elisaxui.core.xui.xhtml.builder.javascript.Anonym)
 	 */
 	@Override
@@ -583,7 +604,7 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 
 		
 		endif();
-		return this;  //TODO a terminer
+		return this; 
 	}
 
 	/* (non-Javadoc)
@@ -603,8 +624,30 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 		}
 		
 		endif();
-		return this; //TODO a terminer
+		return this; 
 	}
+
+	/* (non-Javadoc)
+	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#_do(com.elisaxui.core.xui.xhtml.builder.javascript.Anonym)
+	 */
+	@Override
+	public JSMethodInterface _do(Anonym content) {
+		
+		getListElem().add(JSAddTab.class);
+		
+		try {
+			content.run();
+			MethodDesc currentMethodDesc = MethodInvocationHandler.ThreadLocalMethodDesc.get();
+			MethodInvocationHandler.doLastSourceLineInsered(currentMethodDesc, true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		getListElem().add(JSRemoveTab.class);
+		endfor();
+		return this; 
+	}
+
+
 
 
 

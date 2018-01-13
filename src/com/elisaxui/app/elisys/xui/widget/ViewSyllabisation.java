@@ -30,20 +30,20 @@ public class ViewSyllabisation extends XHTMLPart {
 	public XMLElement xStylePart() {
 
 		return xStyle().path(cDivSyllabisation)
-						.set("min-height:20vh; line-height: 45px;"
+						.add("min-height:20vh; line-height: 45px;"
 							//*	+ "font-family: 'Open Sans', sans-serif;"
 								+ "    font-size: 25px; font-stretch: expanded;"
 								+ " background-color: #feffc7;"
 								)
 					
 					 .path(cSyllabeMot)
-					 	.set("margin:10px")
+					 	.add("margin:10px")
 					 	
 //					 .select(cMicro)
 //					 	.set("width:100%")
 						
 					 .path(cSyllabeImpaire)
-						.set("border: 1px solid rgba(255, 0, 239, 0.56);background: rgba(255, 53, 157, 0.14);") 	
+						.add("border: 1px solid rgba(255, 0, 239, 0.56);background: rgba(255, 53, 157, 0.14);") 	
 								    
 		;
 	}

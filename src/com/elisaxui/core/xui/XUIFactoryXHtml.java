@@ -188,7 +188,7 @@ public class XUIFactoryXHtml {
 	public Response getChallenge(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("token") String token) {
 		System.out.println("token ="+token);
 		return Response.status(Status.OK)
-				.entity("myNV6mWL8RiK2hwEAlcjy43GsJOady4q4kQy-BKsPCU.r7EgwbRaRypDDfgAupsAWglRb_MsRoBAAvUQ8ao1p6w").build();
+				.entity("ow8QTs-0I4ywbbrmp-IHJcXPFpqRKXurs5T2gZAjmqE.r7EgwbRaRypDDfgAupsAWglRb_MsRoBAAvUQ8ao1p6w").build();
 	}
 	
 }

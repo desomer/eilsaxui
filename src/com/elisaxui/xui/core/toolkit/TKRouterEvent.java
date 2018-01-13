@@ -72,7 +72,7 @@ public interface TKRouterEvent extends JSClass {
 					_if(backFromIntent,"!=null &&", backFromIntent.url().isEqual(URL_MENU));
 						self.doAction(txt(ACTION_TOGGLE_MENU));
 						_return() ;   // exit 
-					_elseif("this.toString()==",txt(STATE_MENU)); // is next
+					_elseif_("this.toString()==",txt(STATE_MENU)); // is next
 					
 						set("$xui.intent.action", txt(ACTION_TOGGLE_MENU));
 						set("$xui.intent.url", txt(URL_MENU));
@@ -95,7 +95,7 @@ public interface TKRouterEvent extends JSClass {
 					    set("$xui.intent.action", txt(ACTION_PREV_ROUTE));
 						__(self.doAction(txt(ACTION_PREV_ROUTE)));
 						
-					_elseif("this.toString()==", txt(STATE_ROUTE)); // is next
+					_elseif_("this.toString()==", txt(STATE_ROUTE)); // is next
 						// to Next Route
 						set("$xui.intent.prevActivity", "$xui.tkrouter.activityMgr.idCurrentActivity");
 					    set("$xui.intent.activity", "params.url");
@@ -280,7 +280,7 @@ public interface TKRouterEvent extends JSClass {
 			 
 		    _if("actAnim=='"+ConstTransition.ANIM_FROM_BOTTOM+"'");
 		    	__(tkAnimation.doOpenActivityFromBottom());
-		    _elseif("actAnim=='"+ConstTransition.ANIM_FROM_RIPPLE+"'");
+		    _elseif_("actAnim=='"+ConstTransition.ANIM_FROM_RIPPLE+"'");
 		    	__(tkAnimation.doOpenActivityFromRipple());
 		    endif();
 	     endif();
@@ -294,7 +294,7 @@ public interface TKRouterEvent extends JSClass {
 			
 		 	_if("actAnim=='"+ConstTransition.ANIM_FROM_BOTTOM+"'");
 		    	__(tkAnimation.doOpenActivityFromBottom());
-		    _elseif("actAnim=='"+ConstTransition.ANIM_FROM_RIPPLE+"'");
+		    _elseif_("actAnim=='"+ConstTransition.ANIM_FROM_RIPPLE+"'");
 		    	__(tkAnimation.doOpenActivityFromRipple());
 		    endif();
 	     endif();

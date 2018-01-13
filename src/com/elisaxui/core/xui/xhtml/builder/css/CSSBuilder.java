@@ -79,10 +79,19 @@ public class CSSBuilder  extends XMLElement {
 		return this;
 	}
 	
-	public CSSBuilder set(Object content)
+	public CSSBuilder add(String content)
 	{
-		//Object cssContent = listStyle.getLast().content;
-		listStyle.getLast().content = content;
+		String cssContent = (String) listStyle.getLast().content;
+		content=content.trim();
+		if (cssContent==null)
+			listStyle.getLast().content = content;
+		else
+		{
+			boolean endWithSep = cssContent.charAt(cssContent.length()-1)==';';
+			boolean startWithSep = content.charAt(0)==';';
+			
+			listStyle.getLast().content = cssContent+( (!endWithSep && !startWithSep)?";":"")+content;
+		}
 		return this;	
 	}
 }

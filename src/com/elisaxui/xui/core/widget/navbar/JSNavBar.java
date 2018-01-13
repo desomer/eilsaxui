@@ -57,14 +57,14 @@ public interface JSNavBar extends JSFactory {
 					_var(jqdom, template.appendInto($(selector)));
 					ctx.row().attrByString(JSDataSet._DOM).set(jqdom.get(0));
 					
-				_elseif (jsnavRow.type().isEqual(txt(TYPE_TITLE)));
+				_elseif_ (jsnavRow.type().isEqual(txt(TYPE_TITLE)));
 					JSonNavBarTitle jsnavTitle= cast(JSonNavBarTitle.class,  ctx.row());
 				
 					set(template, ViewNavBar.getTemplateName(jsnavTitle.title()));
 					_var(jqdom, template.appendInto($(selector," ", ViewNavBar.descBar)));
 					ctx.row().attrByString(JSDataSet._DOM).set(jqdom.get(0));
 					
-				_elseif (jsnavRow.type().isEqual(txt(TYPE_BTN_ACTION)));
+				_elseif_ (jsnavRow.type().isEqual(txt(TYPE_BTN_ACTION)));
 					JSonNavBarBtnAction jsnavBtn= cast(JSonNavBarBtnAction.class,  ctx.row());
 					
 					_if($(selector," ", ViewNavBar.rightAction).length().isEqual(0)); 
@@ -76,7 +76,7 @@ public interface JSNavBar extends JSFactory {
 					_var(jqdom, template.appendInto($(selector," ", ViewNavBar.rightAction)));
 					ctx.row().attrByString(JSDataSet._DOM).set(jqdom.get(0));
 				
-				_elseif (jsnavRow.type().isEqual(txt(TYPE_BACKGROUND)));	
+				_elseif_ (jsnavRow.type().isEqual(txt(TYPE_BACKGROUND)));	
 				    JSonNavBarBackground jsnavRowBg= cast(JSonNavBarBackground.class,  ctx.row());
 				    
 				    _if (jsnavRowBg.mode().isEqual(txt("granim")));
@@ -84,7 +84,7 @@ public interface JSNavBar extends JSFactory {
 						_var(jqdom, template.appendInto($(selector)));
 						ctx.row().attrByString(JSDataSet._DOM).set(jqdom.get(0));
 						
-					_elseif (jsnavRowBg.mode().isEqual(txt("css")));
+					_elseif_ (jsnavRowBg.mode().isEqual(txt("css")));
 						set(template, ViewNavBar.getTemplateBgDiv());
 						_var(jqdom, template.appendInto($(selector," ", ViewNavBar.descBar)));
 						__(jqdom.css("background", jsnavRowBg.css()));   //TODO retirer le __

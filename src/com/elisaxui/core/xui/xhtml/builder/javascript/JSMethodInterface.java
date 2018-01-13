@@ -13,13 +13,14 @@ public interface JSMethodInterface  {
 	
 	<E> E let(Class<? extends E > type, Object name, Object... content);
 	<E> E let(String name, E content);
+	void let(Object name, Object... content);
 	
 	JSMethodInterface consoleDebug(Object... content);
 	JSMethodInterface systemDebugIf(Object cond, Object... content);
 	/**********************************************************************/
 	JSMethodInterface _for(Object... content);
 	JSMethodInterface _forIdx(Object idx, JSArray array);
-	
+	JSMethodInterface _do(Anonym c);
 	JSMethodInterface endfor();
 	/**********************************************************************/
 	Object _new(Object... param);
@@ -67,6 +68,7 @@ public interface JSMethodInterface  {
 	
 	JSMethodInterface endif();
 
+	JSMethodInterface _elseif_(Object... content);
 	JSMethodInterface _elseif(Object... content);
 
 	/**********************************************************************/

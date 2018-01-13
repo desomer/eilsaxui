@@ -116,16 +116,23 @@ public class JSVariable {
 		
 		arr.add(operator);
 		
-		int i = objs.length;
-		
-		for (Object obj : objs) {
-			if (i==1 && obj instanceof String && this instanceof JSValue)
-				obj = "\""+ obj + "\"";
+		if (objs!=null)
+		{
+			int i = objs.length;
 			
-			if (obj instanceof Array )
-				arr.addAll((Array<?>)obj);
-			else
-				arr.add(obj);
+			for (Object obj : objs) {
+				if (i==1 && obj instanceof String && this instanceof JSValue)
+					obj = "\""+ obj + "\"";
+				
+				if (obj instanceof Array )
+					arr.addAll((Array<?>)obj);
+				else
+					arr.add(obj);
+			}
+		}
+		else
+		{
+			arr.add(null);
 		}
 
 		ret._setContent(arr);

@@ -28,8 +28,8 @@ public class ViewLoader extends XHTMLPart {
 	public XMLElement xStylePart() {
 
 		
-		return xStyle().path(cLoaderContainer) .set(" position:absolute;left:50%; width:50vw; height:50vw;  top:50%; transform: translate(-50%,-50%);")
-					 .path(cLoaderLoader) .set(" transition: all 0.7s ease-in-out;"
+		return xStyle().path(cLoaderContainer) .add(" position:absolute;left:50%; width:50vw; height:50vw;  top:50%; transform: translate(-50%,-50%);")
+					 .path(cLoaderLoader) .add(" transition: all 0.7s ease-in-out;"
 					 		+ "border:10px solid #ebebeb; border-bottom-color:"+XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorTheme()+";"
 					 		+ "width:100%;height:100%;border-radius:50%;"
 					 		+ "box-shadow: 0px 13px 20px 0px #fd42a430;"

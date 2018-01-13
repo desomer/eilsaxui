@@ -101,7 +101,7 @@ public interface JSContainer extends JSFactory {
 						__(_tkrouter.doEvent(txt(TKActivity.ON_ACTIVITY_CREATE)))	;
 						__(_tkrouter, ".", _activityMgr.setCurrentActivity(new JSString()._setContent("backupId")));
 						
-					_elseif("ctx.row.type=='card'");
+					_elseif_("ctx.row.type=='card'");
 						_var("subData", "{html:'', js:''}");
 					    _if("ctx.row.html!=null") ;
 					    	set("subData", _self.getSubData("ctx"));
@@ -129,12 +129,12 @@ public interface JSContainer extends JSFactory {
 						
 						
 						
-					_elseif("ctx.row.type=='floatAction'");
+					_elseif_("ctx.row.type=='floatAction'");
 						set(template, ViewFloatAction.getTemplate());
 						_var("jqdom", template.appendInto("$(selector)"));
 						__("ctx.row['_dom_']=jqdom[0]");
 	
-					_elseif("ctx.row.type=='action'");
+					_elseif_("ctx.row.type=='action'");
 
 					endif();
 				endif();
@@ -153,7 +153,7 @@ public interface JSContainer extends JSFactory {
 					consoleDebug(txt("JSContainer change "), "ctx.value", "ctx");
 					_if("!ctx.value==''");
 						__("$(ctx.row['_dom_']).css('visibility','')");
-					//	__("$(ctx.row['_dom_']).toggleClass('animated '+ctx.value)");
+						__("$(ctx.row['_dom_']).toggleClass('animated '+ctx.value)");
 						
 					endif();	
 				endif();

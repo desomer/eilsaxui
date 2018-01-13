@@ -107,7 +107,7 @@ public interface JSPageLayout extends JSClass {
 							$headerLogo.css("transform", txt("scale(",scale,")"));
 							
 							 
-						_elseif(deltas, ">0","&&", currentHeaderDescDelta, "<0", "&&", scrollTop, "<", hHeaderDesc);
+						_elseif_(deltas, ">0","&&", currentHeaderDescDelta, "<0", "&&", scrollTop, "<", hHeaderDesc);
 							//affiche
 							deltaDescHeader.set(deltaDescHeader,">0?0:",deltaDescHeader);
 							$headerDesc.data("deltaY", deltaDescHeader);
@@ -126,7 +126,7 @@ public interface JSPageLayout extends JSClass {
 							$header.data("deltaY",  deltaTopHeader);
 							$header.css("transform", txt("translate3d(0px, " , deltaTopHeader , "px, 0px)") );
 							
-						_elseif(deltas, ">0","&&", currentHeaderDelta, "<0");
+						_elseif_(deltas, ">0","&&", currentHeaderDelta, "<0");
 							//affiche
 							deltaTopHeader.set(deltaTopHeader,">0?0:",deltaTopHeader);
 							$header.data("deltaY", deltaTopHeader);
@@ -141,7 +141,7 @@ public interface JSPageLayout extends JSClass {
 							deltaFooter.set("-",deltaFooter);
 							$footer.css("transform", txt("translate3d(0px, " , deltaFooter , "px, 0px)") );
 							
-						_elseif(deltas, ">0","&&", currentFooterDelta, "<0");
+						_elseif_(deltas, ">0","&&", currentFooterDelta, "<0");
 							//affiche
 							deltaFooter.set(deltaFooter,">0?0:",deltaFooter);
 							$footer.data("deltaY", deltaFooter);

@@ -33,7 +33,7 @@ public class ViewOverlayRipple extends XHTMLPart {
 	public XMLElement xStylePart() {
 		
 		return xStyle()
-				.path(ripple_overlay).set(""
+				.path(ripple_overlay).add(""
 					+ "position: absolute;"
 					+ "top: 0px; left: 0px; "
 					+ "width: 100vw;  height: 100vh; "
@@ -45,7 +45,7 @@ public class ViewOverlayRipple extends XHTMLPart {
 
 				.path(ripple_overlay.and(transitionOpacity))
 			//		.set("transition: opacity "+SPEED_ACTIVITY_TRANSITION_EFFECT+"ms linear;")  //cubic-bezier(1, 0, 1, 1)
-					.set("opacity:0;") 
+					.add("opacity:0;") 
 				;
 	}
 	

@@ -56,39 +56,39 @@ public class CssTransition extends XHTMLPart {
 	public XMLElement xStylePart() {
 
 		return xStyle()
-				.path(animated).set("animation-duration:"+SPEED_ANIMATED+"ms")
+				.path(animated).add("animation-duration:"+SPEED_ANIMATED+"ms")
 				
 				.path(activity)
-						.andPath(xStyle(cStateFixedForFreeze).set("top:0px; position: fixed; overflow:hidden "))
-						.andPath(xStyle(cStateFrontActivity).set("z-index:"+XUIScene.ZINDEX_ANIM_FRONT+";"))	
-						.andPath(xStyle(cStateBackActivity).set("z-index:"+XUIScene.ZINDEX_ANIM_BACK+";"))		
+						.andPath(xStyle(cStateFixedForFreeze).add("top:0px; position: fixed; overflow:hidden "))
+						.andPath(xStyle(cStateFrontActivity).add("z-index:"+XUIScene.ZINDEX_ANIM_FRONT+";"))	
+						.andPath(xStyle(cStateBackActivity).add("z-index:"+XUIScene.ZINDEX_ANIM_BACK+";"))		
 	
-				.path(activity.and(cStateMoveToBottom)).set(
+				.path(activity.and(cStateMoveToBottom)).add(
 						"transform: translate3d(0px,100%,0px);"
 						+ "transition:transform "+SPEED_SHOW_ACTIVITY +"ms ease-in-out;")	
-				.path(activity.and(cStateMoveToFront)).set(
+				.path(activity.and(cStateMoveToFront)).add(
 						"transform: translate3d(0px,0px,0px);"
 						+ "transition:transform "+SPEED_SHOW_ACTIVITY +"ms ease-in-out;")  
-				.path(activity.and(cStateNoDisplay)).set("display:none;")
+				.path(activity.and(cStateNoDisplay)).add("display:none;")
 				
 				.path(activity)
-						.andPath(xStyle(cStateZoom12).set("transform: scale3d(1.2,1.2,1)"))
-						.andPath(xStyle(cStateZoom1).set("transform: scale3d(1,1,1)"))	
-						.andPath(xStyle(cStateZoom09).set("transform: scale3d(0.9,0.9,1)"))
+						.andPath(xStyle(cStateZoom12).add("transform: scale3d(1.2,1.2,1)"))
+						.andPath(xStyle(cStateZoom1).add("transform: scale3d(1,1,1)"))	
+						.andPath(xStyle(cStateZoom09).add("transform: scale3d(0.9,0.9,1)"))
 				
-				.path(activityMoveForShowMenu).set(
+				.path(activityMoveForShowMenu).add(
 						"transition:transform "+SPEED_SHOW_MENU+"ms ease-out;"
 						+ " transform: translate3d("+(widthMenu-100)+"px,0px,0px) "
 						+ "scale3d(0.95,0.95,1);")
-				.path(activityMoveForHideMenu).set(
+				.path(activityMoveForHideMenu).add(
 						"transition:transform "+SPEED_SHOW_MENU+"ms ease-out;"
 						+ " transform: translate3d(0px,0px,0px);")
 
-				.path(activity.and(transitionSpeed)).set("transition:all "+ SPEED_SHOW_ACTIVITY +"ms ease-in-out")
-				.path(activity.and(transitionSpeedx2)).set("transition:all "+ SPEED_ACTIVITY_TRANSITION_EFFECT +"ms ease-in-out")
+				.path(activity.and(transitionSpeed)).add("transition:all "+ SPEED_SHOW_ACTIVITY +"ms ease-in-out")
+				.path(activity.and(transitionSpeedx2)).add("transition:all "+ SPEED_ACTIVITY_TRANSITION_EFFECT +"ms ease-in-out")
 								
-				.path(circleAnim0prt).set("clip-path:circle(0.0% at "+ViewOverlayRipple.START_POINT+"); -webkit-clip-path:circle(0.0% at "+ViewOverlayRipple.START_POINT+"); ")
-				.path(circleAnim100prt).set("clip-path:circle(80% at center); -webkit-clip-path:circle(80% at center); ")
+				.path(circleAnim0prt).add("clip-path:circle(0.0% at "+ViewOverlayRipple.START_POINT+"); -webkit-clip-path:circle(0.0% at "+ViewOverlayRipple.START_POINT+"); ")
+				.path(circleAnim100prt).add("clip-path:circle(80% at center); -webkit-clip-path:circle(80% at center); ")
 				;
 				
 	}

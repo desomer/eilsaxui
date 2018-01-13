@@ -42,12 +42,12 @@ public class ViewBtnBurger extends XHTMLPart {
 	public XMLElement xStylePart() {
 
 		return xStyle()
-				.path(hamburger).set("will-change:transform")
+				.path(hamburger).add("will-change:transform")
 				.path(	hamburger.__(hamburger_inner)
 						.or(hamburger.__(hamburger_inner).pseudoClass("after"))
 						.or(hamburger.__(hamburger_inner).pseudoClass("before"))
 						)
-						.set("background-color: #fFf; "
+						.add("background-color: #fFf; "
 								+ "transition-property:all !important; "
 								+ "transition-duration:"+SPEED_BURGER_EFFECT+"ms !important;")
 
@@ -56,7 +56,7 @@ public class ViewBtnBurger extends XHTMLPart {
 //						+ ".hamburger.changeColorMenu .hamburger-inner:before",
 //						"background-color: #fff; transition-property:all !important; transition-duration:500ms !important;")
 
-				.path(cLeftBtn).set("position: absolute;top: 0px; left: 0px; "
+				.path(cLeftBtn).add("position: absolute;top: 0px; left: 0px; "
 						+ "z-index: "+XUIScene.ZINDEX_MENU+"; outline:0 !important") 
 								// pas de bord bleu au click
 		;

@@ -43,12 +43,12 @@ public interface JSViewCard extends JSFactory {
 								__("jqdom.css('opacity', ctx.row.opacity)");
 								__("ctx.row['_dom_']=jqdom[0]");
 							endif();
-					_elseif("ctx.row.type=="+txt(TYPE_TEXT));
+					_elseif_("ctx.row.type=="+txt(TYPE_TEXT));
 						set(template, ViewCard.getTemplateText("ctx.row.html"));
 						_var("jqdom", template.appendInto("$(selector)"));
 						__("ctx.row['_dom_']=jqdom[0]");
 						
-					_elseif("ctx.row.type=="+txt(TYPE_CARD_ACTION));
+					_elseif_("ctx.row.type=="+txt(TYPE_CARD_ACTION));
 						__("$(selector).attr('data-x-action', ctx.row.idAction )");
 						__(JQuery.$(var("selector")).addClass(ViewRippleEffect.cRippleEffect));
 					endif()	;

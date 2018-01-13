@@ -42,7 +42,7 @@ public class ViewFloatAction extends XHTMLPart {
 	public XMLElement xStylePart() {
 
 		return xStyle().path(cFloatAction)
-						.set(""
+						.add(""
 							//+ "z-index:"+XUIScene.ZINDEX_FLOAT+";"
 							+ " position: fixed; "
 							+ "left: calc("+XUIScene.widthScene+" - "+ViewBtnCircle.SIZE_CIRCLE+" - 1rem); "

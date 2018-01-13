@@ -24,8 +24,8 @@ public class ViewLog extends XHTMLPart {
 	public XMLElement xStylePart() {
 
 		return xStyle().path(cLog)
-						.set("min-height:20vh; line-height: 45px;")
-						.childPath(xStyle().path("textarea").set("width:100%"))
+						.add("min-height:20vh; line-height: 45px;")
+						.childPath(xStyle().path("textarea").add("width:100%"))
 						;
 	}
 	

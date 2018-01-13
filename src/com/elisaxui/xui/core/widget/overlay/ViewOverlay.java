@@ -29,7 +29,7 @@ public class ViewOverlay extends XHTMLPart {
 		
 		
 		return xStyle()
-				.path(cBlackOverlay).set("display: none;"
+				.path(cBlackOverlay).add("display: none;"
 						+ "position: absolute;	"
 						+ "top: 0px; left: 0px;"
 						+ " width:100vw ; height:101vh;" 

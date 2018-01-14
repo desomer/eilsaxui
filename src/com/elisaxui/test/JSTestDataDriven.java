@@ -1,7 +1,7 @@
 package com.elisaxui.test;
 
-import com.elisaxui.component.datadriven.JSDataDriven;
-import com.elisaxui.component.datadriven.JSDataSet;
+import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
+import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 

@@ -6,8 +6,8 @@ package com.elisaxui.component.widget.menu;
 import static com.elisaxui.component.transition.ConstTransition.DELAY_SURETE_END_ANIMATION;
 import static com.elisaxui.component.transition.ConstTransition.SPEED_SHOW_MENU_ITEMS;
 
-import com.elisaxui.component.datadriven.JSDataDriven;
-import com.elisaxui.component.datadriven.JSDataSet;
+import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
+import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 

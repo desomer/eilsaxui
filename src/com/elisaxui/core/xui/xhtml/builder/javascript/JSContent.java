@@ -200,6 +200,7 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 */
 	private void addElem(Object name, Object object) {
 		if (object instanceof JSListParameter && name instanceof JSClass) {
+			// gestion du new
 			MethodInvocationHandler inv = (MethodInvocationHandler) Proxy.getInvocationHandler(name);
 			getListElem().add(JSClass._new(inv.getImplementClass(), ((JSListParameter) object).param));
 		} else
@@ -430,7 +431,11 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	 */
 	@Override
 	public Object _new(Object... param) {
-		return new JSListParameter(param);
+		
+		if (param.length>0 && param[0] instanceof Class)
+			return JSClass._new((Class)param[0], Arrays.copyOfRange(param, 1, param.length));
+		else
+			return new JSListParameter(param);
 	}
 
 	@Override

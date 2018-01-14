@@ -36,8 +36,8 @@ public class CssTransition extends XHTMLPart {
 	public static XClass cStateZoom1;
 	public static XClass cStateZoom12;
 	
-	public static XClass transitionSpeed;
-	public static XClass transitionSpeedx2;
+	public static XClass cTransitionSpeed;
+	public static XClass cTransitionSpeedEffect;
 
 
 	public static XClass activityMoveForShowMenu;
@@ -84,8 +84,8 @@ public class CssTransition extends XHTMLPart {
 						"transition:transform "+SPEED_SHOW_MENU+"ms ease-out;"
 						+ " transform: translate3d(0px,0px,0px);")
 
-				.path(activity.and(transitionSpeed)).add("transition:all "+ SPEED_SHOW_ACTIVITY +"ms ease-in-out")
-				.path(activity.and(transitionSpeedx2)).add("transition:all "+ SPEED_ACTIVITY_TRANSITION_EFFECT +"ms ease-in-out")
+				.path(activity.and(cTransitionSpeed)).add("transition:all "+ SPEED_SHOW_ACTIVITY +"ms ease-in-out")
+				.path(activity.and(cTransitionSpeedEffect)).add("transition:all "+ SPEED_ACTIVITY_TRANSITION_EFFECT +"ms ease-in-out")
 								
 				.path(circleAnim0prt).add("clip-path:circle(0.0% at "+ViewOverlayRipple.START_POINT+"); -webkit-clip-path:circle(0.0% at "+ViewOverlayRipple.START_POINT+"); ")
 				.path(circleAnim100prt).add("clip-path:circle(80% at center); -webkit-clip-path:circle(80% at center); ")

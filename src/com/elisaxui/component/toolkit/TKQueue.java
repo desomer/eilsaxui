@@ -85,7 +85,9 @@ public class TKQueue extends XHTMLPart {
 	@xRessource
 	@xPriority(200)	
 	public XMLElement xAddJS() {
-		return xScriptJS( js().__(queuejs));
+		return xScriptJS( js().__(queuejs)
+				.__("window.animInProgess=false")    // init a false
+				);
 	}
 	
 	/**

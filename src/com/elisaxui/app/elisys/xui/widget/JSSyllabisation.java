@@ -7,9 +7,9 @@ import static com.elisaxui.component.toolkit.JQuery.$;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.defAttr;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.defVar;
 
-import com.elisaxui.component.datadriven.JSDataDriven;
-import com.elisaxui.component.datadriven.JSDataSet;
 import com.elisaxui.component.toolkit.JQuery;
+import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
+import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.Anonym;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;

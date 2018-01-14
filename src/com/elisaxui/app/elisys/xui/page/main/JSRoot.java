@@ -36,6 +36,8 @@ public interface JSRoot extends JSClass {
 				// .var("jCanvasGranim", "$('#NavBarActivity1 .animatedBg')[0]")
 				// .__(NavBarAnimated1)
 				// ,")")
+				
+				
 			}), 500, callback(() -> {
 				_set("window.microlistener", jsSyllabe.createMicroListener());
 			})));

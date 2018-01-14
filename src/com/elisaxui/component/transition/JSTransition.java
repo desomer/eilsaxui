@@ -291,7 +291,7 @@ public interface JSTransition extends JSClass {
 							overlay.doShowOverlay(jqAct1, 2);
 							self.doActivityFreeze(jqAct2, MEM_SCROLL); // freeze 2
 	
-							jqAct1.addClass(transitionSpeed);
+							jqAct1.addClass(cTransitionSpeed);
 							jqAct1.addClass(cStateZoom09);
 							jqAct2.addClass(cStateMoveToFront);
 						})
@@ -332,7 +332,7 @@ public interface JSTransition extends JSClass {
 							self.doActivityDeFreeze(jqAct2); // defrezze 2
 							self.doFixedElemToFixe(jqAct1);
 	
-							jqAct1.removeClass(transitionSpeed);
+							jqAct1.removeClass(cTransitionSpeed);
 							jqAct2.removeClass(cStateMoveToBottom);
 							jqAct2.removeClass(cStateFrontActivity);
 							jqAct1.removeClass(cStateBackActivity);
@@ -376,13 +376,8 @@ public interface JSTransition extends JSClass {
 						jqAct1.addClass(cStateBackActivity);
 						
 						self.doFixedElemToAbsolute(jqAct2, SCROLL_TOP);   // fixe pour ripple
-						
-						// ajoute le template du ripple overlay
-//						JSXHTMLPart template = let(JSXHTMLPart.class, "template", ViewOverlayRipple.xTemplate());
-//						JQuery $template = let(JQuery.class, "$template", template.appendInto($(act2)));
-//						$template.addClass(circleAnim0prt);
 				})
-				, NEXT_FRAME, callback(()->{ // prepare animation de ripple	
+				, NEXT_FRAME , callback(()->{ // prepare animation de ripple	  
 						self.doActivityActive(jqAct2);
 						// prepare anim
 						jqAct2.addClass(cStateFrontActivity);
@@ -391,25 +386,22 @@ public interface JSTransition extends JSClass {
 
 						self.doActivityFreeze(jqAct2, MEM_SCROLL); // frezze 2
 				})
-				, NEXT_FRAME, callback(()->{ // lance animation dezoom
+				, NEXT_FRAME, callback(()->{ // lance animation dezoom  
 						overlay.doShowOverlay(jqAct1, 2);
-						jqAct1.addClass(transitionSpeed);
-						jqAct1.addClass(cStateZoom09);     // reduit
+						jqAct1.addClass(cTransitionSpeed);
+						jqAct1.addClass(cStateZoom09);     // reduit la act 1 
 						self.doActivityInactive(jqAct1);
 				})
-				, DELAY_SURETE_END_ANIMATION, callback(()->{ // lance animation ripple
+				, DELAY_SURETE_END_ANIMATION , callback(()->{ // lance animation ripple   
 						jqAct2.removeClass(circleAnim0prt);
-//						$(ViewOverlayRipple.ripple_overlay).removeClass(circleAnim0prt);
-						jqAct2.addClass(transitionSpeedx2); // cercle effect
+						jqAct2.addClass(cTransitionSpeedEffect); // cercle effect
 						jqAct2.addClass(circleAnim100prt);
-						
-//						$(ViewOverlayRipple.ripple_overlay).addClass(ViewOverlayRipple.transitionOpacity); //TODO pas 2 appel jquery
-//						$(ViewOverlayRipple.ripple_overlay).addClass(circleAnim100prt);
 					})
-				,  NEXT_FRAME /*SPEED_ACTIVITY_TRANSITION_EFFECT+ DELAY_SURETE_END_ANIMATION*/, callback(()->{  // lance animation dezoom plus tard
-					//	jqAct2.removeClass(circleAnim100prt);
-						jqAct2.addClass(transitionSpeed);
-						jqAct2.removeClass(transitionSpeedx2);
+				,  SPEED_ACTIVITY_TRANSITION_EFFECT - DELAY_SURETE_END_ANIMATION  , callback(()->{  // lance animation dezoom plus tard
+						jqAct2.removeClass(circleAnim100prt);
+					
+						jqAct2.addClass(cTransitionSpeed);
+						jqAct2.removeClass(cTransitionSpeedEffect);
 						jqAct2.removeClass(cStateZoom12);
 						jqAct2.addClass(cStateZoom1);
 						})
@@ -419,16 +411,14 @@ public interface JSTransition extends JSClass {
 						self.doActivityNoDisplay(jqAct1);
 						self.doActivityDeFreeze(jqAct2); // defrezze 2
 
-						jqAct1.removeClass(transitionSpeed);
+						jqAct1.removeClass(cTransitionSpeed);
 						
-//						$(ViewOverlayRipple.ripple_overlay).remove();
-						
-						jqAct2.removeClass(transitionSpeed);
+						jqAct2.removeClass(cTransitionSpeed);
 						jqAct2.removeClass(cStateFrontActivity);
 						jqAct2.removeClass(cStateZoom1);
 
 						// annule l'animation
-						jqAct2.removeClass(circleAnim100prt);
+					//	jqAct2.removeClass(circleAnim100prt);
 						jqAct2.css(TRANSFORM, "");
 
 						self.doInitScrollTo(jqAct2);
@@ -449,16 +439,17 @@ public interface JSTransition extends JSClass {
 					jqAct2.addClass(cStateFrontActivity);
 				})
 				, NEXT_FRAME, callback(()->{
-					jqAct2.addClass(transitionSpeed);
+					jqAct2.addClass(cTransitionSpeed);
 					jqAct2.addClass(cStateZoom12); // lance le zoome
 				})
 				, NEXT_FRAME, callback(()->{ // puis lance la circle
 					jqAct2.addClass(circleAnim0prt);
+					jqAct2.addClass(cTransitionSpeedEffect);
 					jqAct2.removeClass(circleAnim100prt);
 				})
 				, SPEED_ACTIVITY_TRANSITION_EFFECT / 2, callback(()->{ // lance animation activity 1
 					jqAct1.removeClass(cStateZoom09);
-					jqAct1.addClass(transitionSpeed);
+					jqAct1.addClass(cTransitionSpeed);
 					overlay.doHideOverlay(1);
 				})
 				, Math.max(SPEED_SHOW_ACTIVITY, SPEED_ACTIVITY_TRANSITION_EFFECT) + DELAY_SURETE_END_ANIMATION,
@@ -468,12 +459,12 @@ public interface JSTransition extends JSClass {
 					self.doFixedElemToFixe(jqAct1);
 					self.doActivityDeFreeze(jqAct1); // defrezze 1
 
-					jqAct1.removeClass(transitionSpeed);
+					jqAct1.removeClass(cTransitionSpeed);
 
 					self.doActivityDeFreeze(jqAct2); // defrezze 2
 
-					jqAct2.removeClass(transitionSpeed);  // TODO gestion remove multiple class
-					jqAct2.removeClass(transitionSpeedx2);
+					jqAct2.removeClass(cTransitionSpeed);  // TODO gestion remove multiple class
+					jqAct2.removeClass(cTransitionSpeedEffect);
 					jqAct2.removeClass(circleAnim0prt);
 					jqAct2.removeClass(cStateZoom12);
 					jqAct2.removeClass(cStateFrontActivity);

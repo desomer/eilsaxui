@@ -162,7 +162,7 @@ public interface TKRouterEvent extends JSClass {
 	{
 		_var("retEvent", "{ cancelRipple:false }");
 		
-		_if("!window.animInProgess && event!=null");
+		_if("window.animInProgess==false && event!=null");
 		
 			   _var("currentIntent",   historyIntent(), "[", historyIntent(), ".length-1]");
 			   

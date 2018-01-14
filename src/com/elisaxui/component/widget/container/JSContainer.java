@@ -3,13 +3,13 @@
  */
 package com.elisaxui.component.widget.container;
 
-import com.elisaxui.component.datadriven.JSDataDriven;
-import com.elisaxui.component.datadriven.JSDataSet;
 import com.elisaxui.component.toolkit.JQuery;
 import com.elisaxui.component.toolkit.JSFactory;
 import com.elisaxui.component.toolkit.TKActivity;
 import com.elisaxui.component.toolkit.TKQueue;
 import com.elisaxui.component.toolkit.TKRouterEvent;
+import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
+import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.component.transition.CssTransition;
 import com.elisaxui.component.transition.JSTransition;
 import com.elisaxui.component.widget.button.ViewFloatAction;
@@ -26,8 +26,8 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
  */
 public interface JSContainer extends JSFactory {
 
-	JSDataDriven aDataDriven = null;
-	JSDataSet aDataSet = null;
+	JSDataDriven aDataDriven();
+	JSDataSet aDataSet();
 	JSXHTMLPart template = null;
 	JSContainer _this=null;
 	JSContainer _self=null;
@@ -60,14 +60,13 @@ public interface JSContainer extends JSFactory {
 	default Object getData(Object selector) {
 
 		ViewCard card = new ViewCard();
-		
-		_set(aDataSet, _new());
-		__(aDataSet.setData("[]"));
 
-		_set(aDataDriven, _new(aDataSet));
-		_var(_self, _this);
+		aDataSet().set(_new());
+		aDataSet().setData("[]");
+		aDataDriven().set(_new(aDataSet()));
+		let(_self, _this);
 		
-		__(aDataDriven.onEnter(fct("ctx").__(()->{
+		__(aDataDriven().onEnter(fct("ctx").__(()->{
 				_if("ctx.row['_dom_']==null");
 				
 				 	_if("ctx.row.type=='page'");
@@ -109,25 +108,26 @@ public interface JSContainer extends JSFactory {
 					    
 						_set(template, ViewCard.getTemplate((ViewCard)card.addProperty("childrenCard", XHTMLPart.xVar("subData.html") )));
 						__(template, ".js+=subData.js");
-						
+						// ajoute la card
 						_var("jqdom", template.appendInto("$(selector)"));
 						__("ctx.row['_dom_']=jqdom[0]");
-						__("$(ctx.row['_dom_']).css('visibility','hidden')");
 						
+						if (true) {
+							//------------- anim les card----------	
+							__("$(ctx.row['_dom_']).css('visibility','hidden')");
+							__("setTimeout(", fct("elem") 
+									.__("elem.anim='bounceInUp'")  //zoomInUp  //fadeInUp  //slideInUp //rollIn
+								, ", 500 * ctx.row.idx , ctx.row)");
+						}
+						
+						// ajoute les lignes de card 
 						_var(_cardFactory, _new() );
 						_var("data", _cardFactory.getData("jqdom"));
-						
 						_for("var j in ctx.row.rows");
 							_var("row", "ctx.row.rows[j]");
 							__("data.push(row)")	;
 						endfor();
-						
-						//------------- anim des item de menu----------	
-						__("setTimeout(", fct("elem") 
-								.__("elem.anim='bounceInUp'")  //zoomInUp  //fadeInUp  //slideInUp //rollIn
-							, ", 500 * ctx.row.idx , ctx.row)");
-						
-						
+
 						
 					_elseif_("ctx.row.type=='floatAction'");
 						_set(template, ViewFloatAction.getTemplate());
@@ -141,26 +141,25 @@ public interface JSContainer extends JSFactory {
 				})
 				));
 		
-		__(aDataDriven.onExit(fct("value").__(()->{
+		__(aDataDriven().onExit(fct("value").__(()->{
 				_if("value!=null && value.row['_dom_']!=null");
 
 				endif();
 		})
 				));
 
-		__(aDataDriven.onChange(fct("ctx").__(()->{
+		__(aDataDriven().onChange(fct("ctx").__(()->{
 				_if("ctx.row['_dom_']!=null && ctx.row.type=='card' && ctx.property=='anim'");
 					consoleDebug(txt("JSContainer change "), "ctx.value", "ctx");
 					_if("!ctx.value==''");
 						__("$(ctx.row['_dom_']).css('visibility','')");
-						__("$(ctx.row['_dom_']).toggleClass('animated '+ctx.value)");
-						
+						__("$(ctx.row['_dom_']).toggleClass('animated '+ctx.value)");	
 					endif();	
 				endif();
 			})
 			));
 
-		_var("json", aDataSet.getData());
+		_var("json", aDataSet().getData());
 		__("return json");
 
 		;

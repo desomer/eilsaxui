@@ -87,5 +87,5 @@ public interface JSClass extends JSMethodInterface  {
 	Object _setContent(Object value);
 	Object _getContent();
 	<E> E cast(Class<?> cl, Object obj);
-	
+	<E> E set(Object... value);
 }

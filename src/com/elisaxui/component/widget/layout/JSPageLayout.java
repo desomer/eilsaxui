@@ -8,10 +8,10 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSFloat;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 
 import static com.elisaxui.component.toolkit.json.JXui.$xui;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSWindow.*;
+import static com.elisaxui.component.toolkit.JQuery.*;
 
 import com.elisaxui.component.toolkit.JQuery;
 import com.elisaxui.component.transition.CssTransition;
@@ -22,6 +22,10 @@ import com.elisaxui.component.widget.navbar.ViewNavBar;
  */
 public interface JSPageLayout extends JSClass {
 	
+	/**
+	 * lance event HeaderSwipeDown
+	 * @param idActivity
+	 */
 	default void setEnableCloseGesture(Object idActivity) {
 	  // gesture bas pour fermer l'activity
 	  __("var mcheader = new Hammer($(idActivity)[0])");
@@ -31,11 +35,13 @@ public interface JSPageLayout extends JSClass {
 			  			.__($xui().tkrouter().doEvent("'HeaderSwipeDown'"))
 			  		.endif()
 			  ,")")	;
-	   ;
 	}	
 	
 	
 	default void hideOnScroll(JSString idActivity) {
+		
+		consoleDebug(txt("**********************************************hideOnScroll"));
+		
 		
 		int nbImageParSecond = 30;
 		JSInt interval = let(JSInt.class, "interval", "1000/"+nbImageParSecond);	// 60 image seconde
@@ -44,26 +50,26 @@ public interface JSPageLayout extends JSClass {
 		JSInt then = let(JSInt.class, "then", "Date.now()");	
 		JSInt deltaTime = let(JSInt.class, "deltaTime", 0);	
 		
-		JQuery $activity = let(JQuery.class, "$activity", JQuery.$(idActivity));
+		JQuery $activity = let(JQuery.class, "$activity", $(idActivity));
 		
-		JQuery $header = let(JQuery.class, "$header", $activity.find("header"));  //.find(ViewNavBar.descBar));
+		JQuery $header = let(JQuery.class, "$header", $activity.find("header"));
 		JQuery $headerDesc = let(JQuery.class, "$headerDesc", $activity.find("header").find(ViewNavBar.descBar));
 		JQuery $headerLogo = let(JQuery.class, "$headerLogo", $activity.find("header").find(ViewNavBar.logo));
 		JQuery $footer = let(JQuery.class, "$footer", $activity.find("footer"));
 		
-		JQuery $window = let(JQuery.class, "$window", JQuery.$(var("window")));
+		JQuery $window = let(JQuery.class, "$window", $(var("window")));
 		JSInt lastScrollTop = let(JSInt.class, "lastScrollTop", $window.scrollTop());	
 		JSInt scrollTop = let(JSInt.class, "scrollTop", $window.scrollTop());
 
 		
 		JSFunction fctdraw = fragmentIf(true).__(()->{
 							
-				window().requestAnimationFrame("draw");	
+				window().requestAnimationFrame("fctdraw");	  // restart
 				
 				now.set(calc("Date.now()"));
 				deltaTime.set(now.substact(then));
 				
-				_if( deltaTime,">", interval, "&&", "window.disableScrollEvent==null");
+				_if( deltaTime,">", interval, "&&", "window.disableScrollEvent==null", "&&", "window.animInProgess==false");
 					scrollTop.set($window.scrollTop()); //position du scroll
 						
 					_if(lastScrollTop.isNotEqual(scrollTop), "&&", $activity.hasClass(CssTransition.active) ); 
@@ -114,7 +120,7 @@ public interface JSPageLayout extends JSClass {
 							$headerLogo.css("transform", txt("scale(",scale,")"));
 						endif();	
 						
-						/**************HEADER ACTION   ***********/
+						/**************  HEADER ACTION ***********/
 						 _if(deltas, "<0", "&&", "-",currentHeaderDelta, "<=", hHeaderTop, "&&", scrollTop, ">", hHeaderDesc, "+50");
 					    	//cache
 						 	deltaTopHeader.set(deltaTopHeader,"< -",hHeaderTop,"?-",hHeaderTop,":", deltaTopHeader);
@@ -128,7 +134,7 @@ public interface JSPageLayout extends JSClass {
 							$header.css("transform", txt("translate3d(0px, " , deltaTopHeader , "px, 0px)"));
 						endif();	
 						
-						/************************************/
+						/**************** FOOTER ACTION ********************/
 						_if(deltas, "<0", "&&", "-",currentFooterDelta, "<=", hFooter);
 							//cache
 							deltaFooter.set(deltaFooter,">",hFooter,"?",hFooter,":", deltaFooter);
@@ -151,8 +157,8 @@ public interface JSPageLayout extends JSClass {
 				endif();
 			});
 		
-		__("function draw() {", fctdraw , "}");
-		__("draw()");  // start
+		__("function fctdraw() {", fctdraw , "}");
+		__("fctdraw()");  // start
 		
 	}	
 	

@@ -16,6 +16,7 @@ import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import com.elisaxui.component.widget.activity.JActivity;
@@ -71,6 +72,14 @@ public class MethodInvocationHandler implements InvocationHandler {
 		if (method.getName().equals("_setContent")) {
 			varContent=args[0];
 			return proxy;
+		}
+		
+		if (method.getName().equals("set")) {
+			
+			Object[] param = (Object[]) args[0];
+			
+			return ThreadLocalMethodDesc.get().content._set(proxy, param);
+
 		}
 		
 		if (method.getName().equals("cast"))
@@ -193,10 +202,6 @@ public class MethodInvocationHandler implements InvocationHandler {
 			else if (! checkMethodExist(method) )
 			{
 				/***** INSERT le nom de la methode abstract de type Interface de variable  ****/ 
-				
-
-				
-				
 				Object ret =  getObjectJS(method.getReturnType(), getProxyContent() + ".", method.getName());	
 				
 				if (ret instanceof JSArray)

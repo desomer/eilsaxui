@@ -21,6 +21,7 @@ public interface JSMethodInterface  {
 	JSMethodInterface _for(Object... content);
 	JSMethodInterface _forIdx(Object idx, JSArray<?> array);
 	JSMethodInterface _do(Anonym c);
+	@Deprecated
 	JSMethodInterface endfor();
 	/**********************************************************************/
 	Object _new(Object... param);

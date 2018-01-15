@@ -41,7 +41,7 @@ public interface JSSyllabisation extends JSClass {
 	
 	
 	default Object constructor() {
-		_set(aDataSet(), _new());
+		aDataSet().set(_new());
 		_set(stop, false);
 		_set(isRunning, false);
 		return _set(lastResult, 0);
@@ -65,8 +65,8 @@ public interface JSSyllabisation extends JSClass {
 	{
 		_var("f", "webkitSpeechRecognition || SpeechRecognition");
 		_set(recognition, "new f()");
-		_set(recognition.attr("continuous"), true);
-		_set(recognition.attr("lang"), txt("fr-FR"));
+		_set(recognition.get("continuous"), true);
+		_set(recognition.get("lang"), txt("fr-FR"));
 		_var(_self, _this);
 		
 		JSArray jsonSyllable = new JSArray()._setName("jsonSyllable");
@@ -110,16 +110,15 @@ public interface JSSyllabisation extends JSClass {
 			endif();		
 		};	
 		
-		_set(recognition.attr("onresult"), fct("event") .__(onresult));
-		//set(recognition.attr("onend"), fRecognitionEnd("event"));
-		_set(recognition.attr("onend"), fct("event") .__(fRecognitionEnd));
+		_set(recognition.get("onresult"), fct("event") .__(onresult));
+		_set(recognition.get("onend"), fct("event") .__(fRecognitionEnd));
 		return _this;
 	}
 		
 	default Object getData()
 	{
-		__(aDataSet().setData("[]"));
-		_set(aDataDriven, _new(aDataSet()));
+		aDataSet().setData("[]");
+		aDataDriven.set(_new(aDataSet()));
 		
 		Anonym onEnter = (/*ctx*/)->{
 			_if("ctx.row['_dom_']==null");				

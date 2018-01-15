@@ -26,9 +26,9 @@ public interface JSPageLayout extends JSClass {
 	 * lance event HeaderSwipeDown
 	 * @param idActivity
 	 */
-	default void setEnableCloseGesture(Object idActivity) {
+	default void setEnableCloseGesture(JSString idActivity) {
 	  // gesture bas pour fermer l'activity
-	  __("var mcheader = new Hammer($(idActivity)[0])");
+	  __("var mcheader = new Hammer(", $(idActivity).get(0) ,")");
 	  __("mcheader.get('pan').set({ enable: true, direction: Hammer.DIRECTION_VERTICAL})");
 	  __("mcheader.on('hammer.input',", fct("ev") 
 			  		._if("ev.deltaY>20 && ev.offsetDirection==16 && ev.velocity>1 ")
@@ -39,10 +39,7 @@ public interface JSPageLayout extends JSClass {
 	
 	
 	default void hideOnScroll(JSString idActivity) {
-		
-		consoleDebug(txt("**********************************************hideOnScroll"));
-		
-		
+	
 		int nbImageParSecond = 30;
 		JSInt interval = let(JSInt.class, "interval", "1000/"+nbImageParSecond);	// 60 image seconde
 		
@@ -161,12 +158,4 @@ public interface JSPageLayout extends JSClass {
 		__("fctdraw()");  // start
 		
 	}	
-	
-	/*
-	 *    push to reload
-	 *    
-	 *     touch-action: pan-x pan-y;
-    user-select: none;
-    -webkit-user-drag: none;
-	 * */
 }

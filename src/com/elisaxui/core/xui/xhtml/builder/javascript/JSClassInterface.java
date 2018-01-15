@@ -17,11 +17,6 @@ public class JSClassInterface extends JSVariable {
 
 	// TODO a retirer et a gerer par le _setContent    (voir equal sur JSString)
 	Array<Object> listContent = new Array<Object>();
-
-//	protected void reinit()
-//	{
-//		listContent.clear();
-//	}
 	
 	protected Object[] addText(Object...classes)
 	{
@@ -116,7 +111,6 @@ public class JSClassInterface extends JSVariable {
 			try {
 				ret = (E) this.getClass().newInstance();
 			} catch (InstantiationException | IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			ret._setName(this._getName());
@@ -146,7 +140,6 @@ public class JSClassInterface extends JSVariable {
 			try {
 				ret = (E) this.getClass().newInstance();
 			} catch (InstantiationException | IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			ret._setName(this._getName());
@@ -173,7 +166,6 @@ public class JSClassInterface extends JSVariable {
 			try {
 				ret = (E) this.getClass().newInstance();
 			} catch (InstantiationException | IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			ret._setName(this._getName());

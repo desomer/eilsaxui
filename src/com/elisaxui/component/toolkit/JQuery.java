@@ -85,7 +85,6 @@ public class JQuery extends JSClassInterface {
 	 * @return
 	 */
 	public JQuery remove(Object...selector) {
-		// TODO Auto-generated method stub
 		return callMth("remove", addText(CSSSelector.onPath(selector)));
 	}
 	

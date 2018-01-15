@@ -13,7 +13,8 @@ public interface JSMethodInterface  {
 	
 	<E> E let(Class<? extends E > type, Object name, Object... content);
 	<E> E let(String name, E content);
-	void let(Object name, Object... content);
+	void let(JSMethodInterface name, Object... content);
+	void let(JSVariable name, Object... content);
 	
 	JSMethodInterface consoleDebug(Object... content);
 	JSMethodInterface systemDebugIf(Object cond, Object... content);
@@ -25,6 +26,7 @@ public interface JSMethodInterface  {
 	JSMethodInterface endfor();
 	/**********************************************************************/
 	Object _new(Object... param);
+	<E> E newInst(Class type, Object... param);
 	
 	/**********************************************************************/
 	/**
@@ -42,7 +44,7 @@ public interface JSMethodInterface  {
 	 * @param param
 	 * @return
 	 */
-	Object var(Object... param);
+	JSVariable var(Object... param);
 	Object calc(Object... param);
 	
 	/**********************************************************************/

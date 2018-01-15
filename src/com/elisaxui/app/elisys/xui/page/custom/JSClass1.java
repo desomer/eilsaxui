@@ -5,6 +5,8 @@ package com.elisaxui.app.elisys.xui.page.custom;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.declareType;
 
+import com.elisaxui.component.page.XUIScene;
+import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSBool;
@@ -70,5 +72,7 @@ public interface JSClass1 extends JSClass {
 			b.set(tableau().at(idx));
 		});
 
+		txt(CSSSelector.onPath(XUIScene.scene));
+		
 	}
 }

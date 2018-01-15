@@ -72,7 +72,6 @@ public class JSMinifier {
 			
 			
 		} catch (EvaluatorException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -129,7 +128,6 @@ public class JSMinifier {
 		    return null;
 		}
 	} catch (IOException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
 	return buf;

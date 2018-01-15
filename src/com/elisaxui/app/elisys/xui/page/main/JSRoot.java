@@ -6,6 +6,7 @@ package com.elisaxui.app.elisys.xui.page.main;
 import com.elisaxui.app.elisys.xui.widget.JSSyllabisation;
 import com.elisaxui.component.toolkit.TKQueue;
 import com.elisaxui.component.widget.layout.JSPageLayout;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
@@ -18,15 +19,16 @@ public interface JSRoot extends JSClass {
 
 	default void constructor(JSArray<?> jsonSyllabe, JSSyllabisation jsSyllabe) {
 
-		_set("window.onCreateActivity1", fct("json").__(() -> {
+		// TODO callback("json", ()->{  
+		var("window.onCreateActivity1").set(fct("json").__(()->{  
+
 			consoleDebug("'on Create Activity1'", "json");
-			__(TKQueue.startProcessQueued(100, callback(() -> {  //TODO retirer le __( avant  TKQueue
+			__(TKQueue.startProcessQueued(100, callback(() -> {  
+				//TODO retirer le __( avant  TKQueue
 
-				JSPageLayout jsPageLayout = let(JSPageLayout.class, "jsPageLayout", "null"); 
-				// TODO faire marcher le new
-				_set(jsPageLayout, _new());
+				JSPageLayout jsPageLayout = let("jsPageLayout", newInst(JSPageLayout.class)); 
 				jsPageLayout.hideOnScroll(JSString.value("#Activity1"));
-
+				
 				// TODO a changer : mettre dans une queue avec priorité (avec image) et gestion
 				// de promise d'attente
 				// .__("
@@ -49,9 +51,8 @@ public interface JSRoot extends JSClass {
 		// gestion du slidedown pour fermer
 		_set("window.onCreateActivityDown", fct("json")
 				.__(TKQueue.startProcessQueued(100, fct().__(() -> {
-					JSPageLayout jsPageLayout = let(JSPageLayout.class, "jsPageLayout", "null");
-					_set(jsPageLayout, _new());
-					jsPageLayout.setEnableCloseGesture("json.param");
+					JSPageLayout jsPageLayout = let( "jsPageLayout", newInst(JSPageLayout.class));
+					jsPageLayout.setEnableCloseGesture(cast(JSString.class, "json.param"));
 				}))));
 	}
 

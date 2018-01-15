@@ -154,7 +154,6 @@ public class JSExecutorHelper {
 			 try {
 				result = runtimeV8.executeScript(getScriptBabel());
 			 } catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			 }
 			 System.out.println(result);

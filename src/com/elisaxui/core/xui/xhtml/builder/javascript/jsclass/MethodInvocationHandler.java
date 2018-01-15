@@ -84,12 +84,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 		
 		if (method.getName().equals("cast"))
 		{
-			Object jc = declareType((Class)args[0], null);
-			if (jc instanceof JSVariable)
-				((JSVariable)jc)._setContent(args[1]);
-			else
-				((JSClass)jc)._setContent(args[1]);
-			return jc;
+			return cast((Class)args[0], args[1]);
 		}
 		
 //		if (  method.getName().equals("doActivityFreeze"))
@@ -161,7 +156,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 					
 					//  creer le js du call de la fct
 					Object ret =  JSClassImpl.toJSCall(getProxyContent(), method, args);		
-					registerMethod(ret, ThreadLocalMethodDesc.get());	 //TODO a faire marcher
+					registerMethod(ret, ThreadLocalMethodDesc.get());
 					return ret;
 				}
 				else
@@ -192,7 +187,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 					
 					implcl.getListHandleFuntionPrivate().add(MthInvoke);
 					
-					Object ret = JSClassImpl.toJSCall("/*ww1*/this", method, args);  //.toJSCallInner(getProxyContent(), method, args);  //TODO toJSCall
+					Object ret = JSClassImpl.toJSCall("/*ww1*/this", method, args);
 				
 					// registerMethod
 					registerMethod(ret, ThreadLocalMethodDesc.get());	
@@ -260,6 +255,20 @@ public class MethodInvocationHandler implements InvocationHandler {
 		}
 
 
+	}
+
+	/**
+	 * @param jc
+	 * @param args
+	 * @return
+	 */
+	public static Object cast(Class cl, Object args) {
+		Object jc = declareType(cl, null);
+		if (jc instanceof JSVariable)
+			((JSVariable)jc)._setContent(args);
+		else
+			((JSClass)jc)._setContent(args);
+		return jc;
 	}
 
 	/**
@@ -395,7 +404,6 @@ public class MethodInvocationHandler implements InvocationHandler {
 		try {
 			return JSContent.class.getMethod(method.getName(), method.getParameterTypes())!=null;
 		} catch (NoSuchMethodException | SecurityException e) {
-			// TODO Auto-generated catch block
 			return false;
 		}
 	}

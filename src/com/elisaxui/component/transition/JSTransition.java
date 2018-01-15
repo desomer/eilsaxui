@@ -59,20 +59,18 @@ public interface JSTransition extends JSClass {
 	public static final String DATA_SCROLLTOP = "scrolltop";
 
 	
-	default JSVoid doFixedElemToAbsolute(JQuery act, JSInt sct) {
+	default void doFixedElemToAbsolute(JQuery act, JSInt sct) {
 		
-		JQuery $FixedElem = let(JQuery.class, "$FixedElem", act.find(cFixedElement));
+		JQuery $fixedElem=let(JQuery.class, "$fixedElem", act.find(cFixedElement));
 
-		$FixedElem.each(callback(()->{
+		$fixedElem.each(callback(()->{
 			JSInt posTop = let(JSInt.class, "posTop", sct);
-			posTop.set(posTop.add($(var("this")).get(0), ".getBoundingClientRect().y"));   //TODO add JSElement
-			_if(posTop, ">0");
-				$(var("this")).css(TOP, txt(posTop,"px"));	
-			endif();
+			posTop.set(posTop.add($(var("this")).get(0), ".getBoundingClientRect().y"));   
+			//TODO add JSElement
+			_if(posTop, ">0").then(()->	$(var("this")).css(TOP, txt(posTop,"px")));
 		}));
 		
-		$FixedElem.css(POSITION, ABSOLUTE); // permet la nav de bouger
-		return _void();
+		$fixedElem.css(POSITION, ABSOLUTE); // permet la nav de bouger
 	}
 	
 	
@@ -80,13 +78,12 @@ public interface JSTransition extends JSClass {
 		JQuery $FixedElem = let(JQuery.class, "$FixedElem", act.find(cFixedElement));
 		$FixedElem.css(TOP, "");
 		$FixedElem.css(POSITION,"");
-		return _void();
+		return _void();  // TODO a retirer
 	}
 
 	default JSVoid doToggleBurgerMenu() {
 		
-		JSOverlay overlay = let( JSOverlay.class, "overlay2", NULL );         /*, _new(SPEED_SHOW_MENU, OVERLAY_OPACITY_MENU)*/
-		_set(overlay, _new(SPEED_SHOW_MENU, XUIScene.OVERLAY_OPACITY_MENU));  /* TODO a faire marcher*/
+		JSOverlay overlay = let("overlay", newInst(JSOverlay.class, SPEED_SHOW_MENU, XUIScene.OVERLAY_OPACITY_MENU) ); 
 		
 		JQuery jqMenu = let( JQuery.class, "jqMenu", $(ViewMenu.menu) );
 		JQuery jqScene = let( JQuery.class, "jqScene", $(scene) );

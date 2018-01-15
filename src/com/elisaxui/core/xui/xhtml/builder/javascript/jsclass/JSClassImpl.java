@@ -155,7 +155,6 @@ public class JSClassImpl extends JSContent {
 			try {
 				ret = ((JSVariable)method.getReturnType().newInstance());
 			} catch (InstantiationException | IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			ret._setContent(buf);

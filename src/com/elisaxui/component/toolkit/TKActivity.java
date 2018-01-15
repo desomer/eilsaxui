@@ -51,8 +51,6 @@ public interface TKActivity extends JSClass {
 	{
 	    _set(idCurrentActivity, id);
 	    return cast(JActivity.class,  listRegisterActivity.attrByString(idCurrentActivity)); 
-	  //  idCurrentActivity.set(id); 
-	  //  return getCurrentActivity();   // TODO a faire marcher
 	}
 	
 	default JSVoid createActivity(JActivity activity)
@@ -83,8 +81,6 @@ public interface TKActivity extends JSClass {
 		_var(jsonContainer, jsContainer.getData(txt(CSSSelector.onPath(XUIScene.scene))));
 		_set(json.active(), false);
 		__(jsonContainer.push(json));
-		
-//		createActivity2(json);    // TODO a faire marcher
 		
 		_set(listRegisterActivity.attrByString(json.id()), json);
 		

@@ -73,7 +73,6 @@ public class JSVariable {
 				}
 			 }
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -210,7 +209,6 @@ public class JSVariable {
 		try {
 			ret = this.getClass().newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return ret;

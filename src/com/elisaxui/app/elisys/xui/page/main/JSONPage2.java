@@ -21,7 +21,7 @@ class JSONPage2 extends JSONActivity
 			
 	public JActivity getJSON()
 	{
-		/*TODO */
+		/*TODO  a documenter et retier _setContent */
 		JActivity activity = declareType(JActivity.class, "activity"); 
 		
 		activity._setContent(

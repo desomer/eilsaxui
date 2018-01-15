@@ -288,8 +288,14 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 		getListElem().add("let ");
 		getListElem().add(name);
 		getListElem().add("=");
-		for (Object object : content) {
-			addElem(name, object);  // pour le new class
+		if (content==null)
+		{
+			addElem(null);
+		}
+		else {
+			for (Object object : content) {
+				addElem(name, object);  // pour le new class
+			}
 		}
 		getListElem().add(";");
 		return this;
@@ -355,7 +361,6 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 
 	@Override
 	public JSMethodInterface _forIdx(Object idx, JSArray array) {
-		// TODO Auto-generated method stub
 		return _for("var "+idx+" = 0, "+idx+"len =", array.length(), "; "+idx+" < "+idx+"len; "+idx+"++");
 	}
 	
@@ -422,20 +427,19 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 
 	/********************************************************************************************/
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.elisaxui.core.xui.xml.builder.javascript.JSInterface#_new(java.lang.
-	 * Object)
-	 */
+
 	@Override
 	public Object _new(Object... param) {
 		
 		if (param.length>0 && param[0] instanceof Class)
-			return JSClass._new((Class)param[0], Arrays.copyOfRange(param, 1, param.length));
+			return MethodInvocationHandler.cast((Class)param[0], JSClass._new((Class)param[0], Arrays.copyOfRange(param, 1, param.length)));
 		else
 			return new JSListParameter(param);
+	}
+	
+	@Override
+	public <E> E newInst(Class type, Object... param) {
+			return (E)MethodInvocationHandler.cast(type, JSClass._new(type, param));
 	}
 
 	@Override
@@ -503,9 +507,6 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	}
 
 	
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#jsvar(java.lang.Object[])
-	 */
 	@Override
 	public JSVariable var(Object... param) {
 		return XHTMLPart.jsvar(param);
@@ -561,9 +562,6 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 		return ret;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#let(java.lang.Class, java.lang.Object, java.lang.Object[])
-	 */
 	@Override
 	public <E> E let(Class<? extends E >  type, Object name, Object... content) {
 		_var(name,content);
@@ -583,19 +581,16 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 		return (E) let(t, name, content);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#let(java.lang.Object, java.lang.Object[])
-	 */
 	@Override
-	public void let(Object name, Object... content) {
-		
+	public void let(JSMethodInterface name, Object... content) {
 		_var(name, content);
-		
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#then(com.elisaxui.core.xui.xhtml.builder.javascript.Anonym)
-	 */
+	@Override
+	public void let(JSVariable name, Object... content){
+		_var(name, content);
+	}
+	
 	@Override
 	public JSMethodInterface then(Anonym content) {
 

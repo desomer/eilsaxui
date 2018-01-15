@@ -113,8 +113,10 @@ public class XHTMLAppBuilder {
 				System.out.println("[XHTMLAppBuilder]------------ START SCAN FIELD OF JSClass -----"+ class1);
 			initJSClassVar(XHTMLPart.jsBuilder, class1);
 		}
+		
 		if (debug)
 			System.out.println("[XHTMLAppBuilder]********************************************* END SCAN JSClass ****************************************");
+		
 		return mapClass;
 	}
 	

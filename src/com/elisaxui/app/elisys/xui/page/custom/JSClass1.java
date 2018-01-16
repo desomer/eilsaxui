@@ -15,6 +15,11 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 
 /**
  * @author gauth
+ *   
+ *    https://fr.quora.com/Quel-est-le-meilleur-framework-JavaScript-du-moment-parmi-Angular-React-ou-Vue
+ *
+ *	    gestion    ? N=-1 & mode=IE5 & fork=B
+ *							
  *
  */
 public interface JSClass1 extends JSClass {
@@ -22,9 +27,10 @@ public interface JSClass1 extends JSClass {
 	static final JSString OK = JSString.value("ok"); // constante
 
 	JSString valeur();
+
 	JSArray<JSString> tableau();
 
-	default void constructor() {  // mot reserver
+	default void constructor(JSString txt) { // mot reserver
 		valeur().set("constructor"); // le string est une string
 		tableau().set("[]"); // le string est un tableau
 	}
@@ -34,6 +40,23 @@ public interface JSClass1 extends JSClass {
 		doSomething2(a);
 		doSomething2(JSString.value("12"));
 		a.set("12");
+
+		JSArray<JSClass1> listObj = let("listObj", cast(JSArray.class, "[]"));
+		JSArray<JSClass1> listObj2 = let(JSArray.class, "listObj2", "[]");
+		JSArray<JSString> listObj3 = let("listObj3", cast(JSArray.class, "[]"));
+
+		listObj.push(newInst(JSClass1.class));
+		listObj2.push(newInst(JSClass1.class, a));
+		listObj3.push(JSString.value("12"));
+
+		JSClass1 obj = let(JSClass1.class, "obj", listObj.at(0));
+		_if(false).then(() -> {
+			obj.doSomething();
+		});
+
+		listObj2.at(0).doSomething2(a);
+		listObj3.at(0).substring(1);
+
 		tableau().push(a); // les tableau
 		a.set(tableau().at(0).add(5));
 
@@ -54,25 +77,35 @@ public interface JSClass1 extends JSClass {
 
 		JSInt test = declareType(JSInt.class, "test"); // declare type
 		JSBool bool = declareType(JSBool.class, "bool");
-		
+
 		let(test, 1);
 		let(bool, test.isEqual(2));
-		
-		JSString p = let("p", OK);    // let &  declare type
+
+		JSString p = let("p", OK); // let & declare type
 		JSString b = (JSString) let("b", a.add("5"));
 
 		b.set(b.add(a)); // ajout b = b + a
 		b.set(p.add("5").add(12)); // chainage b = p+"5"+12
 		p.substring(1).substring(0, 2);
 		p.set(calc(b, "+", 5, "+", OK)); // calcule complexe js
-		
+
 		// boucle for
 		JSInt idx = declareType(JSInt.class, "idx"); // declare type sans let
-		_forIdx(idx, tableau())._do(() -> {
+		_forIdx(idx, tableau())._do( () -> {
 			b.set(tableau().at(idx));
 		});
 
-		txt(CSSSelector.onPath(XUIScene.scene));
-		
+		_forIdx("idxx", tableau())._do( () -> { 
+			b.set(tableau().at("idxx")); 
+		});
+
+		// selector en text
+		p.set(txt(CSSSelector.onPath(XUIScene.scene.and(XUIScene.cShell))));
+
+		JSClass1 aClass = let("overlay", newInst(JSClass1.class)); // new class
+		_if(false).then(() -> {
+			aClass.doSomething();
+		});
+
 	}
 }

@@ -6,17 +6,13 @@ package com.elisaxui.component.widget.container;
 import com.elisaxui.component.toolkit.JQuery;
 import com.elisaxui.component.toolkit.JSFactory;
 import com.elisaxui.component.toolkit.TKActivity;
-import com.elisaxui.component.toolkit.TKQueue;
 import com.elisaxui.component.toolkit.TKRouterEvent;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
-import com.elisaxui.component.transition.CssTransition;
 import com.elisaxui.component.transition.JSTransition;
 import com.elisaxui.component.widget.button.ViewFloatAction;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
-import com.elisaxui.component.widget.navbar.ViewNavBar;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 
@@ -162,9 +158,7 @@ public interface JSContainer extends JSFactory {
 		_var("json", aDataSet().getData());
 		__("return json");
 
-		;
-
-		return null;
+		return null;  // TODO a changer
 	}
 	
 }

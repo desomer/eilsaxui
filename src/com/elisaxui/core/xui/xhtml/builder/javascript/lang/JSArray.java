@@ -3,9 +3,12 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.javascript.lang;
 
+import java.lang.reflect.Proxy;
+
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodInvocationHandler;
 
 /**
  * @author Bureau
@@ -17,6 +20,14 @@ public class JSArray<E> extends JSClassInterface {
 	
 	public JSArray push(E value)
 	{
+		if (value instanceof Proxy)
+		{
+			MethodInvocationHandler inv = (MethodInvocationHandler) Proxy.getInvocationHandler(value);
+			_type = inv.getImplementClass();
+		}
+		else
+			_type = value==null?null:value.getClass();
+		
 		return (JSArray) _callMethod(null, "push", value);
 	}
 	

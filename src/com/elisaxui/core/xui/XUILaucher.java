@@ -162,7 +162,7 @@ public class XUILaucher {
         movedHandlerToHttps.setVirtualHosts(new String[]{"@unsecured"});   // uniquement en http
 		
 		HandlerCollection myhandlers2 = new HandlerCollection(true);
-//		myhandlers2.addHandler(movedHandlerToHttps);   // redirection to https
+		myhandlers2.addHandler(movedHandlerToHttps);   // redirection to https
 	//	myhandlers2.addHandler(new SecuredRedirectHandler());   // interdit le non secure
 		myhandlers2.addHandler(rewrite);
 		
@@ -183,7 +183,7 @@ public class XUILaucher {
 		HttpConnectionFactory https1 = new HttpConnectionFactory(config);
 	    HTTP2ServerConnectionFactory https2 = new HTTP2ServerConnectionFactory(config);
 	    
-	    NegotiatingServerConnectionFactory.checkProtocolNegotiationAvailable();
+	  //  NegotiatingServerConnectionFactory.checkProtocolNegotiationAvailable();
 	    	    
 	    ALPNServerConnectionFactory alpn = new ALPNServerConnectionFactory();
 	    alpn.setDefaultProtocol(https1.getProtocol()); // sets default protocol to HTTP 1.1

@@ -37,12 +37,16 @@ public class XClass {
 		return CSSSelector.onPath(this, desc);
 	}
 	
+	public CSSSelector or(Object desc)
+	{
+		return CSSSelector.onPath(this, ",", desc);
+	}
 	
 	public CSSSelector descendant(Object desc)
 	{
 		return CSSSelector.onPath(this, " ", desc);
 	}
-	
+
 	/**
 	 * descendant  .cA .cB
 	 * @param desc

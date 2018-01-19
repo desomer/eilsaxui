@@ -54,7 +54,7 @@ public class JSClassImpl extends JSContent {
 		
 		XMLBuilder oldBuf = null;
 		StringBuilder txtJS = null;
-		if (JSExecutorHelper.WITH_BABEL)
+		if (JSExecutorHelper.isWithPreprocessor())
 		{
 			txtJS = new StringBuilder(1000);
 			StringBuilder txtJSAfter = new StringBuilder();

@@ -1,11 +1,14 @@
 package com.elisaxui.core.xui;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -13,9 +16,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
+
+import org.mapdb.Atomic.Var;
+import org.mapdb.DB;
+import org.mapdb.DBMaker;
+import org.mapdb.HTreeMap;
+import org.mapdb.Serializer;
 
 import com.elisaxui.component.page.JSServiceWorker;
 import com.elisaxui.component.page.XUIScene;
@@ -32,12 +42,43 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.target.CONTENT;
 
+import difflib.Delta;
+import difflib.DiffRow;
+import difflib.DiffRowGenerator;
+import difflib.DiffUtils;
+import difflib.Patch;
+
 @Path("/")
 public class XUIFactoryXHtml {
 
 	private static final ThreadLocal<XHTMLFile> ThreadLocalXUIFactoryPage = new ThreadLocal<XHTMLFile>();
-	private static final HashMap<String, String> pageCache = new HashMap<String, String>();
 
+	private static Map<String, Class<? extends XHTMLPart>> mapClass = null;
+	private static Map<String, ArrayList<String>> listeVersionId = null; 
+	
+	private static HashMap<String, String> pageCacheMem = new HashMap<>() ;
+
+	private static DB db = null;
+	private static HTreeMap<String, String> pageCache = null;
+	private static  Var<Object> listeDico= null;
+	static {	
+		try {
+			String home = System.getProperty("user.home");
+			String pathdb = home+ File.separator+"fileMapdb.db";
+			System.out.println("start db at "+pathdb);
+			db = DBMaker.fileDB(pathdb).checksumHeaderBypass().closeOnJvmShutdown().make();	
+			pageCache = db.hashMap("mapFileHtml",Serializer.STRING,Serializer.STRING).createOrOpen();
+			listeDico = db.atomicVar("pageDico").createOrOpen();
+			
+			listeVersionId = (Map<String, ArrayList<String>>) listeDico.get();
+			if (listeVersionId==null)
+				listeVersionId = new HashMap<>();
+			
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static final XMLPart getXMLRoot() {
 		return ThreadLocalXUIFactoryPage.get().getRoot();
 	}
@@ -47,21 +88,75 @@ public class XUIFactoryXHtml {
 	}
 
 	
-	boolean enableCache = false;
+	boolean enableCache = true;
+	boolean enableDynamic = true;
 	
 	@GET
 	@Path("/page/{pays}/{lang}/id/{id}")
 	@Produces(MediaType.TEXT_HTML)
-	public Response getHtml(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("pays") String pays,
+	public Response getHtml(@Context HttpServletRequest httpRequest, @Context HttpHeaders headers, @Context UriInfo uri, @PathParam("pays") String pays,
 			@PathParam("lang") String lang, @PathParam("id") String id) {
 
+		
+		MultivaluedMap<String, String> param = uri.getQueryParameters();
+		
+		List<String> p = param.get("compatibility");
+		boolean es5 = p!=null && p.get(0).equals("es5");
+		
+		p = param.get("version");
+		int version = p==null?0:Integer.parseInt(p.get(0));
+		
+		JSExecutorHelper.setThreadPreprocessor(es5);
+				
+		// cherche les changements
+		initMapXmlPart();
+		
 		String htmlInCache=null;
+		String idCache = null;
+		String idCacheVersionning = id+es5;
+		
 		if (enableCache)
-			htmlInCache = pageCache.get(id);
+		{
+			idCache = id+XHTMLAppBuilder.lastOlderFile+es5;
+			if (version<0)
+			{
+				String htmlInCacheOriginal = pageCache.get(idCache);
+				ArrayList<String> version1 = listeVersionId.get(idCacheVersionning);
+				if (version1!=null &&  -version<version1.size())
+					idCache = version1.get(version1.size()+version-1);
+				
+				htmlInCache = pageCache.get(idCache);
+				
+				if (htmlInCacheOriginal!=null ) {
+					List<String> original = Arrays.asList(htmlInCache.split("\n"));
+					List<String> revised = Arrays.asList(htmlInCacheOriginal.split("\n"));
+	
+	//				Patch patch = DiffUtils.diff(original, revised);
+	//				for (Delta delta: patch.getDeltas()) {
+	//		                System.out.println(delta);
+	//		        }
+					
+					DiffRowGenerator generator = new DiffRowGenerator.Builder().InlineNewTag("t1").InlineNewCssClass("c1").InlineOldTag("t2").InlineOldCssClass("c2").ignoreBlankLines(true).showInlineDiffs(true).ignoreWhiteSpaces(true).columnWidth(100).build();
+					List<DiffRow> text = generator.generateDiffRows(original, revised);
+					for (DiffRow diffRow : text) {
+						 System.out.println(diffRow);
+					}
+				}
+			}
+			else
+			{
+				htmlInCache = pageCacheMem.get(idCache);
+				if (htmlInCache==null)
+				{
+					htmlInCache = pageCache.get(idCache);
+					pageCacheMem.put(idCache, htmlInCache);
+				}
+			}
+		}
 			
 		if (htmlInCache == null) {
-			// cherche les changements
-			Map<String, Class<? extends XHTMLPart>> mapClass = XHTMLAppBuilder.getMapXHTMLPart();  // synchronized
+			
+			// recupere page
 			Class<? extends XHTMLPart> pageClass = mapClass.get(id);
 			if (pageClass != null) {
 				
@@ -97,7 +192,25 @@ public class XUIFactoryXHtml {
 				}
 
 				String html = buf.toString();
-				pageCache.put(id, html);
+				if (idCache!=null)
+				{
+					//pageCache.put(idCache, html);
+					System.out.println(" add cache "+idCache);
+					
+					ArrayList<String> version1 = listeVersionId.get(idCacheVersionning);
+					if (version1==null)
+					{
+						version1=new ArrayList<>();
+						listeVersionId.put(idCacheVersionning, version1);
+					}
+					version1.add(idCache);
+					
+					pageCache.put(idCache, html);
+					listeDico.set(listeVersionId);
+					db.commit();
+					
+					pageCacheMem.put(idCache, html);
+				}
 
 				JSExecutorHelper.stopThread();
 
@@ -110,10 +223,22 @@ public class XUIFactoryXHtml {
 				return Response.status(Status.NOT_FOUND).entity("no found " + id).header("a", "b").build();
 			}
 		} else {
+			System.out.println("[XUIFactoryXHtml] get from cache");
+			
 			return Response.status(Status.OK) // .type(MediaType.TEXT_HTML)
 					.entity(htmlInCache).header("XUI", "ok").build();
 		}
 
+	}
+
+	/**
+	 * 
+	 */
+	private synchronized void  initMapXmlPart() {
+		if (mapClass==null || enableDynamic)
+		{
+			mapClass = XHTMLAppBuilder.getMapXHTMLPart();  // synchronized
+		}
 	}
 
 	private void initXMLFile(Class<? extends XHTMLPart> pageClass, XMLFile file) {
@@ -154,12 +279,11 @@ public class XUIFactoryXHtml {
 	@Produces("application/javascript")
 	public Response getJS(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("name") String name) {
 		
-		String ReponseInCache=null;
+		String reponseInCache=null;
 		if (enableCache)
-			ReponseInCache = pageCache.get(name);
+			reponseInCache = pageCache.get(name);
 		
-		if (ReponseInCache==null) {
-			//Map<String, Class<? extends XHTMLPart>> mapClass = XHTMLAppBuilder.getMapXHTMLPart();
+		if (reponseInCache==null) {
 			XMLFile fileXML = createXHTMLFile();
 			
 			XHTMLPart part = new JSServiceWorker();
@@ -174,12 +298,12 @@ public class XUIFactoryXHtml {
 				elem.toXML(new XMLBuilder("page", buf, null));
 			}
 			
-			ReponseInCache = buf.toString();
-			pageCache.put(name, ReponseInCache);
+			reponseInCache = buf.toString();
+			pageCache.put(name, reponseInCache);
 		}
 		
 		return Response.status(Status.OK)
-				.entity(ReponseInCache).header("content-type","application/javascript").header("XUI", "ok").build();
+				.entity(reponseInCache).header("content-type","application/javascript").header("XUI", "ok").build();
 	}
 	
 	@GET

@@ -33,28 +33,25 @@ public class JSExecutorHelper {
 	private static final ThreadLocal<V8> ThreadLocalV8 = new ThreadLocal<V8>();
 	public static final boolean VERSION_V8 = true;
 	
+	private static final ThreadLocal<ConfigPreprocessor> ThreadConfigPreprocessor = new ThreadLocal<>();
 	
-	public static final boolean WITH_BABEL = false;
-
+	static class ConfigPreprocessor
+	{
+		boolean es5 = true;
+	}
+	
+	
+	public static void setThreadPreprocessor(boolean es5)
+	{
+		ConfigPreprocessor conf = new ConfigPreprocessor();
+		conf.es5 = es5;
+		ThreadConfigPreprocessor.set(conf);
+	}
 	
 	public static void initGlobal() throws ScriptException, IOException, NoSuchMethodException
 	{
-		 
-		if (!WITH_BABEL)
-			return;
-		
-		
-		if (VERSION_V8) {
-//			 System.out.println("----------- START BABEL------------------");
-//			 runtimeV8 = V8.createV8Runtime();
-//			 Object result = runtimeV8.executeScript(script);
-//			 System.out.println(result);
-//			 System.out.println("-----------------------------------");
-		}
-		else 
-		{
-		
-			System.out.println("----------- START BABEL------------------");
+		if (!VERSION_V8) {
+			System.out.println("----------- START BABEL NASHORN ------------------");
 
 	        ScriptEngine engine =  new ScriptEngineManager().getEngineByName("nashorn");   //JavaScript  nashorn
 	        Compilable compilingEngine = (Compilable) engine;
@@ -70,50 +67,13 @@ public class JSExecutorHelper {
 	        doBabel = (Invocable) cscript.getEngine();
 		}
 	        
-//	        Object ret = invocable.invokeFunction("doBabel");
-//	        System.out.println(ret);
-	        
-	        
-	 //       System.out.println(ret);
-		
-//		ScriptEngineManager engineManager =  new ScriptEngineManager();
-//		ScriptEngine engine = 	 engineManager.getEngineByName("nashorn");
-////		engine.eval("function sum(a, b) { return a + b; }");
-////		System.out.println(engine.eval("sum(1, 2);"));
-//		
-//		URL babelURL = ResourceLoader.getResource(AssetHandler.dicoAsset.get("babel"));
-//		BufferedReader in = new BufferedReader(new InputStreamReader(babelURL.openStream()));
-//		//engine.eval(in);
-//		String response = new String();
-//	//	for (String line; (line = in.readLine()) != null; response += line);
-//		
-//		response += "function doBabel(input) { return Babel.transform(input, { presets: ['es2015'] }).code; }";
-//
-//		
-//		Compilable compilingEngine = (Compilable) engine;
-//		CompiledScript compiledJS = compilingEngine.compile(response);
-//		
-//		Bindings bindings = compiledJS.
-//        for(Map.Entry me : bindings.entrySet()) {
-//            System.out.printf("%s: %s\n",me.getKey(),String.valueOf(me.getValue()));
-//        }
-//        bindings.put("input", "");
-//        //cscript.eval();
-//       Object obj = compiledJS.eval(bindings);
-//		
-////		Bindings bindings = compiledJS.getEngine().createBindings();
-////		// Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
-////	        for(Map.Entry me : bindings.entrySet()) {
-////	            System.out.printf("%s: %s\n",me.getKey(),String.valueOf(me.getValue()));
-////	        }
-//		
-//	//	SimpleBindings sb = new SimpleBindings();
-//	//	Object result =  compiledJS.eval(sb);
-//		
-//			babelEngine=compiledJS.getEngine();	
-//		
-//		//
-//		//System.out.println();
+	}
+
+	/**
+	 * @return
+	 */
+	public static boolean isWithPreprocessor() {
+		return ThreadConfigPreprocessor.get().es5;
 	}
 
 
@@ -124,10 +84,8 @@ public class JSExecutorHelper {
 	private static String getScriptBabel() throws IOException {
 		URL babelURL = ResourceLoader.getResource(AssetHandler.dicoAsset.get("babel"));
 		BufferedReader in = new BufferedReader(new InputStreamReader(babelURL.openStream()));
-		//engine.eval(in);
-		String script = new String();
+		String script = "";
 		for (String line; (line = in.readLine()) != null; script += line);
-		
 		
 		if (VERSION_V8)
 			script += "function doBabel(input) { return Babel.transform(input, { presets: ['es2015'], minified: false, comments: false}).code; }";
@@ -143,11 +101,10 @@ public class JSExecutorHelper {
 		// https://github.com/irbull/j2v8_examples/blob/master/ThreadedMergeSort/src/com/ianbull/j2v8_examples/webworker/WebWorker.java
 		
 		
-		if (!WITH_BABEL)
+		if (! isWithPreprocessor())
 			return;
 		
 		if (VERSION_V8) {
-			 System.out.println("----------- START BABEL------------------");
 			 V8 runtimeV8 =  V8.createV8Runtime();
 			 ThreadLocalV8.set(runtimeV8);
 			 Object result=null;
@@ -156,17 +113,16 @@ public class JSExecutorHelper {
 			 } catch (IOException e) {
 				e.printStackTrace();
 			 }
-			 System.out.println(result);
-			 System.out.println("-----------------------------------");
 		}
 	}
 	
 	public static void stopThread()
 	{
-		if (!WITH_BABEL)
+		if (! isWithPreprocessor())
 			return;
 		
 		if (VERSION_V8) {
+			// TODO faire un pool de V8
 			V8 runtimeV8 = ThreadLocalV8.get();
 			runtimeV8.release();
 		}
@@ -185,3 +141,49 @@ public class JSExecutorHelper {
 		
 	}
 }
+
+
+//Object ret = invocable.invokeFunction("doBabel");
+//System.out.println(ret);
+
+
+//       System.out.println(ret);
+
+//ScriptEngineManager engineManager =  new ScriptEngineManager();
+//ScriptEngine engine = 	 engineManager.getEngineByName("nashorn");
+////engine.eval("function sum(a, b) { return a + b; }");
+////System.out.println(engine.eval("sum(1, 2);"));
+//
+//URL babelURL = ResourceLoader.getResource(AssetHandler.dicoAsset.get("babel"));
+//BufferedReader in = new BufferedReader(new InputStreamReader(babelURL.openStream()));
+////engine.eval(in);
+//String response = new String();
+////	for (String line; (line = in.readLine()) != null; response += line);
+//
+//response += "function doBabel(input) { return Babel.transform(input, { presets: ['es2015'] }).code; }";
+//
+//
+//Compilable compilingEngine = (Compilable) engine;
+//CompiledScript compiledJS = compilingEngine.compile(response);
+//
+//Bindings bindings = compiledJS.
+//for(Map.Entry me : bindings.entrySet()) {
+//System.out.printf("%s: %s\n",me.getKey(),String.valueOf(me.getValue()));
+//}
+//bindings.put("input", "");
+////cscript.eval();
+//Object obj = compiledJS.eval(bindings);
+//
+////Bindings bindings = compiledJS.getEngine().createBindings();
+////// Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
+////for(Map.Entry me : bindings.entrySet()) {
+////    System.out.printf("%s: %s\n",me.getKey(),String.valueOf(me.getValue()));
+////}
+//
+////	SimpleBindings sb = new SimpleBindings();
+////	Object result =  compiledJS.eval(sb);
+//
+//babelEngine=compiledJS.getEngine();	
+//
+////
+////System.out.println();

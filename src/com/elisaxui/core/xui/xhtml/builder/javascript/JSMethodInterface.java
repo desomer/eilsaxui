@@ -12,7 +12,7 @@ public interface JSMethodInterface  {
 	JSMethodInterface _set(Object name, Object... content);
 	JSMethodInterface _var(Object name, Object... content);
 	
-	<E> E let(Class<? extends E > type, Object name, Object... content);
+	<E> E let(Class<? extends E> type, Object name, Object... content);
 	<E> E let(String name, E content);
 	void let(JSMethodInterface name, Object... content);
 	void let(JSVariable name, Object... content);

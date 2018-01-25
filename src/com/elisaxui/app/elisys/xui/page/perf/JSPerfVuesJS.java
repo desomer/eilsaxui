@@ -3,7 +3,7 @@
  */
 package com.elisaxui.app.elisys.xui.page.perf;
 
-import static com.elisaxui.component.toolkit.JQuery.*;
+import static com.elisaxui.component.toolkit.JQuery.$;
 
 import com.elisaxui.component.toolkit.JQuery;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
@@ -21,7 +21,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 public interface JSPerfVuesJS extends JSClass {
 
 	public static boolean isVueJS() {
-		return XUIFactoryXHtml.getXHTMLFile().getFisrtParam("vues", "false").equals("true");
+		return XUIFactoryXHtml.getXHTMLFile().getFisrtParam("vue", "false").equals("true");
 	}
 
 	public static boolean isJQuery() {
@@ -40,15 +40,14 @@ public interface JSPerfVuesJS extends JSClass {
 
 			__(" new Vue({ el: '#app', data: ", d, " })");
 
-			_for("var i=0; i<20000; i++")._do(() -> {
-				__(((JSArray) d.castAttr(new JSArray(), "users")).push(var("{ first_name: 'vue'+i}")));
-			});
+			@SuppressWarnings("unchecked")
+			JSArray<JSon> users = let(JSArray.class, "users", d.get("users"));
+			_forIdxBetween(i, 0, 20000)._do(() -> users.push(cast(JSon.class, "{ first_name: 'vue'+i}")));
 
 			if (isChange())
 				setTimeout(fct().__(() -> {
-					JSArray<JSon> users = let(JSArray.class, "users", d.get("users"));
 					users._type = JSon.class;
-					_for("var i=0; i<20000; i++")
+					_forIdxBetween(i, 0, 20000)
 							._do(() -> users.at("i").get("first_name").set(calc(txt("vues"), "+(20000-i)")));
 				}), 100);
 
@@ -56,17 +55,14 @@ public interface JSPerfVuesJS extends JSClass {
 			JQuery jqUsers = let(JQuery.class, "jqUsers", $("#users"));
 
 			JSString d = let("d", JSString.value(""));
-			_forIdxBetween(i, 0, 20000)._do(() -> {
-				d.append(txt("<li>que", i, "</li>"));
-			});
+			_forIdxBetween(i, 0, 20000)._do(() -> d.append(txt("<li id='q",i,"'>que", i, "</li>")));
 			jqUsers.append(d);
 
 			if (isChange()) {
 				JQuery jqchildren = let(JQuery.class, "jqchildren", jqUsers.children());
-				setTimeout(fct().__(() -> { _forIdxBetween(i, 0, 20000)
-						._do(() -> {
-							jqchildren.eq(i).text(txt("que", var("(20000-i)")));
-						});}), 100);
+				setTimeout(fct().__(() -> _forIdxBetween(i, 0, 20000)
+					//	._do(() -> jqchildren.eq(i).text(txt("que", var("(20000-i)"))))), 100);
+						._do(() -> jqUsers.find(var("'#q'+",i)).text(txt("que", var("(20000-i)"))))), 100);
 			}
 
 		} else {
@@ -80,9 +76,9 @@ public interface JSPerfVuesJS extends JSClass {
 			if (isChange()) {
 				JSVariable children = let(JSVariable.class, "children", "document.getElementById('users').childNodes");
 				setTimeout(fct().__(() -> {
-					_for("var i=3; i<20000; i++");
-					__("children[i].innerText='dom'+(20000-i)");
-					endfor();
+					_for("var i=3; i<20000; i++")._do(() ->
+						__(children, "[i].innerText='dom'+(20000-i)")
+					);
 				}), 100);
 			}
 		}

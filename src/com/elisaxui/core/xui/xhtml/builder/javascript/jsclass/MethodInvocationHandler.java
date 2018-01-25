@@ -339,7 +339,7 @@ public class MethodInvocationHandler implements InvocationHandler {
 				}
 			}
 
-			if (isInFct && numLigne < currentMethodDesc.lastLineNoInsered) {
+			if (isInFct && numLigne <= currentMethodDesc.lastLineNoInsered) {
 				numLigne = currentMethodDesc.lastLineNoInsered + 1; // permet d'inserer la derniere ligne d'une fct
 																	// anonym
 			}

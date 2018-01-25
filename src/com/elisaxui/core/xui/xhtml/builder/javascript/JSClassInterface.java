@@ -24,6 +24,9 @@ public class JSClassInterface extends JSVariable {
 		
 		if (classes.length==1)
 		{
+			if (classes[0] ==null)
+				return null;
+				
 			Object[] ret =  new Object[3];
 			if (classes[0] instanceof JSVariable)
 			{

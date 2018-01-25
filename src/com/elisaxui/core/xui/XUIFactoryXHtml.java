@@ -93,6 +93,11 @@ public class XUIFactoryXHtml {
 			@PathParam("lang") String lang, @PathParam("id") String id) {
 
 		
+		List<String> cacheControl = headers.getRequestHeader("cache-control");
+		boolean noCache = cacheControl!=null && cacheControl.get(0).equals("no-cache");
+		
+		System.out.println("cacheControl="+cacheControl);
+		
 		MultivaluedMap<String, String> param = uri.getQueryParameters();
 		
 		List<String> p = param.get("compatibility");
@@ -116,24 +121,27 @@ public class XUIFactoryXHtml {
 		if (enableCache)
 		{
 			idCache = id+XHTMLAppBuilder.lastOlderFile+es5;
-			if (version<0)
+			if (!noCache)
 			{
-				String htmlInCacheOriginal = pageCache.get(idCache);
-				ArrayList<String> version1 = listeVersionId.get(idCacheVersionning);
-				if (version1!=null &&  -version<version1.size())
-					idCache = version1.get(version1.size()+version-1);
-				
-				htmlInCache = pageCache.get(idCache);
-				
-				if (htmlInCacheOriginal!=null ) {
-					getLineDiff(listLineDiff, htmlInCache, htmlInCacheOriginal);
+				if (version<0)
+				{
+					String htmlInCacheOriginal = pageCache.get(idCache);
+					ArrayList<String> version1 = listeVersionId.get(idCacheVersionning);
+					if (version1!=null &&  -version<version1.size())
+						idCache = version1.get(version1.size()+version-1);
+					
+					htmlInCache = pageCache.get(idCache);
+					
+					if (htmlInCacheOriginal!=null ) {
+						getLineDiff(listLineDiff, htmlInCache, htmlInCacheOriginal);
+					}
 				}
-			}
-			else
-			{
-				htmlInCache = pageCacheMem.computeIfAbsent(idCache, k->{
-					return pageCache.get(k);	
-				});
+				else
+				{
+					htmlInCache = pageCacheMem.computeIfAbsent(idCache, k->{
+						return pageCache.get(k);	
+					});
+				}
 			}
 			
 		}

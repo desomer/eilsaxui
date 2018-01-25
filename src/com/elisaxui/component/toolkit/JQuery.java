@@ -134,7 +134,7 @@ public class JQuery extends JSClassInterface {
 	 * @return
 	 */
 	public JQuery children(Object...selector) {
-		return callMth("children", selector.length==0? null: addText(CSSSelector.onPath(selector)));
+		return callMth("children", addText(CSSSelector.onPath(selector)));
 	}
 	
 	/**
@@ -142,7 +142,9 @@ public class JQuery extends JSClassInterface {
 	 * @return
 	 */
 	public JQuery find(Object...selector) {
-		return callMth("find", addText(CSSSelector.onPath(selector)));
+		Object p = (selector.length==1 & selector[0] instanceof JSVariable)?  selector[0] : addText(CSSSelector.onPath(selector));
+		
+		return callMth("find", p);
 	}
 	
 	public Object hide(Object time, Object fct) {

@@ -14,6 +14,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodDesc;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodInvocationHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 import com.elisaxui.core.xui.xml.builder.IXMLBuilder;
@@ -362,6 +363,11 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	@Override
 	public JSMethodInterface _forIdx(Object idx, JSArray array) {
 		return _for("var "+idx+" = 0, "+idx+"len =", array.length(), "; "+idx+" < "+idx+"len; "+idx+"++");
+	}
+	
+	@Override
+	public JSMethodInterface _forIdxBetween(JSInt idx, int start, int end) {
+		return _for("var "+idx+" = "+start+";"+idx+" < "+end+"; "+idx+"++");
 	}
 	
 	@Override

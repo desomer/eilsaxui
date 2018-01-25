@@ -87,12 +87,6 @@ public class XMLPart  {
 
 	/**************************************************************/
 
-//	public void doContent(XMLPart root) {
-//	}
-//
-//	public void doRessource(XMLPart root) {
-//	}
-
 	/**************************************************************/
 	public final void doContent(XMLPart root) {
 		
@@ -177,7 +171,6 @@ public class XMLPart  {
 					try {
 						field.set(this, inst);
 					} catch (IllegalArgumentException | IllegalAccessException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -196,7 +189,6 @@ public class XMLPart  {
 					try {
 						field.set(this,classCss);
 					} catch (IllegalArgumentException | IllegalAccessException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} 
 				}
@@ -221,7 +213,6 @@ public class XMLPart  {
 					try {
 						field.set(this,variablejs);
 					} catch (IllegalArgumentException | IllegalAccessException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} 
 				}
@@ -239,6 +230,8 @@ public class XMLPart  {
 		if (target != null) {
 			try {
 				XMLElement elem = ((XMLElement) method.invoke(this, new Object[] {}));
+				if (elem== null) return;
+				
 				xPriority priority = method.getAnnotation(xPriority.class);
 				if (priority != null) {
 					elem.setPriority(priority.value());

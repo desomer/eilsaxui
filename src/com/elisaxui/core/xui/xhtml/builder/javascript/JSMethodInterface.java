@@ -1,6 +1,7 @@
 package com.elisaxui.core.xui.xhtml.builder.javascript;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 
 public interface JSMethodInterface  {
@@ -20,6 +21,7 @@ public interface JSMethodInterface  {
 	JSMethodInterface systemDebugIf(Object cond, Object... content);
 	/**********************************************************************/
 	JSMethodInterface _for(Object... content);
+	JSMethodInterface _forIdxBetween(JSInt idx, int start, int end);
 	JSMethodInterface _forIdx(Object idx, JSArray<?> array);
 	JSMethodInterface _do(Anonym c);
 	@Deprecated

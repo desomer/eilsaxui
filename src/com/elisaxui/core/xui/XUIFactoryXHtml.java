@@ -62,7 +62,6 @@ public class XUIFactoryXHtml {
 	private static HTreeMap<String, String> pageCache = null;
 	private static  Var<Object> listeDico= null;
 	static {	
-		try {
 			String home = System.getProperty("user.home");
 			String pathdb = home+ File.separator+"fileMapdb.db";
 			System.out.println("start db at "+pathdb);
@@ -73,10 +72,6 @@ public class XUIFactoryXHtml {
 			listeVersionId = (Map<String, ArrayList<String>>) listeDico.get();
 			if (listeVersionId==null)
 				listeVersionId = new HashMap<>();
-			
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public static final XMLPart getXMLRoot() {
@@ -111,10 +106,13 @@ public class XUIFactoryXHtml {
 		// cherche les changements
 		initMapXmlPart();
 		
+		/********************************************************/
 		String htmlInCache=null;
 		String idCache = null;
 		String idCacheVersionning = id+es5;
 		
+		StringBuilder listLineDiff = new StringBuilder();
+	
 		if (enableCache)
 		{
 			idCache = id+XHTMLAppBuilder.lastOlderFile+es5;
@@ -128,50 +126,35 @@ public class XUIFactoryXHtml {
 				htmlInCache = pageCache.get(idCache);
 				
 				if (htmlInCacheOriginal!=null ) {
-					List<String> original = Arrays.asList(htmlInCache.split("\n"));
-					List<String> revised = Arrays.asList(htmlInCacheOriginal.split("\n"));
-	
-	//				Patch patch = DiffUtils.diff(original, revised);
-	//				for (Delta delta: patch.getDeltas()) {
-	//		                System.out.println(delta);
-	//		        }
-					
-					DiffRowGenerator generator = new DiffRowGenerator.Builder().InlineNewTag("t1").InlineNewCssClass("c1").InlineOldTag("t2").InlineOldCssClass("c2").ignoreBlankLines(true).showInlineDiffs(true).ignoreWhiteSpaces(true).columnWidth(100).build();
-					List<DiffRow> text = generator.generateDiffRows(original, revised);
-					for (DiffRow diffRow : text) {
-						 System.out.println(diffRow);
-					}
+					getLineDiff(listLineDiff, htmlInCache, htmlInCacheOriginal);
 				}
 			}
 			else
 			{
-				htmlInCache = pageCacheMem.get(idCache);
-				if (htmlInCache==null)
-				{
-					htmlInCache = pageCache.get(idCache);
-					pageCacheMem.put(idCache, htmlInCache);
-				}
+				htmlInCache = pageCacheMem.computeIfAbsent(idCache, k->{
+					return pageCache.get(k);	
+				});
 			}
+			
 		}
-			
-		if (htmlInCache == null) {
-			
-			// recupere page
+		
+		if (htmlInCache == null) {   // si pas en cache
+			// recupere la classe de page
 			Class<? extends XHTMLPart> pageClass = mapClass.get(id);
 			if (pageClass != null) {
 				
 				JSExecutorHelper.initThread();
 				
 				XMLFile fileXML = createXHTMLFile();
-
 				fileXML.setRoot(new XHTMLRoot());
 				List<Locale> languages = headers.getAcceptableLanguages();
 				Locale loc = languages.get(0);
 
 				// premier passe
-				initXMLFile(pageClass, fileXML);
+				initXMLFile(pageClass, fileXML, param);
 
 				if (ErrorNotificafionMgr.hasErrorMessage()) {
+					// affiche la page d'erreur
 					return Response.status(Status.INTERNAL_SERVER_ERROR) // .type(MediaType.TEXT_HTML)
 							.entity(ErrorNotificafionMgr.getBufferErrorMessage().toString()).build();
 				}
@@ -181,54 +164,125 @@ public class XUIFactoryXHtml {
 				System.out.println("[XUIFactoryXHtml]********************************************* GENERATE XML File of "
 								+ pageClass + "  ****************************************");
 
-				StringBuilder buf = new StringBuilder(1000);
-				buf.append("<!doctype html>");
-				((XHTMLRoot) fileXML.getRoot()).setLang(loc.toLanguageTag());
-				fileXML.getRoot().doContent(null);
-				ArrayList<XMLElement> rootContent = fileXML.getRoot().getListElement(CONTENT.class);
+				String html = createXMLText(fileXML, loc);
+				addInCache(idCache, idCacheVersionning, html);
 
-				for (XMLElement elem : rootContent) {
-					elem.toXML(new XMLBuilder("page", buf, null));
-				}
-
-				String html = buf.toString();
-				if (idCache!=null)
-				{
-					//pageCache.put(idCache, html);
-					System.out.println(" add cache "+idCache);
-					
-					ArrayList<String> version1 = listeVersionId.get(idCacheVersionning);
-					if (version1==null)
-					{
-						version1=new ArrayList<>();
-						listeVersionId.put(idCacheVersionning, version1);
-					}
-					version1.add(idCache);
-					
-					pageCache.put(idCache, html);
-					listeDico.set(listeVersionId);
-					db.commit();
-					
-					pageCacheMem.put(idCache, html);
-				}
-
-				JSExecutorHelper.stopThread();
-
-				return Response.status(Status.OK) // .type(MediaType.TEXT_HTML)
-						.entity(html)
-						.header("XUI", "ok")
-						//.header("Access-Control-Allow-Origin", "*")
-						.build();
-			} else {
-				return Response.status(Status.NOT_FOUND).entity("no found " + id).header("a", "b").build();
+				JSExecutorHelper.stopThread();					
+				htmlInCache = html;
 			}
 		} else {
-			System.out.println("[XUIFactoryXHtml] get from cache");
+			System.out.println("[XUIFactoryXHtml] get from cache " + idCacheVersionning);
+		}
+		
+		if (htmlInCache==null)
+			return Response.status(Status.NOT_FOUND).entity("no found " + id).header("a", "b").build();
+		
+		if ( version==0)
+		{
+			version = -1;
+			ArrayList<String> version1 = listeVersionId.get(idCacheVersionning);
+			if (version1!=null &&  -version<version1.size())
+				idCache = version1.get(version1.size()+version-1);
 			
-			return Response.status(Status.OK) // .type(MediaType.TEXT_HTML)
-					.entity(htmlInCache).header("XUI", "ok").build();
+			String htmlInCacheOld = pageCache.get(idCache);
+			if (htmlInCacheOld!=null ) {
+				getLineDiff(listLineDiff, htmlInCacheOld ,  htmlInCache);
+			}
+		}
+		
+		
+		StringBuilder dif = new StringBuilder("\n\n<script id='srcdiff' type='application/json'>");  //\r\n
+		dif.append(listLineDiff);
+		dif.append("\n</script>");
+		
+//		return Response.status(Status.OK) // .type(MediaType.TEXT_HTML)
+//		.entity(html+dif)
+//		.header("XUI", "ok")
+//		//.header("Access-Control-Allow-Origin", "*")
+//		.build();
+		
+		return Response.status(Status.OK)
+				.entity(htmlInCache+dif)
+				.header("XUI", "ok")
+				.build();
+	}
+
+	/**
+	 * @param listLineDiff
+	 * @param htmlInCache
+	 * @param htmlInCacheOriginal
+	 */
+	private void getLineDiff(StringBuilder listLineDiff, String htmlInCache, String htmlInCacheOriginal) {
+		List<String> original = Arrays.asList(htmlInCache.split("\n"));
+		List<String> revised = Arrays.asList(htmlInCacheOriginal.split("\n"));
+
+//				Patch patch = DiffUtils.diff(original, revised);
+//				for (Delta delta: patch.getDeltas()) {
+//		                System.out.println(delta);
+//		        }
+		
+		DiffRowGenerator generator = new DiffRowGenerator.Builder().InlineNewTag("span").InlineNewCssClass("cnew").InlineOldTag("span").InlineOldCssClass("cold").ignoreBlankLines(true).showInlineDiffs(true).ignoreWhiteSpaces(true).columnWidth(100).build();
+		List<DiffRow> text = generator.generateDiffRows(original, revised);
+		int numLine = 1;
+		for (DiffRow diffRow : text) {		 
+			 if (!diffRow.getTag().equals(DiffRow.Tag.EQUAL))
+			 {
+				
+				 if (diffRow.getTag().equals(DiffRow.Tag.DELETE))
+				 {
+					 numLine--; 
+					 listLineDiff.append("\n\t"+String.format ("%05d", numLine) + "-" +String.format ("%05d", numLine+1) + ":"+ diffRow.getTag()  + ": " + diffRow.getOldLine()+"  =>  " + diffRow.getNewLine());
+				 }
+				 else
+					 listLineDiff.append("\n\t"+String.format ("%05d", numLine) + ":"+ diffRow.getTag()  + ": " + diffRow.getOldLine()+"  =>  " + diffRow.getNewLine());
+			 } 
+			 numLine++;
+		}
+	}
+
+	/**
+	 * @param idCache
+	 * @param idCacheVersionning
+	 * @param html
+	 */
+	private void addInCache(String idCache, String idCacheVersionning, String html) {
+		if (idCache!=null)
+		{
+			System.out.println(" add cache "+idCache);
+			
+			ArrayList<String> version1 = listeVersionId.get(idCacheVersionning);
+			if (version1==null)
+			{
+				version1=new ArrayList<>();
+				listeVersionId.put(idCacheVersionning, version1);
+			}
+			version1.add(idCache);
+			
+			pageCache.put(idCache, html);
+			listeDico.set(listeVersionId);
+			db.commit();
+			
+			pageCacheMem.put(idCache, html);
+		}
+	}
+
+	/**
+	 * @param fileXML
+	 * @param loc
+	 * @return
+	 */
+	private String createXMLText(XMLFile fileXML, Locale loc) {
+		StringBuilder buf = new StringBuilder(1000);
+		buf.append("<!doctype html>");
+		((XHTMLRoot) fileXML.getRoot()).setLang(loc.toLanguageTag());
+		fileXML.getRoot().doContent(null);
+		ArrayList<XMLElement> rootContent = fileXML.getRoot().getListElement(CONTENT.class);
+
+		for (XMLElement elem : rootContent) {
+			elem.toXML(new XMLBuilder("page", buf, null));
 		}
 
+		return  buf.toString();
 	}
 
 	/**
@@ -241,12 +295,15 @@ public class XUIFactoryXHtml {
 		}
 	}
 
-	private void initXMLFile(Class<? extends XHTMLPart> pageClass, XMLFile file) {
+	private void initXMLFile(Class<? extends XHTMLPart> pageClass, XMLFile file, MultivaluedMap<String, String> p) {
 		try {
 			System.out.println("[XUIFactoryXHtml]");
 			System.out.println("[XUIFactoryXHtml]********************************************* INIT XML File of "
 					+ pageClass + "  ****************************************");
 
+			
+			((XHTMLFile)file).setParam(p);
+			
 			XHTMLPart page = pageClass.newInstance();
 			if (page instanceof XUIScene)
 				((XHTMLFile)file).setScene((XUIScene) page);

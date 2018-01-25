@@ -4,7 +4,10 @@
 package com.elisaxui.core.xui.xhtml;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import javax.ws.rs.core.MultivaluedMap;
 
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
@@ -23,24 +26,46 @@ public class XHTMLFile extends XMLFile {
 	private static final boolean debug = false;
 	
 	private XUIScene scene;
+	MultivaluedMap<String, String> param;
 	
+	/**
+	 * @param param the param to set
+	 */
+	public final void setParam(MultivaluedMap<String, String> param) {
+		this.param = param;
+	}
+
+
 	/**
 	 * @return the scene
 	 */
-	public XUIScene getScene() {
+	public final XUIScene getScene() {
 		return scene;
 	}
 
+	
+	public final List<String> getParam(String key)
+	{
+		return param.get(key);
+	}
+	
+	public final String getFisrtParam(String key, String def)
+	{
+		List<String> p =  param.get(key);
+		
+		return p==null?def:p.get(0);
+	}
+	
 	/**
 	 * @param scene the scene to set
 	 */
-	public void setScene(XUIScene scene) {
+	public final void setScene(XUIScene scene) {
 		this.scene = scene;
 	}
 
-	public Map<String, JSClassImpl> listClass = new HashMap<String, JSClassImpl>();
+	private Map<String, JSClassImpl> listClass = new HashMap<String, JSClassImpl>();
 
-	public JSClassImpl getClassImpl(JSBuilder jsBuilder, Class<? extends JSClass> cl) {
+	public final JSClassImpl getClassImpl(JSBuilder jsBuilder, Class<? extends JSClass> cl) {
 		String name = cl.getSimpleName();
 		JSClassImpl impl = listClass.get(name);
 		if (impl == null) {

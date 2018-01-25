@@ -41,7 +41,7 @@ public interface JSClass1 extends JSClass {
 		JSString a = let("a", JSString.value("test"));
 		doSomething2(a);
 		doSomething2(JSString.value("1"));
-		a.set("12");
+		a.set("13");
 
 		// les tableaux
 		JSArray<JSClass1> listObj = let("listObj", cast(JSArray.class, "[]"));
@@ -73,6 +73,8 @@ public interface JSClass1 extends JSClass {
 		})._else(() -> {
 			a.set("14");
 		});
+		
+		//listObj3.at(0).substring(1);
 
 		return a;
 	}

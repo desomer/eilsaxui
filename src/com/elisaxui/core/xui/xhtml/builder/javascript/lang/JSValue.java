@@ -19,6 +19,13 @@ public class JSValue extends JSVariable {
 		return ret;
 	}
 	
+	public JSValue append(Object... objs)
+	{
+		JSValue ret = (JSValue) declareType();
+		_doOperator(ret, "+=", objs);
+		return ret;
+	}
+	
 	public JSValue substact(Object... objs)
 	{
 		JSValue ret = (JSValue) declareType();

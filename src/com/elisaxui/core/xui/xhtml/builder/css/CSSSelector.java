@@ -16,7 +16,7 @@ public class CSSSelector {
 	
 	public static final CSSSelector onPath(Object... sel)
 	{
-		return new CSSSelector(sel);
+		return sel.length==0 ? null : new CSSSelector(sel);
 	}
 	
 	private CSSSelector(Object... sel)

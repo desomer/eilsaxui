@@ -61,6 +61,16 @@ public class JQuery extends JSClassInterface {
 		return callMth("get", value);
 	}
 	
+	public JQuery eq(Object value)
+	{
+		return callMth("eq", value);
+	}
+	
+	public JQuery text(Object... value)
+	{
+		return callMth("text", addText(value));
+	}
+	
 	public JSInt length()
 	{
 		return  new JSInt()._setContent(attr("length"));
@@ -124,7 +134,7 @@ public class JQuery extends JSClassInterface {
 	 * @return
 	 */
 	public JQuery children(Object...selector) {
-		return callMth("children", addText(CSSSelector.onPath(selector)));
+		return callMth("children", selector.length==0? null: addText(CSSSelector.onPath(selector)));
 	}
 	
 	/**

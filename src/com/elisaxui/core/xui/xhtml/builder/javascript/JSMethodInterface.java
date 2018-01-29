@@ -12,7 +12,7 @@ public interface JSMethodInterface  {
 	JSMethodInterface _set(Object name, Object... content);
 	JSMethodInterface _var(Object name, Object... content);
 	
-	<E> E let(Class<? extends E> type, Object name, Object... content);
+	<E> E let(Class<E> type, Object name, Object... content);
 	<E> E let(String name, E content);
 	void let(JSMethodInterface name, Object... content);
 	void let(JSVariable name, Object... content);
@@ -27,13 +27,13 @@ public interface JSMethodInterface  {
 	@Deprecated
 	JSMethodInterface endfor();
 	/**********************************************************************/
+	@Deprecated
 	Object _new(Object... param);
-	<E> E newInst(Class type, Object... param);
-	
+	<E> E newInst(Class<E> type, Object... param);
 	/**********************************************************************/
 	/**
 	 * exemple <br>  
-	 * txt("do ", jsvar("event"), "on", jsvar("variable")) <br>
+	 * txt("do ", var("event"), "on", var("variable")) <br>
 	 * consoleDebug(txt("do event typed ", jsvar("event")), txt(" on "), "jsonAct")
 	 * @param param
 	 * @return
@@ -80,6 +80,7 @@ public interface JSMethodInterface  {
 
 	/**********************************************************************/
 	JSMethodInterface setTimeout(Object... content);
+	JSMethodInterface setTimeout(Anonym a, Object... content);
 	
 	/**********************************************************************/
 	JSMethodInterface _return(Object... content);

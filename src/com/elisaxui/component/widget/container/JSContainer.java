@@ -92,9 +92,9 @@ public interface JSContainer extends JSFactory {
 						endif();
 						
 						__("var backupId=", _tkrouter, ".", _activityMgr.getCurrentIDActivity());
-						__(_tkrouter, ".", _activityMgr.setCurrentActivity(new JSString()._setContent("ctx.row.id")));
+						__(_tkrouter, ".", _activityMgr.setCurrentActivity(new JSString()._setValue("ctx.row.id")));
 						__(_tkrouter.doEvent(txt(TKActivity.ON_ACTIVITY_CREATE)))	;
-						__(_tkrouter, ".", _activityMgr.setCurrentActivity(new JSString()._setContent("backupId")));
+						__(_tkrouter, ".", _activityMgr.setCurrentActivity(new JSString()._setValue("backupId")));
 						
 					_elseif_("ctx.row.type=='card'");
 						_var("subData", "{html:'', js:''}");

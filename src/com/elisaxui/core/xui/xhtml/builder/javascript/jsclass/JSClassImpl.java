@@ -157,7 +157,7 @@ public class JSClassImpl extends JSContent {
 			} catch (InstantiationException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
-			ret._setContent(buf);
+			ret._setValue(buf);
 			return ret;
 		}
 		else

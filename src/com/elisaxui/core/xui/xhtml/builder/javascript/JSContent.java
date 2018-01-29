@@ -3,6 +3,7 @@ package com.elisaxui.core.xui.xhtml.builder.javascript;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.declareType;
 
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -121,7 +122,9 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 			}
 		} 
 		else if (object instanceof JSVariable) {	
-			Object v = ((JSVariable)object)._getString();
+			Object v = ((JSVariable)object)._getValueOrName();
+			if (v==null)
+				v=v;
 			if (v instanceof Array)
 			{
 				Array arr = (Array)v;
@@ -203,7 +206,7 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 		if (object instanceof JSListParameter && name instanceof JSClass) {
 			// gestion du new
 			MethodInvocationHandler inv = (MethodInvocationHandler) Proxy.getInvocationHandler(name);
-			getListElem().add(JSClass._new(inv.getImplementClass(), ((JSListParameter) object).param));
+			getListElem().add(textNew(inv.getImplementClass().getSimpleName(), ((JSListParameter) object).param));
 		} else
 			addElem(object);
 	}
@@ -323,6 +326,20 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	}
 	
 	@Override
+	public JSMethodInterface setTimeout(Anonym a, Object... content) {		
+		getListElem().add(JSNewLine.class);
+		getListElem().add("setTimeout(");
+			addElem(callback(a));
+			for (Object object : content) {
+				addElem(",");
+				addElem(object);
+			}
+
+		getListElem().add(");");
+		return this;
+	}
+	
+	@Override
 	public JSMethodInterface consoleDebug(Object... content) {
 		getListElem().add(JSNewLine.class);
 		getListElem().add("console.debug(");
@@ -432,20 +449,49 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	}
 
 	/********************************************************************************************/
+	private final String textNew(String cl, Object...param ) {	
+		StringBuilder buf = new StringBuilder();
+		buf.append("new "+cl +"(");
+		if (param!=null)
+		{
+			int i=0;
+			for (Object object : param) {
+				if (i>0)
+					buf.append(", ");
+				buf.append(object);
+				i++;
+			}
+		}
+		buf.append(")");
+		return buf.toString() ;
+	}
 
-
+	@Deprecated
 	@Override
 	public Object _new(Object... param) {
 		
 		if (param.length>0 && param[0] instanceof Class)
-			return MethodInvocationHandler.cast((Class)param[0], JSClass._new((Class)param[0], Arrays.copyOfRange(param, 1, param.length)));
+			return MethodInvocationHandler.cast((Class)param[0], textNew(((Class)param[0]).getSimpleName(), Arrays.copyOfRange(param, 1, param.length)));
 		else
 			return new JSListParameter(param);
 	}
 	
 	@Override
-	public <E> E newInst(Class type, Object... param) {
-			return (E)MethodInvocationHandler.cast(type, JSClass._new(type, param));
+	public <E> E newInst(Class<E> type, Object... param) {
+		Object ret = JSClass.declareType(type, null);
+		
+		String t = type.getSimpleName();
+		if (ret instanceof JSVariable)
+			t= ((JSVariable) ret)._getClassType();
+		
+		String textNew = textNew( t, param);
+		
+		if (ret instanceof JSVariable)
+			((JSVariable) ret)._setValue(textNew);
+		else
+			((JSClass) ret)._setContent(textNew);
+		
+		return (E)ret;
 	}
 
 	@Override
@@ -453,18 +499,30 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 		
 		StringBuilder str = new StringBuilder();
 		str.append("\"");
-		for (int i = 0; i < param.length; i++) {
+		
+		int l =param.length;
+		boolean addEnd = true;
+		
+		for (int i = 0; i < l; i++) {
 			if (param[i] instanceof JSVariable)
 			{
 				str.append("\"+");
 				str.append(param[i]);
-				str.append("+\"");
+				
+				if (i<l-1)
+				{
+					str.append("+\"");
+				}
+				else
+					addEnd=false;
 			}
 			else
 				str.append(param[i]);
 		}
-		str.append("\"");
-		return new JSString()._setContent(str.toString());
+		if (addEnd)
+			str.append("\"");
+		
+		return new JSString()._setValue(str.toString());
 	}
 
 	/***************************************************************/
@@ -569,7 +627,7 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	}
 
 	@Override
-	public <E> E let(Class<? extends E >  type, Object name, Object... content) {
+	public <E> E let(Class<E>  type, Object name, Object... content) {
 		_var(name,content);
 		E v = declareType(type, name);
 		return v;

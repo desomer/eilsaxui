@@ -7,7 +7,6 @@ package com.elisaxui.core.xui.xhtml.builder.javascript;
  *
  */
 public class JSListParameter  {
-//	public boolean newint = true;
 	public Object[] param;
 	
 	public JSListParameter(Object... param) {

@@ -29,6 +29,7 @@ public final class MethodDesc
 	Object[] args;
 	
 	JSContent content;
+	
 	public int lastLineNoInsered = -1;
 	public Object lastMthNoInserted = null;
 	

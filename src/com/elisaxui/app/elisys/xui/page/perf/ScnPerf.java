@@ -62,7 +62,7 @@ public class ScnPerf extends XHTMLPart {
 		return xDiv( xId(xTxt("app")), 
 				xSpan("List of users:"),
 				xUl( xId(xTxt("users")), 
-						xLi( xAttr("v-for", xTxt("user in users")), "{{ user.first_name }}"))
+						xLi( xAttr("v-for", xTxt("user in users")), "{{ user.firstName }}"))
 				);
 	}
 }

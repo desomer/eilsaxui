@@ -73,7 +73,7 @@ public class JQuery extends JSClassInterface {
 	
 	public JSInt length()
 	{
-		return  new JSInt()._setContent(attr("length"));
+		return  new JSInt()._setValue(attr("length"));
 	}
 	
 	public JQuery val(Object... value)

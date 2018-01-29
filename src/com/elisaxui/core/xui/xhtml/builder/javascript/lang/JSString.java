@@ -4,16 +4,22 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 
 public class JSString extends JSValue {
 	
-
+	public String _getClassType() {
+		return "String";
+	}
+	
+	
 	public static final JSString value(String v)
 	{
-		return  new JSString()._setContent("\""+ v + "\"");
+		return  new JSString()._setValue("\""+ v + "\"");
 	}
 	
 	public static final JSString value(JSVariable v)
 	{
-		return  new JSString()._setContent(v._getValue());
+		return  new JSString()._setValue(v._getValue());
 	}
+	
+	/********************************************************************/
 	
 	public JSString substring(Object start)
 	{
@@ -22,7 +28,7 @@ public class JSString extends JSValue {
 	
 	public JSString substring(Object start, Object end)
 	{
-		return (JSString) _callMethod(null, "substring", start, ",", end);
+		return (JSString) _callMethod(null, "substring", start, SEP, end);
 	}
 	
 }

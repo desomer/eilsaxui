@@ -11,8 +11,9 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSObject;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
+import javax.json.*;
 
 /**
  * @author gauth
@@ -36,60 +37,80 @@ public interface JSPerfVuesJS extends JSClass {
 		JSInt i = JSClass.declareType(JSInt.class, "i");
 
 		if (isVueJS()) {
-			JSon d = let(JSon.class, "d", "{ users: [{ first_name: 'toto'}]}");
 
-			__(" new Vue({ el: '#app', data: ", d, " })");
+			modeJava(() -> {
+				JSArray<DtoUser> list = new JSArray<>();
+				list.asLitteral();
+				DtoUser user = newInst(DtoUser.class);
+				user.firstName().set("toto");
+				list.push(user);
 
-			@SuppressWarnings("unchecked")
-			JSArray<JSon> users = let(JSArray.class, "users", d.get("users"));
-			_forIdxBetween(i, 0, 20000)._do(() -> users.push(cast(JSon.class, "{ first_name: 'vue'+i}")));
+				user = newInst(DtoUser.class);
+				user.firstName().set("tata");
+				list.push(user);
 
-			if (isChange())
-				setTimeout(fct().__(() -> {
-					users._type = JSon.class;
-					_forIdxBetween(i, 0, 20000)
-							._do(() -> users.at("i").get("first_name").set(calc(txt("vues"), "+(20000-i)")));
-				}), 100);
+				System.out.println("push = " + list._getValue());
+			});
+
+			DtoTest d = let("d", newInst(DtoTest.class).asLitteral());
+			d.users().set(newInst(JSArray.class));
+			d.users().set(new JSArray<>().asLitteral());
+
+			JSObject a = let("a", newInst(JSObject.class));
+			JSObject b = let("b", newInst(JSObject.class).asLitteral());
+			
+			a.set(b);
+
+			__("new Vue({ el: '#app', data: ", d, " })");
+
+			_forIdxBetween(i, 0, 20000)._do(() -> {
+				DtoUser user = newInst(DtoUser.class).asLitteral(); // pas de let et pas de declaration de class
+				user.firstName().set(txt("vue", i));
+				d.users().push(user);
+			});
+
+			if (isChange()) {
+				setTimeout(() -> _forIdxBetween(i, 0, 20000)
+						._do(() -> {
+							d.users().at(i).firstName().set(txt("vues", calc("(20000-", i, ")")));
+							setTimeout(() -> _forIdxBetween(i, 0, 20000)
+									._do(() -> d.users().pop()),
+									2000);
+						}),
+						100);
+			}
 
 		} else if (isJQuery()) {
 			JQuery jqUsers = let(JQuery.class, "jqUsers", $("#users"));
 
 			JSString d = let("d", JSString.value(""));
-			_forIdxBetween(i, 0, 20000)._do(() -> d.append(txt("<li id='q",i,"'>que", i, "</li>")));
+			_forIdxBetween(i, 0, 20000)._do(() -> d.append(txt("<li id='q", i, "'>que", i, "</li>")));
 			jqUsers.append(d);
 
 			if (isChange()) {
 				JQuery jqchildren = let(JQuery.class, "jqchildren", jqUsers.children());
-				setTimeout(fct().__(() -> _forIdxBetween(i, 0, 20000)
-					//	._do(() -> jqchildren.eq(i).text(txt("que", var("(20000-i)"))))), 100);
-						._do(() -> jqUsers.find(var("'#q'+",i)).text(txt("que", var("(20000-i)"))))), 100);
+				setTimeout(() -> _forIdxBetween(i, 0, 20000)
+						._do(() -> jqchildren.eq(i).text(txt("que", var("(20000-i)")))), 100);
 			}
 
 		} else {
 			JSVariable users = let(JSVariable.class, "users", "document.getElementById('users')");
-			_for("var i=0; i<20000; i++")._do(() -> {
+
+			_forIdxBetween(i, 0, 20000)._do(() -> {
 				_var("node", "document.createElement('li')");
 				_var("textnode", "document.createTextNode('dom'+i)");
 				__("node.appendChild(textnode);");
-				__("users.appendChild(node);");
+				__(users, ".appendChild(node);");
 			});
+
 			if (isChange()) {
-				JSVariable children = let(JSVariable.class, "children", "document.getElementById('users').childNodes");
-				setTimeout(fct().__(() -> {
-					_for("var i=3; i<20000; i++")._do(() ->
-						__(children, "[i].innerText='dom'+(20000-i)")
-					);
-				}), 100);
+				JSArray<?> children = let(JSArray.class, "children", "document.getElementById('users').childNodes");
+				setTimeout(
+						() -> _forIdxBetween(i, 3, 20000)._do(() -> __(children.at(i), ".innerText='dom'+(20000-i)")),
+						100);
 			}
 		}
 
 		return "null";
 	}
-
-	/*
-	 * // JQuery $li = let(JQuery.class, "$li", JQuery.$("<li>que</li>")); //
-	 * _for("var i=0; i<20000; i++")._do(()->{ // __($users.append(calc($li,
-	 * ".clone().text(", txt("que", var("i")),")"))); //
-	 * //__($users.append(txt("<li>que", var("i") , "</li>"))); // });
-	 */
 }

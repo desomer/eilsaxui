@@ -3,6 +3,20 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.javascript;
 
+import java.lang.reflect.Proxy;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonNumber;
+import javax.json.JsonObject;
+import javax.json.JsonString;
+import javax.json.JsonValue;
+
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.Array;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
@@ -19,15 +33,35 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder;
  */
 public class JSVariable {
 	
-	protected String SEP = ",";
+	protected static final String SEP = ",";
 	protected Object name;
 	protected Object value;
+	protected Object parent;
+	
+	
+	public String _getClassType() {
+		return this.getClass().getSimpleName();
+	}
 
-	public Object _getName() {
+	/**
+	 * @return the parent
+	 */
+	public final Object _getParent() {
+		return parent;
+	}
+
+	/**
+	 * @param parent the parent to set
+	 */
+	public final void _setParent(Object parent) {
+		this.parent = parent;
+	}
+
+	public final Object _getName() {
 		return name;
 	}
 
-	public <E extends JSVariable> E _setName(Object name) {
+	public final <E extends JSVariable> E _setName(Object name) {
 		this.name = name;
 		return (E)this;
 	}
@@ -37,25 +71,25 @@ public class JSVariable {
 		return value;
 	}
 	
-	protected Object _getString() {
-		if (value==null)
-			return name==null?"":""+_getName();
-		return value;
-	}
-
-	public <E extends JSVariable> E _setContent(Object value) {
+	public final <E extends JSVariable> E _setValue(Object value) {
 		this.value = value;
 		return (E)this;
+	}
+	
+	protected  Object _getValueOrName() {
+		if (_getValue()==null)
+			return name==null?"":""+_getName();
+		return _getValue();
 	}
 
 	@Override
 	public String toString() {
-		if (value==null)
+		if (_getValue()==null)
 			return name==null?"":""+_getName();
-		return value.toString();
+		return _getValue().toString();
 	}
 	/*************************************************************/
-	protected void _registerMethod(Object obj ) {
+	protected static final void _registerMethod(Object obj ) {
 		 try {
 			 MethodDesc currentMethodDesc = MethodInvocationHandler.ThreadLocalMethodDesc.get();
 			 MethodInvocationHandler.doLastSourceLineInsered(currentMethodDesc, false);
@@ -79,24 +113,38 @@ public class JSVariable {
 	}
 	
 	/**************************************************************/
-	public JSBool isEqual(Object obj)
+	public final JSBool isEqual(Object obj)
 	{
 		JSBool ret = new JSBool();
 		_doOperator(ret, "==", obj);
 		return ret;
 	}
 	
-	public JSBool isNotEqual(Object obj)
+	public final JSBool isNotEqual(Object obj)
 	{
 		JSBool ret = new JSBool();
 		_doOperator(ret, "!=", obj);
 		return ret;
 	}
 	
-	public JSVoid set(Object... objs)
+	public final JSVoid set(Object... objs)
 	{
+		MethodInvocationHandler mh = (MethodInvocationHandler)this.parent;
+		boolean isLitteral = mh!=null && mh.jsonBuilder!=null;
+		
+		if (isLitteral || MethodInvocationHandler.isModeJava()  ) {
+			if (mh.jsonBuilder==null)
+				mh.jsonBuilder=Json.createObjectBuilder();
+			
+			String attr = ""+this.name;
+			attr = attr.substring(attr.lastIndexOf('.')+1);
+			
+			mh.jsonBuilder.add(attr, new JsonNumberImpl(objs[0].toString()));
+		}
+		
 		JSVoid ret = new JSVoid();
-		_doOperator(ret, "=", objs);
+		if (!isLitteral)
+			_doOperator(ret, "=", objs);
 		return ret;
 	}
 
@@ -105,69 +153,76 @@ public class JSVariable {
 	 * @param ret
 	 * @param objs
 	 */
-	protected void _doOperator(JSVariable ret, String operator,  Object... objs) {
-		Array arr = new Array();
-		Object content = _getString();
-		if (content instanceof Array )
-			arr.addAll((Array<?>)content);
-		else
-			arr.add(content);
+	protected final void _doOperator(JSVariable ret, String operator,  Object... objs) {
 		
-		arr.add(operator);
-		
-		if (objs!=null)
-		{
-			int i = objs.length;
+		if (MethodInvocationHandler.isModeJava()) {
 			
-			for (Object obj : objs) {
-				if (i==1 && obj instanceof String && this instanceof JSValue)
-					obj = "\""+ obj + "\"";
-				
-				if (obj instanceof Array )
-					arr.addAll((Array<?>)obj);
-				else
-					arr.add(obj);
-			}
-		}
-		else
-		{
-			arr.add(null);
-		}
+			
+		} else {
+			Array arr = new Array();
+			Object content = _getValueOrName();
+			if (content instanceof Array)
+				arr.addAll((Array<?>) content);
+			else
+				arr.add(content);
 
-		ret._setContent(arr);
-		_registerMethod(ret);
+			arr.add(operator);
+
+			if (objs != null) {
+				int i = objs.length;
+
+				for (Object obj : objs) {
+
+					if (i == 1 && obj instanceof String && this instanceof JSValue)
+						obj = "\"" + obj + "\"";
+
+					if (obj instanceof Array)
+						arr.addAll((Array<?>) obj);
+					else
+						arr.add(obj);
+				}
+			} else {
+				arr.add(null);
+			}
+
+			ret._setValue(arr);
+			_registerMethod(ret);
+		}
 	}
 	
-	protected Object _callMethod(JSVariable ret, String mth,  Object... objs) {
-		if (ret==null)
-		{
+	protected final Object _callMethod(JSVariable ret, String mth, Object... objs) {
+		if (ret == null) {
 			ret = this;
-			if (value==null && this.name!=null)
-			{
+			if (value == null && this.name != null) {
 				// gestion premier appel de variable pour chainage
 				ret = ret.declareType();
 				ret._setName(this._getName());
 			}
 		}
 		
-		Array arr = new Array();
-		Object content = _getString();
-		if (content instanceof Array )
-			arr.addAll((Array<?>)content);
-		else
-			arr.add(content);
-		
-		arr.add("."+mth+"(");
-		_addContent(arr, objs);
-		arr.add(")");
-		
-		ret._setContent(arr);
-		_registerMethod(ret);
-		return ret;
+		if (MethodInvocationHandler.isModeJava()) {
+			return ret;
+		} else {
+
+			Array arr = new Array();
+			Object content = _getValueOrName();
+			if (content instanceof Array)
+				arr.addAll((Array<?>) content);
+			else
+				arr.add(content);
+
+			arr.add("." + mth + "(");
+			_addContent(arr, objs);
+			arr.add(")");
+
+			ret._setValue(arr);
+			_registerMethod(ret);
+			return ret;
+		}
 	}
 
 	
-	protected <E> E _addContent(Array inner, Object content) {
+	protected static final void _addContent(Array inner, Object content) {
 		
 		if ( content instanceof Object[])
 		{
@@ -191,12 +246,16 @@ public class JSVariable {
 				else if ( object instanceof String && object != SEP )
 					inner.add("'"+object+"'");
 				else
+				{
+				//	if (object instanceof Proxy)
+					
 					inner.add(object);
+				}
 			}
 		}
 		else if (content!=null)
 			inner.add(content);
-		return (E)this;
+		//return (E)this;
 	}
 	
 	/*******************************************************/
@@ -204,7 +263,7 @@ public class JSVariable {
 	 * @param ret
 	 * @return
 	 */
-	protected JSVariable declareType() {
+	protected final JSVariable declareType() {
 		JSVariable ret =  null;
 		try {
 			ret = this.getClass().newInstance();
@@ -213,4 +272,87 @@ public class JSVariable {
 		}
 		return ret;
 	}
+
+
+
+	 class JsonNumberImpl implements JsonNumber {
+
+		 String value;
+		 
+		 /**
+		 * @param value
+		 */
+		public JsonNumberImpl(String value) {
+			super();
+			this.value = value;
+		}
+
+
+		@Override
+		 public String toString() {
+			 return value;
+		 }
+
+
+		@Override
+		public ValueType getValueType() {
+			return JsonValue.ValueType.NUMBER;
+		}
+
+
+		@Override
+		public boolean isIntegral() {
+			return false;
+		}
+
+
+		@Override
+		public int intValue() {
+			return 0;
+		}
+
+
+		@Override
+		public int intValueExact() {
+			return 0;
+		}
+
+
+		@Override
+		public long longValue() {
+			return 0;
+		}
+
+
+		@Override
+		public long longValueExact() {
+			return 0;
+		}
+
+
+		@Override
+		public BigInteger bigIntegerValue() {
+			return null;
+		}
+
+
+		@Override
+		public BigInteger bigIntegerValueExact() {
+			return null;
+		}
+
+
+		@Override
+		public double doubleValue() {
+			return 0;
+		}
+
+
+		@Override
+		public BigDecimal bigDecimalValue() {
+			return null;
+		}
+
+	}
+
 }

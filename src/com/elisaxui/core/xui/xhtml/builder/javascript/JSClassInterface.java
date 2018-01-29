@@ -16,12 +16,10 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 public class JSClassInterface extends JSVariable {
 
 	// TODO a retirer et a gerer par le _setContent    (voir equal sur JSString)
-	Array<Object> listContent = new Array<Object>();
+	Array<Object> listContent = new Array<>();
 	
-	protected Object[] addText(Object...classes)
+	protected static final Object[] addText(Object...classes)
 	{
-		
-		
 		if (classes.length==1)
 		{
 			if (classes[0] ==null)
@@ -49,6 +47,7 @@ public class JSClassInterface extends JSVariable {
 		return new Object[] {"... bug addtext..."};
 	}
 	
+	@Deprecated // utiliser le parent
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder(super.toString());
@@ -60,10 +59,11 @@ public class JSClassInterface extends JSVariable {
 		return sb.toString();
 	}
 	
+	@Deprecated  // utiliser le parent
 	@Override
-	protected Object _getString() {
+	protected final Object _getValueOrName() {
 		Array<Object> list = new Array<Object>();
-		Object arr = super._getString();
+		Object arr = super._getValueOrName();
 		if (arr instanceof Array )
 			list.addAll((Array<?>)arr);
 		else
@@ -74,7 +74,7 @@ public class JSClassInterface extends JSVariable {
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected <E extends JSClassInterface> E addContent(Object content) {
+	protected final <E extends JSClassInterface> E addContent(Object content) {
 		
 		if ( content instanceof Object[])
 		{
@@ -105,8 +105,23 @@ public class JSClassInterface extends JSVariable {
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected <E extends JSClassInterface> E  callMth(String mth, Object...classes)
+	protected final <E extends JSClassInterface> E  callMth(String mth, Object...classes)
 	{
+		E ret = getReturnType();
+		
+		ret.addContent("."+mth+"(");
+		ret.addContent(classes);
+		ret.addContent(")");
+		
+		_registerMethod(ret);
+		
+		return ret;
+	}
+
+	/**
+	 * @return
+	 */
+	private final <E extends JSClassInterface> E getReturnType() {
 		E ret = (E)this;
 		if (listContent.size()==0 && this.name!=null)
 		{
@@ -118,13 +133,6 @@ public class JSClassInterface extends JSVariable {
 			}
 			ret._setName(this._getName());
 		}
-		
-		ret.addContent("."+mth+"(");
-		ret.addContent(classes);
-		ret.addContent(")");
-		
-		_registerMethod(ret);
-		
 		return ret;
 	}
 	
@@ -133,20 +141,9 @@ public class JSClassInterface extends JSVariable {
 	
 	
 	/**********************************************************************/
-    public <E extends JSClassInterface> E attrByString(Object attr)
+    public final <E extends JSClassInterface> E attrByString(Object attr)
     {
-     E ret = (E)this;
-   	 
-   	 if (listContent.size()==0 && this.name!=null)
-		{
-			// gestion premier appel de variable
-			try {
-				ret = (E) this.getClass().newInstance();
-			} catch (InstantiationException | IllegalAccessException e) {
-				e.printStackTrace();
-			}
-			ret._setName(this._getName());
-		}
+	 E ret = getReturnType();
    	 
    	 ret.addContent("[");
    	 ret.addContent(addText(attr));
@@ -156,31 +153,20 @@ public class JSClassInterface extends JSVariable {
 	
     @Deprecated
     /**
-     * use get
+     * use get du json
      * @param att
      * @return
      */
-	public <E extends JSClassInterface> E  attr(String att)
+	public final <E extends JSClassInterface> E  attr(String att)
 	{
-		E ret = (E)this;
-		if (listContent.size()==0 && this.name!=null)
-		{
-			// gestion premier appel de variable
-			try {
-				ret = (E) this.getClass().newInstance();
-			} catch (InstantiationException | IllegalAccessException e) {
-				e.printStackTrace();
-			}
-			ret._setName(this._getName());
-		}
-		
+		E ret = getReturnType();
 		ret.addContent("."+att);
 		return ret;
 	}
 	
-	public <E extends JSVariable> E  castAttr(JSVariable cl, String att)
+	public final <E extends JSVariable> E  castAttr(JSVariable cl, String att)
 	{		
-		cl._setContent(this._getName()+"."+att);
+		cl._setValue(this._getName()+"."+att);
 		return (E) cl;
 	}
 }

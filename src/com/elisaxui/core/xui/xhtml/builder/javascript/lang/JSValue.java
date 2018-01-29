@@ -38,14 +38,14 @@ public class JSValue extends JSVariable {
 	{
 		JSInt ret = new JSInt();
 		Array arr = new Array();
-		Object content = _getString();
+		Object content = _getValueOrName();
 		if (content instanceof Array )
 			arr.addAll((Array<?>)content);
 		else
 			arr.add(content);
 		arr.add("%");
 		arr.add(obj);
-		ret._setContent(arr);
+		ret._setValue(arr);
 		return ret;
 	}
 }

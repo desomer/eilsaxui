@@ -8,6 +8,7 @@ import java.lang.reflect.Proxy;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
@@ -20,9 +21,16 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodInvocationHa
  */
 public class JSArray<E> extends JSClassInterface {
 
+	public JSArray() {
+		super();
+		if (MethodInvocationHandler.isModeJava())
+			this.asLitteral();
+	}
+
 	public Class<?> _type;
 	public JsonArrayBuilder jsonBuilder = null;
-
+	
+	@Override
 	public String _getClassType() {
 		return "Array";
 	}
@@ -57,8 +65,14 @@ public class JSArray<E> extends JSClassInterface {
 
 		if (isLitteral())
 		{
-			if (objLitteral!=null)
+			if (value instanceof JSArray)
+				jsonBuilder.add(((JSArray<?>)value).jsonBuilder);
+			else if (objLitteral!=null)
 				jsonBuilder.add(objLitteral);
+			else if (value instanceof Integer)
+				jsonBuilder.add((Integer)value);
+			else if (value instanceof Double)
+				jsonBuilder.add((Double)value);
 			else
 				jsonBuilder.add(value.toString());
 			return this;
@@ -82,7 +96,7 @@ public class JSArray<E> extends JSClassInterface {
 		ret.addContent("]");
 
 		if (_type != null) {
-			E t = JSClass.declareType(_type, null);
+			E t = (E) JSClass.declareType(_type, null);
 			if (t instanceof JSVariable)
 				((JSVariable) t)._setValue(ret);
 			else

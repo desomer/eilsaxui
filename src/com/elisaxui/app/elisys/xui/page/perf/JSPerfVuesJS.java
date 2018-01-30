@@ -22,15 +22,15 @@ import javax.json.*;
 public interface JSPerfVuesJS extends JSClass {
 
 	public static boolean isVueJS() {
-		return XUIFactoryXHtml.getXHTMLFile().getFisrtParam("vue", "false").equals("true");
+		return XUIFactoryXHtml.getXHTMLFile().getFirstQueryParam("vue", "false").equals("true");
 	}
 
 	public static boolean isJQuery() {
-		return XUIFactoryXHtml.getXHTMLFile().getFisrtParam("query", "false").equals("true");
+		return XUIFactoryXHtml.getXHTMLFile().getFirstQueryParam("query", "false").equals("true");
 	}
 
 	public static boolean isChange() {
-		return XUIFactoryXHtml.getXHTMLFile().getFisrtParam("change", "true").equals("true");
+		return XUIFactoryXHtml.getXHTMLFile().getFirstQueryParam("change", "true").equals("true");
 	}
 
 	default Object doPerf() {
@@ -39,17 +39,25 @@ public interface JSPerfVuesJS extends JSClass {
 		if (isVueJS()) {
 
 			modeJava(() -> {
-				JSArray<DtoUser> list = new JSArray<>();
-				list.asLitteral();
+				JSArray<Object> list = new JSArray<>();
 				DtoUser user = newInst(DtoUser.class);
 				user.firstName().set("toto");
 				list.push(user);
+				
+				list.push("test");
+				list.push(1);
+				list.push(1.2);
+				
+				JSArray<Object> list2 = new JSArray<>();
+				list2.push("A");
+				list2.push("B");
+				list.push(list2);
 
 				user = newInst(DtoUser.class);
 				user.firstName().set("tata");
 				list.push(user);
 
-				System.out.println("push = " + list._getValue());
+				System.out.println("list java = " + list._getValue());
 			});
 
 			DtoTest d = let("d", newInst(DtoTest.class).asLitteral());
@@ -72,7 +80,7 @@ public interface JSPerfVuesJS extends JSClass {
 			if (isChange()) {
 				setTimeout(() -> _forIdxBetween(i, 0, 20000)
 						._do(() -> {
-							d.users().at(i).firstName().set(txt("vues", calc("(20000-", i, ")")));
+							d.users().at(i).firstName().set(txt("vues", calc("20000-", i)));
 							setTimeout(() -> _forIdxBetween(i, 0, 20000)
 									._do(() -> d.users().pop()),
 									2000);
@@ -90,7 +98,7 @@ public interface JSPerfVuesJS extends JSClass {
 			if (isChange()) {
 				JQuery jqchildren = let(JQuery.class, "jqchildren", jqUsers.children());
 				setTimeout(() -> _forIdxBetween(i, 0, 20000)
-						._do(() -> jqchildren.eq(i).text(txt("que", var("(20000-i)")))), 100);
+						._do(() -> jqchildren.eq(i).text(txt("que", calc("20000-",i)))), 100);
 			}
 
 		} else {
@@ -105,8 +113,7 @@ public interface JSPerfVuesJS extends JSClass {
 
 			if (isChange()) {
 				JSArray<?> children = let(JSArray.class, "children", "document.getElementById('users').childNodes");
-				setTimeout(
-						() -> _forIdxBetween(i, 3, 20000)._do(() -> __(children.at(i), ".innerText='dom'+(20000-i)")),
+				setTimeout(	() -> _forIdxBetween(i, 3, 20000)._do(() -> __(children.at(i), ".innerText='dom'+(20000-i)")),
 						100);
 			}
 		}

@@ -36,7 +36,7 @@ public final class MethodInvocationHandler implements InvocationHandler {
 	private static final String OF_CLASS = " of class ";
 	private static final boolean TEST_ANONYM = true;
 	private static final Object NOT_USED = "NOT_USED";
-	private static final JSContent NOT_USED_CONTENT = new JSClassImpl(null);
+	private static final JSContent NOT_USED_CONTENT = new JSClassImpl();
 	
 	static boolean debug = false;
 	static boolean debug2 = false;
@@ -47,8 +47,8 @@ public final class MethodInvocationHandler implements InvocationHandler {
 	private Class<? extends JSClass> implementClass; // type js de la class
 
 
-	public JsonObjectBuilder jsonBuilder = null;
-	public MethodInvocationHandler parent=null; // contenu code du proxy
+	public JsonObjectBuilder jsonBuilder = null;   
+	public MethodInvocationHandler parent=null; // parent : a.toto()  le  parent de toto c'est a
 	
 	private String currentFctBuildByProxy = null; //
 	private boolean testAnonymInProgress = false; // test si la methode doit retourner une fonction anonym
@@ -82,7 +82,7 @@ public final class MethodInvocationHandler implements InvocationHandler {
 		
 		String idMeth = JSClassImpl.getMethodId(method, args);
 		
-		JSClassImpl implcl = XUIFactoryXHtml.getXHTMLFile().getClassImpl(XHTMLPart.jsBuilder, getImplementClass());
+		JSClassImpl implcl = XUIFactoryXHtml.getXHTMLFile().getClassImpl(XHTMLPart.getJSBuilder(), getImplementClass());
 		boolean isMthAlreadyInClass = implcl.getListDistinctFct().containsKey(idMeth);
 
 		if (isMthAlreadyInClass) {
@@ -378,7 +378,7 @@ public final class MethodInvocationHandler implements InvocationHandler {
 		currentMethodDesc = mapContentMthBuildByProxy.get(mthName);
 
 		if (currentMethodDesc == null) {
-			JSContent jsc = XHTMLPart.jsBuilder.createJSContent();
+			JSContent jsc = XHTMLPart.getJSBuilder().createJSContent();
 			if (debug2)
 				println(System.identityHashCode(jsc) + " - createJSContent "
 						+ mthName + OF_CLASS + implcl.getName());
@@ -530,9 +530,9 @@ public final class MethodInvocationHandler implements InvocationHandler {
 
 			Object aCode = codeAnonym.$$gosubContent(prevCode);
 			prevCode = null;
-			JSContent cont = XHTMLPart.jsBuilder.createJSContent();
+			JSContent cont = XHTMLPart.getJSBuilder().createJSContent();
 			cont.$$gosubContent(aCode);
-			fct = XHTMLPart.jsBuilder.createJSFunction().setParam(p).setCode(cont);
+			fct = XHTMLPart.getJSBuilder().createJSFunction().setParam(p).setCode(cont);
 
 		} else if (!testAnonymous) {
 			String id = JSClassImpl.getMethodId(handle.method, handle.args);
@@ -544,7 +544,7 @@ public final class MethodInvocationHandler implements InvocationHandler {
 			if (debug2)
 				println(System.identityHashCode(code) + " - return JSFunction " + id);
 
-			fct = XHTMLPart.jsBuilder.createJSFunction()
+			fct = XHTMLPart.getJSBuilder().createJSFunction()
 					.setName(handle.method.getName())
 					.setParam(p)
 					.setCode(code);
@@ -577,7 +577,7 @@ public final class MethodInvocationHandler implements InvocationHandler {
 		// ajouter en fin de methode JS
 		if (ret != null && !(ret instanceof JSContent)) {
 			if (code == null)
-				code = XHTMLPart.jsBuilder.createJSContent();
+				code = XHTMLPart.getJSBuilder().createJSContent();
 
 			code._return(ret);
 		}
@@ -635,8 +635,8 @@ public final class MethodInvocationHandler implements InvocationHandler {
 			return retJSVar;
 		} else if (retJSClass) {
 
-			JSClass prox = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) type);
-			XHTMLPart.jsBuilder.setNameOfProxy(prefix, prox, name);
+			JSClass prox = XHTMLPart.getJSBuilder().getProxy((Class<? extends JSClass>) type);
+			XHTMLPart.getJSBuilder().setNameOfProxy(prefix, prox, name);
 			return prox;
 		} else
 			return prefix + name;

@@ -61,11 +61,11 @@ public interface JSTransition extends JSClass {
 	
 	default void doFixedElemToAbsolute(JQuery act, JSInt sct) {
 		
-		JQuery $fixedElem=let(JQuery.class, "$fixedElem", act.find(cFixedElement));
+		JQuery $fixedElem=let("$fixedElem", act.find(cFixedElement));
 
 		$fixedElem.each(callback(()->{
 			JSInt posTop = let(JSInt.class, "posTop", sct);
-			posTop.set(posTop.add($(var("this")).get(0), ".getBoundingClientRect().y"));   
+			posTop.set(posTop.add( $(var("this")).get(0), ".getBoundingClientRect().y") );   
 			//TODO add JSElement
 			_if(posTop, ">0").then(()->	$(var("this")).css(TOP, txt(posTop,"px")));
 		}));
@@ -175,7 +175,7 @@ public interface JSTransition extends JSClass {
 								// -------------------------------------------------
 								overlay.doShowOverlay(jqActivityActive, 2);
 								// ------------ deplace le hamburger---------
-								jqHamburger.css(TRANSFORM, txt("translate3d(-15px,",calc("(",/*sct*/0,"-3)"),"px,0px) scale(0.6)"));
+								jqHamburger.css(TRANSFORM, txt("translate3d(-15px,",calc(/*sct*/0,"-3"),"px,0px) scale(0.6)"));
 								// ------------- anim des item de menu---------
 								_for("var i in window.jsonMainMenu");
 									JSon jsonMenu = let(JSon.class, "jsonMenu", "window.jsonMainMenu[i]");

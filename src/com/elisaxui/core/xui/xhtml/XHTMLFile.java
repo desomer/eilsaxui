@@ -49,7 +49,7 @@ public class XHTMLFile extends XMLFile {
 		return param.get(key);
 	}
 	
-	public final String getFisrtParam(String key, String def)
+	public final String getFirstQueryParam(String key, String def)
 	{
 		List<String> p =  param.get(key);
 		

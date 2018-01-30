@@ -4,6 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
+import org.apache.commons.lang3.builder.HashCodeExclude;
+
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
@@ -25,10 +27,7 @@ import com.elisaxui.core.xui.xml.builder.XUIFormatManager;
 public class JSBuilder extends XUIFormatManager {    
 	
 
-	public JSBuilder() {
-
-	}
-
+	/**TODO a mettre dans une autre class */
 	public void setNameOfProxy(String prefix, Object inst, Object name) {
 		MethodInvocationHandler mh = (MethodInvocationHandler) Proxy.getInvocationHandler(inst);
 		mh.setVarName(prefix==null?name :( prefix + name));
@@ -36,6 +35,7 @@ public class JSBuilder extends XUIFormatManager {
 
 
 	@SuppressWarnings("unchecked")
+	/**TODO a mettre dans une autre class */
 	public final <E extends JSClass> E getProxy(final Class<? extends JSClass> cl) {
 
 		Object proxy = Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[] { cl }, new MethodInvocationHandler(cl));
@@ -67,7 +67,7 @@ public class JSBuilder extends XUIFormatManager {
 	
 	public static void initJSConstructor(Class<? extends JSClass> cl, String name) {
 		// init constructor
-		JSClass inst = XHTMLPart.jsBuilder.getProxy(cl);
+		JSClass inst = XHTMLPart.getJSBuilder().getProxy(cl);
 		Method[] lism = cl.getDeclaredMethods();
 		
 		xForceInclude annInclude = cl.getAnnotation(xForceInclude.class);
@@ -82,7 +82,6 @@ public class JSBuilder extends XUIFormatManager {
 				boolean includeMth = isPublic && (isForceIncluded || includeAllMth);
 				
 				if (includeMth || method.getName().equals("constructor")) {
-//					System.out.println("[JSBuilder]  include default constructor of class " + name);
 					try {
 						method.invoke(inst, new Object[method.getParameterCount()]);
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
@@ -96,31 +95,19 @@ public class JSBuilder extends XUIFormatManager {
 		}
 	}
 	
-		
-//	public JSClassImpl getJSClassImpl(Class<? extends JSClass> cl) throws IllegalAccessException {
-//		JSClassImpl ImplClass = XUIFactoryXHtml.getXHTMLFile().getClassImpl(JSBuilder.this, cl);
-////		if (!ImplClass.isInitialized()) {
-////
-////			ImplClass.setInitialized(true);
-////		}
-//		return ImplClass;
-//	}
-	
+	@Deprecated
 	public JSClassImpl createJSClass() {
-		return new JSClassImpl(this);
+		return new JSClassImpl();
 	}
 
+	@Deprecated
 	public JSFunction createJSFunction() {
-		return new JSFunction(this);
+		return new JSFunction();
 	}
-
+	
+	@Deprecated
 	public JSContent createJSContent() {
-		return new JSContent(this);
+		return new JSContent();
 	}
 
-
-
-//	public static final class JSElem {
-//		public Object value;
-//	}
 }

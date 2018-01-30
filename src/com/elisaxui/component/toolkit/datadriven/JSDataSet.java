@@ -65,7 +65,7 @@ public interface JSDataSet extends JSClass {
 					       ._if("property!='"+_DOM+"' && target[property]!==value")
 					       		//.consoleDebug("'setting'", "property" , "' for '" , "target" , "' with value '" , "value")
 								._var("row", "{ ope:'change', row:target, idx:target.idx, property:property, value: value, old: target[property] }")
-								._var("fct"," function() {\nfastdom.mutate(function() {\nthat.callBackChange.fire(row); })}")
+								._var("fct"," function() {fastdom.mutate(function() {that.callBackChange.fire(row); })}")
 								.__("setTimeout(fct, 1)")
 					       .endif()
 				       	   ._set("target[property]", "value")
@@ -88,7 +88,7 @@ public interface JSDataSet extends JSClass {
 						.__("Array.prototype.push.apply(this, arguments)")		
 						._var("row", "{ ope:'enter', row:arguments[0], idx:this.length-1 }")
 						// les push sont lancé dans le fast dom 
-						._var("fct"," function() {\nfastdom.mutate(function() {\nthat.callBackChange.fire(row); })}")
+						._var("fct"," function() {fastdom.mutate(function() {that.callBackChange.fire(row); })}")
 						// les push sont executé de facon echelonné dans le temps par intervalle de 2 ms
 						._var("t", "that.delayEvent")
 						._if("t==0")
@@ -100,7 +100,7 @@ public interface JSDataSet extends JSClass {
 				)
 				._set("d.pop", fct()._var("ret","Array.prototype.pop.apply(this, arguments)")
 						._var("row", "{ ope:'exit', row:ret, idx:this.length }")
-						._var("fct"," function() {\nfastdom.mutate(function() {\nthat.callBackChange.fire(row); })}")
+						._var("fct"," function() {fastdom.mutate(function() {that.callBackChange.fire(row); })}")
 						._var("t", "that.delayEvent")
 						._if("t==0")
 							.__("setTimeout(",fct()._set("that.delayEvent",0) ,", 0)")   // remise a zero apres la boucle
@@ -124,7 +124,7 @@ public interface JSDataSet extends JSClass {
 							_set("row", "{ ope:'exit', row:ret[0], idx:this.length }");
 						endif();
 						
-						_var("fct"," function() {\nfastdom.mutate(function() {\nthat.callBackChange.fire(row); })}");
+						_var("fct"," function() {fastdom.mutate(function() {that.callBackChange.fire(row); })}");
 						_var("t", "that.delayEvent");
 						_if("t==0");
 							__("setTimeout(",fct()._set("that.delayEvent",0) ,", 0)") ;  // remise a zero apres la boucle

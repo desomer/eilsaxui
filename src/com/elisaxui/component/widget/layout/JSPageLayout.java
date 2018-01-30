@@ -63,7 +63,7 @@ public interface JSPageLayout extends JSClass {
 							
 				window().requestAnimationFrame("fctdraw");	  // restart
 				
-				now.set(calc("Date.now()"));
+				now.set(var("Date.now()"));
 				deltaTime.set(now.substact(then));
 				
 				_if( deltaTime,">", interval, "&&", "window.disableScrollEvent==null", "&&", "window.animInProgess==false");

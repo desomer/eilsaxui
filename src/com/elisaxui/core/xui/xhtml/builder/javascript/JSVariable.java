@@ -90,26 +90,30 @@ public class JSVariable {
 	}
 	/*************************************************************/
 	protected static final void _registerMethod(Object obj ) {
-		 try {
 			 MethodDesc currentMethodDesc = MethodInvocationHandler.ThreadLocalMethodDesc.get();
-			 MethodInvocationHandler.doLastSourceLineInsered(currentMethodDesc, false);
+			 try {
+				MethodInvocationHandler.doLastSourceLineInsered(currentMethodDesc, false);
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			 
 			 StackTraceElement[]  stack = Thread.currentThread().getStackTrace();
 			
 			 int numLigne = -1;
 			 for (StackTraceElement stackTraceElement : stack) {
-				if (JSClass.class.isAssignableFrom(Class.forName(stackTraceElement.getClassName()))  && stackTraceElement.getLineNumber()!=-1 )
-				{
-					numLigne = stackTraceElement.getLineNumber();
-					currentMethodDesc.lastLineNoInsered = numLigne;
-					currentMethodDesc.lastMthNoInserted = obj;
-					break;
+				 try {
+						if (JSClass.class.isAssignableFrom(Class.forName(stackTraceElement.getClassName()))  && stackTraceElement.getLineNumber()!=-1 )
+						{
+							numLigne = stackTraceElement.getLineNumber();
+							currentMethodDesc.lastLineNoInsered = numLigne;
+							currentMethodDesc.lastMthNoInserted = obj;
+							break;
+						}
+				} catch (ClassNotFoundException e) {
+					//	e.printStackTrace();
 				}
 			 }
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		
 	}
 	
 	/**************************************************************/

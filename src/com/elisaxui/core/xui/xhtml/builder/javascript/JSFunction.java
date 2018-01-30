@@ -25,9 +25,6 @@ public class JSFunction extends JSContent
 		return strBuf.toString();
 	}
 
-	JSFunction(JSBuilder jsBuilder) {
-		super(jsBuilder);
-	}
 
 	Object name = null;
 	Object[] param = null; 

@@ -15,6 +15,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassInterface;
 public class JSObject extends JSClassInterface {
 	public JsonObjectBuilder jsonBuilder = null;
 	
+	@Override
 	public String _getClassType() {
 		return "Object";
 	}

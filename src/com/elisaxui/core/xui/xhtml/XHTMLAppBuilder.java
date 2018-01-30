@@ -102,7 +102,7 @@ public class XHTMLAppBuilder {
 		for (Class<? extends JSClassInterface> class1 : listJSClassMethod) {
 			if (debug)
 				System.out.println("[XHTMLAppBuilder]------------ START SCAN FIELD OF JSClassMethod -----"+ class1);
-			initJSClassVar(XHTMLPart.jsBuilder, class1);
+			initJSClassVar(XHTMLPart.getJSBuilder(), class1);
 		}
 		
 		if (debug)
@@ -111,7 +111,7 @@ public class XHTMLAppBuilder {
 		for (Class<? extends JSClass> class1 : listJSClass) {
 			if (debug)
 				System.out.println("[XHTMLAppBuilder]------------ START SCAN FIELD OF JSClass -----"+ class1);
-			initJSClassVar(XHTMLPart.jsBuilder, class1);
+			initJSClassVar(XHTMLPart.getJSBuilder(), class1);
 		}
 		
 		if (debug)
@@ -136,8 +136,8 @@ public class XHTMLAppBuilder {
 						System.out.println("[XHTMLAppBuilder] init XMLPart var static <JSClass> name "+ field.getName() );
 					field.setAccessible(true);
 					@SuppressWarnings("unchecked")
-					JSClass inst = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) field.getType());
-					XHTMLPart.jsBuilder.setNameOfProxy("", inst, field.getName());
+					JSClass inst = XHTMLPart.getJSBuilder().getProxy((Class<? extends JSClass>) field.getType());
+					XHTMLPart.getJSBuilder().setNameOfProxy("", inst, field.getName());
 					try {
 						field.set(cl, inst);
 					} catch (IllegalArgumentException | IllegalAccessException e) {
@@ -198,7 +198,7 @@ public class XHTMLAppBuilder {
 			// au proxy
 			@SuppressWarnings("unchecked")
 			
-			JSClass prox = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) field.getType());
+			JSClass prox = XHTMLPart.getJSBuilder().getProxy((Class<? extends JSClass>) field.getType());
 			setProxyName(field, prox);
 			
 			try {
@@ -250,9 +250,9 @@ public class XHTMLAppBuilder {
 			name = comment.value();
 		}
 		if (name.startsWith("_")) {
-			XHTMLPart.jsBuilder.setNameOfProxy("", prox, name.substring(1));
+			XHTMLPart.getJSBuilder().setNameOfProxy("", prox, name.substring(1));
 		} else
-			XHTMLPart.jsBuilder.setNameOfProxy("this.", prox, name);
+			XHTMLPart.getJSBuilder().setNameOfProxy("this.", prox, name);
 	}
 
 

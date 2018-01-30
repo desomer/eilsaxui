@@ -31,10 +31,6 @@ public class JSClassImpl extends JSContent {
 	
 	private LinkedList<MethodDesc> listHandleFuntionPrivate = new LinkedList<>();
 	
-	public JSClassImpl(JSBuilder jsBuilder) {
-		super(jsBuilder);
-	}
-	
 
 	public Object getName() {
 		return name;
@@ -145,7 +141,7 @@ public class JSClassImpl extends JSContent {
 		if (JSClass.class.isAssignableFrom(method.getReturnType() ))
 		{
 			// chainage d'attribut
-			JSClass prox = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) method.getReturnType());
+			JSClass prox = XHTMLPart.getJSBuilder().getProxy((Class<? extends JSClass>) method.getReturnType());
 			prox._setContent(buf);
 			return prox;
 		}

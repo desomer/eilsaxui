@@ -2,9 +2,6 @@ package com.elisaxui.core.xui.xhtml;
 
 import java.util.ArrayList;
 
-import javax.script.ScriptException;
-
-import com.elisaxui.core.helper.JSExecutorHelper;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
@@ -22,7 +19,20 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
 
 public abstract class XHTMLPart extends XMLPart {
 
-	public static JSBuilder jsBuilder = new JSBuilder();
+	public static final ThreadLocal<JSBuilder> ThreadLocalJSBuilder = new ThreadLocal<>(); 
+	
+	public static JSBuilder getJSBuilder()
+	{
+		JSBuilder jsb = ThreadLocalJSBuilder.get();
+		if (jsb==null)
+		{
+			jsb = new JSBuilder();
+			ThreadLocalJSBuilder.set(jsb);
+		}
+		return jsb;
+	}
+	
+
 
 	public final XMLPart vBody(XMLElement body) {
 		XUIFactoryXHtml.getXMLRoot().addElement(BODY.class, body);
@@ -35,63 +45,63 @@ public abstract class XHTMLPart extends XMLPart {
 	}
 
 	/******************************************************************************/
-	public final static XMLElement xDiv(Object... inner) {
+	public static final XMLElement xDiv(Object... inner) {
 		return xElement("div", inner);
 	}
 	
-	public final static XMLElement xHeader(Object... inner) {
+	public static final XMLElement xHeader(Object... inner) {
 		return xElement("header", inner);
 	}
 	
-	public final static XMLElement xFooter(Object... inner) {
+	public static final XMLElement xFooter(Object... inner) {
 		return xElement("footer", inner);
 	}
 
-	public final static XMLElement xSpan(Object... inner) {
+	public static final XMLElement xSpan(Object... inner) {
 		return xElement("span", inner);
 	}
 	
-	public final static XMLElement xI(Object... inner) {
+	public static final XMLElement xI(Object... inner) {
 		return xElement("i", inner);
 	}
 	
-	public final static XMLElement xA(Object... inner) {
+	public static final XMLElement xA(Object... inner) {
 		return xElement("a", inner);
 	}
 	
-	public final static XMLElement xP(Object... inner) {
+	public static final XMLElement xP(Object... inner) {
 		return xElement("p", inner);
 	}
 	
-	public final static XMLElement xButton(Object... inner) {
+	public static final XMLElement xButton(Object... inner) {
 		return xElement("button", inner);
 	}
 
-	public final static XMLElement xH1(Object... inner) {
+	public static final XMLElement xH1(Object... inner) {
 		return xElement("h1", inner);
 	}
 	
-	public final static XMLElement xH2(Object... inner) {
+	public static final XMLElement xH2(Object... inner) {
 		return xElement("h2", inner);
 	}
 
-	public final static XMLElement xUl(Object... inner) {
+	public static final XMLElement xUl(Object... inner) {
 		return xElement("ul", inner);
 	}
 
-	public final static XMLElement xLi(Object... inner) {
+	public static final XMLElement xLi(Object... inner) {
 		return xElement("li", inner);
 	}
 	
-	public final static XMLElement xImg(Object... inner) {
+	public static final XMLElement xImg(Object... inner) {
 		return xElement("img", inner);
 	}
 	
-	public final static XMLElement xCanvas(Object... inner) {
+	public static final XMLElement xCanvas(Object... inner) {
 		return xElement("canvas", inner);
 	}
 	
-	public final static XMLElement xTextArea(Object... inner) {
+	public static final XMLElement xTextArea(Object... inner) {
 		return xElement("textarea", inner);
 	}
 
@@ -117,32 +127,32 @@ public abstract class XHTMLPart extends XMLPart {
 
 	
 	/***********************************************************************/
-//	public final static <E> E declare() {
-//		return null;
-//	}
 	
-	public final static JSMethodInterface js() {
-		return jsBuilder.createJSContent();
+	public static final JSMethodInterface js() {
+		return getJSBuilder().createJSContent();
 	}
 	
-	public final static JSFunction fct(Object...param)
+	@Deprecated
+	public static final JSFunction fct(Object...param)
 	{
-		return jsBuilder.createJSFunction().setParam(param);
+		return getJSBuilder().createJSFunction().setParam(param);
 	}
 	
 	/**
 	 *     ou js()   mais fragment peux etre conditionnel
 	 * @return
 	 */
+	@Deprecated
 	public final static JSFunction fragment()
 	{
-		return jsBuilder.createJSFunction().setFragment(true);
+		return getJSBuilder().createJSFunction().setFragment(true);
 	}
 
 	public static final String xVar(Object var) {
 		return "'+" + var + "+'";
 	}
 	
+	@Deprecated
 	public static JSVariable jsvar(Object... param) {
 		StringBuilder str = new StringBuilder();
 		for (int i = 0; i < param.length; i++) {
@@ -153,10 +163,8 @@ public abstract class XHTMLPart extends XMLPart {
 		return var;
 	}
 	
-	//@Deprecated
-	public final static XMLElement xScriptJS(Object js) {
-		XMLElement t = xElement("script", xAttr("type", "\"text/javascript\""), js);
-		return t;
+	public static final XMLElement xScriptJS(Object js) {
+		return xElement("script", xAttr("type", "\"text/javascript\""), js);
 	}
 	
 //	public final static XMLElement xScriptJSAsync(Object js) {
@@ -164,9 +172,8 @@ public abstract class XHTMLPart extends XMLPart {
 //		return t;
 //	}
 	
-	public final static XMLElement xScriptSrc(Object js) {
-		XMLElement t = xElement("script", xAttr("src", "\""+js+"\""));
-		return t;
+	public static final XMLElement xScriptSrc(Object js) {
+		return xElement("script", xAttr("src", "\""+js+"\""));
 	}
 	
 	public final static XMLElement xScriptSrcAsync(Object js) {
@@ -208,7 +215,7 @@ public abstract class XHTMLPart extends XMLPart {
 	
 	
 	public final static XMLElement xImport(Class<? extends JSClass> cl) {
-		JSClassImpl script = XUIFactoryXHtml.getXHTMLFile().getClassImpl(jsBuilder, cl);
+		JSClassImpl script = XUIFactoryXHtml.getXHTMLFile().getClassImpl(getJSBuilder(), cl);
 		
 		XMLElement t = xElement("script", xAttr("type", "\"text/javascript\""), script);
 		return t;
@@ -228,6 +235,7 @@ public abstract class XHTMLPart extends XMLPart {
 	}
 
 	/****************************************************************************/
+	@Deprecated
 	public Object _new(Object... param) {
 		return new JSListParameter(param);
 	}

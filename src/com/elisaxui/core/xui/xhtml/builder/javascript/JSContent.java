@@ -49,8 +49,8 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	/**
 	 * @param jsBuilder
 	 */
-	protected JSContent(JSBuilder jsBuilder) {
-		this.jsBuilder = jsBuilder;
+	protected JSContent() {
+		this.jsBuilder =  XHTMLPart.getJSBuilder();  
 	}
 
 	private LinkedList<Object> listElem = new LinkedList<Object>();
@@ -109,7 +109,7 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 		} else if (object instanceof JSFunction) {
 			JSFunction fct = (JSFunction) object;
 			if (fct.isFragment())
-			{
+			{  /////
 				fct.toXML(buf);
 			}
 			else
@@ -578,7 +578,13 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 
 	public JSVariable calc(Object... param)
 	{
-		return var(param);
+		List<Object> l = Arrays.asList(param);
+		ArrayList<Object> l2 = new ArrayList<Object>();
+		l2.add("(");
+		l2.addAll(l);
+		l2.add(")");
+		
+		return var(l2.toArray());
 	}
 
 	/**************************** FORMATAGE  ********************************/
@@ -589,7 +595,6 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	@Override
 	@Deprecated
 	public JSVoid _void() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -599,7 +604,6 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	@Override
 	@Deprecated
 	public JSMethodInterface _null() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -623,6 +627,8 @@ public class JSContent implements IXMLBuilder, JSMethodInterface {
 	public Object $$gosubContent(Object content) {
 		LinkedList<Object> ret = getListElem();
 		setListElem((LinkedList<Object>)content);
+	//	getListElem().add(0, JSAddTab.class);
+	//	getListElem().add(JSRemoveTab.class);
 		return ret;
 	}
 

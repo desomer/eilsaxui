@@ -166,8 +166,8 @@ public class XMLPart  {
 						System.out.println("[XMLPart] init var JSClass on " + this.getClass() + " name "+ field.getName() );
 					field.setAccessible(true);
 					@SuppressWarnings("unchecked")
-					JSClass inst = XHTMLPart.jsBuilder.getProxy((Class<? extends JSClass>) field.getType());
-					XHTMLPart.jsBuilder.setNameOfProxy("", inst, field.getName());
+					JSClass inst = XHTMLPart.getJSBuilder().getProxy((Class<? extends JSClass>) field.getType());
+					XHTMLPart.getJSBuilder().setNameOfProxy("", inst, field.getName());
 					try {
 						field.set(this, inst);
 					} catch (IllegalArgumentException | IllegalAccessException e) {

@@ -263,7 +263,7 @@ public interface TKRouterEvent extends JSClass {
 
 		 	JIntent currentIntent = let("currentIntent", geCurrentIntention());
 //		 	var("act1", "'#'+$xui.intent.activity");
-		 	JQuery jqAct1 = let(JQuery.class, "jqAct1", JQuery.$(calc("'#'+",currentIntent.activity())));
+		 	JQuery jqAct1 = let(JQuery.class, "jqAct1", JQuery.$(var("'#'+",currentIntent.activity())));
 		 
 		 	_if(jqAct1.hasClass(CssTransition.cStateBackActivity));
 		 		systemDebugIf(TKCoreConfig.debugDoAction, txt("PB doAction Activity used to intent "), currentIntent);

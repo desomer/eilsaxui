@@ -10,9 +10,8 @@ import java.util.Map;
 import javax.ws.rs.core.MultivaluedMap;
 
 import com.elisaxui.component.page.XUIScene;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassImpl;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassBuilder;
 import com.elisaxui.core.xui.xml.XMLFile;
 
 /**
@@ -63,21 +62,22 @@ public class XHTMLFile extends XMLFile {
 		this.scene = scene;
 	}
 
-	private Map<String, JSClassImpl> listClass = new HashMap<String, JSClassImpl>();
+	private Map<String, JSClassBuilder> listClass = new HashMap<String, JSClassBuilder>();
 
-	public final JSClassImpl getClassImpl(JSBuilder jsBuilder, Class<? extends JSClass> cl) {
+	public final JSClassBuilder getClassImpl(Class<? extends JSClass> cl) {
 		String name = cl.getSimpleName();
-		JSClassImpl impl = listClass.get(name);
+		JSClassBuilder impl = listClass.get(name);
 		if (impl == null) {
 			if (debug)
 				System.out.println("[XHTMLFile] import JSClass " + name);
-			impl = jsBuilder.createJSClass();
+			impl = new JSClassBuilder();
 			impl.setName(cl.getSimpleName());
 
 			listClass.put(name, impl);
 
 			// initialise le constructor
-			JSBuilder.initJSConstructor(cl, name);
+			Object auto = JSClassBuilder.initJSConstructor(cl);
+			impl.setAutoCallMeth(auto);
 		}
 		return impl;
 	}

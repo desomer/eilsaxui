@@ -35,7 +35,7 @@ import com.elisaxui.component.widget.navbar.ViewNavBar;
 import com.elisaxui.component.widget.overlay.JSOverlay;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
@@ -77,7 +77,7 @@ public abstract class XUIScene extends XHTMLPart {
 	public static XClass scene;
 	public static XClass cShell;
 	
-	public abstract JSMethodInterface createScene();
+	public abstract JSContentInterface createScene();
 	public abstract ConfigScene getConfigScene();
 	   
 	@xTarget(AFTER_BODY.class)
@@ -288,7 +288,7 @@ public abstract class XUIScene extends XHTMLPart {
 
 	
 
-	public JSMethodInterface removeAppShell()
+	public JSContentInterface removeAppShell()
 	{
 	  return fragment()
 			  .__(TKQueue.startProcessQueued( 200,  fct()  //TODO a gerer dans un event appli ready
@@ -297,7 +297,7 @@ public abstract class XUIScene extends XHTMLPart {
 				;
 	}
 	
-	public JSMethodInterface registerServiceWorker()
+	public JSContentInterface registerServiceWorker()
 	{
 	  return fragment()
 			._if("'serviceWorker' in navigator")
@@ -319,7 +319,7 @@ public abstract class XUIScene extends XHTMLPart {
 	protected static TKActivity tkActivity;
 	protected static JSPageLayout jsPageLayout;
 	
-	public JSMethodInterface initializeScene()
+	public JSContentInterface initializeScene()
 	{
 	  return fragment()   
 			//******************** construction du menu ****************************************************
@@ -347,18 +347,18 @@ public abstract class XUIScene extends XHTMLPart {
 	}
 	
 	
-	public JSMethodInterface searchMenu()
+	public JSContentInterface searchMenu()
 	{
 	  return fragment();
 	}
 	
 
-	public JSMethodInterface loadPage()
+	public JSContentInterface loadPage()
 	{
 	  return fragment();
 	}
 	
-	public JSMethodInterface loadExtendScript()
+	public JSContentInterface loadExtendScript()
 	{  	// TODO a changer : mettre dans une queue avec priorité (avec image) et gestion de promise d'attente 
 	  return fragment()   
 		 		// load script notify
@@ -366,7 +366,7 @@ public abstract class XUIScene extends XHTMLPart {
 			  ;
 	}
 	
-	public JSMethodInterface getIntializeJSFct()
+	public JSContentInterface getIntializeJSFct()
 	{
 		return js()
 		
@@ -388,7 +388,7 @@ public abstract class XUIScene extends XHTMLPart {
 	JQuery ripple;
 	JQuery btn;
 	
-	public JSMethodInterface searchRipple()
+	public JSContentInterface searchRipple()
 	{
 	  return fragment()
 			 // recherche le ripple btn
@@ -401,7 +401,7 @@ public abstract class XUIScene extends XHTMLPart {
 			   .endif();
 	}
 	
-	public JSMethodInterface getEventManager()
+	public JSContentInterface getEventManager()
 	{
 	  return fct()
 			   .consoleDebug("'ok EventManager'") 
@@ -440,7 +440,7 @@ public abstract class XUIScene extends XHTMLPart {
 			;
 	}
 	
-	public JSMethodInterface getMoveManager()
+	public JSContentInterface getMoveManager()
 	{
 		// gestion deplacement menu et fermeture par gesture 
 	  return fct().consoleDebug("'ok MoveManager by HAMMER'") 
@@ -514,7 +514,7 @@ public abstract class XUIScene extends XHTMLPart {
 	}
  
 	TKRouterEvent tkrouter;
-	public JSMethodInterface getStateManager()
+	public JSContentInterface getStateManager()
 	{
 	  return fct()
 //		.consoleDebug("'ok StateManager'") 

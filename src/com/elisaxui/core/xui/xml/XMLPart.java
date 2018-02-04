@@ -11,8 +11,9 @@ import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -34,6 +35,16 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
  *
  */
 public class XMLPart  {
+	/**
+	 * 
+	 */
+	public static final double PRECISION = 100000.0;
+
+	/**
+	 * 
+	 */
+	public static final String NONAME = null;
+
 	private static final boolean debug = false;
 	
 	/**************************************************************************/
@@ -166,8 +177,8 @@ public class XMLPart  {
 						System.out.println("[XMLPart] init var JSClass on " + this.getClass() + " name "+ field.getName() );
 					field.setAccessible(true);
 					@SuppressWarnings("unchecked")
-					JSClass inst = XHTMLPart.getJSBuilder().getProxy((Class<? extends JSClass>) field.getType());
-					XHTMLPart.getJSBuilder().setNameOfProxy("", inst, field.getName());
+					JSClass inst = ProxyHandler.getProxy((Class<? extends JSClass>) field.getType());
+					ProxyHandler.setNameOfProxy("", inst, field.getName());
 					try {
 						field.set(this, inst);
 					} catch (IllegalArgumentException | IllegalAccessException e) {
@@ -232,13 +243,22 @@ public class XMLPart  {
 				XMLElement elem = ((XMLElement) method.invoke(this, new Object[] {}));
 				if (elem== null) return;
 				
+				// ajoute le hashcode du nom pour avoir toujours le même tri sur une priorite identique
+				int h = method.getName().hashCode();
+				double p = (double)(h)/PRECISION;
+				int d = (int)p;
+				p=(p-d);
+				
 				xPriority priority = method.getAnnotation(xPriority.class);
 				if (priority != null) {
-					elem.setPriority(priority.value());
+					p = priority.value()+p;
+					elem.setPriority(p);
 				}
+				else
+					elem.setPriority(100.0+p);
 
 				String comment = getComment(method);
-				elem.setComment(comment!=null?comment+ " priority "+elem.getPriority() : null );
+				elem.setComment(comment!=null?comment+ " priority "+((int)(elem.getPriority())) : null );
 				
 				Class<? extends XMLTarget> targetClass = target.value();
 				if (debug)
@@ -319,7 +339,7 @@ public class XMLPart  {
 	}
 
 	public final static XMLElement xListElement(Object... array) {
-		return xElement(null, array);
+		return xElement(NONAME, array);
 	}
 
 	public final static XMLAttr xAttr(String name, Object value) {

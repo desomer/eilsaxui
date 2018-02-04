@@ -11,9 +11,9 @@ import java.util.List;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSStyle;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassImpl;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassBuilder;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Handle;
 import com.elisaxui.core.xui.xml.target.CONTENT;
 
@@ -36,9 +36,9 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 		this.comment = comment;
 		return this;
 	}
-	
+
 	public XMLElement getXMLElementTabbed(int nbInitialTab) {
-		setNbInitialTab(nbInitialTab);
+		setTabForNewLine(nbInitialTab);
 		return this;
 	}
 
@@ -51,7 +51,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 
 		if (inner != null) {
 			List<String> listClass = null;
-			
+
 			for (Object object : inner) {
 				if (object instanceof XMLAttr) {
 					listAttr.add((XMLAttr) object);
@@ -67,11 +67,10 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 					listInner.add(object);
 				}
 			}
-			
-			if (listClass!=null)
-			{
+
+			if (listClass != null) {
 				String[] arr = new String[listClass.size()];
-				listAttr.add(XMLBuilder.createAttr("class", "\""+ String.join("", listClass.toArray(arr)) +"\""));
+				listAttr.add(XMLBuilder.createAttr("class", "\"" + String.join("", listClass.toArray(arr)) + "\""));
 			}
 		}
 
@@ -84,15 +83,15 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 
 		if (comment != null && XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS()) {
 			newLine(buf);
-			newTabulation(buf);
+			newTabInternal(buf);
 			buf.addContent("<!--" + comment + "-->");
 		}
 
-		if (name != null) {
+		if (name != null) { // && !name.equals(XMLPart.NONAME)
 			newLine(buf);
 		}
 
-		newTabulation(buf);
+		newTabInternal(buf);
 		if (name != null) {
 			buf.addContent("<" + name);
 
@@ -102,54 +101,61 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			}
 			buf.addContent(">");
 		}
+
 		int nbChild = 0;
 		for (Object inner : listInner) {
 			if (inner != null)
+			{
+				this.nbTabInternal = this.nbTabInternal - (this.name==null?1:0);
 				nbChild = doChild(buf, nbChild, inner);
+				this.nbTabInternal = this.nbTabInternal + (this.name==null?1:0);
+			}
 		}
-		if (nbChild > 0) {
-			newLine(buf);
-			newTabulation(buf);
-		}
+
 		if (name != null) {
+			if (nbChild > 0) {
+				newLine(buf);
+				newTabInternal(buf);
+			}
 			buf.addContent("</" + name + ">");
 		}
 
 		if (comment != null && XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS()) {
 			newLine(buf);
-			newTabulation(buf);
+			newTabInternal(buf);
 			buf.addContent("<!--end of " + comment + "-->");
 		}
 
 		nbTabInternal = 0;
-		nbInitialTab = 0;
+		nbTabForNewLine = 0;
 		XUIFactoryXHtml.getXHTMLFile().listParent.removeLast();
 		return buf;
 	}
 
 	private int doChild(XMLBuilder buf, int nbChild, Object inner) {
 
-		if (inner instanceof XMLElement) {
+		if (inner instanceof XMLElement) { // une div
 			nbChild++;
 			XMLElement tag = ((XMLElement) inner);
 			tag.nbTabInternal = this.nbTabInternal + 1;
-			tag.nbInitialTab = this.nbInitialTab;
+			tag.nbTabForNewLine = this.nbTabForNewLine;
 			tag.toXML(buf);
-			
-		} else if (inner instanceof XMLPartElement) {
+
+		} else if (inner instanceof XMLPartElement) { // un XMLPart
 			XMLPartElement part = ((XMLPartElement) inner);
 			nbChild++;
 			for (XMLElement elem : part.part.getListElement(CONTENT.class)) {
 				elem.nbTabInternal = this.nbTabInternal + 1;
-				elem.nbInitialTab = this.nbInitialTab;
+				elem.nbTabForNewLine = this.nbTabForNewLine;
 			}
 			part.toXML(buf);
-		} else if (inner instanceof List) {
+
+		} else if (inner instanceof List) { // une liste
 			List<?> listChild = (List<?>) inner;
 			for (Object object : listChild) {
 				nbChild = doChild(buf, nbChild, object);
 			}
-		} else if (inner instanceof Handle) {
+		} else if (inner instanceof Handle) { // un handle
 			Handle h = (Handle) inner;
 			String nameHandle = h.getName();
 			LinkedList<Object> listParent = XUIFactoryXHtml.getXHTMLFile().listParent;
@@ -157,8 +163,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			for (Iterator<Object> it = listParent.descendingIterator(); it.hasNext();) {
 				Object elm = it.next();
 				if (elm instanceof XMLElement) {
-					// MgrErrorNotificafion.doError("Handle on Element",
-					// null);
+					// MgrErrorNotificafion.doError("Handle on Element", null)
 				} else if (elm instanceof XMLPartElement) {
 					Object elem = ((XMLPartElement) elm).part.getProperty(nameHandle);
 					if (elem != null) {
@@ -170,30 +175,35 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 				nbChild = doChild(buf, nbChild, handledObject);
 			}
 
-		} else if (inner instanceof JSClassImpl) {
-			JSClassImpl part = ((JSClassImpl) inner);
-			JSBuilder jsBuilder = part.getJSBuilder();
-			jsBuilder.nbTabInternal = this.nbTabInternal + 1;
-			jsBuilder.nbInitialTab = this.nbInitialTab;
+		} else if (inner instanceof JSClassBuilder) { // cas d'une class js
+			JSClassBuilder part = ((JSClassBuilder) inner);
+			ProxyHandler.getFormatManager().nbTabInternal = this.nbTabInternal + 1;
+			ProxyHandler.getFormatManager().nbTabForNewLine = this.nbTabForNewLine;
 			part.toXML(buf);
 			nbChild++;
-		} else if (inner instanceof JSContent) {
+		} else if (inner instanceof JSContent) { // cas d'un js
 			JSContent part = ((JSContent) inner);
-			JSBuilder jsBuilder = part.getJSBuilder();
-			jsBuilder.nbTabInternal = this.nbTabInternal + 1;
-			jsBuilder.nbInitialTab = this.nbInitialTab;
+			ProxyHandler.getFormatManager().nbTabInternal = this.nbTabInternal + 1;
+			ProxyHandler.getFormatManager().nbTabForNewLine = this.nbTabForNewLine;
 			part.toXML(buf);
 			nbChild++;
-		}else if (inner instanceof CSSStyle) {
-			
+		} else if (inner instanceof CSSStyle) { // un css
+
 			CSSStyle part = ((CSSStyle) inner);
 			part.nbTabInternal = this.nbTabInternal + 1;
-			part.nbInitialTab = this.nbInitialTab;
+			part.nbTabForNewLine = this.nbTabForNewLine;
 			part.toXML(buf);
 			nbChild++;
-			
-		} else
+			//////
+		} else {
+			if (inner instanceof StringBuilder)
+			{
+				StringBuilder text = (StringBuilder)inner;
+				if (text.indexOf("\n")>=0)
+					nbChild++;
+			}
 			buf.addContent(inner);
+		}
 
 		return nbChild;
 	}

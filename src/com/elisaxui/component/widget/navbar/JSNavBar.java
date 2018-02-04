@@ -15,7 +15,7 @@ import com.elisaxui.component.widget.navbar.JSonNavBar.JSonNavBarBackground;
 import com.elisaxui.component.widget.navbar.JSonNavBar.JSonNavBarBtnAction;
 import com.elisaxui.component.widget.navbar.JSonNavBar.JSonNavBarRow;
 import com.elisaxui.component.widget.navbar.JSonNavBar.JSonNavBarTitle;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.core.xui.xml.annotation.xForceInclude;
 

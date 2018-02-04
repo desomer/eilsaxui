@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 
 import com.elisaxui.core.xui.xhtml.XHTMLAppBuilder;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -25,7 +25,7 @@ public final class JSServiceWorker extends XHTMLPart {
 		
 		JSon response = new JSon()._setName("response");
 		
-		JSMethodInterface fctFetch = fct(response)
+		JSContentInterface fctFetch = fct(response)
 				 // Check if we received a valid response
 	            ._if("!response || response.status !== 200 || response.type !== 'basic'") 
 	            //	.consoleDebug(txt("************ ret error from net"), response)
@@ -42,7 +42,7 @@ public final class JSServiceWorker extends XHTMLPart {
 	            ._return("response");
 				;
 		
-		JSMethodInterface fctCache = fct(response)
+		JSContentInterface fctCache = fct(response)
 				._if(response)
 					.consoleDebug(txt("hit cache "), response.get("url"))
 			        ._return(response)  // Cache hit - return response
@@ -55,7 +55,7 @@ public final class JSServiceWorker extends XHTMLPart {
 			    
 				;
 		  
-		JSMethodInterface fctPostMessage = fct("clients")
+		JSContentInterface fctPostMessage = fct("clients")
 				._if("clients && clients.length")
 					.__("clients[0].postMessage(event.request.url)")
 				.endif();

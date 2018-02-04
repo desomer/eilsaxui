@@ -6,6 +6,8 @@ package com.elisaxui.core.xui.xhtml.builder.javascript.jsclass;
 import java.util.ArrayList;
 
 /**
+ * pour debug
+ * 
  * @author gauth
  *
  */

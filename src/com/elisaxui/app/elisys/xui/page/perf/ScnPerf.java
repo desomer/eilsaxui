@@ -7,8 +7,12 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xFile;
+import com.elisaxui.core.xui.xml.annotation.xForceInclude;
+import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
+import com.elisaxui.core.xui.xml.annotation.xVersion;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.target.CONTENT;
@@ -29,6 +33,7 @@ public class ScnPerf extends XHTMLPart {
 
 	@xTarget(HEADER.class)
 	@xRessource // une seule fois par vue
+	@xPriority(1)
 	public XMLElement xImport() {
 		if (JSPerfVuesJS.isVueJS())
 			return xListElement(xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.13/vue.min.js"));
@@ -39,7 +44,8 @@ public class ScnPerf extends XHTMLPart {
 
 	}
 
-	interface A extends JSClass {
+	public interface A extends JSClass {
+		@xStatic(autoCall=true)          // appel automatique de la methode static
 		default void main() {
 			JSPerfVuesJS p = let("p", newInst(JSPerfVuesJS.class));
 			p.doPerf();
@@ -48,17 +54,11 @@ public class ScnPerf extends XHTMLPart {
 
 	@xTarget(AFTER_CONTENT.class)
 	@xRessource // une seule fois par vue
-	public XMLElement xDo() {
-		//A a = JSClass.declareType(A.class, "a");
-		
-		JSPerfVuesJS perfVuesJS = JSClass.declareType(JSPerfVuesJS.class, "perfVuesJS");
+	@xVersion("1.2")  // a terminer
+	public XMLElement xDo() {		
 		return xListElement(
-					xScriptJS(js()
-						._var(perfVuesJS, _new())
-						.__(perfVuesJS.doPerf())
-					)
+					xImport(A.class)
 				);
-
 	}
 
 	@xTarget(CONTENT.class)

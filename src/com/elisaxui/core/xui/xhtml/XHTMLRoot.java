@@ -9,10 +9,12 @@ import java.util.Comparator;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.target.BODY;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
+import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.CONTENT;
+
 
 public class XHTMLRoot extends XHTMLPart {
 
@@ -23,7 +25,7 @@ public class XHTMLRoot extends XHTMLPart {
 	private final class XMLElementComparator implements Comparator<XMLElement> {
 		@Override
 		public int compare(XMLElement arg0, XMLElement arg1) {
-			return arg0.getPriority()-arg1.getPriority();
+			return (int)((arg0.getPriority()*XMLPart.PRECISION)-(arg1.getPriority()*XMLPart.PRECISION));
 		}
 	}
 
@@ -65,10 +67,10 @@ public class XHTMLRoot extends XHTMLPart {
 		Collections.sort(body, new XMLElementComparator() );
 		Collections.sort(afterBody, new XMLElementComparator() );
 		
-		xListElement(body).getXMLElementTabbed(1)
+		xListElement(body).getXMLElementTabbed(2)
 				.toXML(new XMLBuilder("page", textbody, textAfterbody));
 
-		xListElement(afterBody).getXMLElementTabbed(0)
+		xListElement(afterBody).getXMLElementTabbed(1)
 				.toXML(new XMLBuilder("page", textAfterbody, null));
 		
 	//	Collections.reverse(header);

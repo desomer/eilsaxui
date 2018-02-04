@@ -7,23 +7,23 @@ import com.elisaxui.core.xui.XUIFactoryXHtml;
 
 /**
  * @author Bureau
- *
+ *    pour le css et le html    (JS grace a un ThreadLocal)
  */
 public class XUIFormatManager {
 
 	
-	private int priority = 100;
+	private double priority = 100.0;
 	
-	public int getPriority() {
+	public double getPriority() {
 		return priority;
 	}
 
-	public void setPriority(int priority) {
+	public void setPriority(double priority) {
 		this.priority = priority;
 	}
 
 	protected int nbTabInternal = 0;
-	protected int nbInitialTab = 0;
+	protected int nbTabForNewLine = 0;
 
 	/**
 	 * 
@@ -32,12 +32,12 @@ public class XUIFormatManager {
 		super();
 	}
 
-	public int getNbInitialTab() {
-		return nbInitialTab;
+	public int getTabForNewLine() {
+		return nbTabForNewLine;
 	}
 
-	public void setNbInitialTab(int nbInitialTab) {
-		this.nbInitialTab = nbInitialTab;
+	public void setTabForNewLine(int nbInitialTab) {
+		this.nbTabForNewLine = nbInitialTab;
 	}
 
 
@@ -51,8 +51,8 @@ public class XUIFormatManager {
 			if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCrXML())
 				buf.addContent("\n");
 		}
-	
-		for (int i = 0; i < nbInitialTab; i++) {
+		
+		for (int i = 0; i < nbTabForNewLine; i++) {
 			buf.addContent("\t");
 		}
 		
@@ -62,8 +62,7 @@ public class XUIFormatManager {
 		}
 	}
 
-	public void newTabulation(XMLBuilder buf) {
-		// if (buf.isJS()) return;
+	public void newTabInternal(XMLBuilder buf) {
 		for (int i = 0; i < nbTabInternal; i++) {
 			buf.addContent("\t");
 		}

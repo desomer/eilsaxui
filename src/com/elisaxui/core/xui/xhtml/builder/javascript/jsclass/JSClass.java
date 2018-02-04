@@ -3,19 +3,17 @@ package com.elisaxui.core.xui.xhtml.builder.javascript.jsclass;
 import java.lang.reflect.Proxy;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.javascript.Anonym;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSAnonym;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
 
 /**
  * interface proxy de class JS
  * @author Bureau
  *
  */
-public interface JSClass extends JSMethodInterface  {
+public interface JSClass extends JSContentInterface  {
 
-
-	
 	/**
 	 * sert a ne pas avoir de warning
 	 * @return
@@ -58,8 +56,8 @@ public interface JSClass extends JSMethodInterface  {
 		
 		if (retJSClass)
 		{
-			JSClass prox = XHTMLPart.getJSBuilder().getProxy( (Class<? extends JSClass>) type);
-			XHTMLPart.getJSBuilder().setNameOfProxy(null, prox, name);	
+			JSClass prox = ProxyHandler.getProxy( (Class<? extends JSClass>) type);
+			ProxyHandler.setNameOfProxy(null, prox, name);	
 			return (E)prox;
 		}
 		
@@ -75,5 +73,9 @@ public interface JSClass extends JSMethodInterface  {
 	<E> E set(Object... value);
 	<E> E asLitteral(); 
 	
-	void modeJava(Anonym c);
+	/**
+	 * execute en mode java => pas de js
+	 * @param c
+	 */
+	void callJava(JSAnonym c);
 }

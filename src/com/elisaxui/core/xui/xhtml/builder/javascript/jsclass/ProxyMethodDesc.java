@@ -13,9 +13,9 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
  * @author gauth
  *
  */
-public final class MethodDesc
+public final class ProxyMethodDesc
 {
-	public MethodDesc(JSClassImpl implcl, Object proxy, Method method, Object[] args) {
+	public ProxyMethodDesc(JSClassBuilder implcl, Object proxy, Method method, Object[] args) {
 		super();
 		this.implcl = implcl;
 		this.proxy = proxy;
@@ -23,8 +23,15 @@ public final class MethodDesc
 		this.args = args;
 	}
 	
-	JSClassImpl implcl;
-	public Object proxy; 
+	JSClassBuilder implcl;
+	Object proxy; 
+	/**
+	 * @return the proxy
+	 */
+	public final Object getProxy() {
+		return proxy;
+	}
+
 	Method method;
 	Object[] args;
 	
@@ -37,7 +44,7 @@ public final class MethodDesc
 	/**
 	 * @param content
 	 */
-	public MethodDesc(JSContent content) {
+	public ProxyMethodDesc(JSContent content) {
 		super();
 		this.content = content;
 	}

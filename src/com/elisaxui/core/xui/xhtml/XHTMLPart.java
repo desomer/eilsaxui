@@ -2,15 +2,16 @@ package com.elisaxui.core.xui.xhtml;
 
 import java.util.ArrayList;
 
+import com.elisaxui.app.elisys.xui.page.perf.ScnPerf.A;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSBuilder;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSListParameter;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassImpl;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassBuilder;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.target.BODY;
 import com.elisaxui.core.xui.xml.XMLPart;
@@ -19,20 +20,10 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
 
 public abstract class XHTMLPart extends XMLPart {
 
-	public static final ThreadLocal<JSBuilder> ThreadLocalJSBuilder = new ThreadLocal<>(); 
-	
-	public static JSBuilder getJSBuilder()
-	{
-		JSBuilder jsb = ThreadLocalJSBuilder.get();
-		if (jsb==null)
-		{
-			jsb = new JSBuilder();
-			ThreadLocalJSBuilder.set(jsb);
-		}
-		return jsb;
-	}
-	
-
+	private static final String ASYNC = "async";
+	private static final String ONLOAD = "onload";
+	private static final String STYLESHEET = "stylesheet";
+	private static final String SCRIPT = "script";
 
 	public final XMLPart vBody(XMLElement body) {
 		XUIFactoryXHtml.getXMLRoot().addElement(BODY.class, body);
@@ -107,15 +98,15 @@ public abstract class XHTMLPart extends XMLPart {
 
 	/*************************  META **************************************/
 	
-	public final static XMLElement xTitle(Object... inner) {
+	public static final XMLElement xTitle(Object... inner) {
 		return xElement("title", inner);
 	}
 	
-	public final static XMLElement xMeta(Object... inner) {
+	public static final XMLElement xMeta(Object... inner) {
 		return xElement("meta", inner);
 	}
 	
-	public final static XMLElement xComment(Object... comment) {
+	public static final XMLElement xComment(Object... comment) {
 		ArrayList<Object> elem = new ArrayList<>();
 		elem.add("<!--\n");
 		for (Object c : comment) {
@@ -127,15 +118,22 @@ public abstract class XHTMLPart extends XMLPart {
 
 	
 	/***********************************************************************/
-	
-	public static final JSMethodInterface js() {
-		return getJSBuilder().createJSContent();
+	/**
+	 * 
+	 * @return
+	 */
+	@Deprecated
+	public static final JSContentInterface js() {
+		return new JSContent();
 	}
 	
-	@Deprecated
+	/**
+	 * 
+	 */
+	@Deprecated 
 	public static final JSFunction fct(Object...param)
 	{
-		return getJSBuilder().createJSFunction().setParam(param);
+		return new JSFunction().setParam(param);
 	}
 	
 	/**
@@ -143,15 +141,20 @@ public abstract class XHTMLPart extends XMLPart {
 	 * @return
 	 */
 	@Deprecated
-	public final static JSFunction fragment()
+	public static final JSFunction fragment()
 	{
-		return getJSBuilder().createJSFunction().setFragment(true);
+		return new JSFunction().setFragment(true);
 	}
 
 	public static final String xVar(Object var) {
 		return "'+" + var + "+'";
 	}
 	
+	/**
+	 * 
+	 * @param param
+	 * @return
+	 */
 	@Deprecated
 	public static JSVariable jsvar(Object... param) {
 		StringBuilder str = new StringBuilder();
@@ -164,74 +167,71 @@ public abstract class XHTMLPart extends XMLPart {
 	}
 	
 	public static final XMLElement xScriptJS(Object js) {
-		return xElement("script", xAttr("type", "\"text/javascript\""), js);
+		return xElement(SCRIPT, xAttr("type", "\"text/javascript\""), js);
 	}
-	
-//	public final static XMLElement xScriptJSAsync(Object js) {
-//		XMLElement t = xElement("script", xAttr("async"), xAttr("type", "\"text/javascript\""), js);
-//		return t;
-//	}
 	
 	public static final XMLElement xScriptSrc(Object js) {
-		return xElement("script", xAttr("src", "\""+js+"\""));
+		return xElement(SCRIPT, xAttr("src", "\""+js+"\""));
 	}
 	
-	public final static XMLElement xScriptSrcAsync(Object js) {
-		XMLElement t = xElement("script", xAttr("src", "\""+js+"\""), xAttr("async"));
-		return t;
+	public static final XMLElement xScriptSrcAsync(Object js) {
+		return xElement(SCRIPT, xAttr("src", "\""+js+"\""), xAttr(ASYNC));
 	}
 	
 	
-	public final static XMLElement xScriptSrcAsync(Object js , Object fct) {
-		XMLElement t = xElement("script", xAttr("src", "\""+js+"\""), xAttr("async"), xAttr("onload", txt(fct)));
-		return t;
+	public static final XMLElement xScriptSrcAsync(Object js , Object fct) {
+		return xElement(SCRIPT, xAttr("src", "\""+js+"\""), xAttr(ASYNC), xAttr(ONLOAD, txt(fct)));
 	}
 
-	public final static XMLElement xLinkCss(String url) {
-		return xElement("link", xAttr("rel", xTxt("stylesheet")), xAttr("href", xTxt(url)));
+	public static final XMLElement xLinkCss(String url) {
+		return xElement("link", xAttr("rel", xTxt(STYLESHEET)), xAttr("href", xTxt(url)));
 	}
-	public final static XMLElement xLinkManifest(String url) {
+	public static final XMLElement xLinkManifest(String url) {
 		return xElement("link", xAttr("rel", xTxt("manifest")), xAttr("href", xTxt(url)));
 	}
-	public final static XMLElement xLinkIcon(String url) {
+	public static final XMLElement xLinkIcon(String url) {
 		return xElement("link", xAttr("rel", xTxt("icon")), xAttr("href", xTxt(url)));
 	}
 	
-	public final static XMLElement xLinkCssAsync(String url) {
-		return xElement("link", xAttr("rel", xTxt("stylesheet")), xAttr("media", xTxt("async")), xAttr("href", xTxt(url)), xAttr("onload", txt("resLoadedCss(this, 'all');")));
+	public static final XMLElement xLinkCssAsync(String url) {
+		return xElement("link", xAttr("rel", xTxt(STYLESHEET)), xAttr("media", xTxt(ASYNC)), xAttr("href", xTxt(url)), xAttr(ONLOAD, txt("resLoadedCss(this, 'all');")));
 	}
 	
-	public final static XMLElement xLinkCssAsync(String url, Object fctTxt) {
-		return xElement("link", xAttr("rel", xTxt("stylesheet")), xAttr("media", xTxt("async")), xAttr("onload", txt(fctTxt)), xAttr("href", xTxt(url)));
+	public static final XMLElement xLinkCssAsync(String url, Object fctTxt) {
+		return xElement("link", xAttr("rel", xTxt(STYLESHEET)), xAttr("media", xTxt(ASYNC)), xAttr(ONLOAD, txt(fctTxt)), xAttr("href", xTxt(url)));
 	}
 	
-	public final static CSSBuilder xStyle() {
+	public static final CSSBuilder xStyle() {
 		return new CSSBuilder();
 	}
 	
-	public final static CSSBuilder xStyle(Object...path ) {
+	public static final CSSBuilder xStyle(Object...path ) {
 		return new CSSBuilder().path(path);
 	}
 	
 	
-	public final static XMLElement xImport(Class<? extends JSClass> cl) {
-		JSClassImpl script = XUIFactoryXHtml.getXHTMLFile().getClassImpl(getJSBuilder(), cl);
+	public static final XMLElement xImport(Class<? extends JSClass> cl) {
+		JSClassBuilder script = XUIFactoryXHtml.getXHTMLFile().getClassImpl(cl);
 		
-		XMLElement t = xElement("script", xAttr("type", "\"text/javascript\""), script);
-		return t;
+		Object autocall = null;
+		if (script.getAutoCallMeth()!=null)
+		{
+			JSClass jsclass = JSClass.declareType(cl, cl.getSimpleName());
+			autocall = new JSContent().__(jsclass, "." ,script.getAutoCallMeth());
+		}
+		
+		return xElement(SCRIPT, xAttr("type", "\"text/javascript\""), script, autocall);
 	}
 	
  
 	/**************************************************************************/
 
-	public final static XMLAttr xId(Object id) {
-		XMLAttr attr = xAttr("id", id);
-		return attr;
+	public static final XMLAttr xId(Object id) {
+		return xAttr("id", id);
 	}
 	
-	public final static XMLAttr xIdAction(Object id) {
-		XMLAttr attr = xAttr("data-x-action", id);
-		return attr;
+	public static final XMLAttr xIdAction(Object id) {
+		return xAttr("data-x-action", id);
 	}
 
 	/****************************************************************************/
@@ -240,7 +240,7 @@ public abstract class XHTMLPart extends XMLPart {
 		return new JSListParameter(param);
 	}
 
-	public static String txt(Object var) {
+	public static final String txt(Object var) {
 		return "\""+ var + "\"";
 	}
 }

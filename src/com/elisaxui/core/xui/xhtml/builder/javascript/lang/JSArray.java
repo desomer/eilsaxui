@@ -10,20 +10,20 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassInterface;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodInvocationHandler;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSonInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 
 /**
  * @author Bureau
  *
  */
-public class JSArray<E> extends JSClassInterface {
+public class JSArray<E> extends JSClassInterface implements JSonInterface {
 
 	public JSArray() {
 		super();
-		if (MethodInvocationHandler.isModeJava())
+		if (ProxyHandler.isModeJava())
 			this.asLitteral();
 	}
 
@@ -56,9 +56,9 @@ public class JSArray<E> extends JSClassInterface {
 		JsonObjectBuilder objLitteral = null;
 		
 		if (value instanceof Proxy) {
-			MethodInvocationHandler inv = (MethodInvocationHandler) Proxy.getInvocationHandler(value);
-			if (inv.jsonBuilder!=null)
-				objLitteral = inv.jsonBuilder;
+			ProxyHandler inv = (ProxyHandler) Proxy.getInvocationHandler(value);
+			if (inv.getJsonBuilder()!=null)
+				objLitteral = inv.getJsonBuilder();
 			_type = inv.getImplementClass();
 		} else
 			_type = value == null ? null : value.getClass();
@@ -108,6 +108,14 @@ public class JSArray<E> extends JSClassInterface {
 
 	public JSInt length() {
 		return castAttr(new JSInt(), "length");
+	}
+
+	/* (non-Javadoc)
+	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSonInterface#getStringJSON()
+	 */
+	@Override
+	public String getStringJSON() {
+		return ""+_getValue();
 	}
 
 }

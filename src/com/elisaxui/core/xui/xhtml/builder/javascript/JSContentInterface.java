@@ -2,30 +2,31 @@ package com.elisaxui.core.xui.xhtml.builder.javascript;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 
-public interface JSMethodInterface  {
+public interface JSContentInterface  {
 	
-	JSMethodInterface __(Object... content);
+	JSContentInterface __(Object... content);
 	
 	/**********************************************************************/
-	JSMethodInterface _set(Object name, Object... content);
-	JSMethodInterface _var(Object name, Object... content);
+	JSContentInterface _set(Object name, Object... content);
+	JSContentInterface _var(Object name, Object... content);
 	
 	<E> E let(Class<E> type, Object name, Object... content);
 	<E> E let(String name, E content);
-	void let(JSMethodInterface name, Object... content);
+	void let(JSContentInterface name, Object... content);
 	void let(JSVariable name, Object... content);
 	
-	JSMethodInterface consoleDebug(Object... content);
-	JSMethodInterface systemDebugIf(Object cond, Object... content);
+	JSContentInterface consoleDebug(Object... content);
+	JSContentInterface systemDebugIf(Object cond, Object... content);
 	/**********************************************************************/
-	JSMethodInterface _for(Object... content);
-	JSMethodInterface _forIdxBetween(JSInt idx, int start, int end);
-	JSMethodInterface _forIdx(Object idx, JSArray<?> array);
-	JSMethodInterface _do(Anonym c);
+	JSContentInterface _for(Object... content);
+	JSContentInterface _forIdxBetween(JSInt idx, int start, int end);
+	JSContentInterface _forIdx(Object idx, JSArray<?> array);
+	JSContentInterface _do(JSAnonym c);
 	@Deprecated
-	JSMethodInterface endfor();
+	JSContentInterface endfor();
 	/**********************************************************************/
 	@Deprecated
 	Object _new(Object... param);
@@ -52,8 +53,8 @@ public interface JSMethodInterface  {
 	/**********************************************************************/
 	
 	JSFunction fct(Object... param);
-	JSFunction callback( Anonym c);
-	JSFunction callback(Object param, Anonym c);
+	JSFunction callback( JSAnonym c);
+	JSFunction callback(Object param, JSAnonym c);
 	
 	/**
 	 * exemple <br>
@@ -65,25 +66,25 @@ public interface JSMethodInterface  {
 	JSFunction fragmentIf(Object condition);
 
 	/**********************************************************************/
-	JSMethodInterface _if(Object... content);
-	JSMethodInterface then(Anonym content);
+	JSContentInterface _if(Object... content);
+	JSContentInterface then(JSAnonym content);
 	
-	JSMethodInterface _else();
-	JSMethodInterface _else(Anonym content);
-	JSMethodInterface _elseif(Object... content);
+	JSContentInterface _else();
+	JSContentInterface _else(JSAnonym content);
+	JSContentInterface _elseif(Object... content);
 	
 	@Deprecated
-	JSMethodInterface endif();
+	JSContentInterface endif();
 	@Deprecated
-	JSMethodInterface _elseif_(Object... content);
+	JSContentInterface _elseif_(Object... content);
 
 
 	/**********************************************************************/
-	JSMethodInterface setTimeout(Object... content);
-	JSMethodInterface setTimeout(Anonym a, Object... content);
+	JSContentInterface setTimeout(Object... content);
+	JSContentInterface setTimeout(JSAnonym a, Object... content);
 	
 	/**********************************************************************/
-	JSMethodInterface _return(Object... content);
+	JSContentInterface _return(Object... content);
 	
 	@Deprecated
 	JSVoid _void();

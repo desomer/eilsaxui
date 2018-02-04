@@ -3,7 +3,7 @@ package com.elisaxui.component.toolkit.datadriven;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.defAttr;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.defVar;
 
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSCallBack;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
@@ -70,7 +70,7 @@ public interface JSDataDriven extends JSClass {
 
 	default JSVoid start() {
 		
-		JSMethodInterface fctChange =  fct("value").__(()->{
+		JSContentInterface fctChange =  fct("value").__(()->{
 			_if("value.ope=='enter'");
 				__(_self.doEnter("value"));
 			endif();

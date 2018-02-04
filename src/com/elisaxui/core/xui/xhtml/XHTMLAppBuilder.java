@@ -16,14 +16,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.elisaxui.core.helper.ClassLoaderHelper;
-import com.elisaxui.core.helper.ReflectionHelper;
 import com.elisaxui.core.helper.ClassLoaderHelper.FileEntry;
+import com.elisaxui.core.helper.ReflectionHelper;
 import com.elisaxui.core.xui.XUILaucher;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassInterface;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xFile;
@@ -102,7 +102,7 @@ public class XHTMLAppBuilder {
 		for (Class<? extends JSClassInterface> class1 : listJSClassMethod) {
 			if (debug)
 				System.out.println("[XHTMLAppBuilder]------------ START SCAN FIELD OF JSClassMethod -----"+ class1);
-			initJSClassVar(XHTMLPart.getJSBuilder(), class1);
+			initJSClassVar(class1);
 		}
 		
 		if (debug)
@@ -111,7 +111,7 @@ public class XHTMLAppBuilder {
 		for (Class<? extends JSClass> class1 : listJSClass) {
 			if (debug)
 				System.out.println("[XHTMLAppBuilder]------------ START SCAN FIELD OF JSClass -----"+ class1);
-			initJSClassVar(XHTMLPart.getJSBuilder(), class1);
+			initJSClassVar(class1);
 		}
 		
 		if (debug)
@@ -136,8 +136,8 @@ public class XHTMLAppBuilder {
 						System.out.println("[XHTMLAppBuilder] init XMLPart var static <JSClass> name "+ field.getName() );
 					field.setAccessible(true);
 					@SuppressWarnings("unchecked")
-					JSClass inst = XHTMLPart.getJSBuilder().getProxy((Class<? extends JSClass>) field.getType());
-					XHTMLPart.getJSBuilder().setNameOfProxy("", inst, field.getName());
+					JSClass inst = ProxyHandler.getProxy((Class<? extends JSClass>) field.getType());
+					ProxyHandler.setNameOfProxy("", inst, field.getName());
 					try {
 						field.set(cl, inst);
 					} catch (IllegalArgumentException | IllegalAccessException e) {
@@ -170,7 +170,7 @@ public class XHTMLAppBuilder {
 	}
 	
 	
-	public static void initJSClassVar(JSBuilder jsBuilder, Class<?> cl) {
+	public static void initJSClassVar(Class<?> cl) {
 	//	String name = cl.getSimpleName();
 		// init field => chaque attribut contient le nom js de son champs
 		Field[] listField = cl.getDeclaredFields();
@@ -198,7 +198,7 @@ public class XHTMLAppBuilder {
 			// au proxy
 			@SuppressWarnings("unchecked")
 			
-			JSClass prox = XHTMLPart.getJSBuilder().getProxy((Class<? extends JSClass>) field.getType());
+			JSClass prox = ProxyHandler.getProxy((Class<? extends JSClass>) field.getType());
 			setProxyName(field, prox);
 			
 			try {
@@ -250,9 +250,9 @@ public class XHTMLAppBuilder {
 			name = comment.value();
 		}
 		if (name.startsWith("_")) {
-			XHTMLPart.getJSBuilder().setNameOfProxy("", prox, name.substring(1));
+			ProxyHandler.setNameOfProxy("", prox, name.substring(1));
 		} else
-			XHTMLPart.getJSBuilder().setNameOfProxy("this.", prox, name);
+			ProxyHandler.setNameOfProxy("this.", prox, name);
 	}
 
 

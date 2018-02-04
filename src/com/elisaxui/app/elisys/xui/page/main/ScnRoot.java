@@ -14,7 +14,7 @@ import com.elisaxui.component.widget.layout.JSPageLayout;
 import com.elisaxui.component.widget.log.ViewLog;
 import com.elisaxui.component.widget.menu.JSMenu;
 import com.elisaxui.component.widget.navbar.JSNavBar;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
@@ -66,7 +66,7 @@ public class ScnRoot extends XUIScene {
 	
 
 	@Override
-	public JSMethodInterface searchMenu()
+	public JSContentInterface searchMenu()
 	{
 	  JSArray jsonMenu = new JSArray()._setName("jsonMenu");	
 	  JSArray jsonApi = new JSArray()._setName("jsonApi");	
@@ -85,7 +85,7 @@ public class ScnRoot extends XUIScene {
 	}
 	
 	@Override
-	public JSMethodInterface loadPage()
+	public JSContentInterface loadPage()
 	{
 	  return fragment()
 				.__(tkActivity.createActivity(new JSONPage1().getJSON()))
@@ -99,7 +99,7 @@ public class ScnRoot extends XUIScene {
 	static JSRoot jsRoot;
 	
 	@Override
-	public JSMethodInterface createScene()
+	public JSContentInterface createScene()
 	{	
 		JSArray jsonSyllabe = new JSArray()._setName("jsonSyllabe");
 		return fragment()				

@@ -1,20 +1,23 @@
 package com.elisaxui.core.xui.xhtml.builder.javascript.jsclass;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import javax.script.ScriptException;
 
 import com.elisaxui.core.helper.JSExecutorHelper;
-import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSBuilder;
+import com.elisaxui.core.helper.log.CoreLogger;
+import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
+import com.elisaxui.core.xui.xml.annotation.xForceInclude;
+import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
 /**
@@ -22,16 +25,72 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder;
  * @author Bureau
  *
  */
-public class JSClassImpl extends JSContent {
+public final class JSClassBuilder extends JSContent {
 	
 	Object name;   // nom de la class
+	Object autoCallMeth;
 	
+	/**
+	 * @return the autoCallMeth
+	 */
+	public final Object getAutoCallMeth() {
+		return autoCallMeth;
+	}
+
+
+	/**
+	 * @param autoCallMeth the autoCallMeth to set
+	 */
+	public final void setAutoCallMeth(Object autoCallMeth) {
+		this.autoCallMeth = autoCallMeth;
+	}
+
 	LinkedList<JSFunction> listFuntion = new LinkedList<>();
-	private Map<String, String> listDistinctFct = new HashMap<String, String>();
+	private Map<String, String> listDistinctFct = new HashMap<>();
 	
-	private LinkedList<MethodDesc> listHandleFuntionPrivate = new LinkedList<>();
+	private LinkedList<ProxyMethodDesc> listHandleFuntionPrivate = new LinkedList<>();
 	
 
+	
+	public static Object initJSConstructor(Class<? extends JSClass> cl) {
+		Object autoCall = null;
+		
+		// init constructor
+		JSClass inst = ProxyHandler.getProxy(cl);
+		Method[] lism = cl.getDeclaredMethods();
+		
+		xForceInclude annInclude = cl.getAnnotation(xForceInclude.class);
+		boolean includeAllMth = annInclude != null;
+		
+		if (lism != null) {
+			for (Method method : lism) {
+				boolean isPublic = method.isDefault();
+				xForceInclude annIncludeMth = method.getAnnotation(xForceInclude.class);
+				xStatic annStaticMth = method.getAnnotation(xStatic.class);
+				
+				boolean isForceIncluded = annIncludeMth != null;
+				boolean isStatic = annStaticMth != null;
+				boolean includeMth = isPublic && (isForceIncluded || includeAllMth || isStatic);
+				
+				if (isStatic && annStaticMth.autoCall())
+					autoCall = method.getName()+"()";
+				
+				if (includeMth || method.getName().equals("constructor")) {
+					try {
+						method.invoke(inst, new Object[method.getParameterCount()]);
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+							| SecurityException e) {
+						ErrorNotificafionMgr.doError("pb constructor sur " + cl.getSimpleName(), e);
+					}
+
+				}
+			}
+		}
+		
+		return autoCall;
+	}
+	
+	
 	public Object getName() {
 		return name;
 	}
@@ -40,7 +99,7 @@ public class JSClassImpl extends JSContent {
 		this.name = name;
 	}
 	
-	public JSClassImpl addFunction(JSFunction fct) {
+	public JSClassBuilder addFunction(JSFunction fct) {
 		listFuntion.add(fct);
 		return this;
 	}
@@ -56,29 +115,28 @@ public class JSClassImpl extends JSContent {
 			StringBuilder txtJSAfter = new StringBuilder();
 			
 			XMLBuilder bufJS =  new XMLBuilder("js", txtJS, txtJSAfter);
-			//this.setNbInitialTab(jsBuilder.getNbInitialTab());
 			oldBuf = buf;
 			buf = bufJS;
 		}
 		
-		jsBuilder.newLine(buf);
-		jsBuilder.newTabulation(buf);
+		ProxyHandler.getFormatManager().newLine(buf);
+		ProxyHandler.getFormatManager().newTabInternal(buf);
 		buf.addContent("class ");
 		buf.addContent(name);
 		buf.addContent(" {");
 	
-		jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab()+1);
-		jsBuilder.newLine(buf);
+		ProxyHandler.getFormatManager().setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine()+1);
+		ProxyHandler.getFormatManager().newLine(buf);
 		int i=0;
 		for (JSFunction jsFunction : listFuntion) {
 			i++;
 			jsFunction.toXML(buf);
 			if (i<listFuntion.size())
-				jsBuilder.newLine(buf);
+				ProxyHandler.getFormatManager().newLine(buf);
 		}
-		jsBuilder.setNbInitialTab(jsBuilder.getNbInitialTab()-1);
-		jsBuilder.newLine(buf);
-		jsBuilder.newTabulation(buf);
+		ProxyHandler.getFormatManager().setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine()-1);
+		ProxyHandler.getFormatManager().newLine(buf);
+		ProxyHandler.getFormatManager().newTabInternal(buf);
 		buf.addContent("}");
 		
 		if (txtJS!=null)
@@ -141,7 +199,7 @@ public class JSClassImpl extends JSContent {
 		if (JSClass.class.isAssignableFrom(method.getReturnType() ))
 		{
 			// chainage d'attribut
-			JSClass prox = XHTMLPart.getJSBuilder().getProxy((Class<? extends JSClass>) method.getReturnType());
+			JSClass prox = ProxyHandler.getProxy((Class<? extends JSClass>) method.getReturnType());
 			prox._setContent(buf);
 			return prox;
 		}
@@ -189,7 +247,7 @@ public class JSClassImpl extends JSContent {
 	/**
 	 * @return the listHandleFuntionPrivate
 	 */
-	public LinkedList<MethodDesc> getListHandleFuntionPrivate() {
+	public LinkedList<ProxyMethodDesc> getListHandleFuntionPrivate() {
 		return listHandleFuntionPrivate;
 	}
 

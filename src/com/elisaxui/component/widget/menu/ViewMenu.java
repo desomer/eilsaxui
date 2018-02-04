@@ -31,13 +31,6 @@ import com.elisaxui.test.JSTestDataDriven;
 @xComment("ViewMenu")
 public class ViewMenu extends XHTMLPart {
 
-	
-//	public static ViewMenu style =new ViewMenu();
-//	static{
-//	  xPart(style); 
-//	}
-	
-//	@xComment("menu")
 	public static XClass menu;
 
 	@xComment("fixedLeft")

@@ -36,7 +36,7 @@ public final class CSSStyle extends XUIFormatManager implements IXMLBuilder {
 		if (style!=null)
 		{
 			newLine(buf);
-			newTabulation(buf);
+			newTabInternal(buf);
 			buf.addContent(style);
 		}
 		return buf;

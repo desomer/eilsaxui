@@ -13,5 +13,6 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 public interface DtoUser extends JSClass {
 
 	JSString firstName();
+	JSString lastName();
 	
 }

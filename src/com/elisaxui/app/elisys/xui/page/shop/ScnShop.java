@@ -5,7 +5,7 @@ package com.elisaxui.app.elisys.xui.page.shop;
 
 import com.elisaxui.component.page.ConfigScene;
 import com.elisaxui.component.page.XUIScene;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xFile;
 
@@ -19,14 +19,14 @@ public class ScnShop extends XUIScene {
 
 	
 	@Override
-	public JSMethodInterface createScene()
+	public JSContentInterface createScene()
 	{
 		return fragment()
 		;
 	}
 
 	@Override
-	public JSMethodInterface loadPage()
+	public JSContentInterface loadPage()
 	{
 		return fragment()
 		.__(tkActivity.createActivity(new JSONPageHome().getJSON()))

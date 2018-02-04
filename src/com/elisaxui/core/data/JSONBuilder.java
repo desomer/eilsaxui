@@ -18,6 +18,7 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  * @author Bureau
  *
  */
+/** TODO en interface de JSClass */
 public abstract class JSONBuilder {
 
 	public abstract Object getJSON();

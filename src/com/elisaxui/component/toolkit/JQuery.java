@@ -4,9 +4,9 @@
 package com.elisaxui.component.toolkit;
 
 import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSClassInterface;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
 
 /**
  * @author Bureau

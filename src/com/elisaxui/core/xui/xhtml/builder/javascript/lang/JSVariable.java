@@ -1,30 +1,21 @@
 /**
  * 
  */
-package com.elisaxui.core.xui.xhtml.builder.javascript;
+package com.elisaxui.core.xui.xhtml.builder.javascript.lang;
 
-import java.lang.reflect.Proxy;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
 
 import javax.json.Json;
-import javax.json.JsonArray;
 import javax.json.JsonNumber;
-import javax.json.JsonObject;
-import javax.json.JsonString;
 import javax.json.JsonValue;
 
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.Array;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodDesc;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.MethodInvocationHandler;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSBool;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSValue;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyMethodDesc;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
 /**
@@ -76,7 +67,7 @@ public class JSVariable {
 		return (E)this;
 	}
 	
-	protected  Object _getValueOrName() {
+	public  Object _getValueOrName() {
 		if (_getValue()==null)
 			return name==null?"":""+_getName();
 		return _getValue();
@@ -90,9 +81,9 @@ public class JSVariable {
 	}
 	/*************************************************************/
 	protected static final void _registerMethod(Object obj ) {
-			 MethodDesc currentMethodDesc = MethodInvocationHandler.ThreadLocalMethodDesc.get();
+			 ProxyMethodDesc currentMethodDesc = ProxyHandler.ThreadLocalMethodDesc.get();
 			 try {
-				MethodInvocationHandler.doLastSourceLineInsered(currentMethodDesc, false);
+				ProxyHandler.doLastSourceLineInsered(currentMethodDesc, false);
 			} catch (ClassNotFoundException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -133,17 +124,17 @@ public class JSVariable {
 	
 	public final JSVoid set(Object... objs)
 	{
-		MethodInvocationHandler mh = (MethodInvocationHandler)this.parent;
-		boolean isLitteral = mh!=null && mh.jsonBuilder!=null;
+		ProxyHandler mh = (ProxyHandler)this.parent;
+		boolean isLitteral = mh!=null && mh.getJsonBuilder()!=null;
 		
-		if (isLitteral || MethodInvocationHandler.isModeJava()  ) {
-			if (mh.jsonBuilder==null)
-				mh.jsonBuilder=Json.createObjectBuilder();
+		if (isLitteral || ProxyHandler.isModeJava()  ) {
+			if (mh.getJsonBuilder()==null)
+				mh.setJsonBuilder(Json.createObjectBuilder());
 			
 			String attr = ""+this.name;
 			attr = attr.substring(attr.lastIndexOf('.')+1);
 			
-			mh.jsonBuilder.add(attr, new JsonNumberImpl(objs[0].toString()));
+			mh.getJsonBuilder().add(attr, new JsonNumberImpl(objs[0].toString()));
 		}
 		
 		JSVoid ret = new JSVoid();
@@ -159,7 +150,7 @@ public class JSVariable {
 	 */
 	protected final void _doOperator(JSVariable ret, String operator,  Object... objs) {
 		
-		if (MethodInvocationHandler.isModeJava()) {
+		if (ProxyHandler.isModeJava()) {
 			
 			
 		} else {
@@ -204,7 +195,7 @@ public class JSVariable {
 			}
 		}
 		
-		if (MethodInvocationHandler.isModeJava()) {
+		if (ProxyHandler.isModeJava()) {
 			return ret;
 		} else {
 

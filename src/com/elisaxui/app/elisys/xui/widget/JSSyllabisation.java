@@ -11,12 +11,12 @@ import com.elisaxui.component.toolkit.JQuery;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.javascript.Anonym;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSAnonym;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.core.xui.xml.annotation.xAnonymous;
@@ -51,7 +51,7 @@ public interface JSSyllabisation extends JSClass {
 	@xAnonymous    //TODO a faire fonctionner     pour retirer le boolean testAnonymInProgress dans la class MethodInvocationHandler
 	default Object fRecognitionEnd(Object event)
 	{
-		return  (Anonym) ()-> {
+		return  (JSAnonym) ()-> {
 			_if("window.microlistener.stop");
 				_set("window.microlistener.stop", false);
 			_else();
@@ -72,7 +72,7 @@ public interface JSSyllabisation extends JSClass {
 		JSArray jsonSyllable = new JSArray()._setName("jsonSyllable");
 		_var(jsonSyllable, aDataSet().getData());
 
-		Anonym onresult = (/*event*/)->{ 			
+		JSAnonym onresult = (/*event*/)->{ 			
 			_for("var i = event.resultIndex; i < event.results.length; i++");
 				_var("time", "event.timeStamp-", "self.lastResult");
 				_if("event.results[i].isFinal && time>500");
@@ -87,7 +87,7 @@ public interface JSSyllabisation extends JSClass {
 					
 					JSon data = new JSon()._setName("data"); 
 					
-					Anonym onJsonSyllabysation = (/*data*/)->{	
+					JSAnonym onJsonSyllabysation = (/*data*/)->{	
 						JSArray lesmots = new JSArray()._setName("lesmots");
 						_var(lesmots, data.attr("mots"));
 						JSInt num = new JSInt()._setName("num");
@@ -102,7 +102,7 @@ public interface JSSyllabisation extends JSClass {
 			endfor();
 		};
 		
-		Anonym fRecognitionEnd = (/*event*/)->{ 	
+		JSAnonym fRecognitionEnd = (/*event*/)->{ 	
 			_if("window.microlistener.stop");
 				_set("window.microlistener.stop", false);
 			_else();
@@ -120,7 +120,7 @@ public interface JSSyllabisation extends JSClass {
 		aDataSet().setData("[]");
 		aDataDriven.set(_new(aDataSet()));
 		
-		Anonym onEnter = (/*ctx*/)->{
+		JSAnonym onEnter = (/*ctx*/)->{
 			_if("ctx.row['_dom_']==null");				
 				_set(template, ViewSyllabisation.getMot(XHTMLPart.xVar("ctx.row.text")));
 				
@@ -145,7 +145,7 @@ public interface JSSyllabisation extends JSClass {
 	        endif();
 		};
 								
-		Anonym onExit = (/*ctx*/)->{
+		JSAnonym onExit = (/*ctx*/)->{
 			_if("ctx!=null && ctx.row['_dom_']!=null");
 				__($(var("ctx.row['_dom_']")).hide("50+(ctx.idx*20)", fct().__("$(this).remove()") ));
 			endif();

@@ -80,7 +80,6 @@ public class SrvMain {
 	
 	class JSONMenuAct1 extends JSONMenu
 	{
-		@Override
 		public Object getJSON()
 		{
 			
@@ -141,7 +140,7 @@ public class SrvMain {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getManifest(@Context HttpHeaders headers, @Context UriInfo uri) {		
 		
-		class JSONManifest extends JSONBuilder
+		class JSONManifest implements JSONBuilder
 		{
 			public Object getJSON()
 			{

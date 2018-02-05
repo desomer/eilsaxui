@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.json.JsonValue;
+
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.Array;
@@ -222,7 +224,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	 * @param object
 	 */
 	private void addElem(Object object) {
-		if (object instanceof List /*&& ! (object instanceof JSMethodInterface)*/) {
+		if (object instanceof List && ! (object instanceof JsonValue)) {
 			@SuppressWarnings("unchecked")
 			List<Object> list = (List<Object>) object;
 			for (Object object2 : list) {

@@ -60,7 +60,7 @@ public class SrvSyllabisation {
 
 	public Object doSyllbisation(String text) {
 	
-		class jsonMot extends JSONBuilder
+		class jsonMot implements JSONBuilder
 		{
 			String unePhrase;
 			
@@ -69,10 +69,7 @@ public class SrvSyllabisation {
 				this.unePhrase = unePhrase;
 			}
 
-			/* (non-Javadoc)
-			 * @see com.elisaxui.core.data.json.JSONBuilder#getJSON()
-			 */
-			@Override
+
 			public Object getJSON() {
 				@SuppressWarnings("resource")
 				Scanner s = new Scanner(unePhrase).useDelimiter(" ");
@@ -208,7 +205,7 @@ public class SrvSyllabisation {
 
 		
 		public Object doJson() {
-			class JSONStyllable extends JSONBuilder
+			class JSONStyllable implements JSONBuilder
 			{
 				public Object getJSON()
 				{

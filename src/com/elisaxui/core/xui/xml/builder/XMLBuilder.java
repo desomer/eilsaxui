@@ -63,7 +63,6 @@ public class XMLBuilder  {
 	public void addContent(Object v) {
 		if (afterContent==null)
 		{
-			//ErrorNotificafionMgr.doError(" doit etre ajouter dans un @xTarget(CONTENT)" , null);
 			after= false;
 		}
 		(after ? afterContent : content).append(v);

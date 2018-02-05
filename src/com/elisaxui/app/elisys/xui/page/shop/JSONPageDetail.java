@@ -14,7 +14,6 @@ import com.elisaxui.component.widget.activity.JSONActivity;
  */
 public class JSONPageDetail extends JSONActivity {
 
-	@Override
 	public JActivity getJSON() {
 		JActivity activity = declareType(JActivity.class, "activity"); 
 		activity._setContent(activity( "ActivityDetail", arr(

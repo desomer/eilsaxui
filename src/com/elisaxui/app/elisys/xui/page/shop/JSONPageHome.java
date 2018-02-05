@@ -16,7 +16,6 @@ public class JSONPageHome extends JSONActivity {
 
 	public static final String EVT_BTN_FLOAT = "BtnFloatMain";
 	
-	@Override
 	public JActivity getJSON() {
 		JActivity activity = declareType(JActivity.class, "activity"); 
 		activity._setContent( activity( "Activity1", arr(    //TODO ActivityHome

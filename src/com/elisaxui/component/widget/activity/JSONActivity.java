@@ -10,7 +10,7 @@ import com.elisaxui.core.data.JSONBuilder;
  * @author Bureau
  *
  */
-public abstract class JSONActivity extends JSONBuilder
+public abstract class JSONActivity implements JSONBuilder
 {
 	
 	/**

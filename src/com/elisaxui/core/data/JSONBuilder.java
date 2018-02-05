@@ -10,6 +10,7 @@ import javax.json.JsonValue;
 
 import org.apache.commons.text.StringEscapeUtils;
 
+import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -18,13 +19,10 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  * @author Bureau
  *
  */
-/** TODO en interface de JSClass */
-public abstract class JSONBuilder {
 
-	public abstract Object getJSON();
+public interface JSONBuilder {
 	
-	
-	public Object obj(Object...value)
+	default Object obj(Object...value)
 	{
 		 JsonObjectBuilder jsonObj = Json.createObjectBuilder();
 				  
@@ -59,29 +57,37 @@ public abstract class JSONBuilder {
 				 else if (attr.value instanceof JsonValue)
 					 jsonObj.add(attr.key.toString(), (JsonValue)attr.value);
 			 }
+			 else
+				 CoreLogger.getLogger(2).severe("pb obj");
 		 }
 		
 		return jsonObj.build();
 		
 	}
 	
-	public Object arr(Object...items)
+	default Object arr(Object...items)
 	{
 		JsonArrayBuilder arr = Json.createArrayBuilder();
 		
 		for (Object object : items) {
 			 if (object instanceof JsonValue)
 				 arr.add((JsonValue)object);
+			 else if (object instanceof Integer)
+				 arr.add((Integer)object);
+			 else if (object instanceof String)
+				 arr.add((String)object);
+			 else
+				 CoreLogger.getLogger(2).severe("pb arr");
 		}
 		return arr.build();
 	}
 	
-	public Object v(Object key, Object value)
+	default Object v(Object key, Object value)
 	{
 		return new Attr(key, value);
 	}
 	
-	private class Attr
+	static class Attr
 	{
 		Object key;
 		Object value;

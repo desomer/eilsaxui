@@ -21,6 +21,7 @@ import java.util.Map;
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 
+import com.elisaxui.core.data.JSONBuilder;
 import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSAnonym;
@@ -164,14 +165,14 @@ public final class ProxyHandler implements InvocationHandler {
 				/*******************************************/
 				/***** APPEL DES FUNCTION DE LA CLASSE *****/
 				/*******************************************/
-				ret = doCallMethod(proxy, method, args, idMeth, implcl, mthInvoke);
+				ret = doCallMethod			(proxy, method, args, idMeth, implcl, mthInvoke);
 
 			} else {
 				/*****************************************************
 				 * APPEL A UNE AUTRE FCT INTERNE A LA FCT EN COURS DU PROXY => AJOUTE DANS
 				 * getListHandleFuntionPrivate
 				 *****************************************************/
-				ret = doCallInternalMethod(method, args, idMeth, implcl, mthInvoke);
+				ret = doCallInternalMethod	(proxy,method, args, idMeth, implcl, mthInvoke);
 			}
 		}
 		return ret;
@@ -188,6 +189,7 @@ public final class ProxyHandler implements InvocationHandler {
 	 * @throws IllegalArgumentException 
 	 * @throws Throwable
 	 */
+	/** TODO use ProxyMethodDesc */
 	private Object doCallMethod(Object proxy, Method method, Object[] args, String idMeth, JSClassBuilder implcl,
 			ProxyMethodDesc mthInvoke) throws Throwable {
 		Object ret;
@@ -231,9 +233,24 @@ public final class ProxyHandler implements InvocationHandler {
 	 * @return
 	 * @throws Throwable 
 	 */
-	private Object doCallInternalMethod(Method method, Object[] args, String idMeth, JSClassBuilder implcl,
+	/** TODO use ProxyMethodDesc */
+	private Object doCallInternalMethod(Object proxy, Method method, Object[] args, String idMeth, JSClassBuilder implcl,
 			ProxyMethodDesc mthInvoke) throws Throwable {
-		Object ret;
+		Object ret = null;
+		
+		if (JSONBuilder.class.isAssignableFrom(method.getDeclaringClass()))
+		{
+			final Class<?> declaringClass = method.getDeclaringClass();
+			Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class.getDeclaredConstructor(Class.class,
+					int.class);
+			constructor.setAccessible(true);
+
+
+			// appel la fct default de la proxy JSONBuilder
+			return constructor.newInstance(declaringClass, MethodHandles.Lookup.PRIVATE)
+					.unreflectSpecial(method, declaringClass).bindTo(proxy).invokeWithArguments(args);
+			
+		}
 		
 		JSFunction anon = isAnonymous(mthInvoke);
 		if (anon!=null)

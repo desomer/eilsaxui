@@ -6,6 +6,7 @@ package com.elisaxui.app.elisys.xui.page.perf;
 import static com.elisaxui.component.toolkit.JQuery.$;
 
 import com.elisaxui.component.toolkit.JQuery;
+import com.elisaxui.core.data.JSONBuilder;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSAnonym;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
@@ -19,7 +20,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
  * @author gauth
  *
  */
-public interface JSPerfVuesJS extends JSClass {
+public interface JSPerfVuesJS extends JSClass, JSONBuilder {
 
 	public static boolean isVueJS() {
 		return XUIFactoryXHtml.getXHTMLFile().getFirstQueryParam("vue", "false").equals("true");
@@ -53,7 +54,7 @@ public interface JSPerfVuesJS extends JSClass {
 				JSArray<Object> list2 = new JSArray<>();
 				list2.push("A");
 				list2.push("B");
-				
+
 				list.push(list2);
 
 				user = newInst(DtoUser.class);
@@ -64,7 +65,14 @@ public interface JSPerfVuesJS extends JSClass {
 			callJava(doJava);
 
 			JSArray<?> json = let(JSArray.class, "json", list.getStringJSON());
-
+			JSArray<?> json2 = let(JSArray.class, "json2",
+					arr(obj(
+							v("a", 1),
+							v("b", "aaa"),
+							v("c", arr(1, 2, 3)))));
+			JSArray<?> json3 = let(JSArray.class, "json3", arr("a", "b"));
+			
+			
 			DtoTest d = let("d", newInst(DtoTest.class).asLitteral()); // asLitteral: ne create pas le new DtoTest()
 
 			d.users().set(newInst(JSArray.class)); // d.users=new Array()
@@ -74,6 +82,8 @@ public interface JSPerfVuesJS extends JSClass {
 			JSObject b = let("b", newInst(JSObject.class).asLitteral());
 
 			a.set(json);
+			b.set(json2);
+			b.set(json3);
 			a.set(b);
 
 			__("new Vue({ el: '#app', data: ", d, " })");

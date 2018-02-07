@@ -30,6 +30,7 @@ import org.mapdb.Serializer;
 import com.elisaxui.component.page.JSServiceWorker;
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.core.helper.JSExecutorHelper;
+import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.xhtml.XHTMLAppBuilder;
 import com.elisaxui.core.xui.xhtml.XHTMLFile;
@@ -96,7 +97,7 @@ public class XUIFactoryXHtml {
 		List<String> cacheControl = headers.getRequestHeader("cache-control");
 		boolean noCache = cacheControl!=null && cacheControl.get(0).equals("no-cache");
 		
-		System.out.println("cacheControl="+cacheControl);
+		CoreLogger.getLogger(1).info(() -> "cacheControl="+cacheControl);
 		
 		MultivaluedMap<String, String> param = uri.getQueryParameters();
 		
@@ -168,10 +169,10 @@ public class XUIFactoryXHtml {
 				}
 
 				// generation page
-				System.out.println("[XUIFactoryXHtml]");
-				System.out.println("[XUIFactoryXHtml]********************************************* GENERATE XML File of "
-								+ pageClass + "  ****************************************");
-
+				CoreLogger.getLogger(1).info(() -> "********************************************* "
+						+ "GENERATE XML File of "
+						+ pageClass + "  ****************************************");
+				
 				String html = createXMLText(fileXML, loc);
 				addInCache(idCache, idCacheVersionning, html);
 
@@ -179,7 +180,7 @@ public class XUIFactoryXHtml {
 				htmlInCache = html;
 			}
 		} else {
-			System.out.println("[XUIFactoryXHtml] get from cache " + idCacheVersionning);
+			CoreLogger.getLogger(1).info(() -> "get from cache " + idCacheVersionning);
 		}
 		
 		if (htmlInCache==null)

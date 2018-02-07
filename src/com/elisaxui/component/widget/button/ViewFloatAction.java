@@ -7,6 +7,7 @@ import static com.elisaxui.component.transition.CssTransition.*;
 
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.XHTMLTemplate;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -54,7 +55,16 @@ public class ViewFloatAction extends XHTMLPart {
 	
 	@xTarget(CONTENT.class)
 	public static XMLElement getTemplateBtnFloat() {
-		return xDiv(cFloatAction, cFixedElement, xIdAction("\"BtnFloatMain\""),	xPart(new ViewBtnCircle().addProperty(ViewBtnCircle.PROPERTY_ICON, "history")));
+		
+		XHTMLTemplate template = new XHTMLTemplate() {
+			@Override
+			public XMLElement getTemplate()
+			{
+				return xDiv(cFloatAction, cFixedElement, xIdAction("\"BtnFloatMain\""),	xPart(new ViewBtnCircle().addProperty(ViewBtnCircle.PROPERTY_ICON, "history")));
+			}
+		};
+		
+		return template.getTemplate();
 	}
 	
 	public static XMLElement getTemplate() {

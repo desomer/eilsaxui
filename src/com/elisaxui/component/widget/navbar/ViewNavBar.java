@@ -11,6 +11,7 @@ import com.elisaxui.component.transition.ConstTransition;
 import com.elisaxui.component.widget.button.ViewBtnBurger;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.XHTMLTemplate;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xml.annotation.xComment;
@@ -127,16 +128,45 @@ public class ViewNavBar extends XHTMLPart {
 	}
 	
 	public static XMLElement getTemplateActionBar() {
-		return xDiv(rightAction);
+		XHTMLTemplate template = new XHTMLTemplate() {
+			@Override
+			public XMLElement getTemplate()
+			{
+				return xDiv(rightAction);
+			}
+		};
+		
+		return template.getTemplate();
 	}
 	
 	public static XMLElement getTemplateName(Object name) {
-		return xDiv(center, xDiv(logo, xVar(name)));
+		XHTMLTemplate template = new XHTMLTemplate() {
+			@Override
+			public XMLElement getTemplate()
+			{
+				return xDiv(center, xDiv(logo, xVar(name)));
+			}
+		};
+		
+		return template.getTemplate();
+
 	}
 	
 	public static XMLElement getTemplateAction(Object name, Object action) {
-		return xElement("button", actionBtnContainer, cRippleEffect , xAttr("data-x-action", txt(xVar(action))), xAttr("type", "\"button\""), 
-				xI(actionBtn, material_icons, xVar(name)));
+		
+		XHTMLTemplate template = new XHTMLTemplate() {
+			@Override
+			public XMLElement getTemplate()
+			{
+				return xElement("button", actionBtnContainer, cRippleEffect , 
+						xAttr("data-x-action", 
+						txt(xVar(action))), 
+						xAttr("type", "\"button\""), 
+						xI(actionBtn, material_icons, xVar(name)));
+			}
+		};
+		
+		return template.getTemplate();
 	}
 	
 	public static XMLElement getTemplateBgCanvas() {

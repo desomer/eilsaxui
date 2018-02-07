@@ -66,7 +66,7 @@ public final class JSServiceWorker extends XHTMLPart {
 		
 		String formatDateTimeBuild =   dateBuild.format(formatter);
 		
-		return xListElement(js()
+		return xListElem(js()
 				._var("CACHE_NAME", txt("site-cache-"+formatDateTimeBuild))
 				
 				.__("self.addEventListener('install',", fct("event")

@@ -24,6 +24,7 @@ import javax.json.JsonObjectBuilder;
 import com.elisaxui.core.data.JSONBuilder;
 import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.xhtml.XHTMLElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSAnonym;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
@@ -50,6 +51,7 @@ public final class ProxyHandler implements InvocationHandler {
 	private Class<? extends JSClass> implementClass; // type js de la class
 
 	private JsonObjectBuilder jsonBuilder = null;
+
 	/**
 	 * @return the jsonBuilder
 	 */
@@ -58,7 +60,8 @@ public final class ProxyHandler implements InvocationHandler {
 	}
 
 	/**
-	 * @param jsonBuilder the jsonBuilder to set
+	 * @param jsonBuilder
+	 *            the jsonBuilder to set
 	 */
 	public final void setJsonBuilder(JsonObjectBuilder jsonBuilder) {
 		this.jsonBuilder = jsonBuilder;
@@ -100,17 +103,25 @@ public final class ProxyHandler implements InvocationHandler {
 	 */
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
-		Object ret = invokeDirectMethod(proxy, method, args);
+		
+		ProxyMethodDesc mthInvoke = new ProxyMethodDesc(null, null, proxy, method, args);
+		
+		Object ret = invokeDirectMethod(mthInvoke);
 		if (ret != null)
 			return ret == NOT_USED ? null : ret;
 
 		String idMeth = JSClassBuilder.getMethodId(method, args);
-
 		JSClassBuilder implcl = XUIFactoryXHtml.getXHTMLFile().getClassImpl(getImplementClass());
+
+		mthInvoke.idMeth = idMeth;
+		mthInvoke.implcl = implcl;
+
 		boolean isMthAlreadyInClass = implcl.getListDistinctFct().containsKey(idMeth);
 
 		if (isMthAlreadyInClass) {
+			/********************************************************************/
 			// creer le js du call de la fct
+			/********************************************************************/
 			ret = JSClassBuilder.toJSCall(getStringProxyContent(), method, args); // utilise le nom du proxy
 			if (!testAnonymInProgress) {
 				registerCallMethodJS(ret, ThreadLocalMethodDesc.get());
@@ -120,8 +131,8 @@ public final class ProxyHandler implements InvocationHandler {
 			/* CREATION DU CODE DANS LA FCT */
 			/********************************************************************/
 			if (method.isDefault()) {
-				ret = doCallMethod(proxy, method, args, idMeth, implcl);
-				
+				ret = doCallImplement(mthInvoke);
+
 			} else if (!checkMethodExist(method)) {
 				/******************************************************************************/
 				/***** INSERT le nom de la methode abstract de type Interface de variable ****/
@@ -132,8 +143,7 @@ public final class ProxyHandler implements InvocationHandler {
 				/******************************************************************************/
 				/***** APPEL DES FUNCTION INTERNE (var, set, if) sur la class JSContent *****/
 				/******************************************************************************/
-				// creer le JSContent
-				ret = doCallInternalImplement(proxy, method, args, idMeth, implcl);
+				ret = doCallInternalImplement(mthInvoke);
 
 			}
 		}
@@ -141,134 +151,98 @@ public final class ProxyHandler implements InvocationHandler {
 		return ret;
 	}
 
-	/**
-	 * @param proxy
-	 * @param method
-	 * @param args
-	 * @param idMeth
-	 * @param implcl
-	 * @return
-	 * @throws Throwable
-	 */
-	private Object doCallMethod(Object proxy, Method method, Object[] args, String idMeth, JSClassBuilder implcl)
-			throws Throwable {
-		Object ret;
-		if (testAnonymInProgress)
-		{
-			ret =  JSClassBuilder.toJSCall("/*ww4*/this", method, args); // ne creer pas la fct en
-																	//testAnonymInProgress
-		}
-		else {
-			ProxyMethodDesc mthInvoke = new ProxyMethodDesc(implcl, proxy, method, args);
+	private Object doCallImplement(ProxyMethodDesc mthInvoke) throws Throwable {
+		Object ret = null;
+		if (testAnonymInProgress) {
+			ret = JSClassBuilder.toJSCall("/*ww4*/this", mthInvoke.method, mthInvoke.args); // ne creer pas la fct en
+			// testAnonymInProgress
+		} else {
 
 			if (currentFctBuildByProxy == null) { // test si meth en cours de build
 				/*******************************************/
 				/***** APPEL DES FUNCTION DE LA CLASSE *****/
 				/*******************************************/
-				ret = doCallMethod			(proxy, method, args, idMeth, implcl, mthInvoke);
+				ret = doCallMethod(mthInvoke);
 
 			} else {
 				/*****************************************************
 				 * APPEL A UNE AUTRE FCT INTERNE A LA FCT EN COURS DU PROXY => AJOUTE DANS
 				 * getListHandleFuntionPrivate
 				 *****************************************************/
-				ret = doCallInternalMethod	(proxy,method, args, idMeth, implcl, mthInvoke);
+				ret = doCallInternalMethod(mthInvoke);
 			}
 		}
 		return ret;
 	}
 
-	/**
-	 * @param proxy
-	 * @param method
-	 * @param args
-	 * @param idMeth
-	 * @param implcl
-	 * @param mthInvoke
-	 * @return
-	 * @throws IllegalArgumentException 
-	 * @throws Throwable
-	 */
-	/** TODO use ProxyMethodDesc */
-	private Object doCallMethod(Object proxy, Method method, Object[] args, String idMeth, JSClassBuilder implcl,
-			ProxyMethodDesc mthInvoke) throws Throwable {
-		Object ret;
-		implcl.getListDistinctFct().put(idMeth, idMeth);
-		currentFctBuildByProxy = idMeth;
+	private Object doCallMethod(ProxyMethodDesc mthInvoke) throws Throwable {
+		mthInvoke.implcl.getListDistinctFct().put(mthInvoke.idMeth, mthInvoke.idMeth);
+		currentFctBuildByProxy = mthInvoke.idMeth;
 
-		traceDebug("include mth", idMeth, implcl, NOT_USED_CONTENT, NOT_USED);
+		traceDebug("include mth", mthInvoke.idMeth, mthInvoke.implcl, NOT_USED_CONTENT, NOT_USED);
 
 		Object nameProxy = this.varname; // recupere le nom de la variable du proxy
 		this.varname = "/*ww2*/this"; // force a this pour appel interne d'autre fct de la classe JS
 
 		// creer le JSContent
-		ProxyMethodDesc currentMethodDesc = getMethodDesc(implcl, proxy, currentFctBuildByProxy);
+		ProxyMethodDesc currentMethodDesc = getMethodDesc(mthInvoke.implcl, mthInvoke.proxy, currentFctBuildByProxy);
 		ProxyMethodDesc lastMethodDesc = ThreadLocalMethodDesc.get();
 		ThreadLocalMethodDesc.set(currentMethodDesc);
 
-		traceDebug("begin create mth", idMeth, implcl, currentMethodDesc.content, NOT_USED);
+		traceDebug("begin create mth", mthInvoke.idMeth, mthInvoke.implcl, currentMethodDesc.content, NOT_USED);
 
 		// creer le code en appelant la fct
 		JSFunction fct = createJSFunctionImpl(mthInvoke, !TEST_ANONYM);
-		implcl.addFunction(fct);
+		mthInvoke.implcl.addFunction(fct);
 		ThreadLocalMethodDesc.set(lastMethodDesc);
 
-		traceDebug("end create mth", idMeth, implcl, currentMethodDesc.content, NOT_USED);
+		traceDebug("end create mth", mthInvoke.idMeth, mthInvoke.implcl, currentMethodDesc.content, NOT_USED);
 
 		this.varname = nameProxy;
 
 		// creer le js du call de la fct
-		ret = JSClassBuilder.toJSCall(getStringProxyContent(), method, args);
+		Object ret = JSClassBuilder.toJSCall(getStringProxyContent(), mthInvoke.method, mthInvoke.args);
 		registerCallMethodJS(ret, ThreadLocalMethodDesc.get());
 		return ret;
 	}
 
-	/**
-	 * @param method
-	 * @param args
-	 * @param idMeth
-	 * @param implcl
-	 * @param mthInvoke
-	 * @param anon
-	 * @return
-	 * @throws Throwable 
-	 */
-	/** TODO use ProxyMethodDesc */
-	private Object doCallInternalMethod(Object proxy, Method method, Object[] args, String idMeth, JSClassBuilder implcl,
-			ProxyMethodDesc mthInvoke) throws Throwable {
+	private Object doCallInternalMethod(ProxyMethodDesc mthInvoke) throws Throwable {
 		Object ret = null;
-		
-		if (JSONBuilder.class.isAssignableFrom(method.getDeclaringClass()))
-		{
-			final Class<?> declaringClass = method.getDeclaringClass();
-			Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class.getDeclaredConstructor(Class.class,
+
+		boolean isJSClass = JSClass.class.isAssignableFrom(mthInvoke.method.getDeclaringClass());
+
+		if (!isJSClass) {
+			// appel la fct default de la proxy JSONBuilder ou XHTMLElement
+
+			final Class<?> declaringClass = mthInvoke.method.getDeclaringClass();
+			Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class.getDeclaredConstructor(
+					Class.class,
 					int.class);
 			constructor.setAccessible(true);
 
+			ret = constructor.newInstance(declaringClass, MethodHandles.Lookup.PRIVATE)
+					.unreflectSpecial(mthInvoke.method, declaringClass).bindTo(mthInvoke.proxy)
+					.invokeWithArguments(mthInvoke.args);
 
-			// appel la fct default de la proxy JSONBuilder
-			return constructor.newInstance(declaringClass, MethodHandles.Lookup.PRIVATE)
-					.unreflectSpecial(method, declaringClass).bindTo(proxy).invokeWithArguments(args);
-			
+		} else {
+			JSFunction anon = isAnonymous(mthInvoke);
+			if (anon != null)
+				ret = anon;
+			else {
+				/*******************************************************************************/
+				traceDebug("call other mth same class", mthInvoke.idMeth, mthInvoke.implcl, NOT_USED_CONTENT, NOT_USED);
+
+				// ajoute une methode de la meme class à creer par la suite
+				mthInvoke.implcl.getListHandleFuntionPrivate().add(mthInvoke);
+
+				// creer le js du call de la fct
+				ret = JSClassBuilder.toJSCall("/*ww1*/this", mthInvoke.method, mthInvoke.args);
+
+				// registerMethod
+				registerCallMethodJS(ret, ThreadLocalMethodDesc.get());
+			}
 		}
 		
-		JSFunction anon = isAnonymous(mthInvoke);
-		if (anon!=null)
-			ret = anon;
-		else
-		{
-			/*******************************************************************************/
-			traceDebug("call other mth same class", idMeth, implcl, NOT_USED_CONTENT, NOT_USED);
-
-			// ajoute une methode de la meme class à creer par la suite
-			implcl.getListHandleFuntionPrivate().add(mthInvoke);
-
-			// creer le js du call de la fct
-			ret = JSClassBuilder.toJSCall("/*ww1*/this", method, args);
-
-			// registerMethod
-			registerCallMethodJS(ret, ThreadLocalMethodDesc.get());
-		}
 		return ret;
 	}
 
@@ -292,7 +266,7 @@ public final class ProxyHandler implements InvocationHandler {
 		if (fctAnomyn != null) {
 			return fctAnomyn; // retourne anonym
 		}
-		
+
 		return null;
 	}
 
@@ -305,9 +279,8 @@ public final class ProxyHandler implements InvocationHandler {
 	 */
 	private Object doCallAttribut(Method method)
 			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		Object ret;
 		Object objName = currentFctBuildByProxy == null ? getStringProxyContent() : "/*ww4*/this";
-		ret = getObjectJS(method.getReturnType(), objName + ".", method.getName());
+		Object ret = getObjectJS(method.getReturnType(), objName + ".", method.getName());
 
 		if (ret instanceof JSVariable) {
 			if (ret instanceof JSArray) {
@@ -315,42 +288,30 @@ public final class ProxyHandler implements InvocationHandler {
 			}
 
 			((JSVariable) ret)._setParent(this);
-		} 
+		}
 		return ret;
 	}
 
-	/**
-	 * @param proxy
-	 * @param method
-	 * @param args
-	 * @param idMeth
-	 * @param implcl
-	 * @return
-	 * @throws ClassNotFoundException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
-	 */
-	private Object doCallInternalImplement(Object proxy, Method method, Object[] args, String idMeth,
-			JSClassBuilder implcl) throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
-		
-		Object ret;
-		ProxyMethodDesc currentMethodDesc = getMethodDesc(implcl, proxy, currentFctBuildByProxy);
+	private Object doCallInternalImplement(ProxyMethodDesc mthInvoke)
+			throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
+
+		ProxyMethodDesc currentMethodDesc = ThreadLocalMethodDesc.get();
 		JSContent currentJSContent = currentMethodDesc.content;
 
 		if (!testAnonymInProgress)
-			doLastSourceLineInsered(ThreadLocalMethodDesc.get(), false);
+			doLastSourceLineInsered(false);
 
-		traceDebug("begin call jscontent", idMeth, implcl, currentJSContent, NOT_USED);
+		traceDebug("begin call jscontent", mthInvoke.idMeth, mthInvoke.implcl, currentJSContent, NOT_USED);
 
 		// appel l'implementation le methode JSInterface (JSContent)
-		ret = method.invoke(currentJSContent, args);
+		Object ret = mthInvoke.method.invoke(currentJSContent, mthInvoke.args);
 
 		if (ret instanceof JSFunction) // gestion appel fct anonyme par fct() ou fragment()
 		{
-			((JSFunction) ret).setProxy((JSContentInterface) proxy);
+			((JSFunction) ret).setProxy((JSContentInterface) mthInvoke.proxy);
 		}
 
-		traceDebug("end call jscontent", idMeth, implcl, currentJSContent, ret);
+		traceDebug("end call jscontent", mthInvoke.idMeth, mthInvoke.implcl, currentJSContent, ret);
 		return ret;
 	}
 
@@ -359,12 +320,12 @@ public final class ProxyHandler implements InvocationHandler {
 	 * @param method
 	 * @param args
 	 */
-	private Object invokeDirectMethod(Object proxy, Method method, Object[] args) {
-		if (method.getName().equals("toString")) {
+	private Object invokeDirectMethod(ProxyMethodDesc mthInvoke) {
+		if (mthInvoke.method.getName().equals("toString")) {
 			return getStringProxyContent();
 		}
 
-		if (method.getName().equals("_getContent")) {
+		if (mthInvoke.method.getName().equals("_getContent")) {
 			if (jsonBuilder != null)
 				return jsonBuilder.build().toString();
 
@@ -373,30 +334,30 @@ public final class ProxyHandler implements InvocationHandler {
 			return varContent;
 		}
 
-		if (method.getName().equals("_setContent")) {
-			varContent = args[0];
-			return proxy;
+		if (mthInvoke.method.getName().equals("_setContent")) {
+			varContent = mthInvoke.args[0];
+			return mthInvoke.proxy;
 		}
 
-		if (method.getName().equals("set")) {
-			Object[] param = (Object[]) args[0];
-			return ThreadLocalMethodDesc.get().content._set(proxy, param);
+		if (mthInvoke.method.getName().equals("set")) {
+			Object[] param = (Object[]) mthInvoke.args[0];
+			return ThreadLocalMethodDesc.get().content._set(mthInvoke.proxy, param);
 		}
 
-		if (method.getName().equals("cast")) {
-			return cast((Class<?>) args[0], args[1]);
+		if (mthInvoke.method.getName().equals("cast")) {
+			return cast((Class<?>) mthInvoke.args[0], mthInvoke.args[1]);
 		}
 
-		if (method.getName().equals("asLitteral")) {
+		if (mthInvoke.method.getName().equals("asLitteral")) {
 			this.jsonBuilder = Json.createObjectBuilder();
-			return proxy;
+			return mthInvoke.proxy;
 		}
 
-		if (method.getName().equals("callJava")) {
+		if (mthInvoke.method.getName().equals("callJava")) {
 			ThreadLocalMode.set(Boolean.TRUE);
-			((JSAnonym) args[0]).run();
+			((JSAnonym) mthInvoke.args[0]).run();
 			ThreadLocalMode.set(Boolean.FALSE);
-			return proxy;
+			return mthInvoke.proxy;
 		}
 
 		return null;
@@ -531,11 +492,11 @@ public final class ProxyHandler implements InvocationHandler {
 	 */
 	private static final void registerCallMethodJS(Object method, ProxyMethodDesc currentMethodDesc)
 			throws ClassNotFoundException {
-		
+
 		if (currentMethodDesc == null)
 			return;
 
-		doLastSourceLineInsered(currentMethodDesc, false);
+		doLastSourceLineInsered(false);
 
 		StackTraceElement[] stack = Thread.currentThread().getStackTrace();
 
@@ -554,8 +515,10 @@ public final class ProxyHandler implements InvocationHandler {
 	/**
 	 * @throws ClassNotFoundException
 	 */
-	public static final void doLastSourceLineInsered(ProxyMethodDesc currentMethodDesc, boolean isInFct)
+	public static final void doLastSourceLineInsered(boolean isInFct)
 			throws ClassNotFoundException {
+
+		ProxyMethodDesc currentMethodDesc = ProxyHandler.ThreadLocalMethodDesc.get();
 
 		if (currentMethodDesc != null && currentMethodDesc.lastLineNoInsered > 0) {
 
@@ -635,7 +598,7 @@ public final class ProxyHandler implements InvocationHandler {
 		}
 	}
 
-	private JSFunction createJSFunctionImpl(ProxyMethodDesc handle, boolean testAnonymous) throws Throwable  {
+	private JSFunction createJSFunctionImpl(ProxyMethodDesc handle, boolean testAnonymous) throws Throwable {
 
 		final Class<?> declaringClass = handle.method.getDeclaringClass();
 		Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class.getDeclaredConstructor(Class.class,
@@ -659,7 +622,7 @@ public final class ProxyHandler implements InvocationHandler {
 		Object retProxyMth = constructor.newInstance(declaringClass, MethodHandles.Lookup.PRIVATE)
 				.unreflectSpecial(handle.method, declaringClass).bindTo(handle.proxy).invokeWithArguments(p);
 
-		doLastSourceLineInsered(ThreadLocalMethodDesc.get(), true);
+		doLastSourceLineInsered(true);
 
 		JSFunction fct = null;
 

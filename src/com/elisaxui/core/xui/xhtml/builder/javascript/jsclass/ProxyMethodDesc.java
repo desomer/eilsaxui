@@ -15,30 +15,31 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
  */
 public final class ProxyMethodDesc
 {
-	public ProxyMethodDesc(JSClassBuilder implcl, Object proxy, Method method, Object[] args) {
+	public ProxyMethodDesc(String idMeth, JSClassBuilder implcl, Object proxy, Method method, Object[] args) {
 		super();
 		this.implcl = implcl;
 		this.proxy = proxy;
 		this.method = method;
 		this.args = args;
+		this.idMeth = idMeth;
 	}
 	
+	String idMeth;
 	JSClassBuilder implcl;
 	Object proxy; 
+	Method method;
+	Object[] args;
+	
+	JSContent content;
+	public int lastLineNoInsered = -1;
+	public Object lastMthNoInserted = null;
+	
 	/**
 	 * @return the proxy
 	 */
 	public final Object getProxy() {
 		return proxy;
 	}
-
-	Method method;
-	Object[] args;
-	
-	JSContent content;
-	
-	public int lastLineNoInsered = -1;
-	public Object lastMthNoInserted = null;
 	
 
 	/**

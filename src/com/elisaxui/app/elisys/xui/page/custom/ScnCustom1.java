@@ -28,7 +28,7 @@ public class ScnCustom1 extends XHTMLPart {
 	@xTarget(HEADER.class)
 	@xRessource // une seule fois par vue
 	public XMLElement xImportMeta() {
-		return xListElement( // ajout plusieur element sans balise parent
+		return xListElem( // ajout plusieur element sans balise parent
 				xTitle("titre"),
 				xMeta(xAttr("name", xTxt("author")), xAttr("content", xTxt("desomer"))));
 	}

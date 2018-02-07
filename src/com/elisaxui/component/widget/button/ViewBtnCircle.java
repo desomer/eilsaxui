@@ -67,8 +67,8 @@ public class ViewBtnCircle extends XHTMLPart {
 
 	@xTarget(CONTENT.class)
 	public XMLElement xBurgerBtn() {
-		return  xListElement( xPart(new ViewRippleEffect()),   ////////////////// IMPORT //////////////////
-		       xElement("button", cRippleEffect, cBtnCircle, xAttr("type", "\"button\""),
+		return  xListElem( xPart(new ViewRippleEffect()),   ////////////////// IMPORT //////////////////
+				xElement("button", cRippleEffect, cBtnCircle, xAttr("type", "\"button\""),
 				"<i class=\"material-icons\">", this.getProperty(PROPERTY_ICON), "</i>")
 		       );
 	}

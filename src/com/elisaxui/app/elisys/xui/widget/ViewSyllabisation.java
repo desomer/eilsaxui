@@ -3,8 +3,12 @@
  */
 package com.elisaxui.app.elisys.xui.widget;
 
+import static com.elisaxui.component.transition.CssTransition.cFixedElement;
+
 import com.elisaxui.app.elisys.xui.page.main.JSONPage1;
+import com.elisaxui.component.widget.button.ViewBtnCircle;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.XHTMLTemplate;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -55,10 +59,26 @@ public class ViewSyllabisation extends XHTMLPart {
 	}
 	
 	public static XMLElement getMot(Object text) {
-		return xSpan(cSyllabeMot, xIdAction(JSONPage1.EVT_DO_MOT), xAttr("data-mot", text) , xSpan("  "));
+		XHTMLTemplate template = new XHTMLTemplate() {
+			@Override
+			public XMLElement getTemplate()
+			{
+				return xSpan(cSyllabeMot, xIdAction(JSONPage1.EVT_DO_MOT), xAttr("data-mot", text) , xSpan("  "));
+			}
+		};
+		
+		return template.getTemplate();
 	}
 	
 	public static XMLElement getSyl(Object text) {
-		return xSpan(cSyllabe, text);
+		XHTMLTemplate template = new XHTMLTemplate() {
+			@Override
+			public XMLElement getTemplate()
+			{
+				return xSpan(cSyllabe, text);
+			}
+		};
+		
+		return template.getTemplate();
 	}
 }

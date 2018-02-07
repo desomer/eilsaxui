@@ -4,6 +4,7 @@ import com.elisaxui.component.toolkit.datadriven.JSDataCtx;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.XHTMLTemplate;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
@@ -43,7 +44,7 @@ public class ScnAdminMain extends XHTMLPart {
 	@xTarget(HEADER.class)
 	@xRessource
 	public XMLElement xImportAllClass() {
-		return xListElement(
+		return xListElem(
 				xImport(JSTestClass.class),
 				xImport(JSTest2Class.class),
 				xImport(JSXHTMLPart.class),
@@ -122,6 +123,14 @@ public class ScnAdminMain extends XHTMLPart {
 	
 	public static XMLElement xTemplateDataDriven(Object value, Object value2)
 	{
-		return 	xDiv(xAttr("style", panel), xVar(value), xSpan("-"), xSpan(xVar(value2)) );	
+		XHTMLTemplate template = new XHTMLTemplate() {
+			@Override
+			public XMLElement getTemplate()
+			{
+				return 	xDiv(xAttr("style", panel), xVar(value), xSpan("-"), xSpan(xVar(value2)) );	
+			}
+		};
+		
+		return template.getTemplate();
 	}
 }

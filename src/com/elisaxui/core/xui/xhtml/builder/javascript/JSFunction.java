@@ -171,8 +171,7 @@ public class JSFunction extends JSContent {
 		try {
 			c.run();
 			// insere la dernier ligne
-			ProxyMethodDesc currentMethodDesc = ProxyHandler.ThreadLocalMethodDesc.get();
-			ProxyHandler.doLastSourceLineInsered(currentMethodDesc, true);
+			ProxyHandler.doLastSourceLineInsered(true);
 		} catch (Exception e) {
 			CoreLogger.getLogger(3).log(Level.SEVERE, "pb run anonym", e);
 		}

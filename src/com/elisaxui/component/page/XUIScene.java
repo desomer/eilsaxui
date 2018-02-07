@@ -84,7 +84,7 @@ public abstract class XUIScene extends XHTMLPart {
 	@xRessource
 	@xPriority(1)
 	public XMLElement xImportCssXUIScene() {
-		return xListElement(
+		return xListElem(
 				xLinkCssAsync("https://fonts.googleapis.com/icon?family=Material+Icons"),
 				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"),
 				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css")
@@ -95,7 +95,7 @@ public abstract class XUIScene extends XHTMLPart {
 	@xRessource
 	@xPriority(1)
 	public XMLElement xImportXUIScene() {
-		return xListElement(
+		return xListElem(
 				
 				xTitle(getConfigScene().getTitle()),
 				xMeta(xAttr("name", xTxt("theme-color")), xAttr("content", xTxt(getConfigScene().getBgColorTheme()))),
@@ -151,7 +151,7 @@ public abstract class XUIScene extends XHTMLPart {
 	@xRessource
 	public XMLElement xImportAfterXUIScene() {
 		
-		return xListElement(
+		return xListElem(
 				xPart(new TKQueue()),   //TODO Remplacer par une class js
 				xImport(JSXHTMLPart.class),
 				xImport(JSDataDriven.class),
@@ -224,7 +224,7 @@ public abstract class XUIScene extends XHTMLPart {
 	@xTarget(CONTENT.class)
 	public XMLElement xContenuXUIScene() {
 		return 
-			xListElement(
+			xListElem(
 				xPart(new ViewMenu()),
 				xDiv(scene, xDiv(cShell, 
 						xPart(new ViewNavBar().addProperty(ViewNavBar.PROPERTY_NAME, "NavBarShell"), xH1("Loading...")),  
@@ -237,7 +237,7 @@ public abstract class XUIScene extends XHTMLPart {
 	@xPriority(500)
 	@xRessource
 	public XMLElement xImportStartXUIScene() {
-		return xListElement(
+		return xListElem(
 				xScriptJS(js()
 						// a mettre dans TKConfig
 						._set($xui(), "{ intent: { nextActivityAnim : 'fromBottom' }, tkrouter:'', config:{ }, resourceLoading:{} }")

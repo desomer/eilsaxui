@@ -12,6 +12,7 @@ import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.component.transition.JSTransition;
 import com.elisaxui.component.widget.button.ViewFloatAction;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
+import com.elisaxui.core.xui.xhtml.XHTMLElement;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
@@ -20,7 +21,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
  * @author Bureau
  *
  */
-public interface JSContainer extends JSFactory {
+public interface JSContainer extends JSFactory, XHTMLElement {
 
 	JSDataDriven aDataDriven();
 	JSDataSet aDataSet();
@@ -34,19 +35,19 @@ public interface JSContainer extends JSFactory {
 	
 	default Object getSubData(Object ctx)
 	{
-		__()
-		._if("ctx.row.html instanceof JSXHTMLPart")
-			._var("part", "ctx.row.html")
-			._var("ret", XHTMLPart.xDiv(XHTMLPart.xVar("part.html")))
-			.__("ret.js+=part.js")
-			.__("return ret")
-		._else()
-			._var("ret", XHTMLPart.xDiv(XHTMLPart.xVar("ctx.row.html")))
-			._var("js", "ctx.row.js.replace('<script type=\\\"text\\\\/javascript\\\">', '')")
-			._set("js", "js.replace('<\\\\/script>', '')")
-			.__("ret.js=\"<script>\"+js+\"<\\/script>\"")
-			.__("return ret")
-		.endif()
+
+		_if("ctx.row.html instanceof JSXHTMLPart");
+			_var("part", "ctx.row.html");
+			_var("ret", xDiv(XHTMLPart.xVar("part.html")));
+			__("ret.js+=part.js");
+			__("return ret");
+		_else();
+			_var("ret", xDiv(XHTMLPart.xVar("ctx.row.html")));
+			_var("js", "ctx.row.js.replace('<script type=\\\"text\\\\/javascript\\\">', '')");
+			_set("js", "js.replace('<\\\\/script>', '')");
+			__("ret.js=\"<script>\"+js+\"<\\/script>\"");
+			__("return ret");
+		endif()
 		;
 		return null;
 	}

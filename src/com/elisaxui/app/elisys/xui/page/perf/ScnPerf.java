@@ -36,11 +36,11 @@ public class ScnPerf extends XHTMLPart {
 	@xPriority(1)
 	public XMLElement xImport() {
 		if (JSPerfVuesJS.isVueJS())
-			return xListElement(xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.13/vue.min.js"));
+			return xListElem(xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.13/vue.min.js"));
 		else if (JSPerfVuesJS.isJQuery())
-			return xListElement(xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js"));
+			return xListElem(xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js"));
 		else
-			return xListElement();
+			return xListElem();
 
 	}
 
@@ -56,7 +56,7 @@ public class ScnPerf extends XHTMLPart {
 	@xRessource // une seule fois par vue
 	@xVersion("1.2")  // a terminer
 	public XMLElement xDo() {		
-		return xListElement(
+		return xListElem(
 					xImport(A.class)
 				);
 	}

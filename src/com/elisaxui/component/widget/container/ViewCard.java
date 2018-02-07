@@ -3,8 +3,8 @@
  */
 package com.elisaxui.component.widget.container;
 
-import com.elisaxui.component.widget.button.ViewBtnBurger;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.XHTMLTemplate;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -51,15 +51,27 @@ public class ViewCard extends XHTMLPart {
 	}
 	
 	public static XMLElement getTemplateRichMedia() {
+		XHTMLTemplate template = new XHTMLTemplate() {
+			@Override
+			public XMLElement getTemplate()
+			{
+				return xDiv(xAttr("style","\"width: 100%; height: 30vh\""));
+			}
+		};
 		
-		//\"width: 100%; height: 30vh; background:url(" +IMAGE6 +") center / cover\"
-		return xDiv(xAttr("style","\"width: 100%; height: 30vh\""));
+		return template.getTemplate();
 	}
 	
 	public static XMLElement getTemplateText(Object text) {
+		XHTMLTemplate template = new XHTMLTemplate() {
+			@Override
+			public XMLElement getTemplate()
+			{
+				return xP(cCardText, xVar(text));
+			}
+		};
 		
-		//\"width: 100%; height: 30vh; background:url(" +IMAGE6 +") center / cover\"
-		return xP(cCardText, xVar(text));
+		return template.getTemplate();
 	}
 	
 }

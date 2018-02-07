@@ -83,9 +83,8 @@ public class JSVariable {
 	protected static final void _registerMethod(Object obj ) {
 			 ProxyMethodDesc currentMethodDesc = ProxyHandler.ThreadLocalMethodDesc.get();
 			 try {
-				ProxyHandler.doLastSourceLineInsered(currentMethodDesc, false);
+				ProxyHandler.doLastSourceLineInsered( false);
 			} catch (ClassNotFoundException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			 

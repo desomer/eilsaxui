@@ -80,7 +80,7 @@ public class ViewMenu extends XHTMLPart {
 	@xTarget(HEADER.class)
 	@xRessource
 	public XMLElement xImportAllClass() {
-		return xListElement(
+		return xListElem(
 			//	xImport(JSMenu.class)
 				);
 	}

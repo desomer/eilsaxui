@@ -674,8 +674,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 
 		try {
 			content.run();
-			ProxyMethodDesc currentMethodDesc = ProxyHandler.ThreadLocalMethodDesc.get();
-			ProxyHandler.doLastSourceLineInsered(currentMethodDesc, true);
+			ProxyHandler.doLastSourceLineInsered(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -695,8 +694,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 		
 		try {
 			content.run();
-			ProxyMethodDesc currentMethodDesc = ProxyHandler.ThreadLocalMethodDesc.get();
-			ProxyHandler.doLastSourceLineInsered(currentMethodDesc, true);
+			ProxyHandler.doLastSourceLineInsered(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -715,8 +713,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 		
 		try {
 			content.run();
-			ProxyMethodDesc currentMethodDesc = ProxyHandler.ThreadLocalMethodDesc.get();
-			ProxyHandler.doLastSourceLineInsered(currentMethodDesc, true);
+			ProxyHandler.doLastSourceLineInsered(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

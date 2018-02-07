@@ -67,16 +67,16 @@ public class XHTMLRoot extends XHTMLPart {
 		Collections.sort(body, new XMLElementComparator() );
 		Collections.sort(afterBody, new XMLElementComparator() );
 		
-		xListElement(body).getXMLElementTabbed(2)
+		xListElem(body).getXMLElementTabbed(2)
 				.toXML(new XMLBuilder("page", textbody, textAfterbody));
 
-		xListElement(afterBody).getXMLElementTabbed(1)
+		xListElem(afterBody).getXMLElementTabbed(1)
 				.toXML(new XMLBuilder("page", textAfterbody, null));
 		
 	//	Collections.reverse(header);
 
 		return xElement("html", xAttr("lang", xTxt(lang)),
-				xListElement("\n"),
+				xListElem("\n"),
 				xComment("version 1.0.0" + XHTMLAppBuilder.nbChangement , "generated at " + formatDateTimeNow  , "build at " + formatDateTimeBuild),
 				xElement("head", xElement("meta", xAttr("charset", xTxt("utf-8"))),
 						xElement("meta", xAttr("name", xTxt("mobile-web-app-capable")), xAttr("content", xTxt("yes"))),
@@ -87,7 +87,7 @@ public class XHTMLRoot extends XHTMLPart {
 						header
 						),
 				xElement("body", textbody),
-				xListElement(textAfterbody)
+				xListElem(textAfterbody)
 				);
 	}
 

@@ -3,9 +3,12 @@
  */
 package com.elisaxui.component.widget.loader;
 
+import static com.elisaxui.component.widget.button.ViewRippleEffect.cRippleEffect;
+
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.XHTMLTemplate;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -44,7 +47,15 @@ public class ViewLoader extends XHTMLPart {
 	
 	@xTarget(CONTENT.class)
 	public static XMLElement getTemplateBtnFloat() {
-		return xDiv(cLoaderContainer, xDiv(cLoaderLoader));
+		XHTMLTemplate template = new XHTMLTemplate() {
+			@Override
+			public XMLElement getTemplate()
+			{
+				return xDiv(cLoaderContainer, xDiv(cLoaderLoader));
+			}
+		};
+		
+		return template.getTemplate();
 	}
 	
 	

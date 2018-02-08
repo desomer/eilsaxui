@@ -101,7 +101,6 @@ public class JSVariable {
 							break;
 						}
 				} catch (ClassNotFoundException e) {
-					//	e.printStackTrace();
 				}
 			 }
 	}
@@ -121,8 +120,11 @@ public class JSVariable {
 		return ret;
 	}
 	
-	public final JSVoid set(Object... objs)
+	public final JSVariable set(Object... objs)
 	{
+		
+		JSVariable ret = declareType();
+		
 		ProxyHandler mh = (ProxyHandler)this.parent;
 		boolean isLitteral = mh!=null && mh.getJsonBuilder()!=null;
 		
@@ -133,12 +135,15 @@ public class JSVariable {
 			String attr = ""+this.name;
 			attr = attr.substring(attr.lastIndexOf('.')+1);
 			
+			if (objs[0] instanceof String && this instanceof JSValue)
+				objs[0] = "\"" + objs[0] + "\"";
+			
 			mh.getJsonBuilder().add(attr, new JsonNumberImpl(objs[0].toString()));
 		}
 		
-		JSVoid ret = new JSVoid();
 		if (!isLitteral)
 			_doOperator(ret, "=", objs);
+		
 		return ret;
 	}
 
@@ -240,16 +245,13 @@ public class JSVariable {
 				else if ( object instanceof String && object != SEP )
 					inner.add("'"+object+"'");
 				else
-				{
-				//	if (object instanceof Proxy)
-					
+				{				
 					inner.add(object);
 				}
 			}
 		}
 		else if (content!=null)
 			inner.add(content);
-		//return (E)this;
 	}
 	
 	/*******************************************************/

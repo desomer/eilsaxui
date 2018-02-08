@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.target.BODY;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
@@ -50,14 +51,13 @@ public class XHTMLRoot extends XHTMLPart {
 		LocalDateTime now = LocalDateTime.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-		LocalDateTime dateBuild = XHTMLAppBuilder.dateBuild;
+		LocalDateTime dateBuild = XUIFactoryXHtml.changeMgr.dateBuild;
 		
 		String formatDateTimeBuild =   dateBuild.format(formatter);
 		String formatDateTimeNow = now.format(formatter);
 
 		StringBuilder textbody = new StringBuilder(1000);
 		StringBuilder textAfterbody = new StringBuilder(1000);
-		//StringBuilder textAfterbody2 = new StringBuilder(1000);
 		
 		ArrayList<XMLElement> body = getListElement(BODY.class);
 		ArrayList<XMLElement> afterBody = getListElement(AFTER_BODY.class);
@@ -73,11 +73,9 @@ public class XHTMLRoot extends XHTMLPart {
 		xListElem(afterBody).getXMLElementTabbed(1)
 				.toXML(new XMLBuilder("page", textAfterbody, null));
 		
-	//	Collections.reverse(header);
-
 		return xElement("html", xAttr("lang", xTxt(lang)),
 				xListElem("\n"),
-				xComment("version 1.0.0" + XHTMLAppBuilder.nbChangement , "generated at " + formatDateTimeNow  , "build at " + formatDateTimeBuild),
+				xComment("version 1.0.0" + XUIFactoryXHtml.changeMgr.nbChangement , "generated at " + formatDateTimeNow  , "build at " + formatDateTimeBuild),
 				xElement("head", xElement("meta", xAttr("charset", xTxt("utf-8"))),
 						xElement("meta", xAttr("name", xTxt("mobile-web-app-capable")), xAttr("content", xTxt("yes"))),
 						xElement("meta", xAttr("name", xTxt("apple-mobile-web-app-capable")), xAttr("content", xTxt("yes"))),

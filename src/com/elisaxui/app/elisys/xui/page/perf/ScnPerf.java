@@ -44,6 +44,7 @@ public class ScnPerf extends XHTMLPart {
 
 	}
 
+	// une class JS
 	public interface A extends JSClass {
 		@xStatic(autoCall=true)          // appel automatique de la methode static
 		default void main() {
@@ -54,7 +55,7 @@ public class ScnPerf extends XHTMLPart {
 
 	@xTarget(AFTER_CONTENT.class)
 	@xRessource // une seule fois par vue
-	@xVersion("1.2")  // a terminer
+	@xVersion("1.0")  // a terminer
 	public XMLElement xDo() {		
 		return xListElem(
 					xImport(A.class)

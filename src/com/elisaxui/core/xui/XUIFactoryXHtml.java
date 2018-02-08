@@ -3,6 +3,7 @@ package com.elisaxui.core.xui;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -33,6 +34,7 @@ import com.elisaxui.core.helper.JSExecutorHelper;
 import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.xhtml.XHTMLAppBuilder;
+import com.elisaxui.core.xui.xhtml.XHTMLChangeManager;
 import com.elisaxui.core.xui.xhtml.XHTMLFile;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot;
@@ -54,7 +56,8 @@ public class XUIFactoryXHtml {
 
 	private static final ThreadLocal<XHTMLFile> ThreadLocalXUIFactoryPage = new ThreadLocal<XHTMLFile>();
 
-	private static Map<String, Class<? extends XHTMLPart>> mapClass = null;
+	public static XHTMLChangeManager changeMgr = new XHTMLChangeManager();
+	
 	private static Map<String, ArrayList<String>> listeVersionId = null; 
 	
 	private static HashMap<String, String> pageCacheMem = new HashMap<>() ;
@@ -62,13 +65,36 @@ public class XUIFactoryXHtml {
 	private static DB db = null;
 	private static HTreeMap<String, String> pageCache = null;
 	private static  Var<Object> listeDico= null;
+	private static  Var<Object> lastDateFile= null;
+
+	public static final long getLastDate() {
+		Long r = (Long) lastDateFile.get();
+		if (r==null)
+		{
+			lastDateFile.set(System.currentTimeMillis());
+			r = (Long) lastDateFile.get();
+		}
+		return r;
+	}
+
+	/**
+	 * @param lastDate the lastDate to set
+	 */
+	public static final void setLastDate(long lastDate) {
+		lastDateFile.set(lastDate);
+		db.commit();
+	}
+
 	static {	
 			String home = System.getProperty("user.home");
 			String pathdb = home+ File.separator+"fileMapdb.db";
-			System.out.println("start db at "+pathdb);
+			
+			CoreLogger.getLogger(1).info(()->"start db at "+pathdb);
+			
 			db = DBMaker.fileDB(pathdb).checksumHeaderBypass().closeOnJvmShutdown().make();	
 			pageCache = db.hashMap("mapFileHtml",Serializer.STRING,Serializer.STRING).createOrOpen();
 			listeDico = db.atomicVar("pageDico").createOrOpen();
+			lastDateFile = db.atomicVar("lastDate").createOrOpen();
 			
 			listeVersionId = (Map<String, ArrayList<String>>) listeDico.get();
 			if (listeVersionId==null)
@@ -90,8 +116,13 @@ public class XUIFactoryXHtml {
 	@GET
 	@Path("/page/{pays}/{lang}/id/{id}")
 	@Produces(MediaType.TEXT_HTML)
-	public Response getHtml(@Context HttpServletRequest httpRequest, @Context HttpHeaders headers, @Context UriInfo uri, @PathParam("pays") String pays,
-			@PathParam("lang") String lang, @PathParam("id") String id) {
+	public Response getHtml(
+			@Context HttpServletRequest httpRequest, 
+			@Context HttpHeaders headers, 
+			@Context UriInfo uri, 
+			@PathParam("pays") String pays,
+			@PathParam("lang") String lang, 
+			@PathParam("id") String id) {
 
 		
 		List<String> cacheControl = headers.getRequestHeader("cache-control");
@@ -110,18 +141,17 @@ public class XUIFactoryXHtml {
 		JSExecutorHelper.setThreadPreprocessor(es5);
 				
 		// cherche les changements
-		initMapXmlPart();
+		initChangeManager();
 		
 		/********************************************************/
 		String htmlInCache=null;
 		String idCache = null;
 		String idCacheVersionning = id+es5;
 		
-		StringBuilder listLineDiff = new StringBuilder();
 	
 		if (enableCache)
 		{
-			idCache = id+XHTMLAppBuilder.lastOlderFile+es5;
+			idCache = id+changeMgr.lastOlderFile+es5;
 			if (!noCache)
 			{
 				if (version<0)
@@ -134,14 +164,12 @@ public class XUIFactoryXHtml {
 					htmlInCache = pageCache.get(idCache);
 					
 					if (htmlInCacheOriginal!=null ) {
-						getLineDiff(listLineDiff, htmlInCache, htmlInCacheOriginal);
+						changeMgr.initLineDiff( htmlInCache, htmlInCacheOriginal);
 					}
 				}
 				else
 				{
-					htmlInCache = pageCacheMem.computeIfAbsent(idCache, k->{
-						return pageCache.get(k);	
-					});
+					htmlInCache = pageCacheMem.computeIfAbsent(idCache, k-> pageCache.get(k));
 				}
 			}
 			
@@ -149,7 +177,7 @@ public class XUIFactoryXHtml {
 		
 		if (htmlInCache == null) {   // si pas en cache
 			// recupere la classe de page
-			Class<? extends XHTMLPart> pageClass = mapClass.get(id);
+			Class<? extends XHTMLPart> pageClass = changeMgr.mapClass.get(id);
 			if (pageClass != null) {
 				
 				JSExecutorHelper.initThread();
@@ -169,9 +197,9 @@ public class XUIFactoryXHtml {
 				}
 
 				// generation page
-				CoreLogger.getLogger(1).info(() -> "********************************************* "
-						+ "GENERATE XML File of "
-						+ pageClass + "  ****************************************");
+				CoreLogger.getLogger(1).info(() -> "*******"
+						+ " GENERATE XML File of "
+						+ pageClass + " ********");
 				
 				String html = createXMLText(fileXML, loc);
 				addInCache(idCache, idCacheVersionning, html);
@@ -195,13 +223,13 @@ public class XUIFactoryXHtml {
 			
 			String htmlInCacheOld = pageCache.get(idCache);
 			if (htmlInCacheOld!=null ) {
-				getLineDiff(listLineDiff, htmlInCacheOld ,  htmlInCache);
+				changeMgr.initLineDiff(htmlInCacheOld ,  htmlInCache);
 			}
 		}
 		
 		
 		StringBuilder dif = new StringBuilder("\n\n<script id='srcdiff' type='application/json'>");  //\r\n
-		dif.append(listLineDiff);
+		dif.append(changeMgr.listLineDiff);
 		dif.append("\n</script>");
 		
 //		return Response.status(Status.OK) // .type(MediaType.TEXT_HTML)
@@ -216,38 +244,6 @@ public class XUIFactoryXHtml {
 				.build();
 	}
 
-	/**
-	 * @param listLineDiff
-	 * @param htmlInCache
-	 * @param htmlInCacheOriginal
-	 */
-	private void getLineDiff(StringBuilder listLineDiff, String htmlInCache, String htmlInCacheOriginal) {
-		List<String> original = Arrays.asList(htmlInCache.split("\n"));
-		List<String> revised = Arrays.asList(htmlInCacheOriginal.split("\n"));
-
-//				Patch patch = DiffUtils.diff(original, revised);
-//				for (Delta delta: patch.getDeltas()) {
-//		                System.out.println(delta);
-//		        }
-		
-		DiffRowGenerator generator = new DiffRowGenerator.Builder().InlineNewTag("span").InlineNewCssClass("cnew").InlineOldTag("span").InlineOldCssClass("cold").ignoreBlankLines(true).showInlineDiffs(true).ignoreWhiteSpaces(true).columnWidth(100).build();
-		List<DiffRow> text = generator.generateDiffRows(original, revised);
-		int numLine = 1;
-		for (DiffRow diffRow : text) {		 
-			 if (!diffRow.getTag().equals(DiffRow.Tag.EQUAL))
-			 {
-				
-				 if (diffRow.getTag().equals(DiffRow.Tag.DELETE))
-				 {
-					 numLine--; 
-					 listLineDiff.append("\n\t"+String.format ("%05d", numLine) + "-" +String.format ("%05d", numLine+1) + ":"+ diffRow.getTag()  + ": " + diffRow.getOldLine()+"  =>  " + diffRow.getNewLine());
-				 }
-				 else
-					 listLineDiff.append("\n\t"+String.format ("%05d", numLine) + ":"+ diffRow.getTag()  + ": " + diffRow.getOldLine()+"  =>  " + diffRow.getNewLine());
-			 } 
-			 numLine++;
-		}
-	}
 
 	/**
 	 * @param idCache
@@ -257,7 +253,7 @@ public class XUIFactoryXHtml {
 	private void addInCache(String idCache, String idCacheVersionning, String html) {
 		if (idCache!=null)
 		{
-			System.out.println(" add cache "+idCache);
+			CoreLogger.getLogger(1).info(()->" add cache "+idCache);
 			
 			ArrayList<String> version1 = listeVersionId.get(idCacheVersionning);
 			if (version1==null)
@@ -297,20 +293,18 @@ public class XUIFactoryXHtml {
 	/**
 	 * 
 	 */
-	private synchronized void  initMapXmlPart() {
-		if (mapClass==null || enableDynamic)
+	private synchronized void  initChangeManager() {
+		if (changeMgr.mapClass==null || enableDynamic)
 		{
-			mapClass = XHTMLAppBuilder.getMapXHTMLPart();  // synchronized
+			XHTMLAppBuilder.getMapXHTMLPart(changeMgr);  // synchronized
 		}
 	}
 
 	private void initXMLFile(Class<? extends XHTMLPart> pageClass, XMLFile file, MultivaluedMap<String, String> p) {
 		try {
-			System.out.println("[XUIFactoryXHtml]");
-			System.out.println("[XUIFactoryXHtml]********************************************* INIT XML File of "
-					+ pageClass + "  ****************************************");
 
-			
+			CoreLogger.getLogger(1).info(()->"******** INIT XML File of "+pageClass+" ********");
+						
 			((XHTMLFile)file).setParam(p);
 			
 			XHTMLPart page = pageClass.newInstance();

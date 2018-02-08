@@ -46,7 +46,7 @@ public interface JSPerfVuesJS extends JSClass, JSONBuilder {
 			// creer un json en java
 			JSAnonym doJava = () -> {
 				DtoUser user = newInst(DtoUser.class);
-				user.firstName().set("'toto'");
+				user.firstName().set("toto");
 				list.push(user);
 
 				list.push("test");
@@ -60,7 +60,7 @@ public interface JSPerfVuesJS extends JSClass, JSONBuilder {
 				list.push(list2);
 
 				user = newInst(DtoUser.class);
-				user.firstName().set("'tata'");
+				user.firstName().set(15151);
 				list.push(user);
 			};
 

@@ -6,7 +6,9 @@ package com.elisaxui.component.page;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLAppBuilder;
+import com.elisaxui.core.xui.xhtml.XHTMLChangeManager;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
@@ -62,7 +64,7 @@ public final class JSServiceWorker extends XHTMLPart {
 		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
 
-		LocalDateTime dateBuild = XHTMLAppBuilder.dateBuild;
+		LocalDateTime dateBuild = XUIFactoryXHtml.changeMgr.dateBuild;
 		
 		String formatDateTimeBuild =   dateBuild.format(formatter);
 		

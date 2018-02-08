@@ -43,7 +43,6 @@ import com.elisaxui.core.helper.JSExecutorHelper;
 
 public class XUILaucher {
 
-	
 //    private static ConstraintSecurityHandler buildConstraintSecurityHandler() {
 //        // this configures jetty to require HTTPS for all requests
 //        Constraint constraint = new Constraint();

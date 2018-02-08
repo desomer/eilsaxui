@@ -18,6 +18,7 @@ import java.util.Map;
 import com.elisaxui.core.helper.ClassLoaderHelper;
 import com.elisaxui.core.helper.ClassLoaderHelper.FileEntry;
 import com.elisaxui.core.helper.ReflectionHelper;
+import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.XUILaucher;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
@@ -36,42 +37,49 @@ import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
  */
 public class XHTMLAppBuilder {
 
-	public static int nbChangement = 0;
-	public static long lastOlderFile = 0;
-	public static LocalDateTime dateBuild = null;
 	
 	private static final boolean debug = false;
 	
 	// TODO mettre en cache
-	public static synchronized Map<String, Class<? extends XHTMLPart>>  getMapXHTMLPart() {
-				
+	public static synchronized XHTMLChangeManager  getMapXHTMLPart(XHTMLChangeManager changeInfo) {
+		
+		
 		List<Class<? extends XHTMLPart>> listXHTMLPart = new ArrayList<>(100);
 		List<Class<? extends JSClass>> listJSClass = new ArrayList<>(100);
 		List<Class<? extends JSClassInterface>> listJSClassMethod = new ArrayList<>(100);
 		
+		changeInfo.listFileChanged.clear();
+		
 		long olderFile = 0;
+		long last = XUIFactoryXHtml.getLastDate();
+		
 		try {
-			Iterable<FileEntry> list = ClassLoaderHelper.listFilesRelativeToClass(XUILaucher.class,	"com"); ///elisaxui/core/xui/xml
+			Iterable<FileEntry> list = ClassLoaderHelper.listFilesRelativeToClass(XUILaucher.class,	"com");
 			for (FileEntry fileEntry : list) {
 				long lm = fileEntry.file.lastModified();
 				if (debug)
 					System.out.println("[XHTMLAppBuilder]file scan for date " +  fileEntry.file);
 				if (lm > olderFile)
 					olderFile = lm;
+				
+				if (lm>last)
+					changeInfo.listFileChanged.add(fileEntry.file);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		if (lastOlderFile!=olderFile)
+		if (changeInfo.lastOlderFile!=olderFile)
 		{
-			lastOlderFile=olderFile;
-			nbChangement++;
+			changeInfo.lastOlderFile=olderFile;
+			changeInfo.nbChangement++;
 		}
+		XUIFactoryXHtml.setLastDate(changeInfo.lastOlderFile);
 		
 		Date input = new Date(olderFile);
 		Instant instant = input.toInstant();
 		ZonedDateTime zdt = instant.atZone(ZoneId.systemDefault());
-		dateBuild = zdt.toLocalDateTime();
+		changeInfo.dateBuild = zdt.toLocalDateTime();
+		
 		if (debug)
 			System.out.println("[XHTMLAppBuilder]********************************************* END SCAN FILE ****************************************");
 
@@ -83,7 +91,6 @@ public class XHTMLAppBuilder {
 		if (debug)
 			System.out.println("[XHTMLAppBuilder]********************************************* START SCAN XHTMLPart ************************************");
 
-		Map<String, Class<? extends XHTMLPart>> mapClass = new HashMap<String, Class<? extends XHTMLPart>>(100);
 		for (Class<? extends XHTMLPart> pageClass : listXHTMLPart) {
 			xFile annPage = pageClass.getAnnotation(xFile.class);
 			if (annPage != null) { 
@@ -91,7 +98,7 @@ public class XHTMLAppBuilder {
 					System.out.println("[XHTMLAppBuilder]##############################################################################################");
 					System.out.println("[XHTMLAppBuilder]#############################    PAGE   "+annPage.id()+"   ###################################"+ annPage.id());
 				}
-				mapClass.put(annPage.id(), pageClass);
+				changeInfo.mapClass.put(annPage.id(), pageClass);
 			}
 			initXMLPartVarStatic(pageClass);
 		}
@@ -101,7 +108,7 @@ public class XHTMLAppBuilder {
 
 		for (Class<? extends JSClassInterface> class1 : listJSClassMethod) {
 			if (debug)
-				System.out.println("[XHTMLAppBuilder]------------ START SCAN FIELD OF JSClassMethod -----"+ class1);
+				System.out.println("[XHTMLAppBuilder]------------ START SCAN FIELD OF JSClassInterface -----"+ class1);
 			initJSClassVar(class1);
 		}
 		
@@ -117,7 +124,7 @@ public class XHTMLAppBuilder {
 		if (debug)
 			System.out.println("[XHTMLAppBuilder]********************************************* END SCAN JSClass ****************************************");
 		
-		return mapClass;
+		return changeInfo;
 	}
 	
 	
@@ -204,7 +211,6 @@ public class XHTMLAppBuilder {
 			try {
 				ReflectionHelper.setFinalStatic(field, prox);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else if (JSVariable.class.isAssignableFrom(field.getType())) {

@@ -8,6 +8,7 @@ import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
@@ -24,17 +25,26 @@ public class CoreLogger {
 	private CoreLogger() {
 		super();
 	}
+	
+	static ConcurrentHashMap<String, Logger> mapLogger = new ConcurrentHashMap<>();
 
 	public static Logger getLogger(int nb) {
-		Handler handler = new ConsoleHandler();
-		handler.setLevel(Level.ALL);
 		
-		handler.setFormatter(new SingleLineFormatter());
+		String name = Thread.currentThread().getStackTrace()[nb].getClassName();
+		
+		Logger logger = mapLogger.computeIfAbsent(name, key-> {
+			Handler handler = new ConsoleHandler();
+			handler.setLevel(Level.ALL);
+			
+			handler.setFormatter(new SingleLineFormatter());
+	
+			Logger l = Logger.getLogger(name);
+			l.addHandler(handler);
+			l.setUseParentHandlers(false);
+			l.setLevel(Level.FINE);
+			return l;
+		});
 
-		Logger logger = Logger.getLogger(Thread.currentThread().getStackTrace()[nb].getClassName());
-		logger.addHandler(handler);
-		logger.setUseParentHandlers(false);
-		logger.setLevel(Level.FINE);
 
 		return logger;
 	}

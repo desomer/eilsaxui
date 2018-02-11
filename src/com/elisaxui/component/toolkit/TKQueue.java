@@ -114,14 +114,12 @@ public class TKQueue extends XHTMLPart {
 	public static final Object[] startProcessQueued(Object... param)
 	{
 		ArrayList<Object> ret = new ArrayList<>();
-		//ret.add("window.animInProgess=true;\n");
 		ret.add("TKQueue()");
 		for (Object  object: param) {
 			ret.add("(");
 			ret.add(object);
 			ret.add(")");
 		}
-		//ret.add("(\"callback\", function() {window.animInProgess=false})");
 		ret.add("()");
 		return ret.toArray();
 	}

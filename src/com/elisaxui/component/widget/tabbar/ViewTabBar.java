@@ -12,6 +12,7 @@ import com.elisaxui.component.widget.navbar.ViewNavBar;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -65,6 +66,15 @@ public class ViewTabBar extends XHTMLPart {
 	}
 	
 	public static XMLElement getTemplateAction(Object name, Object action) {
-		return xElement("button", xAttr("data-x-action", txt(xVar(action))), ViewNavBar.actionBtnContainer, cRippleEffect , xAttr("type", "\"button\""),  "<i class=\"actionBtn material-icons\">",xVar(name),"</i>");
+		
+		IXHTMLTemplate template = new IXHTMLTemplate() {
+			@Override
+			public XMLElement getTemplate()
+			{		
+				return xElement("button", xAttr("data-x-action", txt(xVar(action))), ViewNavBar.actionBtnContainer, cRippleEffect , xAttr("type", "\"button\""),  "<i class=\"actionBtn material-icons\">",xVar(name),"</i>");
+			}
+		};
+		
+		return template.getTemplate();
 	}
 }

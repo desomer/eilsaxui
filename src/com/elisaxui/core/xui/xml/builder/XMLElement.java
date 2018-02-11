@@ -12,6 +12,7 @@ import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSStyle;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Handle;
@@ -19,6 +20,7 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 
 /**
  * un element XML
+ *   TODO mettre un heritage  pour mieux gere doElementModeTemplate et doElementModeXML
  * 
  * @author Bureau
  *
@@ -81,10 +83,59 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 
 		XUIFactoryXHtml.getXHTMLFile().listParent.add(this);
 
+		if (buf.isTemplate) {
+			doElementModeTemplate(buf);
+		} else
+			doElementModeXML(buf);
+
+		nbTabInternal = 0;
+		nbTabForNewLine = 0;
+		XUIFactoryXHtml.getXHTMLFile().listParent.removeLast();
+		return buf;
+	}
+
+	/**
+	 * @param buf
+	 */
+	private void doElementModeTemplate(XMLBuilder buf) {
+		buf.getJSContent().getListElem().add("e('" + name + "'");
+
+		buf.getJSContent().getListElem().add(",[");
+		int nbAttr = 0;
+		for (XMLAttr attr : listAttr) {
+			if (nbAttr == 0)
+				buf.getJSContent().getListElem().add("a([");
+			else
+				buf.getJSContent().getListElem().add(",");
+
+			buf.getJSContent().getListElem().add("\"" + attr.getName() + "\"," + attr.getValue() + "");
+			nbAttr++;
+		}
+		if (nbAttr > 0)
+			buf.getJSContent().getListElem().add("])");
+
+		int nbChild = 0;
+		for (Object inner : listInner) {
+			if (inner != null) {
+				if (nbChild > 0 || nbAttr > 0)
+					buf.getJSContent().getListElem().add(",");
+
+				nbChild = doChild(buf, nbChild, inner);
+			}
+		}
+		buf.getJSContent().getListElem().add("]");
+
+		buf.getJSContent().getListElem().add(")");
+	}
+
+	/**
+	 * @param buf
+	 */
+	private void doElementModeXML(XMLBuilder buf) {
 		if (comment != null && XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS()) {
 			newLine(buf);
 			newTabInternal(buf);
-			buf.addContent("<!--" + comment + "-->");
+			buf.addContentOnTarget("<!--" + comment + "-->");
 		}
 
 		if (name != null) { // && !name.equals(XMLPart.NONAME)
@@ -93,22 +144,21 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 
 		newTabInternal(buf);
 		if (name != null) {
-			buf.addContent("<" + name);
+			buf.addContentOnTarget("<" + name);
 
 			for (XMLAttr attr : listAttr) {
-				buf.addContent(" ");
+				buf.addContentOnTarget(" ");
 				attr.toXML(buf);
 			}
-			buf.addContent(">");
+			buf.addContentOnTarget(">");
 		}
 
 		int nbChild = 0;
 		for (Object inner : listInner) {
-			if (inner != null)
-			{
-				this.nbTabInternal = this.nbTabInternal - (this.name==null?1:0);
+			if (inner != null) {
+				this.nbTabInternal = this.nbTabInternal - (this.name == null ? 1 : 0);
 				nbChild = doChild(buf, nbChild, inner);
-				this.nbTabInternal = this.nbTabInternal + (this.name==null?1:0);
+				this.nbTabInternal = this.nbTabInternal + (this.name == null ? 1 : 0);
 			}
 		}
 
@@ -117,19 +167,14 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 				newLine(buf);
 				newTabInternal(buf);
 			}
-			buf.addContent("</" + name + ">");
+			buf.addContentOnTarget("</" + name + ">");
 		}
 
 		if (comment != null && XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS()) {
 			newLine(buf);
 			newTabInternal(buf);
-			buf.addContent("<!--end of " + comment + "-->");
+			buf.addContentOnTarget("<!--end of " + comment + "-->");
 		}
-
-		nbTabInternal = 0;
-		nbTabForNewLine = 0;
-		XUIFactoryXHtml.getXHTMLFile().listParent.removeLast();
-		return buf;
 	}
 
 	private int doChild(XMLBuilder buf, int nbChild, Object inner) {
@@ -144,6 +189,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 		} else if (inner instanceof XMLPartElement) { // un XMLPart
 			XMLPartElement part = ((XMLPartElement) inner);
 			nbChild++;
+			// postionne les tabulation
 			for (XMLElement elem : part.part.getListElement(CONTENT.class)) {
 				elem.nbTabInternal = this.nbTabInternal + 1;
 				elem.nbTabForNewLine = this.nbTabForNewLine;
@@ -155,6 +201,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			for (Object object : listChild) {
 				nbChild = doChild(buf, nbChild, object);
 			}
+
 		} else if (inner instanceof Handle) { // un handle
 			Handle h = (Handle) inner;
 			String nameHandle = h.getName();
@@ -181,28 +228,39 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			ProxyHandler.getFormatManager().nbTabForNewLine = this.nbTabForNewLine;
 			part.toXML(buf);
 			nbChild++;
+
 		} else if (inner instanceof JSContent) { // cas d'un js
 			JSContent part = ((JSContent) inner);
 			ProxyHandler.getFormatManager().nbTabInternal = this.nbTabInternal + 1;
 			ProxyHandler.getFormatManager().nbTabForNewLine = this.nbTabForNewLine;
 			part.toXML(buf);
 			nbChild++;
-		} else if (inner instanceof CSSStyle) { // un css
 
+		} else if (inner instanceof CSSStyle) { // un css
 			CSSStyle part = ((CSSStyle) inner);
 			part.nbTabInternal = this.nbTabInternal + 1;
 			part.nbTabForNewLine = this.nbTabForNewLine;
 			part.toXML(buf);
 			nbChild++;
-			//////
+
 		} else {
-			if (inner instanceof StringBuilder)
-			{
-				StringBuilder text = (StringBuilder)inner;
-				if (text.indexOf("\n")>=0)
-					nbChild++;
+			if (buf.isTemplate) {
+				if (inner instanceof CharSequence) {
+					buf.addContentOnTarget("\""+inner+"\"");
+				} else {
+					buf.addContentOnTarget("t(");
+					buf.addContentOnTarget(inner);
+					buf.addContentOnTarget(")");
+				}
+				nbChild++;
+			} else {
+				if (inner instanceof StringBuilder) {
+					StringBuilder text = (StringBuilder) inner;
+					if (text.indexOf("\n") >= 0)
+						nbChild++;
+				}
+				buf.addContentOnTarget(inner);
 			}
-			buf.addContent(inner);
 		}
 
 		return nbChild;

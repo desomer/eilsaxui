@@ -1,11 +1,10 @@
 package com.elisaxui.core.xui.xml.builder;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xml.XMLPart;
 
 /**
- * 
- * sortir la gestion des tabulations (utiliser par le JSBuilder)
  * 
  * @author Bureau
  *
@@ -13,17 +12,44 @@ import com.elisaxui.core.xui.xml.XMLPart;
 public class XMLBuilder  {
 
 	String id; // identifiant du bloc
+
+	boolean isString = false;  // creer un string '<div>'
 	StringBuilder content;
 	StringBuilder afterContent;
 	boolean after = false;
-	boolean isJS = false;
-
-	public boolean isJS() {
-		return isJS;
+	
+	boolean isTemplate = false;  // e("div",[])
+	JSContent jsTemplate = null;
+	
+	/**
+	 * @return the js
+	 */
+	public final JSContent getJSContent() {
+		return jsTemplate;
 	}
 
-	public XMLBuilder setJS(boolean isJS) {
-		this.isJS = isJS;
+	/**
+	 * @return the isTemplate
+	 */
+	public final boolean isTemplate() {
+		return isTemplate;
+	}
+
+	/**
+	 * @param isTemplate the isTemplate to set
+	 */
+	public final XMLBuilder setTemplate(boolean isTemplate) {
+		this.isTemplate = isTemplate;
+		jsTemplate = new JSContent();
+		return this;
+	}
+
+	public boolean isModeString() {
+		return isString;
+	}
+
+	public XMLBuilder setModeString(boolean isJS) {
+		this.isString = isJS;
 		return this;
 	}
 
@@ -35,13 +61,11 @@ public class XMLBuilder  {
 	}
 
 	public static XMLElement createElement(Object name, Object... inner) {
-		XMLElement t = new XMLElement(name, inner);
-		return t;
+		return new XMLElement(name, inner);
 	}
 
 	public static XMLAttr createAttr(Object name, Object value) {
-		XMLAttr t = new XMLAttr(name, value);
-		return t;
+		return new XMLAttr(name, value);
 	}
 
 	public static XMLPartElement createPart(XMLPart part, Object... inner) {
@@ -51,8 +75,7 @@ public class XMLBuilder  {
 	}
 
 	public static Handle createHandle(String name) {
-		Handle t = new Handle(name);
-		return t;
+		return new Handle(name);
 	}
 
 	/**
@@ -60,12 +83,18 @@ public class XMLBuilder  {
 	 * 
 	 * @param v
 	 */
-	public void addContent(Object v) {
-		if (afterContent==null)
+	public void addContentOnTarget(Object v) {
+		
+		if (isTemplate)
+			this.getJSContent().getListElem().add(v);
+		else
 		{
-			after= false;
+			if (afterContent==null)
+			{
+				after= false;
+			}
+			(after ? afterContent : content).append(v);
 		}
-		(after ? afterContent : content).append(v);
 	}
 
 	public static class Handle {

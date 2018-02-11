@@ -28,12 +28,12 @@ public interface JSTestDataDriven extends JSClass {
 	
 	default Object startTest()
 	{
-		 _var("v", " []")    // {a:15, b:'12'},{a:21, b:'22'} 
+		 _var("v", " []");    // {a:15, b:'12'},{a:21, b:'22'} 
 				
-				._set(aDataSet, _new())
-				.__(aDataSet.setData("v"))
+				_set(aDataSet, _new());
+				aDataSet.setData("v");
 				
-				._set(aDataDriven, _new(aDataSet))
+				_set(aDataDriven, _new(aDataSet))
 				.__(aDataDriven.onEnter(fct("value")
 						._if("value.row['_dom_']==null")
 				            ._set(template, ScnAdminMain.xTemplateDataDriven("value.row.a", "value.row.b"))

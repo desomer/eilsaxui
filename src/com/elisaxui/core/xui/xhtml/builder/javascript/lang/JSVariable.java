@@ -11,6 +11,7 @@ import javax.json.JsonNumber;
 import javax.json.JsonValue;
 
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.Array;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
@@ -22,7 +23,7 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder;
  * @author Bureau
  *
  */
-public class JSVariable {
+public class JSVariable implements JSElement {
 	
 	protected static final String SEP = ",";
 	protected Object name;

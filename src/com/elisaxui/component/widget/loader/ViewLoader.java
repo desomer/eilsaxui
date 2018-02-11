@@ -8,8 +8,8 @@ import static com.elisaxui.component.widget.button.ViewRippleEffect.cRippleEffec
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.XHTMLTemplate;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -47,7 +47,7 @@ public class ViewLoader extends XHTMLPart {
 	
 	@xTarget(CONTENT.class)
 	public static XMLElement getTemplateBtnFloat() {
-		XHTMLTemplate template = new XHTMLTemplate() {
+		IXHTMLTemplate template = new IXHTMLTemplate() {
 			@Override
 			public XMLElement getTemplate()
 			{

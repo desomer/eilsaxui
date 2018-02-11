@@ -37,7 +37,7 @@ public final class CSSStyle extends XUIFormatManager implements IXMLBuilder {
 		{
 			newLine(buf);
 			newTabInternal(buf);
-			buf.addContent(style);
+			buf.addContentOnTarget(style);
 		}
 		return buf;
 	}

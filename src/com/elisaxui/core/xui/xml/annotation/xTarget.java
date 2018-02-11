@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.elisaxui.core.xui.xml.builder.XMLTarget;
+import com.elisaxui.core.xui.xml.target.XMLTarget;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target( {ElementType.FIELD, ElementType.METHOD} )

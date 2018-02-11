@@ -12,12 +12,12 @@ import com.elisaxui.component.widget.activity.JActivity;
 import com.elisaxui.component.widget.activity.JSONActivity;
 import com.elisaxui.component.widget.button.ViewRippleEffect;
 import com.elisaxui.component.widget.log.ViewLog;
-import com.elisaxui.core.xui.xhtml.XHTMLElement;
+import com.elisaxui.core.xui.xhtml.IXHTMLBuilder;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 
 /**********************************************************************/
-	public class JSONPage1 extends JSONActivity implements XHTMLElement
+	public class JSONPage1 extends JSONActivity implements IXHTMLBuilder
 	{
 		public static final String EVT_CLEAR = "clear";
 		public static final String EVT_MORE = "more";
@@ -29,12 +29,9 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
 		
 		public JActivity getJSON()
 		{
-			
-
-			
 			XMLElement cnt1 = xDiv(   ViewRippleEffect.cRippleEffect,                             //6
 							XHTMLPart.xAttr("style", "\"width: 100%; height: 30vh; background:url(" +ScnRoot.listPhotos[9] +") center / cover\""),
-							XHTMLPart.xId("test1"), 
+							xId("test1"), 
 							XHTMLPart.xAttr("data-x-action", "\""+EVT_DO_PHRASE+"\"")
 					 );
 				 

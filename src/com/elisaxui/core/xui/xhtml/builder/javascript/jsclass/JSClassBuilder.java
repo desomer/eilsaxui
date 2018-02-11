@@ -121,9 +121,9 @@ public final class JSClassBuilder extends JSContent {
 		
 		ProxyHandler.getFormatManager().newLine(buf);
 		ProxyHandler.getFormatManager().newTabInternal(buf);
-		buf.addContent("class ");
-		buf.addContent(name);
-		buf.addContent(" {");
+		buf.addContentOnTarget("class ");
+		buf.addContentOnTarget(name);
+		buf.addContentOnTarget(" {");
 	
 		ProxyHandler.getFormatManager().setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine()+1);
 		ProxyHandler.getFormatManager().newLine(buf);
@@ -137,14 +137,14 @@ public final class JSClassBuilder extends JSContent {
 		ProxyHandler.getFormatManager().setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine()-1);
 		ProxyHandler.getFormatManager().newLine(buf);
 		ProxyHandler.getFormatManager().newTabInternal(buf);
-		buf.addContent("}");
+		buf.addContentOnTarget("}");
 		
 		if (txtJS!=null)
 		{
 			try {
 				String str = JSExecutorHelper.doBabel(txtJS.toString());
 				
-				oldBuf.addContent(str);
+				oldBuf.addContentOnTarget(str);
 			} catch (ScriptException | NoSuchMethodException e) {
 				e.printStackTrace();
 			}

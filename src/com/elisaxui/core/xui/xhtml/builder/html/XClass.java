@@ -23,8 +23,9 @@ public class XClass {
 		return id;
 	}
 
-	public void setId(String id) {
+	public XClass setId(String id) {
 		this.id = id;
+		return this;
 	}
 	
 	/**

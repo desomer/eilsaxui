@@ -33,11 +33,11 @@ import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.core.helper.JSExecutorHelper;
 import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
-import com.elisaxui.core.xui.xhtml.XHTMLAppBuilder;
-import com.elisaxui.core.xui.xhtml.XHTMLChangeManager;
 import com.elisaxui.core.xui.xhtml.XHTMLFile;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot;
+import com.elisaxui.core.xui.xhtml.application.XHTMLAppScanner;
+import com.elisaxui.core.xui.xhtml.application.XHTMLChangeManager;
 import com.elisaxui.core.xui.xml.XMLFile;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
@@ -296,7 +296,7 @@ public class XUIFactoryXHtml {
 	private synchronized void  initChangeManager() {
 		if (changeMgr.mapClass==null || enableDynamic)
 		{
-			XHTMLAppBuilder.getMapXHTMLPart(changeMgr);  // synchronized
+			XHTMLAppScanner.getMapXHTMLPart(changeMgr);
 		}
 	}
 

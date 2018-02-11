@@ -11,6 +11,13 @@ package com.elisaxui.core.xui.xml.builder;
  */
 public class XMLAttr implements IXMLBuilder {
 	private Object name;
+	/**
+	 * @return the name
+	 */
+	public final Object getName() {
+		return name;
+	}
+
 	private Object value;
 
 	public Object getValue() {
@@ -25,11 +32,11 @@ public class XMLAttr implements IXMLBuilder {
 
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
-		buf.addContent(name);
+		buf.addContentOnTarget(name);
 		if (value!=null)
 		{
-			buf.addContent("=");
-			buf.addContent(value);
+			buf.addContentOnTarget("=");
+			buf.addContentOnTarget(value);
 		}
 		return buf;
 	}

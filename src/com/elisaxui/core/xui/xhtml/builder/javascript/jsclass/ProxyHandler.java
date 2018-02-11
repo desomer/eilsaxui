@@ -21,16 +21,16 @@ import java.util.Map;
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 
-import com.elisaxui.core.data.JSONBuilder;
 import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
-import com.elisaxui.core.xui.xhtml.XHTMLElement;
+import com.elisaxui.core.xui.xhtml.IXHTMLBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSAnonym;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.json.JSONBuilder;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.builder.XUIFormatManager;
 
@@ -107,6 +107,7 @@ public final class ProxyHandler implements InvocationHandler {
 		ProxyMethodDesc mthInvoke = new ProxyMethodDesc(null, null, proxy, method, args);
 		
 		Object ret = invokeDirectMethod(mthInvoke);
+		
 		if (ret != null)
 			return ret == NOT_USED ? null : ret;
 
@@ -437,8 +438,10 @@ public final class ProxyHandler implements InvocationHandler {
 		if (returnType instanceof ParameterizedType) {
 			ParameterizedType paramType = (ParameterizedType) returnType;
 			Type[] argTypes = paramType.getActualTypeArguments();
-			if (argTypes.length > 0) {
-				((JSArray<?>) ret)._type = Class.forName(argTypes[0].getTypeName());
+			if (argTypes.length > 0 ) {
+				String cl = argTypes[0].getTypeName();
+				if (!cl.equals("?"))
+					((JSArray<?>) ret)._type = Class.forName(cl);
 			}
 		}
 	}
@@ -455,7 +458,7 @@ public final class ProxyHandler implements InvocationHandler {
 	public static Object cast(Class<?> cl, Object args) {
 		Object jc = declareType(cl, null);
 		if (jc instanceof JSVariable)
-			((JSVariable) jc)._setValue(args);
+			((JSVariable) jc)._setValue(args)._setName(args);
 		else
 			((JSClass) jc)._setContent(args);
 		return jc;

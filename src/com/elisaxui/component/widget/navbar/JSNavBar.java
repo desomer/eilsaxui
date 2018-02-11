@@ -39,7 +39,7 @@ public interface JSNavBar extends JSFactory {
 	default Object getData(JSVariable selector) {
 
 		_set(aDataSet, _new());
-		__(aDataSet.setData("[]"));    //cast(JSArray.class,"[]"))
+		aDataSet.setData("[]");    //cast(JSArray.class,"[]"))
 
 		_set(aDataDriven, _new(aDataSet));
 		

@@ -4,8 +4,8 @@ import com.elisaxui.component.toolkit.datadriven.JSDataCtx;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.XHTMLTemplate;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xFile;
@@ -123,7 +123,7 @@ public class ScnAdminMain extends XHTMLPart {
 	
 	public static XMLElement xTemplateDataDriven(Object value, Object value2)
 	{
-		XHTMLTemplate template = new XHTMLTemplate() {
+		IXHTMLTemplate template = new IXHTMLTemplate() {
 			@Override
 			public XMLElement getTemplate()
 			{

@@ -13,24 +13,26 @@ public interface JSDataSet extends JSClass {
 
 	public static final String _DOM = "_dom_";
 	
-	JSArray data = null;
-	JSCallBack callBackChange = null;
+	JSArray<?> data();
+	
+	JSCallBack callBackChange();
 	JSInt delayEvent = null;
 	JSVariable myProxySet = null;    //WeakSet
 	
 	JSDataSet _that = null;
-//	Object synchroneEvent = null;   // toDo
+	
+//	Object synchroneEvent = null   // TODO   desactive le fastdom
 
 	default JSVoid constructor(Object d) {
-		 _set(data, d);
-		 _set(callBackChange, "$.Callbacks()");
+		 data().set(d);
+		 callBackChange().set("$.Callbacks()");
 		 _set(delayEvent, 0);
 		 _set(myProxySet, "new WeakSet()");
 		 return _void();
 	}
 
 	default Object onChange(Object callback) {
-		return __(callBackChange,".add(", callback ,")");
+		return __(callBackChange(),".add(", callback ,")");
 				
 	}
 	
@@ -44,13 +46,10 @@ public interface JSDataSet extends JSClass {
 		return __(myProxySet,".add(",myObj,")");
 	}
 	
-	default Object setData(Object d) {
-		//JSDataSet that = i
-		return  
+	default void setData(Object d) {
 				_var("changeHandler", "{\n" +
 					" get: function(target, property) {\n" +
-		//				" console.log(\'getting \' , property , \' for \' , target);\n" +
-						" // property is index in this case\n" +
+
 						" return target[property];\n" +
 						" },\n"+ 
 						" apply: function(target, thisArg, argumentsList) {\n"+
@@ -60,10 +59,10 @@ public interface JSDataSet extends JSClass {
 						" console.log(\"Deleted %s\", property);\n"+
 						" return true;\n"+
 						" },"+
+						
 					"set:", fct("target", "property", "value", "receiver")
 	
 					       ._if("property!='"+_DOM+"' && target[property]!==value")
-					       		//.consoleDebug("'setting'", "property" , "' for '" , "target" , "' with value '" , "value")
 								._var("row", "{ ope:'change', row:target, idx:target.idx, property:property, value: value, old: target[property] }")
 								._var("fct"," function() {fastdom.mutate(function() {that.callBackChange.fire(row); })}")
 								.__("setTimeout(fct, 1)")
@@ -133,13 +132,13 @@ public interface JSDataSet extends JSClass {
 						__("setTimeout(fct, t)");
 						__("return ret");
 					})
-				)
-			   ._set(data, "d")	 
-				;
+				);
+		
+			   data().set("d");	 
 	}
 
 	default JSArray getData() {
-		 return data;
+		 return data();
 	}
 
 }

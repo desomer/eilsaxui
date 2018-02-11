@@ -23,10 +23,10 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Handle;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.builder.XMLPartElement;
-import com.elisaxui.core.xui.xml.builder.XMLTarget;
-import com.elisaxui.core.xui.xml.builder.XMLTarget.ITargetRoot;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.target.CONTENT;
+import com.elisaxui.core.xui.xml.target.XMLTarget;
+import com.elisaxui.core.xui.xml.target.XMLTarget.ITargetRoot;
 
 /**
  * un bloc xml representant une vue

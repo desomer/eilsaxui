@@ -117,28 +117,28 @@ public class JSFunction extends JSContent {
 		if (!isFragment) {
 			if (name == null) {
 				if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS())
-					buf.addContent("/*** start anonymous ***/");
-				buf.addContent("function");
+					buf.addContentOnTarget("/*** start anonymous ***/");
+				buf.addContentOnTarget("function");
 			} else {
 				ProxyHandler.getFormatManager().newTabInternal(buf);
 				if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS())
-					buf.addContent("/******** start " + name + " *******/");
+					buf.addContentOnTarget("/******** start " + name + " *******/");
 				ProxyHandler.getFormatManager().newLine(buf);
 				ProxyHandler.getFormatManager().newTabInternal(buf);
 				if (this.isStatic)
-					buf.addContent("static ");	
-				buf.addContent(name);
+					buf.addContentOnTarget("static ");	
+				buf.addContentOnTarget(name);
 			}
-			buf.addContent("(");
+			buf.addContentOnTarget("(");
 			if (param != null) {
 				for (int i = 0; i < param.length; i++) {
 					if (i > 0)
-						buf.addContent(", ");
-					buf.addContent(param[i]);
+						buf.addContentOnTarget(", ");
+					buf.addContentOnTarget(param[i]);
 				}
 			}
-			buf.addContent(")");
-			buf.addContent(" {");
+			buf.addContentOnTarget(")");
+			buf.addContentOnTarget(" {");
 
 			ProxyHandler.getFormatManager().setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine() + 1);
 		} else {
@@ -155,10 +155,10 @@ public class JSFunction extends JSContent {
 			ProxyHandler.getFormatManager().setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine() - 1);
 			ProxyHandler.getFormatManager().newLine(buf);
 			ProxyHandler.getFormatManager().newTabInternal(buf);
-			buf.addContent("}");
+			buf.addContentOnTarget("}");
 			if (name == null) {
 				if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS())
-					buf.addContent("/*** end anonymous ***/");
+					buf.addContentOnTarget("/*** end anonymous ***/");
 			}
 		}
 

@@ -25,7 +25,7 @@ public interface JSMenu extends JSClass {
 	{
 				
 		_set(aDataSet, _new());
-		__(aDataSet.setData("[]"));
+		aDataSet.setData("[]");
 		
 		_set(aDataDriven, _new(aDataSet));
 		__(aDataDriven.onEnter(fct("ctx").__(()->{

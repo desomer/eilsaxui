@@ -11,8 +11,8 @@ import com.elisaxui.component.transition.ConstTransition;
 import com.elisaxui.component.widget.button.ViewBtnBurger;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.XHTMLTemplate;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -128,7 +128,7 @@ public class ViewNavBar extends XHTMLPart {
 	}
 	
 	public static XMLElement getTemplateActionBar() {
-		XHTMLTemplate template = new XHTMLTemplate() {
+		IXHTMLTemplate template = new IXHTMLTemplate() {
 			@Override
 			public XMLElement getTemplate()
 			{
@@ -140,7 +140,7 @@ public class ViewNavBar extends XHTMLPart {
 	}
 	
 	public static XMLElement getTemplateName(Object name) {
-		XHTMLTemplate template = new XHTMLTemplate() {
+		IXHTMLTemplate template = new IXHTMLTemplate() {
 			@Override
 			public XMLElement getTemplate()
 			{
@@ -154,7 +154,7 @@ public class ViewNavBar extends XHTMLPart {
 	
 	public static XMLElement getTemplateAction(Object name, Object action) {
 		
-		XHTMLTemplate template = new XHTMLTemplate() {
+		IXHTMLTemplate template = new IXHTMLTemplate() {
 			@Override
 			public XMLElement getTemplate()
 			{

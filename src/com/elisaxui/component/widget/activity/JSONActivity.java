@@ -4,7 +4,7 @@
 package com.elisaxui.component.widget.activity;
 
 import com.elisaxui.component.widget.container.JSViewCard;
-import com.elisaxui.core.data.JSONBuilder;
+import com.elisaxui.core.xui.xhtml.builder.json.JSONBuilder;
 
 /**
  * @author Bureau

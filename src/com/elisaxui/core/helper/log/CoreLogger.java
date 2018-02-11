@@ -32,21 +32,24 @@ public class CoreLogger {
 		
 		String name = Thread.currentThread().getStackTrace()[nb].getClassName();
 		
-		Logger logger = mapLogger.computeIfAbsent(name, key-> {
-			Handler handler = new ConsoleHandler();
-			handler.setLevel(Level.ALL);
-			
-			handler.setFormatter(new SingleLineFormatter());
-	
-			Logger l = Logger.getLogger(name);
-			l.addHandler(handler);
-			l.setUseParentHandlers(false);
-			l.setLevel(Level.FINE);
-			return l;
-		});
+		return mapLogger.computeIfAbsent(name, key-> createLogger(name) );
+	}
 
+	/**
+	 * @param name
+	 * @return
+	 */
+	private static Logger createLogger(String name) {
+		Handler handler = new ConsoleHandler();
+		handler.setLevel(Level.ALL);
+		
+		handler.setFormatter(new SingleLineFormatter());
 
-		return logger;
+		Logger l = Logger.getLogger(name);
+		l.addHandler(handler);
+		l.setUseParentHandlers(false);
+		l.setLevel(Level.FINE);
+		return l;
 	}
 	
 	public static class SingleLineFormatter extends Formatter {
@@ -80,10 +83,14 @@ public class CoreLogger {
 		    }
 		    formatter.format(args, text, null);
 		    sb.append(text);
-		    sb.append(" <");
-
-
+		    
+		    // Level
+		    sb.append(" [");
+		    sb.append(record.getLevel().getLocalizedName());
+		    sb.append("] ");
+		    
 		    // Class name 
+		    sb.append("<");
 		    if (record.getSourceClassName() != null) {
 		      sb.append(record.getSourceClassName());
 		    } else {
@@ -96,11 +103,6 @@ public class CoreLogger {
 		      sb.append(record.getSourceMethodName());
 		      sb.append(">");
 		    }
-
-		    // Level
-		    sb.append("[");
-		    sb.append(record.getLevel().getLocalizedName());
-		    sb.append("] ");
 
 		    // Indent - the more serious, the more indented.
 		    int iOffset = (1000 - record.getLevel().intValue()) / 100;

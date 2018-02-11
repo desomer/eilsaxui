@@ -147,7 +147,7 @@ public interface JSTransition extends JSClass {
 				/*************************************************/
 				// ouvre le menu
 				/*************************************************/
-				__(TKQueue.startAnimQueued(callback("param", ()->{
+				__(TKQueue.startAnimQueued(callback(()->{
 							__("window.disableScrollEvent=true");
 							overlay.doShowOverlay(jqActivityActive, 1);
 							

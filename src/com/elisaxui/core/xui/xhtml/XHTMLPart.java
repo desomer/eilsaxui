@@ -1,7 +1,5 @@
 package com.elisaxui.core.xui.xhtml;
 
-import java.util.ArrayList;
-
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
@@ -17,7 +15,7 @@ import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.builder.XMLAttr;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 
-public abstract class XHTMLPart extends XMLPart implements XHTMLElement {
+public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 
 	private static final String ASYNC = "async";
 	private static final String ONLOAD = "onload";
@@ -34,90 +32,10 @@ public abstract class XHTMLPart extends XMLPart implements XHTMLElement {
 		return this;
 	}
 
-	/******************************************************************************/
-//	public static final XMLElement xDiv(Object... inner) {
-//		return xElement("div", inner);
-//	}
-//
-//	public static final XMLElement xHeader(Object... inner) {
-//		return xElement("header", inner);
-//	}
-//
-//	public static final XMLElement xFooter(Object... inner) {
-//		return xElement("footer", inner);
-//	}
-//
-//	public static final XMLElement xSpan(Object... inner) {
-//		return xElement("span", inner);
-//	}
-//
-//	public static final XMLElement xI(Object... inner) {
-//		return xElement("i", inner);
-//	}
-//
-//	public static final XMLElement xA(Object... inner) {
-//		return xElement("a", inner);
-//	}
-//
-//	public static final XMLElement xP(Object... inner) {
-//		return xElement("p", inner);
-//	}
-//
-//	public static final XMLElement xButton(Object... inner) {
-//		return xElement("button", inner);
-//	}
-//
-//	public static final XMLElement xH1(Object... inner) {
-//		return xElement("h1", inner);
-//	}
-//
-//	public static final XMLElement xH2(Object... inner) {
-//		return xElement("h2", inner);
-//	}
-//
-//	public static final XMLElement xUl(Object... inner) {
-//		return xElement("ul", inner);
-//	}
-//
-//	public static final XMLElement xLi(Object... inner) {
-//		return xElement("li", inner);
-//	}
-//
-//	public static final XMLElement xImg(Object... inner) {
-//		return xElement("img", inner);
-//	}
-//
-//	public static final XMLElement xCanvas(Object... inner) {
-//		return xElement("canvas", inner);
-//	}
-//
-//	public static final XMLElement xTextArea(Object... inner) {
-//		return xElement("textarea", inner);
-//	}
-//
-//	/************************* META **************************************/
-//
-//	public static final XMLElement xTitle(Object... inner) {
-//		return xElement("title", inner);
-//	}
-//
-//	public static final XMLElement xMeta(Object... inner) {
-//		return xElement("meta", inner);
-//	}
-//
-//	public static final XMLElement xComment(Object... comment) {
-//		ArrayList<Object> elem = new ArrayList<>();
-//		elem.add("<!--\n");
-//		for (Object c : comment) {
-//			elem.add(xListElement(c + "\n"));
-//		}
-//		elem.add(xListElement("-->"));
-//		return xElement(null, elem.toArray());
-//	}
-
 	/***********************************************************************/
 	/**
-	 * 
+	 *  pas dans un XMLPart mais un JSClass
+	 *  
 	 * @return
 	 */
 	@Deprecated
@@ -126,7 +44,7 @@ public abstract class XHTMLPart extends XMLPart implements XHTMLElement {
 	}
 
 	/**
-	 * 
+	 *  pas dans un XMLPart mais un JSClass
 	 */
 	@Deprecated
 	public static final JSFunction fct(Object... param) {
@@ -135,7 +53,7 @@ public abstract class XHTMLPart extends XMLPart implements XHTMLElement {
 
 	/**
 	 * ou js() mais fragment peux etre conditionnel
-	 * 
+	 *   pas dans un XMLPart mais un JSClass
 	 * @return
 	 */
 	@Deprecated
@@ -143,11 +61,9 @@ public abstract class XHTMLPart extends XMLPart implements XHTMLElement {
 		return new JSFunction().setFragment(true);
 	}
 
-	public static final String xVar(Object var) {
-		return "'+" + var + "+'";
-	}
-
 	/**
+	 * 
+	 *  pas dans un XMLPart mais un JSClass
 	 * 
 	 * @param param
 	 * @return
@@ -223,10 +139,6 @@ public abstract class XHTMLPart extends XMLPart implements XHTMLElement {
 
 	/**************************************************************************/
 
-	public static final XMLAttr xId(Object id) {
-		return xAttr("id", id);
-	}
-
 	public static final XMLAttr xIdAction(Object id) {
 		return xAttr("data-x-action", id);
 	}
@@ -237,6 +149,7 @@ public abstract class XHTMLPart extends XMLPart implements XHTMLElement {
 		return new JSListParameter(param);
 	}
 
+	@Deprecated
 	public static final String txt(Object var) {
 		return "\"" + var + "\"";
 	}

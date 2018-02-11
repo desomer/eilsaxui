@@ -8,8 +8,8 @@ import static com.elisaxui.component.transition.CssTransition.cFixedElement;
 import com.elisaxui.app.elisys.xui.page.main.JSONPage1;
 import com.elisaxui.component.widget.button.ViewBtnCircle;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.XHTMLTemplate;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -59,7 +59,7 @@ public class ViewSyllabisation extends XHTMLPart {
 	}
 	
 	public static XMLElement getMot(Object text) {
-		XHTMLTemplate template = new XHTMLTemplate() {
+		IXHTMLTemplate template = new IXHTMLTemplate() {
 			@Override
 			public XMLElement getTemplate()
 			{
@@ -71,7 +71,7 @@ public class ViewSyllabisation extends XHTMLPart {
 	}
 	
 	public static XMLElement getSyl(Object text) {
-		XHTMLTemplate template = new XHTMLTemplate() {
+		IXHTMLTemplate template = new IXHTMLTemplate() {
 			@Override
 			public XMLElement getTemplate()
 			{

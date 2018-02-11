@@ -10,6 +10,7 @@ import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.def
 import com.elisaxui.component.toolkit.JQuery;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
+import com.elisaxui.core.xui.xhtml.IXHTMLBuilder;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSAnonym;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
@@ -24,7 +25,7 @@ import com.elisaxui.core.xui.xml.annotation.xAnonymous;
  * @author Bureau
  *
  */
-public interface JSSyllabisation extends JSClass {
+public interface JSSyllabisation extends JSClass, IXHTMLBuilder {
 
 	public static final String REST_JSON_SYLLABISATION = "/rest/json/syllabisation/pacahontas";
 	
@@ -122,7 +123,7 @@ public interface JSSyllabisation extends JSClass {
 		
 		JSAnonym onEnter = (/*ctx*/)->{
 			_if("ctx.row['_dom_']==null");				
-				_set(template, ViewSyllabisation.getMot(XHTMLPart.xVar("ctx.row.text")));
+				_set(template, ViewSyllabisation.getMot(xVar("ctx.row.text")));
 				
 				JQuery jqdom = new JQuery()._setName("jqdom");
 				_var(jqdom, template.appendInto(JQuery.$(ViewSyllabisation.cDivSyllabisation)));
@@ -133,7 +134,7 @@ public interface JSSyllabisation extends JSClass {
 				_var(sylb, "ctx.row.syllabes");
 				
 	            _forIdx("j", sylb);
-	            	_set(template, ViewSyllabisation.getSyl(XHTMLPart.xVar(sylb.at("j").attr("text"))));
+	            	_set(template, ViewSyllabisation.getSyl(xVar(sylb.at("j").attr("text"))));
 	            	
 	        		JQuery jqdomSyl = new JQuery()._setName("jqdomSyl");
 	            	_var(jqdomSyl, template.appendInto("jqdom"));

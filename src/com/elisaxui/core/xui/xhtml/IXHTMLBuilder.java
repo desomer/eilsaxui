@@ -6,13 +6,15 @@ package com.elisaxui.core.xui.xhtml;
 import java.util.ArrayList;
 
 import com.elisaxui.core.xui.xml.XMLPart;
+import com.elisaxui.core.xui.xml.builder.XMLAttr;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 
 /**
  * @author gauth
  *
  */
-public interface XHTMLElement {
+public interface IXHTMLBuilder {
 
 	static XMLElement xElem(String name, Object... inner) {
 		return XMLPart.xElement(name, inner);
@@ -103,5 +105,14 @@ public interface XHTMLElement {
 		return xElem(null, elem.toArray());
 	}
 
+	/**************************  ATTR  ************************************/
+	default XMLAttr xId(Object value) {
+		return XMLBuilder.createAttr("id", value);
+	}
 	
+	
+	/*************************  VAR  **************************************/
+	default String xVar(Object var) {
+		return "'+" + var + "+'";
+	}
 }

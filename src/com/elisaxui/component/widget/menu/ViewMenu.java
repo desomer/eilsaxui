@@ -14,6 +14,7 @@ import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -87,11 +88,21 @@ public class ViewMenu extends XHTMLPart {
 
 
 	public static XMLElement getTemplateMenu(Object name, Object icon, Object idAction) {
-		return xListElement(xPart(new ViewMenuItems()
-				.addProperty(ViewMenuItems.PROPERTY_NAME, xVar(name))
-				.addProperty(ViewMenuItems.PROPERTY_ICON, xVar(icon))
-				.addProperty(ViewMenuItems.PROPERTY_ACTION, xVar(idAction))
-				));
+		
+		IXHTMLTemplate template = new IXHTMLTemplate() {
+			@Override
+			public XMLElement getTemplate()
+			{
+				return xListElement(xPart(new ViewMenuItems()
+						.addProperty(ViewMenuItems.PROPERTY_NAME, xVar(name))
+						.addProperty(ViewMenuItems.PROPERTY_ICON, xVar(icon))
+						.addProperty(ViewMenuItems.PROPERTY_ACTION, xVar(idAction))
+						));
+			}
+		};
+		
+		return template.getTemplate();
+		
 	}
 	
 	public static XMLElement getTemplateMenuDivider() {

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.core.xui.xhtml;
+package com.elisaxui.core.xui.xhtml.application;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -20,6 +20,7 @@ import com.elisaxui.core.helper.ClassLoaderHelper.FileEntry;
 import com.elisaxui.core.helper.ReflectionHelper;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.XUILaucher;
+import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassInterface;
@@ -35,14 +36,13 @@ import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
  * @author Bureau
  *
  */
-public class XHTMLAppBuilder {
+public class XHTMLAppScanner {
 
 	
 	private static final boolean debug = false;
 	
 	// TODO mettre en cache
 	public static synchronized XHTMLChangeManager  getMapXHTMLPart(XHTMLChangeManager changeInfo) {
-		
 		
 		List<Class<? extends XHTMLPart>> listXHTMLPart = new ArrayList<>(100);
 		List<Class<? extends JSClass>> listJSClass = new ArrayList<>(100);

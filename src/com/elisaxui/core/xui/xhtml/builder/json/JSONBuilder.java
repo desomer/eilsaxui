@@ -1,10 +1,12 @@
 /**
  * 
  */
-package com.elisaxui.core.data;
+package com.elisaxui.core.xui.xhtml.builder.json;
 
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
@@ -22,7 +24,7 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
 
 public interface JSONBuilder {
 	
-	default Object obj(Object...value)
+	default JsonObject obj(Object...value)
 	{
 		 JsonObjectBuilder jsonObj = Json.createObjectBuilder();
 				  
@@ -42,7 +44,7 @@ public interface JSONBuilder {
 						StringBuilder txtHtml = new StringBuilder(1000);
 						StringBuilder txtJS = new StringBuilder(1000);
 
-						((XMLElement)attr.value).toXML(new XMLBuilder("js", txtHtml, txtJS).setJS(false));
+						((XMLElement)attr.value).toXML(new XMLBuilder("js", txtHtml, txtJS).setModeString(false));
 						
 						String strHTML =txtHtml.toString();
 						strHTML = strHTML.replaceAll("\\n", "");
@@ -65,7 +67,7 @@ public interface JSONBuilder {
 		
 	}
 	
-	default Object arr(Object...items)
+	default JsonArray arr(Object...items)
 	{
 		JsonArrayBuilder arr = Json.createArrayBuilder();
 		

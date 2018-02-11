@@ -44,27 +44,27 @@ public class XUIFormatManager {
 	
 	public void newLine(XMLBuilder buf) {
 	
-		if (buf.isJS()) {
+		if (buf.isModeString()) {
 			if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCrXMLinJS())
-				buf.addContent("'+\n");
+				buf.addContentOnTarget("'+\n");
 		} else {
 			if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCrXML())
-				buf.addContent("\n");
+				buf.addContentOnTarget("\n");
 		}
 		
 		for (int i = 0; i < nbTabForNewLine; i++) {
-			buf.addContent("\t");
+			buf.addContentOnTarget("\t");
 		}
 		
-		if (buf.isJS()) {
+		if (buf.isModeString()) {
 			if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCrXMLinJS())
-				buf.addContent("'");
+				buf.addContentOnTarget("'");
 		}
 	}
 
 	public void newTabInternal(XMLBuilder buf) {
 		for (int i = 0; i < nbTabInternal; i++) {
-			buf.addContent("\t");
+			buf.addContentOnTarget("\t");
 		}
 	}
 

@@ -12,7 +12,7 @@ import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.component.transition.JSTransition;
 import com.elisaxui.component.widget.button.ViewFloatAction;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
-import com.elisaxui.core.xui.xhtml.XHTMLElement;
+import com.elisaxui.core.xui.xhtml.IXHTMLBuilder;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
@@ -21,7 +21,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
  * @author Bureau
  *
  */
-public interface JSContainer extends JSFactory, XHTMLElement {
+public interface JSContainer extends JSFactory, IXHTMLBuilder {
 
 	JSDataDriven aDataDriven();
 	JSDataSet aDataSet();
@@ -38,11 +38,11 @@ public interface JSContainer extends JSFactory, XHTMLElement {
 
 		_if("ctx.row.html instanceof JSXHTMLPart");
 			_var("part", "ctx.row.html");
-			_var("ret", xDiv(XHTMLPart.xVar("part.html")));
+			_var("ret", xDiv(xVar("part.html")));
 			__("ret.js+=part.js");
 			__("return ret");
 		_else();
-			_var("ret", xDiv(XHTMLPart.xVar("ctx.row.html")));
+			_var("ret", xDiv(xVar("ctx.row.html")));
 			_var("js", "ctx.row.js.replace('<script type=\\\"text\\\\/javascript\\\">', '')");
 			_set("js", "js.replace('<\\\\/script>', '')");
 			__("ret.js=\"<script>\"+js+\"<\\/script>\"");
@@ -67,7 +67,7 @@ public interface JSContainer extends JSFactory, XHTMLElement {
 				_if("ctx.row['_dom_']==null");
 				
 				 	_if("ctx.row.type=='page'");
-						_set(template, XHTMLPart.xPart(new ViewPageLayout(XHTMLPart.xVar("ctx.row.id"))));
+						_set(template, XHTMLPart.xPart(new ViewPageLayout(xVar("ctx.row.id"))));
 						_var("jqdom", template.appendInto("$(selector)"));
 						__("ctx.row['_dom_']=jqdom[0]");
 						
@@ -103,7 +103,7 @@ public interface JSContainer extends JSFactory, XHTMLElement {
 					    	_set("subData", _self.getSubData("ctx"));
 					    endif();
 					    
-						_set(template, ViewCard.getTemplate((ViewCard)card.addProperty("childrenCard", XHTMLPart.xVar("subData.html") )));
+						_set(template, ViewCard.getTemplate((ViewCard)card.addProperty("childrenCard", xVar("subData.html") )));
 						__(template, ".js+=subData.js");
 						// ajoute la card
 						_var("jqdom", template.appendInto("$(selector)"));

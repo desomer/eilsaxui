@@ -5,6 +5,7 @@ import java.lang.reflect.Proxy;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSAnonym;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
 
 /**
@@ -12,7 +13,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
  * @author Bureau
  *
  */
-public interface JSClass extends JSContentInterface  {
+public interface JSClass extends JSContentInterface, JSElement  {
 
 	/**
 	 * sert a ne pas avoir de warning

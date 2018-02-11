@@ -54,7 +54,8 @@ public interface JSContentInterface  {
 	
 	JSFunction fct(Object... param);
 	JSFunction callback( JSAnonym c);
-	JSFunction callback(Object param, JSAnonym c);
+	JSFunction callback(JSElement param, JSAnonym c);
+	JSFunction callback(JSElement param1, JSElement param2, JSAnonym c);
 	
 	/**
 	 * exemple <br>

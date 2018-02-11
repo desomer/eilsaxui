@@ -27,7 +27,8 @@ public interface JSViewCard extends JSFactory {
 	default Object getData(Object selector) {
 
 		_set(aDataSet, _new());
-		__(aDataSet.setData("[]"));
+		
+		aDataSet.setData("[]");
 
 		_set(aDataDriven, _new(aDataSet));
 

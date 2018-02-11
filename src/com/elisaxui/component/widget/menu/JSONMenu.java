@@ -3,7 +3,7 @@
  */
 package com.elisaxui.component.widget.menu;
 
-import com.elisaxui.core.data.JSONBuilder;
+import com.elisaxui.core.xui.xhtml.builder.json.JSONBuilder;
 
 public class JSONMenu implements JSONBuilder
 {

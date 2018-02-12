@@ -674,7 +674,9 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 
 	@Override
 	public <E> E let(String name, E content) {
-		Class<?> t = content.getClass();
+		Class<?> t = JSVariable.class;
+		if (content!=null)
+			t = content.getClass();
 		if (content instanceof Proxy) {
 			ProxyHandler mh = (ProxyHandler) Proxy.getInvocationHandler(content);
 			t = mh.getImplementClass();

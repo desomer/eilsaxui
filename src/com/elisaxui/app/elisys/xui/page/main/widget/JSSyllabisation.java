@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.xui.widget;
+package com.elisaxui.app.elisys.xui.page.main.widget;
 
 import static com.elisaxui.component.toolkit.JQuery.$;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.defAttr;

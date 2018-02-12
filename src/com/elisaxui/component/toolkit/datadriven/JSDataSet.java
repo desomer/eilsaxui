@@ -11,11 +11,11 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 public interface JSDataSet extends JSClass {
 
 
-	public static final String _DOM = "_dom_";
+	public static final String ATTR_DOM_LINK = "_dom_";
 	
 	JSArray<?> data();
-	
 	JSCallBack callBackChange();
+	
 	JSInt delayEvent = null;
 	JSVariable myProxySet = null;    //WeakSet
 	
@@ -23,12 +23,11 @@ public interface JSDataSet extends JSClass {
 	
 //	Object synchroneEvent = null   // TODO   desactive le fastdom
 
-	default JSVoid constructor(Object d) {
+	default void constructor(Object d) {
 		 data().set(d);
 		 callBackChange().set("$.Callbacks()");
 		 _set(delayEvent, 0);
 		 _set(myProxySet, "new WeakSet()");
-		 return _void();
 	}
 
 	default Object onChange(Object callback) {
@@ -62,7 +61,7 @@ public interface JSDataSet extends JSClass {
 						
 					"set:", fct("target", "property", "value", "receiver")
 	
-					       ._if("property!='"+_DOM+"' && target[property]!==value")
+					       ._if("property!='"+ATTR_DOM_LINK+"' && target[property]!==value")
 								._var("row", "{ ope:'change', row:target, idx:target.idx, property:property, value: value, old: target[property] }")
 								._var("fct"," function() {fastdom.mutate(function() {that.callBackChange.fire(row); })}")
 								.__("setTimeout(fct, 1)")

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.xui.page.custom;
+package com.elisaxui.app.elisys.xui.page.formation;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;

@@ -36,6 +36,10 @@ public interface IXHTMLBuilder {
 	default XMLElement xFooter(Object... inner) {
 		return xElem("footer", inner);
 	}
+	
+	default XMLElement xArticle(Object... inner) {
+		return xElem("article", inner);
+	}
 
 	default XMLElement xSpan(Object... inner) {
 		return xElem("span", inner);

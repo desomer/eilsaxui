@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.xui.page.custom;
+package com.elisaxui.app.elisys.xui.page.formation;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.declareType;
 

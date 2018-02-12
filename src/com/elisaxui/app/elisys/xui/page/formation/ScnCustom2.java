@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.xui.page.custom;
+package com.elisaxui.app.elisys.xui.page.formation;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
@@ -26,7 +26,7 @@ public class ScnCustom2 extends XHTMLPart {
 	@xRessource									// une seule fois par vue
 	public XMLElement xImportClass() {
 		return xListElem(   // ajout plusieur element sans balise parent
-					xImport(JSClass1.class),
+					xImport(JSClass1.class),    // xImport( cl,  INLINE)  OU  xImport( cl,  moduleJS("test.js"))
 					
 					xScriptJS(js()
 							._var(jsClass1, _new())

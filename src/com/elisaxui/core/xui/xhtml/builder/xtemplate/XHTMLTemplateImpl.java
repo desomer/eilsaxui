@@ -26,11 +26,18 @@ public class XHTMLTemplateImpl implements IXHTMLTemplate
 
 	public static final JSFunction onEnter(Object row, XMLElement elem)
 	{
-		return (JSFunction) new JSFunction().setParam(new Object[] {row})
+		return (JSFunction) new JSFunction().setParam(new Object[] {row, "ctx"})
 				._return( new XHTMLTemplateImpl(elem).setModeJS(true) );
 
 	}
 	
+	public static final JSFunction onExit(Object row, Object dom)
+	{
+		return (JSFunction) new JSFunction().setParam(new Object[] {row, dom, "ctx"})
+				._if(dom,"!=null")
+					.__("$("+dom+").remove()")
+				.endif();
+	}
 	
 	/**
 	 * @param modeJs the modeJs to set

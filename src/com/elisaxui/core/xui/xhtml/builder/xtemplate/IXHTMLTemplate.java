@@ -3,7 +3,6 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.xtemplate;
 
-import com.elisaxui.app.elisys.xui.page.perf.DtoUser;
 import com.elisaxui.core.xui.xhtml.IXHTMLBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
@@ -25,13 +24,13 @@ public interface IXHTMLTemplate extends IXHTMLBuilder {
 		
 	}
 
-	default Object xData(JSArray<?> data, Object enter )
+	default Object xDataDriven(JSArray<?> data, Object enter, Object exit )
 	{
 		JSon d =  JSClass.declareType(JSon.class, "d");
 		
 		return new JSFunction().setParam(new Object[] {d})
-				.__("JSXHTMLTemplate.doTemplateDataDriven(",d,",",data,","+enter+")")
-				._return("e('h2', ['ok'])");
+				.__("JSXHTMLTemplate.doTemplateDataDriven(",d,",",data,","+enter+","+exit+")")
+				;
 	}
 
 }

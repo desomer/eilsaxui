@@ -3,7 +3,7 @@
  */
 package com.elisaxui.app.elisys.xui.page.main;
 
-import com.elisaxui.app.elisys.xui.widget.JSSyllabisation;
+import com.elisaxui.app.elisys.xui.page.main.widget.JSSyllabisation;
 import com.elisaxui.component.toolkit.TKQueue;
 import com.elisaxui.component.widget.layout.JSPageLayout;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;

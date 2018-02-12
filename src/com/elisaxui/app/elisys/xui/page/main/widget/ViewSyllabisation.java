@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.xui.widget;
+package com.elisaxui.app.elisys.xui.page.main.widget;
 
 import static com.elisaxui.component.transition.CssTransition.cFixedElement;
 

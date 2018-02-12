@@ -18,7 +18,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.json.JSONBuilder;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
-import static com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplateImpl.onEnter;
+import static com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplateImpl.*;
 
 /**
  * @author gauth
@@ -41,10 +41,6 @@ public interface JSPerfVuesJS extends JSClass, JSONBuilder, IXHTMLTemplate {
 
 	default void doPerf() {
 		JSInt i = JSClass.declareType(JSInt.class, "i");
-		JSInt j = JSClass.declareType(JSInt.class, "j");
-		JSArray<?> child = JSClass.declareType(JSArray.class, "child");
-		JSon elem = JSClass.declareType(JSon.class, "elem");
-		JSon eldom = JSClass.declareType(JSon.class, "eldom");
 
 		if (isVueJS()) {
 
@@ -95,57 +91,7 @@ public interface JSPerfVuesJS extends JSClass, JSONBuilder, IXHTMLTemplate {
 			b.set(json2);
 			b.set(json3);
 
-			let("doElem", callback(eldom, elem, () -> {
-				_if("elem instanceof Element || elem instanceof Text").then(() -> { // nodeType = Node.TextNode
-					__("eldom.appendChild(elem)");
-				})._elseif("typeof(elem) === 'string' || elem instanceof String").then(() -> {
-					__("eldom.appendChild(document.createTextNode(elem))");
-				})._elseif("elem instanceof Function").then(() -> {
-					let("r", "elem.call(elem, eldom)");
-					__("doElem(eldom, r)");
-				})._else(() -> {
-					JSArray<?> el = cast(JSArray.class, "elem");
-					_forIdx(i, el)._do(() -> {
-						let("attr", el.at(i));
-						__("eldom.setAttributeNode(attr)");
-					});
-				});
-			}));
-
-			let("e", fct("id", child, "attr").__(() -> {
-				JSVariable newdom = let(JSVariable.class, "newdom", "document.createElement(id)");
-				_if(child.isNotEqual(null)).then(() -> {
-					_forIdx(j, child)._do(() -> {
-						let("elem", child.at(j));
-						__("doElem(newdom, elem)");
-					});
-				});
-				_return(newdom);
-			}));
-
-			let("a", callback(child, () -> {
-				JSon attr = let(JSon.class, "attr", null);
-				JSArray<Object> ret = let("ret", new JSArray<>().asLitteral());
-				_forIdx(j, child)._do(() -> {
-					let("elem", child.at(j));
-					_if(j.modulo(2).isEqual(0)).then(() -> {
-						attr.set("document.createAttribute(elem)");
-						ret.push(attr);
-					})._else(() -> {
-						attr.get("value").set("elem");
-					});
-
-				});
-				_return(ret);
-			}));
-
-			let("t", callback(child, () -> {
-				JSon text = let(JSon.class, "text", null);
-				text.set("document.createTextNode(", child, ")");
-				_return(text);
-			}));
-
-			XClass cA = new XClass().setId("cA");
+					
 			JSString id = let("id", JSString.value("testid"));
 			JSString varText = let("varText", JSString.value("testVar"));
 			JSString varText2 = let("varText2", JSString.value("binding"));
@@ -153,23 +99,30 @@ public interface JSPerfVuesJS extends JSClass, JSONBuilder, IXHTMLTemplate {
 			JSArray<DtoUser> listUser = let("listUser", new JSArray<DtoUser>().asLitteral());
 
 			DtoUser aUser = JSClass.declareType(DtoUser.class, "aUser");
+			JSon aDom = JSClass.declareType(JSon.class, "aDom");
 
+			XClass cA = new XClass().setId("cA");
+			
 			a.set(xTemplateJS(
 					xLi(
 							xUl(xId(id), cA),
 							xDiv(
-									xData(listUser, 
-											onEnter(aUser, xDiv(aUser.firstName()))
+									xDataDriven(listUser, 
+											onEnter(aUser, xDiv(aUser.firstName())),
+											onExit(aUser, aDom)  // TODO ici mettre une promise avant retirer le dom
 										)
 								),
 							xDiv(varText,
 									xH1(varText2)))));
+			
 
 			_forIdxBetween(i, 0, 50)._do(() -> {
 				DtoUser auser = newInst(DtoUser.class).asLitteral();
 				auser.firstName().set(txt("nickel", i));
 				listUser.push(auser);
 			});
+			
+			setTimeout(	() -> _forIdxBetween(i, 0, 50)._do(listUser::pop), 2000);
 
 			__("document.getElementById('users').appendChild(", a, ")");
 			

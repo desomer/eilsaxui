@@ -7,7 +7,7 @@ import static com.elisaxui.component.toolkit.TKActivity.ON_ACTIVITY_CREATE;
 import static com.elisaxui.component.toolkit.TKActivity.ON_ACTIVITY_RESUME;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.declareType;
 
-import com.elisaxui.app.elisys.xui.widget.ViewSyllabisation;
+import com.elisaxui.app.elisys.xui.page.main.widget.ViewSyllabisation;
 import com.elisaxui.component.widget.activity.JActivity;
 import com.elisaxui.component.widget.activity.JSONActivity;
 import com.elisaxui.component.widget.button.ViewRippleEffect;

@@ -4,7 +4,7 @@
 package com.elisaxui.app.elisys.xui.page.main;
 
 import com.elisaxui.app.elisys.xui.js.JSHistoireManager;
-import com.elisaxui.app.elisys.xui.widget.JSSyllabisation;
+import com.elisaxui.app.elisys.xui.page.main.widget.JSSyllabisation;
 import com.elisaxui.component.page.ConfigScene;
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.component.toolkit.JQuery;

@@ -8,15 +8,15 @@ import static com.elisaxui.component.toolkit.JQuery.$;
 import com.elisaxui.component.toolkit.JQuery;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSAnonym;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSLambda;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSObject;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
-import com.elisaxui.core.xui.xhtml.builder.json.JSONBuilder;
+import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
 import static com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplateImpl.*;
 
@@ -25,7 +25,7 @@ import static com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplateImpl.*;
  *
  *         DTOxxx : class json != class JS JSxxx : class JS
  */
-public interface JSPerfVuesJS extends JSClass, JSONBuilder, IXHTMLTemplate {
+public interface JSPerfVuesJS extends JSClass, IJSONBuilder, IXHTMLTemplate {
 
 	public static boolean isVueJS() {
 		return XUIFactoryXHtml.getXHTMLFile().getFirstQueryParam("vue", "false").equals("true");
@@ -47,7 +47,7 @@ public interface JSPerfVuesJS extends JSClass, JSONBuilder, IXHTMLTemplate {
 			JSArray<Object> list = new JSArray<>().asLitteral();
 
 			// creer un json en java
-			JSAnonym doJava = () -> {
+			JSLambda doJava = () -> {
 				DtoUser user = newInst(DtoUser.class);
 				user.firstName().set("toto");
 				list.push(user);
@@ -170,7 +170,7 @@ public interface JSPerfVuesJS extends JSClass, JSONBuilder, IXHTMLTemplate {
 			}
 
 		} else {
-			JSVariable users = let(JSVariable.class, "users", "document.getElementById('users')");
+			JSAny users = let(JSAny.class, "users", "document.getElementById('users')");
 
 			_forIdxBetween(i, 0, 20000)._do(() -> {
 				_var("node", "document.createElement('li')");

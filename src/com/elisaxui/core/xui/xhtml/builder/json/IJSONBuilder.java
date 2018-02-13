@@ -22,7 +22,7 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  *
  */
 
-public interface JSONBuilder {
+public interface IJSONBuilder {
 	
 	default JsonObject obj(Object...value)
 	{

@@ -3,10 +3,10 @@ package com.elisaxui.core.xui.xhtml.builder.javascript.jsclass;
 import java.lang.reflect.Proxy;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSAnonym;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSLambda;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 
 /**
  * interface proxy de class JS
@@ -39,14 +39,14 @@ public interface JSClass extends JSContentInterface, JSElement  {
 	 */
 	public static <E> E declareType(Class<E> type, Object name) {
 		
-		boolean retJSVariable=JSVariable.class.isAssignableFrom(type);
+		boolean retJSVariable=JSAny.class.isAssignableFrom(type);
 		boolean retJSClass=JSClass.class.isAssignableFrom(type);
 		
 		if (retJSVariable)
 		{
-			JSVariable v =null;
+			JSAny v =null;
 			try {
-				v = ((JSVariable)type.newInstance());
+				v = ((JSAny)type.newInstance());
 				v._setName(name) ;
 			} catch (InstantiationException | IllegalAccessException e) {
 				e.printStackTrace();
@@ -78,5 +78,5 @@ public interface JSClass extends JSContentInterface, JSElement  {
 	 * execute en mode java => pas de js
 	 * @param c
 	 */
-	void callJava(JSAnonym c);
+	void callJava(JSLambda c);
 }

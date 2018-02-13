@@ -25,7 +25,7 @@ import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xFile;
@@ -213,14 +213,14 @@ public class XHTMLAppScanner {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		} else if (JSVariable.class.isAssignableFrom(field.getType())) {
+		} else if (JSAny.class.isAssignableFrom(field.getType())) {
 			try {
 				
 				Object v = field.get(cl);
 				
 				if (v==null)
 				{
-					JSVariable var =(JSVariable) field.getType().newInstance();
+					JSAny var =(JSAny) field.getType().newInstance();
 					setVarName(field, var);
 					  
 					ReflectionHelper.setFinalStatic(field, var);
@@ -262,7 +262,7 @@ public class XHTMLAppScanner {
 	}
 
 
-	private static void setVarName(Field field, JSVariable var) {
+	private static void setVarName(Field field, JSAny var) {
 		String name = field.getName();
 		xComment comment = field.getAnnotation(xComment.class);
 		if (comment != null) {

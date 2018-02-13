@@ -12,15 +12,15 @@ import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.IXHTMLBuilder;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSAnonym;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSLambda;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
-import com.elisaxui.core.xui.xml.annotation.xAnonymous;
+import com.elisaxui.core.xui.xml.annotation.xInLine;
 /**
  * @author Bureau
  *
@@ -34,8 +34,8 @@ public interface JSSyllabisation extends JSClass, IXHTMLBuilder {
 	JSXHTMLPart template =  defAttr();
 	JSInt lastResult =  defAttr();
 	JSon recognition =  defAttr();
-	JSVariable stop =  defAttr();
-	JSVariable isRunning =  defAttr();
+	JSAny stop =  defAttr();
+	JSAny isRunning =  defAttr();
 	
 	JSSyllabisation _self =  defVar();
 	JSSyllabisation _this =  defVar();
@@ -49,19 +49,19 @@ public interface JSSyllabisation extends JSClass, IXHTMLBuilder {
 	}
 	
 	
-	@xAnonymous    //TODO a faire fonctionner     pour retirer le boolean testAnonymInProgress dans la class MethodInvocationHandler
-	default Object fRecognitionEnd(Object event)
-	{
-		return  (JSAnonym) ()-> {
-			_if("window.microlistener.stop");
-				_set("window.microlistener.stop", false);
-			_else();
-				__("window.microlistener.recognition.start()");
-			endif();
-		};
-	}
+
+	//	default Object fRecognitionEnd(Object event)
+//	{
+//		return  (JSAnonym) ()-> {
+//			_if("window.microlistener.stop");
+//				_set("window.microlistener.stop", false);
+//			_else();
+//				__("window.microlistener.recognition.start()");
+//			endif();
+//		};
+//	}
 	
-	
+	@xInLine    //TODO a faire fonctionner     pour retirer le boolean testAnonymInProgress dans la class MethodInvocationHandler
 	default Object createMicroListener()
 	{
 		_var("f", "webkitSpeechRecognition || SpeechRecognition");
@@ -73,7 +73,7 @@ public interface JSSyllabisation extends JSClass, IXHTMLBuilder {
 		JSArray jsonSyllable = new JSArray()._setName("jsonSyllable");
 		_var(jsonSyllable, aDataSet().getData());
 
-		JSAnonym onresult = (/*event*/)->{ 			
+		JSLambda onresult = (/*event*/)->{ 			
 			_for("var i = event.resultIndex; i < event.results.length; i++");
 				_var("time", "event.timeStamp-", "self.lastResult");
 				_if("event.results[i].isFinal && time>500");
@@ -88,7 +88,7 @@ public interface JSSyllabisation extends JSClass, IXHTMLBuilder {
 					
 					JSon data = new JSon()._setName("data"); 
 					
-					JSAnonym onJsonSyllabysation = (/*data*/)->{	
+					JSLambda onJsonSyllabysation = (/*data*/)->{	
 						JSArray lesmots = new JSArray()._setName("lesmots");
 						_var(lesmots, data.attr("mots"));
 						JSInt num = new JSInt()._setName("num");
@@ -103,7 +103,7 @@ public interface JSSyllabisation extends JSClass, IXHTMLBuilder {
 			endfor();
 		};
 		
-		JSAnonym fRecognitionEnd = (/*event*/)->{ 	
+		JSLambda fRecognitionEnd = (/*event*/)->{ 	
 			_if("window.microlistener.stop");
 				_set("window.microlistener.stop", false);
 			_else();
@@ -121,7 +121,7 @@ public interface JSSyllabisation extends JSClass, IXHTMLBuilder {
 		aDataSet().setData("[]");
 		aDataDriven.set(_new(aDataSet()));
 		
-		JSAnonym onEnter = (/*ctx*/)->{
+		JSLambda onEnter = (/*ctx*/)->{
 			_if("ctx.row['_dom_']==null");				
 				_set(template, ViewSyllabisation.getMot(xVar("ctx.row.text")));
 				
@@ -146,7 +146,7 @@ public interface JSSyllabisation extends JSClass, IXHTMLBuilder {
 	        endif();
 		};
 								
-		JSAnonym onExit = (/*ctx*/)->{
+		JSLambda onExit = (/*ctx*/)->{
 			_if("ctx!=null && ctx.row['_dom_']!=null");
 				__($(var("ctx.row['_dom_']")).hide("50+(ctx.idx*20)", fct().__("$(this).remove()") ));
 			endif();

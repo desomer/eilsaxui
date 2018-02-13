@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @author gauth
  *
  */
-public class Array<E> extends ArrayList<E> {
+public class ArrayMethod<E> extends ArrayList<E> {
 
 	/**
 	 * 

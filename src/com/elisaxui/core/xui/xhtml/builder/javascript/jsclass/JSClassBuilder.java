@@ -15,7 +15,7 @@ import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xml.annotation.xForceInclude;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
@@ -179,10 +179,7 @@ public final class JSClassBuilder extends JSContent {
 	 */
 	public static final Object toJSCall(Object name , Method method, Object[] args) {
 		
-//		if (method.getName().equals("activityMgr"))
-//			System.out.println("activityMgr activityMgr ok");
-		
-		List<Object> buf = new Array<Object>();
+		List<Object> buf = new ArrayMethod<>();
 		buf.add(name + "." + method.getName() + "(");
 
 		int i = 0;
@@ -203,11 +200,11 @@ public final class JSClassBuilder extends JSContent {
 			prox._setContent(buf);
 			return prox;
 		}
-		else if (JSVariable.class.isAssignableFrom(method.getReturnType() ))
+		else if (JSAny.class.isAssignableFrom(method.getReturnType() ))
 		{
-			JSVariable ret=null;
+			JSAny ret=null;
 			try {
-				ret = ((JSVariable)method.getReturnType().newInstance());
+				ret = ((JSAny)method.getReturnType().newInstance());
 			} catch (InstantiationException | IllegalAccessException e) {
 				e.printStackTrace();
 			}

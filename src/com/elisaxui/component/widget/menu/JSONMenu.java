@@ -3,9 +3,9 @@
  */
 package com.elisaxui.component.widget.menu;
 
-import com.elisaxui.core.xui.xhtml.builder.json.JSONBuilder;
+import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 
-public class JSONMenu implements JSONBuilder
+public class JSONMenu implements IJSONBuilder
 {
 	public Object item(String name, String icon, String idAction)
 	{

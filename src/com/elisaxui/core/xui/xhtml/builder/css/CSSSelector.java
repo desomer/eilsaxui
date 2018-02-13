@@ -4,7 +4,7 @@
 package com.elisaxui.core.xui.xhtml.builder.css;
 
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 
 /**
  * @author Bureau
@@ -27,7 +27,7 @@ public class CSSSelector {
 				selector.append(".");
 				selector.append(((XClass)obj).getId());
 			}
-			else if (obj instanceof JSVariable)
+			else if (obj instanceof JSAny)
 			{
 				selector.append("'+");
 				selector.append(obj);

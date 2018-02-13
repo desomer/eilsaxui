@@ -8,7 +8,7 @@ import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 
@@ -19,7 +19,7 @@ import com.elisaxui.core.xui.xml.annotation.xStatic;
 public interface JSXHTMLTemplate extends JSClass {
 
 	@xStatic
-	default void doTemplateDataDriven(JSon parent, JSArray<?> data, JSVariable fctEnter, JSVariable fctExit )
+	default void doTemplateDataDriven(JSon parent, JSArray<?> data, JSAny fctEnter, JSAny fctExit )
 	{
 		JSDataSet aDataSet = let("aDataSet", newInst(JSDataSet.class) );
 		aDataSet.setData(data);
@@ -69,7 +69,7 @@ public interface JSXHTMLTemplate extends JSClass {
 		}));
 
 		let("e", fct("id", child, "attr").__(() -> {
-			JSVariable newdom = let(JSVariable.class, "newdom", "document.createElement(id)");
+			JSAny newdom = let(JSAny.class, "newdom", "document.createElement(id)");
 			_if(child.isNotEqual(null)).then(() -> {
 				_forIdx(j, child)._do(() -> {
 					let("elem", child.at(j));

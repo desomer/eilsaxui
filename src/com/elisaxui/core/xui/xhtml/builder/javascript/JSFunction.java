@@ -106,7 +106,7 @@ public class JSFunction extends JSContent {
 		return this;
 	}
 
-	public JSFunction __(JSAnonym c) {
+	public JSFunction __(JSLambda c) {
 		doFctAnonym(c);
 		return this;
 	}

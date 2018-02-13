@@ -15,7 +15,7 @@ import com.elisaxui.component.widget.navbar.JSonNavBar.JSonNavBarBackground;
 import com.elisaxui.component.widget.navbar.JSonNavBar.JSonNavBarBtnAction;
 import com.elisaxui.component.widget.navbar.JSonNavBar.JSonNavBarRow;
 import com.elisaxui.component.widget.navbar.JSonNavBar.JSonNavBarTitle;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.core.xui.xml.annotation.xForceInclude;
 
@@ -36,7 +36,7 @@ public interface JSNavBar extends JSFactory {
 	JSDataSet aDataSet = defVar();
 	JSXHTMLPart template = defVar();
 
-	default Object getData(JSVariable selector) {
+	default Object getData(JSAny selector) {
 
 		_set(aDataSet, _new());
 		aDataSet.setData("[]");    //cast(JSArray.class,"[]"))

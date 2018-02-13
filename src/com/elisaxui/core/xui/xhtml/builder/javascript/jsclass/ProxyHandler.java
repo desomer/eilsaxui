@@ -24,13 +24,13 @@ import javax.json.JsonObjectBuilder;
 import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.IXHTMLBuilder;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSAnonym;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSLambda;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
-import com.elisaxui.core.xui.xhtml.builder.json.JSONBuilder;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
+import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.builder.XUIFormatManager;
 
@@ -68,7 +68,7 @@ public final class ProxyHandler implements InvocationHandler {
 	}
 
 	private String currentFctBuildByProxy = null; //
-	private boolean testAnonymInProgress = false; // test si la methode doit retourner une fonction anonym
+	private boolean testInLineInProgress = false; // test si la methode doit retourner une fonction anonym
 
 	// methode en attente d'ajout dans le code
 	public static final ThreadLocal<ProxyMethodDesc> ThreadLocalMethodDesc = new ThreadLocal<>(); // regrouper le 2
@@ -102,7 +102,6 @@ public final class ProxyHandler implements InvocationHandler {
 	 * n'existe pas - creer les fct javascript
 	 */
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-
 		
 		ProxyMethodDesc mthInvoke = new ProxyMethodDesc(null, null, proxy, method, args);
 		
@@ -124,7 +123,7 @@ public final class ProxyHandler implements InvocationHandler {
 			// creer le js du call de la fct
 			/********************************************************************/
 			ret = JSClassBuilder.toJSCall(getStringProxyContent(), method, args); // utilise le nom du proxy
-			if (!testAnonymInProgress) {
+			if (!testInLineInProgress) {
 				registerCallMethodJS(ret, ThreadLocalMethodDesc.get());
 			}
 		} else {
@@ -154,7 +153,7 @@ public final class ProxyHandler implements InvocationHandler {
 
 	private Object doCallImplement(ProxyMethodDesc mthInvoke) throws Throwable {
 		Object ret = null;
-		if (testAnonymInProgress) {
+		if (testInLineInProgress) {
 			ret = JSClassBuilder.toJSCall("/*ww4*/this", mthInvoke.method, mthInvoke.args); // ne creer pas la fct en
 			// testAnonymInProgress
 		} else {
@@ -224,9 +223,12 @@ public final class ProxyHandler implements InvocationHandler {
 			ret = constructor.newInstance(declaringClass, MethodHandles.Lookup.PRIVATE)
 					.unreflectSpecial(mthInvoke.method, declaringClass).bindTo(mthInvoke.proxy)
 					.invokeWithArguments(mthInvoke.args);
+			
+			// on ajoute pas le code JS dans la class dans le cas "xDiv( codeJS )" car deja ajouté dans le xDiv
+			ThreadLocalMethodDesc.get().lastMthNoInserted = null;
 
 		} else {
-			JSFunction anon = isAnonymous(mthInvoke);
+			JSFunction anon = null; // isAnonymous(mthInvoke);
 			if (anon != null)
 				ret = anon;
 			else {
@@ -251,7 +253,7 @@ public final class ProxyHandler implements InvocationHandler {
 	 * @param mthInvoke
 	 * @throws Throwable
 	 */
-	private JSFunction isAnonymous(ProxyMethodDesc mthInvoke) throws Throwable {
+	private JSFunction isInLineMethod(ProxyMethodDesc mthInvoke) throws Throwable {
 		/**************************
 		 * test si utilisation class Anonym
 		 **********************************/
@@ -283,12 +285,12 @@ public final class ProxyHandler implements InvocationHandler {
 		Object objName = currentFctBuildByProxy == null ? getStringProxyContent() : "/*ww4*/this";
 		Object ret = getObjectJS(method.getReturnType(), objName + ".", method.getName());
 
-		if (ret instanceof JSVariable) {
+		if (ret instanceof JSAny) {
 			if (ret instanceof JSArray) {
 				initTypeOfJSArray(method, ret);
 			}
 
-			((JSVariable) ret)._setParent(this);
+			((JSAny) ret)._setParent(this);
 		}
 		return ret;
 	}
@@ -299,7 +301,7 @@ public final class ProxyHandler implements InvocationHandler {
 		ProxyMethodDesc currentMethodDesc = ThreadLocalMethodDesc.get();
 		JSContent currentJSContent = currentMethodDesc.content;
 
-		if (!testAnonymInProgress)
+		if (!testInLineInProgress)
 			doLastSourceLineInsered(false);
 
 		traceDebug("begin call jscontent", mthInvoke.idMeth, mthInvoke.implcl, currentJSContent, NOT_USED);
@@ -356,7 +358,7 @@ public final class ProxyHandler implements InvocationHandler {
 
 		if (mthInvoke.method.getName().equals("callJava")) {
 			ThreadLocalMode.set(Boolean.TRUE);
-			((JSAnonym) mthInvoke.args[0]).run();
+			((JSLambda) mthInvoke.args[0]).run();
 			ThreadLocalMode.set(Boolean.FALSE);
 			return mthInvoke.proxy;
 		}
@@ -457,8 +459,8 @@ public final class ProxyHandler implements InvocationHandler {
 	 */
 	public static Object cast(Class<?> cl, Object args) {
 		Object jc = declareType(cl, null);
-		if (jc instanceof JSVariable)
-			((JSVariable) jc)._setValue(args)._setName(args);
+		if (jc instanceof JSAny)
+			((JSAny) jc)._setValue(args)._setName(args);
 		else
 			((JSClass) jc)._setContent(args);
 		return jc;
@@ -601,7 +603,7 @@ public final class ProxyHandler implements InvocationHandler {
 		}
 	}
 
-	private JSFunction createJSFunctionImpl(ProxyMethodDesc handle, boolean testAnonymous) throws Throwable {
+	private JSFunction createJSFunctionImpl(ProxyMethodDesc handle, boolean testInline) throws Throwable {
 
 		final Class<?> declaringClass = handle.method.getDeclaringClass();
 		Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class.getDeclaredConstructor(Class.class,
@@ -614,8 +616,8 @@ public final class ProxyHandler implements InvocationHandler {
 		Object prevCode = null;
 		JSContent codeAnonym = null;
 
-		if (testAnonymous) {
-			testAnonymInProgress = true;
+		if (testInline) {
+			testInLineInProgress = true;
 			codeAnonym = mapContentMthBuildByProxy.get(currentFctBuildByProxy).content;
 			prevCode = codeAnonym.$$subContent();
 		}
@@ -629,8 +631,8 @@ public final class ProxyHandler implements InvocationHandler {
 
 		JSFunction fct = null;
 
-		if (testAnonymous && retProxyMth instanceof JSAnonym) {
-			testAnonymInProgress = false;
+		if (testInline && retProxyMth instanceof JSLambda) {
+			testInLineInProgress = false;
 			((Runnable) retProxyMth).run(); // execute la function qui retourne l'anonym
 
 			Object aCode = codeAnonym.$$gosubContent(prevCode);
@@ -639,7 +641,7 @@ public final class ProxyHandler implements InvocationHandler {
 			cont.$$gosubContent(aCode);
 			fct = new JSFunction().setParam(p).setCode(cont);
 
-		} else if (!testAnonymous) {
+		} else if (!testInline) {
 			String id = JSClassBuilder.getMethodId(handle.method, handle.args);
 
 			ProxyMethodDesc methDesc = mapContentMthBuildByProxy.get(id);
@@ -661,13 +663,13 @@ public final class ProxyHandler implements InvocationHandler {
 			currentFctBuildByProxy = null;
 
 			// invoke les methodes interne private a la fin de la creation de la methode
-			invokeInternalClassMethod(handle);
+			invokeInternalClassOtherMethodAfterBuild(handle);
 		}
 
-		boolean putLastCode = testAnonymous && prevCode != null;
+		boolean putLastCode = testInline && prevCode != null;
 		if (putLastCode) {
 			codeAnonym.$$gosubContent(prevCode);
-			testAnonymInProgress = false;
+			testInLineInProgress = false;
 		}
 
 		return fct;
@@ -718,7 +720,7 @@ public final class ProxyHandler implements InvocationHandler {
 	 * @throws IllegalAccessException
 	 * @throws InvocationTargetException
 	 */
-	private static final void invokeInternalClassMethod(ProxyMethodDesc handle)
+	private static final void invokeInternalClassOtherMethodAfterBuild(ProxyMethodDesc handle)
 			throws IllegalAccessException, InvocationTargetException {
 		// invoke les methodes interne private a la fin de la creation de la methode
 		for (Iterator<ProxyMethodDesc> i = handle.implcl.getListHandleFuntionPrivate().iterator(); i.hasNext();) {
@@ -738,10 +740,10 @@ public final class ProxyHandler implements InvocationHandler {
 	private static final Object getObjectJS(Class<?> type, String prefix, Object name)
 			throws InstantiationException, IllegalAccessException {
 
-		boolean retJSVariable = JSVariable.class.isAssignableFrom(type);
+		boolean retJSVariable = JSAny.class.isAssignableFrom(type);
 		boolean retJSClass = JSClass.class.isAssignableFrom(type);
 		if (retJSVariable) {
-			JSVariable retJSVar = (JSVariable) type.newInstance();
+			JSAny retJSVar = (JSAny) type.newInstance();
 			retJSVar._setName(prefix + name);
 			return retJSVar;
 		} else if (retJSClass) {

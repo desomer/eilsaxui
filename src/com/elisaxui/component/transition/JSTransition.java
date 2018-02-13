@@ -22,7 +22,7 @@ import com.elisaxui.component.widget.overlay.ViewOverlayRipple;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
@@ -90,7 +90,7 @@ public interface JSTransition extends JSClass {
 	
 		JQuery jqActivityActive = let( JQuery.class, "jqActivityActive", $(activity.and(active)) );
 		JQuery jqNavBar = let( JQuery.class, "jqNavBar", $(activity.and(active).directChildren(navbar)) );
-		JSVariable document = JSClass.declareType(JSVariable.class, "document");
+		JSAny document = JSClass.declareType(JSAny.class, "document");
 		
 		JSInt sct = let( JSInt.class, "sct",    $(document).scrollTop() );
 
@@ -250,7 +250,7 @@ public interface JSTransition extends JSClass {
 
 	default JSVoid doInitScrollTo(JQuery act) {
 		JSInt scrposition = let(JSInt.class, "scrposition", act.data(DATA_SCROLLTOP));
-		JSVariable document = JSClass.declareType(JSVariable.class, "document");
+		JSAny document = JSClass.declareType(JSAny.class, "document");
 		$(document).scrollTop(calc(scrposition,"==null?0:",scrposition));
 		return _void();
 	}
@@ -258,7 +258,7 @@ public interface JSTransition extends JSClass {
 	default JSVoid doOpenActivityFromBottom() {
 		JSOverlay overlay = let(JSOverlay.class, "overlay", NULL);
 		_set(overlay, _new(SPEED_SHOW_ACTIVITY, XUIScene.OVERLAY_OPACITY_BACK));
-		JSVariable document = JSClass.declareType(JSVariable.class, "document");
+		JSAny document = JSClass.declareType(JSAny.class, "document");
 		JSInt sct = let(JSInt.class, "sct", $(document).scrollTop());
 		JSString act1 = let(JSString.class, "act1", "'#'+$xui.intent.prevActivity");
 		JSString act2 = let(JSString.class, "act2", "'#'+$xui.intent.activity");
@@ -354,7 +354,7 @@ public interface JSTransition extends JSClass {
 		_set(overlay, _new(SPEED_SHOW_ACTIVITY, 0.6));
 
 		JSTransition self = let(JSTransition.class, "self", "this");
-		JSVariable document = JSClass.declareType(JSVariable.class, "document");
+		JSAny document = JSClass.declareType(JSAny.class, "document");
 		
 		JSInt sct = let(JSInt.class, "sct", $(document).scrollTop());
 		

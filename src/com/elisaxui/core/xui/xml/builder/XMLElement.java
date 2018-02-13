@@ -13,8 +13,11 @@ import com.elisaxui.core.xui.xhtml.builder.css.CSSStyle;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ArrayMethod;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLFunction;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Handle;
 import com.elisaxui.core.xui.xml.target.CONTENT;
 
@@ -197,9 +200,17 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			part.toXML(buf);
 
 		} else if (inner instanceof List) { // une liste
-			List<?> listChild = (List<?>) inner;
-			for (Object object : listChild) {
-				nbChild = doChild(buf, nbChild, object);
+			if (inner instanceof ArrayMethod)
+			{				
+				XHTMLFunction v = new XHTMLFunction()._setValue(inner);
+				nbChild = doChild(buf, nbChild, v);
+			}
+			else
+			{
+				List<?> listChild = (List<?>) inner;
+				for (Object object : listChild) {
+					nbChild = doChild(buf, nbChild, object);
+				}
 			}
 
 		} else if (inner instanceof Handle) { // un handle
@@ -247,6 +258,8 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			if (buf.isTemplate) {
 				if (inner instanceof CharSequence) {
 					buf.addContentOnTarget("\""+inner+"\"");
+				} else if (inner instanceof XHTMLFunction) {
+					buf.addContentOnTarget(inner);
 				} else {
 					buf.addContentOnTarget("t(");
 					buf.addContentOnTarget(inner);

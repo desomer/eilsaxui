@@ -1,11 +1,11 @@
 package com.elisaxui.test;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 
 public interface JSTestClass extends JSClass {
 
-	JSVariable a = null;
+	JSAny a = null;
 	JSTest2Class b = null;
 
 	default Object constructor(Object val) {

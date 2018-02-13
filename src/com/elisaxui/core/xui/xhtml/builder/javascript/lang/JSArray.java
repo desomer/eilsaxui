@@ -97,8 +97,8 @@ public class JSArray<E> extends JSClassInterface implements JSonInterface {
 
 		if (_type != null) {
 			E t = (E) JSClass.declareType(_type, null);
-			if (t instanceof JSVariable)
-				((JSVariable) t)._setValue(ret);
+			if (t instanceof JSAny)
+				((JSAny) t)._setValue(ret);
 			else
 				((JSClass) t)._setContent(ret);
 			return t;

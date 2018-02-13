@@ -12,14 +12,14 @@ import javax.json.JsonValue;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.Array;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ArrayMethod;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyMethodDesc;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplateImpl;
@@ -153,20 +153,20 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 				ProxyHandler.getFormatManager().newTabInternal(buf);
 			}
 			
-		} else if (object instanceof JSVariable) {
-			Object v = ((JSVariable) object)._getValueOrName();
-			if (v instanceof Array) {
-				Array<?> arr = (Array<?>) v;
+		} else if (object instanceof JSAny) {
+			Object v = ((JSAny) object)._getValueOrName();
+			if (v instanceof ArrayMethod) {
+				ArrayMethod<?> arr = (ArrayMethod<?>) v;
 				for (Object object2 : arr) {
 					addXML(buf, object2);
 				}
 			} else
-				buf.addContentOnTarget(((JSVariable) object).toString());
+				buf.addContentOnTarget(((JSAny) object).toString());
 			
 		} else if (object instanceof JSClass) {
 			Object v = ((JSClass) object)._getContent(); // recup de la valeur du proxy
-			if (v instanceof Array) {
-				Array<?> arr = (Array<?>) v;
+			if (v instanceof ArrayMethod) {
+				ArrayMethod<?> arr = (ArrayMethod<?>) v;
 				for (Object object2 : arr) {
 					addXML(buf, object2);
 				}
@@ -350,7 +350,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	}
 
 	@Override
-	public JSContentInterface setTimeout(JSAnonym a, Object... content) {
+	public JSContentInterface setTimeout(JSLambda a, Object... content) {
 		getListElem().add(JSNewLine.class);
 		getListElem().add("setTimeout(");
 		addElem(callback(a));
@@ -380,7 +380,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 
 	@Override
 	public JSContentInterface systemDebugIf(Object cond, Object... content) {
-		Array<Object> p = new Array<Object>();
+		ArrayMethod<Object> p = new ArrayMethod<Object>();
 		p.add("'<SYSTEM>'");
 		p.addAll(Arrays.asList(content));
 
@@ -505,13 +505,13 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 		Object ret = JSClass.declareType(type, null);
 
 		String t = type.getSimpleName();
-		if (ret instanceof JSVariable)
-			t = ((JSVariable) ret)._getClassType();
+		if (ret instanceof JSAny)
+			t = ((JSAny) ret)._getClassType();
 
 		String textNew = textNew(t, param);
 
-		if (ret instanceof JSVariable)
-			((JSVariable) ret)._setValue(textNew);
+		if (ret instanceof JSAny)
+			((JSAny) ret)._setValue(textNew);
 		else
 			((JSClass) ret)._setContent(textNew);
 
@@ -528,7 +528,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 		boolean addEnd = true;
 
 		for (int i = 0; i < l; i++) {
-			if (param[i] instanceof JSVariable) {
+			if (param[i] instanceof JSAny) {
 				str.append("\"+");
 				str.append(param[i]);
 
@@ -553,7 +553,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	}
 
 	@Override
-	public JSFunction callback(JSAnonym call) {
+	public JSFunction callback(JSLambda call) {
 		JSFunction ret = new JSFunction();
 		ret.proxy = (JSContentInterface) ProxyHandler.ThreadLocalMethodDesc.get().getProxy();
 		ret.__(call);
@@ -561,7 +561,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	}
 
 	@Override
-	public JSFunction callback(JSElement param, JSAnonym call) {
+	public JSFunction callback(JSElement param, JSLambda call) {
 		JSFunction ret = new JSFunction().setParam(new Object[] {param});
 		ret.proxy = (JSContentInterface) ProxyHandler.ThreadLocalMethodDesc.get().getProxy();
 		ret.__(call);
@@ -569,7 +569,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	}
 	
 	@Override
-	public JSFunction callback(JSElement param1, JSElement param2, JSAnonym call) {
+	public JSFunction callback(JSElement param1, JSElement param2, JSLambda call) {
 		JSFunction ret = new JSFunction().setParam(new Object[] {param1 , param2});
 		ret.proxy = (JSContentInterface) ProxyHandler.ThreadLocalMethodDesc.get().getProxy();
 		ret.__(call);
@@ -603,11 +603,11 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	}
 
 	@Override
-	public JSVariable var(Object... param) {
+	public JSAny var(Object... param) {
 		return XHTMLPart.jsvar(param);
 	}
 
-	public JSVariable calc(Object... param) {
+	public JSAny calc(Object... param) {
 		List<Object> l = Arrays.asList(param);
 		ArrayList<Object> l2 = new ArrayList<Object>();
 		l2.add("(");
@@ -674,7 +674,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 
 	@Override
 	public <E> E let(String name, E content) {
-		Class<?> t = JSVariable.class;
+		Class<?> t = JSAny.class;
 		if (content!=null)
 			t = content.getClass();
 		if (content instanceof Proxy) {
@@ -690,12 +690,12 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	}
 
 	@Override
-	public void let(JSVariable name, Object... content) {
+	public void let(JSAny name, Object... content) {
 		_var(name, content);
 	}
 
 	@Override
-	public JSContentInterface then(JSAnonym content) {
+	public JSContentInterface then(JSLambda content) {
 
 		try {
 			content.run();
@@ -716,7 +716,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	 * elisaxui.core.xui.xhtml.builder.javascript.Anonym)
 	 */
 	@Override
-	public JSContentInterface _else(JSAnonym content) {
+	public JSContentInterface _else(JSLambda content) {
 		getListElem().add(" else {");
 		getListElem().add(JSAddTab.class);
 
@@ -739,7 +739,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	 * elisaxui.core.xui.xhtml.builder.javascript.Anonym)
 	 */
 	@Override
-	public JSContentInterface _do(JSAnonym content) {
+	public JSContentInterface _do(JSLambda content) {
 
 		getListElem().add(JSAddTab.class);
 

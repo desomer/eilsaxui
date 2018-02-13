@@ -12,7 +12,7 @@ public class JSString extends JSValue {
 		return  new JSString()._setValue("\""+ v + "\"");
 	}
 	
-	public static final JSString value(JSVariable v)
+	public static final JSString value(JSAny v)
 	{
 		return  new JSString()._setValue(v._getValue());
 	}

@@ -5,7 +5,7 @@ package com.elisaxui.core.xui.xhtml.builder.javascript.jsclass;
 
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
 /**
@@ -13,10 +13,10 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder;
  *
  *         class JS d'interface vers un JS externe sans implementation interne
  */
-public class JSClassInterface extends JSVariable {
+public class JSClassInterface extends JSAny {
 
 	// TODO a retirer et a gerer par le _setContent (voir equal sur JSString)
-	Array<Object> listContent = new Array<>();
+	ArrayMethod<Object> listContent = new ArrayMethod<>();
 
 	protected static final Object[] addText(Object... classes) {
 		if (classes.length == 1) {
@@ -24,7 +24,7 @@ public class JSClassInterface extends JSVariable {
 				return null;
 
 			Object[] ret = new Object[3];
-			if (classes[0] instanceof JSVariable) {
+			if (classes[0] instanceof JSAny) {
 				return new Object[] { classes[0] };
 			}
 			if (classes[0] instanceof Integer) {
@@ -55,10 +55,10 @@ public class JSClassInterface extends JSVariable {
 	@Deprecated // utiliser le parent
 	@Override
 	public final Object _getValueOrName() {
-		Array<Object> list = new Array<Object>();
+		ArrayMethod<Object> list = new ArrayMethod<Object>();
 		Object arr = super._getValueOrName();
-		if (arr instanceof Array)
-			list.addAll((Array<?>) arr);
+		if (arr instanceof ArrayMethod)
+			list.addAll((ArrayMethod<?>) arr);
 		else
 			list.add(arr);
 
@@ -86,8 +86,9 @@ public class JSClassInterface extends JSVariable {
 			listContent.add(content);
 		return (E) this;
 	}
+	
 
-	protected final <E extends JSClassInterface> E callMth(String mth, Object... classes) {
+	protected final <E extends JSClassInterface> E _callMth(String mth, Object... classes) {
 		E ret = getReturnType();
 
 		ret.addContent("." + mth + "(");
@@ -103,9 +104,27 @@ public class JSClassInterface extends JSVariable {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
+	private final <E extends JSClassInterface> E getReturnType(Class type) {
+		E ret = (E) this;
+		if (listContent.isEmpty() && this.name != null) {
+			// gestion premier appel de variable pour chainage
+			try {
+				ret = (E) this.getClass().newInstance();
+			} catch (InstantiationException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			ret._setName(this._getName());
+		}
+		return ret;
+	}
+	
+	/**
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
 	private final <E extends JSClassInterface> E getReturnType() {
 		E ret = (E) this;
-		if (listContent.size() == 0 && this.name != null) {
+		if (listContent.isEmpty() && this.name != null) {
 			// gestion premier appel de variable pour chainage
 			try {
 				ret = (E) this.getClass().newInstance();
@@ -143,7 +162,7 @@ public class JSClassInterface extends JSVariable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public final <E extends JSVariable> E castAttr(JSVariable cl, String att) {
+	public final <E extends JSAny> E castAttr(JSAny cl, String att) {
 		cl._setValue(this._getName() + "." + att);
 		return (E) cl;
 	}

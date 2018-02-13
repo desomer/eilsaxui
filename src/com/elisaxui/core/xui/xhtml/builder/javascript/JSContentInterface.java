@@ -2,7 +2,7 @@ package com.elisaxui.core.xui.xhtml.builder.javascript;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 
 public interface JSContentInterface  {
@@ -16,7 +16,7 @@ public interface JSContentInterface  {
 	<E> E let(Class<E> type, Object name, Object... content);
 	<E> E let(String name, E content);
 	void let(JSContentInterface name, Object... content);
-	void let(JSVariable name, Object... content);
+	void let(JSAny name, Object... content);
 	
 	JSContentInterface consoleDebug(Object... content);
 	JSContentInterface systemDebugIf(Object cond, Object... content);
@@ -24,7 +24,7 @@ public interface JSContentInterface  {
 	JSContentInterface _for(Object... content);
 	JSContentInterface _forIdxBetween(JSInt idx, int start, int end);
 	JSContentInterface _forIdx(Object idx, JSArray<?> array);
-	JSContentInterface _do(JSAnonym c);
+	JSContentInterface _do(JSLambda c);
 	@Deprecated
 	JSContentInterface endfor();
 	/**********************************************************************/
@@ -47,15 +47,15 @@ public interface JSContentInterface  {
 	 * @param param
 	 * @return
 	 */
-	JSVariable var(Object... param);
+	JSAny var(Object... param);
 	Object calc(Object... param);
 	
 	/**********************************************************************/
 	
 	JSFunction fct(Object... param);
-	JSFunction callback( JSAnonym c);
-	JSFunction callback(JSElement param, JSAnonym c);
-	JSFunction callback(JSElement param1, JSElement param2, JSAnonym c);
+	JSFunction callback( JSLambda c);
+	JSFunction callback(JSElement param, JSLambda c);
+	JSFunction callback(JSElement param1, JSElement param2, JSLambda c);
 	
 	/**
 	 * exemple <br>
@@ -68,10 +68,10 @@ public interface JSContentInterface  {
 
 	/**********************************************************************/
 	JSContentInterface _if(Object... content);
-	JSContentInterface then(JSAnonym content);
+	JSContentInterface then(JSLambda content);
 	
 	JSContentInterface _else();
-	JSContentInterface _else(JSAnonym content);
+	JSContentInterface _else(JSLambda content);
 	JSContentInterface _elseif(Object... content);
 	
 	@Deprecated
@@ -82,7 +82,7 @@ public interface JSContentInterface  {
 
 	/**********************************************************************/
 	JSContentInterface setTimeout(Object... content);
-	JSContentInterface setTimeout(JSAnonym a, Object... content);
+	JSContentInterface setTimeout(JSLambda a, Object... content);
 	
 	/**********************************************************************/
 	JSContentInterface _return(Object... content);

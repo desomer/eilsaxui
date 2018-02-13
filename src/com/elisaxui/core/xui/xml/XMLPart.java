@@ -13,7 +13,7 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -203,13 +203,13 @@ public class XMLPart  {
 						e.printStackTrace();
 					} 
 				}
-				else if (!isStatic && JSVariable.class.isAssignableFrom(field.getType()))
+				else if (!isStatic && JSAny.class.isAssignableFrom(field.getType()))
 				{
 					if (debug)
 						System.out.println("[XMLPart] init var JSVariable on " + this.getClass() + " name "+ field.getName() );
-					JSVariable variablejs=null;
+					JSAny variablejs=null;
 					try {
-						variablejs = (JSVariable) field.getType().newInstance();
+						variablejs = (JSAny) field.getType().newInstance();
 					} catch (InstantiationException | IllegalAccessException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();

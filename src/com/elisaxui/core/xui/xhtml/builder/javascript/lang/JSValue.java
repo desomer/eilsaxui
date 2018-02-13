@@ -3,13 +3,13 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.javascript.lang;
 
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.Array;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ArrayMethod;
 
 /**
  * @author gauth
  *
  */
-public class JSValue extends JSVariable {
+public class JSValue extends JSAny {
 
 	public JSValue add(Object... objs)
 	{
@@ -36,10 +36,10 @@ public class JSValue extends JSVariable {
 	public JSInt modulo(Object obj)
 	{
 		JSInt ret = new JSInt();
-		Array arr = new Array();
+		ArrayMethod arr = new ArrayMethod();
 		Object content = _getValueOrName();
-		if (content instanceof Array )
-			arr.addAll((Array<?>)content);
+		if (content instanceof ArrayMethod )
+			arr.addAll((ArrayMethod<?>)content);
 		else
 			arr.add(content);
 		arr.add("%");

@@ -8,7 +8,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSListParameter;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassBuilder;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVariable;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.target.BODY;
 import com.elisaxui.core.xui.xml.XMLPart;
@@ -69,12 +69,12 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 	 * @return
 	 */
 	@Deprecated
-	public static JSVariable jsvar(Object... param) {
+	public static JSAny jsvar(Object... param) {
 		StringBuilder str = new StringBuilder();
 		for (int i = 0; i < param.length; i++) {
 			str.append(param[i]);
 		}
-		JSVariable var = new JSVariable();
+		JSAny var = new JSAny();
 		var._setName(str.toString());
 		return var;
 	}

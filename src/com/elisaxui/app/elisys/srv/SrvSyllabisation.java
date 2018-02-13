@@ -18,7 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.elisaxui.core.xui.xhtml.builder.json.JSONBuilder;
+import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 
 import javax.ws.rs.core.UriInfo;
 
@@ -60,7 +60,7 @@ public class SrvSyllabisation {
 
 	public Object doSyllbisation(String text) {
 	
-		class jsonMot implements JSONBuilder
+		class jsonMot implements IJSONBuilder
 		{
 			String unePhrase;
 			
@@ -205,7 +205,7 @@ public class SrvSyllabisation {
 
 		
 		public Object doJson() {
-			class JSONStyllable implements JSONBuilder
+			class JSONStyllable implements IJSONBuilder
 			{
 				public Object getJSON()
 				{

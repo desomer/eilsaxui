@@ -31,7 +31,7 @@ import com.elisaxui.app.elisys.xui.asset.AssetHandler;
 import com.elisaxui.component.page.ConfigScene;
 import com.elisaxui.component.widget.menu.JSONMenu;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
-import com.elisaxui.core.xui.xhtml.builder.json.JSONBuilder;
+import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
@@ -140,7 +140,7 @@ public class SrvMain {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getManifest(@Context HttpHeaders headers, @Context UriInfo uri) {		
 		
-		class JSONManifest implements JSONBuilder
+		class JSONManifest implements IJSONBuilder
 		{
 			public Object getJSON()
 			{

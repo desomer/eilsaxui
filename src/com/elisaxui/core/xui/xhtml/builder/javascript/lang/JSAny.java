@@ -13,7 +13,7 @@ import javax.json.JsonValue;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.Array;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ArrayMethod;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyMethodDesc;
@@ -23,7 +23,7 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder;
  * @author Bureau
  *
  */
-public class JSVariable implements JSElement {
+public class JSAny implements JSElement {
 	
 	protected static final String SEP = ",";
 	protected Object name;
@@ -53,7 +53,7 @@ public class JSVariable implements JSElement {
 		return name;
 	}
 
-	public final <E extends JSVariable> E _setName(Object name) {
+	public final <E extends JSAny> E _setName(Object name) {
 		this.name = name;
 		return (E)this;
 	}
@@ -63,7 +63,7 @@ public class JSVariable implements JSElement {
 		return value;
 	}
 	
-	public final <E extends JSVariable> E _setValue(Object value) {
+	public final <E extends JSAny> E _setValue(Object value) {
 		this.value = value;
 		return (E)this;
 	}
@@ -121,10 +121,10 @@ public class JSVariable implements JSElement {
 		return ret;
 	}
 	
-	public final JSVariable set(Object... objs)
+	public final JSAny set(Object... objs)
 	{
 		
-		JSVariable ret = declareType();
+		JSAny ret = declareType();
 		
 		ProxyHandler mh = (ProxyHandler)this.parent;
 		boolean isLitteral = mh!=null && mh.getJsonBuilder()!=null;
@@ -153,16 +153,16 @@ public class JSVariable implements JSElement {
 	 * @param ret
 	 * @param objs
 	 */
-	protected final void _doOperator(JSVariable ret, String operator,  Object... objs) {
+	protected final void _doOperator(JSAny ret, String operator,  Object... objs) {
 		
 		if (ProxyHandler.isModeJava()) {
 			
 			
 		} else {
-			Array arr = new Array();
+			ArrayMethod arr = new ArrayMethod();
 			Object content = _getValueOrName();
-			if (content instanceof Array)
-				arr.addAll((Array<?>) content);
+			if (content instanceof ArrayMethod)
+				arr.addAll((ArrayMethod<?>) content);
 			else
 				arr.add(content);
 
@@ -176,8 +176,8 @@ public class JSVariable implements JSElement {
 					if (i == 1 && obj instanceof String && this instanceof JSValue)
 						obj = "\"" + obj + "\"";
 
-					if (obj instanceof Array)
-						arr.addAll((Array<?>) obj);
+					if (obj instanceof ArrayMethod)
+						arr.addAll((ArrayMethod<?>) obj);
 					else
 						arr.add(obj);
 				}
@@ -190,7 +190,7 @@ public class JSVariable implements JSElement {
 		}
 	}
 	
-	protected final Object _callMethod(JSVariable ret, String mth, Object... objs) {
+	protected final Object _callMethod(JSAny ret, String mth, Object... objs) {
 		if (ret == null) {
 			ret = this;
 			if (value == null && this.name != null) {
@@ -204,10 +204,10 @@ public class JSVariable implements JSElement {
 			return ret;
 		} else {
 
-			Array arr = new Array();
+			ArrayMethod arr = new ArrayMethod();
 			Object content = _getValueOrName();
-			if (content instanceof Array)
-				arr.addAll((Array<?>) content);
+			if (content instanceof ArrayMethod)
+				arr.addAll((ArrayMethod<?>) content);
 			else
 				arr.add(content);
 
@@ -222,7 +222,7 @@ public class JSVariable implements JSElement {
 	}
 
 	
-	protected static final void _addContent(Array inner, Object content) {
+	protected static final void _addContent(ArrayMethod inner, Object content) {
 		
 		if ( content instanceof Object[])
 		{
@@ -245,6 +245,10 @@ public class JSVariable implements JSElement {
 				}
 				else if ( object instanceof String && object != SEP )
 					inner.add("'"+object+"'");
+				else if ( object instanceof ArrayMethod)
+				{
+					inner.addAll((ArrayMethod)object);
+				}
 				else
 				{				
 					inner.add(object);
@@ -260,8 +264,8 @@ public class JSVariable implements JSElement {
 	 * @param ret
 	 * @return
 	 */
-	protected final JSVariable declareType() {
-		JSVariable ret =  null;
+	protected final JSAny declareType() {
+		JSAny ret =  null;
 		try {
 			ret = this.getClass().newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {

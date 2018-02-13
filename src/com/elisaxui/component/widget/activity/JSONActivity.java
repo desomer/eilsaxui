@@ -4,13 +4,13 @@
 package com.elisaxui.component.widget.activity;
 
 import com.elisaxui.component.widget.container.JSViewCard;
-import com.elisaxui.core.xui.xhtml.builder.json.JSONBuilder;
+import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 
 /**
  * @author Bureau
  *
  */
-public abstract class JSONActivity implements JSONBuilder
+public abstract class JSONActivity implements IJSONBuilder
 {
 	
 	/**

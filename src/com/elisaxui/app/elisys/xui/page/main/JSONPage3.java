@@ -4,10 +4,10 @@
 package com.elisaxui.app.elisys.xui.page.main;
 
 import static com.elisaxui.component.toolkit.TKActivity.ON_ACTIVITY_CREATE;
-import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.declareType;
 
 import com.elisaxui.component.widget.activity.JActivity;
 import com.elisaxui.component.widget.activity.JSONActivity;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 
 /**********************************************************************************/
 class JSONPage3 extends JSONActivity
@@ -21,7 +21,7 @@ class JSONPage3 extends JSONActivity
 			
 	public JActivity getJSON()
 	{
-		JActivity activity = declareType(JActivity.class, "activity"); 
+		JActivity activity = JSContent.declareType(JActivity.class, "activity"); 
 		activity._setContent(activity( "Activity3", arr( 
 					factory("#NavBarActivity3", FACTORY_NAVBAR, arr(  
 																 btnBurger(), 

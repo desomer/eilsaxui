@@ -4,20 +4,17 @@
 package com.elisaxui.app.elisys.xui.page.main.widget;
 
 import static com.elisaxui.component.toolkit.JQuery.$;
-import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.defAttr;
-import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.defVar;
 
 import com.elisaxui.component.toolkit.JQuery;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.IXHTMLBuilder;
-import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSLambda;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.core.xui.xml.annotation.xInLine;
@@ -29,16 +26,16 @@ public interface JSSyllabisation extends JSClass, IXHTMLBuilder {
 
 	public static final String REST_JSON_SYLLABISATION = "/rest/json/syllabisation/pacahontas";
 	
-	JSDataDriven aDataDriven = defAttr(); 
+	JSDataDriven aDataDriven = null; 
 	JSDataSet aDataSet();
-	JSXHTMLPart template =  defAttr();
-	JSInt lastResult =  defAttr();
-	JSon recognition =  defAttr();
-	JSAny stop =  defAttr();
-	JSAny isRunning =  defAttr();
+	JSXHTMLPart template =  null;
+	JSInt lastResult =  null;
+	JSon recognition =  null;
+	JSAny stop =  null;
+	JSAny isRunning =  null;
 	
-	JSSyllabisation _self =  defVar();
-	JSSyllabisation _this =  defVar();
+	JSSyllabisation _self =  null;
+	JSSyllabisation _this =  null;
 	
 	
 	default Object constructor() {
@@ -66,8 +63,8 @@ public interface JSSyllabisation extends JSClass, IXHTMLBuilder {
 	{
 		_var("f", "webkitSpeechRecognition || SpeechRecognition");
 		_set(recognition, "new f()");
-		_set(recognition.get("continuous"), true);
-		_set(recognition.get("lang"), txt("fr-FR"));
+		_set(recognition.attr("continuous"), true);
+		_set(recognition.attr("lang"), txt("fr-FR"));
 		_var(_self, _this);
 		
 		JSArray jsonSyllable = new JSArray()._setName("jsonSyllable");
@@ -111,14 +108,14 @@ public interface JSSyllabisation extends JSClass, IXHTMLBuilder {
 			endif();		
 		};	
 		
-		_set(recognition.get("onresult"), fct("event") .__(onresult));
-		_set(recognition.get("onend"), fct("event") .__(fRecognitionEnd));
+		_set(recognition.attr("onresult"), fct("event") .__(onresult));
+		_set(recognition.attr("onend"), fct("event") .__(fRecognitionEnd));
 		return _this;
 	}
 		
 	default Object getData()
 	{
-		aDataSet().setData("[]");
+		aDataSet().setData(new JSArray<>().asLitteral());
 		aDataDriven.set(_new(aDataSet()));
 		
 		JSLambda onEnter = (/*ctx*/)->{
@@ -152,8 +149,8 @@ public interface JSSyllabisation extends JSClass, IXHTMLBuilder {
 			endif();
 			};
 		
-		__(aDataDriven.onEnter(fct("ctx").__(onEnter)));
-		__(aDataDriven.onExit(fct("ctx").__(onExit)));	
+		aDataDriven.onEnter(fct("ctx").__(onEnter));
+		aDataDriven.onExit(fct("ctx").__(onExit));	
 		
 		return aDataSet().getData();
 	}

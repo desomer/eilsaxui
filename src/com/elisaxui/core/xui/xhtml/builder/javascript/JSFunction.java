@@ -116,8 +116,6 @@ public class JSFunction extends JSContent {
 
 		if (!isFragment) {
 			if (name == null) {
-				if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS())
-					buf.addContentOnTarget("/*** start anonymous ***/");
 				buf.addContentOnTarget("function");
 			} else {
 				ProxyHandler.getFormatManager().newTabInternal(buf);
@@ -139,6 +137,11 @@ public class JSFunction extends JSContent {
 			}
 			buf.addContentOnTarget(")");
 			buf.addContentOnTarget(" {");
+			
+			if (!isFragment && name == null) {
+				if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS())
+					buf.addContentOnTarget("/*** start anonymous ***/");
+			}
 
 			ProxyHandler.getFormatManager().setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine() + 1);
 		} else {

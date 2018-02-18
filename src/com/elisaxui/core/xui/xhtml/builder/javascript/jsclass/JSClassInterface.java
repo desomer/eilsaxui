@@ -6,7 +6,6 @@ package com.elisaxui.core.xui.xhtml.builder.javascript.jsclass;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
 /**
  * @author Bureau
@@ -18,7 +17,7 @@ public class JSClassInterface extends JSAny {
 	// TODO a retirer et a gerer par le _setContent (voir equal sur JSString)
 	ArrayMethod<Object> listContent = new ArrayMethod<>();
 
-	protected static final Object[] addText(Object... classes) {
+	protected static final Object[] addParamMth(Object... classes) {
 		if (classes.length == 1) {
 			if (classes[0] == null)
 				return null;
@@ -37,7 +36,7 @@ public class JSClassInterface extends JSAny {
 			return ret;
 		}
 
-		return new Object[] { "... bug addtext..." };
+		return new Object[] { "... bug  addParamMth..." };
 	}
 
 	@Deprecated // utiliser le parent
@@ -122,7 +121,8 @@ public class JSClassInterface extends JSAny {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private final <E extends JSClassInterface> E getReturnType() {
+	protected
+	final <E extends JSClassInterface> E getReturnType() {
 		E ret = (E) this;
 		if (listContent.isEmpty() && this.name != null) {
 			// gestion premier appel de variable pour chainage
@@ -143,22 +143,19 @@ public class JSClassInterface extends JSAny {
 		E ret = getReturnType();
 
 		ret.addContent("[");
-		ret.addContent(addText(attr));
+		ret.addContent(addParamMth(attr));
 		ret.addContent("]");
 		return ret;
 	}
 
-	@Deprecated
-	/**
-	 * use get du json
-	 * 
-	 * @param att
-	 * @return
-	 */
-	public final <E extends JSClassInterface> E attr(String att) {
+	public <E extends JSClassInterface> E attr(String att) {
 		E ret = getReturnType();
 		ret.addContent("." + att);
 		return ret;
+	}
+	
+	public final <E extends JSClassInterface> E apply(Object... classes) {
+		return _callMth("apply", classes[0], SEP, classes[1]);
 	}
 
 	@SuppressWarnings("unchecked")

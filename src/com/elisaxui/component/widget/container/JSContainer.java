@@ -14,6 +14,7 @@ import com.elisaxui.component.widget.button.ViewFloatAction;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
 import com.elisaxui.core.xui.xhtml.IXHTMLBuilder;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 
@@ -59,11 +60,11 @@ public interface JSContainer extends JSFactory, IXHTMLBuilder {
 		ViewCard card = new ViewCard();
 
 		aDataSet().set(_new());
-		aDataSet().setData("[]");
+		aDataSet().setData(new JSArray<>().asLitteral());
 		aDataDriven().set(_new(aDataSet()));
 		let(_self, _this);
 		
-		__(aDataDriven().onEnter(fct("ctx").__(()->{
+		aDataDriven().onEnter(fct("ctx").__(()->{
 				_if("ctx.row['_dom_']==null");
 				
 				 	_if("ctx.row.type=='page'");
@@ -136,16 +137,16 @@ public interface JSContainer extends JSFactory, IXHTMLBuilder {
 					endif();
 				endif();
 				})
-				));
+				);
 		
-		__(aDataDriven().onExit(fct("value").__(()->{
+		aDataDriven().onExit(fct("value").__(()->{
 				_if("value!=null && value.row['_dom_']!=null");
 
 				endif();
 		})
-				));
+				);
 
-		__(aDataDriven().onChange(fct("ctx").__(()->{
+		aDataDriven().onChange(fct("ctx").__(()->{
 				_if("ctx.row['_dom_']!=null && ctx.row.type=='card' && ctx.property=='anim'");
 					consoleDebug(txt("JSContainer change "), "ctx.value", "ctx");
 					_if("!ctx.value==''");
@@ -154,7 +155,7 @@ public interface JSContainer extends JSFactory, IXHTMLBuilder {
 					endif();	
 				endif();
 			})
-			));
+			);
 
 		_var("json", aDataSet().getData());
 		__("return json");

@@ -13,21 +13,21 @@ public class JSValue extends JSAny {
 
 	public JSValue add(Object... objs)
 	{
-		JSValue ret = (JSValue) declareType();
+		JSValue ret = (JSValue) declareTypeAny();
 		_doOperator(ret, "+", objs);
 		return ret;
 	}
 	
 	public JSValue append(Object... objs)
 	{
-		JSValue ret = (JSValue) declareType();
+		JSValue ret = (JSValue) declareTypeAny();
 		_doOperator(ret, "+=", objs);
 		return ret;
 	}
 	
 	public JSValue substact(Object... objs)
 	{
-		JSValue ret = (JSValue) declareType();
+		JSValue ret = (JSValue) declareTypeAny();
 		_doOperator(ret, "-", objs);
 		return ret;
 	}

@@ -12,8 +12,12 @@ import javax.json.JsonValue;
 
 import org.apache.commons.text.StringEscapeUtils;
 
+import com.elisaxui.app.elisys.xui.page.formation2.SrvScnDataDriven.ImgType;
 import com.elisaxui.core.helper.log.CoreLogger;
+import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.xhtml.XHTMLFile;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 
@@ -23,6 +27,18 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  */
 
 public interface IJSONBuilder {
+	
+	default <E extends JSClass> E newJava(Class<? extends JSClass> type)
+	{
+		if (XUIFactoryXHtml.ThreadLocalXUIFactoryPage.get()==null)
+		{
+			XHTMLFile file = new XHTMLFile();
+			XUIFactoryXHtml.ThreadLocalXUIFactoryPage.set(file);
+		}
+		
+		return (E)  JSContent.declareType(type, null).asLitteral();
+	}
+	
 	
 	default JsonObject obj(Object...value)
 	{

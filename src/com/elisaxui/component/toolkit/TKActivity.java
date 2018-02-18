@@ -3,8 +3,6 @@
  */
 package com.elisaxui.component.toolkit;
 
-import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.declareType;
-
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.component.widget.activity.JActivity;
 import com.elisaxui.component.widget.container.JSContainer;
@@ -29,12 +27,11 @@ public interface TKActivity extends JSClass {
 	JSon listRegisterActivity = null;
 	JSString idCurrentActivity = null;
 	
-	default JSVoid constructor()
+	default void constructor()
 	{
 		_set(listRegisterActivity, "{}");
 		_set(jsContainer, _new());
 		_set(idCurrentActivity, txt());
-		return  _void();
 	}
 	
 	default JActivity getCurrentActivity()

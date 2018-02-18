@@ -1,6 +1,7 @@
 package com.elisaxui.core.xui;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -38,6 +39,7 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot;
 import com.elisaxui.core.xui.xhtml.application.XHTMLAppScanner;
 import com.elisaxui.core.xui.xhtml.application.XHTMLChangeManager;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xml.XMLFile;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
@@ -54,9 +56,9 @@ import difflib.Patch;
 @Path("/")
 public class XUIFactoryXHtml {
 
-	private static final ThreadLocal<XHTMLFile> ThreadLocalXUIFactoryPage = new ThreadLocal<XHTMLFile>();
+	public static final ThreadLocal<XHTMLFile> ThreadLocalXUIFactoryPage = new ThreadLocal<>();
 
-	public static XHTMLChangeManager changeMgr = new XHTMLChangeManager();
+	public static final XHTMLChangeManager changeMgr = new XHTMLChangeManager();
 	
 	private static Map<String, ArrayList<String>> listeVersionId = null; 
 	
@@ -111,7 +113,7 @@ public class XUIFactoryXHtml {
 
 	
 	boolean enableCache = true;
-	boolean enableDynamic = true;
+	boolean enableDynamic = false;
 	
 	@GET
 	@Path("/page/{pays}/{lang}/id/{id}")
@@ -182,12 +184,13 @@ public class XUIFactoryXHtml {
 				
 				JSExecutorHelper.initThread();
 				
+				ProxyHandler.ThreadLocalMethodDesc.set(null);
 				XMLFile fileXML = createXHTMLFile();
 				fileXML.setRoot(new XHTMLRoot());
 				List<Locale> languages = headers.getAcceptableLanguages();
 				Locale loc = languages.get(0);
 
-				// premier passe
+				// premier passe (execute les annotation)
 				initXMLFile(pageClass, fileXML, param);
 
 				if (ErrorNotificafionMgr.hasErrorMessage()) {
@@ -201,9 +204,10 @@ public class XUIFactoryXHtml {
 						+ " GENERATE XML File of "
 						+ pageClass + " ********");
 				
-				String html = createXMLText(fileXML, loc);
+				// deuxieme passe (execute les toXML)
+				String html = toXML(fileXML, loc);
+				
 				addInCache(idCache, idCacheVersionning, html);
-
 				JSExecutorHelper.stopThread();					
 				htmlInCache = html;
 			}
@@ -276,7 +280,7 @@ public class XUIFactoryXHtml {
 	 * @param loc
 	 * @return
 	 */
-	private String createXMLText(XMLFile fileXML, Locale loc) {
+	private String toXML(XMLFile fileXML, Locale loc) {
 		StringBuilder buf = new StringBuilder(1000);
 		buf.append("<!doctype html>");
 		((XHTMLRoot) fileXML.getRoot()).setLang(loc.toLanguageTag());
@@ -294,7 +298,7 @@ public class XUIFactoryXHtml {
 	 * 
 	 */
 	private synchronized void  initChangeManager() {
-		if (changeMgr.mapClass==null || enableDynamic)
+		if (changeMgr.mapClass.isEmpty() || enableDynamic)
 		{
 			XHTMLAppScanner.getMapXHTMLPart(changeMgr);
 		}
@@ -308,6 +312,7 @@ public class XUIFactoryXHtml {
 			((XHTMLFile)file).setParam(p);
 			
 			XHTMLPart page = pageClass.newInstance();
+			
 			if (page instanceof XUIScene)
 				((XHTMLFile)file).setScene((XUIScene) page);
 			
@@ -328,6 +333,7 @@ public class XUIFactoryXHtml {
 	 * @return
 	 */
 	private XHTMLFile createXHTMLFile() {
+		System.out.println("create XHTML File");
 		XHTMLFile file = new XHTMLFile();
 		ThreadLocalXUIFactoryPage.set(file);
 		return file;

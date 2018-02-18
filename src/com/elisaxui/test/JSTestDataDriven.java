@@ -3,6 +3,7 @@ package com.elisaxui.test;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 
 public interface JSTestDataDriven extends JSClass {
@@ -28,13 +29,14 @@ public interface JSTestDataDriven extends JSClass {
 	
 	default Object startTest()
 	{
-		 _var("v", " []");    // {a:15, b:'12'},{a:21, b:'22'} 
 				
+		 		JSArray v = let("v",new JSArray<>().asLitteral());
 				_set(aDataSet, _new());
-				aDataSet.setData("v");
+				aDataSet.setData(v);
 				
-				_set(aDataDriven, _new(aDataSet))
-				.__(aDataDriven.onEnter(fct("value")
+				_set(aDataDriven, _new(aDataSet));
+				
+				aDataDriven.onEnter(fct("value")
 						._if("value.row['_dom_']==null")
 				            ._set(template, ScnAdminMain.xTemplateDataDriven("value.row.a", "value.row.b"))
 				            ._var("jqdom", template.insertAt("$('#content')", "value.idx"))
@@ -62,8 +64,8 @@ public interface JSTestDataDriven extends JSClass {
 //			            		)
 
 			            
-	            ))
-				.__(aDataDriven.onExit(fct("value")
+	            );
+				aDataDriven.onExit(fct("value")
 						._if("value!=null && value.row['_dom_']!=null")
 						//	.__("$(value.row['_dom_']).addClass('animated rubberBand infinite')")
 							// .__("$(value.row['_dom_']).one('animationend',  function() {this.removeClass('animated rubberBand');}.bind($(value.row['_dom_'])) )")
@@ -72,9 +74,9 @@ public interface JSTestDataDriven extends JSClass {
 						//	.__("value.row['_dom_']=null")
 							//.__("$(value.row['_dom_']).animate({\"margin-left\" : \"150px\"}, 500)")  
 						.endif()
-					))
+					);
 				
-				.__(aDataDriven.onChange(fct("value")
+				aDataDriven.onChange(fct("value")
 //					    .consoleDebug("value")
 						._if("value.row['_dom_']!=null && value.property=='idx'")
 							.__("$(value.row['_dom_']).css('transform','translate3d(0px,' + value.value*35 + 'px,0px)')")
@@ -83,11 +85,11 @@ public interface JSTestDataDriven extends JSClass {
 							._var("span","$(value.row['_dom_']).find('span:nth-child(2)')")
 							.__("span.text(value.value)")
 						.endif() 
-						))
+						);
 				
 //				.__(aDataDriven.start())
 				
-				._set("v", aDataSet.getData())
+				_set(v, aDataSet.getData())
 				
 				.__("setTimeout(", fct()
 						._for("var i=0; i<20; i++")

@@ -5,7 +5,6 @@ package com.elisaxui.app.elisys.xui.page.main;
 
 import static com.elisaxui.component.toolkit.TKActivity.ON_ACTIVITY_CREATE;
 import static com.elisaxui.component.toolkit.TKActivity.ON_ACTIVITY_RESUME;
-import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.declareType;
 
 import com.elisaxui.app.elisys.xui.page.main.widget.ViewSyllabisation;
 import com.elisaxui.component.widget.activity.JActivity;
@@ -14,6 +13,7 @@ import com.elisaxui.component.widget.button.ViewRippleEffect;
 import com.elisaxui.component.widget.log.ViewLog;
 import com.elisaxui.core.xui.xhtml.IXHTMLBuilder;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 
 /**********************************************************************/
@@ -42,7 +42,7 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
 			
 			XMLElement cntLogWorker =  XHTMLPart.xPart(new ViewLog());	
 			
-			JActivity activity = declareType(JActivity.class, "activity"); 
+			JActivity activity = JSContent.declareType(JActivity.class, "activity"); 
 			activity._setContent( activity( "Activity1", arr( 
 						factory("#NavBarActivity1", FACTORY_NAVBAR, arr( 
 																	 //backgroundGradiant(),

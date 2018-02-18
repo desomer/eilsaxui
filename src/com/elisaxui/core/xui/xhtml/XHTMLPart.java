@@ -54,6 +54,8 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 	/**
 	 * ou js() mais fragment peux etre conditionnel
 	 *   pas dans un XMLPart mais un JSClass
+	 *   
+	 *   utiliser aussi pour surcharge
 	 * @return
 	 */
 	@Deprecated
@@ -124,13 +126,31 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 	public static final CSSBuilder xStyle(Object... path) {
 		return new CSSBuilder().path(path);
 	}
+	
+	public static final XMLElement xImport(Class<?>...cl) {
+		Object[] r = new Object[cl.length];
+		
+		for (int i = 0; i < r.length; i++) {
+			r[i] = doImport((Class<? extends JSClass>) cl[i]);
+		}
+		
+		return xListElement(r);
+	}
 
 	public static final XMLElement xImport(Class<? extends JSClass> cl) {
+		return doImport(cl);
+	}
+
+	/**
+	 * @param cl
+	 * @return
+	 */
+	private static XMLElement doImport(Class<? extends JSClass> cl) {
 		JSClassBuilder script = XUIFactoryXHtml.getXHTMLFile().getClassImpl(cl);
 
 		Object autocall = null;
 		if (script.getAutoCallMeth() != null) {
-			JSClass jsclass = JSClass.declareType(cl, cl.getSimpleName());
+			JSClass jsclass = JSContent.declareType(cl, cl.getSimpleName());
 			autocall = new JSContent().__(jsclass, ".", script.getAutoCallMeth());
 		}
 

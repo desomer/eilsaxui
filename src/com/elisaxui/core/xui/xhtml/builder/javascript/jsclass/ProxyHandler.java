@@ -3,8 +3,6 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.javascript.jsclass;
 
-import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.declareType;
-
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
@@ -23,14 +21,12 @@ import javax.json.JsonObjectBuilder;
 
 import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
-import com.elisaxui.core.xui.xhtml.IXHTMLBuilder;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSLambda;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSLambda;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
-import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.builder.XUIFormatManager;
 
@@ -46,56 +42,22 @@ public final class ProxyHandler implements InvocationHandler {
 	static boolean debug2 = false;
 	static boolean debug3 = false;
 
-	private Object varname; // nom de la variable du proxy
-	private Object varContent; // contenu code du proxy
-	private Class<? extends JSClass> implementClass; // type js de la class
-
-	private JsonObjectBuilder jsonBuilder = null;
-
-	/**
-	 * @return the jsonBuilder
-	 */
-	public final JsonObjectBuilder getJsonBuilder() {
-		return jsonBuilder;
-	}
-
-	/**
-	 * @param jsonBuilder
-	 *            the jsonBuilder to set
-	 */
-	public final void setJsonBuilder(JsonObjectBuilder jsonBuilder) {
-		this.jsonBuilder = jsonBuilder;
-	}
-
-	private String currentFctBuildByProxy = null; //
-	private boolean testInLineInProgress = false; // test si la methode doit retourner une fonction anonym
-
+	
+	public static final ThreadLocal<Boolean> ThreadLocalMode = new ThreadLocal<>();
+	public static final ThreadLocal<XUIFormatManager> ThreadLocalXUIFormatManager = new ThreadLocal<>();
 	// methode en attente d'ajout dans le code
 	public static final ThreadLocal<ProxyMethodDesc> ThreadLocalMethodDesc = new ThreadLocal<>(); // regrouper le 2
 																									// ThreadLocal
-	public static final ThreadLocal<Boolean> ThreadLocalMode = new ThreadLocal<>();
-	public static final ThreadLocal<XUIFormatManager> ThreadLocalXUIFormatManager = new ThreadLocal<>();
-
-	public static XUIFormatManager getFormatManager() {
-		XUIFormatManager jsb = ThreadLocalXUIFormatManager.get();
-		if (jsb == null) {
-			jsb = new XUIFormatManager();
-			ThreadLocalXUIFormatManager.set(jsb);
-		}
-		return jsb;
-	}
-
-	private Map<String, ProxyMethodDesc> mapContentMthBuildByProxy = new HashMap<>(); // contenu des methodes crée par
-																						// proxy , ThreadLocal?
-
-	public ProxyHandler(Class<? extends JSClass> impl) {
-		this.setImplementClass(impl);
-	}
-
-	public static final boolean isModeJava() {
-		Boolean b = ThreadLocalMode.get();
-		return b == null ? false : b;
-	}
+	
+	
+	/***************************************************************************/
+	private Object varname; // nom de la variable du proxy
+	private Object varContent; // contenu code du proxy
+	private Class<? extends JSClass> implementClass; // type js de la class
+	private JsonObjectBuilder jsonBuilder = null;
+	private String currentFctBuildByProxy = null; //
+	private boolean testInLineInProgress = false; // test si la methode doit retourner une fonction anonym
+	
 
 	/**
 	 * interception des appel de methode de interface - creer une JSClassImpl si
@@ -133,18 +95,18 @@ public final class ProxyHandler implements InvocationHandler {
 			if (method.isDefault()) {
 				ret = doCallImplement(mthInvoke);
 
-			} else if (!checkMethodExist(method)) {
+			} else if (checkMethodIsInJSContent(method)) {
 				/******************************************************************************/
-				/***** INSERT le nom de la methode abstract de type Interface de variable ****/
+				/***** APPEL DES FUNCTION INTERNE  sur la class JSContent *****/
 				/******************************************************************************/
-				ret = doCallAttribut(method);
+				ret = doCallInternalJSContent(mthInvoke);   // var, set, if
 
 			} else {
 				/******************************************************************************/
-				/***** APPEL DES FUNCTION INTERNE (var, set, if) sur la class JSContent *****/
+				/***** INSERT le nom de la methode abstract de type Interface de variable ****/
 				/******************************************************************************/
-				ret = doCallInternalImplement(mthInvoke);
-
+				ret = doCallAttribut(method);  // Object attr()    sans default
+				
 			}
 		}
 
@@ -155,7 +117,6 @@ public final class ProxyHandler implements InvocationHandler {
 		Object ret = null;
 		if (testInLineInProgress) {
 			ret = JSClassBuilder.toJSCall("/*ww4*/this", mthInvoke.method, mthInvoke.args); // ne creer pas la fct en
-			// testAnonymInProgress
 		} else {
 
 			if (currentFctBuildByProxy == null) { // test si meth en cours de build
@@ -169,7 +130,7 @@ public final class ProxyHandler implements InvocationHandler {
 				 * APPEL A UNE AUTRE FCT INTERNE A LA FCT EN COURS DU PROXY => AJOUTE DANS
 				 * getListHandleFuntionPrivate
 				 *****************************************************/
-				ret = doCallInternalMethod(mthInvoke);
+				ret = doCallMethodInternal(mthInvoke);
 			}
 		}
 		return ret;
@@ -206,7 +167,7 @@ public final class ProxyHandler implements InvocationHandler {
 		return ret;
 	}
 
-	private Object doCallInternalMethod(ProxyMethodDesc mthInvoke) throws Throwable {
+	private Object doCallMethodInternal(ProxyMethodDesc mthInvoke) throws Throwable {
 		Object ret = null;
 
 		boolean isJSClass = JSClass.class.isAssignableFrom(mthInvoke.method.getDeclaringClass());
@@ -290,12 +251,12 @@ public final class ProxyHandler implements InvocationHandler {
 				initTypeOfJSArray(method, ret);
 			}
 
-			((JSAny) ret)._setParent(this);
+			((JSAny) ret)._setParentLitteral(this);
 		}
 		return ret;
 	}
 
-	private Object doCallInternalImplement(ProxyMethodDesc mthInvoke)
+	private Object doCallInternalJSContent(ProxyMethodDesc mthInvoke)
 			throws ClassNotFoundException, IllegalAccessException, InvocationTargetException {
 
 		ProxyMethodDesc currentMethodDesc = ThreadLocalMethodDesc.get();
@@ -344,6 +305,7 @@ public final class ProxyHandler implements InvocationHandler {
 
 		if (mthInvoke.method.getName().equals("set")) {
 			Object[] param = (Object[]) mthInvoke.args[0];
+			/*****  FAUT LE METTRE DIRECTEMENT dans le content   ************/ 
 			return ThreadLocalMethodDesc.get().content._set(mthInvoke.proxy, param);
 		}
 
@@ -351,6 +313,10 @@ public final class ProxyHandler implements InvocationHandler {
 			return cast((Class<?>) mthInvoke.args[0], mthInvoke.args[1]);
 		}
 
+		if (mthInvoke.method.getName().equals("declareType")) {
+			return JSContent.declareType((Class<?>) mthInvoke.args[0], mthInvoke.args[1]);
+		}
+		
 		if (mthInvoke.method.getName().equals("asLitteral")) {
 			this.jsonBuilder = Json.createObjectBuilder();
 			return mthInvoke.proxy;
@@ -458,7 +424,7 @@ public final class ProxyHandler implements InvocationHandler {
 	 * @return
 	 */
 	public static Object cast(Class<?> cl, Object args) {
-		Object jc = declareType(cl, null);
+		Object jc = JSContent.declareType(cl, null);
 		if (jc instanceof JSAny)
 			((JSAny) jc)._setValue(args)._setName(args);
 		else
@@ -475,7 +441,7 @@ public final class ProxyHandler implements InvocationHandler {
 
 		ProxyMethodDesc currentMethodDesc = null;
 
-		currentMethodDesc = mapContentMthBuildByProxy.get(mthName);
+		currentMethodDesc = implcl.mapContentMthBuildByProxy.get(mthName);
 
 		if (currentMethodDesc == null) {
 			JSContent jsc = new JSContent();
@@ -485,7 +451,7 @@ public final class ProxyHandler implements InvocationHandler {
 
 			currentMethodDesc = new ProxyMethodDesc(jsc);
 			currentMethodDesc.proxy = proxy;
-			mapContentMthBuildByProxy.put(mthName, currentMethodDesc); // creer le contenu
+			implcl.mapContentMthBuildByProxy.put(mthName, currentMethodDesc); // creer le contenu
 		}
 
 		return currentMethodDesc;
@@ -595,7 +561,7 @@ public final class ProxyHandler implements InvocationHandler {
 	 * @return
 	 * @throws NoSuchMethodException
 	 */
-	private static final boolean checkMethodExist(Method method) {
+	private static final boolean checkMethodIsInJSContent(Method method) {
 		try {
 			return JSContent.class.getMethod(method.getName(), method.getParameterTypes()) != null;
 		} catch (NoSuchMethodException | SecurityException e) {
@@ -618,7 +584,7 @@ public final class ProxyHandler implements InvocationHandler {
 
 		if (testInline) {
 			testInLineInProgress = true;
-			codeAnonym = mapContentMthBuildByProxy.get(currentFctBuildByProxy).content;
+			codeAnonym = handle.implcl.mapContentMthBuildByProxy.get(currentFctBuildByProxy).content;
 			prevCode = codeAnonym.$$subContent();
 		}
 
@@ -644,7 +610,7 @@ public final class ProxyHandler implements InvocationHandler {
 		} else if (!testInline) {
 			String id = JSClassBuilder.getMethodId(handle.method, handle.args);
 
-			ProxyMethodDesc methDesc = mapContentMthBuildByProxy.get(id);
+			ProxyMethodDesc methDesc = handle.implcl.mapContentMthBuildByProxy.get(id);
 
 			JSContent code = addReturnInCode(retProxyMth, methDesc);
 
@@ -798,4 +764,40 @@ public final class ProxyHandler implements InvocationHandler {
 				new ProxyHandler(cl));
 		return (E) proxy;
 	}
+	
+	/**
+	 * @return the jsonBuilder
+	 */
+	public final JsonObjectBuilder getJsonBuilder() {
+		return jsonBuilder;
+	}
+
+	/**
+	 * @param jsonBuilder
+	 *            the jsonBuilder to set
+	 */
+	public final void setJsonBuilder(JsonObjectBuilder jsonBuilder) {
+		this.jsonBuilder = jsonBuilder;
+	}
+
+	
+	public static XUIFormatManager getFormatManager() {
+		XUIFormatManager jsb = ThreadLocalXUIFormatManager.get();
+		if (jsb == null) {
+			jsb = new XUIFormatManager();
+			ThreadLocalXUIFormatManager.set(jsb);
+		}
+		return jsb;
+	}
+
+
+	public ProxyHandler(Class<? extends JSClass> impl) {
+		this.setImplementClass(impl);
+	}
+
+	public static final boolean isModeJava() {
+		Boolean b = ThreadLocalMode.get();
+		return b == null ? false : b;
+	}
+
 }

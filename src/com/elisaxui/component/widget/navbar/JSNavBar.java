@@ -16,6 +16,7 @@ import com.elisaxui.component.widget.navbar.JSonNavBar.JSonNavBarBtnAction;
 import com.elisaxui.component.widget.navbar.JSonNavBar.JSonNavBarRow;
 import com.elisaxui.component.widget.navbar.JSonNavBar.JSonNavBarTitle;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.core.xui.xml.annotation.xForceInclude;
 
@@ -32,21 +33,21 @@ public interface JSNavBar extends JSFactory {
 	static final String TYPE_BTN_ACTION = "action";
 	static final String TYPE_BACKGROUND = "background";
 	
-	JSDataDriven aDataDriven = defVar();
-	JSDataSet aDataSet = defVar();
-	JSXHTMLPart template = defVar();
+	JSDataDriven aDataDriven = null;
+	JSDataSet aDataSet = null;
+	JSXHTMLPart template = null;
 
 	default Object getData(JSAny selector) {
 
 		_set(aDataSet, _new());
-		aDataSet.setData("[]");    //cast(JSArray.class,"[]"))
+		aDataSet.setData(new JSArray<>().asLitteral()); 
 
 		_set(aDataDriven, _new(aDataSet));
 		
 		JSChangeCtx ctx = declareType(JSChangeCtx.class, "ctx");
 		JQuery jqdom = declareType(JQuery.class, "jqdom");
 		
-		__(aDataDriven.onEnter(fct(ctx).__(()->{
+		aDataDriven.onEnter(fct(ctx).__(()->{
 			
 			_if(ctx.row().attrByString(JSDataSet.ATTR_DOM_LINK).isEqual(null)); 
 			
@@ -97,21 +98,21 @@ public interface JSNavBar extends JSFactory {
 				
 			endif ();
 		}
-		)));
+		));
 		
-		__(aDataDriven.onExit(fct("value").__(()->{
+		aDataDriven.onExit(fct("value").__(()->{
 				_if("value!=null && value.row['_dom_']!=null");
 
 				endif();
 		})
-		));
+		);
 		
-		__(aDataDriven.onChange(fct("value").__(()->{
+		aDataDriven.onChange(fct("value").__(()->{
 				_if("value.row['_dom_']!=null && value.property=='idx'");
 
 				endif();
 		})
-		));
+		);
 		
 		return aDataSet.getData();
 	}

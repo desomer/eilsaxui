@@ -1,8 +1,6 @@
 package com.elisaxui.component.toolkit.datadriven;
 
-import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.defAttr;
-import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.defVar;
-
+import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSCallBack;
@@ -20,74 +18,67 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
  */
 public interface JSDataDriven extends JSClass {
 
-	JSDataSet dataSet = null;
+	JSDataSet dataSet();
 
-	JSCallBack callBackEnter = null;
-	JSCallBack callBackExit = null;
-	JSCallBack callBackChange = null;
+	TKPubSub callBackEnter();
+	TKPubSub callBackExit();
+	TKPubSub callBackChange();
 	
 	JSDataDriven _this = null;
 	JSDataDriven _self = null;
 
-	default JSVoid constructor(Object data) {
-		_set(dataSet, data);
-		_set(callBackEnter, "$.Callbacks()");
-		_set(callBackExit, "$.Callbacks()");
-		_set(callBackChange, "$.Callbacks()");
+	default void constructor(Object data) {
+		dataSet().set(data);
+		callBackEnter().set(newInst(TKPubSub.class));
+		callBackExit().set(newInst(TKPubSub.class));
+		callBackChange().set(newInst(TKPubSub.class));
 		start();
-		return _void();
 	}
 
-	default JSVoid onEnter(Object callback) {
-		__(callBackEnter, ".add(", callback, ")");
-		return  _void();
+	default void onEnter(Object callback) {
+		callBackEnter().subscribe(callback);
 	}
 
-	default JSVoid onExit(Object callback) {
-		__(callBackExit, ".add(", callback, ")");
-		return  _void();
+	default void onExit(Object callback) {
+		callBackExit().subscribe(callback);
 	}
 
-	default JSVoid onChange(Object callback) {
-		__(callBackChange, ".add(", callback, ")");
-		return  _void();
+	default void onChange(Object callback) {
+		callBackChange().subscribe(callback);
 	}
 
-	default JSVoid doEnter(Object row) {
-		__(callBackEnter, ".fire(row)");
-		return  _void();
+	default void doEnter(Object row) {
+		callBackEnter().publish(row);
 	}
 
-	default JSVoid doExit(Object row) {
-		__(callBackExit, ".fire(row)");
-		return  _void();
+	default void doExit(Object row) {
+		callBackExit().publish(row);
 	}
 
-	default JSVoid doChange(Object row) {
-		__(callBackChange, ".fire(row)");
-		return  _void();
+	default void doChange(Object row) {
+		callBackChange().publish(row);
 	}
 
 	default JSVoid start() {
 		
 		JSContentInterface fctChange =  fct("value").__(()->{
 			_if("value.ope=='enter'");
-				__(_self.doEnter("value"));
+				_self.doEnter("value");
 			endif();
 			_if("value.ope=='exit'");
-				__(_self.doExit("value"));
+				_self.doExit("value");
 			endif();
 			_if("value.ope=='change'");
-				__(_self.doChange("value"));
+				_self.doChange("value");
 			endif();
 		});
 		
 		/******************************************/
-		_var("data", dataSet.getData());
+		_var("data", dataSet().getData());
 		_var(_self, _this);
 		_var("fctChange", fctChange);
 		
-		dataSet.onChange("fctChange");
+		dataSet().onChange("fctChange");
 		
 		return _void();
 	}

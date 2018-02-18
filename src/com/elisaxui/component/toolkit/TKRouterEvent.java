@@ -57,9 +57,9 @@ public interface TKRouterEvent extends JSClass {
 		// this est un string (bind)
 		// ecoute l'history back
 		JSCallBack doPushState = let(JSCallBack.class, "doPushState", fct("params","query").__(()->{   
-				_if(self.navigo().get("nextenable"));
+				_if(self.navigo().attr("nextenable"));
 				
-				    JRoute toRoute = let(JRoute.class, "toRoute", self.navigo().get("_lastRouteResolved"));
+				    JRoute toRoute = let(JRoute.class, "toRoute", self.navigo().attr("_lastRouteResolved"));
 				    _if(toRoute.url().substring(0, 1).isEqual("!"));
 				    	toRoute.url().set(toRoute.url().substring(1));
 				    endif();

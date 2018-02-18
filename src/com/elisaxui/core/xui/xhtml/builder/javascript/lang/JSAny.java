@@ -28,25 +28,25 @@ public class JSAny implements JSElement {
 	protected static final String SEP = ",";
 	protected Object name;
 	protected Object value;
-	protected Object parent;
+	protected Object parentLitteral;
 	
 	
 	public String _getClassType() {
 		return this.getClass().getSimpleName();
 	}
 
-	/**
-	 * @return the parent
-	 */
-	public final Object _getParent() {
-		return parent;
-	}
+//	/**
+//	 * @return the parent
+//	 */
+//	public final Object _getParent() {
+//		return parentLitteral;
+//	}
 
 	/**
 	 * @param parent the parent to set
 	 */
-	public final void _setParent(Object parent) {
-		this.parent = parent;
+	public final void _setParentLitteral(Object parent) {
+		this.parentLitteral = parent;
 	}
 
 	public final Object _getName() {
@@ -69,9 +69,11 @@ public class JSAny implements JSElement {
 	}
 	
 	public  Object _getValueOrName() {
-		if (_getValue()==null)
+		Object v =_getValue();
+		if (v==null)
 			return name==null?"":""+_getName();
-		return _getValue();
+		else
+			return v;
 	}
 
 	@Override
@@ -106,6 +108,10 @@ public class JSAny implements JSElement {
 			 }
 	}
 	
+	public boolean isLitteral() {
+		return false;
+	}
+	
 	/**************************************************************/
 	public final JSBool isEqual(Object obj)
 	{
@@ -124,22 +130,37 @@ public class JSAny implements JSElement {
 	public final JSAny set(Object... objs)
 	{
 		
-		JSAny ret = declareType();
+		JSAny ret = declareTypeAny();
+		boolean isLitteral = false;
 		
-		ProxyHandler mh = (ProxyHandler)this.parent;
-		boolean isLitteral = mh!=null && mh.getJsonBuilder()!=null;
-		
-		if (isLitteral || ProxyHandler.isModeJava()  ) {
-			if (mh.getJsonBuilder()==null)
-				mh.setJsonBuilder(Json.createObjectBuilder());
+		if (this.parentLitteral instanceof ProxyHandler)
+		{
+			ProxyHandler mh = (ProxyHandler)this.parentLitteral;
+			isLitteral = mh.getJsonBuilder()!=null;
 			
+			if (isLitteral || ProxyHandler.isModeJava()  ) {
+				if (mh.getJsonBuilder()==null)
+					mh.setJsonBuilder(Json.createObjectBuilder());
+				
+				String attr = ""+this.name;
+				attr = attr.substring(attr.lastIndexOf('.')+1);
+				
+				if (objs[0] instanceof String && this instanceof JSValue)
+					objs[0] = "\"" + objs[0] + "\"";
+				
+				mh.getJsonBuilder().add(attr, new JsonNumberImpl(objs[0].toString()));
+			}
+		}
+		else if (this.parentLitteral instanceof JSObject)
+		{
+			JSObject mh = (JSObject)this.parentLitteral;
+			isLitteral = mh.jsonBuilder!=null;
 			String attr = ""+this.name;
-			attr = attr.substring(attr.lastIndexOf('.')+1);
 			
 			if (objs[0] instanceof String && this instanceof JSValue)
 				objs[0] = "\"" + objs[0] + "\"";
 			
-			mh.getJsonBuilder().add(attr, new JsonNumberImpl(objs[0].toString()));
+			mh.jsonBuilder.add(attr, new JsonNumberImpl(objs[0].toString()));
 		}
 		
 		if (!isLitteral)
@@ -190,12 +211,22 @@ public class JSAny implements JSElement {
 		}
 	}
 	
+	public final <E extends JSAny> E call(String mth, Object... objs)
+	{
+		return (E)_callMethod(null, mth, objs );
+	}
+	
+	public final <E extends JSAny> E callTyped(E type, String mth, Object... objs)
+	{
+		return (E)_callMethod(type, mth, objs );
+	}
+	
 	protected final Object _callMethod(JSAny ret, String mth, Object... objs) {
 		if (ret == null) {
 			ret = this;
 			if (value == null && this.name != null) {
 				// gestion premier appel de variable pour chainage
-				ret = ret.declareType();
+				ret = ret.declareTypeAny();
 				ret._setName(this._getName());
 			}
 		}
@@ -264,7 +295,7 @@ public class JSAny implements JSElement {
 	 * @param ret
 	 * @return
 	 */
-	protected final JSAny declareType() {
+	protected final JSAny declareTypeAny() {
 		JSAny ret =  null;
 		try {
 			ret = this.getClass().newInstance();

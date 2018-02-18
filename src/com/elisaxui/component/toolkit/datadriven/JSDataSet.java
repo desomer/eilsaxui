@@ -1,143 +1,156 @@
 package com.elisaxui.component.toolkit.datadriven;
 
+import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSCallBack;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSObject;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 
 public interface JSDataSet extends JSClass {
 
-
 	public static final String ATTR_DOM_LINK = "_dom_";
-	
-	JSArray<?> data();
-	JSCallBack callBackChange();
-	
+
+	JSArray<Object> data();
+
+	TKPubSub callBackChange();
+
 	JSInt delayEvent = null;
-	JSAny myProxySet = null;    //WeakSet
-	
+	JSAny myProxySet = null; // WeakSet
+
 	JSDataSet _that = null;
-	
-//	Object synchroneEvent = null   // TODO   desactive le fastdom
+
+	// Object synchroneEvent = null // TODO desactive le fastdom
 
 	default void constructor(Object d) {
-		 data().set(d);
-		 callBackChange().set("$.Callbacks()");
-		 _set(delayEvent, 0);
-		 _set(myProxySet, "new WeakSet()");
+		data().set(d);
+		callBackChange().set(newInst(TKPubSub.class));
+		_set(delayEvent, 0);
+		_set(myProxySet, "new WeakSet()");
 	}
 
-	default Object onChange(Object callback) {
-		return __(callBackChange(),".add(", callback ,")");
-				
+	default void onChange(Object callback) {
+		callBackChange().subscribe(callback);
 	}
-	
-	default Object isProxy(Object myObj)
-	{
-		return __("return ",myProxySet,".has(",myObj,")");
-	}
-	
-	default Object addProxy(Object myObj)
-	{
-		return __(myProxySet,".add(",myObj,")");
-	}
-	
-	default void setData(Object d) {
-				_var("changeHandler", "{\n" +
-					" get: function(target, property) {\n" +
 
-						" return target[property];\n" +
-						" },\n"+ 
-						" apply: function(target, thisArg, argumentsList) {\n"+
-						" return thisArg[target].apply(this, argumentList);\n"+
-						" },\n"+
-						" deleteProperty: function(target, property) {\n"+
-						" console.log(\"Deleted %s\", property);\n"+
-						" return true;\n"+
-						" },"+
-						
-					"set:", fct("target", "property", "value", "receiver")
-	
-					       ._if("property!='"+ATTR_DOM_LINK+"' && target[property]!==value")
-								._var("row", "{ ope:'change', row:target, idx:target.idx, property:property, value: value, old: target[property] }")
-								._var("fct"," function() {fastdom.mutate(function() {that.callBackChange.fire(row); })}")
-								.__("setTimeout(fct, 1)")
-					       .endif()
-				       	   ._set("target[property]", "value")
-					       .__("return true")
+	default Object isProxy(Object myObj) {
+		return __("return ", myProxySet, ".has(", myObj, ")");
+	}
 
-//				" set: function(target, property, value, receiver) {\n" +
-//				" console.log(\'setting \' , property , \' for \' , target , \' with value \' , value);\n" +
-//				" target[property] = value;\n" +
-//				" // you have to return true to accept the changes\n" +
-//				" return true;\n" +
-//				" }\n" +
-				,"};")
-				
-				
-				._var("that", "this")
-				// observe le push du tableau
-				._set("d.push", fct()
-						.__("arguments[0]=new Proxy(arguments[0], changeHandler)")
-						.__(_that.addProxy("arguments[0]"))
-						.__("Array.prototype.push.apply(this, arguments)")		
-						._var("row", "{ ope:'enter', row:arguments[0], idx:this.length-1 }")
-						// les push sont lancé dans le fast dom 
-						._var("fct"," function() {fastdom.mutate(function() {that.callBackChange.fire(row); })}")
-						// les push sont executé de facon echelonné dans le temps par intervalle de 2 ms
-						._var("t", "that.delayEvent")
-						._if("t==0")
-							.__("setTimeout(",fct()._set("that.delayEvent",0) ,", 0)")   // remise a zero apres la boucle
-						.endif()
-						._set("that.delayEvent", "that.delayEvent+2")
-						.__("setTimeout(fct, t)")
-						//.__("window.requestAnimationFrame(fct)")
-				)
-				._set("d.pop", fct()._var("ret","Array.prototype.pop.apply(this, arguments)")
-						._var("row", "{ ope:'exit', row:ret, idx:this.length }")
-						._var("fct"," function() {fastdom.mutate(function() {that.callBackChange.fire(row); })}")
-						._var("t", "that.delayEvent")
-						._if("t==0")
-							.__("setTimeout(",fct()._set("that.delayEvent",0) ,", 0)")   // remise a zero apres la boucle
-						.endif()
-						._set("that.delayEvent", "that.delayEvent+2")
-						.__("setTimeout(fct, t)")
-						.__("return ret")
-				)
-				._set("d.splice", fct().__(()->{
-						
-						_if("arguments.length>2 && !", _that.isProxy("arguments[2]") );
-							__("arguments[2]=new Proxy(arguments[2], changeHandler)");
-							__(_that.addProxy("arguments[2]"));
-						endif();
-						
-						_var("ret","Array.prototype.splice.apply(this, arguments)");
-						_var("row", "null");
-						_if("arguments.length>2");
-							_set("row", "{ ope:'enter', row:arguments[2], idx:arguments[0] }");
-						_else();
-							_set("row", "{ ope:'exit', row:ret[0], idx:this.length }");
-						endif();
-						
-						_var("fct"," function() {fastdom.mutate(function() {that.callBackChange.fire(row); })}");
-						_var("t", "that.delayEvent");
-						_if("t==0");
-							__("setTimeout(",fct()._set("that.delayEvent",0) ,", 0)") ;  // remise a zero apres la boucle
-						endif();
-						_set("that.delayEvent", "that.delayEvent+2");
-						__("setTimeout(fct, t)");
-						__("return ret");
-					})
-				);
+	default Object addProxy(Object myObj) {
+		return __(myProxySet, ".add(", myObj, ")");
+	}
+
+	default void setData(JSArray<?> d) {
+
+
 		
-			   data().set("d");	 
+		JSObject target = declareType(JSObject.class, "target");
+		JSObject property = declareType(JSObject.class, "property");
+		JSObject thisArg = declareType(JSObject.class, "thisArg");
+		JSObject argumentsList = declareType(JSObject.class, "argumentsList");
+		JSObject value = declareType(JSObject.class, "value");
+		JSObject receiver = declareType(JSObject.class, "receiver");
+		
+		// changeHandler sur attribut d'objet JS
+		JSObject changeHandler=  let("changeHandler", new JSObject().asLitteral());
+		
+		changeHandler.attr("get").set(callback(target, property,
+				() -> _return(target.attrByString(property))));
+		changeHandler.attr("apply").set(callback(target, thisArg, argumentsList,
+				() -> _return(thisArg.attrByString(target).apply(_this(), argumentsList))));
+		changeHandler.attr("deleteProperty").set(callback(target, property,
+				() -> {
+					consoleDebug(txt("Deleted %s"), property);
+					_return(true);
+				}));
+		changeHandler.attr("set").set(callback(target, property, value, receiver, 
+				() -> {
+					_if("property!='" + ATTR_DOM_LINK + "' && target[property]!==value").then(() -> {
+						JSChangeCtx obj = newInst(JSChangeCtx.class).asLitteral();
+						obj.ope().set("change");
+						obj.row().set(target);
+						obj.idx().set(target.attr("idx"));
+						obj.property().set(property);
+						obj.value().set(value);
+						obj.old().set(target.attrByString(property));
+						
+						JSChangeCtx row = let("row", obj);
+						setTimeout(callback(()->
+							__("fastdom.mutate(", callback(()-> cast(JSDataSet.class,"that").callBackChange().publish(row)  )  ,")")
+						), 1);
+					});
+					
+					target.attrByString(property).set(value);
+					_return(true);
+				}));
+
+		
+		_var("that", _this());
+
+		// observe le push du tableau
+		_set("d.push", fct()
+				.__("arguments[0]=new Proxy(arguments[0], changeHandler)")
+				.__(_that.addProxy("arguments[0]"))
+				.__("Array.prototype.push.apply(this, arguments)")
+				._var("row", "{ ope:'enter', row:arguments[0], idx:this.length-1 }")
+				// les push sont lancé dans le fast dom
+				._var("fct", " function() {fastdom.mutate(function() {that.callBackChange.publish(row); })}")
+				// les push sont executé de facon echelonné dans le temps par intervalle de 2 ms
+				._var("t", "that.delayEvent")
+				._if("t==0")
+				.__("setTimeout(", fct()._set("that.delayEvent", 0), ", 0)") // remise a zero apres la boucle
+				.endif()
+				._set("that.delayEvent", "that.delayEvent+2")
+				.__("setTimeout(fct, t)")
+		// .__("window.requestAnimationFrame(fct)")
+		);
+
+		_set("d.pop", fct()._var("ret", "Array.prototype.pop.apply(this, arguments)")
+				._var("row", "{ ope:'exit', row:ret, idx:this.length }")
+				._var("fct", " function() {fastdom.mutate(function() {that.callBackChange.publish(row); })}")
+				._var("t", "that.delayEvent")
+				._if("t==0")
+				.__("setTimeout(", fct()._set("that.delayEvent", 0), ", 0)") // remise a zero apres la boucle
+				.endif()
+				._set("that.delayEvent", "that.delayEvent+2")
+				.__("setTimeout(fct, t)")
+				.__("return ret"));
+
+		_set("d.splice", fct().__(() -> {
+
+			_if("arguments.length>2 && !", _that.isProxy("arguments[2]"));
+				__("arguments[2]=new Proxy(arguments[2], changeHandler)");
+				__(_that.addProxy("arguments[2]"));
+			endif();
+
+			_var("ret", "Array.prototype.splice.apply(this, arguments)");
+			_var("row", "null");
+			_if("arguments.length>2");
+				_set("row", "{ ope:'enter', row:arguments[2], idx:arguments[0] }");
+			_else();
+				_set("row", "{ ope:'exit', row:ret[0], idx:this.length }");
+			endif();
+
+			_var("fct", " function() {fastdom.mutate(function() {that.callBackChange.publish(row); })}");
+			_var("t", "that.delayEvent");
+			_if("t==0");
+				__("setTimeout(", fct()._set("that.delayEvent", 0), ", 0)"); // remise a zero apres la boucle
+			endif();
+			
+			_set("that.delayEvent", "that.delayEvent+2");
+			__("setTimeout(fct, t)");
+			__("return ret");
+		}));
+
+		data().set(d);
 	}
 
-	default JSArray getData() {
-		 return data();
+	default JSArray<Object> getData() {
+		return data();
 	}
 
 }

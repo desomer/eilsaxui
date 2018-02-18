@@ -2,6 +2,7 @@ package com.elisaxui.core.xui.xhtml.builder.javascript;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 
@@ -39,7 +40,7 @@ public interface JSContentInterface  {
 	 * @param param
 	 * @return
 	 */
-	Object txt(Object... param);
+	JSString txt(Object... param);
 	
 	/**
 	 * creation d'un JSVariable <br>
@@ -56,6 +57,8 @@ public interface JSContentInterface  {
 	JSFunction callback( JSLambda c);
 	JSFunction callback(JSElement param, JSLambda c);
 	JSFunction callback(JSElement param1, JSElement param2, JSLambda c);
+	JSFunction callback(JSElement param1, JSElement param2, JSElement param3, JSLambda c);
+	JSFunction callback(JSElement param1, JSElement param2, JSElement param3, JSElement param4, JSLambda c);
 	
 	/**
 	 * exemple <br>
@@ -86,13 +89,11 @@ public interface JSContentInterface  {
 	
 	/**********************************************************************/
 	JSContentInterface _return(Object... content);
+	Object _this();
 	
 	@Deprecated
 	JSVoid _void();
-	@Deprecated
-	Object _null();
-	@Deprecated
-	Object _this();
+
 	/*******************************************************************/
 	Object $$subContent();
 	Object $$gosubContent(Object content);

@@ -1,7 +1,5 @@
 package com.elisaxui.core.xui.xhtml.builder.javascript;
 
-import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.declareType;
-
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,14 +12,12 @@ import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ArrayMethod;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyMethodDesc;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplateImpl;
 import com.elisaxui.core.xui.xml.builder.IXMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
@@ -35,19 +31,43 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  */
 public class JSContent implements IXMLBuilder, JSContentInterface {
 
+	/**
+	 * @return
+	 */
+	public static <E> E declareType(Class<E> type, Object name) {
+		
+		boolean retJSVariable=JSAny.class.isAssignableFrom(type);
+		boolean retJSClass=JSClass.class.isAssignableFrom(type);
+		
+		if (retJSVariable)
+		{
+			JSAny v =null;
+			try {
+				v = ((JSAny)type.newInstance());
+				v._setName(name) ;
+			} catch (InstantiationException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+	
+			return (E)v;
+		}
+		
+		if (retJSClass)
+		{
+			JSClass prox = ProxyHandler.getProxy( (Class<? extends JSClass>) type);
+			ProxyHandler.setNameOfProxy(null, prox, name);	
+			return (E)prox;
+		}
+		
+		return (E)name;
+	}
+	
 	protected JSContentInterface proxy;
 
-	/**
-	 * @return the proxy
-	 */
 	public final JSContentInterface getProxy() {
 		return proxy;
 	}
 
-	/**
-	 * @param proxy
-	 *            the proxy to set
-	 */
 	public final void setProxy(JSContentInterface proxy) {
 		this.proxy = proxy;
 	}
@@ -502,7 +522,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 
 	@Override
 	public <E> E newInst(Class<E> type, Object... param) {
-		Object ret = JSClass.declareType(type, null);
+		Object ret = declareType(type, null);
 
 		String t = type.getSimpleName();
 		if (ret instanceof JSAny)
@@ -519,7 +539,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	}
 
 	@Override
-	public Object txt(Object... param) {
+	public JSString txt(Object... param) {
 
 		StringBuilder str = new StringBuilder();
 		str.append("\"");
@@ -571,6 +591,22 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	@Override
 	public JSFunction callback(JSElement param1, JSElement param2, JSLambda call) {
 		JSFunction ret = new JSFunction().setParam(new Object[] {param1 , param2});
+		ret.proxy = (JSContentInterface) ProxyHandler.ThreadLocalMethodDesc.get().getProxy();
+		ret.__(call);
+		return ret;
+	}
+	
+	@Override
+	public JSFunction callback(JSElement param1, JSElement param2, JSElement param3, JSLambda call) {
+		JSFunction ret = new JSFunction().setParam(new Object[] {param1 , param2, param3});
+		ret.proxy = (JSContentInterface) ProxyHandler.ThreadLocalMethodDesc.get().getProxy();
+		ret.__(call);
+		return ret;
+	}
+	
+	@Override
+	public JSFunction callback(JSElement param1, JSElement param2, JSElement param3, JSElement param4, JSLambda call) {
+		JSFunction ret = new JSFunction().setParam(new Object[] {param1 , param2, param3, param4});
 		ret.proxy = (JSContentInterface) ProxyHandler.ThreadLocalMethodDesc.get().getProxy();
 		ret.__(call);
 		return ret;
@@ -630,16 +666,6 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSInterface#_null()
-	 */
-	@Override
-	@Deprecated
-	public JSContentInterface _null() {
-		return null;
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -650,7 +676,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	public Object _this() {
 		return "this";   // TODO ajouter le cast de type
 	}
-
+	
 	/****************************************************************/
 	@Override
 	public Object $$subContent() {

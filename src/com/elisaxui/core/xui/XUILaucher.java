@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.security.CodeSource;
 
 import javax.script.Compilable;
 import javax.script.CompiledScript;
@@ -39,6 +40,8 @@ import com.elisaxui.AppConfig;
 import com.elisaxui.ResourceLoader;
 import com.elisaxui.app.elisys.xui.asset.AssetHandler;
 import com.elisaxui.core.helper.JSExecutorHelper;
+import com.elisaxui.core.xui.xhtml.application.WatchDir;
+import com.elisaxui.core.xui.xhtml.application.XHTMLAppScanner;
 
 
 public class XUILaucher {
@@ -216,9 +219,18 @@ public class XUILaucher {
 		/***********************************************************************************/
 		
 		server.setHandler(myhandlers2);   // les handlers 
-		
 		server.setConnectors(new Connector[] { httpconnector, sslConnector });   // les connectors
 
+		/*******************************************************************/
+		
+		XHTMLAppScanner.getMapXHTMLPart(XUIFactoryXHtml.changeMgr);
+		
+	    CodeSource src = XUILaucher.class.getProtectionDomain().getCodeSource();
+	    URL classpathEntry = src.getLocation();
+		WatchDir.start(classpathEntry.getFile()+"com");
+		
+		/***************************************************/
+		
 		server.start();
 		server.join();
 	}

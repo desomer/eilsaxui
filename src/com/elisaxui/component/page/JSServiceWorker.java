@@ -40,13 +40,13 @@ public final class JSServiceWorker extends XHTMLPart {
 	            		.consoleDebug(txt("add cache"), "cache")
 	            		.__("cache.put(event.request, responseToCache)"),")")
 	            
-	            .consoleDebug(txt("************ ret 200 from net "), response.get("url"))
+	            .consoleDebug(txt("************ ret 200 from net "), response.attr("url"))
 	            ._return("response");
 				;
 		
 		JSContentInterface fctCache = fct(response)
 				._if(response)
-					.consoleDebug(txt("hit cache "), response.get("url"))
+					.consoleDebug(txt("hit cache "), response.attr("url"))
 			        ._return(response)  // Cache hit - return response
 			    .endif()
 			    

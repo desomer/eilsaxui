@@ -3,11 +3,10 @@
  */
 package com.elisaxui.app.elisys.xui.page.formation;
 
-import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.declareType;
-
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.component.widget.overlay.ViewOverlay;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSBool;
@@ -26,7 +25,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 public interface JSClass1 extends JSClass {
 
 	static final JSString OK = JSString.value("ok"); // constante
-	JSInt idxc = declareType(JSInt.class, "idxc"); // declare type sans let
+	JSInt idxc = JSContent.declareType(JSInt.class, "idxc"); // declare type sans let
 
 	JSString valeur();
 
@@ -116,9 +115,7 @@ public interface JSClass1 extends JSClass {
 
 		// new instance
 		JSClass1 aClass = let("overlay", newInst(JSClass1.class)); // new class
-		_if(false).then(() -> {
-			aClass.doSomething();
-		});
+		_if(false).then(() ->	aClass.doSomething());
 
 	}
 }

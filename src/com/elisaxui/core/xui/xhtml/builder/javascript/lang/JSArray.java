@@ -10,6 +10,7 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSonInterface;
@@ -40,6 +41,7 @@ public class JSArray<E> extends JSClassInterface implements JSonInterface {
 		return this;
 	}
 	
+	@Override
 	public boolean isLitteral() {
 		return jsonBuilder!=null;
 	}
@@ -96,12 +98,16 @@ public class JSArray<E> extends JSClassInterface implements JSonInterface {
 		ret.addContent("]");
 
 		if (_type != null) {
-			E t = (E) JSClass.declareType(_type, null);
-			if (t instanceof JSAny)
-				((JSAny) t)._setValue(ret);
-			else
-				((JSClass) t)._setContent(ret);
-			return t;
+			E t = (E) JSContent.declareType(_type, null);
+			if (t!=null)
+			{
+				if (t instanceof JSAny)
+					((JSAny) t)._setValue(ret);
+				else 
+					((JSClass) t)._setContent(ret);
+				
+				return t;
+			}
 		}
 		return (E) ret;
 	}

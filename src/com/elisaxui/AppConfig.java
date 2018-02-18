@@ -13,7 +13,7 @@ public class AppConfig {
 	public static String getRestPackage()
 	{
 		StringBuilder buf = new StringBuilder();
-		String[] listePackage =  new String[] {"com.elisaxui.app.elisys.srv"};
+		String[] listePackage =  new String[] {"com.elisaxui.app.elisys.srv", "com.elisaxui.app.elisys.xui.page.formation2"};
 		
 		for (String string : listePackage) {
 			if (buf.length()>0)

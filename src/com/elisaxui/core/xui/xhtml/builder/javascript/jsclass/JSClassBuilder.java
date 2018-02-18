@@ -28,6 +28,14 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 public final class JSClassBuilder extends JSContent {
 	
 	Object name;   // nom de la class
+	
+	LinkedList<JSFunction> listFuntion = new LinkedList<>();
+	private Map<String, String> listDistinctFct = new HashMap<>();
+	
+	private LinkedList<ProxyMethodDesc> listHandleFuntionPrivate = new LinkedList<>();
+	public Map<String, ProxyMethodDesc> mapContentMthBuildByProxy = new HashMap<>(); // contenu des methodes crée par proxy , ThreadLocal?
+	
+	
 	Object autoCallMeth;
 	
 	/**
@@ -44,12 +52,6 @@ public final class JSClassBuilder extends JSContent {
 	public final void setAutoCallMeth(Object autoCallMeth) {
 		this.autoCallMeth = autoCallMeth;
 	}
-
-	LinkedList<JSFunction> listFuntion = new LinkedList<>();
-	private Map<String, String> listDistinctFct = new HashMap<>();
-	
-	private LinkedList<ProxyMethodDesc> listHandleFuntionPrivate = new LinkedList<>();
-	
 
 	
 	public static Object initJSConstructor(Class<? extends JSClass> cl) {
@@ -77,6 +79,7 @@ public final class JSClassBuilder extends JSContent {
 				
 				if (includeMth || method.getName().equals("constructor")) {
 					try {
+						method.setAccessible(true);
 						method.invoke(inst, new Object[method.getParameterCount()]);
 					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 							| SecurityException e) {

@@ -26,7 +26,7 @@ public class JSObject extends JSClassInterface {
 		return (E) this;
 	}
 	
-	
+	@Override
 	public boolean isLitteral() {
 		return jsonBuilder!=null;
 	}
@@ -39,5 +39,17 @@ public class JSObject extends JSClassInterface {
 			return super._getValue();
 	}
 	
+	@Override
+	public final <E extends JSClassInterface> E attr(String att) {
+		if (isLitteral())
+		{
+			JSAny ret = declareTypeAny();
+			ret._setName(att);
+			ret._setParentLitteral(this);
+			return (E) ret;
+		}
+		else
+			return super.attr(att);
+	}
 	
 }

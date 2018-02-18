@@ -43,11 +43,11 @@ public interface JSXHTMLTemplate extends JSClass {
 
 	@xStatic(autoCall=true)
 	default void initMethod() {
-		JSInt i = JSClass.declareType(JSInt.class, "i");
-		JSInt j = JSClass.declareType(JSInt.class, "j");
-		JSArray<?> child = JSClass.declareType(JSArray.class, "child");
-		JSon elem = JSClass.declareType(JSon.class, "elem");
-		JSon eldom = JSClass.declareType(JSon.class, "eldom");
+		JSInt i = declareType(JSInt.class, "i");
+		JSInt j = declareType(JSInt.class, "j");
+		JSArray<?> child = declareType(JSArray.class, "child");
+		JSon elem = declareType(JSon.class, "elem");
+		JSon eldom = declareType(JSon.class, "eldom");
 		
 		let("doElem", callback(eldom, elem, () -> {
 			_if("elem instanceof Element || elem instanceof Text").then(() -> { // nodeType = Node.TextNode
@@ -89,7 +89,7 @@ public interface JSXHTMLTemplate extends JSClass {
 					attr.set("document.createAttribute(elem)");
 					ret.push(attr);
 				})._else(() -> {
-					attr.get("value").set("elem");
+					attr.attr("value").set("elem");
 				});
 
 			});

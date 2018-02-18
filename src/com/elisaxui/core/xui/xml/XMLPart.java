@@ -240,6 +240,7 @@ public class XMLPart  {
 		xTarget target = method.getAnnotation(xTarget.class);
 		if (target != null) {
 			try {
+				method.setAccessible(true);
 				XMLElement elem = ((XMLElement) method.invoke(this, new Object[] {}));
 				if (elem== null) return;
 				

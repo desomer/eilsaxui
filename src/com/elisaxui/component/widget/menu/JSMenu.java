@@ -9,6 +9,7 @@ import static com.elisaxui.component.transition.ConstTransition.SPEED_SHOW_MENU_
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 
 /**
@@ -25,10 +26,11 @@ public interface JSMenu extends JSClass {
 	{
 				
 		_set(aDataSet, _new());
-		aDataSet.setData("[]");
+		aDataSet.setData(new JSArray<>().asLitteral());
 		
 		_set(aDataDriven, _new(aDataSet));
-		__(aDataDriven.onEnter(fct("ctx").__(()->{
+		
+		aDataDriven.onEnter(fct("ctx").__(()->{
 				_if("ctx.row['_dom_']==null");
 					_if("ctx.row.type=='divider'");
 						_set(template, ViewMenu.getTemplateMenuDivider());
@@ -42,16 +44,16 @@ public interface JSMenu extends JSClass {
 		            endif();
 	            endif();
 		  })
-        ));
+        );
 		
-		__(aDataDriven.onExit(fct("value").__(()->{
+		aDataDriven.onExit(fct("value").__(()->{
 				_if("value!=null && value.row['_dom_']!=null");
 
 				endif();
 		 })
-			));
+			);
 		
-		__(aDataDriven.onChange(fct("ctx").__(()->{
+		aDataDriven.onChange(fct("ctx").__(()->{
 				_if("ctx.row['_dom_']!=null && ctx.property=='anim'");
 					_var("change", "ctx.value");
 					_if("!change==''");
@@ -62,13 +64,9 @@ public interface JSMenu extends JSClass {
 					endif();
 				endif();
 		 })
-				));
+				);
 		
-		_var("jsonMenu", aDataSet.getData());
-		__("return jsonMenu");
-		
-		;
 		 
-		 return null;
+		 return aDataSet.getData();
 	}
 }

@@ -43,12 +43,12 @@ public class JQuery extends JSClassInterface {
 	/**TODO remplacer par une annotation */
 	public JQuery addClass(Object...classes)
 	{
-		return _callMth("addClass", addText(classes));
+		return _callMth("addClass", addParamMth(classes));
 	}
 	
 	public JQuery removeClass(Object...classes)
 	{
-		return _callMth("removeClass", addText(classes));
+		return _callMth("removeClass", addParamMth(classes));
 	}
 	
 	public JQuery detach()
@@ -68,7 +68,7 @@ public class JQuery extends JSClassInterface {
 	
 	public JQuery text(Object... value)
 	{
-		return _callMth("text", addText(value));
+		return _callMth("text", addParamMth(value));
 	}
 	
 	public JSInt length()
@@ -95,12 +95,12 @@ public class JQuery extends JSClassInterface {
 	 * @return
 	 */
 	public JQuery remove(Object...selector) {
-		return _callMth("remove", addText(CSSSelector.onPath(selector)));
+		return _callMth("remove", addParamMth(CSSSelector.onPath(selector)));
 	}
 	
 	public JQuery css(Object attr, Object value)
 	{
-		return _callMth("css", addText(attr), "," ,addText(value));
+		return _callMth("css", addParamMth(attr), "," ,addParamMth(value));
 	}
 	
 	public JQuery on(Object...classes)
@@ -118,7 +118,7 @@ public class JQuery extends JSClassInterface {
 	 * @return
 	 */
 	public Object closest(Object...selector) {
-		return _callMth("closest", addText(CSSSelector.onPath(selector)));
+		return _callMth("closest", addParamMth(CSSSelector.onPath(selector)));
 	}
 
 	/**
@@ -126,7 +126,7 @@ public class JQuery extends JSClassInterface {
 	 * @return
 	 */
 	public Object hasClass(Object...classes) {
-		return _callMth("hasClass", addText(classes));
+		return _callMth("hasClass", addParamMth(classes));
 	}
 
 	/**
@@ -134,7 +134,7 @@ public class JQuery extends JSClassInterface {
 	 * @return
 	 */
 	public JQuery children(Object...selector) {
-		return _callMth("children", addText(CSSSelector.onPath(selector)));
+		return _callMth("children", addParamMth(CSSSelector.onPath(selector)));
 	}
 	
 	/**
@@ -142,7 +142,7 @@ public class JQuery extends JSClassInterface {
 	 * @return
 	 */
 	public JQuery find(Object...selector) {
-		Object p = (selector.length==1 & selector[0] instanceof JSAny)?  selector[0] : addText(CSSSelector.onPath(selector));
+		Object p = (selector.length==1 & selector[0] instanceof JSAny)?  selector[0] : addParamMth(CSSSelector.onPath(selector));
 		
 		return _callMth("find", p);
 	}
@@ -157,15 +157,15 @@ public class JQuery extends JSClassInterface {
 	
 	
 	public Object data(Object attr, Object value) {
-		return _callMth("data", addText(attr), "," ,addText(value));
+		return _callMth("data", addParamMth(attr), "," ,addParamMth(value));
 	}
 	
 	public Object data(Object attr) {
-		return _callMth("data", addText(attr));
+		return _callMth("data", addParamMth(attr));
 	}
 	
 	public Object height(Object... attr) {
-		return _callMth("height", addText(attr));
+		return _callMth("height", addParamMth(attr));
 	}
 	/*
 	 * Padding + Border + (margin optionel)

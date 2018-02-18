@@ -4,14 +4,21 @@
 package com.elisaxui.app.elisys.xui.page.formation2;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDocument.document;
+import static com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplateImpl.onEnter;
+import static com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplateImpl.onExit;
 
+import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSElement;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.elisaxui.core.xui.xhtml.builder.json.JSONType;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
@@ -26,21 +33,23 @@ import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.target.CONTENT;
 
 /**
- * @author gauth 
- * TODO xImport( Module("mod.js", JSDataSet, JSDataDriven,
- *         JSXHTMLTemplate ) )
+ * @author gauth
  */
-@xFile(id = "ScnDataDriven")
-public class ScnDataDriven extends XHTMLPart {
+@xFile(id = "ScnDataDriven2")
+public class ScnDataDriven2 extends XHTMLPart {
 
 	static XClass cMain;
 
 	@xTarget(HEADER.class)
 	@xRessource // une seule fois par vue
-	public XMLElement xImportVue() {
+	public XMLElement xImport() {
 		return xListElem(
-				xImport(JSXHTMLTemplate.class)
-				);
+				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"),
+				xImport(
+						JSXHTMLTemplate.class,
+						TKPubSub.class,
+						JSDataDriven.class,
+						JSDataSet.class));
 	}
 
 	@xTarget(CONTENT.class) // la vue App Shell
@@ -51,35 +60,43 @@ public class ScnDataDriven extends XHTMLPart {
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
 	public XMLElement xLoad() {
 		return xImport(JSTestDataDriven.class);
-		// TODO a mettre @xTarget sur la JSClass pour retirer l'import
 	}
 
 	// une class JS
-	@xTarget(AFTER_CONTENT.class)   // une seule fois par vue car class
+	@xTarget(AFTER_CONTENT.class) // une seule fois par vue car class
 	public interface JSTestDataDriven extends JSClass, IXHTMLTemplate, IJSONBuilder {
 
 		@xStatic(autoCall = true) // appel automatique de la methode static
 		default void main() {
-			ImgType data = let("data", newInst(ImgType.class).asLitteral());   // affecter literal dans le newInst
-			data.name().set("Votre creation");
-			data.urlImage().set("https://images.pexels.com/photos/316465/pexels-photo-316465.jpeg?h=350&auto=compress&cs=tinysrgb");			
-			
+
+			JSInt i = declareType(JSInt.class, "i");
+
 			JSTestDataDriven template = let("template", newInst(JSTestDataDriven.class));
-			document().querySelector(cMain).appendChild(template.xImageOK(data.name(), data.urlImage()));
+			JSArray<TestData> container = let("container", new JSArray<TestData>().asLitteral());
+
+			document().querySelector(cMain).appendChild(template.xRow(container));
+
+			_forIdxBetween(i, 0, 100)._do(() -> {
+				TestData row = newInst(TestData.class).asLitteral();
+				row.name().set(txt("row ", i));
+				container.push(row);
+			});
+
 		}
 
-		default Object xImageOK(JSAny id, JSString url) {
-			return xTemplateJS(xDiv(id, xPicture(url)));
+		default Object xRow(JSArray<TestData> data) {
+			TestData aTestData = declareType(TestData.class, "aTestData");
+			JSElement aDom = declareType(JSElement.class, "aDom");
+
+			return xTemplateJS(xUl(xDataDriven(data,
+					onEnter(aTestData, xLi(aTestData.name())),
+					onExit(aTestData, aDom))));
 		}
 
-		default Object xPicture(JSString url) {
-			return xTemplateJS(xImg(xAttr("src", url)));
-		}
 	}
 
-	public interface ImgType extends JSONType {
-		JSString urlImage();
+	public interface TestData extends JSONType {
 		JSString name();
 	}
-	
+
 }

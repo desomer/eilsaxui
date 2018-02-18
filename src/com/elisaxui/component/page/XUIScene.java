@@ -13,6 +13,7 @@ import com.elisaxui.app.elisys.xui.asset.AssetHandler;
 import com.elisaxui.component.config.TKCoreConfig;
 import com.elisaxui.component.toolkit.JQuery;
 import com.elisaxui.component.toolkit.TKActivity;
+import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.component.toolkit.TKQueue;
 import com.elisaxui.component.toolkit.TKRouterEvent;
 import com.elisaxui.component.toolkit.datadriven.JSDataCtx;
@@ -154,6 +155,7 @@ public abstract class XUIScene extends XHTMLPart {
 		return xListElem(
 				xPart(new TKQueue()),   //TODO Remplacer par une class js
 				xImport(JSXHTMLPart.class),
+				xImport(TKPubSub.class),
 				xImport(JSDataDriven.class),
 				xImport(JSDataSet.class),
 				xImport(JSDataCtx.class),

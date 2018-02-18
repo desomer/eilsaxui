@@ -8,6 +8,7 @@ import com.elisaxui.component.toolkit.JSFactory;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.component.widget.button.ViewRippleEffect;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 
 /**
@@ -28,11 +29,11 @@ public interface JSViewCard extends JSFactory {
 
 		_set(aDataSet, _new());
 		
-		aDataSet.setData("[]");
+		aDataSet.setData(new JSArray<>().asLitteral());
 
 		_set(aDataDriven, _new(aDataSet));
 
-		__(aDataDriven.onEnter(fct("ctx").__(() -> {
+		aDataDriven.onEnter(fct("ctx").__(() -> {
 			_if("ctx.row['_dom_']==null").then(() -> {
 				_if("ctx.row.type== " + txt(TYPE_BACKGROUND)).then(() -> {
 					_if("ctx.row.mode=='css'").then(() -> {
@@ -54,19 +55,19 @@ public interface JSViewCard extends JSFactory {
 					__(JQuery.$(var("selector")).addClass(ViewRippleEffect.cRippleEffect));
 				});
 			});
-		})));
+		}));
 
-		__(aDataDriven.onExit(fct("value").__(() -> {
+		aDataDriven.onExit(fct("value").__(() -> {
 			_if("value!=null && value.row['_dom_']!=null");
 
 			endif();
-		})));
+		}));
 
-		__(aDataDriven.onChange(fct("value").__(() -> {
+		aDataDriven.onChange(fct("value").__(() -> {
 			_if("value.row['_dom_']!=null && value.property=='idx'");
 
 			endif();
-		})));
+		}));
 
 		_return(aDataSet.getData());
 		return null;

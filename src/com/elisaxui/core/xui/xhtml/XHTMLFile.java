@@ -23,6 +23,7 @@ import com.elisaxui.core.xui.xml.XMLFile;
 public class XHTMLFile extends XMLFile {
 
 	private static final boolean debug = false;
+	private Map<String, JSClassBuilder> listClass = new HashMap<String, JSClassBuilder>();
 	
 	private XUIScene scene;
 	MultivaluedMap<String, String> param;
@@ -61,8 +62,6 @@ public class XHTMLFile extends XMLFile {
 	public final void setScene(XUIScene scene) {
 		this.scene = scene;
 	}
-
-	private Map<String, JSClassBuilder> listClass = new HashMap<String, JSClassBuilder>();
 
 	public final JSClassBuilder getClassImpl(Class<? extends JSClass> cl) {
 		String name = cl.getSimpleName();

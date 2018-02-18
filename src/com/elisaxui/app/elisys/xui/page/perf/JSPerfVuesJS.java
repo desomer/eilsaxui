@@ -40,7 +40,7 @@ public interface JSPerfVuesJS extends JSClass, IJSONBuilder, IXHTMLTemplate {
 	}
 
 	default void doPerf() {
-		JSInt i = JSClass.declareType(JSInt.class, "i");
+		JSInt i = declareType(JSInt.class, "i");
 
 		if (isVueJS()) {
 
@@ -98,8 +98,8 @@ public interface JSPerfVuesJS extends JSClass, IJSONBuilder, IXHTMLTemplate {
 
 			JSArray<DtoUser> listUser = let("listUser", new JSArray<DtoUser>().asLitteral());
 
-			DtoUser aUser = JSClass.declareType(DtoUser.class, "aUser");
-			JSon aDom = JSClass.declareType(JSon.class, "aDom");
+			DtoUser aUser = declareType(DtoUser.class, "aUser");
+			JSon aDom = declareType(JSon.class, "aDom");
 
 			XClass cA = new XClass().setId("cA");
 			

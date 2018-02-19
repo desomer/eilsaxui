@@ -4,21 +4,21 @@
 package com.elisaxui.app.elisys.xui.page.formation2;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDocument.document;
+import static com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplateImpl.onChange;
 import static com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplateImpl.onEnter;
 import static com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplateImpl.onExit;
 
 import com.elisaxui.component.toolkit.TKPubSub;
+import com.elisaxui.component.toolkit.datadriven.JSChangeCtx;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.elisaxui.core.xui.xhtml.builder.json.JSONType;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
@@ -72,25 +72,38 @@ public class ScnDataDriven2 extends XHTMLPart {
 			JSInt i = declareType(JSInt.class, "i");
 
 			JSTestDataDriven template = let("template", newInst(JSTestDataDriven.class));
-			JSArray<TestData> container = let("container", new JSArray<TestData>().asLitteral());
+			JSArray<TestData> listData = let("listData", new JSArray<TestData>().asLitteral());
 
-			document().querySelector(cMain).appendChild(template.xRow(container));
+			document().querySelector(cMain).appendChild(template.xRow(listData));
 
+			// ajout les ligne
 			_forIdxBetween(i, 0, 100)._do(() -> {
 				TestData row = newInst(TestData.class).asLitteral();
 				row.name().set(txt("row ", i));
-				container.push(row);
+				listData.push(row);
 			});
+
+			// change les text en asynchrone
+			JSInt j = declareType(JSInt.class, "j");
+			_forIdxBetween(i, 0, 100)._do(
+					() -> setTimeout(callback(j, () -> listData.at(j).name().set(txt("a ", j))), calc(i, "*50"), i));
 
 		}
 
+		// le template
 		default Object xRow(JSArray<TestData> data) {
 			TestData aTestData = declareType(TestData.class, "aTestData");
 			JSElement aDom = declareType(JSElement.class, "aDom");
+			JSChangeCtx changeCtx = declareType(JSChangeCtx.class, "changeCtx");
 
-			return xTemplateJS(xUl(xDataDriven(data,
-					onEnter(aTestData, xLi(aTestData.name())),
-					onExit(aTestData, aDom))));
+			return xTemplateJS(
+					xUl(
+							xDataDriven(
+									data,
+									onEnter(aTestData, xLi(aTestData.name())),
+									onExit(aTestData, aDom),
+									onChange(changeCtx, aDom, callback(() -> _if(changeCtx.property().isEqual("name"))
+											.then(() -> __(aDom, ".textContent=", changeCtx.value())))))));
 		}
 
 	}

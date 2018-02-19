@@ -19,7 +19,7 @@ import com.elisaxui.core.xui.xml.annotation.xStatic;
 public interface JSXHTMLTemplate extends JSClass {
 
 	@xStatic
-	default void doTemplateDataDriven(JSon parent, JSArray<?> data, JSAny fctEnter, JSAny fctExit )
+	default void doTemplateDataDriven(JSon parent, JSArray<?> data, JSAny fctEnter, JSAny fctExit, JSAny fctChange )
 	{
 		JSDataSet aDataSet = let("aDataSet", newInst(JSDataSet.class) );
 		aDataSet.setData(data);
@@ -31,10 +31,19 @@ public interface JSXHTMLTemplate extends JSClass {
 			__("ctx.row['"+JSDataSet.ATTR_DOM_LINK+"']=row");
 			__(parent, ".appendChild( row )");
 		}));
+		
 		aDataDriven.onExit(fct("ctx").__(()->{
 			__("ctx.parent = parent");
 			__(fctExit, ".call(this, ctx.row, ctx.row['"+JSDataSet.ATTR_DOM_LINK+"'], ctx)");
 		}));
+		
+		_if(fctChange, "!=null").then(() -> {
+			aDataDriven.onChange(fct("valuectx").__(()->{
+				_if("valuectx.row['_dom_']!=null").then(() -> {
+					__(fctChange, ".call(this, valuectx)");
+				});
+		}));
+		});
 		
 		
 		/********************************************************************/

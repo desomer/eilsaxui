@@ -3,8 +3,12 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.xtemplate;
 
+import com.elisaxui.component.toolkit.datadriven.JSChangeCtx;
+import com.elisaxui.component.toolkit.datadriven.JSDataCtx;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSLambda;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSElement;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 
@@ -37,6 +41,15 @@ public class XHTMLTemplateImpl implements IXHTMLTemplate
 				._if(dom,"!=null")
 					.__("$("+dom+").remove()")
 				.endif();
+	}
+	
+	public static final JSFunction onChange(JSChangeCtx ctx, JSElement aDom, JSFunction action )
+	{
+		return (JSFunction) new JSFunction().setParam(new Object[] {"ctx"})
+				._var("d" , "ctx.row['_dom_']")
+				._var("f", action.setParam(new Object[] {ctx, aDom}))
+				.__("f(ctx, d)")
+				;		
 	}
 	
 	/**

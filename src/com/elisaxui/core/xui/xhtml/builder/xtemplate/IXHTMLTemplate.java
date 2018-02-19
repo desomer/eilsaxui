@@ -29,7 +29,16 @@ public interface IXHTMLTemplate extends IXHTMLBuilder {
 		JSon d =  JSContent.declareType(JSon.class, "d");
 		
 		return new JSFunction().setParam(new Object[] {d})
-				.__("JSXHTMLTemplate.doTemplateDataDriven(",d,",",data,","+enter+","+exit+")")
+				.__("JSXHTMLTemplate.doTemplateDataDriven(",d,",",data,","+enter+","+exit+", null)")
+				;
+	}
+	
+	default Object xDataDriven(JSArray<?> data, Object enter, Object exit, Object change )
+	{
+		JSon d =  JSContent.declareType(JSon.class, "d");
+		
+		return new JSFunction().setParam(new Object[] {d})
+				.__("JSXHTMLTemplate.doTemplateDataDriven(",d,",",data,","+enter+","+exit+","+change+")")
 				;
 	}
 

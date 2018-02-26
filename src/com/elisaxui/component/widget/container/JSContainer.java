@@ -64,7 +64,7 @@ public interface JSContainer extends JSFactory, IXHTMLBuilder {
 		aDataDriven().set(_new(aDataSet()));
 		let(_self, _this);
 		
-		aDataDriven().onEnter(fct("ctx").__(()->{
+		aDataDriven().onEnter(funct("ctx").__(()->{
 				_if("ctx.row['_dom_']==null");
 				
 				 	_if("ctx.row.type=='page'");
@@ -113,7 +113,7 @@ public interface JSContainer extends JSFactory, IXHTMLBuilder {
 						if (true) {
 							//------------- anim les card----------	
 							__("$(ctx.row['_dom_']).css('visibility','hidden')");
-							__("setTimeout(", fct("elem") 
+							__("setTimeout(", funct("elem") 
 									.__("elem.anim='bounceInUp'")  //zoomInUp  //fadeInUp  //slideInUp //rollIn
 								, ", 500 * ctx.row.idx , ctx.row)");
 						}
@@ -139,14 +139,14 @@ public interface JSContainer extends JSFactory, IXHTMLBuilder {
 				})
 				);
 		
-		aDataDriven().onExit(fct("value").__(()->{
+		aDataDriven().onExit(funct("value").__(()->{
 				_if("value!=null && value.row['_dom_']!=null");
 
 				endif();
 		})
 				);
 
-		aDataDriven().onChange(fct("ctx").__(()->{
+		aDataDriven().onChange(funct("ctx").__(()->{
 				_if("ctx.row['_dom_']!=null && ctx.row.type=='card' && ctx.property=='anim'");
 					consoleDebug(txt("JSContainer change "), "ctx.value", "ctx");
 					_if("!ctx.value==''");

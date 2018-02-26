@@ -6,8 +6,6 @@ package com.elisaxui.core.xui.xhtml.builder.javascript.lang;
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassInterface;
-
 /**
  * @author gauth
  *
@@ -16,7 +14,7 @@ public class JSObject extends JSClassInterface {
 	public JsonObjectBuilder jsonBuilder = null;
 	
 	@Override
-	public String _getClassType() {
+	public String zzGetJSClassType() {
 		return "Object";
 	}
 	
@@ -40,7 +38,7 @@ public class JSObject extends JSClassInterface {
 	}
 	
 	@Override
-	public final <E extends JSClassInterface> E attr(String att) {
+	public final <E extends JSAny> E attr(String att) {
 		if (isLitteral())
 		{
 			JSAny ret = declareTypeAny();

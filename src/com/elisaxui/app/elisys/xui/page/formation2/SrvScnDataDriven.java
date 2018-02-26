@@ -77,7 +77,7 @@ public class SrvScnDataDriven implements IJSONBuilder {
 				ImgType data = declareType(ImgType.class, "data");
 				TKCom tkcom = declareType(TKCom.class, "TKCom");
 				
-				tkcom.requestUrl(JSString.value(REST_JSON_TEST_55)).then(callback(data, ()->
+				tkcom.requestUrl(JSString.value(REST_JSON_TEST_55)).then(fct(data, ()->
 					document().querySelector(cMain).appendChild(newInst(JSTestDataDriven.class)
 							.xImageOK(data.name(), data.urlImage()))
 				));

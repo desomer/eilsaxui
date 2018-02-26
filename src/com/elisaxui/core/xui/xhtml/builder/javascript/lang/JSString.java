@@ -2,7 +2,7 @@ package com.elisaxui.core.xui.xhtml.builder.javascript.lang;
 
 public class JSString extends JSValue {
 	
-	public String _getClassType() {
+	public String zzGetJSClassType() {
 		return "String";
 	}
 	
@@ -21,12 +21,12 @@ public class JSString extends JSValue {
 	
 	public JSString substring(Object start)
 	{
-		return (JSString) _callMethod(null, "substring", start);
+		return call("substring", start);
 	}
 	
 	public JSString substring(Object start, Object end)
 	{
-		return (JSString) _callMethod(null, "substring", start, SEP, end);
+		return call("substring", start, SEP, end);
 	}
 	
 }

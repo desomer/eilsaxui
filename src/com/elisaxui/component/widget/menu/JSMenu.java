@@ -30,7 +30,7 @@ public interface JSMenu extends JSClass {
 		
 		_set(aDataDriven, _new(aDataSet));
 		
-		aDataDriven.onEnter(fct("ctx").__(()->{
+		aDataDriven.onEnter(funct("ctx").__(()->{
 				_if("ctx.row['_dom_']==null");
 					_if("ctx.row.type=='divider'");
 						_set(template, ViewMenu.getTemplateMenuDivider());
@@ -46,21 +46,21 @@ public interface JSMenu extends JSClass {
 		  })
         );
 		
-		aDataDriven.onExit(fct("value").__(()->{
+		aDataDriven.onExit(funct("value").__(()->{
 				_if("value!=null && value.row['_dom_']!=null");
 
 				endif();
 		 })
 			);
 		
-		aDataDriven.onChange(fct("ctx").__(()->{
+		aDataDriven.onChange(funct("ctx").__(()->{
 				_if("ctx.row['_dom_']!=null && ctx.property=='anim'");
 					_var("change", "ctx.value");
 					_if("!change==''");
 						__("$(ctx.row['_dom_']).css('visibility','')");
 						__("$(ctx.row['_dom_']).toggleClass('animated '+change)");
 						// remise a zero de l'animation
-						__("setTimeout(", fct("elem").__("elem.toggleClass('animated '+change)") ,",", SPEED_SHOW_MENU_ITEMS + DELAY_SURETE_END_ANIMATION,", $(ctx.row['_dom_']))");
+						__("setTimeout(", funct("elem").__("elem.toggleClass('animated '+change)") ,",", SPEED_SHOW_MENU_ITEMS + DELAY_SURETE_END_ANIMATION,", $(ctx.row['_dom_']))");
 					endif();
 				endif();
 		 })

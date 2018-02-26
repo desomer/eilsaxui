@@ -30,7 +30,7 @@ public interface JSPageLayout extends JSClass {
 	  // gesture bas pour fermer l'activity
 	  __("var mcheader = new Hammer(", $(idActivity).get(0) ,")");
 	  __("mcheader.get('pan').set({ enable: true, direction: Hammer.DIRECTION_VERTICAL})");
-	  __("mcheader.on('hammer.input',", fct("ev") 
+	  __("mcheader.on('hammer.input',", funct("ev") 
 			  		._if("ev.deltaY>20 && ev.offsetDirection==16 && ev.velocity>1 ")
 			  			.__($xui().tkrouter().doEvent("'HeaderSwipeDown'"))
 			  		.endif()
@@ -61,7 +61,7 @@ public interface JSPageLayout extends JSClass {
 		
 		JSFunction fctdraw = fragmentIf(true).__(()->{
 							
-				window().requestAnimationFrame("fctdraw");	  // restart
+				window().requestAnimationFrame(var("fctdraw"));	  // restart
 				
 				now.set(var("Date.now()"));
 				deltaTime.set(now.substact(then));

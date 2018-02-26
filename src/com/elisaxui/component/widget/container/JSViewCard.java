@@ -33,7 +33,7 @@ public interface JSViewCard extends JSFactory {
 
 		_set(aDataDriven, _new(aDataSet));
 
-		aDataDriven.onEnter(fct("ctx").__(() -> {
+		aDataDriven.onEnter(funct("ctx").__(() -> {
 			_if("ctx.row['_dom_']==null").then(() -> {
 				_if("ctx.row.type== " + txt(TYPE_BACKGROUND)).then(() -> {
 					_if("ctx.row.mode=='css'").then(() -> {
@@ -57,13 +57,13 @@ public interface JSViewCard extends JSFactory {
 			});
 		}));
 
-		aDataDriven.onExit(fct("value").__(() -> {
+		aDataDriven.onExit(funct("value").__(() -> {
 			_if("value!=null && value.row['_dom_']!=null");
 
 			endif();
 		}));
 
-		aDataDriven.onChange(fct("value").__(() -> {
+		aDataDriven.onChange(funct("value").__(() -> {
 			_if("value.row['_dom_']!=null && value.property=='idx'");
 
 			endif();

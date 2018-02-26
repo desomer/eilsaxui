@@ -47,7 +47,7 @@ public interface JSNavBar extends JSFactory {
 		JSChangeCtx ctx = declareType(JSChangeCtx.class, "ctx");
 		JQuery jqdom = declareType(JQuery.class, "jqdom");
 		
-		aDataDriven.onEnter(fct(ctx).__(()->{
+		aDataDriven.onEnter(funct(ctx).__(()->{
 			
 			_if(ctx.row().attrByString(JSDataSet.ATTR_DOM_LINK).isEqual(null)); 
 			
@@ -100,14 +100,14 @@ public interface JSNavBar extends JSFactory {
 		}
 		));
 		
-		aDataDriven.onExit(fct("value").__(()->{
+		aDataDriven.onExit(funct("value").__(()->{
 				_if("value!=null && value.row['_dom_']!=null");
 
 				endif();
 		})
 		);
 		
-		aDataDriven.onChange(fct("value").__(()->{
+		aDataDriven.onChange(funct("value").__(()->{
 				_if("value.row['_dom_']!=null && value.property=='idx'");
 
 				endif();

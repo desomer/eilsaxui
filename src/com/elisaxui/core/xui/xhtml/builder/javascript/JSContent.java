@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.json.Json;
 import javax.json.JsonValue;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
@@ -17,7 +18,9 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSValue;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
+import com.elisaxui.core.xui.xhtml.builder.json.JsonNumberImpl;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplateImpl;
 import com.elisaxui.core.xui.xml.builder.IXMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
@@ -310,6 +313,37 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	 */
 	@Override
 	public JSContentInterface _set(Object name, Object... content) {
+		
+		if (name instanceof Proxy)
+		{
+			ProxyHandler proxy = (ProxyHandler) Proxy.getInvocationHandler((Proxy)name);
+			if (proxy.getParentLitteral() instanceof ProxyHandler)
+			{
+				ProxyHandler mh = (ProxyHandler)proxy.getParentLitteral();
+				boolean isLitteral = mh.getJsonBuilder()!=null;
+				
+				if (isLitteral || ProxyHandler.isModeJava()  ) {
+					if (mh.getJsonBuilder()==null)
+						mh.setJsonBuilder(Json.createObjectBuilder());
+					
+					String attr = ""+name;
+					attr = attr.substring(attr.lastIndexOf('.')+1);
+					
+					if (content[0] instanceof String)
+						content[0] = "\"" + content[0] + "\"";
+					else if (content[0] instanceof JSClass)
+					{
+						JSClass jscl = (JSClass)content[0];
+						content[0] = jscl._getContent();
+					}
+						
+					mh.getJsonBuilder().add(attr, new JsonNumberImpl(content[0].toString()));
+					return this;
+				}
+			}
+		}
+
+		
 		getListElem().add(JSNewLine.class);
 		getListElem().add(name);
 		getListElem().add("=");
@@ -373,7 +407,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	public JSContentInterface setTimeout(JSLambda a, Object... content) {
 		getListElem().add(JSNewLine.class);
 		getListElem().add("setTimeout(");
-		addElem(callback(a));
+		addElem(fct(a));
 		for (Object object : content) {
 			addElem(",");
 			addElem(object);
@@ -526,7 +560,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 
 		String t = type.getSimpleName();
 		if (ret instanceof JSAny)
-			t = ((JSAny) ret)._getClassType();
+			t = ((JSAny) ret).zzGetJSClassType();
 
 		String textNew = textNew(t, param);
 
@@ -568,12 +602,12 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	/***************************************************************/
 
 	@Override
-	public JSFunction fct(Object... param) {
+	public JSFunction funct(Object... param) {
 		return new JSFunction().setParam(param);
 	}
 
 	@Override
-	public JSFunction callback(JSLambda call) {
+	public JSFunction fct(JSLambda call) {
 		JSFunction ret = new JSFunction();
 		ret.proxy = (JSContentInterface) ProxyHandler.ThreadLocalMethodDesc.get().getProxy();
 		ret.__(call);
@@ -581,7 +615,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	}
 
 	@Override
-	public JSFunction callback(JSElement param, JSLambda call) {
+	public JSFunction fct(JSElement param, JSLambda call) {
 		JSFunction ret = new JSFunction().setParam(new Object[] {param});
 		ret.proxy = (JSContentInterface) ProxyHandler.ThreadLocalMethodDesc.get().getProxy();
 		ret.__(call);
@@ -589,7 +623,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	}
 	
 	@Override
-	public JSFunction callback(JSElement param1, JSElement param2, JSLambda call) {
+	public JSFunction fct(JSElement param1, JSElement param2, JSLambda call) {
 		JSFunction ret = new JSFunction().setParam(new Object[] {param1 , param2});
 		ret.proxy = (JSContentInterface) ProxyHandler.ThreadLocalMethodDesc.get().getProxy();
 		ret.__(call);
@@ -597,7 +631,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	}
 	
 	@Override
-	public JSFunction callback(JSElement param1, JSElement param2, JSElement param3, JSLambda call) {
+	public JSFunction fct(JSElement param1, JSElement param2, JSElement param3, JSLambda call) {
 		JSFunction ret = new JSFunction().setParam(new Object[] {param1 , param2, param3});
 		ret.proxy = (JSContentInterface) ProxyHandler.ThreadLocalMethodDesc.get().getProxy();
 		ret.__(call);
@@ -605,7 +639,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	}
 	
 	@Override
-	public JSFunction callback(JSElement param1, JSElement param2, JSElement param3, JSElement param4, JSLambda call) {
+	public JSFunction fct(JSElement param1, JSElement param2, JSElement param3, JSElement param4, JSLambda call) {
 		JSFunction ret = new JSFunction().setParam(new Object[] {param1 , param2, param3, param4});
 		ret.proxy = (JSContentInterface) ProxyHandler.ThreadLocalMethodDesc.get().getProxy();
 		ret.__(call);
@@ -674,7 +708,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	 */
 	@Override
 	public Object _this() {
-		return "this";   // TODO ajouter le cast de type
+		return var("this");   // TODO ajouter le cast de type
 	}
 	
 	/****************************************************************/

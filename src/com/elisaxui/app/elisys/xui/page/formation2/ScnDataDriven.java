@@ -51,11 +51,10 @@ public class ScnDataDriven extends XHTMLPart {
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
 	public XMLElement xLoad() {
 		return xImport(JSTestDataDriven.class);
-		// TODO a mettre @xTarget sur la JSClass pour retirer l'import
 	}
 
 	// une class JS
-	@xTarget(AFTER_CONTENT.class)   // une seule fois par vue car class
+	@xTarget(AFTER_CONTENT.class)   // une seule fois par vue car class  ,  a mettre @xTarget sur la JSClass pour retirer l'import
 	public interface JSTestDataDriven extends JSClass, IXHTMLTemplate, IJSONBuilder {
 
 		@xStatic(autoCall = true) // appel automatique de la methode static

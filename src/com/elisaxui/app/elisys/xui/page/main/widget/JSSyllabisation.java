@@ -90,11 +90,11 @@ public interface JSSyllabisation extends JSClass, IXHTMLBuilder {
 						_var(lesmots, data.attr("mots"));
 						JSInt num = new JSInt()._setName("num");
 						_forIdx(num, lesmots);
-							setTimeout(fct(num).__(jsonSyllable.push(lesmots.at(num))), "50+(20*"+num+")", num);
+							setTimeout(funct(num).__(jsonSyllable.push(lesmots.at(num))), "50+(20*"+num+")", num);
 						endfor();
 					};
 
-					__("$.getJSON('"+REST_JSON_SYLLABISATION+"', ",param," ).done(", fct(data).__(onJsonSyllabysation),")");
+					__("$.getJSON('"+REST_JSON_SYLLABISATION+"', ",param," ).done(", funct(data).__(onJsonSyllabysation),")");
 					
 				endif();
 			endfor();
@@ -108,8 +108,8 @@ public interface JSSyllabisation extends JSClass, IXHTMLBuilder {
 			endif();		
 		};	
 		
-		_set(recognition.attr("onresult"), fct("event") .__(onresult));
-		_set(recognition.attr("onend"), fct("event") .__(fRecognitionEnd));
+		_set(recognition.attr("onresult"), funct("event") .__(onresult));
+		_set(recognition.attr("onend"), funct("event") .__(fRecognitionEnd));
 		return _this;
 	}
 		
@@ -145,12 +145,12 @@ public interface JSSyllabisation extends JSClass, IXHTMLBuilder {
 								
 		JSLambda onExit = (/*ctx*/)->{
 			_if("ctx!=null && ctx.row['_dom_']!=null");
-				__($(var("ctx.row['_dom_']")).hide("50+(ctx.idx*20)", fct().__("$(this).remove()") ));
+				__($(var("ctx.row['_dom_']")).hide("50+(ctx.idx*20)", funct().__("$(this).remove()") ));
 			endif();
 			};
 		
-		aDataDriven.onEnter(fct("ctx").__(onEnter));
-		aDataDriven.onExit(fct("ctx").__(onExit));	
+		aDataDriven.onEnter(funct("ctx").__(onEnter));
+		aDataDriven.onExit(funct("ctx").__(onExit));	
 		
 		return aDataSet().getData();
 	}

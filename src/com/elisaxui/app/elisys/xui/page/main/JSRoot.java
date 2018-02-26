@@ -20,10 +20,10 @@ public interface JSRoot extends JSClass {
 	default void constructor(JSArray<?> jsonSyllabe, JSSyllabisation jsSyllabe) {
 
 		// TODO callback("json", ()->{  
-		var("window.onCreateActivity1").set(fct("json").__(()->{  
+		var("window.onCreateActivity1").set(funct("json").__(()->{  
 
 			consoleDebug("'on Create Activity1'", "json");
-			__(TKQueue.startProcessQueued(100, callback(() -> {  
+			__(TKQueue.startProcessQueued(100, fct(() -> {  
 				//TODO retirer le __( avant  TKQueue
 
 				JSPageLayout jsPageLayout = let("jsPageLayout", newInst(JSPageLayout.class)); 
@@ -40,17 +40,17 @@ public interface JSRoot extends JSClass {
 				// ,")")
 				
 				
-			}), 500, callback(() -> {
+			}), 500, fct(() -> {
 				_set("window.microlistener", jsSyllabe.createMicroListener());
 			})));
 		}));
 
-		_set("window.onResumeActivity1", fct().__("alert('ok')"));
+		_set("window.onResumeActivity1", funct().__("alert('ok')"));
 
 		/**************************************************************/
 		// gestion du slidedown pour fermer
-		_set("window.onCreateActivityDown", fct("json")
-				.__(TKQueue.startProcessQueued(100, fct().__(() -> {
+		_set("window.onCreateActivityDown", funct("json")
+				.__(TKQueue.startProcessQueued(100, funct().__(() -> {
 					JSPageLayout jsPageLayout = let( "jsPageLayout", newInst(JSPageLayout.class));
 					jsPageLayout.setEnableCloseGesture(cast(JSString.class, "json.param"));
 				}))));

@@ -19,11 +19,11 @@ public interface JSDataSet extends JSClass {
 	TKPubSub callBackChange();
 
 	JSInt delayEvent = null;
-	JSAny myProxySet = null; // WeakSet
+	JSAny myProxySet = null; //ajouter le type WeakSet
 
 	JSDataSet _that = null;
 
-	// Object synchroneEvent = null // TODO desactive le fastdom
+	// TODO desactive le fastdom
 
 	default void constructor(Object d) {
 		data().set(d);
@@ -45,8 +45,6 @@ public interface JSDataSet extends JSClass {
 	}
 
 	default void setData(JSArray<?> d) {
-
-
 		
 		JSObject target = declareType(JSObject.class, "target");
 		JSObject property = declareType(JSObject.class, "property");
@@ -58,16 +56,24 @@ public interface JSDataSet extends JSClass {
 		// changeHandler sur attribut d'objet JS
 		JSObject changeHandler=  let("changeHandler", new JSObject().asLitteral());
 		
-		changeHandler.attr("get").set(callback(target, property,
-				() -> _return(target.attrByString(property))));
-		changeHandler.attr("apply").set(callback(target, thisArg, argumentsList,
+		
+		changeHandler.attr("get").set(fct(target, property,
+				() -> {
+					JSObject obj = let("obj", target.attrByString(property));
+					_if("typeof ", obj, "=== 'object' && !(" , obj, " instanceof Array) && ", obj, "!==null && ",property, "!='", JSDataSet.ATTR_DOM_LINK, "'" ).then(() -> {
+						_return("new Proxy(",obj,",", changeHandler, ")");
+					})._else(() -> {
+						_return(obj);
+					});
+				}));
+		changeHandler.attr("apply").set(fct(target, thisArg, argumentsList,
 				() -> _return(thisArg.attrByString(target).apply(_this(), argumentsList))));
-		changeHandler.attr("deleteProperty").set(callback(target, property,
+		changeHandler.attr("deleteProperty").set(fct(target, property,
 				() -> {
 					consoleDebug(txt("Deleted %s"), property);
 					_return(true);
 				}));
-		changeHandler.attr("set").set(callback(target, property, value, receiver, 
+		changeHandler.attr("set").set(fct(target, property, value, receiver, 
 				() -> {
 					_if("property!='" + ATTR_DOM_LINK + "' && target[property]!==value").then(() -> {
 						JSChangeCtx obj = newInst(JSChangeCtx.class).asLitteral();
@@ -79,8 +85,8 @@ public interface JSDataSet extends JSClass {
 						obj.old().set(target.attrByString(property));
 						
 						JSChangeCtx row = let("row", obj);
-						setTimeout(callback(()->
-							__("fastdom.mutate(", callback(()-> cast(JSDataSet.class,"that").callBackChange().publish(row)  )  ,")")
+						setTimeout(fct(()->
+							__("fastdom.mutate(", fct(()-> cast(JSDataSet.class,"that").callBackChange().publish(row)  )  ,")")
 						), 1);
 					});
 					
@@ -92,7 +98,7 @@ public interface JSDataSet extends JSClass {
 		_var("that", _this());
 
 		// observe le push du tableau
-		_set("d.push", fct()
+		_set("d.push", funct()
 				.__("arguments[0]=new Proxy(arguments[0], changeHandler)")
 				.__(_that.addProxy("arguments[0]"))
 				.__("Array.prototype.push.apply(this, arguments)")
@@ -102,25 +108,25 @@ public interface JSDataSet extends JSClass {
 				// les push sont executé de facon echelonné dans le temps par intervalle de 2 ms
 				._var("t", "that.delayEvent")
 				._if("t==0")
-				.__("setTimeout(", fct()._set("that.delayEvent", 0), ", 0)") // remise a zero apres la boucle
+				.__("setTimeout(", funct()._set("that.delayEvent", 0), ", 0)") // remise a zero apres la boucle
 				.endif()
 				._set("that.delayEvent", "that.delayEvent+2")
 				.__("setTimeout(fct, t)")
 		// .__("window.requestAnimationFrame(fct)")
 		);
 
-		_set("d.pop", fct()._var("ret", "Array.prototype.pop.apply(this, arguments)")
+		_set("d.pop", funct()._var("ret", "Array.prototype.pop.apply(this, arguments)")
 				._var("row", "{ ope:'exit', row:ret, idx:this.length }")
 				._var("fct", " function() {fastdom.mutate(function() {that.callBackChange.publish(row); })}")
 				._var("t", "that.delayEvent")
 				._if("t==0")
-				.__("setTimeout(", fct()._set("that.delayEvent", 0), ", 0)") // remise a zero apres la boucle
+				.__("setTimeout(", funct()._set("that.delayEvent", 0), ", 0)") // remise a zero apres la boucle
 				.endif()
 				._set("that.delayEvent", "that.delayEvent+2")
 				.__("setTimeout(fct, t)")
 				.__("return ret"));
 
-		_set("d.splice", fct().__(() -> {
+		_set("d.splice", funct().__(() -> {
 
 			_if("arguments.length>2 && !", _that.isProxy("arguments[2]"));
 				__("arguments[2]=new Proxy(arguments[2], changeHandler)");
@@ -138,7 +144,7 @@ public interface JSDataSet extends JSClass {
 			_var("fct", " function() {fastdom.mutate(function() {that.callBackChange.publish(row); })}");
 			_var("t", "that.delayEvent");
 			_if("t==0");
-				__("setTimeout(", fct()._set("that.delayEvent", 0), ", 0)"); // remise a zero apres la boucle
+				__("setTimeout(", funct()._set("that.delayEvent", 0), ", 0)"); // remise a zero apres la boucle
 			endif();
 			
 			_set("that.delayEvent", "that.delayEvent+2");

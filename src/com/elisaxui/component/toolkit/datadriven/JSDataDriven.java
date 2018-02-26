@@ -61,7 +61,7 @@ public interface JSDataDriven extends JSClass {
 
 	default JSVoid start() {
 		
-		JSContentInterface fctChange =  fct("value").__(()->{
+		JSContentInterface fctChange =  funct("value").__(()->{
 			_if("value.ope=='enter'");
 				_self.doEnter("value");
 			endif();

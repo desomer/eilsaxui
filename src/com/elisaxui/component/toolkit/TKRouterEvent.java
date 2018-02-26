@@ -56,7 +56,7 @@ public interface TKRouterEvent extends JSClass {
 		
 		// this est un string (bind)
 		// ecoute l'history back
-		JSCallBack doPushState = let(JSCallBack.class, "doPushState", fct("params","query").__(()->{   
+		JSCallBack doPushState = let(JSCallBack.class, "doPushState", funct("params","query").__(()->{   
 				_if(self.navigo().attr("nextenable"));
 				
 				    JRoute toRoute = let(JRoute.class, "toRoute", self.navigo().attr("_lastRouteResolved"));
@@ -127,7 +127,7 @@ public interface TKRouterEvent extends JSClass {
 				+ "})");
 		
 		/**TODO change par un affichage user */
-		__("nav.notFound(", fct("query").consoleDebug("'notFound navigo ='", "query") ,")");
+		__("nav.notFound(", funct("query").consoleDebug("'notFound navigo ='", "query") ,")");
 		
 		// set(historyIntent(),"[]");
 		historyIntent().set("[]");

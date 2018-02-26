@@ -53,12 +53,12 @@ public interface JSContentInterface  {
 	
 	/**********************************************************************/
 	
-	JSFunction fct(Object... param);
-	JSFunction callback( JSLambda c);
-	JSFunction callback(JSElement param, JSLambda c);
-	JSFunction callback(JSElement param1, JSElement param2, JSLambda c);
-	JSFunction callback(JSElement param1, JSElement param2, JSElement param3, JSLambda c);
-	JSFunction callback(JSElement param1, JSElement param2, JSElement param3, JSElement param4, JSLambda c);
+	JSFunction funct(Object... param);
+	JSFunction fct( JSLambda c);
+	JSFunction fct(JSElement param, JSLambda c);
+	JSFunction fct(JSElement param1, JSElement param2, JSLambda c);
+	JSFunction fct(JSElement param1, JSElement param2, JSElement param3, JSLambda c);
+	JSFunction fct(JSElement param1, JSElement param2, JSElement param3, JSElement param4, JSLambda c);
 	
 	/**
 	 * exemple <br>

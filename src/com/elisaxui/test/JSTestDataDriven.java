@@ -36,7 +36,7 @@ public interface JSTestDataDriven extends JSClass {
 				
 				_set(aDataDriven, _new(aDataSet));
 				
-				aDataDriven.onEnter(fct("value")
+				aDataDriven.onEnter(funct("value")
 						._if("value.row['_dom_']==null")
 				            ._set(template, ScnAdminMain.xTemplateDataDriven("value.row.a", "value.row.b"))
 				            ._var("jqdom", template.insertAt("$('#content')", "value.idx"))
@@ -65,7 +65,7 @@ public interface JSTestDataDriven extends JSClass {
 
 			            
 	            );
-				aDataDriven.onExit(fct("value")
+				aDataDriven.onExit(funct("value")
 						._if("value!=null && value.row['_dom_']!=null")
 						//	.__("$(value.row['_dom_']).addClass('animated rubberBand infinite')")
 							// .__("$(value.row['_dom_']).one('animationend',  function() {this.removeClass('animated rubberBand');}.bind($(value.row['_dom_'])) )")
@@ -76,7 +76,7 @@ public interface JSTestDataDriven extends JSClass {
 						.endif()
 					);
 				
-				aDataDriven.onChange(fct("value")
+				aDataDriven.onChange(funct("value")
 //					    .consoleDebug("value")
 						._if("value.row['_dom_']!=null && value.property=='idx'")
 							.__("$(value.row['_dom_']).css('transform','translate3d(0px,' + value.value*35 + 'px,0px)')")
@@ -91,14 +91,14 @@ public interface JSTestDataDriven extends JSClass {
 				
 				_set(v, aDataSet.getData())
 				
-				.__("setTimeout(", fct()
+				.__("setTimeout(", funct()
 						._for("var i=0; i<20; i++")
 							//.__("setTimeout(function(idx) {v.splice(0,0, {a:idx, b:'test5'} )}, i*10, i)") 
 							.__("setTimeout(function(idx) {v.push({a:idx, b:'test5'})} , i*10, i)") 
 						.endfor()	
 							, ", 1)")
 				
-				.__("setTimeout(", fct()
+				.__("setTimeout(", funct()
 						._for("var i=0; i<0; i++")
 							.__("setTimeout(function() {var idx = Math.floor(Math.random()*(v.length));\n"
 						        +"var idx2 = Math.floor(Math.random()*(v.length));\n"
@@ -113,7 +113,7 @@ public interface JSTestDataDriven extends JSClass {
 						.endfor()	
 							, ", 3000)")
 				
-				.__("setTimeout(", fct()
+				.__("setTimeout(", funct()
 						._for("var i=0; i<0; i++")
 							.__("setTimeout(function() { var idx = Math.floor(Math.random()*(v.length));\nvar val = Math.floor(Math.random()*(100)); v[idx].b='test'+val; }, i*100)") 
 						.endfor()	

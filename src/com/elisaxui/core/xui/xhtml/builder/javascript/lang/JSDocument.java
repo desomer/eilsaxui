@@ -4,7 +4,6 @@
 package com.elisaxui.core.xui.xhtml.builder.javascript.lang;
 
 import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassInterface;
 
 /**
  * @author gauth
@@ -20,17 +19,17 @@ public class JSDocument extends JSClassInterface {
 		return ret;
 	}
 	
-	public JSElement querySelector(CSSSelector selector)
+	public JSDomElement querySelector(CSSSelector selector)
 	{
-		return (JSElement) _callMethod(new JSElement(), "querySelector", ""+selector);
+		return callTyped(new JSDomElement(), "querySelector", ""+selector);
 	}
 	
-	public JSElement querySelector(JSAny variable)
+	public JSDomElement querySelector(JSAny variable)
 	{
-		return (JSElement) _callMethod(new JSElement(), "querySelector", variable);
+		return callTyped(new JSDomElement(), "querySelector", variable);
 	}
 	
-	public JSElement querySelector(Object... selector)
+	public JSDomElement querySelector(Object... selector)
 	{
 		if (selector.length==1 && selector[0] instanceof JSAny)
 			return querySelector((JSAny)selector[0]);	

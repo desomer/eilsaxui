@@ -3,14 +3,13 @@ package com.elisaxui.core.xui.xhtml.builder.javascript.jsclass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSLambda;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 
 /**
  * interface proxy de class JS
  * @author Bureau
  *
  */
-public interface JSClass extends JSContentInterface, JSElement  {
+public interface JSClass extends JSContentInterface, JSElement, ILitteral  {
 
 	Object _setContent(Object value);
 	Object _getContent();

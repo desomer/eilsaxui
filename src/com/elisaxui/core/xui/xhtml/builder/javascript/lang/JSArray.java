@@ -12,15 +12,14 @@ import javax.json.JsonValue;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassInterface;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSonInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ILitteral;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 
 /**
  * @author Bureau
  *
  */
-public class JSArray<E> extends JSClassInterface implements JSonInterface {
+public class JSArray<E> extends JSClassInterface implements ILitteral {
 
 	public JSArray() {
 		super();
@@ -28,11 +27,26 @@ public class JSArray<E> extends JSClassInterface implements JSonInterface {
 			this.asLitteral();
 	}
 
-	public Class<?> _type;
+	private Class<?> _type;
+	/**
+	 * @return the _type
+	 */
+	public final Class<?> getArrayType() {
+		return _type;
+	}
+
+	/**
+	 * @param _type the _type to set
+	 */
+	public final JSArray<E> setArrayType(Class<?> type) {
+		this._type = type;
+		return this;
+	}
+
 	public JsonArrayBuilder jsonBuilder = null;
 	
 	@Override
-	public String _getClassType() {
+	public String zzGetJSClassType() {
 		return "Array";
 	}
 
@@ -80,19 +94,19 @@ public class JSArray<E> extends JSClassInterface implements JSonInterface {
 			return this;
 		}
 		else
-			return (JSArray<E>) _callMethod(null, "push", value);
+			return (JSArray<E>) call( "push", value);
 	}
 
 	public E pop() {
-		return (E) _callMethod(null, "pop", null);
+		return (E) call("pop", null);
 	}
 
 	public JSArray<E> splice(Object debut, Object nbASupprimer) {
-		return (JSArray<E>) _callMethod(null, "splice", debut, SEP, nbASupprimer);
+		return (JSArray<E>) call("splice", debut, SEP, nbASupprimer);
 	}
 
 	public E at(Object idx) {
-		JSArray ret = new JSArray()._setName(this._getName());
+		JSArray<?> ret = new JSArray<Object>()._setName(_getValueOrName());
 		ret.addContent("[");
 		ret.addContent(idx);
 		ret.addContent("]");

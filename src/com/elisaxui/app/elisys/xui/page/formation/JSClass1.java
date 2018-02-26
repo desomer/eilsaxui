@@ -72,8 +72,6 @@ public interface JSClass1 extends JSClass {
 		})._else(() -> {
 			a.set("14");
 		});
-		
-		//listObj3.at(0).substring(1);
 
 		return a;
 	}
@@ -115,7 +113,7 @@ public interface JSClass1 extends JSClass {
 
 		// new instance
 		JSClass1 aClass = let("overlay", newInst(JSClass1.class)); // new class
-		_if(false).then(() ->	aClass.doSomething());
+		_if(false).then(aClass::doSomething);
 
 	}
 }

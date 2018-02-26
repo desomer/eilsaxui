@@ -3,13 +3,10 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.javascript.lang;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-
 import javax.json.Json;
-import javax.json.JsonNumber;
-import javax.json.JsonValue;
 
+import com.elisaxui.core.helper.log.CoreLogger;
+import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
@@ -17,7 +14,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ArrayMethod;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyMethodDesc;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder;
+import com.elisaxui.core.xui.xhtml.builder.json.JsonNumberImpl;
 
 /**
  * @author Bureau
@@ -25,105 +22,50 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder;
  */
 public class JSAny implements JSElement {
 	
-	protected static final String SEP = ",";
-	protected Object name;
-	protected Object value;
+	public static final String SEP = ",";
+	private Object name;
+	
+	private Object value = null;
+	private ArrayMethod<Object> listContent = new ArrayMethod<>();
+	private static Object NULL = null;
+	
 	protected Object parentLitteral;
+
 	
-	
-	public String _getClassType() {
-		return this.getClass().getSimpleName();
+	/***************************************************************/
+	public final <E extends JSAny> E attrByString(Object attr) {
+		E ret = getReturnType();
+
+		ret.addContent("[");
+		ret.addContent(addParamMth(attr));
+		ret.addContent("]");
+		return ret;
 	}
 
-//	/**
-//	 * @return the parent
-//	 */
-//	public final Object _getParent() {
-//		return parentLitteral;
-//	}
-
-	/**
-	 * @param parent the parent to set
-	 */
-	public final void _setParentLitteral(Object parent) {
-		this.parentLitteral = parent;
-	}
-
-	public final Object _getName() {
-		return name;
-	}
-
-	public final <E extends JSAny> E _setName(Object name) {
-		this.name = name;
-		return (E)this;
-	}
-
-
-	public Object _getValue() {
-		return value;
+	public <E extends JSAny> E attr(String att) {
+		E ret = getReturnType();
+		ret.addContent("." + att);
+		return ret;
 	}
 	
-	public final <E extends JSAny> E _setValue(Object value) {
-		this.value = value;
-		return (E)this;
-	}
-	
-	public  Object _getValueOrName() {
-		Object v =_getValue();
-		if (v==null)
-			return name==null?"":""+_getName();
-		else
-			return v;
-	}
-
-	@Override
-	public String toString() {
-		if (_getValue()==null)
-			return name==null?"":""+_getName();
-		return _getValue().toString();
-	}
-	/*************************************************************/
-	protected static final void _registerMethod(Object obj ) {
-			 ProxyMethodDesc currentMethodDesc = ProxyHandler.ThreadLocalMethodDesc.get();
-			 try {
-				ProxyHandler.doLastSourceLineInsered( false);
-			} catch (ClassNotFoundException e1) {
-				e1.printStackTrace();
-			}
-			 
-			 StackTraceElement[]  stack = Thread.currentThread().getStackTrace();
-			
-			 int numLigne = -1;
-			 for (StackTraceElement stackTraceElement : stack) {
-				 try {
-						if (JSClass.class.isAssignableFrom(Class.forName(stackTraceElement.getClassName()))  && stackTraceElement.getLineNumber()!=-1 )
-						{
-							numLigne = stackTraceElement.getLineNumber();
-							currentMethodDesc.lastLineNoInsered = numLigne;
-							currentMethodDesc.lastMthNoInserted = obj;
-							break;
-						}
-				} catch (ClassNotFoundException e) {
-				}
-			 }
-	}
-	
-	public boolean isLitteral() {
-		return false;
+	@SuppressWarnings("unchecked")
+	public final <E extends JSAny> E castAttr(JSAny cl, String att) {
+		cl._setValue(this._getName() + "." + att);
+		return (E) cl;
 	}
 	
 	/**************************************************************/
 	public final JSBool isEqual(Object obj)
 	{
 		JSBool ret = new JSBool();
-		_doOperator(ret, "==", obj);
+		doOperator(ret, "==", obj);
 		return ret;
 	}
 	
 	public final JSBool isNotEqual(Object obj)
 	{
 		JSBool ret = new JSBool();
-		_doOperator(ret, "!=", obj);
+		doOperator(ret, "!=", obj);
 		return ret;
 	}
 	
@@ -164,23 +106,116 @@ public class JSAny implements JSElement {
 		}
 		
 		if (!isLitteral)
-			_doOperator(ret, "=", objs);
+			doOperator(ret, "=", objs);
 		
 		return ret;
 	}
+	
+	/***********************************************************************************/
+	
+	public final <E extends JSAny> E call(String mth, Object... objs)
+	{
+		return callTyped(null, mth, objs );
+	}
+	
+	public final <E extends JSAny> E callTyped(E type, String mth, Object... objs)
+	{
+		if (type == null) {
+			type = getReturnType();
+		}
+		
+		if (ProxyHandler.isModeJava()) {
+			return type;
+		} else {
 
+			ArrayMethod<Object> arr = new ArrayMethod<>();
+			
+			Object content =_getValueOrName();
+			
+			if (content instanceof ArrayMethod)
+				arr.addAll((ArrayMethod<?>) content);
+			else
+				arr.add(content);
+
+			arr.add("." + mth + "(");
+			addContent(arr, objs);
+			arr.add(")");
+
+			type._setValue(arr);
+			
+			zzRegisterMethod(type);
+			return type;
+		}
+	}
+			
+	
+	public final <E extends JSAny> E apply(Object... classes) {
+		return call("apply", addParamMth(classes));
+	}
+	
+	/***************************************************************************************/
+	@SuppressWarnings("unchecked")
+	protected final <E extends JSAny> E getReturnType() {
+		E ret = (E) this;
+		if (this.name != null && listContent.isEmpty()) {  
+			// gestion premier appel de variable pour chainage
+			ret = (E) ret.declareTypeAny();
+			if (ret!=null)
+				ret._setName(this._getName());
+		}
+		return ret;
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected final <E extends JSAny> E addContent(Object content) {		
+		addContent(listContent, content);
+		return (E) this;
+	}
+	
+	private final void addContent(ArrayMethod<Object> inner, Object content) {
+		
+		if ( content instanceof Object[])
+		{
+			Object[] arr = (Object[])content;
+			for (Object object : arr) {
+				
+				if (object instanceof XClass)
+					inner.add( new JSAny()._setName( ((XClass)object).getId()) );
+				
+				else if (object instanceof CSSSelector)
+					inner.add( new JSAny()._setName("'" + ((CSSSelector)object).toString()) +"'" );
+				
+				else if (object instanceof JSFunction)
+				{
+					inner.add(object);
+				}
+				else if ( object instanceof Object[])
+				{
+					addContent(inner, object);
+				}
+				else if ( object instanceof String && object != SEP )
+					inner.add(JSString.value(object.toString()));
+				else if ( object instanceof ArrayMethod)
+				{
+					inner.addAll((ArrayMethod<?>)object);
+				}
+				else
+				{				
+					inner.add(object);
+				}
+			}
+		}
+		else if (content!=null)
+			inner.add(content);
+	}
+	
 	/*******************************************************************************/
-	/**
-	 * @param ret
-	 * @param objs
-	 */
-	protected final void _doOperator(JSAny ret, String operator,  Object... objs) {
+	protected final void doOperator(JSAny ret, String operator,  Object... objs) {
 		
 		if (ProxyHandler.isModeJava()) {
 			
-			
 		} else {
-			ArrayMethod arr = new ArrayMethod();
+			ArrayMethod<Object> arr = new ArrayMethod<>();
 			Object content = _getValueOrName();
 			if (content instanceof ArrayMethod)
 				arr.addAll((ArrayMethod<?>) content);
@@ -207,184 +242,165 @@ public class JSAny implements JSElement {
 			}
 
 			ret._setValue(arr);
-			_registerMethod(ret);
+			zzRegisterMethod(ret);
 		}
 	}
 	
-	public final <E extends JSAny> E call(String mth, Object... objs)
-	{
-		return (E)_callMethod(null, mth, objs );
-	}
-	
-	public final <E extends JSAny> E callTyped(E type, String mth, Object... objs)
-	{
-		return (E)_callMethod(type, mth, objs );
-	}
-	
-	protected final Object _callMethod(JSAny ret, String mth, Object... objs) {
-		if (ret == null) {
-			ret = this;
-			if (value == null && this.name != null) {
-				// gestion premier appel de variable pour chainage
-				ret = ret.declareTypeAny();
-				ret._setName(this._getName());
-			}
-		}
-		
-		if (ProxyHandler.isModeJava()) {
-			return ret;
-		} else {
-
-			ArrayMethod arr = new ArrayMethod();
-			Object content = _getValueOrName();
-			if (content instanceof ArrayMethod)
-				arr.addAll((ArrayMethod<?>) content);
-			else
-				arr.add(content);
-
-			arr.add("." + mth + "(");
-			_addContent(arr, objs);
-			arr.add(")");
-
-			ret._setValue(arr);
-			_registerMethod(ret);
-			return ret;
-		}
-	}
-
-	
-	protected static final void _addContent(ArrayMethod inner, Object content) {
-		
-		if ( content instanceof Object[])
-		{
-			Object[] arr = (Object[])content;
-			for (Object object : arr) {
-				
-				if (object instanceof XClass)
-					inner.add(((XClass)object).getId());
-				
-				else if (object instanceof JSFunction)
-				{
-					StringBuilder strBuf = new StringBuilder();
-					XMLBuilder buf = new XMLBuilder("????", strBuf, null);
-					((JSFunction)object).toXML(buf);
-					inner.add(strBuf.toString());
-				}
-				else if ( object instanceof Object[])
-				{
-					_addContent(inner, object);
-				}
-				else if ( object instanceof String && object != SEP )
-					inner.add("'"+object+"'");
-				else if ( object instanceof ArrayMethod)
-				{
-					inner.addAll((ArrayMethod)object);
-				}
-				else
-				{				
-					inner.add(object);
-				}
-			}
-		}
-		else if (content!=null)
-			inner.add(content);
-	}
-	
-	/*******************************************************/
-	/**
-	 * @param ret
-	 * @return
-	 */
 	protected final JSAny declareTypeAny() {
 		JSAny ret =  null;
 		try {
 			ret = this.getClass().newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
-			e.printStackTrace();
+			CoreLogger.getLogger(1).severe("pb declareTypeAny");
+			return this;
 		}
 		return ret;
+	}	
+	
+	protected static final Object[] addParamMth(Object... classes) {
+	
+		if (classes==null)
+			return null;
+		
+		Object[] ret = classes;
+		if (ret!=null && ret.length>1)
+		{
+			ret = new Object[((ret.length-1)*2)+1];
+		}
+		
+		for (int i = 0; i < classes.length; i++) {
+			int j = i*2;
+			
+			if (classes[i] instanceof String )
+				ret[j] = JSString.value(classes[i].toString());
+			else if ( classes[i] instanceof XClass)
+				ret[j] = JSString.value(((XClass)classes[i]).getId());
+			else
+				ret[j] = classes[i];
+			
+			if (i>0)
+				ret[j-1] = SEP;
+		}
+
+		return ret;
+
+	}
+	/********************************************************************************/
+	public final Object _getName() {
+		return name;
+	}
+
+	public final <E extends JSAny> E _setName(Object name) {
+		this.name = name;
+		return (E)this;
+	}
+	
+	/*******************************************************************************/
+	public boolean isLitteral() {
+		return false;
+	}
+	
+	public final void _setParentLitteral(Object parent) {
+		this.parentLitteral = parent;
+	}
+
+	/*******************************************************************************/
+	public Object _getValue() { 
+		return value;
+	}
+	
+	public final <E extends JSAny> E _setValue(Object v) {
+		this.value = v;
+		listContent.clear();
+		return (E)this;
+	}
+	
+	public final Object _getValueOrName() {
+		
+		if (this instanceof JSClassInterface) {
+			return getValueOrNameContent();
+		}
+		
+		return getValueOrNameAny();
+	}
+
+	private Object getValueOrNameAny() {
+		Object v =_getValue();
+		if (v==null)
+			return name==null?"":_getName();
+		else
+			return v;
+	}
+
+	private Object getValueOrNameContent() {
+		ArrayMethod<Object> list = new ArrayMethod<>();
+		Object arr = getValueOrNameAny();
+		if (arr instanceof ArrayMethod)
+			list.addAll((ArrayMethod<?>) arr);
+		else if (arr !=null)
+			list.add(arr);
+
+		list.addAll(listContent);
+		return list;
 	}
 
 
-
-	 class JsonNumberImpl implements JsonNumber {
-
-		 String value;
-		 
-		 /**
-		 * @param value
-		 */
-		public JsonNumberImpl(String value) {
-			super();
-			this.value = value;
-		}
-
-
-		@Override
-		 public String toString() {
-			 return value;
-		 }
-
-
-		@Override
-		public ValueType getValueType() {
-			return JsonValue.ValueType.NUMBER;
-		}
-
-
-		@Override
-		public boolean isIntegral() {
-			return false;
-		}
-
-
-		@Override
-		public int intValue() {
-			return 0;
-		}
-
-
-		@Override
-		public int intValueExact() {
-			return 0;
-		}
-
-
-		@Override
-		public long longValue() {
-			return 0;
-		}
-
-
-		@Override
-		public long longValueExact() {
-			return 0;
-		}
-
-
-		@Override
-		public BigInteger bigIntegerValue() {
-			return null;
-		}
-
-
-		@Override
-		public BigInteger bigIntegerValueExact() {
-			return null;
-		}
-
-
-		@Override
-		public double doubleValue() {
-			return 0;
-		}
-
-
-		@Override
-		public BigDecimal bigDecimalValue() {
-			return null;
-		}
-
+	/*************************************************************/
+	protected static final void zzRegisterMethod(Object obj ) {
+			 ProxyMethodDesc currentMethodDesc = ProxyHandler.ThreadLocalMethodDesc.get();
+			 try {
+				ProxyHandler.doLastSourceLineInsered( false);
+			} catch (ClassNotFoundException e1) {
+				CoreLogger.getLogger(1).severe("error");
+			}
+			 
+			 StackTraceElement[]  stack = Thread.currentThread().getStackTrace();
+			
+			 int numLigne = -1;
+			 for (StackTraceElement stackTraceElement : stack) {
+				 try {
+						if (JSClass.class.isAssignableFrom(Class.forName(stackTraceElement.getClassName()))  && stackTraceElement.getLineNumber()!=-1 )
+						{
+							numLigne = stackTraceElement.getLineNumber();
+							currentMethodDesc.lastLineNoInsered = numLigne;
+							currentMethodDesc.lastMthNoInserted = obj;
+							break;
+						}
+				} catch (ClassNotFoundException e) {
+					CoreLogger.getLogger(1).severe("error");
+				}
+			 }
 	}
+	
+	
+	public String zzGetJSClassType() {
+		return this.getClass().getSimpleName();
+	}
+	/*************************************************************/
+	@Override
+	public String toString() {
+		
+		if (this instanceof JSClassInterface)
+		{
+			
+			StringBuilder sb = new StringBuilder();
+			
+			Object arr = getValueOrNameAny();
+			if (arr instanceof ArrayMethod)
+				for (Object object : (ArrayMethod<?>)arr) {
+					sb.append(object);
+				}
+			else
+				sb.append(arr);
+	
+			for (Object object : listContent) {
+				sb.append(object);
+			}
 
+			return sb.toString();
+		}
+
+		
+		return getValueOrNameAny().toString();
+	}
 }

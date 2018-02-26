@@ -30,14 +30,14 @@ public interface JSHistoireManager extends JSClass {
 					// jsonSyllable = aJSArray1
 			
 		
-		JSFunction onJson = fct(aJPhrase).__(()->{
+		JSFunction onJson = funct(aJPhrase).__(()->{
 			
 			JSInt i = declareType(JSInt.class,"i"); 
 			JSInt num = declareType(JSInt.class,"num");
 			
 			_forIdx(i, aJPhrase.mots())._do(()->{
 				setTimeout( 
-						fct(num).__(jsonSyllable.push(aJPhrase.mots().at(num)))
+						funct(num).__(jsonSyllable.push(aJPhrase.mots().at(num)))
 					,"50+(20*i)", i);	
 			});
 			

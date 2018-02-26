@@ -55,6 +55,8 @@ public final class ProxyHandler implements InvocationHandler {
 	private Object varContent; // contenu code du proxy
 	private Class<? extends JSClass> implementClass; // type js de la class
 	private JsonObjectBuilder jsonBuilder = null;
+	private Object parentLitteral;
+	
 	private String currentFctBuildByProxy = null; //
 	private boolean testInLineInProgress = false; // test si la methode doit retourner une fonction anonym
 	
@@ -116,7 +118,7 @@ public final class ProxyHandler implements InvocationHandler {
 	private Object doCallImplement(ProxyMethodDesc mthInvoke) throws Throwable {
 		Object ret = null;
 		if (testInLineInProgress) {
-			ret = JSClassBuilder.toJSCall("/*ww4*/this", mthInvoke.method, mthInvoke.args); // ne creer pas la fct en
+			ret = JSClassBuilder.toJSCall("this", mthInvoke.method, mthInvoke.args); // ne creer pas la fct en
 		} else {
 
 			if (currentFctBuildByProxy == null) { // test si meth en cours de build
@@ -243,7 +245,7 @@ public final class ProxyHandler implements InvocationHandler {
 	 */
 	private Object doCallAttribut(Method method)
 			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		Object objName = currentFctBuildByProxy == null ? getStringProxyContent() : "/*ww4*/this";
+		Object objName = currentFctBuildByProxy == null ? getStringProxyContent() : "this";
 		Object ret = getObjectJS(method.getReturnType(), objName + ".", method.getName());
 
 		if (ret instanceof JSAny) {
@@ -252,6 +254,14 @@ public final class ProxyHandler implements InvocationHandler {
 			}
 
 			((JSAny) ret)._setParentLitteral(this);
+		}
+		else
+		{
+			// proxy
+			ProxyHandler mh = (ProxyHandler) Proxy.getInvocationHandler(ret);
+			// ajouter uniquement si literral
+			mh.setParentLitteral(this);
+			
 		}
 		return ret;
 	}
@@ -409,7 +419,7 @@ public final class ProxyHandler implements InvocationHandler {
 			if (argTypes.length > 0 ) {
 				String cl = argTypes[0].getTypeName();
 				if (!cl.equals("?"))
-					((JSArray<?>) ret)._type = Class.forName(cl);
+					((JSArray<?>) ret).setArrayType(Class.forName(cl));
 			}
 		}
 	}
@@ -798,6 +808,20 @@ public final class ProxyHandler implements InvocationHandler {
 	public static final boolean isModeJava() {
 		Boolean b = ThreadLocalMode.get();
 		return b == null ? false : b;
+	}
+
+	/**
+	 * @return the parentLitteral
+	 */
+	public Object getParentLitteral() {
+		return parentLitteral;
+	}
+
+	/**
+	 * @param parentLitteral the parentLitteral to set
+	 */
+	public void setParentLitteral(Object parentLitteral) {
+		this.parentLitteral = parentLitteral;
 	}
 
 }

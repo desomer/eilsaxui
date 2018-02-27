@@ -313,8 +313,8 @@ public abstract class XUIScene extends XHTMLPart {
 								.consoleDebug(txt("ok registration scope"), "registration.scope")
 								._set("navigator.serviceWorker.onmessage", fct("e")
 										// .consoleDebug(txt("onEventSW"), "e.data")
-										.__(JQuery.$(ViewLog.cLog, " textArea")
-												.val(JQuery.$(ViewLog.cLog, " textArea").val(), jsvar("+ e.data")))),
+										._var("v", JQuery.$(ViewLog.cLog, " textArea").val(), jsvar("+ e.data"))
+										.__(JQuery.$(ViewLog.cLog, " textArea").val(jsvar("v")))),
 						",",
 						fct("err").consoleDebug(txt("ServiceWorker registration failed"), "err"), ")")
 				.endif();
@@ -403,9 +403,9 @@ public abstract class XUIScene extends XHTMLPart {
 	public JSContentInterface getEventManager() {
 		return fct()
 				.consoleDebug("'ok EventManager'")
-				.__($("body").on("touchstop", ",", fct('e')
+				.__($("body").on("touchstop", fct('e')
 						._set("window.stopClientY", "e.originalEvent.touches[0].clientY")))
-				.__($("body").on("touchstart", ",", fct('e')
+				.__($("body").on("touchstart", fct('e')
 						._set("window.startClientY", "e.originalEvent.touches[0].clientY")
 						._set("window.stopClientY", -1)
 						._set("window.startScrollTop", $(jsvar("document")).scrollTop())

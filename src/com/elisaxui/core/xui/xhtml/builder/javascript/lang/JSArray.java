@@ -94,15 +94,15 @@ public class JSArray<E> extends JSClassInterface implements ILitteral {
 			return this;
 		}
 		else
-			return (JSArray<E>) call( "push", value);
+			return (JSArray<E>) callMth( "push", value);
 	}
 
 	public E pop() {
-		return (E) call("pop", null);
+		return (E) callMth("pop");
 	}
 
 	public JSArray<E> splice(Object debut, Object nbASupprimer) {
-		return (JSArray<E>) call("splice", debut, SEP, nbASupprimer);
+		return (JSArray<E>) callMth("splice", debut, nbASupprimer);
 	}
 
 	public E at(Object idx) {

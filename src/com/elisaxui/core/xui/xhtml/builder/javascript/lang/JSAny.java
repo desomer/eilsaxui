@@ -22,16 +22,15 @@ import com.elisaxui.core.xui.xhtml.builder.json.JsonNumberImpl;
  */
 public class JSAny implements JSElement {
 	
-	public static final String SEP = ",";
-	private Object name;
+	private static final String SEP = ",";
+	private static Object NULL = null;
 	
+	private Object name;
 	private Object value = null;
 	private ArrayMethod<Object> listContent = new ArrayMethod<>();
-	private static Object NULL = null;
 	
 	protected Object parentLitteral;
 
-	
 	/***************************************************************/
 	public final <E extends JSAny> E attrByString(Object attr) {
 		E ret = getReturnType();
@@ -112,14 +111,15 @@ public class JSAny implements JSElement {
 	}
 	
 	/***********************************************************************************/
-	
-	public final <E extends JSAny> E call(String mth, Object... objs)
+	public final <E extends JSAny> E callMth(String mth, Object... objs)
 	{
 		return callTyped(null, mth, objs );
 	}
-	
+		
 	public final <E extends JSAny> E callTyped(E type, String mth, Object... objs)
 	{
+		objs = addParamMth(objs);
+		
 		if (type == null) {
 			type = getReturnType();
 		}
@@ -150,7 +150,7 @@ public class JSAny implements JSElement {
 			
 	
 	public final <E extends JSAny> E apply(Object... classes) {
-		return call("apply", addParamMth(classes));
+		return callMth("apply", classes);
 	}
 	
 	/***************************************************************************************/
@@ -309,6 +309,7 @@ public class JSAny implements JSElement {
 		return value;
 	}
 	
+	@Deprecated
 	public final <E extends JSAny> E _setValue(Object v) {
 		this.value = v;
 		listContent.clear();

@@ -30,7 +30,7 @@ public interface JSXHTMLTemplate extends JSClass {
 		JSDataDriven aDataDriven = let("aDataDriven", newInst(JSDataDriven.class, aDataSet) );
 		aDataDriven.onEnter(funct(ctx).__(()->{
 			ctx.parent().set(parent);
-			JSDomElement dom =let(JSDomElement.class, "dom", fctEnter.call("call", _this(), JSAny.SEP, ctx.row(), JSAny.SEP, ctx));   //, ".call(this, ctx.row, ctx)"
+			JSDomElement dom =let(JSDomElement.class, "dom", fctEnter.callMth("call", _this(), ctx.row(), ctx)); 
 			ctx.row().attrByString(JSDataSet.ATTR_DOM_LINK).set(dom);
 			parent.appendChild( dom );
 		}));

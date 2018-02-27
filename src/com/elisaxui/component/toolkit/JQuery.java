@@ -40,35 +40,34 @@ public class JQuery extends JSClassInterface {
 			return $(CSSSelector.onPath(selector));
 	}
 		
-	/**TODO remplacer par une annotation */
 	public JQuery addClass(Object...classes)
 	{
-		return call("addClass", addParamMth(classes));
+		return callMth("addClass", classes);
 	}
 	
 	public JQuery removeClass(Object...classes)
 	{
-		return call("removeClass", addParamMth(classes));
+		return callMth("removeClass", classes);
 	}
 	
 	public JQuery detach()
 	{
-		return call("detach", null);
+		return callMth("detach");
 	}
 	
 	public JQuery get(Object value)
 	{
-		return call("get", value);
+		return callMth("get", value);
 	}
 	
 	public JQuery eq(Object value)
 	{
-		return call("eq", value);
+		return callMth("eq", value);
 	}
 	
 	public JQuery text(Object... value)
 	{
-		return call("text", addParamMth(value));
+		return callMth("text", value);
 	}
 	
 	public JSInt length()
@@ -78,39 +77,39 @@ public class JQuery extends JSClassInterface {
 	
 	public JQuery val(Object... value)
 	{
-		return call("val", value);
+		return callMth("val", value);
 	}
 	
 	public JQuery prepend(Object...html)
 	{
-		return call("prepend", html);
+		return callMth("prepend", html);
 	}
 	
 	public JQuery append(Object...html)
 	{
-		return call("append", html);
+		return callMth("append", html);
 	}
 	
 	/**
 	 * @return
 	 */
 	public JQuery remove(Object...selector) {
-		return call("remove", addParamMth(CSSSelector.onPath(selector)));
+		return callMth("remove", CSSSelector.onPath(selector));
 	}
 	
 	public JQuery css(Object attr, Object value)
 	{
-		return call("css", addParamMth(attr), JSAny.SEP ,addParamMth(value));
+		return callMth("css", attr ,value);
 	}
 	
 	public JQuery on(Object...classes)
 	{
-		return call("on", classes);
+		return callMth("on", classes);
 	}
 
 	public JQuery each(Object...classes)
 	{
-		return call("each", classes);
+		return callMth("each", classes);
 	}
 	
 	/**
@@ -118,7 +117,7 @@ public class JQuery extends JSClassInterface {
 	 * @return
 	 */
 	public Object closest(Object...selector) {
-		return call("closest", addParamMth(CSSSelector.onPath(selector)));
+		return callMth("closest", CSSSelector.onPath(selector));
 	}
 
 	/**
@@ -126,7 +125,7 @@ public class JQuery extends JSClassInterface {
 	 * @return
 	 */
 	public Object hasClass(Object...classes) {
-		return call("hasClass", addParamMth(classes));
+		return callMth("hasClass", classes);
 	}
 
 	/**
@@ -134,7 +133,7 @@ public class JQuery extends JSClassInterface {
 	 * @return
 	 */
 	public JQuery children(Object...selector) {
-		return call("children", addParamMth(CSSSelector.onPath(selector)));
+		return callMth("children", CSSSelector.onPath(selector));
 	}
 	
 	/**
@@ -144,34 +143,34 @@ public class JQuery extends JSClassInterface {
 	public JQuery find(Object...selector) {
 		Object p = (selector.length==1 & selector[0] instanceof JSAny)?  selector[0] : addParamMth(CSSSelector.onPath(selector));
 		
-		return call("find", p);
+		return callMth("find", p);
 	}
 	
 	public Object hide(Object time, Object fct) {
-		return call("hide", time, JSAny.SEP , fct);
+		return callMth("hide", time,fct);
 	}
 	
 	public Object scrollTop(Object...param) {
-		return call("scrollTop", param);
+		return callMth("scrollTop", param);
 	}
 	
 	
 	public Object data(Object attr, Object value) {
-		return call("data", addParamMth(attr), JSAny.SEP ,addParamMth(value));
+		return callMth("data", attr, value);
 	}
 	
 	public Object data(Object attr) {
-		return call("data", addParamMth(attr));
+		return callMth("data", attr);
 	}
 	
 	public Object height(Object... attr) {
-		return call("height", addParamMth(attr));
+		return callMth("height", attr);
 	}
 	/*
 	 * Padding + Border + (margin optionel)
 	 */
 	public Object outerHeight(Object...withMargin) {
-		return call("outerHeight", withMargin);
+		return callMth("outerHeight", withMargin);
 	}
 
 

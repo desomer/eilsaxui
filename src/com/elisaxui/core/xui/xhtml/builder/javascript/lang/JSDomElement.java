@@ -10,7 +10,7 @@ package com.elisaxui.core.xui.xhtml.builder.javascript.lang;
 public class JSDomElement extends JSClassInterface {
 
 	public JSDomElement appendChild(Object element) {
-		return  call("appendChild", element);
+		return  callMth("appendChild", element);
 	}
 	
 	public JSString textContent() {

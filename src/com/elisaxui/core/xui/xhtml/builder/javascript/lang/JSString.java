@@ -21,12 +21,12 @@ public class JSString extends JSValue {
 	
 	public JSString substring(Object start)
 	{
-		return call("substring", start);
+		return callMth("substring", start);
 	}
 	
 	public JSString substring(Object start, Object end)
 	{
-		return call("substring", start, SEP, end);
+		return callMth("substring", start, end);
 	}
 	
 }

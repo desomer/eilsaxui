@@ -19,7 +19,7 @@ public class JSWindow extends JSClassInterface {
 	
 	public JSWindow requestAnimationFrame(Object value)
 	{
-		return call("requestAnimationFrame", value);
+		return callMth("requestAnimationFrame", value);
 	}
 	
 	

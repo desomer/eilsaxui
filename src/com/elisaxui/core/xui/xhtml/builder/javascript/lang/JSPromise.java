@@ -13,7 +13,7 @@ public class JSPromise extends JSClassInterface {
 
 	public JSPromise then(JSFunction lamba)
 	{
-		return callTyped(new JSPromise(), "then", lamba);
+		return callMth("then", lamba);
 	}
 	
 }

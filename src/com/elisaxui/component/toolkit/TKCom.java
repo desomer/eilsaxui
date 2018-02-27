@@ -24,7 +24,7 @@ public interface TKCom extends JSClass {
 		JSFunction fct = fct(var("resolve"), var("reject"), ()->{
 			
 			JSObject xhr = let(JSObject.class, "xhr", "new XMLHttpRequest()");
-			xhr.call("open", var(obj,".method || 'GET',",obj,".url"));
+			xhr.callMth("open", var(obj,".method || 'GET',",obj,".url"));
 			xhr.attr("onload").set(fct(()->{
 				_if(xhr.attr("status"), ">=200 &&", xhr.attr("status") ,"<300").then(() -> {
 					__("resolve(JSON.parse(", xhr.attr("response"), "))");
@@ -33,7 +33,7 @@ public interface TKCom extends JSClass {
 				});
 			}));
 			
-			xhr.call("send", obj.attr("body"));
+			xhr.callMth("send", obj.attr("body"));
 			
 		});
 		

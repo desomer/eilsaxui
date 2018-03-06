@@ -17,7 +17,7 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  * @author gauth
  *
  */
-public class XHTMLTemplateImpl implements IXHTMLTemplate
+public class XHTMLTemplateImpl extends JSDomElement implements IXHTMLTemplate
 {
 	XMLElement xml;
 	boolean modeJs = false;
@@ -36,9 +36,16 @@ public class XHTMLTemplateImpl implements IXHTMLTemplate
 
 	}
 	
+	public static final JSFunction onEnter(Object row, JSDomElement elem)
+	{
+		return (JSFunction) new JSFunction().zzSetComment("onEnter").setParam(new Object[] {row, "ctx"})
+				._return( elem );
+
+	}
+	
 	public static final JSFunction onExit(Object row, Object dom)
 	{
-		return (JSFunction) new JSFunction().setParam(new Object[] {row, dom, "ctx"})
+		return (JSFunction) new JSFunction().zzSetComment("onExit").setParam(new Object[] {row, dom, "ctx"})
 				._if(dom,"!=null")
 					.__("$("+dom+").remove()")
 				.endif();
@@ -46,7 +53,7 @@ public class XHTMLTemplateImpl implements IXHTMLTemplate
 	
 	public static final JSFunction onChange(JSChangeCtx ctx, JSDomElement aDom, JSFunction action )
 	{
-		return (JSFunction) new JSFunction().setParam(new Object[] {"ctx"})
+		return (JSFunction) new JSFunction().zzSetComment("onChange").setParam(new Object[] {"ctx"})
 				._var("dom" , "ctx.row['"+JSDataSet.ATTR_DOM_LINK+"']")
 				._var("f", action.setParam(new Object[] {ctx, aDom}))
 				.__("f(ctx, dom)")
@@ -68,7 +75,7 @@ public class XHTMLTemplateImpl implements IXHTMLTemplate
 		XMLBuilder elemJS =  new XMLBuilder("js", txtXML, txtXMLAfter);
 		xml.setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine()+3);
 		
-		xml.toXML(elemJS.setModeString(!modeJs).setTemplate(modeJs));  // charge les string
+		xml.toXML(elemJS.setModeString(!modeJs).setModeTemplate(modeJs));  // charge les string
 		
 		return this.modeJs?elemJS.getJSContent() :  "'"+txtXML.toString()+"'";
 	}

@@ -4,13 +4,21 @@
 package com.elisaxui.app.elisys.xui.page.formation2;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDocument.document;
+import static com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplateImpl.onChange;
+import static com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplateImpl.onEnter;
+import static com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplateImpl.onExit;
 
+import com.elisaxui.component.toolkit.TKPubSub;
+import com.elisaxui.component.toolkit.datadriven.JSChangeCtx;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.elisaxui.core.xui.xhtml.builder.json.JSONType;
@@ -26,9 +34,7 @@ import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.target.CONTENT;
 
 /**
- * @author gauth 
- * TODO xImport( Module("mod.js", JSDataSet, JSDataDriven,
- *         JSXHTMLTemplate ) )
+ * @author gauth
  */
 @xFile(id = "ScnDataDriven")
 public class ScnDataDriven extends XHTMLPart {
@@ -37,10 +43,13 @@ public class ScnDataDriven extends XHTMLPart {
 
 	@xTarget(HEADER.class)
 	@xRessource // une seule fois par vue
-	public XMLElement xImportVue() {
+	public XMLElement xImport() {
 		return xListElem(
-				xImport(JSXHTMLTemplate.class)
-				);
+				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"),
+				xImport(JSXHTMLTemplate.class,
+						TKPubSub.class,
+						JSDataDriven.class,
+						JSDataSet.class));
 	}
 
 	@xTarget(CONTENT.class) // la vue App Shell
@@ -49,36 +58,97 @@ public class ScnDataDriven extends XHTMLPart {
 	}
 
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
+	@xRessource // une seule fois par vue
 	public XMLElement xLoad() {
 		return xImport(JSTestDataDriven.class);
 	}
 
 	// une class JS
-	@xTarget(AFTER_CONTENT.class)   // une seule fois par vue car class  ,  a mettre @xTarget sur la JSClass pour retirer l'import
+	@xTarget(AFTER_CONTENT.class) // une seule fois par vue car class
 	public interface JSTestDataDriven extends JSClass, IXHTMLTemplate, IJSONBuilder {
 
 		@xStatic(autoCall = true) // appel automatique de la methode static
 		default void main() {
-			ImgType data = let("data", newInst(ImgType.class).asLitteral());   // affecter literal dans le newInst
-			data.name().set("Votre creation");
-			data.urlImage().set("https://images.pexels.com/photos/316465/pexels-photo-316465.jpeg?h=350&auto=compress&cs=tinysrgb");			
-			
+
+			JSInt i = declareType(JSInt.class, "i");
+			JSInt j = declareType(JSInt.class, "j");
+			/*************************************************************************/
+
 			JSTestDataDriven template = let("template", newInst(JSTestDataDriven.class));
-			document().querySelector(cMain).appendChild(template.xImageOK(data.name(), data.urlImage()));
+			JSArray<TestData> listData = let("listData", new JSArray<TestData>().asLitteral());
+
+			document().querySelector(cMain).appendChild(template.xArray(listData));
+
+			/*************************** CHARGEMENT DES JSON *************************/
+
+			// ajout les ligne
+			_forIdxBetween(i, 0, 100)._do(() -> {
+				TestData row = newInst(TestData.class).asLitteral();
+				row.name().set(txt("row ", i));
+				row.id().set(i);
+				TestDataRow datarow = newInst(TestDataRow.class).asLitteral();
+				datarow.name2().set(txt("one", i));
+				row.oneToOne().set(datarow);
+				row.oneToMany().set(new JSArray<>().asLitteral());
+				listData.push(row);
+			});
+
+			// change les text en asynchrone
+			_forIdxBetween(i, 0, 100)._do(
+					() -> setTimeout(fct(j, () -> {
+						listData.at(j).name().set(txt("wor ", j));
+						listData.at(j).oneToOne().name2().set(txt("changeone ", j));
+					}),
+							calc(i, "*50"), i));
+
 		}
 
-		default Object xImageOK(JSAny id, JSString url) {
-			return xTemplateJS(xDiv(id, xPicture(url)));
+		// le template
+		default Object xArray(JSArray<TestData> data) {
+
+			TestData aTestData = declareType(TestData.class, "aTestData");
+			JSDomElement aDom = declareType(JSDomElement.class, "aDom");
+			JSChangeCtx changeCtx = declareType(JSChangeCtx.class, "changeCtx");
+
+			JSTestDataDriven that = let(JSTestDataDriven.class, "that", _this());
+
+			
+			JSFunction onChange = fct(() -> {
+				_if(changeCtx.property().isEqual("name")).then(
+						() -> aDom.firstNodeValue().set(changeCtx.value()));
+				_if(changeCtx.property().isEqual("name2")).then(
+						() -> aDom.querySelector("span").firstNodeValue().set(changeCtx.value()));
+			});
+
+			JSDomElement row = that.xRow(aTestData.name(), aTestData.oneToOne().name2());
+			
+			return jsTemplate(
+					xUl(
+							xDataDriven(data,
+									onEnter(aTestData, row)	,
+									onExit(aTestData, aDom),
+									onChange(changeCtx, aDom, onChange))));
+
 		}
 
-		default Object xPicture(JSString url) {
-			return xTemplateJS(xImg(xAttr("src", url)));
+		default JSDomElement xRow(JSString text, JSString id) {
+			return jsTemplate(xLi(text, xSpan(id)));
 		}
+
 	}
 
-	public interface ImgType extends JSONType {
-		JSString urlImage();
+	public interface TestData extends JSONType {
+		JSString id();
+
 		JSString name();
+
+		TestDataRow oneToOne();
+
+		JSArray<TestDataRow> oneToMany();
 	}
-	
+
+	public interface TestDataRow extends JSONType {
+		JSString name2();
+	}
+
 }

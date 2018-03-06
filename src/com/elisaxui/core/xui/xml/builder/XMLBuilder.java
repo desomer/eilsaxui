@@ -13,11 +13,11 @@ public class XMLBuilder  {
 
 	String id; // identifiant du bloc
 
-	boolean isString = false;  // creer un string '<div>'
 	StringBuilder content;
 	StringBuilder afterContent;
 	boolean after = false;
 	
+	boolean isString = false;  // creer un string '<div>'
 	boolean isTemplate = false;  // e("div",[])
 	JSContent jsTemplate = null;
 	
@@ -38,7 +38,7 @@ public class XMLBuilder  {
 	/**
 	 * @param isTemplate the isTemplate to set
 	 */
-	public final XMLBuilder setTemplate(boolean isTemplate) {
+	public final XMLBuilder setModeTemplate(boolean isTemplate) {
 		this.isTemplate = isTemplate;
 		jsTemplate = new JSContent();
 		return this;

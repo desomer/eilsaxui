@@ -18,7 +18,6 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSValue;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 import com.elisaxui.core.xui.xhtml.builder.json.JsonNumberImpl;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplateImpl;
@@ -34,6 +33,17 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  */
 public class JSContent implements IXMLBuilder, JSContentInterface {
 
+	public int lastNumLigne = -1;
+	protected JSContentInterface proxy;
+
+	public final JSContentInterface getProxy() {
+		return proxy;
+	}
+
+	public final void setProxy(JSContentInterface proxy) {
+		this.proxy = proxy;
+	}
+	
 	/**
 	 * @return
 	 */
@@ -65,15 +75,6 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 		return (E)name;
 	}
 	
-	protected JSContentInterface proxy;
-
-	public final JSContentInterface getProxy() {
-		return proxy;
-	}
-
-	public final void setProxy(JSContentInterface proxy) {
-		this.proxy = proxy;
-	}
 
 	/**************************************************************/
 	// new line
@@ -161,7 +162,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 			
 			if (buf.isTemplate())
 			{
-				buf.setTemplate(true);
+				buf.setModeTemplate(true);
 			}
 			
 			if (fct.isFragment()) {
@@ -211,11 +212,13 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	}
 
 	/**
-	 * ajout d'une div+js (XMLElement dans un JS)
+	 * ajout d'une div en text +js (XMLElement dans un JS)
 	 * 
 	 * @param buf
 	 * @param elem
 	 */
+	
+	/** TODO a mettre dans le JSXHTMLPart */ 
 	private void doXMLElementToJSXHTMLPart(XMLBuilder buf, XMLElement elem) {
 		StringBuilder txtXML = new StringBuilder(1000);
 		StringBuilder txtXMLAfter = new StringBuilder(1000);

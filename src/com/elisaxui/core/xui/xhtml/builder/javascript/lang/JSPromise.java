@@ -9,7 +9,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
  * @author gauth
  *
  */
-public class JSPromise extends JSClassInterface {
+public class JSPromise extends JSAny  implements IJSClassInterface {
 
 	public JSPromise then(JSFunction lamba)
 	{

@@ -103,7 +103,7 @@ public interface JSPerfVuesJS extends JSClass, IJSONBuilder, IXHTMLTemplate {
 
 			XClass cA = new XClass().setId("cA");
 			
-			a.set(xTemplateJS(
+			a.set(jsTemplate(
 					xLi(
 							xUl(xId(id), cA),
 							xDiv(

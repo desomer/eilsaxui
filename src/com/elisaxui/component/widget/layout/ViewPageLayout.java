@@ -53,7 +53,7 @@ public class ViewPageLayout extends XHTMLPart {
 		return xDiv(xId(getProperty(ID)), CssTransition.activity, CssTransition.inactive, CssTransition.cStateNoDisplay 
 				, xPart(new ViewNavBar().addProperty(ViewNavBar.PROPERTY_NAME, "NavBar"+getProperty(ID)))
 				, xDiv(content 	
-						, xDiv(cArticle, vHandle("children"+getProperty(ID)))
+						, xDiv(cArticle, searchProperty("children"+getProperty(ID)))
 						, xPart(new ViewOverlay())
 						)
 				, xPart(new ViewTabBar().addProperty(ViewNavBar.PROPERTY_NAME, "TabBar"+getProperty(ID)) ,

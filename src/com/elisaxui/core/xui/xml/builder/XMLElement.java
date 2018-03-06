@@ -4,6 +4,7 @@
 package com.elisaxui.core.xui.xml.builder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +18,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ArrayMethod;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLFunction;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Handle;
 import com.elisaxui.core.xui.xml.target.CONTENT;
@@ -29,6 +31,13 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
  *
  */
 public class XMLElement extends XUIFormatManager implements IXMLBuilder {
+	
+	public static final String MTH_ADD_ELEM = "e";
+	public static final String MTH_ADD_ATTR = "a";
+	public static final String MTH_ADD_TEXT = "t";
+	
+	private static final Object IS_XPART = null;
+	
 	private Object name;
 	private Object comment;
 
@@ -101,13 +110,16 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 	 * @param buf
 	 */
 	private void doElementModeTemplate(XMLBuilder buf) {
-		buf.getJSContent().getListElem().add("e('" + name + "'");
+		if (name==IS_XPART)  
+			name="xpart";
+		
+		buf.getJSContent().getListElem().add(MTH_ADD_ELEM+"('" + name + "'");
 
 		buf.getJSContent().getListElem().add(",[");
 		int nbAttr = 0;
 		for (XMLAttr attr : listAttr) {
 			if (nbAttr == 0)
-				buf.getJSContent().getListElem().add("a([");
+				buf.getJSContent().getListElem().add(MTH_ADD_ATTR+"([");
 			else
 				buf.getJSContent().getListElem().add(",");
 
@@ -209,6 +221,8 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			{
 				List<?> listChild = (List<?>) inner;
 				for (Object object : listChild) {
+					if (buf.isTemplate && nbChild>0) { buf.getJSContent().getListElem().add(",");}
+					
 					nbChild = doChild(buf, nbChild, object);
 				}
 			}
@@ -260,9 +274,19 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 					buf.addContentOnTarget("\""+inner+"\"");
 				} else if (inner instanceof XHTMLFunction) {
 					buf.addContentOnTarget(inner);
-				} else {
-					buf.addContentOnTarget("t(");
+				} else if (inner instanceof JSDomElement) {
 					buf.addContentOnTarget(inner);
+				}
+				else {
+					buf.addContentOnTarget(MTH_ADD_TEXT+"(");
+//					List<String> result = Arrays.asList(inner.toString().split("\\."));
+//					StringBuilder buft = new StringBuilder();
+//					for (int i = 1; i < result.size(); i++) {
+//						if (i>1)
+//							buft.append(",");
+//						buft.append("'"+result.get(i)+"'");
+//					}
+					buf.addContentOnTarget(inner);    //+","+result.get(0)+",["+buft+"]");
 					buf.addContentOnTarget(")");
 				}
 				nbChild++;

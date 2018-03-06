@@ -23,7 +23,7 @@ import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSClassInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.IJSClassInterface;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xFile;
@@ -43,7 +43,7 @@ public class XHTMLAppScanner {
 
 		List<Class<? extends XHTMLPart>> listXHTMLPart = new ArrayList<>(100);
 		List<Class<? extends JSClass>> listJSClass = new ArrayList<>(100);
-		List<Class<? extends JSClassInterface>> listJSClassMethod = new ArrayList<>(100);
+		List<Class<? extends JSAny>> listJSClassMethod = new ArrayList<>(100); /**TODO a retirer */
 
 		changeInfo.listFileChanged.clear();
 
@@ -102,7 +102,7 @@ public class XHTMLAppScanner {
 		// new FastClasspathScanner("com.elisaxui").matchSubclassesOf(XHTMLPart.class,
 		// listXHTMLPart::add).scan();
 		new FastClasspathScanner("com.elisaxui").matchSubinterfacesOf(JSClass.class, listJSClass::add).scan();
-		new FastClasspathScanner("com.elisaxui").matchSubclassesOf(JSClassInterface.class, listJSClassMethod::add)
+		new FastClasspathScanner("com.elisaxui").matchSubclassesOf(JSAny.class, listJSClassMethod::add)
 				.scan();
 
 		if (debug)
@@ -127,7 +127,7 @@ public class XHTMLAppScanner {
 			System.out.println(
 					"[XHTMLAppBuilder]********************************************* START SCAN JSClassMethod ************************************");
 
-		for (Class<? extends JSClassInterface> class1 : listJSClassMethod) {
+		for (Class<? extends JSAny> class1 : listJSClassMethod) {
 			if (debug)
 				System.out.println("[XHTMLAppBuilder]------------ START SCAN FIELD OF JSClassInterface -----" + class1);
 			initJSClassVar(class1);

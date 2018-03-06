@@ -19,7 +19,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
  * @author Bureau
  *
  */
-public class JSArray<E> extends JSClassInterface implements ILitteral {
+public class JSArray<E> extends JSAny  implements ILitteral, IJSClassInterface {
 
 	public JSArray() {
 		super();

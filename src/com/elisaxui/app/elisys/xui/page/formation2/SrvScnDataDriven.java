@@ -42,7 +42,8 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 @Path("/json")
 public class SrvScnDataDriven implements IJSONBuilder {
 
-	@xFile(id = "ScnSingle")
+	/********************************************    VIEW     ***********************************************/
+	@xFile(id = "SrvScnDataDriven")
 	public static class ScnDataDriven extends XHTMLPart {
 		
 		static XClass cMain;
@@ -84,16 +85,16 @@ public class SrvScnDataDriven implements IJSONBuilder {
 			}
 
 			default Object xImageOK(JSAny id, JSString url) {
-				return xTemplateJS(xDiv(xSpan(id), xPicture(url)));
+				return jsTemplate(xDiv(xSpan(id), xPicture(url)));
 			}
 
 			default Object xPicture(JSString url) {
-				return xTemplateJS(xImg(xAttr("src", url)));
+				return jsTemplate(xImg(xAttr("src", url)));
 			}
 		}
 	}
-	
-	/****************************************************************************************************/
+	 
+	/********************************************    DTO      ***********************************************/
 	/**
 	 *  un type json
 	 */
@@ -101,7 +102,7 @@ public class SrvScnDataDriven implements IJSONBuilder {
 		JSString urlImage();
 		JSString name();
 	}
-	/***************************************************************************************************/
+	/********************************************  SERVICE  *************************************************/
 	
 	private static final String PHOTO = "https://images.pexels.com/photos/316465/pexels-photo-316465.jpeg?h=350&auto=compress&cs=tinysrgb";
 	private static final String REST_JSON_TEST_55 = "/rest/json/test/ok";
@@ -115,7 +116,8 @@ public class SrvScnDataDriven implements IJSONBuilder {
 		data.name().set("Votre creation "+id);
 		data.urlImage().set(PHOTO);
 		
-		return Response.status(Status.OK)    
+		return Response.status(Status.OK)  
+				.header("Link", "<https://fonts.googleapis.com/icon?family=Material+Icons>; rel=preload; as=style, <https://fonts.gstatic.com>; rel=preconnect")
 				.entity(data._getContent())
 				.build();
 	}

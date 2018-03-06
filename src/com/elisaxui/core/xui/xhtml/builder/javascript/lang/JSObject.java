@@ -6,11 +6,13 @@ package com.elisaxui.core.xui.xhtml.builder.javascript.lang;
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ILitteral;
+
 /**
  * @author gauth
  *
  */
-public class JSObject extends JSClassInterface {
+public class JSObject extends JSAny  implements ILitteral, IJSClassInterface{
 	public JsonObjectBuilder jsonBuilder = null;
 	
 	@Override
@@ -50,4 +52,8 @@ public class JSObject extends JSClassInterface {
 			return super.attr(att);
 	}
 	
+	@Override
+	public String getStringJSON() {
+		return ""+_getValue();
+	}
 }

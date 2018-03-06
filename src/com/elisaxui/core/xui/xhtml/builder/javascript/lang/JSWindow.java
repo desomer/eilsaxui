@@ -7,7 +7,7 @@ package com.elisaxui.core.xui.xhtml.builder.javascript.lang;
  * @author gauth
  *
  */
-public class JSWindow extends JSClassInterface {
+public class JSWindow extends JSAny  implements IJSClassInterface {
 
 	
 	public static final JSWindow window()

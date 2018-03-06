@@ -79,8 +79,8 @@ public final class JSClassBuilder extends JSContent {
 					try {
 						method.setAccessible(true);
 						method.invoke(inst, new Object[method.getParameterCount()]);
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
-							| SecurityException e) {
+						ProxyHandler.doLastSourceLineInsered(false);
+					} catch (Throwable e) {
 						ErrorNotificafionMgr.doError("pb constructor sur " + cl.getSimpleName(), e);
 					}
 

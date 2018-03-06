@@ -27,6 +27,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSLambda;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.builder.XUIFormatManager;
 
@@ -41,6 +42,7 @@ public final class ProxyHandler implements InvocationHandler {
 	static boolean debug = false;
 	static boolean debug2 = false;
 	static boolean debug3 = false;
+	static boolean debug4 = false;
 
 	
 	public static final ThreadLocal<Boolean> ThreadLocalMode = new ThreadLocal<>();
@@ -499,34 +501,50 @@ public final class ProxyHandler implements InvocationHandler {
 	public static final void doLastSourceLineInsered(boolean isInFct)
 			throws ClassNotFoundException {
 
-		ProxyMethodDesc currentMethodDesc = ProxyHandler.ThreadLocalMethodDesc.get();
+		ProxyMethodDesc lastMethodDesc = ProxyHandler.ThreadLocalMethodDesc.get();
 
-		if (currentMethodDesc != null && currentMethodDesc.lastLineNoInsered > 0) {
+		if (lastMethodDesc != null && lastMethodDesc.lastLineNoInsered > 0) {
 
 			ProxyMethodDesc methodDesc = getMethodDescFromStacktrace();
 
-			if (isInFct && methodDesc.lastLineNoInsered <= currentMethodDesc.lastLineNoInsered) {
-				methodDesc.lastLineNoInsered = currentMethodDesc.lastLineNoInsered + 1;
+			if (isInFct && methodDesc.lastLineNoInsered <= lastMethodDesc.lastLineNoInsered) {
+				methodDesc.lastLineNoInsered = lastMethodDesc.lastLineNoInsered + 1;
 				// permet d'inserer la derniere ligne d'une fct anonym
 			}
 
-			if (methodDesc.lastLineNoInsered <= currentMethodDesc.lastLineNoInsered) {
-				currentMethodDesc.lastMthNoInserted = null; // plus
+			if (methodDesc.lastLineNoInsered <= lastMethodDesc.lastLineNoInsered) {
+				lastMethodDesc.lastMthNoInserted = null; // plus
 				ThreadLocalMethodDesc.get().lastMthNoInserted = null;
 			} else {
 
-				if (currentMethodDesc.lastMthNoInserted != null) {
-					// INSERE LA LIGNE
-					currentMethodDesc.content.__(currentMethodDesc.lastMthNoInserted);
-					if (debug3)
-						println("--------- add source line " + methodDesc.lastMthNoInserted + ":"
-								+ currentMethodDesc.lastLineNoInsered + " > " + currentMethodDesc.lastMthNoInserted);
+				if (lastMethodDesc.lastMthNoInserted != null) {
+					boolean add = true;
+					if (isInFct && methodDesc.lastMthNoInserted==null)
+					{
+						// test si la ligne est deja ajouter
+						if (lastMethodDesc.content.getListElem().size()>2)
+						{
+							Object lastInsert =lastMethodDesc.content.getListElem().get(lastMethodDesc.content.getListElem().size()-2);
+							if (lastInsert==lastMethodDesc.lastMthNoInserted)
+								add=false;   // deja ajouter
+						}
+					}
+					
+					if (add)	
+					{
+						// INSERE LA LIGNE
+						lastMethodDesc.content.lastNumLigne = lastMethodDesc.lastLineNoInsered;
+						lastMethodDesc.content.__(lastMethodDesc.lastMthNoInserted);
+						if (debug4)
+							println("--------- add source line " + methodDesc.lastMthNoInserted + ":"
+									+ lastMethodDesc.lastLineNoInsered + " > " + lastMethodDesc.lastMthNoInserted);
+					}
 
-					currentMethodDesc.lastMthNoInserted = null;
+					lastMethodDesc.lastMthNoInserted = null;
 				}
 			}
 
-			currentMethodDesc.lastLineNoInsered = -1;
+			lastMethodDesc.lastLineNoInsered = -1;
 			ThreadLocalMethodDesc.get().lastLineNoInsered = -1;
 		}
 	}
@@ -603,8 +621,9 @@ public final class ProxyHandler implements InvocationHandler {
 		Object retProxyMth = constructor.newInstance(declaringClass, MethodHandles.Lookup.PRIVATE)
 				.unreflectSpecial(handle.method, declaringClass).bindTo(handle.proxy).invokeWithArguments(p);
 
-		doLastSourceLineInsered(true);
-
+		// permet d'inserer la derniere ligne d'une fct sauf si un retour
+		doLastSourceLineInsered(retProxyMth==null?true:false);
+		
 		JSFunction fct = null;
 
 		if (testInline && retProxyMth instanceof JSLambda) {

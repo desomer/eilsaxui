@@ -47,7 +47,7 @@ public class ViewCard extends XHTMLPart {
 	}
 	
 	public static XMLElement getTemplate(ViewCard card) {
-		return xListElement(xPart(card, vHandle("childrenCard") ));
+		return xListElement(xPart(card, searchProperty("childrenCard") ));
 	}
 	
 	public static XMLElement getTemplateRichMedia() {

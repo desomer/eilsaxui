@@ -9,6 +9,8 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
  * @author gauth
  *
  */
+/*xIf() xFor() */
+
 public class XHTMLFunction extends JSAny {
 
 }

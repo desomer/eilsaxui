@@ -169,7 +169,6 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 		return new JSListParameter(param);
 	}
 
-	@Deprecated
 	public static final String txt(Object var) {
 		return "\"" + var + "\"";
 	}

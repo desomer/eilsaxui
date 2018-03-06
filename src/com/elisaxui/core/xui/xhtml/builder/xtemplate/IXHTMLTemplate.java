@@ -18,27 +18,27 @@ public interface IXHTMLTemplate extends IXHTMLBuilder {
 	XMLElement getTemplate();
 	
 
-	default XHTMLTemplateImpl xTemplateJS(XMLElement xmlElement)
+	default XHTMLTemplateImpl jsTemplate(XMLElement xmlElement)
 	{
 		return new XHTMLTemplateImpl(xmlElement).setModeJS(true);
 		
 	}
 
-	default Object xDataDriven(JSArray<?> data, Object enter, Object exit )
+	default JSFunction xDataDriven(JSArray<?> data, Object enter, Object exit )
 	{
-		JSon d =  JSContent.declareType(JSon.class, "d");
+		JSon domparent =  JSContent.declareType(JSon.class, "domparent");
 		
-		return new JSFunction().setParam(new Object[] {d})
-				.__("JSXHTMLTemplate.doTemplateDataDriven(",d,",",data,","+enter+","+exit+", null)")
+		return (JSFunction) new JSFunction().zzSetComment("xDataDriven").setParam(new Object[] {domparent})
+				.__("JSXHTMLTemplate.doTemplateDataDriven(",domparent,",",data,","+enter+","+exit+", null)")
 				;
 	}
 	
-	default Object xDataDriven(JSArray<?> data, Object enter, Object exit, Object change )
+	default JSFunction xDataDriven(JSArray<?> data, Object enter, Object exit, Object change )
 	{
-		JSon d =  JSContent.declareType(JSon.class, "d");
+		JSon domparent =  JSContent.declareType(JSon.class, "domparent");
 		
-		return new JSFunction().setParam(new Object[] {d})
-				.__("JSXHTMLTemplate.doTemplateDataDriven(",d,",",data,","+enter+","+exit+","+change+")")
+		return (JSFunction) new JSFunction().zzSetComment("xDataDriven").setParam(new Object[] {domparent})
+				.__("JSXHTMLTemplate.doTemplateDataDriven(",domparent,",",data,","+enter+","+exit+","+change+")")
 				;
 	}
 

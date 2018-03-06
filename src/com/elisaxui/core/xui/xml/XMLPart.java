@@ -22,7 +22,6 @@ import com.elisaxui.core.xui.xml.builder.XMLAttr;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Handle;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
-import com.elisaxui.core.xui.xml.builder.XMLPartElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.target.CONTENT;
 import com.elisaxui.core.xui.xml.target.XMLTarget;
@@ -358,7 +357,7 @@ public class XMLPart  {
 	 * @param name
 	 * @return
 	 */
-	public final static Handle vHandle(String name) {
+	public final static Handle searchProperty(String name) {
 		Handle attr = XMLBuilder.createHandle(name);
 		return attr;
 	}

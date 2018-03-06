@@ -49,7 +49,26 @@ public class JSAny implements JSElement {
 	
 	@SuppressWarnings("unchecked")
 	public final <E extends JSAny> E castAttr(JSAny cl, String att) {
-		cl._setValue(this._getName() + "." + att);
+		Object name = this._getName();
+		
+		if (name!=null)
+		  cl._setValue(name + "." + att);
+		else
+		{
+			ArrayMethod<Object> arr = new ArrayMethod<>();
+			
+			Object content =_getValueOrName();
+			
+			if (content instanceof ArrayMethod)
+				arr.addAll((ArrayMethod<?>) content);
+			else
+				arr.add(content);
+	
+			arr.add("." +att);
+	
+			cl._setValue(arr);
+		}
+		
 		return (E) cl;
 	}
 	
@@ -160,8 +179,7 @@ public class JSAny implements JSElement {
 		if (this.name != null && listContent.isEmpty()) {  
 			// gestion premier appel de variable pour chainage
 			ret = (E) ret.declareTypeAny();
-			if (ret!=null)
-				ret._setName(this._getName());
+			ret._setName(this._getName());
 		}
 		return ret;
 	}
@@ -318,7 +336,7 @@ public class JSAny implements JSElement {
 	
 	public final Object _getValueOrName() {
 		
-		if (this instanceof JSClassInterface) {
+		if (this instanceof IJSClassInterface) {
 			return getValueOrNameContent();
 		}
 		
@@ -381,7 +399,7 @@ public class JSAny implements JSElement {
 	@Override
 	public String toString() {
 		
-		if (this instanceof JSClassInterface)
+		if (this instanceof IJSClassInterface)
 		{
 			
 			StringBuilder sb = new StringBuilder();

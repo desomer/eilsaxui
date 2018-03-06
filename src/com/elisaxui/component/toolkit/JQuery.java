@@ -6,13 +6,13 @@ package com.elisaxui.component.toolkit;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSClassInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.IJSClassInterface;
 
 /**
  * @author Bureau
  *
  */
-public class JQuery extends JSClassInterface {
+public class JQuery extends JSAny  implements IJSClassInterface {
 
 	public static final JQuery $(CSSSelector selector)
 	{

@@ -35,6 +35,23 @@ public class JSFunction extends JSContent {
 	JSContent code;
 	boolean isFragment = false;
 	boolean isStatic = false;
+	Object comment = null;
+	
+	/**
+	 * @return the comment
+	 */
+	private final Object getComment() {
+		return comment;
+	}
+
+	/**
+	 * @param comment the comment to set
+	 */
+	public final JSFunction zzSetComment(Object comment) {
+		this.comment = comment;
+		return this;
+	}
+
 	/**
 	 * @return the isStatic
 	 */
@@ -140,7 +157,7 @@ public class JSFunction extends JSContent {
 			
 			if (!isFragment && name == null) {
 				if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS())
-					buf.addContentOnTarget("/*** start anonymous ***/");
+					buf.addContentOnTarget("/*** start " + (getComment()==null?"anonymous":getComment())+ " ***/");
 			}
 
 			ProxyHandler.getFormatManager().setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine() + 1);
@@ -161,7 +178,7 @@ public class JSFunction extends JSContent {
 			buf.addContentOnTarget("}");
 			if (name == null) {
 				if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS())
-					buf.addContentOnTarget("/*** end anonymous ***/");
+					buf.addContentOnTarget("/*** end " + (getComment()==null?"anonymous":getComment())+ " ***/");
 			}
 		}
 

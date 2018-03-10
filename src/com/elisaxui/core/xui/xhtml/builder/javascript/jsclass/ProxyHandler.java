@@ -438,7 +438,10 @@ public final class ProxyHandler implements InvocationHandler {
 	public static Object cast(Class<?> cl, Object args) {
 		Object jc = JSContent.declareType(cl, null);
 		if (jc instanceof JSAny)
-			((JSAny) jc)._setValue(args)._setName(args);
+		{
+			JSAny jsa = ((JSAny) jc);
+			jsa._setValue(args)._setName(args);
+		}
 		else
 			((JSClass) jc)._setContent(args);
 		return jc;

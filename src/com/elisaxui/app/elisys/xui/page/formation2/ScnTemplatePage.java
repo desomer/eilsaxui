@@ -86,16 +86,15 @@ public class ScnTemplatePage extends XHTMLPart {
 					
 		}
 		
-		/**TODO retirer le vSearch */
 		@xTarget(CONTENT.class)
 		public XMLElement xBar() {
 			return xListElement(
-					xHeader(vSearch(pContentHeader)),
+					xHeader(pContentHeader),
 					xDiv( cPageContainer,
-							xNav(vSearch(pContentNav)),
-							xMain(vSearch(pContentMain))
+							xNav(pContentNav),
+							xMain(pContentMain)
 					),
-					xFooter(vSearch(pContentFooter)));
+					xFooter(pContentFooter));
 		}
 
 	}
@@ -114,13 +113,8 @@ public class ScnTemplatePage extends XHTMLPart {
 		@xTarget(CONTENT.class)
 		public XMLElement xBloc() {
 			return  xSection( cSection,
-								vIfExist(pSectionH1,  
-										xH1(vSearch(pSectionH1))
-								),
-								xArticle(vIfExist(pArticleH1, 
-										 		xH1(vSearch(pArticleH1))),
-										 vSearch(pContentArticle)
-										 ),
+								vIfExist(pSectionH1, xH1(pSectionH1)),
+								xArticle(vIfExist(pArticleH1, xH1(pArticleH1)),	 pContentArticle ),
 								xAside()
 							);
 		}

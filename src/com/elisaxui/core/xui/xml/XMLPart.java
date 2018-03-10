@@ -47,10 +47,9 @@ public class XMLPart  {
 	/**************************************************************************/
 	protected HashMap<Class<? extends XMLTarget>, ArrayList<XMLElement>> listPart = new HashMap<Class<? extends XMLTarget>, ArrayList<XMLElement>>();
 	protected HashMap<Object, Object> listProperties = new HashMap<Object, Object>(); 
-	@Deprecated
-	private final List<Object> children = new ArrayList<>();
 	
 	public static final String PROP_ID = "PROP_ID";
+	public static final String PROP_CHILDREN = "PROP_CHILDREN";
 	/**
 	 * @return the propertiesPrefix
 	 */
@@ -250,12 +249,15 @@ public class XMLPart  {
 //	}
 
 	/**************************************************************/
-	/**
-	 * gerer par properties ?????????????
-	 * @return
-	 */
+	@SuppressWarnings("unchecked")
 	public final List<Object> getChildren() {
-		return children;
+		 List<Object> ret =  (List<Object>) listProperties.get(PROP_CHILDREN) ;    
+		 if (ret==null)
+		 {
+			 ret= new ArrayList<>();
+			 listProperties.put(PROP_CHILDREN, ret);
+		 }
+		 return ret;
 	}
 
 	public final void vContent(XMLElement part) {

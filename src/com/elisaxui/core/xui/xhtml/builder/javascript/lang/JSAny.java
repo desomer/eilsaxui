@@ -31,6 +31,13 @@ public class JSAny implements JSElement {
 	
 	protected Object parentLitteral;
 
+	/**
+	 * @return the parentLitteral
+	 */
+	public final Object zzGetParentLitteral() {
+		return parentLitteral;
+	}
+
 	/***************************************************************/
 	public final <E extends JSAny> E attrByString(Object attr) {
 		E ret = getReturnType();

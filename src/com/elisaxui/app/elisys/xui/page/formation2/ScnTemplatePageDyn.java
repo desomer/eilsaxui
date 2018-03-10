@@ -17,6 +17,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSObject;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
+import com.elisaxui.core.xui.xhtml.builder.json.JSONType;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSXHTMLTemplate;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
@@ -36,8 +37,10 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 @xFile(id = "ScnTemplatePageDyn")
 public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
 
+	static JSon aRow;
+	
 	@xTarget(HEADER.class)
-	@xRessource // une seule fois par vue
+	@xRessource  
 	public XMLElement xImport() {
 		return xList(
 				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"),
@@ -61,10 +64,7 @@ public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
 		return xPart(new CmpPage());
 	}
 
-	public XMLElement xTemplateDyn(JSArray<JSObject> arr) {
-
-		JSon aRow = JSContent.declareType(JSon.class, "aRow");  //a mettre en injection de dep
-
+	public XMLElement xSessionDyn(JSArray<JSObject> arr) {
 		return xListElement(
 				vFor(arr, aRow,
 						xPart(new CmpSection()
@@ -90,25 +90,28 @@ public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
 		default void main() {
 
 			JSArray<JSObject> arrSection = let("arr", new JSArray<JSObject>().asLitteral());
-			JSArray<JSObject> arrNav = let("arrNav", new JSArray<JSObject>().asLitteral());
+			JSArray<Menu> arrNav = let("arrNav", new JSArray<Menu>().asLitteral());
 
 			document().querySelector(CmpPage.cPageMain)
-					.appendChild(jsTemplate(new ScnTemplatePageDyn().xTemplateDyn(arrSection)));
+					.appendChild(jsTemplate(new ScnTemplatePageDyn().xSessionDyn(arrSection)));
 			
 			document().querySelector(CmpNavVertical.cNavContainer)
-					.appendChild(jsTemplate(new CmpNavVertical().xTemplateDyn(arrNav)));
+					.appendChild(jsTemplate(new CmpNavVertical().xNavDyn(arrNav)));
 			
 			/***************************************************/
+			setTimeout(() -> {
+				Menu obj = newJS(Menu.class).asLitteral();
+				obj.titre().set("page A");
+				arrNav.push(obj);
+				
+				obj = newJS(Menu.class).asLitteral();
+				obj.titre().set("page B");
+				arrNav.push(obj);
+			}, 3000);
+
+			/***************************************************/
+			
 			JSObject obj = new JSObject().asLitteral();
-			obj.attr("titre").set(JSString.value("page A"));
-			arrNav.push(obj);
-			
-			obj = new JSObject().asLitteral();
-			obj.attr("titre").set(JSString.value("page B"));
-			arrNav.push(obj);
-			/***************************************************/
-			
-			obj = new JSObject().asLitteral();
 			obj.attr("titre").set(JSString.value("section A"));
 			obj.attr("article").set(JSString.value("un article a ajouter"));
 			obj.attr("m").set(new JSArray<JSObject>().asLitteral());
@@ -119,6 +122,7 @@ public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
 			obj.attr("article").set(JSString.value("un article 2 a ajouter"));
 			obj.attr("m").set(new JSArray<JSObject>().asLitteral());
 			arrSection.push(obj);
+						
 			/***************************************************/
 			JSArray<JSObject> arr2 = let(JSArray.class, "arr2", arrSection.at(0).attr("m"));
 			JSArray<JSObject> arr3 = let(JSArray.class, "arr3", arrSection.at(1).attr("m"));
@@ -142,12 +146,17 @@ public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
 				phrase = new JSObject().asLitteral();
 				phrase.attr("phrase").set(JSString.value("une phrase 23 ajouter"));
 				arr3.push(phrase);
+				
+
 			}, 2000);
 
-			// cast(JSArray.class, obj.attr("m")).push(phrase); //TODO a faire marcher
 		}
 	}
 
+	public interface Menu extends JSONType {
+		JSString titre();
+	}
+	
 	/********************************************************/
 	// les components
 	/********************************************************/
@@ -170,8 +179,8 @@ public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
 			return xListElement(
 					xHeader(),
 					xDiv(cPageContainer,
-							xNav(vSearch(pContentNav)),
-							xMain(cPageMain, vSearch(pContentMain))),
+							xNav(pContentNav),
+							xMain(cPageMain, pContentMain)),
 					xFooter());
 		}
 
@@ -193,12 +202,11 @@ public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
 		@xTarget(CONTENT.class)
 		public XMLElement xBloc() {
 			return xSection(cSection,
-					vIfExist(pSectionH1,
-							xH1(vSearch(pSectionH1))),
-					xArticle(vIfExist(pArticleH1,
-							xH1(vSearch(pArticleH1))),
-							vSearch(pContentArticle)),
-					xAside());
+						vIfExist(pSectionH1, xH1(pSectionH1)),
+						xArticle(vIfExist(pArticleH1, xH1(pArticleH1)),
+								pContentArticle),
+						xAside()
+					);
 		}
 
 	}
@@ -207,19 +215,18 @@ public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
 	static class CmpNavVertical extends XHTMLPart implements IJSDataDriven {
 		static XClass cNavContainer;
 		static VProperty pContent;
+		static JSon aRow;
 
 		@xTarget(CONTENT.class)
 		public XMLElement xBloc() {
-			return xUl(cNavContainer, xList(getChildren(), vSearch(pContent)));
+			return xUl(cNavContainer, xList(getChildren(), pContent));
 		}
 
 		public XMLElement xItem(Object content) {
 			return xLi(content);
 		}
 
-		public XMLElement xTemplateDyn(JSArray<JSObject> arr) {
-			JSon aRow = JSContent.declareType(JSon.class, "aRow");   //a mettre en injection de dep
-			
+		public XMLElement xNavDyn(JSArray<Menu> arr) {			
 			return xListElement(
 					   vFor(arr, aRow, xItem(aRow.attr("titre"))
 					));

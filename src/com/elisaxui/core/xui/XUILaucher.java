@@ -1,18 +1,8 @@
 package com.elisaxui.core.xui;
 
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.security.CodeSource;
-
-import javax.script.Compilable;
-import javax.script.CompiledScript;
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.SimpleBindings;
 
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
 import org.eclipse.jetty.http2.HTTP2Cipher;
@@ -23,7 +13,6 @@ import org.eclipse.jetty.rewrite.handler.RewritePatternRule;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
-import org.eclipse.jetty.server.NegotiatingServerConnectionFactory;
 import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -37,8 +26,6 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 import com.elisaxui.AppConfig;
-import com.elisaxui.ResourceLoader;
-import com.elisaxui.app.elisys.xui.asset.AssetHandler;
 import com.elisaxui.core.helper.JSExecutorHelper;
 import com.elisaxui.core.xui.xhtml.application.WatchDir;
 import com.elisaxui.core.xui.xhtml.application.XHTMLAppScanner;

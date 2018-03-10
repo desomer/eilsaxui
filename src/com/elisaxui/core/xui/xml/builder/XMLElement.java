@@ -4,7 +4,6 @@
 package com.elisaxui.core.xui.xml.builder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,11 +12,9 @@ import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSStyle;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ArrayMethod;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLFunction;
 import com.elisaxui.core.xui.xml.XMLPart;
@@ -206,6 +203,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private int doChild(XMLBuilder buf, int nbChild, Object inner) {
 
 		if (inner instanceof XMLElement) { // une div
@@ -243,48 +241,11 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 
 		} else if (inner instanceof Handle) { // un handle
 			Handle h = (Handle) inner;
-			String nameHandle = h.getName();
-			// recherche dans les parents
-			LinkedList<Object> listParent = XUIFactoryXHtml.getXHTMLFile().listParent;
-			Object handledObject = null;
-			String firstPrefix = null;
-			XMLPart firstPart = null;
-			
-			for (Iterator<Object> it = listParent.descendingIterator(); it.hasNext();) {
-				Object elm = it.next();
-				if (elm instanceof XMLElement) {
-					// MgrErrorNotificafion.doError("Handle on Element", null)
-				} else if (elm instanceof XMLPartElement) {
-					XMLPart part = ((XMLPartElement) elm).part;
-					if (firstPrefix==null)
-					{
-						firstPart = part;
-						firstPrefix = part.getPropertiesPrefix()==null?"":part.getPropertiesPrefix();
-					}
-					Object elem = part.vProperty(nameHandle+firstPrefix);
-					if (elem != null) {
-						handledObject = elem;
-						break;   // element trouve sur un parent
-					}
-				}
-			}
-			
-			if (handledObject==null)
-			{   // recherche sur la scene
-				handledObject = XUIFactoryXHtml.getXHTMLFile().getScene().vProperty(nameHandle+firstPrefix);
-			}
-			
-			if (firstPart!=null && handledObject==null)
-			{   // recherche sans le prefix sur le premier part
-				handledObject = firstPart.vProperty(nameHandle);
-			}
-			
-			if (h.getIfExistAdd()!=null && handledObject!=null)
-				handledObject = h.getIfExistAdd();
-			
-			if (handledObject != null) {
-				nbChild = doChild(buf, nbChild, handledObject);
-			}
+			nbChild = doProperties(buf, nbChild, h);
+
+		} else if (inner instanceof VProperty) { // un handle
+			VProperty h = (VProperty) inner;
+			nbChild = doProperties(buf, nbChild, new Handle(h.getName()));
 
 		} else if (inner instanceof JSClassBuilder) { // cas d'une class js
 			JSClassBuilder part = ((JSClassBuilder) inner);
@@ -341,6 +302,53 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			}
 		}
 
+		return nbChild;
+	}
+
+
+	private int doProperties(XMLBuilder buf, int nbChild, Handle h) {
+		String nameHandle = h.getName();
+		// recherche dans les parents
+		LinkedList<Object> listParent = XUIFactoryXHtml.getXHTMLFile().listParent;
+		Object handledObject = null;
+		String firstPrefix = null;
+		XMLPart firstPart = null;
+		
+		for (Iterator<Object> it = listParent.descendingIterator(); it.hasNext();) {
+			Object elm = it.next();
+			if (elm instanceof XMLElement) {
+				// MgrErrorNotificafion.doError("Handle on Element", null)
+			} else if (elm instanceof XMLPartElement) {
+				XMLPart part = ((XMLPartElement) elm).part;
+				if (firstPrefix==null)
+				{
+					firstPart = part;
+					firstPrefix = part.getPropertiesPrefix()==null?"":part.getPropertiesPrefix();
+				}
+				Object elem = part.vProperty(nameHandle+firstPrefix);
+				if (elem != null) {
+					handledObject = elem;
+					break;   // element trouve sur un parent
+				}
+			}
+		}
+		
+		if (handledObject==null)
+		{   // recherche sur la scene
+			handledObject = XUIFactoryXHtml.getXHTMLFile().getScene().vProperty(nameHandle+firstPrefix);
+		}
+		
+		if (firstPart!=null && handledObject==null)
+		{   // recherche sans le prefix sur le premier part
+			handledObject = firstPart.vProperty(nameHandle);
+		}
+		
+		if (h.getIfExistAdd()!=null && handledObject!=null)
+			handledObject = h.getIfExistAdd();
+		
+		if (handledObject != null) {
+			nbChild = doChild(buf, nbChild, handledObject);
+		}
 		return nbChild;
 	}
 

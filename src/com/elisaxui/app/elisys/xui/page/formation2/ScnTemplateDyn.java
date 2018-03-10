@@ -43,7 +43,8 @@ public class ScnTemplateDyn extends XHTMLPart {
 	static XClass cMain;
 
 	@xTarget(HEADER.class)
-	@xRessource // une seule fois par vue
+	@xRessource // une seule fois par vue  
+	/**TODO a gerer en automatique if script ou style */
 	public XMLElement xImport() {
 		return xList(
 				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"),

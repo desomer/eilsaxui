@@ -127,7 +127,7 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 		return new CSSBuilder().path(path);
 	}
 	
-	public static final XMLElement xImport(Class<?>...cl) {
+	public static final XMLElement xImport(Class<? extends JSClass>...cl) {
 		Object[] r = new Object[cl.length];
 		
 		for (int i = 0; i < r.length; i++) {
@@ -165,6 +165,7 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 
 	/****************************************************************************/
 	@Deprecated
+	// newJS
 	public Object _new(Object... param) {
 		return new JSListParameter(param);
 	}

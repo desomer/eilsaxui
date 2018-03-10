@@ -43,6 +43,17 @@ public interface JSPerfVuesJS extends JSClass, IJSONBuilder, IXHTMLTemplate, IJS
 	default void doPerf() {
 		JSInt i = declareType(JSInt.class, "i");
 
+		/*********************************************************/
+		JSArray<JSObject> m = new JSArray<JSObject>().asLitteral();
+		JSObject phrase1 = new JSObject().asLitteral();
+		phrase1.attr("a").set(JSString.value("aaaa"));
+		m.push(phrase1);
+		JSObject obja = new JSObject().asLitteral();
+		obja.attr("m").set(m);
+		
+		let("jso", obja);
+		
+		/*********************************************************/
 		if (isVueJS()) {
 
 			JSArray<Object> list = new JSArray<>().asLitteral();

@@ -2,6 +2,7 @@ package com.elisaxui.core.xui;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -241,14 +242,32 @@ public class XUIFactoryXHtml {
 //		.header("XUI", "ok")
 //		//.header("Access-Control-Allow-Origin", "*")
 //		.build();
+		String ret = htmlInCache+dif;
 		
 		return Response.status(Status.OK)
-				.entity(htmlInCache+dif)
+				.entity(ret)
 				.header("XUI", "ok")
+				.header("Cache-Control", "public, max-age=31536000")
+//				.header("ETag", calculateEtag(ret))
 				.build();
 	}
 
 
+	public static String calculateEtag(final String s) {
+	    final java.nio.ByteBuffer buf = java.nio.charset.StandardCharsets.UTF_8.encode(s);
+	    java.security.MessageDigest digest;
+		try {
+			digest = java.security.MessageDigest.getInstance("SHA1");
+		    buf.mark();
+		    digest.update(buf);
+		    buf.reset();
+		    return String.format("W/\"%s\"", javax.xml.bind.DatatypeConverter.printHexBinary(digest.digest()));
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return "?";
+	}
+	
 	/**
 	 * @param idCache
 	 * @param idCacheVersionning

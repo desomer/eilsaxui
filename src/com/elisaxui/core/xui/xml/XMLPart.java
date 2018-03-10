@@ -153,7 +153,6 @@ public class XMLPart  {
 	private Method[] getXMLMethod()
 	{
 		ArrayList<Method> alf = new ArrayList<Method>(10);
-	//	Map<String, Method> dicoMeth = 
 		Class<?> c = this.getClass();
 		while (XMLPart.class.isAssignableFrom(c) && c!= XHTMLPart.class && c!= XMLPart.class) {
 			Method[] lf = c.getDeclaredMethods();

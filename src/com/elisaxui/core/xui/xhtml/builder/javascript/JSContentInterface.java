@@ -31,7 +31,7 @@ public interface JSContentInterface  {
 	/**********************************************************************/
 	@Deprecated
 	Object _new(Object... param);
-	<E> E newInst(Class<E> type, Object... param);
+	<E> E newJS(Class<E> type, Object... param);
 	/**********************************************************************/
 	/**
 	 * exemple <br>  

@@ -13,6 +13,7 @@ import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassBuilder;
 import com.elisaxui.core.xui.xml.XMLFile;
+import com.elisaxui.core.xui.xml.XMLPart;
 
 /**
  * @author Bureau
@@ -25,7 +26,7 @@ public class XHTMLFile extends XMLFile {
 	private static final boolean debug = false;
 	private Map<String, JSClassBuilder> listClass = new HashMap<String, JSClassBuilder>();
 	
-	private XUIScene scene;
+	private XMLPart scene;
 	MultivaluedMap<String, String> param;
 	
 	/**
@@ -39,7 +40,7 @@ public class XHTMLFile extends XMLFile {
 	/**
 	 * @return the scene
 	 */
-	public final XUIScene getScene() {
+	public final XMLPart getScene() {
 		return scene;
 	}
 
@@ -59,7 +60,7 @@ public class XHTMLFile extends XMLFile {
 	/**
 	 * @param scene the scene to set
 	 */
-	public final void setScene(XUIScene scene) {
+	public final void setScene(XMLPart scene) {
 		this.scene = scene;
 	}
 

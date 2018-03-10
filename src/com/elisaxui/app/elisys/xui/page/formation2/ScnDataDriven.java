@@ -4,11 +4,9 @@
 package com.elisaxui.app.elisys.xui.page.formation2;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDocument.document;
-import static com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplateImpl.onChange;
-import static com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplateImpl.onEnter;
-import static com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplateImpl.onExit;
 
 import com.elisaxui.component.toolkit.TKPubSub;
+import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSChangeCtx;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
@@ -20,7 +18,6 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
-import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.elisaxui.core.xui.xhtml.builder.json.JSONType;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSXHTMLTemplate;
@@ -44,7 +41,7 @@ public class ScnDataDriven extends XHTMLPart {
 	@xTarget(HEADER.class)
 	@xRessource // une seule fois par vue
 	public XMLElement xImport() {
-		return xListElem(
+		return xList(
 				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"),
 				xImport(JSXHTMLTemplate.class,
 						TKPubSub.class,
@@ -65,7 +62,7 @@ public class ScnDataDriven extends XHTMLPart {
 
 	// une class JS
 	@xTarget(AFTER_CONTENT.class) // une seule fois par vue car class
-	public interface JSTestDataDriven extends JSClass, IXHTMLTemplate, IJSONBuilder {
+	public interface JSTestDataDriven extends JSClass, IXHTMLTemplate, IJSDataDriven {
 
 		@xStatic(autoCall = true) // appel automatique de la methode static
 		default void main() {
@@ -74,7 +71,7 @@ public class ScnDataDriven extends XHTMLPart {
 			JSInt j = declareType(JSInt.class, "j");
 			/*************************************************************************/
 
-			JSTestDataDriven template = let("template", newInst(JSTestDataDriven.class));
+			JSTestDataDriven template = let("template", newJS(JSTestDataDriven.class));
 			JSArray<TestData> listData = let("listData", new JSArray<TestData>().asLitteral());
 
 			document().querySelector(cMain).appendChild(template.xArray(listData));
@@ -83,13 +80,15 @@ public class ScnDataDriven extends XHTMLPart {
 
 			// ajout les ligne
 			_forIdxBetween(i, 0, 100)._do(() -> {
-				TestData row = newInst(TestData.class).asLitteral();
-				row.name().set(txt("row ", i));
-				row.id().set(i);
-				TestDataRow datarow = newInst(TestDataRow.class).asLitteral();
+				TestDataRow datarow = newJS(TestDataRow.class).asLitteral();
 				datarow.name2().set(txt("one", i));
+				
+				TestData row = newJS(TestData.class).asLitteral();
+				row.name().set(txt("row ", i));
+				row.id().set(i);			
 				row.oneToOne().set(datarow);
 				row.oneToMany().set(new JSArray<>().asLitteral());
+				
 				listData.push(row);
 			});
 

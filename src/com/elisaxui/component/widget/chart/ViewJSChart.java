@@ -20,14 +20,14 @@ public class ViewJSChart extends XHTMLPart {
 
 	public ViewJSChart(Object id) {
 		super();
-		this.addProperty(ID, id);
+		this.vProperty(ID, id);
 	}
 
 
 
 	@xTarget(CONTENT.class)
 	public XMLElement xContenu() {
-		return xCanvas(this.getProperty(ID), xAttr("width", "100%")/* , xAttr("height", "300px")*/ ) ;
+		return xCanvas(this.vProperty(ID), xAttr("width", "100%")/* , xAttr("height", "300px")*/ ) ;
 		
 	}
 	
@@ -77,7 +77,7 @@ public class ViewJSChart extends XHTMLPart {
 				//  .__("Chart.defaults.global.maintainAspectRatio = false") 
 				  ._var("options", doughnutOptions)
 				  ._var("data", doughnutData)
-				  ._var("ctx", "document.getElementById('" + getPropertyXID(ID).getValue()+"').getContext('2d')")
+				  ._var("ctx", "document.getElementById('" + vPropertyAttr(ID).getValue()+"').getContext('2d')")
 				  ._var("mydoughnutChart", "new Chart(ctx, {type: 'doughnut', data: data, options : options })")	
 				);
 	}

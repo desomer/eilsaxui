@@ -9,18 +9,18 @@ import com.elisaxui.core.xui.xml.XMLPart;
  * @author Bureau
  *
  */
-public class XMLBuilder  {
+public class XMLBuilder {
 
 	String id; // identifiant du bloc
 
 	StringBuilder content;
 	StringBuilder afterContent;
 	boolean after = false;
-	
-	boolean isString = false;  // creer un string '<div>'
-	boolean isTemplate = false;  // e("div",[])
+
+	boolean isString = false; // creer un string '<div>'
+	boolean isTemplate = false; // e("div",[])
 	JSContent jsTemplate = null;
-	
+
 	/**
 	 * @return the js
 	 */
@@ -36,7 +36,8 @@ public class XMLBuilder  {
 	}
 
 	/**
-	 * @param isTemplate the isTemplate to set
+	 * @param isTemplate
+	 *            the isTemplate to set
 	 */
 	public final XMLBuilder setModeTemplate(boolean isTemplate) {
 		this.isTemplate = isTemplate;
@@ -84,21 +85,35 @@ public class XMLBuilder  {
 	 * @param v
 	 */
 	public void addContentOnTarget(Object v) {
-		
+
 		if (isTemplate)
 			this.getJSContent().getListElem().add(v);
-		else
-		{
-			if (afterContent==null)
-			{
-				after= false;
+		else {
+			if (afterContent == null) {
+				after = false;
 			}
 			(after ? afterContent : content).append(v);
 		}
 	}
 
 	public static class Handle {
+
 		private String name;
+		private Object ifExistAdd;
+
+		/**
+		 * @return the ifExistAdd
+		 */
+		public final Object getIfExistAdd() {
+			return ifExistAdd;
+		}
+
+		/**
+		 * @param ifExistAdd the ifExistAdd to set
+		 */
+		public final void setIfExistAdd(Object ifExistAdd) {
+			this.ifExistAdd = ifExistAdd;
+		}
 
 		public Handle(String name) {
 			super();

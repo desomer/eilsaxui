@@ -29,11 +29,11 @@ public class XMLPartElement implements IXMLBuilder {
 	public XMLBuilder toXML(XMLBuilder buf) {
 		XUIFactoryXHtml.getXHTMLFile().listParent.add(this);
 		buf.after = false;
-		for (XMLElement elem : part.getListElement(CONTENT.class)) {
+		for (XMLElement elem : part.getListElementFromTarget(CONTENT.class)) {
 			elem.toXML(buf);
 		}
 		buf.after = true;
-		for (XMLElement elem : part.getListElement(AFTER_CONTENT.class)) {
+		for (XMLElement elem : part.getListElementFromTarget(AFTER_CONTENT.class)) {
 			elem.toXML(buf);
 		}
 		buf.after = false;

@@ -18,12 +18,9 @@ public class CSSBuilder  extends XMLElement {
 		super("style", inner);
 	}
 	
-	private CSSBuilder(Object name, Object... inner) {
-		super("style", inner);
-	}
 
 
-	private LinkedList<CSSStyle> listStyle = new LinkedList<CSSStyle>();
+	private LinkedList<CSSStyle> listStyle = new LinkedList<>();
 	private CSSStyle currentCSSStyle =null;
 
 	@Override
@@ -57,12 +54,34 @@ public class CSSBuilder  extends XMLElement {
 	}
 	
 	
-	public CSSBuilder childPath(CSSBuilder content)
+	public CSSBuilder andChildPath(CSSBuilder content)
 	{
 		LinkedList<CSSStyle> path = content.listStyle;
 		
 		for (CSSStyle cssStyle : path) {
 			listStyle.add(new CSSStyle(CSSSelector.onPath(currentCSSStyle.path, " ", cssStyle.path), cssStyle.content));
+		}
+		
+		return this;
+	}
+	
+	public CSSBuilder andDirectChildPath(CSSBuilder content)
+	{
+		LinkedList<CSSStyle> path = content.listStyle;
+		
+		for (CSSStyle cssStyle : path) {
+			listStyle.add(new CSSStyle(CSSSelector.onPath(currentCSSStyle.path, ">", cssStyle.path), cssStyle.content));
+		}
+		
+		return this;
+	}
+	
+	public CSSBuilder orPath(CSSBuilder content)
+	{
+		LinkedList<CSSStyle> path = content.listStyle;
+		
+		for (CSSStyle cssStyle : path) {
+			listStyle.add(new CSSStyle(CSSSelector.onPath(currentCSSStyle.path, ",", cssStyle.path), cssStyle.content));
 		}
 		
 		return this;

@@ -27,6 +27,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.IJSClassInterface;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xFile;
+import com.elisaxui.core.xui.xml.builder.VProperty;
 
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 
@@ -155,51 +156,144 @@ public class XHTMLAppScanner {
 			System.out
 					.println("[XHTMLAppBuilder]---------START SCAN FIELD OF XHTMLPart  [JSClass, CSSClass]---- " + cl);
 
-		Field[] lf = cl.getDeclaredFields();
-		if (lf != null) {
-			for (Field field : lf) {
-				boolean isStatic = java.lang.reflect.Modifier.isStatic(field.getModifiers());
-				if (isStatic && JSClass.class.isAssignableFrom(field.getType())) {
-					if (debug)
-						System.out
-								.println("[XHTMLAppBuilder] init XMLPart var static <JSClass> name " + field.getName());
-					field.setAccessible(true);
-					@SuppressWarnings("unchecked")
-					JSClass inst = ProxyHandler.getProxy((Class<? extends JSClass>) field.getType());
-					ProxyHandler.setNameOfProxy("", inst, field.getName());
-					try {
-						field.set(cl, inst);
-					} catch (IllegalArgumentException | IllegalAccessException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				} else if (isStatic && XClass.class.isAssignableFrom(field.getType())) {
-					if (debug)
-						System.out.println(
-								"[XHTMLAppBuilder] init XMLPart var static <CSSClass> name " + field.getName());
-					XClass classCss = new XClass();
-					String name = field.getName();
-					xComment comment = field.getAnnotation(xComment.class);
-					if (comment != null) {
-						name = comment.value();
-					}
-					classCss.setId(name);
-					field.setAccessible(true);
-					try {
-						field.set(cl, classCss);
-					} catch (Throwable e) {
-						// TODO Auto-generated catch block
-						System.out.println("**** ERROR on " + field.getName() + " of type " + field.getType().getName()
-								+ " on class " + cl.getName());
-						e.printStackTrace();
-					}
+		initVar(true, cl, cl);
+	}
+
+	
+	private static final Field[] getXMLField(Class<?> c)
+	{
+		ArrayList<Field> alf = new ArrayList<Field>(10);
+
+		while (XMLPart.class.isAssignableFrom(c)) {
+			Field[] lf = c.getDeclaredFields();
+			if (lf!=null)
+			{
+				for (Field field : lf) {
+					alf.add(field);
 				}
+			}
+			c=c.getSuperclass();
+		}
+		
+		Field[] a = new Field[alf.size()];
+		alf.toArray(a);
+		return a;
+	}
+	
+	public static final void initVar(boolean doStatic, Class<? extends XMLPart> cl, Object obj) {
+		Field[] lf = getXMLField(cl);
+		for (Field field : lf) {
+			
+			boolean isStatic = java.lang.reflect.Modifier.isStatic(field.getModifiers());
+			if (doStatic==isStatic && JSClass.class.isAssignableFrom(field.getType()))
+			{
+				doVarJSClass(cl, obj, field);
+			}
+			else if (doStatic==isStatic && XClass.class.isAssignableFrom(field.getType()))
+			{
+				doVarXClass(cl, obj, field); 
+			}
+			else if (doStatic==isStatic && JSAny.class.isAssignableFrom(field.getType()))
+			{
+				doVarJSAny(cl, obj, field); 
+			}
+			else if (doStatic==isStatic && VProperty.class.isAssignableFrom(field.getType()))
+			{
+				doVarProperties(cl, obj, field); 
 			}
 		}
 	}
 
+	/**
+	 * @param cl
+	 * @param obj
+	 * @param field
+	 */
+	private static void doVarJSClass(Class<? extends XMLPart> cl, Object obj, Field field) {
+		if (debug)
+			System.out.println("[XMLPart] init var JSClass on " + cl + " name "+ field.getName() );
+		field.setAccessible(true);
+		@SuppressWarnings("unchecked")
+		JSClass inst = ProxyHandler.getProxy((Class<? extends JSClass>) field.getType());
+		ProxyHandler.setNameOfProxy("", inst, field.getName());
+		try {
+			field.set(obj, inst);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * @param cl
+	 * @param obj
+	 * @param field
+	 */
+	private static void doVarJSAny(Class<? extends XMLPart> cl, Object obj, Field field) {
+		if (debug)
+			System.out.println("[XMLPart] init var JSVariable on " + cl + " name "+ field.getName() );
+		JSAny variablejs=null;
+		try {
+			variablejs = (JSAny) field.getType().newInstance();
+		} catch (InstantiationException | IllegalAccessException e1) {
+			e1.printStackTrace();
+		}
+		String name = field.getName();
+		xComment comment = field.getAnnotation(xComment.class);
+		if (comment != null) {
+			name = comment.value();
+		}
+		variablejs._setName(name);
+		field.setAccessible(true);
+		try {
+			field.set(obj,variablejs);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * @param cl
+	 * @param obj
+	 * @param field
+	 */
+	private static void doVarXClass(Class<? extends XMLPart> cl, Object obj, Field field) {
+		if (debug)
+			System.out.println("[XMLPart] init var CSSClass on " + cl + " name "+ field.getName() );
+		XClass classCss = new XClass();
+		String name = field.getName();
+		xComment comment = field.getAnnotation(xComment.class);
+		if (comment != null) {
+			name = comment.value();
+		}
+		classCss.setId(name);
+		field.setAccessible(true);
+		try {
+			field.set(obj,classCss);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void doVarProperties(Class<? extends XMLPart> cl, Object obj, Field field) {
+		if (debug)
+			System.out.println("[XMLPart] init var VProperty on " + cl + " name "+ field.getName() );
+
+		String name = field.getName();
+		xComment comment = field.getAnnotation(xComment.class);
+		if (comment != null) {
+			name = comment.value();
+		}
+		VProperty v = new VProperty(name);
+		field.setAccessible(true);
+		try {
+			field.set(obj,v);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	public static void initJSClassVar(Class<?> cl) {
-		// String name = cl.getSimpleName();
 		// init field => chaque attribut contient le nom js de son champs
 		Field[] listField = cl.getDeclaredFields();
 		if (listField != null) {
@@ -246,7 +340,6 @@ public class XHTMLAppScanner {
 					ReflectionHelper.setFinalStatic(field, var);
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {

@@ -5,11 +5,8 @@ package com.elisaxui.app.elisys.xui.page.formation2;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDocument.document;
 
-import com.elisaxui.app.elisys.xui.page.formation2.ScnDataDriven.TestData;
-import com.elisaxui.app.elisys.xui.page.formation2.part.CmpBtnBar;
-import com.elisaxui.app.elisys.xui.page.formation2.part.CmpButton;
 import com.elisaxui.component.toolkit.TKPubSub;
-import com.elisaxui.component.toolkit.datadriven.JSChangeCtx;
+import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
@@ -22,7 +19,6 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSObject;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
-import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSXHTMLTemplate;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
@@ -34,22 +30,22 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.target.CONTENT;
 
-import static com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplateImpl.onEnter;
-import static com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplateImpl.onExit;
-
 /**
  * @author gauth
  *
  */
-@xFile(id = "ScnTemplatePart")
-public class ScnTemplatePart extends XHTMLPart {
+@xFile(id = "ScnTemplateDyn")
+public class ScnTemplateDyn extends XHTMLPart {
 
+	/********************************************************/
+	// la vue
+	/********************************************************/
 	static XClass cMain;
 
 	@xTarget(HEADER.class)
 	@xRessource // une seule fois par vue
 	public XMLElement xImport() {
-		return xListElem(
+		return xList(
 				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"),
 				xImport(JSXHTMLTemplate.class,
 						TKPubSub.class,
@@ -60,7 +56,7 @@ public class ScnTemplatePart extends XHTMLPart {
 	@xTarget(CONTENT.class) // la vue App Shell
 	public XMLElement xAppShell() {
 		return xDiv(xH1("Scn Template Part"), xDiv(cMain,
-				xPart(new CmpButton().addProperty(CmpButton.PROPERTY_LABEL, "OK"))));
+				xPart(new CmpButton().vProperty(CmpButton.PROPERTY_LABEL, "OK"))));
 	}
 
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
@@ -68,7 +64,10 @@ public class ScnTemplatePart extends XHTMLPart {
 		return xImport(JSTest.class);
 	}
 	
-	public interface JSTest extends JSClass, IXHTMLTemplate, IJSONBuilder {
+	/********************************************************/
+	// une class js avec template et datadriven
+	/********************************************************/
+	public interface JSTest extends JSClass, IXHTMLTemplate, IJSDataDriven {
 
 		@xStatic(autoCall = true) // appel automatique de la methode static
 		default void main() {
@@ -77,6 +76,7 @@ public class ScnTemplatePart extends XHTMLPart {
 			JSString label2 = let("label2", JSString.value("OK 23"));
 			JSString label3 = let("label3", JSString.value("OK 233"));
 
+			// une fct qui retourne un template
 			JSFunction f = fct(() -> {
 				_return(jsTemplate(xDiv("super")));
 			});
@@ -87,34 +87,40 @@ public class ScnTemplatePart extends XHTMLPart {
 			JSDomElement aDom = declareType(JSDomElement.class, "aDom");
 			
 			// btn data driven
-			XMLElement btnOnDataDriven = xPart(new CmpButton().addProperty(CmpButton.PROPERTY_LABEL, aRow.attr("t")));
+			XMLElement btnOnDataDriven = xPart(new CmpButton().vProperty(CmpButton.PROPERTY_LABEL, aRow.attr("t")));
 			
-			Object barDataDriven = xListElem(xPart(new CmpBtnBar(), 
+			// une bar de btn en datadriven
+			Object barDataDriven = xList(xPart(new CmpBtnBar(), 
 					xDataDriven(arr, 
 							onEnter(aRow,  btnOnDataDriven), 
 							onExit(aRow, aDom))));
 			
 			// list element
-			XMLElement listElem = xListElem(f, xDiv("LLL"), barDataDriven);
+			XMLElement listElem = xList(f, xDiv("LLL"), barDataDriven);
 			
 			// appel meth de JSDomElement
 			JSDomElement ko = let("ko", xPicture(JSString.value("KO")));
 			
+			Object attrRed = xAttr("style",txt("border:1px red solid"));
+			Object attrGreen = xAttr("style",txt("border:1px green solid"));
+			
 			document().querySelector(cMain).appendChild(
 					jsTemplate(
-							xListElem(
+							xList(
 									xPart(new CmpBtnBar()
-											.addProperty("toto", "marche")
-											.addProperty("titi", label3)
-											.addProperty("test", listElem)
+											.vProperty(CmpBtnBar.PROPERTY_STYLE, attrRed)
+											.vProperty("attr", attrGreen)
+											.vProperty("toto", "marche")
+											.vProperty("titi", label3)
+											.vProperty("test", listElem)
 											, ko
-											, xPart(new CmpBtnBar(),
-													xPart(new CmpButton().addProperty(CmpButton.PROPERTY_LABEL, label)),
-													xPart(new CmpButton().addProperty(CmpButton.PROPERTY_LABEL, label2)),
-													xPart(new CmpButton().addProperty(CmpButton.PROPERTY_LABEL, searchProperty("toto")))
+											, xPart(new CmpBtnBar().vProperty(CmpBtnBar.PROPERTY_STYLE, vSearchProperty("attr")),
+													xPart(new CmpButton().vProperty(CmpButton.PROPERTY_LABEL, label)),
+													xPart(new CmpButton().vProperty(CmpButton.PROPERTY_LABEL, label2)),
+													xPart(new CmpButton().vProperty(CmpButton.PROPERTY_LABEL, vSearchProperty("toto")))
 											)
-											, xH1(searchProperty("titi")) 
-											, searchProperty("test")
+											, xH1(vSearchProperty("titi")) 
+											, vSearchProperty("test")
 											)
 									, xH1("h1")
 									)
@@ -134,9 +140,35 @@ public class ScnTemplatePart extends XHTMLPart {
 		
 		@xStatic
 		default JSDomElement xPicture(JSAny url) {
-			return jsTemplate(xPart(new CmpButton().addProperty(CmpButton.PROPERTY_LABEL, url)));
+			return jsTemplate(xPart(new CmpButton().vProperty(CmpButton.PROPERTY_LABEL, url)));
 		}
 
 	}
+	
+	/********************************************************/
+	// un component
+	/********************************************************/
+	static class CmpButton extends XHTMLPart {
 
+		public static final String PROPERTY_LABEL = "PROPERTY_LABEL";
+		
+		@xTarget(CONTENT.class)
+		public XMLElement xBtn() {
+			return xButton(this.<Object>vProperty(PROPERTY_LABEL) );
+		}
+		
+	}
+	/********************************************************/
+	// un component
+	/********************************************************/
+	static class CmpBtnBar extends XHTMLPart {
+
+		public static final String PROPERTY_STYLE = "PROPERTY_STYLE";
+		
+		@xTarget(CONTENT.class)
+		public XMLElement xBar() {
+			return xDiv(vSearchProperty(PROPERTY_STYLE), this.getChildren() );
+		}
+		
+	}
 }

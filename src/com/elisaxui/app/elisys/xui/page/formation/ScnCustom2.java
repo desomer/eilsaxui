@@ -25,7 +25,7 @@ public class ScnCustom2 extends XHTMLPart {
 	@xTarget(HEADER.class)
 	@xRessource									// une seule fois par vue
 	public XMLElement xImportClass() {
-		return xListElem(   // ajout plusieur element sans balise parent
+		return xList(   // ajout plusieur element sans balise parent
 					xImport(JSClass1.class),    // xImport( cl,  INLINE)  OU  xImport( cl,  moduleJS("test.js"))
 					
 					xScriptJS(js()

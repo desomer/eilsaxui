@@ -17,7 +17,7 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  * @author gauth
  *
  */
-public class XHTMLTemplateImpl extends JSDomElement implements IXHTMLTemplate
+public class XHTMLTemplate extends JSDomElement implements IXHTMLTemplate
 {
 	XMLElement xml;
 	boolean modeJs = false;
@@ -29,41 +29,10 @@ public class XHTMLTemplateImpl extends JSDomElement implements IXHTMLTemplate
 		return modeJs;
 	}
 
-	public static final JSFunction onEnter(Object row, XMLElement elem)
-	{
-		return (JSFunction) new JSFunction().setParam(new Object[] {row, "ctx"})
-				._return( new XHTMLTemplateImpl(elem).setModeJS(true) );
-
-	}
-	
-	public static final JSFunction onEnter(Object row, JSDomElement elem)
-	{
-		return (JSFunction) new JSFunction().zzSetComment("onEnter").setParam(new Object[] {row, "ctx"})
-				._return( elem );
-
-	}
-	
-	public static final JSFunction onExit(Object row, Object dom)
-	{
-		return (JSFunction) new JSFunction().zzSetComment("onExit").setParam(new Object[] {row, dom, "ctx"})
-				._if(dom,"!=null")
-					.__("$("+dom+").remove()")
-				.endif();
-	}
-	
-	public static final JSFunction onChange(JSChangeCtx ctx, JSDomElement aDom, JSFunction action )
-	{
-		return (JSFunction) new JSFunction().zzSetComment("onChange").setParam(new Object[] {"ctx"})
-				._var("dom" , "ctx.row['"+JSDataSet.ATTR_DOM_LINK+"']")
-				._var("f", action.setParam(new Object[] {ctx, aDom}))
-				.__("f(ctx, dom)")
-				;		
-	}
-	
 	/**
 	 * @param modeJs the modeJs to set
 	 */
-	public final XHTMLTemplateImpl setModeJS(boolean modeJs) {
+	public final XHTMLTemplate setModeJS(boolean modeJs) {
 		this.modeJs = modeJs;
 		return this;
 	}
@@ -83,7 +52,7 @@ public class XHTMLTemplateImpl extends JSDomElement implements IXHTMLTemplate
 	/**
 	 * @param xml
 	 */
-	public XHTMLTemplateImpl(XMLElement xml) {
+	public XHTMLTemplate(XMLElement xml) {
 		super();
 		this.xml = xml;
 	}

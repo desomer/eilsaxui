@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.xui.page.perf;
+package com.elisaxui.app.elisys.xui.page.formation3;
 
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
@@ -30,7 +30,7 @@ public class ScnPerf extends XHTMLPart {
 	@xTarget(HEADER.class)
 	@xRessource // une seule fois par vue
 	public XMLElement xImportVue() {
-		return xListElem(
+		return xList(
 				xImport(JSPerfVuesJS.class), 
 				xImport(JSDataSet.class),
 				xImport(JSDataDriven.class),
@@ -45,11 +45,11 @@ public class ScnPerf extends XHTMLPart {
 	@xPriority(1)
 	public XMLElement xImport() {
 		if (JSPerfVuesJS.isVueJS())
-			return xListElem(xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.13/vue.min.js"));
+			return xList(xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.13/vue.min.js"));
 	//	else if (JSPerfVuesJS.isJQuery())
 	//		return xListElem(xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js"));
 		else
-			return xListElem();
+			return xList();
 
 	}
 
@@ -57,7 +57,7 @@ public class ScnPerf extends XHTMLPart {
 	public interface A extends JSClass {
 		@xStatic(autoCall=true)          // appel automatique de la methode static
 		default void main() {
-			JSPerfVuesJS p = let("p", newInst(JSPerfVuesJS.class));
+			JSPerfVuesJS p = let("p", newJS(JSPerfVuesJS.class));
 			p.doPerf();
 		}
 	}
@@ -66,7 +66,7 @@ public class ScnPerf extends XHTMLPart {
 	@xRessource // une seule fois par vue
 	@xVersion("1.0")  // a terminer
 	public XMLElement xDo() {		
-		return xListElem(
+		return xList(
 					xImport(A.class)
 				);
 	}

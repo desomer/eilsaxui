@@ -13,6 +13,6 @@ public class ViewItem extends XHTMLPart {
 
 	@xTarget(CONTENT.class)
 	public XMLElement xListe() {
-		return xDiv("ViewItem handle = ", searchProperty(TEST_HANDLE));
+		return xDiv("ViewItem handle = ", vSearchProperty(TEST_HANDLE));
 	}
 }

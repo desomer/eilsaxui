@@ -285,7 +285,7 @@ public class XUIFactoryXHtml {
 		buf.append("<!doctype html>");
 		((XHTMLRoot) fileXML.getRoot()).setLang(loc.toLanguageTag());
 		fileXML.getRoot().doContent(null);
-		ArrayList<XMLElement> rootContent = fileXML.getRoot().getListElement(CONTENT.class);
+		List<XMLElement> rootContent = fileXML.getRoot().getListElementFromTarget(CONTENT.class);
 
 		for (XMLElement elem : rootContent) {
 			elem.toXML(new XMLBuilder("page", buf, null));
@@ -313,14 +313,13 @@ public class XUIFactoryXHtml {
 			
 			XHTMLPart page = pageClass.newInstance();
 			
-			if (page instanceof XUIScene)
-				((XHTMLFile)file).setScene((XUIScene) page);
+			((XHTMLFile)file).setScene( page);
 			
 			page.doContent(file.getRoot());
-			for (XMLElement elem : page.getListElement(CONTENT.class)) {
+			for (XMLElement elem : page.getListElementFromTarget(CONTENT.class)) {
 				page.vBody(elem);
 			}
-			for (XMLElement elem : page.getListElement(AFTER_CONTENT.class)) {
+			for (XMLElement elem : page.getListElementFromTarget(AFTER_CONTENT.class)) {
 				page.vAfterBody(elem);
 			}
 		} catch (InstantiationException | IllegalAccessException e) {
@@ -358,7 +357,7 @@ public class XUIFactoryXHtml {
 			
 			StringBuilder buf = new StringBuilder(1000);
 			part.doContent(null);
-			ArrayList<XMLElement> rootContent = part.getListElement(CONTENT.class);
+			List<XMLElement> rootContent = part.getListElementFromTarget(CONTENT.class);
 	
 			for (XMLElement elem : rootContent) {
 				elem.toXML(new XMLBuilder("page", buf, null));

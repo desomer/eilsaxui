@@ -20,7 +20,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 import com.elisaxui.core.xui.xhtml.builder.json.JsonNumberImpl;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplateImpl;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplate;
 import com.elisaxui.core.xui.xml.builder.IXMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -149,8 +149,8 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 		} else if (object instanceof XMLElement) {
 			doXMLElementToJSXHTMLPart(buf, ((XMLElement) object));
 
-		} else if (object instanceof XHTMLTemplateImpl) {
-			XHTMLTemplateImpl template = ((XHTMLTemplateImpl) object);
+		} else if (object instanceof XHTMLTemplate) {
+			XHTMLTemplate template = ((XHTMLTemplate) object);
 
 			if (template.isModeJS())
 				((JSContent) template.getContent()).toXML(buf);
@@ -558,7 +558,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	}
 
 	@Override
-	public <E> E newInst(Class<E> type, Object... param) {
+	public <E> E newJS(Class<E> type, Object... param) {
 		Object ret = declareType(type, null);
 
 		String t = type.getSimpleName();

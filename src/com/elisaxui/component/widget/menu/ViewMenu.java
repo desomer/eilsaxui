@@ -52,7 +52,7 @@ public class ViewMenu extends XHTMLPart {
 						)
 				.on(cFixedLeft,
 						"position:absolute; top:0px; transform:translate3d(-" + (XUIScene.widthMenu+5) + "px,0px,0px)")
-				.on(cHeaderMenu, "height:53px; background:" + XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorMenu()
+				.on(cHeaderMenu, "height:53px; background:" + ((XUIScene)XUIFactoryXHtml.getXHTMLFile().getScene()).getConfigScene().getBgColorMenu()
 						+ "box-shadow: 0px 5px 13px 0px #969696;")
 
 				.on(".menu ul", "padding-left: 0;  list-style-type: none; margin:0px;")
@@ -81,7 +81,7 @@ public class ViewMenu extends XHTMLPart {
 	@xTarget(HEADER.class)
 	@xRessource
 	public XMLElement xImportAllClass() {
-		return xListElem(
+		return xList(
 			//	xImport(JSMenu.class)
 				);
 	}
@@ -94,9 +94,9 @@ public class ViewMenu extends XHTMLPart {
 			public XMLElement getTemplate()
 			{
 				return xListElement(xPart(new ViewMenuItems()
-						.addProperty(ViewMenuItems.PROPERTY_NAME, xVar(name))
-						.addProperty(ViewMenuItems.PROPERTY_ICON, xVar(icon))
-						.addProperty(ViewMenuItems.PROPERTY_ACTION, xVar(idAction))
+						.vProperty(ViewMenuItems.PROPERTY_NAME, xVar(name))
+						.vProperty(ViewMenuItems.PROPERTY_ICON, xVar(icon))
+						.vProperty(ViewMenuItems.PROPERTY_ACTION, xVar(idAction))
 						));
 			}
 		};

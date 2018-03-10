@@ -83,7 +83,7 @@ public interface JSTransition extends JSClass {
 
 	default JSVoid doToggleBurgerMenu() {
 		
-		JSOverlay overlay = let("overlay", newInst(JSOverlay.class, SPEED_SHOW_MENU, XUIScene.OVERLAY_OPACITY_MENU) ); 
+		JSOverlay overlay = let("overlay", newJS(JSOverlay.class, SPEED_SHOW_MENU, XUIScene.OVERLAY_OPACITY_MENU) ); 
 		
 		JQuery jqMenu = let( JQuery.class, "jqMenu", $(ViewMenu.menu) );
 		JQuery jqScene = let( JQuery.class, "jqScene", $(scene) );

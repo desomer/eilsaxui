@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
@@ -59,22 +60,22 @@ public class XHTMLRoot extends XHTMLPart {
 		StringBuilder textbody = new StringBuilder(1000);
 		StringBuilder textAfterbody = new StringBuilder(1000);
 		
-		ArrayList<XMLElement> body = getListElement(BODY.class);
-		ArrayList<XMLElement> afterBody = getListElement(AFTER_BODY.class);
-		ArrayList<XMLElement> header = getListElement(HEADER.class);
+		List<XMLElement> body = getListElementFromTarget(BODY.class);
+		List<XMLElement> afterBody = getListElementFromTarget(AFTER_BODY.class);
+		List<XMLElement> header = getListElementFromTarget(HEADER.class);
 		
 		Collections.sort(header, new XMLElementComparator() );
 		Collections.sort(body, new XMLElementComparator() );
 		Collections.sort(afterBody, new XMLElementComparator() );
 		
-		xListElem(body).getXMLElementTabbed(2)
+		xList(body).getXMLElementTabbed(2)
 				.toXML(new XMLBuilder("page", textbody, textAfterbody));
 
-		xListElem(afterBody).getXMLElementTabbed(1)
+		xList(afterBody).getXMLElementTabbed(1)
 				.toXML(new XMLBuilder("page", textAfterbody, null));
 		
 		return xElement("html", xAttr("lang", xTxt(lang)),
-				xListElem("\n"),
+				xList("\n"),
 				xComment("version 1.0.0" + XUIFactoryXHtml.changeMgr.nbChangement , "generated at " + formatDateTimeNow  , "build at " + formatDateTimeBuild),
 				xElement("head", xElement("meta", xAttr("charset", xTxt("utf-8"))),
 						xElement("meta", xAttr("name", xTxt("mobile-web-app-capable")), xAttr("content", xTxt("yes"))),
@@ -85,7 +86,7 @@ public class XHTMLRoot extends XHTMLPart {
 						header
 						),
 				xElement("body", textbody),
-				xListElem(textAfterbody)
+				xList(textAfterbody)
 				);
 	}
 

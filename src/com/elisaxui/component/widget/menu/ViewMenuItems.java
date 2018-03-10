@@ -22,6 +22,6 @@ public class ViewMenuItems extends XHTMLPart {
 	
 	@xTarget(CONTENT.class)
 	public XMLElement xContenu() {
-		return xLi(cRippleEffect, cRippleEffectColorBack, xIdAction(this.getProperty(PROPERTY_ACTION)), xA("<i class=\"material-icons\">", this.getProperty(PROPERTY_ICON) ,"</i>", this.getProperty(PROPERTY_NAME) ));
+		return xLi(cRippleEffect, cRippleEffectColorBack, xIdAction(this.vProperty(PROPERTY_ACTION)), xA("<i class=\"material-icons\">", this.vProperty(PROPERTY_ICON) ,"</i>", this.vProperty(PROPERTY_NAME) ));
 	}
 }

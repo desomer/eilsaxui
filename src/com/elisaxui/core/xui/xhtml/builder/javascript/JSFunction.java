@@ -14,7 +14,7 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder;
  * @author Bureau
  *
  */
-public class JSFunction extends JSContent {
+public class JSFunction extends JSContent implements JSElement {
 	// "use strict"
 
 	/*

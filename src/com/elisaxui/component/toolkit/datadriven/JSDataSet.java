@@ -27,7 +27,7 @@ public interface JSDataSet extends JSClass {
 
 	default void constructor(Object d) {
 		data().set(d);
-		callBackChange().set(newInst(TKPubSub.class));
+		callBackChange().set(newJS(TKPubSub.class));
 		_set(delayEvent, 0);
 		_set(myProxySet, "new WeakSet()");
 	}
@@ -76,7 +76,7 @@ public interface JSDataSet extends JSClass {
 		changeHandler.attr("set").set(fct(target, property, value, receiver, 
 				() -> {
 					_if("property!='" + ATTR_DOM_LINK + "' && target[property]!==value").then(() -> {
-						JSChangeCtx obj = newInst(JSChangeCtx.class).asLitteral();
+						JSChangeCtx obj = newJS(JSChangeCtx.class).asLitteral();
 						obj.ope().set("change");
 						obj.row().set(target);
 						obj.idx().set(target.attr("idx"));

@@ -20,6 +20,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLFunction;
+import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Handle;
 import com.elisaxui.core.xui.xml.target.CONTENT;
 
@@ -58,6 +59,13 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 
 	protected List<XMLAttr> listAttr = new ArrayList<>();
 	protected List<Object> listInner = new ArrayList<>();
+
+	/**
+	 * @return the listInner
+	 */
+	public final List<Object> getListInner() {
+		return listInner;
+	}
 
 	public XMLElement(Object name, Object... inner) {
 		super();
@@ -132,7 +140,13 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 		int nbChild = 0;
 		for (Object inner : listInner) {
 			if (inner != null) {
-				if (nbChild > 0 || nbAttr > 0)
+				if (nbAttr > 0)
+				{
+					buf.getJSContent().getListElem().add(",");
+					nbAttr=0;
+				}
+				
+				if (nbChild > 0)
 					buf.getJSContent().getListElem().add(",");
 
 				nbChild = doChild(buf, nbChild, inner);
@@ -205,7 +219,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			XMLPartElement part = ((XMLPartElement) inner);
 			nbChild++;
 			// postionne les tabulation
-			for (XMLElement elem : part.part.getListElement(CONTENT.class)) {
+			for (XMLElement elem : part.part.getListElementFromTarget(CONTENT.class)) {
 				elem.nbTabInternal = this.nbTabInternal + 1;
 				elem.nbTabForNewLine = this.nbTabForNewLine;
 			}
@@ -230,19 +244,44 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 		} else if (inner instanceof Handle) { // un handle
 			Handle h = (Handle) inner;
 			String nameHandle = h.getName();
+			// recherche dans les parents
 			LinkedList<Object> listParent = XUIFactoryXHtml.getXHTMLFile().listParent;
 			Object handledObject = null;
+			String firstPrefix = null;
+			XMLPart firstPart = null;
+			
 			for (Iterator<Object> it = listParent.descendingIterator(); it.hasNext();) {
 				Object elm = it.next();
 				if (elm instanceof XMLElement) {
 					// MgrErrorNotificafion.doError("Handle on Element", null)
 				} else if (elm instanceof XMLPartElement) {
-					Object elem = ((XMLPartElement) elm).part.getProperty(nameHandle);
+					XMLPart part = ((XMLPartElement) elm).part;
+					if (firstPrefix==null)
+					{
+						firstPart = part;
+						firstPrefix = part.getPropertiesPrefix()==null?"":part.getPropertiesPrefix();
+					}
+					Object elem = part.vProperty(nameHandle+firstPrefix);
 					if (elem != null) {
 						handledObject = elem;
+						break;   // element trouve sur un parent
 					}
 				}
 			}
+			
+			if (handledObject==null)
+			{   // recherche sur la scene
+				handledObject = XUIFactoryXHtml.getXHTMLFile().getScene().vProperty(nameHandle+firstPrefix);
+			}
+			
+			if (firstPart!=null && handledObject==null)
+			{   // recherche sans le prefix sur le premier part
+				handledObject = firstPart.vProperty(nameHandle);
+			}
+			
+			if (h.getIfExistAdd()!=null && handledObject!=null)
+				handledObject = h.getIfExistAdd();
+			
 			if (handledObject != null) {
 				nbChild = doChild(buf, nbChild, handledObject);
 			}
@@ -268,6 +307,16 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			part.toXML(buf);
 			nbChild++;
 
+		} else if (inner instanceof XMLAttr) { // un attribut
+			XMLAttr attr = ((XMLAttr) inner);
+			if (buf.isTemplate) {
+				buf.getJSContent().getListElem().add(MTH_ADD_ATTR+"([");
+				buf.getJSContent().getListElem().add("\"" + attr.getName() + "\"," + attr.getValue() + "");
+				buf.getJSContent().getListElem().add("]),");
+			}
+			else
+				attr.toXML(buf);
+			
 		} else {
 			if (buf.isTemplate) {
 				if (inner instanceof CharSequence) {
@@ -276,17 +325,9 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 					buf.addContentOnTarget(inner);
 				} else if (inner instanceof JSDomElement) {
 					buf.addContentOnTarget(inner);
-				}
-				else {
+				} else {
 					buf.addContentOnTarget(MTH_ADD_TEXT+"(");
-//					List<String> result = Arrays.asList(inner.toString().split("\\."));
-//					StringBuilder buft = new StringBuilder();
-//					for (int i = 1; i < result.size(); i++) {
-//						if (i>1)
-//							buft.append(",");
-//						buft.append("'"+result.get(i)+"'");
-//					}
-					buf.addContentOnTarget(inner);    //+","+result.get(0)+",["+buft+"]");
+					buf.addContentOnTarget(inner);  
 					buf.addContentOnTarget(")");
 				}
 				nbChild++;

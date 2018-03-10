@@ -20,7 +20,7 @@ public interface IXHTMLBuilder {
 		return XMLPart.xElement(name, inner);
 	}
 	
-	default XMLElement xListElem(Object... array) {
+	default XMLElement xList(Object... array) {
 		return XMLPart.xListElement(array);
 	}
 	
@@ -31,6 +31,22 @@ public interface IXHTMLBuilder {
 	
 	default XMLElement xHeader(Object... inner) {
 		return xElem("header", inner);
+	}
+	
+	default XMLElement xNav(Object... inner) {
+		return xElem("nav", inner);
+	}
+	
+	default XMLElement xMain(Object... inner) {
+		return xElem("main", inner);
+	}
+	
+	default XMLElement xSection(Object... inner) {
+		return xElem("section", inner);
+	}
+	
+	default XMLElement xAside(Object... inner) {
+		return xElem("aside", inner);
 	}
 	
 	default XMLElement xFooter(Object... inner) {
@@ -103,9 +119,9 @@ public interface IXHTMLBuilder {
 		ArrayList<Object> elem = new ArrayList<>();
 		elem.add("<!--\n");
 		for (Object c : comment) {
-			elem.add(xListElem(c + "\n"));
+			elem.add(xList(c + "\n"));
 		}
-		elem.add(xListElem("-->"));
+		elem.add(xList("-->"));
 		return xElem(null, elem.toArray());
 	}
 

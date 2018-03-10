@@ -36,7 +36,7 @@ public class ViewPageLayout extends XHTMLPart {
 	
 	public ViewPageLayout(Object id) {
 		super();
-		this.addProperty(ID, id);
+		this.vProperty(ID, id);
 	}
 
 	@xTarget(HEADER.class)
@@ -50,13 +50,13 @@ public class ViewPageLayout extends XHTMLPart {
 	
 	@xTarget(CONTENT.class)
 	public XMLElement xViewPanel() {
-		return xDiv(xId(getProperty(ID)), CssTransition.activity, CssTransition.inactive, CssTransition.cStateNoDisplay 
-				, xPart(new ViewNavBar().addProperty(ViewNavBar.PROPERTY_NAME, "NavBar"+getProperty(ID)))
+		return xDiv(xId(vProperty(ID)), CssTransition.activity, CssTransition.inactive, CssTransition.cStateNoDisplay 
+				, xPart(new ViewNavBar().vProperty(ViewNavBar.PROPERTY_NAME, "NavBar"+vProperty(ID)))
 				, xDiv(content 	
-						, xDiv(cArticle, searchProperty("children"+getProperty(ID)))
+						, xDiv(cArticle, vSearchProperty("children"+vProperty(ID)))
 						, xPart(new ViewOverlay())
 						)
-				, xPart(new ViewTabBar().addProperty(ViewNavBar.PROPERTY_NAME, "TabBar"+getProperty(ID)) ,
+				, xPart(new ViewTabBar().vProperty(ViewNavBar.PROPERTY_NAME, "TabBar"+vProperty(ID)) ,
 						xLi (ViewTabBar.cFlex_1, ViewTabBar.cTextAlignCenter, ViewTabBar.getTemplateAction("'schedule'", "''")),  
 						xLi (ViewTabBar.cFlex_1, ViewTabBar.cTextAlignCenter, ViewTabBar.getTemplateAction("'today'", "''")),  
 						xLi (ViewTabBar.cFlex_1, ViewTabBar.cTextAlignCenter, ViewTabBar.getTemplateAction("'mic'", "''")) , 

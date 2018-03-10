@@ -104,7 +104,7 @@ public interface JSContainer extends JSFactory, IXHTMLBuilder {
 					    	_set("subData", _self.getSubData("ctx"));
 					    endif();
 					    
-						_set(template, ViewCard.getTemplate((ViewCard)card.addProperty("childrenCard", xVar("subData.html") )));
+						_set(template, ViewCard.getTemplate((ViewCard)card.vProperty("childrenCard", xVar("subData.html") )));
 						__(template, ".js+=subData.js");
 						// ajoute la card
 						_var("jqdom", template.appendInto("$(selector)"));

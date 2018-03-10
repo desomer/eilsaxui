@@ -32,7 +32,7 @@ public class ViewCard extends XHTMLPart {
 						+ "border-radius: 4px;"
 						+ "background-color: #FFF;"
 						+ "box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);"
-						).childPath(xStyle(cCardText).add("user-select: none;font-size: 14px;display: block; "
+						).andChildPath(xStyle(cCardText).add("user-select: none;font-size: 14px;display: block; "
 								+ "left: 0;right: 0;top: 100px; padding: 16px; margin: 0;"
 								+ "line-height: 1.6; po2sition: absolute; color: #000;"
 								+ "overflow: hidden;")
@@ -47,7 +47,7 @@ public class ViewCard extends XHTMLPart {
 	}
 	
 	public static XMLElement getTemplate(ViewCard card) {
-		return xListElement(xPart(card, searchProperty("childrenCard") ));
+		return xListElement(xPart(card, vSearchProperty("childrenCard") ));
 	}
 	
 	public static XMLElement getTemplateRichMedia() {

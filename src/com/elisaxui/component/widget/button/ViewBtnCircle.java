@@ -6,6 +6,7 @@ package com.elisaxui.component.widget.button;
 import static com.elisaxui.component.transition.ConstTransition.SPEED_SHOW_ACTIVITY;
 import static com.elisaxui.component.widget.button.ViewRippleEffect.cRippleEffect;
 
+import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
@@ -43,7 +44,7 @@ public class ViewBtnCircle extends XHTMLPart {
 						 		+ "height: "+SIZE_CIRCLE+"; width: "+SIZE_CIRCLE+"; "
 								//+ "/*min-width: 56px;*/ "
 								+ "padding: 0;  overflow: hidden; outline: 0 !important; " // pas																						// focus
-								+ "background:"+ XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorNavBar()+";"
+								+ "background:"+ ((XUIScene)XUIFactoryXHtml.getXHTMLFile().getScene()).getConfigScene().getBgColorNavBar()+";"
 								+ "box-shadow: 3px 3px 3px 0 rgba(0,0,0,.24);"
 								+ "transition:transform " + SPEED_SHOW_ACTIVITY +  "ms ease-out;"
 								+ " position: relative; line-height: normal; border:none; background-color:#ee6e73;"
@@ -67,9 +68,9 @@ public class ViewBtnCircle extends XHTMLPart {
 
 	@xTarget(CONTENT.class)
 	public XMLElement xBurgerBtn() {
-		return  xListElem( xPart(new ViewRippleEffect()),   ////////////////// IMPORT //////////////////
+		return  xList( xPart(new ViewRippleEffect()),   ////////////////// IMPORT //////////////////
 				xElement("button", cRippleEffect, cBtnCircle, xAttr("type", "\"button\""),
-				"<i class=\"material-icons\">", this.getProperty(PROPERTY_ICON), "</i>")
+				"<i class=\"material-icons\">", this.vProperty(PROPERTY_ICON), "</i>")
 		       );
 	}
 

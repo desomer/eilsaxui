@@ -60,7 +60,7 @@ public class ViewFloatAction extends XHTMLPart {
 			@Override
 			public XMLElement getTemplate()
 			{
-				return xDiv(cFloatAction, cFixedElement, xIdAction("\"BtnFloatMain\""),	xPart(new ViewBtnCircle().addProperty(ViewBtnCircle.PROPERTY_ICON, "history")));
+				return xDiv(cFloatAction, cFixedElement, xIdAction("\"BtnFloatMain\""),	xPart(new ViewBtnCircle().vProperty(ViewBtnCircle.PROPERTY_ICON, "history")));
 			}
 		};
 		

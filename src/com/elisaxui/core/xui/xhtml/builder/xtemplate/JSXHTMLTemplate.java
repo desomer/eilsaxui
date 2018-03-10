@@ -6,12 +6,11 @@ package com.elisaxui.core.xui.xhtml.builder.xtemplate;
 import com.elisaxui.component.toolkit.datadriven.JSChangeCtx;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
-import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -22,50 +21,7 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  */
 public interface JSXHTMLTemplate extends JSClass {
 	
-	@xStatic
-	default void doTemplateDataDriven(JSDomElement parent, JSArray<?> data, JSAny fctEnter, JSAny fctExit, JSAny fctChange )
-	{
-		JSChangeCtx ctx = declareType(JSChangeCtx.class, "ctx");
-		JSon key = declareType(JSon.class, "key");
-		
-		JSDataSet aDataSet = let("aDataSet", newInst(JSDataSet.class) );
-		aDataSet.setData(data);
-	
-		JSDataDriven aDataDriven = let("aDataDriven", newInst(JSDataDriven.class, aDataSet) );
-		aDataDriven.onEnter(funct(ctx).zzSetComment("onEnter").__(()->{
-			ctx.parent().set(parent);
-			JSDomElement dom =let(JSDomElement.class, "dom", fctEnter.callMth("call", _this(), ctx.row(), ctx)); 
-			ctx.row().attrByString(JSDataSet.ATTR_DOM_LINK).set(dom);
 
-			_for("var ", key ," in ", ctx.row())._do(()->{
-				_if(ctx.row().hasOwnProperty(key)).then(() -> {
-					JSon attr = let("attr", ctx.row().attrByString(key));
-					_if(attr, " instanceof Object").then(() -> {
-						attr.attrByString(JSDataSet.ATTR_DOM_LINK).set(dom);
-					});
-
-				});
-			});
-			parent.appendChild( dom );
-		}));
-		
-		aDataDriven.onExit(funct(ctx).zzSetComment("onExit").__(()->{
-			ctx.parent().set(parent);
-			__(fctExit, ".call(this, ctx.row, ctx.row['"+JSDataSet.ATTR_DOM_LINK+"'], ctx)");
-		}));
-		
-		_if(fctChange.isNotEqual(null)).then(() -> {
-			aDataDriven.onChange(funct(ctx).zzSetComment("onChange").__(()->{
-				_if(ctx.row().attrByString(JSDataSet.ATTR_DOM_LINK).isNotEqual(null)).then(() -> {
-					__(fctChange, ".call(this, ctx)");
-				});
-		}));
-		});
-		
-		
-		/********************************************************************/
-		
-	}
 
 	@xStatic(autoCall=true)
 	default void initMethod() {

@@ -47,8 +47,8 @@ public interface JSClass1 extends JSClass {
 		JSArray<JSClass1> listObj2 = let(JSArray.class, "listObj2", "[]");
 		JSArray<JSString> listObj3 = let("listObj3", cast(JSArray.class, "[]"));
 
-		listObj.push(newInst(JSClass1.class));
-		listObj2.push(newInst(JSClass1.class, a));   // a param de constructor
+		listObj.push(newJS(JSClass1.class));
+		listObj2.push(newJS(JSClass1.class, a));   // a param de constructor
 		listObj3.push(JSString.value("12"));
 
 		JSClass1 obj = let(JSClass1.class, "obj", listObj.at(0));
@@ -112,7 +112,7 @@ public interface JSClass1 extends JSClass {
 				));
 
 		// new instance
-		JSClass1 aClass = let("overlay", newInst(JSClass1.class)); // new class
+		JSClass1 aClass = let("overlay", newJS(JSClass1.class)); // new class
 		_if(false).then(aClass::doSomething);
 
 	}

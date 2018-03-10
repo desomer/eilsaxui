@@ -23,12 +23,12 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 	private static final String SCRIPT = "script";
 
 	public final XMLPart vBody(XMLElement body) {
-		XUIFactoryXHtml.getXMLRoot().addElement(BODY.class, body);
+		XUIFactoryXHtml.getXMLRoot().addElementOnTarget(BODY.class, body);
 		return this;
 	}
 
 	public final XMLPart vAfterBody(XMLElement elem) {
-		XUIFactoryXHtml.getXMLRoot().addElement(AFTER_BODY.class, elem);
+		XUIFactoryXHtml.getXMLRoot().addElementOnTarget(AFTER_BODY.class, elem);
 		return this;
 	}
 
@@ -168,7 +168,9 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 	public Object _new(Object... param) {
 		return new JSListParameter(param);
 	}
-
+	
+	@Deprecated
+	/** xTxt */
 	public static final String txt(Object var) {
 		return "\"" + var + "\"";
 	}

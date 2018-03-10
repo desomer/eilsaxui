@@ -26,7 +26,7 @@ public interface JSRoot extends JSClass {
 			__(TKQueue.startProcessQueued(100, fct(() -> {  
 				//TODO retirer le __( avant  TKQueue
 
-				JSPageLayout jsPageLayout = let("jsPageLayout", newInst(JSPageLayout.class)); 
+				JSPageLayout jsPageLayout = let("jsPageLayout", newJS(JSPageLayout.class)); 
 				jsPageLayout.hideOnScroll(JSString.value("#Activity1"));
 				
 				// TODO a changer : mettre dans une queue avec priorité (avec image) et gestion
@@ -51,7 +51,7 @@ public interface JSRoot extends JSClass {
 		// gestion du slidedown pour fermer
 		_set("window.onCreateActivityDown", funct("json")
 				.__(TKQueue.startProcessQueued(100, funct().__(() -> {
-					JSPageLayout jsPageLayout = let( "jsPageLayout", newInst(JSPageLayout.class));
+					JSPageLayout jsPageLayout = let( "jsPageLayout", newJS(JSPageLayout.class));
 					jsPageLayout.setEnableCloseGesture(cast(JSString.class, "json.param"));
 				}))));
 	}

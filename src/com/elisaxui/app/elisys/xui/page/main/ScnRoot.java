@@ -56,7 +56,7 @@ public class ScnRoot extends XUIScene {
 	@xTarget(AFTER_CONTENT.class) 
 	@xRessource
 	public XMLElement xImportAfter() {
-		return xListElem(
+		return xList(
 				xImport(JSSyllabisation.class), 
 				xImport(JSHistoireManager.class),
 				xImport(JSRoot.class)  

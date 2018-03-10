@@ -87,7 +87,7 @@ public abstract class XUIScene extends XHTMLPart {
 	@xRessource
 	@xPriority(1)
 	public XMLElement xImportCssXUIScene() {
-		return xListElem(
+		return xList(
 				xLinkCssAsync("https://fonts.googleapis.com/icon?family=Material+Icons"),
 				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"),
 				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css"));
@@ -97,7 +97,7 @@ public abstract class XUIScene extends XHTMLPart {
 	@xRessource
 	@xPriority(1)
 	public XMLElement xImportXUIScene() {
-		return xListElem(
+		return xList(
 
 				xTitle(getConfigScene().getTitle()),
 				xMeta(xAttr("name", xTxt("theme-color")), xAttr("content", xTxt(getConfigScene().getBgColorTheme()))),
@@ -156,7 +156,7 @@ public abstract class XUIScene extends XHTMLPart {
 	@xRessource
 	public XMLElement xImportAfterXUIScene() {
 
-		return xListElem(
+		return xList(
 				xPart(new TKQueue()), // TODO Remplacer par une class js
 				xImport(JSXHTMLPart.class),
 				xImport(TKPubSub.class),
@@ -206,10 +206,10 @@ public abstract class XUIScene extends XHTMLPart {
 																														// auto
 				// + "min-width: 100vw; "
 						+ "min-height: 100vh; ")
-				.childPath(xStyle(cShell).add("background-color: " + getConfigScene().getBgColorContent() + ";"
+				.andChildPath(xStyle(cShell).add("background-color: " + getConfigScene().getBgColorContent() + ";"
 						+ "width: " + widthScene + ";"
 						+ "  min-height: 100vh; "))
-				.childPath(xStyle("#NavBarShell h1")
+				.andChildPath(xStyle("#NavBarShell h1")
 						.add("text-align:center;color: inherit;  font-size: 2.1rem; margin-top: 50px"))
 				// ----------------------------------------------------------------
 				.path(activity)
@@ -217,7 +217,7 @@ public abstract class XUIScene extends XHTMLPart {
 						+ " width:" + widthScene + ";"
 						+ " will-change:overflow,z-index;") // will-change:transform =bug : les header et footer ne se
 															// fixe plus au body
-				.childPath(xStyle(ViewPageLayout.content)
+				.andChildPath(xStyle(ViewPageLayout.content)
 						.add(" min-height: 100vh; "
 								+ "min-width: " + widthScene + "; "
 								+ "background-color:" + getConfigScene().getBgColorContent() + ";will-change:contents") // changement
@@ -240,10 +240,10 @@ public abstract class XUIScene extends XHTMLPart {
 
 	@xTarget(CONTENT.class)
 	public XMLElement xContenuXUIScene() {
-		return xListElem(
+		return xList(
 				xPart(new ViewMenu()),
 				xDiv(scene, xDiv(cShell,
-						xPart(new ViewNavBar().addProperty(ViewNavBar.PROPERTY_NAME, "NavBarShell"), xH1("Loading...")),
+						xPart(new ViewNavBar().vProperty(ViewNavBar.PROPERTY_NAME, "NavBarShell"), xH1("Loading...")),
 						xPart(new ViewLoader()))));
 	}
 
@@ -251,7 +251,7 @@ public abstract class XUIScene extends XHTMLPart {
 	@xPriority(500)
 	@xRessource
 	public XMLElement xImportStartXUIScene() {
-		return xListElem(
+		return xList(
 				xScriptJS(js()
 						// a mettre dans TKConfig
 						._set($xui(),

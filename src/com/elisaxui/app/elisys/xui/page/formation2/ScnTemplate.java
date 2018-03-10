@@ -36,7 +36,7 @@ public class ScnTemplate extends XHTMLPart {
 	@xTarget(HEADER.class)
 	@xRessource // une seule fois par vue
 	public XMLElement xImportVue() {
-		return xListElem(
+		return xList(
 				xImport(JSXHTMLTemplate.class)
 				);
 	}
@@ -48,16 +48,16 @@ public class ScnTemplate extends XHTMLPart {
 
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
 	public XMLElement xLoad() {
-		return xImport(JSTestDataDriven.class);
+		return xImport(JSTestTemplate.class);
 	}
 
 	// une class JS
 	@xTarget(AFTER_CONTENT.class)   // une seule fois par vue car class  ,  a mettre @xTarget sur la JSClass pour retirer l'import
-	public interface JSTestDataDriven extends JSClass, IXHTMLTemplate, IJSONBuilder {
+	public interface JSTestTemplate extends JSClass, IXHTMLTemplate, IJSONBuilder {
 
 		@xStatic(autoCall = true) // appel automatique de la methode static
 		default void main() {
-			ImgType data = let("data", newInst(ImgType.class).asLitteral());   // affecter literal dans le newInst
+			ImgType data = let("data", newJS(ImgType.class).asLitteral());   // affecter literal dans le newInst
 			data.name().set("Votre creation");
 			data.urlImage().set("https://images.pexels.com/photos/316465/pexels-photo-316465.jpeg?h=350&auto=compress&cs=tinysrgb");			
 			

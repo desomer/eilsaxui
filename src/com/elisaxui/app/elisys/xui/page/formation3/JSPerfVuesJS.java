@@ -1,11 +1,12 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.xui.page.perf;
+package com.elisaxui.app.elisys.xui.page.formation3;
 
 import static com.elisaxui.component.toolkit.JQuery.$;
 
 import com.elisaxui.component.toolkit.JQuery;
+import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSLambda;
@@ -18,14 +19,14 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
-import static com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplateImpl.*;
+import static com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplate.*;
 
 /**
  * @author gauth
  *
  *         DTOxxx : class json != class JS JSxxx : class JS
  */
-public interface JSPerfVuesJS extends JSClass, IJSONBuilder, IXHTMLTemplate {
+public interface JSPerfVuesJS extends JSClass, IJSONBuilder, IXHTMLTemplate, IJSDataDriven {
 
 	public static boolean isVueJS() {
 		return XUIFactoryXHtml.getXHTMLFile().getFirstQueryParam("vue", "false").equals("true");
@@ -48,7 +49,7 @@ public interface JSPerfVuesJS extends JSClass, IJSONBuilder, IXHTMLTemplate {
 
 			// creer un json en java
 			JSLambda doJava = () -> {
-				DtoUser user = newInst(DtoUser.class);
+				DtoUser user = newJS(DtoUser.class);
 				user.firstName().set("toto");
 				list.push(user);
 
@@ -62,7 +63,7 @@ public interface JSPerfVuesJS extends JSClass, IJSONBuilder, IXHTMLTemplate {
 
 				list.push(list2);
 
-				user = newInst(DtoUser.class);
+				user = newJS(DtoUser.class);
 				user.firstName().set(15151);
 				list.push(user);
 			};
@@ -79,13 +80,13 @@ public interface JSPerfVuesJS extends JSClass, IJSONBuilder, IXHTMLTemplate {
 							v("d", arr(1, 2, 3)))));
 			JSArray<?> json3 = let(JSArray.class, "json3", arr("a", "b", 1)); // ['a','b',1]
 
-			DtoTest d = let("d", newInst(DtoTest.class).asLitteral()); // asLitteral: ne create pas le new DtoTest()
+			DtoTest d = let("d", newJS(DtoTest.class).asLitteral()); // asLitteral: ne create pas le new DtoTest()
 
-			d.users().set(newInst(JSArray.class)); // d.users=new Array()
+			d.users().set(newJS(JSArray.class)); // d.users=new Array()
 			d.users().set(new JSArray<>().asLitteral()); // d.users=[]
 
-			JSObject a = let("a1", newInst(JSObject.class)); // let a=new Object()
-			JSObject b = let("b", newInst(JSObject.class).asLitteral()); //
+			JSObject a = let("a1", newJS(JSObject.class)); // let a=new Object()
+			JSObject b = let("b", newJS(JSObject.class).asLitteral()); //
 
 			a.set(json);
 			b.set(json2);
@@ -117,7 +118,7 @@ public interface JSPerfVuesJS extends JSClass, IJSONBuilder, IXHTMLTemplate {
 			
 
 			_forIdxBetween(i, 0, 50)._do(() -> {
-				DtoUser auser = newInst(DtoUser.class).asLitteral();
+				DtoUser auser = newJS(DtoUser.class).asLitteral();
 				auser.firstName().set(txt("nickel", i));
 				listUser.push(auser);
 			});
@@ -134,7 +135,7 @@ public interface JSPerfVuesJS extends JSClass, IJSONBuilder, IXHTMLTemplate {
 			__("new Vue({ el: '" + xid + "', data: ", d, " })");
 
 			_forIdxBetween(i, 0, 20000)._do(() -> {
-				DtoUser user = newInst(DtoUser.class).asLitteral(); // pas de let et pas de declaration de class
+				DtoUser user = newJS(DtoUser.class).asLitteral(); // pas de let et pas de declaration de class
 				user.firstName().set(txt("vuejs ", i));
 				d.users().push(user);
 			});

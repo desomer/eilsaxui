@@ -10,6 +10,7 @@ import java.util.List;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.application.XHTMLAppScanner;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
@@ -18,6 +19,7 @@ import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
+import com.elisaxui.core.xui.xml.builder.VProperty;
 import com.elisaxui.core.xui.xml.builder.XMLAttr;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Handle;
@@ -38,10 +40,6 @@ public class XMLPart  {
 	 * 
 	 */
 	public static final double PRECISION = 100000.0;
-
-	/**
-	 * 
-	 */
 	public static final String NONAME = null;
 
 	private static final boolean debug = false;
@@ -49,34 +47,66 @@ public class XMLPart  {
 	/**************************************************************************/
 	protected HashMap<Class<? extends XMLTarget>, ArrayList<XMLElement>> listPart = new HashMap<Class<? extends XMLTarget>, ArrayList<XMLElement>>();
 	protected HashMap<Object, Object> listProperties = new HashMap<Object, Object>(); 
+	@Deprecated
+	private final List<Object> children = new ArrayList<>();
 	
-	
-	public XMLPart addProperty(Object key, Object value)
+	public static final String PROP_ID = "PROP_ID";
+	/**
+	 * @return the propertiesPrefix
+	 */
+	public final String getPropertiesPrefix() {
+		return vProperty(PROP_ID);
+	}
+
+
+	/**************************************************************************/
+	public XMLPart vProperty(Object key, Object value)
 	{
-		listProperties.put(key, value);
+		listProperties.put(key.toString(), value);
 		return this;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <E extends Object> E  getProperty(Object key)
+	public XMLPart vProperties(Object key, Object value)
 	{
-		return (E) listProperties.get(key);
+		Object obj = listProperties.get(key.toString());
+		if (obj!=null)
+		{
+			if (obj instanceof List)
+			{
+				((List<Object>)obj).add(value);
+			}
+			else
+			{
+				List<Object> l = new ArrayList<>();
+				l.add(obj);
+				listProperties.put(key.toString(), l);
+			}
+		}
+		else
+			listProperties.put(key.toString(), value);
+		return this;
 	}
 	
-	public XMLElement getPropertyElement(Object key)
+	
+	@SuppressWarnings("unchecked")
+	public <E extends Object> E  vProperty(Object key)
 	{
-		return (XMLElement)listProperties.get(key);
+		return (E) listProperties.get(key.toString());
 	}
 	
-	public XMLAttr getPropertyXID(Object key)
+	public XMLElement vPropertyElement(Object key)
 	{
-		return (XMLAttr)listProperties.get(key);
+		return (XMLElement)listProperties.get(key.toString());
 	}
 	
-	@Deprecated
-	private final List<Object> children = new ArrayList<>();
-
-	public void addElement(Class<? extends XMLTarget> target, XMLElement value) {
+	public XMLAttr vPropertyAttr(Object key)
+	{
+		return (XMLAttr)listProperties.get(key.toString());
+	}
+	
+	/*********************************************************************************/
+	public final void addElementOnTarget(Class<? extends XMLTarget> target, XMLElement value) {
 		ArrayList<XMLElement> partData = listPart.get(target);
 		if (partData == null) {
 			partData = new ArrayList<>(100);
@@ -87,8 +117,8 @@ public class XMLPart  {
 	}
 
 	private ArrayList<XMLElement> none = new ArrayList<>();
-	public ArrayList<XMLElement> getListElement(Class<? extends XMLTarget> part) {
-		ArrayList<XMLElement> list =  listPart.get(part);
+	public List<XMLElement> getListElementFromTarget(Class<? extends XMLTarget> target) {
+		ArrayList<XMLElement> list =  listPart.get(target);
 		if (list!=null)
 			return list;
 		else
@@ -100,14 +130,13 @@ public class XMLPart  {
 	/**************************************************************/
 	public final void doContent(XMLPart root) {
 		
-		
 		if (debug)
 			System.out.println("[XMLPart]--------------- add content of ------------- " + this.getClass() );
 				
 		XMLFile file = XUIFactoryXHtml.getXHTMLFile();
 		boolean isfirstInit = !file.isXMLPartAlreadyInFile(this);
 		
-		initVar();
+		XHTMLAppScanner.initVar(false, this.getClass(), this);
 		
 		Method[] listMth = getXMLMethod();
 		for (Method method : listMth) {
@@ -143,92 +172,7 @@ public class XMLPart  {
 		return a;
 	}
 	
-	private Field[] getXMLField()
-	{
-		ArrayList<Field> alf = new ArrayList<Field>(10);
-		Class c = this.getClass();
-		while (XMLPart.class.isAssignableFrom(c)) {
-			Field[] lf = c.getDeclaredFields();
-			if (lf!=null)
-			{
-				for (Field field : lf) {
-					alf.add(field);
-				}
-			}
-			c=c.getSuperclass();
-		}
-		
-		Field[] a = new Field[alf.size()];
-		alf.toArray(a);
-		return a;
-	}
-	
-	public void initVar() {
-		Field[] lf = getXMLField();
-		if (lf!=null)
-		{
-			for (Field field : lf) {
-				
-				boolean isStatic = java.lang.reflect.Modifier.isStatic(field.getModifiers());
-				if (!isStatic && JSClass.class.isAssignableFrom(field.getType()))
-				{
-					if (debug)
-						System.out.println("[XMLPart] init var JSClass on " + this.getClass() + " name "+ field.getName() );
-					field.setAccessible(true);
-					@SuppressWarnings("unchecked")
-					JSClass inst = ProxyHandler.getProxy((Class<? extends JSClass>) field.getType());
-					ProxyHandler.setNameOfProxy("", inst, field.getName());
-					try {
-						field.set(this, inst);
-					} catch (IllegalArgumentException | IllegalAccessException e) {
-						e.printStackTrace();
-					}
-				}
-				else if (!isStatic && XClass.class.isAssignableFrom(field.getType()))
-				{
-					if (debug)
-						System.out.println("[XMLPart] init var CSSClass on " + this.getClass() + " name "+ field.getName() );
-					XClass classCss = new XClass();
-					String name = field.getName();
-					xComment comment = field.getAnnotation(xComment.class);
-					if (comment != null) {
-						name = comment.value();
-					}
-					classCss.setId(name);
-					field.setAccessible(true);
-					try {
-						field.set(this,classCss);
-					} catch (IllegalArgumentException | IllegalAccessException e) {
-						e.printStackTrace();
-					} 
-				}
-				else if (!isStatic && JSAny.class.isAssignableFrom(field.getType()))
-				{
-					if (debug)
-						System.out.println("[XMLPart] init var JSVariable on " + this.getClass() + " name "+ field.getName() );
-					JSAny variablejs=null;
-					try {
-						variablejs = (JSAny) field.getType().newInstance();
-					} catch (InstantiationException | IllegalAccessException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					String name = field.getName();
-					xComment comment = field.getAnnotation(xComment.class);
-					if (comment != null) {
-						name = comment.value();
-					}
-					variablejs._setName(name);
-					field.setAccessible(true);
-					try {
-						field.set(this,variablejs);
-					} catch (IllegalArgumentException | IllegalAccessException e) {
-						e.printStackTrace();
-					} 
-				}
-			}
-		}
-	}
+
 
 
 	/**
@@ -266,9 +210,9 @@ public class XMLPart  {
 				if (elem != null && targetClass!=null ) {
 					int nbTab = targetClass.newInstance().getInitialNbTab();
 					if (ITargetRoot.class.isAssignableFrom(targetClass))
-						XUIFactoryXHtml.getXMLRoot().addElement(targetClass, elem.getXMLElementTabbed(nbTab));
+						XUIFactoryXHtml.getXMLRoot().addElementOnTarget(targetClass, elem.getXMLElementTabbed(nbTab));
 					else
-						addElement(targetClass, elem.getXMLElementTabbed(nbTab));
+						addElementOnTarget(targetClass, elem.getXMLElementTabbed(nbTab));
 				}
 			} 
 			catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
@@ -315,11 +259,11 @@ public class XMLPart  {
 	}
 
 	public final void vContent(XMLElement part) {
-		addElement(CONTENT.class, part);
+		addElementOnTarget(CONTENT.class, part);
 	}
 
 	public final void vAfterContent(XMLElement part) {
-		addElement(AFTER_CONTENT.class, part);
+		addElementOnTarget(AFTER_CONTENT.class, part);
 	}
 
 
@@ -357,11 +301,30 @@ public class XMLPart  {
 	 * @param name
 	 * @return
 	 */
-	public final static Handle searchProperty(String name) {
+	@Deprecated
+	public static final Handle vSearchProperty(String name) {
 		Handle attr = XMLBuilder.createHandle(name);
 		return attr;
 	}
+	
+	@Deprecated
+	public static final Handle vIfExistProperty(String iff, Object then) {
+		Handle attr = XMLBuilder.createHandle(iff);
+		attr.setIfExistAdd(then);
+		return attr;
+	}
 
+	public static final Handle vSearch(VProperty name) {
+		Handle attr = XMLBuilder.createHandle(name.getName());
+		return attr;
+	}
+	
+	public static final Handle vIfExist(VProperty iff, Object then) {
+		Handle attr = XMLBuilder.createHandle(iff.getName());
+		attr.setIfExistAdd(then);
+		return attr;
+	}
+	
 	public final static Object xTxt(Object text) {
 		return "\"" + text + "\"";
 	}

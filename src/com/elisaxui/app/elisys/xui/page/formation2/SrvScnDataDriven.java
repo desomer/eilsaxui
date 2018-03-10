@@ -21,6 +21,7 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.XClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.elisaxui.core.xui.xhtml.builder.json.JSONType;
@@ -42,10 +43,12 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 @Path("/json")
 public class SrvScnDataDriven implements IJSONBuilder {
 
-	/********************************************    VIEW     ***********************************************/
+	/********************************************
+	 * VIEW
+	 ***********************************************/
 	@xFile(id = "SrvScnDataDriven")
 	public static class ScnDataDriven extends XHTMLPart {
-		
+
 		static XClass cMain;
 
 		@xTarget(HEADER.class)
@@ -57,67 +60,70 @@ public class SrvScnDataDriven implements IJSONBuilder {
 		@xTarget(HEADER.class)
 		@xRessource
 		public XMLElement xStylePart() {
-			return xStyle(cMain, " span").add("color:blue");
+			return xStyle().path(cMain, " span").add("color:blue");
 		}
-		
+
 		@xTarget(CONTENT.class) // la vue App Shell
 		public XMLElement xAppShell() {
-			return xDiv(xH1("LOGO"), xArticle(cMain) );
+			return xDiv(xH1("LOGO"), xArticle(cMain));
 		}
 
 		@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
 		public XMLElement xLoad() {
-			return xImport(JSTestDataDriven.class);
+			return xImport(JSTestTemplate.class);
 		}
 
 		// une class JS
-		public interface JSTestDataDriven extends JSClass, IXHTMLTemplate {
+		public interface JSTestTemplate extends JSClass, IXHTMLTemplate {
 
 			@xStatic(autoCall = true) // appel automatique de la methode static
-			default void main() {	
+			default void main() {
 				ImgType data = declareType(ImgType.class, "data");
 				TKCom tkcom = declareType(TKCom.class, "TKCom");
-				
-				tkcom.requestUrl(JSString.value(REST_JSON_TEST_55)).then(fct(data, ()->
-					document().querySelector(cMain).appendChild(newInst(JSTestDataDriven.class)
-							.xImageOK(data.name(), data.urlImage()))
-				));
+
+				tkcom.requestUrl(JSString.value(REST_JSON_TEST+"OK"))
+						.then(fct(data, () -> document().querySelector(cMain).appendChild(
+								newJS(JSTestTemplate.class).xImageOK(data.name(), data.urlImage()))));
 			}
 
-			default Object xImageOK(JSAny id, JSString url) {
+			default JSDomElement xImageOK(JSAny id, JSString url) {
 				return jsTemplate(xDiv(xSpan(id), xPicture(url)));
 			}
 
-			default Object xPicture(JSString url) {
+			default JSDomElement xPicture(JSString url) {
 				return jsTemplate(xImg(xAttr("src", url)));
 			}
 		}
 	}
-	 
-	/********************************************    DTO      ***********************************************/
-	/**
-	 *  un type json
-	 */
+
+	/********************************************
+	 * DTO
+	 ***********************************************/
 	public interface ImgType extends JSONType {
 		JSString urlImage();
+
 		JSString name();
 	}
-	/********************************************  SERVICE  *************************************************/
-	
+
+	/********************************************
+	 * SERVICE
+	 *************************************************/
+
 	private static final String PHOTO = "https://images.pexels.com/photos/316465/pexels-photo-316465.jpeg?h=350&auto=compress&cs=tinysrgb";
-	private static final String REST_JSON_TEST_55 = "/rest/json/test/ok";
-	
+	private static final String REST_JSON_TEST = "/rest/json/test/";
+
 	@GET
 	@Path("/test/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getHtml(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("id") String id) {
 
-		ImgType data =  newJava(ImgType.class);
-		data.name().set("Votre creation "+id);
+		ImgType data = newJava(ImgType.class);
+		data.name().set("Votre creation " + id);
 		data.urlImage().set(PHOTO);
-		
-		return Response.status(Status.OK)  
-				.header("Link", "<https://fonts.googleapis.com/icon?family=Material+Icons>; rel=preload; as=style, <https://fonts.gstatic.com>; rel=preconnect")
+
+		return Response.status(Status.OK)
+				.header("Link", "<https://fonts.googleapis.com/icon?family=Material+Icons>; rel=preload; as=style,"
+						+ " <https://fonts.gstatic.com>; rel=preconnect")
 				.entity(data._getContent())
 				.build();
 	}

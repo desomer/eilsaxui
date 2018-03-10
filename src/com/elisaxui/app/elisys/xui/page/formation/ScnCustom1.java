@@ -28,7 +28,7 @@ public class ScnCustom1 extends XHTMLPart {
 	@xTarget(HEADER.class)
 	@xRessource // une seule fois par vue
 	public XMLElement xImportMeta() {
-		return xListElem( // ajout plusieur element sans balise parent
+		return xList( // ajout plusieur element sans balise parent
 				xTitle("titre"),
 				xMeta(xAttr("name", xTxt("author")), xAttr("content", xTxt("desomer"))));
 	}
@@ -72,9 +72,10 @@ public class ScnCustom1 extends XHTMLPart {
 		return xStyle()
 				.path(".toto1").add("display: none;")
 				.andPath(xStyle(":toto2").add("display: none").add(";display: none")
-						.andPath(xStyle(":toto3").add("display: none;"))
-						.childPath(xStyle("img").add("display: none;")))
-				.childPath(xStyle(".toto5").add("display: none;"))
+							.andPath(xStyle(":toto3").add("display: none;"))
+							.andChildPath(xStyle("img").add("display: none;"))
+					)
+				.andChildPath(xStyle(".toto5").add("display: none;"))
 				.path("#toto6").add("display: none;");
 	}
 }

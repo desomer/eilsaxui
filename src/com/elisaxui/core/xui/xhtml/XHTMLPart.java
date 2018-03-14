@@ -1,7 +1,7 @@
 package com.elisaxui.core.xui.xhtml;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
-import com.elisaxui.core.xui.xhtml.builder.css.CSSBuilder;
+import com.elisaxui.core.xui.xhtml.builder.css.CSSDomElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
@@ -119,15 +119,15 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 				xAttr("href", xTxt(url)));
 	}
 
-	public static final CSSBuilder xStyle() {
-		return new CSSBuilder();
+	public static final CSSDomElement xStyle() {
+		return new CSSDomElement();
 	}
 
-	public static final CSSBuilder xStyle(Object... path) {
-		return new CSSBuilder().path(path);
+	public static final CSSDomElement xStyle(Object... path) {
+		return new CSSDomElement().path(path);
 	}
 	
-	public static final XMLElement xImport(Class<? extends JSClass>...cl) {
+	public static final XMLElement xImport(Class<?>...cl) {
 		Object[] r = new Object[cl.length];
 		
 		for (int i = 0; i < r.length; i++) {

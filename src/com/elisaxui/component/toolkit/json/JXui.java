@@ -12,6 +12,7 @@ import com.elisaxui.core.xui.xml.annotation.xComment;
  * @author Bureau
  *
  */
+@Deprecated
 public class JXui extends JSAny  implements IJSClassInterface {
 	@xComment("_$xui.tkrouter")    //   _ retire le this de  this.$ui  => donne juste $xui.
 	static TKRouterEvent _tkrouter;

@@ -11,6 +11,6 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
  */
 /*xIf() xFor() */
 
-public class XHTMLFunction extends JSAny {
+public class JSDomFuntion extends JSAny {
 
 }

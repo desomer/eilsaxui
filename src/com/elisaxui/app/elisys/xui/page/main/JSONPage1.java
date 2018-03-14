@@ -38,9 +38,9 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
 			
 			//XMLElement cnt2 = xPart(new ViewJSChart(xId("test2")));	
 			
-			XMLElement cntSyllabique =  XHTMLPart.xPart(new ViewSyllabisation());	
+			XMLElement cntSyllabique =  XHTMLPart.vPart(new ViewSyllabisation());	
 			
-			XMLElement cntLogWorker =  XHTMLPart.xPart(new ViewLog());	
+			XMLElement cntLogWorker =  XHTMLPart.vPart(new ViewLog());	
 			
 			JActivity activity = JSContent.declareType(JActivity.class, "activity"); 
 			activity._setContent( activity( "Activity1", arr( 

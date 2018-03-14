@@ -9,14 +9,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
-import com.elisaxui.core.xui.xhtml.builder.css.CSSStyle;
-import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.css.CSSStyleRow;
+import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ArrayMethod;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLFunction;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomFuntion;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Handle;
 import com.elisaxui.core.xui.xml.target.CONTENT;
@@ -75,12 +75,12 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 				if (object instanceof XMLAttr) {
 					listAttr.add((XMLAttr) object);
 
-				} else if (object instanceof XClass) {
+				} else if (object instanceof CSSClass) {
 					if (listClass == null)
 						listClass = new ArrayList<>();
 					else
 						listClass.add(" ");
-					listClass.add(((XClass) object).getId());
+					listClass.add(((CSSClass) object).getId());
 				} else {
 
 					listInner.add(object);
@@ -97,7 +97,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
-
+		
 		XUIFactoryXHtml.getXHTMLFile().listParent.add(this);
 
 		if (buf.isTemplate) {
@@ -226,7 +226,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 		} else if (inner instanceof List) { // une liste
 			if (inner instanceof ArrayMethod)
 			{				
-				XHTMLFunction v = new XHTMLFunction()._setValue(inner);
+				JSDomFuntion v = new JSDomFuntion()._setValue(inner);
 				nbChild = doChild(buf, nbChild, v);
 			}
 			else
@@ -261,8 +261,8 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			part.toXML(buf);
 			nbChild++;
 
-		} else if (inner instanceof CSSStyle) { // un css
-			CSSStyle part = ((CSSStyle) inner);
+		} else if (inner instanceof CSSStyleRow) { // un css
+			CSSStyleRow part = ((CSSStyleRow) inner);
 			part.nbTabInternal = this.nbTabInternal + 1;
 			part.nbTabForNewLine = this.nbTabForNewLine;
 			part.toXML(buf);
@@ -282,7 +282,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			if (buf.isTemplate) {
 				if (inner instanceof CharSequence) {
 					buf.addContentOnTarget("\""+inner+"\"");
-				} else if (inner instanceof XHTMLFunction) {
+				} else if (inner instanceof JSDomFuntion) {
 					buf.addContentOnTarget(inner);
 				} else if (inner instanceof JSDomElement) {
 					buf.addContentOnTarget(inner);

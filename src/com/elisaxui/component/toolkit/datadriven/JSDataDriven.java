@@ -63,8 +63,8 @@ public interface JSDataDriven extends JSClass {
 			_if(fctExit, "!=null").then(() -> {
 				__(fctExit, ".call(this, ctx.row, ctx.row['"+JSDataSet.ATTR_DOM_LINK+"'], ctx)");
 			})._else(()->{
-				_if("ctx.row['"+JSDataSet.ATTR_DOM_LINK+"']!=null").then(() -> {
-					__("$(ctx.row['"+JSDataSet.ATTR_DOM_LINK+"']).remove()");
+				_if(ctx.row().attrByString(JSDataSet.ATTR_DOM_LINK).isNotEqual(null)).then(() -> {
+					cast(JSDomElement.class, ctx.row().attrByString(JSDataSet.ATTR_DOM_LINK)).remove();
 				});
 			});
 		}));

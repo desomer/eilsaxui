@@ -68,7 +68,7 @@ public interface JSContainer extends JSFactory, IXHTMLBuilder {
 				_if("ctx.row['_dom_']==null");
 				
 				 	_if("ctx.row.type=='page'");
-						_set(template, XHTMLPart.xPart(new ViewPageLayout(xVar("ctx.row.id"))));
+						_set(template, XHTMLPart.vPart(new ViewPageLayout(xVar("ctx.row.id"))));
 						_var("jqdom", template.appendInto("$(selector)"));
 						__("ctx.row['_dom_']=jqdom[0]");
 						

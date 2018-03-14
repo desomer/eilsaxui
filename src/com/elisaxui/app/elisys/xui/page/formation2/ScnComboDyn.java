@@ -3,6 +3,7 @@
  */
 package com.elisaxui.app.elisys.xui.page.formation2;
 
+import static com.elisaxui.component.toolkit.com.JSCom.xuiCom;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDocument.document;
 
 import javax.ws.rs.GET;
@@ -16,12 +17,17 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
+import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.component.toolkit.com.TKCom;
+import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
+import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
+import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
@@ -41,33 +47,49 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
  *
  */
 @Path("/json")
-public class SrvScnDataDriven implements IJSONBuilder {
+public class ScnComboDyn implements IJSONBuilder {
 
 	/********************************************
 	 * VIEW
 	 ***********************************************/
-	@xFile(id = "SrvScnDataDriven")
-	public static class ScnDataDriven extends XHTMLPart {
-
+	@xFile(id = "ScnComboDyn")
+	public static class CmpComboTelephone extends XHTMLPart implements IJSDataDriven {
 		static CSSClass cMain;
+		static Telephone aRow;
 
 		@xTarget(HEADER.class)
-		@xRessource // une seule fois par vue
-		public XMLElement xImportVue() {
-			return xImport(JSDomBuilder.class, TKCom.class);
+		@xRessource  
+		public XMLElement xImport() {
+			return xListNode(
+					xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"),
+					xImport(JSDomBuilder.class,
+							TKPubSub.class,
+							JSDataDriven.class,
+							JSDataSet.class,
+							TKCom.class));
 		}
-
+		
 		@xTarget(HEADER.class)
 		@xRessource
 		public XMLElement xStylePart() {
-			return xStyle().path(cMain, " span").set("color:blue");
+			return xStyle().path(cMain).set("display:block");
 		}
 
 		@xTarget(CONTENT.class) // la vue App Shell
 		public XMLElement xAppShell() {
-			return xDiv(xH1("LOGO"), xArticle(cMain));
+			return xUl(cMain);
 		}
 
+		public XMLElement xItem(JSAny code, JSAny Libelle) {
+			return xLi(code, "- ", Libelle);
+		}
+
+		public XMLElement xListItem(JSArray<Telephone> listTelephone) {			
+			return xElem(
+					   vFor(listTelephone, aRow, xItem(aRow.nom(), aRow.marque()) 
+					));
+		}
+		
 		@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
 		public XMLElement xLoad() {
 			return xImport(JSTestTemplate.class);
@@ -76,55 +98,54 @@ public class SrvScnDataDriven implements IJSONBuilder {
 		// une class JS
 		public interface JSTestTemplate extends JSClass, IJSDomTemplate {
 
-			@xStatic(autoCall = true) // appel automatique de la methode static
+			@xStatic(autoCall = true)
 			default void main() {
-				ImgType data = declareType(ImgType.class, "data");
-				TKCom tkcom = declareType(TKCom.class, "TKCom");  // TODO a ameilorer
+				
+				JSArray<Telephone> data = let("data", new JSArray<Telephone>().asLitteral());
 
-				tkcom.requestUrl(JSString.value(REST_JSON_TEST+"OK"))
-						.then(fct(data, () -> document().querySelector(cMain).appendChild(
-								newJS(JSTestTemplate.class).xImageOK(data.name(), data.urlImage()))));
+				document().querySelector(cMain).appendChild(
+						createDomTemplate(new CmpComboTelephone().xListItem(data)));
+				
+				JSArray<Telephone> result = JSContent.declareArray(Telephone.class, "result");
+				xuiCom().requestUrl(JSString.value(REST_JSON_TEST+"A"))
+						.then(fct(result, () -> data.pushAll(result) ));
 			}
 
-			default JSDomElement xImageOK(JSAny id, JSString url) {
-				return createDomTemplate(xDiv(xSpan(id), xPicture(url)));
-			}
-
-			default JSDomElement xPicture(JSString url) {
-				return createDomTemplate(xImg(xAttr("src", url)));
-			}
 		}
 	}
 
 	/********************************************
 	 * DTO
 	 ***********************************************/
-	public interface ImgType extends JSType {
-		JSString urlImage();
-
-		JSString name();
+	public interface Telephone extends JSType {
+		JSString nom();
+		JSString marque();
 	}
 
 	/********************************************
 	 * SERVICE
 	 *************************************************/
-
-	private static final String PHOTO = "https://images.pexels.com/photos/316465/pexels-photo-316465.jpeg?h=350&auto=compress&cs=tinysrgb";
-	private static final String REST_JSON_TEST = "/rest/json/test/";
+	private static final String REST_JSON_TEST = "/rest/json/listTelephone/";
 
 	@GET
-	@Path("/test/{id}")
+	@Path("/listTelephone/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getHtml(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("id") String id) {
 
-		ImgType data = newJava(ImgType.class);
-		data.name().set("Votre creation " + id);
-		data.urlImage().set(PHOTO);
+		JSArray<Telephone> result = new JSArray<Telephone>().asLitteral();
+		
+		Telephone data = newJava(Telephone.class);
+		data.nom().set("IPhone " + id);
+		data.marque().set("Apple");
+		result.push(data);
+		
+		data = newJava(Telephone.class);
+		data.nom().set("Galaxy S7" + id);
+		data.marque().set("Samsung");
+		result.push(data);
 
 		return Response.status(Status.OK)
-				.header("Link", "<https://fonts.googleapis.com/icon?family=Material+Icons>; rel=preload; as=style,"
-						+ " <https://fonts.gstatic.com>; rel=preconnect")
-				.entity(data._getContent())
+				.entity(result.toString())
 				.build();
 	}
 

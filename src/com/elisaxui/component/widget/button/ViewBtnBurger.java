@@ -8,7 +8,7 @@ import static com.elisaxui.component.transition.CssTransition.*;
 
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -23,32 +23,32 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 @xComment("ViewBtnBurger")
 public class ViewBtnBurger extends XHTMLPart {
 
-	XClass cLeftBtn;
+	CSSClass cLeftBtn;
 
 	@xComment("hamburger")
-	public static XClass hamburger;
+	public static CSSClass hamburger;
 	@xComment("hamburger-box")
-	XClass hamburger_box;
+	CSSClass hamburger_box;
 	@xComment("hamburger-inner")
-	XClass hamburger_inner;
+	CSSClass hamburger_inner;
 
 	@xComment("hamburger--elastic")
-	XClass hamburger_elastic;
+	CSSClass hamburger_elastic;
 	
 	@xComment("hamburger--arrow")
-	XClass hamburger_arrow;
+	CSSClass hamburger_arrow;
 
 	@xTarget(HEADER.class)
 	@xRessource
 	public XMLElement xStylePart() {
 
 		return xStyle()
-				.path(hamburger).add("will-change:transform")
+				.path(hamburger).set("will-change:transform")
 				.path(	hamburger.__(hamburger_inner)
 						.or(hamburger.__(hamburger_inner).pseudoClass("after"))
 						.or(hamburger.__(hamburger_inner).pseudoClass("before"))
 						)
-						.add("background-color: #fFf; "
+						.set("background-color: #fFf; "
 								+ "transition-property:all !important; "
 								+ "transition-duration:"+SPEED_BURGER_EFFECT+"ms !important;")
 
@@ -57,7 +57,7 @@ public class ViewBtnBurger extends XHTMLPart {
 //						+ ".hamburger.changeColorMenu .hamburger-inner:before",
 //						"background-color: #fff; transition-property:all !important; transition-duration:500ms !important;")
 
-				.path(cLeftBtn).add("position: absolute;top: 0px; left: 0px; "
+				.path(cLeftBtn).set("position: absolute;top: 0px; left: 0px; "
 						+ "z-index: "+XUIScene.ZINDEX_MENU+"; outline:0 !important") 
 								// pas de bord bleu au click
 		;

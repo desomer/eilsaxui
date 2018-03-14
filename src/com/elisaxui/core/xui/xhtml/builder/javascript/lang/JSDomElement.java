@@ -15,6 +15,10 @@ public class JSDomElement extends JSAny  implements IJSClassInterface {
 		return  callMth("appendChild", element);
 	}
 	
+	public JSDomElement remove() {
+		return  callMth("remove");
+	}
+	
 	public JSString textContent() {
 		return castAttr(new JSString(), "textContent");
 	}

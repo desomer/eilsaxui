@@ -11,8 +11,8 @@ import com.elisaxui.component.transition.ConstTransition;
 import com.elisaxui.component.widget.button.ViewBtnBurger;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.html.XClass;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
+import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -26,19 +26,19 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 @xComment("ViewNavBar")
 public class ViewNavBar extends XHTMLPart {
 	
-	public static XClass actionBtnContainer;
-	static XClass animatedBg;
-	public static XClass isOpenMenu;
-	public static XClass navbar;
-	public static XClass fixedTop;
-	public static XClass rightAction;
-	public static XClass center;
-	public static XClass logo;
-	public static XClass actionBtn;
+	public static CSSClass actionBtnContainer;
+	static CSSClass animatedBg;
+	public static CSSClass isOpenMenu;
+	public static CSSClass navbar;
+	public static CSSClass fixedTop;
+	public static CSSClass rightAction;
+	public static CSSClass center;
+	public static CSSClass logo;
+	public static CSSClass actionBtn;
 	@xComment("material-icons")
-	public static XClass material_icons;
-	public static XClass descBar;
-	public static XClass topBar;
+	public static CSSClass material_icons;
+	public static CSSClass descBar;
+	public static CSSClass topBar;
 	
 	public static final String PROPERTY_NAME = "PROPERTY_NAME";
 	
@@ -47,7 +47,7 @@ public class ViewNavBar extends XHTMLPart {
 	public XMLElement xStylePart() {
 		
 		return xStyle()  
-				.path(navbar).add("z-index: "+XUIScene.ZINDEX_NAV_BAR+";"
+				.path(navbar).set("z-index: "+XUIScene.ZINDEX_NAV_BAR+";"
 						+ "height: 3rem;"
 						+ "width: "+XUIScene.widthScene+"; "
 						+ "color:white; "
@@ -55,20 +55,20 @@ public class ViewNavBar extends XHTMLPart {
 						+ XUIScene.PREFORM_3D_2
 					)
 				
-				.path(fixedTop).add("position:fixed; top:0px;"
+				.path(fixedTop).set("position:fixed; top:0px;"
 						+ XUIScene.PREFORM_3D_2
 						 )
 			//----------------	.select(fixedToAbsolute).set("position:absolute;")  // permet de deplacement
 				
-				.path(rightAction).add("position: absolute; right: 0px;  top: 0px;  height: 100%;  width: auto;")
+				.path(rightAction).set("position: absolute; right: 0px;  top: 0px;  height: 100%;  width: auto;")
 				
-				.path(actionBtn).add("margin: 0; padding: 8px;  font-size: 2.5rem;  cursor: pointer;")
+				.path(actionBtn).set("margin: 0; padding: 8px;  font-size: 2.5rem;  cursor: pointer;")
 				
-				.path(center).add(""
+				.path(center).set(""
 						+ ";height:100%; "
 						+ "display: flex; align-items: center;justify-content: center"
 						)
-				.path(logo).add( ""
+				.path(logo).set( ""
 						+ "z-index: "+(XUIScene.ZINDEX_NAV_BAR+1)+";"  // pour opacity
 						+ " margin-top:calc(" + XUIScene.heightNavBar +" /2); "
 						+ "color: inherit; "
@@ -76,17 +76,17 @@ public class ViewNavBar extends XHTMLPart {
 						+ "transition: all "+ConstTransition.SPEED_ANIM_SCROLL+"ms linear;"    //ease-in-out
 						 )
 				
-				.path(animatedBg).add("position: absolute; display: block;"
+				.path(animatedBg).set("position: absolute; display: block;"
 						+ "  width: 100%; height: 100%;"
 						+ " top: 0; right: 0; bottom: 0; left: 0;"
 					//	+ "background:"+XUIFactoryXHtml.getXHTMLFile().getScene().getConfigScene().getBgColorNavBar()+"; "
 						)
 				
-				.path(actionBtnContainer).add("cursor: pointer; position: relative; background-color: Transparent; color:white;"
+				.path(actionBtnContainer).set("cursor: pointer; position: relative; background-color: Transparent; color:white;"
 						+ "padding: 0;  overflow: hidden; outline: 0 !important; " // pas de bordure au focus
 						+ "border:none")
 				
-				.path(topBar).add(""
+				.path(topBar).set(""
 						+ "background:"+"linear-gradient(to bottom, #00000061 0%, rgba(0, 0, 0, 0.23) 64%, rgba(0, 0, 0, 0) 100%);"
 						+ "position: absolute;" 
 						+ "top: 0px;" 
@@ -96,7 +96,7 @@ public class ViewNavBar extends XHTMLPart {
 						+ XUIScene.PREFORM_3D_2
 						)
 				
-				.path(descBar).add( ""
+				.path(descBar).set( ""
 					    + "top: 0px; width: 100%;"
 					    + "position: absolute; "
 					    + "height:"+ XUIScene.heightNavBar+";"
@@ -124,11 +124,11 @@ public class ViewNavBar extends XHTMLPart {
 	}
 	
 	public static XMLElement getTemplateBtnBurger() {
-		return xPart(new ViewBtnBurger());
+		return vPart(new ViewBtnBurger());
 	}
 	
 	public static XMLElement getTemplateActionBar() {
-		IXHTMLTemplate template = new IXHTMLTemplate() {
+		IJSDomTemplate template = new IJSDomTemplate() {
 			@Override
 			public XMLElement getTemplate()
 			{
@@ -140,7 +140,7 @@ public class ViewNavBar extends XHTMLPart {
 	}
 	
 	public static XMLElement getTemplateName(Object name) {
-		IXHTMLTemplate template = new IXHTMLTemplate() {
+		IJSDomTemplate template = new IJSDomTemplate() {
 			@Override
 			public XMLElement getTemplate()
 			{
@@ -154,7 +154,7 @@ public class ViewNavBar extends XHTMLPart {
 	
 	public static XMLElement getTemplateAction(Object name, Object action) {
 		
-		IXHTMLTemplate template = new IXHTMLTemplate() {
+		IJSDomTemplate template = new IJSDomTemplate() {
 			@Override
 			public XMLElement getTemplate()
 			{

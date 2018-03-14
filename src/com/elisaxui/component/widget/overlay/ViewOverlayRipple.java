@@ -8,7 +8,7 @@ import static com.elisaxui.component.transition.ConstTransition.SPEED_ACTIVITY_T
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -25,15 +25,15 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 public class ViewOverlayRipple extends XHTMLPart {
 
 	public static final String START_POINT ="85vw 80vh";
-	public static XClass ripple_overlay;
-	public static XClass transitionOpacity;
+	public static CSSClass ripple_overlay;
+	public static CSSClass transitionOpacity;
 	
 	@xTarget(HEADER.class)
 	@xRessource
 	public XMLElement xStylePart() {
 		
 		return xStyle()
-				.path(ripple_overlay).add(""
+				.path(ripple_overlay).set(""
 					+ "position: absolute;"
 					+ "top: 0px; left: 0px; "
 					+ "width: 100vw;  height: 100vh; "
@@ -45,7 +45,7 @@ public class ViewOverlayRipple extends XHTMLPart {
 
 				.path(ripple_overlay.and(transitionOpacity))
 			//		.set("transition: opacity "+SPEED_ACTIVITY_TRANSITION_EFFECT+"ms linear;")  //cubic-bezier(1, 0, 1, 1)
-					.add("opacity:0;") 
+					.set("opacity:0;") 
 				;
 	}
 	
@@ -55,7 +55,7 @@ public class ViewOverlayRipple extends XHTMLPart {
 	}
 	
 	public static XMLElement xTemplate() {
-			return xListElement( xPart( new ViewOverlayRipple()  ));	
+			return xListElement( vPart( new ViewOverlayRipple()  ));	
 	}
 
 }

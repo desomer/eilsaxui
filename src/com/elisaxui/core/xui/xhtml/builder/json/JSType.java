@@ -10,6 +10,6 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
  *
  */
 /** TODO par defaut litteral*/
-public interface JSONType extends JSClass {
+public interface JSType extends JSClass {
 
 }

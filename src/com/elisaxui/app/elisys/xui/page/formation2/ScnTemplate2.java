@@ -6,12 +6,13 @@ package com.elisaxui.app.elisys.xui.page.formation2;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDocument.document;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSXHTMLTemplate;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -29,17 +30,17 @@ public class ScnTemplate2 extends XHTMLPart {
 	/********************************************************/
 	// la vue
 	/********************************************************/
-	static XClass cMain;
+	static CSSClass cMain;
 
 	@xTarget(HEADER.class)
 	@xRessource // une seule fois par vue
 	public XMLElement xImportVue() {
-		return xImport(JSXHTMLTemplate.class);
+		return xImport(JSDomBuilder.class);
 	}
 
 	@xTarget(CONTENT.class) // la vue App Shell
 	public XMLElement xAppShell() {
-		return xDiv(xH1("Scn Template 2"), xPart(new CmpButton2().vProperty(CmpButton2.PROPERTY_LABEL, "OK 2")), xArticle(cMain));
+		return xDiv(xH1("Scn Template 2"), vPart(new CmpButton2().vProperty(CmpButton2.PROPERTY_LABEL, "OK 2")), xArticle(cMain));
 	}
 
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
@@ -51,7 +52,7 @@ public class ScnTemplate2 extends XHTMLPart {
 	// une class JS
 	/********************************************************/
 	@xTarget(AFTER_CONTENT.class) // une seule fois par vue car class , a mettre @xTarget sur la JSClass pour retirer l'import
-	public interface JSTestTemplate2 extends JSClass, IXHTMLTemplate, IJSONBuilder {
+	public interface JSTestTemplate2 extends JSClass, IJSDomTemplate, IJSONBuilder {
 
 		@xStatic(autoCall = true) // appel automatique de la methode static
 		default void main() {
@@ -61,9 +62,9 @@ public class ScnTemplate2 extends XHTMLPart {
 		}
 
 		@xStatic
-		default Object xPicture(JSString url) {
-			return jsTemplate(xList(
-					xPart(new CmpButton2().vProperty(CmpButton2.PROPERTY_LABEL, "OK")),
+		default JSDomElement xPicture(JSString url) {
+			return createDomTemplate(xListNode(
+					vPart(new CmpButton2().vProperty(CmpButton2.PROPERTY_LABEL, "OK")),
 					xImg(xAttr("src", url))));
 		}
 
@@ -74,7 +75,7 @@ public class ScnTemplate2 extends XHTMLPart {
 	static class CmpButton2 extends XHTMLPart {
 
 		@xComment("change-Nom")
-		XClass cCmpButton;
+		CSSClass cCmpButton;
 
 		public static final String PROPERTY_LABEL = "PROPERTY_LABEL";
 
@@ -86,7 +87,7 @@ public class ScnTemplate2 extends XHTMLPart {
 		@xTarget(HEADER.class)
 		@xRessource // une seule fois par vue
 		public XMLElement xImportCss() {
-			return xStyle().path("button").add("background-color: #4CAF50;");
+			return xStyle().path("button").set("background-color: #4CAF50;");
 		}
 
 	}

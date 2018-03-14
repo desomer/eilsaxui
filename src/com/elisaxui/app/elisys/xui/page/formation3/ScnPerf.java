@@ -7,7 +7,7 @@ import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSXHTMLTemplate;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
@@ -30,11 +30,11 @@ public class ScnPerf extends XHTMLPart {
 	@xTarget(HEADER.class)
 	@xRessource // une seule fois par vue
 	public XMLElement xImportVue() {
-		return xList(
+		return xListNode(
 				xImport(JSPerfVuesJS.class), 
 				xImport(JSDataSet.class),
 				xImport(JSDataDriven.class),
-				xImport(JSXHTMLTemplate.class),
+				xImport(JSDomBuilder.class),
 				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js"),
 				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js")
 				);
@@ -45,11 +45,11 @@ public class ScnPerf extends XHTMLPart {
 	@xPriority(1)
 	public XMLElement xImport() {
 		if (JSPerfVuesJS.isVueJS())
-			return xList(xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.13/vue.min.js"));
+			return xListNode(xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.13/vue.min.js"));
 	//	else if (JSPerfVuesJS.isJQuery())
 	//		return xListElem(xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js"));
 		else
-			return xList();
+			return xListNode();
 
 	}
 
@@ -66,7 +66,7 @@ public class ScnPerf extends XHTMLPart {
 	@xRessource // une seule fois par vue
 	@xVersion("1.0")  // a terminer
 	public XMLElement xDo() {		
-		return xList(
+		return xListNode(
 					xImport(A.class)
 				);
 	}

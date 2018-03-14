@@ -9,7 +9,7 @@ import com.elisaxui.component.widget.navbar.ViewNavBar;
 import com.elisaxui.component.widget.overlay.ViewOverlay;
 import com.elisaxui.component.widget.tabbar.ViewTabBar;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -29,8 +29,8 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 
 public class ViewPageLayout extends XHTMLPart { 
 	
-	public static XClass cArticle;
-	public static XClass content;
+	public static CSSClass cArticle;
+	public static CSSClass content;
 	
 	public static final String ID = "ID";
 	
@@ -44,19 +44,19 @@ public class ViewPageLayout extends XHTMLPart {
 	public XMLElement xStylePart() {
 
 		return xStyle().path(cArticle)
-						.add("overflow:hidden;")
+						.set("overflow:hidden;")
 		;
 	}
 	
 	@xTarget(CONTENT.class)
 	public XMLElement xViewPanel() {
 		return xDiv(xId(vProperty(ID)), CssTransition.activity, CssTransition.inactive, CssTransition.cStateNoDisplay 
-				, xPart(new ViewNavBar().vProperty(ViewNavBar.PROPERTY_NAME, "NavBar"+vProperty(ID)))
+				, vPart(new ViewNavBar().vProperty(ViewNavBar.PROPERTY_NAME, "NavBar"+vProperty(ID)))
 				, xDiv(content 	
 						, xDiv(cArticle, vSearchProperty("children"+vProperty(ID)))
-						, xPart(new ViewOverlay())
+						, vPart(new ViewOverlay())
 						)
-				, xPart(new ViewTabBar().vProperty(ViewNavBar.PROPERTY_NAME, "TabBar"+vProperty(ID)) ,
+				, vPart(new ViewTabBar().vProperty(ViewNavBar.PROPERTY_NAME, "TabBar"+vProperty(ID)) ,
 						xLi (ViewTabBar.cFlex_1, ViewTabBar.cTextAlignCenter, ViewTabBar.getTemplateAction("'schedule'", "''")),  
 						xLi (ViewTabBar.cFlex_1, ViewTabBar.cTextAlignCenter, ViewTabBar.getTemplateAction("'today'", "''")),  
 						xLi (ViewTabBar.cFlex_1, ViewTabBar.cTextAlignCenter, ViewTabBar.getTemplateAction("'mic'", "''")) , 

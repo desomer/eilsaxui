@@ -12,9 +12,9 @@ import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.component.transition.CssTransition;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -32,12 +32,12 @@ import com.elisaxui.test.JSTestDataDriven;
 @xComment("ViewMenu")
 public class ViewMenu extends XHTMLPart {
 
-	public static XClass menu;
+	public static CSSClass menu;
 
 	@xComment("fixedLeft")
-	XClass cFixedLeft;
+	CSSClass cFixedLeft;
 
-	XClass cHeaderMenu;
+	CSSClass cHeaderMenu;
 
 	@xTarget(HEADER.class)
 	@xRessource
@@ -81,7 +81,7 @@ public class ViewMenu extends XHTMLPart {
 	@xTarget(HEADER.class)
 	@xRessource
 	public XMLElement xImportAllClass() {
-		return xList(
+		return xListNode(
 			//	xImport(JSMenu.class)
 				);
 	}
@@ -89,11 +89,11 @@ public class ViewMenu extends XHTMLPart {
 
 	public static XMLElement getTemplateMenu(Object name, Object icon, Object idAction) {
 		
-		IXHTMLTemplate template = new IXHTMLTemplate() {
+		IJSDomTemplate template = new IJSDomTemplate() {
 			@Override
 			public XMLElement getTemplate()
 			{
-				return xListElement(xPart(new ViewMenuItems()
+				return xListElement(vPart(new ViewMenuItems()
 						.vProperty(ViewMenuItems.PROPERTY_NAME, xVar(name))
 						.vProperty(ViewMenuItems.PROPERTY_ICON, xVar(icon))
 						.vProperty(ViewMenuItems.PROPERTY_ACTION, xVar(idAction))
@@ -106,6 +106,6 @@ public class ViewMenu extends XHTMLPart {
 	}
 	
 	public static XMLElement getTemplateMenuDivider() {
-		return xListElement(xPart(new ViewMenuDivider()));
+		return xListElement(vPart(new ViewMenuDivider()));
 	}
 }

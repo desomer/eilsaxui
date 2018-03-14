@@ -15,114 +15,118 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  *
  */
 public interface IXHTMLBuilder {
-
-	static XMLElement xElem(String name, Object... inner) {
-		return XMLPart.xElement(name, inner);
-	}
 	
-	default XMLElement xList(Object... array) {
+	default XMLElement xElem(Object... array) {
 		return XMLPart.xListElement(array);
 	}
 	
+	default XMLElement xListNode(Object... array) {
+		return XMLPart.xListElement(array);
+	}
+	
+	
+	static XMLElement xNode(String name, Object... inner) {
+		return XMLPart.xElement(name, inner);
+	}
 	/******************************************************************************/
 	default XMLElement xDiv(Object... inner) {
-		return xElem("div", inner);
+		return xNode("div", inner);
 	}
 	
 	default XMLElement xHeader(Object... inner) {
-		return xElem("header", inner);
+		return xNode("header", inner);
 	}
 	
 	default XMLElement xNav(Object... inner) {
-		return xElem("nav", inner);
+		return xNode("nav", inner);
 	}
 	
 	default XMLElement xMain(Object... inner) {
-		return xElem("main", inner);
+		return xNode("main", inner);
 	}
 	
 	default XMLElement xSection(Object... inner) {
-		return xElem("section", inner);
+		return xNode("section", inner);
 	}
 	
 	default XMLElement xAside(Object... inner) {
-		return xElem("aside", inner);
+		return xNode("aside", inner);
 	}
 	
 	default XMLElement xFooter(Object... inner) {
-		return xElem("footer", inner);
+		return xNode("footer", inner);
 	}
 	
 	default XMLElement xArticle(Object... inner) {
-		return xElem("article", inner);
+		return xNode("article", inner);
 	}
 
 	default XMLElement xSpan(Object... inner) {
-		return xElem("span", inner);
+		return xNode("span", inner);
 	}
 	
 	default XMLElement xI(Object... inner) {
-		return xElem("i", inner);
+		return xNode("i", inner);
 	}
 	
 	default XMLElement xA(Object... inner) {
-		return xElem("a", inner);
+		return xNode("a", inner);
 	}
 	
 	default XMLElement xP(Object... inner) {
-		return xElem("p", inner);
+		return xNode("p", inner);
 	}
 	
 	default XMLElement xButton(Object... inner) {
-		return xElem("button", inner);
+		return xNode("button", inner);
 	}
 
 	default XMLElement xH1(Object... inner) {
-		return xElem("h1", inner);
+		return xNode("h1", inner);
 	}
 	
 	default XMLElement xH2(Object... inner) {
-		return xElem("h2", inner);
+		return xNode("h2", inner);
 	}
 
 	default XMLElement xUl(Object... inner) {
-		return xElem("ul", inner);
+		return xNode("ul", inner);
 	}
 
 	default XMLElement xLi(Object... inner) {
-		return xElem("li", inner);
+		return xNode("li", inner);
 	}
 	
 	default XMLElement xImg(Object... inner) {
-		return xElem("img", inner);
+		return xNode("img", inner);
 	}
 	
 	default XMLElement xCanvas(Object... inner) {
-		return xElem("canvas", inner);
+		return xNode("canvas", inner);
 	}
 	
 	default XMLElement xTextArea(Object... inner) {
-		return xElem("textarea", inner);
+		return xNode("textarea", inner);
 	}
 
 	/*************************  META **************************************/
 	
 	default XMLElement xTitle(Object... inner) {
-		return xElem("title", inner);
+		return xNode("title", inner);
 	}
 	
 	default XMLElement xMeta(Object... inner) {
-		return xElem("meta", inner);
+		return xNode("meta", inner);
 	}
 	
 	default XMLElement xComment(Object... comment) {
 		ArrayList<Object> elem = new ArrayList<>();
 		elem.add("<!--\n");
 		for (Object c : comment) {
-			elem.add(xList(c + "\n"));
+			elem.add(xListNode(c + "\n"));
 		}
-		elem.add(xList("-->"));
-		return xElem(null, elem.toArray());
+		elem.add(xListNode("-->"));
+		return xNode(null, elem.toArray());
 	}
 
 	/**************************  ATTR  ************************************/

@@ -5,7 +5,7 @@ package com.elisaxui.component.widget.overlay;
 
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -20,7 +20,7 @@ import com.elisaxui.core.xui.xml.target.CONTENT;;
 @xComment("ViewOverlay")
 public class ViewOverlay extends XHTMLPart {
 
-	public static XClass cBlackOverlay;
+	public static CSSClass cBlackOverlay;
 	
 	@xTarget(AFTER_BODY.class)
 	@xRessource
@@ -29,7 +29,7 @@ public class ViewOverlay extends XHTMLPart {
 		
 		
 		return xStyle()
-				.path(cBlackOverlay).add("display: none;"
+				.path(cBlackOverlay).set("display: none;"
 						+ "position: absolute;	"
 						+ "top: 0px; left: 0px;"
 						+ " width:100vw ; height:101vh;" 

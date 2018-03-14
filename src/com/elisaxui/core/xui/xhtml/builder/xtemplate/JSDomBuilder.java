@@ -19,7 +19,7 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  * @author gauth
  *
  */
-public interface JSXHTMLTemplate extends JSClass {
+public interface JSDomBuilder extends JSClass {
 	
 
 

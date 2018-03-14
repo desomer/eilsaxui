@@ -3,7 +3,7 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.css;
 
-import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 
 /**
@@ -22,10 +22,10 @@ public class CSSSelector {
 	private CSSSelector(Object... sel)
 	{
 		for (Object obj : sel) {
-			if (obj instanceof XClass)
+			if (obj instanceof CSSClass)
 			{
 				selector.append(".");
-				selector.append(((XClass)obj).getId());
+				selector.append(((CSSClass)obj).getId());
 			}
 			else if (obj instanceof JSAny)
 			{

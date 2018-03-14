@@ -7,7 +7,7 @@ import javax.json.Json;
 
 import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
-import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ArrayMethod;
@@ -204,8 +204,8 @@ public class JSAny implements JSElement {
 			Object[] arr = (Object[])content;
 			for (Object object : arr) {
 				
-				if (object instanceof XClass)
-					inner.add( new JSAny()._setName( ((XClass)object).getId()) );
+				if (object instanceof CSSClass)
+					inner.add( new JSAny()._setName( ((CSSClass)object).getId()) );
 				
 				else if (object instanceof CSSSelector)
 					inner.add( new JSAny()._setName("'" + ((CSSSelector)object).toString()) +"'" );
@@ -298,8 +298,8 @@ public class JSAny implements JSElement {
 			
 			if (classes[i] instanceof String )
 				ret[j] = JSString.value(classes[i].toString());
-			else if ( classes[i] instanceof XClass)
-				ret[j] = JSString.value(((XClass)classes[i]).getId());
+			else if ( classes[i] instanceof CSSClass)
+				ret[j] = JSString.value(((CSSClass)classes[i]).getId());
 			else
 				ret[j] = classes[i];
 			

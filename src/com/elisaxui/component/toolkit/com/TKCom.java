@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.component.toolkit;
+package com.elisaxui.component.toolkit.com;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
@@ -37,8 +37,7 @@ public interface TKCom extends JSClass {
 			
 		});
 		
-		JSPromise promise = let(JSPromise.class, "promise", "new Promise("+fct+")");
-		return promise;
+		return cast(JSPromise.class, "new Promise("+fct+")");
 	}
 	
 	/*

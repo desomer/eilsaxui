@@ -24,7 +24,7 @@ public class ActListPage extends XHTMLPart {
 	
 	@xTarget(CONTENT.class)
 	public XMLElement xListe() {
-		return xButton("ok", xPart(new ViewItem()), xUl(this.getChildren()));
+		return xButton("ok", vPart(new ViewItem()), xUl(this.getChildren()));
 	}
 
 	@xTarget(AFTER_CONTENT.class)

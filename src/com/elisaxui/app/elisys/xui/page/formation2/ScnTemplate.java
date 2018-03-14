@@ -6,14 +6,14 @@ package com.elisaxui.app.elisys.xui.page.formation2;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDocument.document;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
-import com.elisaxui.core.xui.xhtml.builder.json.JSONType;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSXHTMLTemplate;
+import com.elisaxui.core.xui.xhtml.builder.json.JSType;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -31,13 +31,13 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 @xFile(id = "ScnTemplate")
 public class ScnTemplate extends XHTMLPart {
 
-	static XClass cMain;
+	static CSSClass cMain;
 
 	@xTarget(HEADER.class)
 	@xRessource // une seule fois par vue
 	public XMLElement xImportVue() {
-		return xList(
-				xImport(JSXHTMLTemplate.class)
+		return xListNode(
+				xImport(JSDomBuilder.class)
 				);
 	}
 
@@ -53,7 +53,7 @@ public class ScnTemplate extends XHTMLPart {
 
 	// une class JS
 	@xTarget(AFTER_CONTENT.class)   // une seule fois par vue car class  ,  a mettre @xTarget sur la JSClass pour retirer l'import
-	public interface JSTestTemplate extends JSClass, IXHTMLTemplate, IJSONBuilder {
+	public interface JSTestTemplate extends JSClass, IJSDomTemplate, IJSONBuilder {
 
 		@xStatic(autoCall = true) // appel automatique de la methode static
 		default void main() {
@@ -66,16 +66,16 @@ public class ScnTemplate extends XHTMLPart {
 
 		@xStatic
 		default Object xImageOK(JSAny text, JSString url) {
-			return jsTemplate(xDiv(text, xPicture(url) ));
+			return createDomTemplate(xDiv(text, xPicture(url) ));
 		}
 
 		@xStatic
 		default Object xPicture(JSString url) {
-			return jsTemplate(xImg(xAttr("src", url)));
+			return createDomTemplate(xImg(xAttr("src", url)));
 		}
 	}
 
-	public interface ImgType extends JSONType {
+	public interface ImgType extends JSType {
 		JSString urlImage();
 		JSString name();
 	}

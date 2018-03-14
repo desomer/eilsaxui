@@ -19,8 +19,9 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
+import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.json.JsonNumberImpl;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplate;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomTemplate;
 import com.elisaxui.core.xui.xml.builder.IXMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -45,9 +46,37 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	}
 	
 	/**
+	 * @param jc
+	 * @param args
 	 * @return
 	 */
-	public static <E> E declareType(Class<E> type, Object name) {
+	public static final Object cast(Class<?> cl, Object args) {
+		Object jc = declareType(cl, null);
+		if (jc instanceof JSAny)
+		{
+			JSAny jsa = ((JSAny) jc);
+			jsa._setValue(args)._setName(args);
+		}
+		else
+			((JSClass) jc)._setContent(args);
+		return jc;
+	}
+	
+	public static final <E extends JSAny> E declareType(E type, String name) {
+		type._setValue(name)._setName(name);
+		return type;
+	}
+	
+	public static final <E> JSArray<E> declareArray(Class<E> type, String name) {
+		JSArray<?> jc = declareType(JSArray.class, name);
+		jc.setArrayType(type);
+		return (JSArray<E>) jc;
+	}
+	
+	/**
+	 * @return
+	 */
+	public static final <E> E declareType(Class<E> type, Object name) {
 		
 		boolean retJSVariable=JSAny.class.isAssignableFrom(type);
 		boolean retJSClass=JSClass.class.isAssignableFrom(type);
@@ -149,8 +178,8 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 		} else if (object instanceof XMLElement) {
 			doXMLElementToJSXHTMLPart(buf, ((XMLElement) object));
 
-		} else if (object instanceof XHTMLTemplate) {
-			XHTMLTemplate template = ((XHTMLTemplate) object);
+		} else if (object instanceof JSDomTemplate) {
+			JSDomTemplate template = ((JSDomTemplate) object);
 
 			if (template.isModeJS())
 				((JSContent) template.getContent()).toXML(buf);
@@ -551,7 +580,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	public Object _new(Object... param) {
 
 		if (param.length > 0 && param[0] instanceof Class)
-			return ProxyHandler.cast((Class<?>) param[0],
+			return cast((Class<?>) param[0],
 					textNew(((Class<?>) param[0]).getSimpleName(), Arrays.copyOfRange(param, 1, param.length)));
 		else
 			return new JSListParameter(param);
@@ -570,7 +599,13 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 		if (ret instanceof JSAny)
 			((JSAny) ret)._setValue(textNew);
 		else
+		{
 			((JSClass) ret)._setContent(textNew);
+			if ( ret instanceof JSType )
+			{
+				((JSClass) ret).asLitteral();
+			}
+		}
 
 		return (E) ret;
 	}

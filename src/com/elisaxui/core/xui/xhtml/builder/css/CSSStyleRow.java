@@ -3,12 +3,17 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.css;
 
-import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xml.builder.IXMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XUIFormatManager;
 
-public final class CSSStyle extends XUIFormatManager implements IXMLBuilder {
+/**
+ * la ligne de style
+ * @author gauth
+ *
+ */
+public final class CSSStyleRow extends XUIFormatManager implements IXMLBuilder {
 	Object path;
 	Object content;
 
@@ -18,13 +23,13 @@ public final class CSSStyle extends XUIFormatManager implements IXMLBuilder {
 		if (content==null)
 			return null;
 		
-		if (path instanceof XClass)
-			return  "."+((XClass)path).getId() + " { " +content +" }";
+		if (path instanceof CSSClass)
+			return  "."+((CSSClass)path).getId() + " { " +content +" }";
 		else
 			return  path + " {" +content +"}";
 	}
 
-	public CSSStyle(Object path, Object content) {
+	public CSSStyleRow(Object path, Object content) {
 		super();
 		this.path = path;
 		this.content = content;

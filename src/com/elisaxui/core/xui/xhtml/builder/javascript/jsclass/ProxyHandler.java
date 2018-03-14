@@ -292,6 +292,7 @@ public final class ProxyHandler implements InvocationHandler {
 	}
 
 	/**
+	 * Appel un methode non implementer ailleur
 	 * @param proxy
 	 * @param method
 	 * @param args
@@ -322,7 +323,7 @@ public final class ProxyHandler implements InvocationHandler {
 		}
 
 		if (mthInvoke.method.getName().equals("cast")) {
-			return cast((Class<?>) mthInvoke.args[0], mthInvoke.args[1]);
+			return JSContent.cast((Class<?>) mthInvoke.args[0], mthInvoke.args[1]);
 		}
 
 		if (mthInvoke.method.getName().equals("declareType")) {
@@ -430,22 +431,6 @@ public final class ProxyHandler implements InvocationHandler {
 		CoreLogger.getLogger(1).fine(t);
 	}
 
-	/**
-	 * @param jc
-	 * @param args
-	 * @return
-	 */
-	public static Object cast(Class<?> cl, Object args) {
-		Object jc = JSContent.declareType(cl, null);
-		if (jc instanceof JSAny)
-		{
-			JSAny jsa = ((JSAny) jc);
-			jsa._setValue(args)._setName(args);
-		}
-		else
-			((JSClass) jc)._setContent(args);
-		return jc;
-	}
 
 	/**
 	 * @param implcl

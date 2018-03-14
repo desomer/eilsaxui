@@ -28,7 +28,7 @@ public class ScnCustom1 extends XHTMLPart {
 	@xTarget(HEADER.class)
 	@xRessource // une seule fois par vue
 	public XMLElement xImportMeta() {
-		return xList( // ajout plusieur element sans balise parent
+		return xListNode( // ajout plusieur element sans balise parent
 				xTitle("titre"),
 				xMeta(xAttr("name", xTxt("author")), xAttr("content", xTxt("desomer"))));
 	}
@@ -36,7 +36,7 @@ public class ScnCustom1 extends XHTMLPart {
 	@xTarget(HEADER.class)
 	@xRessource // une seule fois par vue
 	public XMLElement xImportCss() {
-		return xStyle().path("tutu").add("display: none;");
+		return xStyle().path("tutu").set("display: none;");
 	}
 
 	@xTarget(BODY.class)
@@ -61,7 +61,7 @@ public class ScnCustom1 extends XHTMLPart {
 	@xRessource
 	@xPriority(200) // par defaut 100
 	public XMLElement xImportStyle() {
-		return xStyle().path("import").add("display: none;");
+		return xStyle().path("import").set("display: none;");
 	}
 
 	/***********************************************************/
@@ -70,12 +70,24 @@ public class ScnCustom1 extends XHTMLPart {
 	@xRessource
 	public XMLElement xStylePart() {
 		return xStyle()
-				.path(".toto1").add("display: none;")
-				.andPath(xStyle(":toto2").add("display: none").add(";display: none")
-							.andPath(xStyle(":toto3").add("display: none;"))
-							.andChildPath(xStyle("img").add("display: none;"))
-					)
-				.andChildPath(xStyle(".toto5").add("display: none;"))
-				.path("#toto6").add("display: none;");
+				/**********************************/
+				.path(".toto1").set("display: none;")
+					.and(xStyle(":toto2").set("display: none").set(";display: none")
+								.and(xStyle(":toto3").set("display: none;"))
+								.andChild(xStyle("img").set("display: none;"))
+								.andDirectChild(xStyle("span").set("display: none;"))
+						)
+					.or(xStyle("titi").or(xStyle("tutu")	
+							.set("display: none;")
+							.and(xStyle(":titi1").set("display: none;"))
+							))
+					.or(xStyle("tata").set("display: none;"))
+					.andChild(xStyle(".toto5").set("display: none;"))
+				/***************************************/
+				.path("#toto6").set("display: block2;")
+				    .andChild(xStyle(".eee").or(xStyle(".fff")).set("display: block;"))
+		
+				/****************************************/
+				;
 	}
 }

@@ -5,7 +5,7 @@ import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xFile;
@@ -44,7 +44,7 @@ public class ScnAdminMain extends XHTMLPart {
 	@xTarget(HEADER.class)
 	@xRessource
 	public XMLElement xImportAllClass() {
-		return xList(
+		return xListNode(
 				xImport(JSTestClass.class),
 				xImport(JSTest2Class.class),
 				xImport(JSXHTMLPart.class),
@@ -58,7 +58,7 @@ public class ScnAdminMain extends XHTMLPart {
 	@xTarget(CONTENT.class)
 	public XMLElement xContenu() {
 		return xDiv(xH1(xId("'test'"), xAttr("style", "'display:inline-block'"), "un ActListPage :",
-				xPart(new ActListPage()
+				vPart(new ActListPage()
 						.vProperty(ActListPage.PROPERTY_NAME, xDiv("property name ok"))
 						.vProperty(ViewItem.TEST_HANDLE, xSpan("un example d'handle "))
 						,xLi("ligne5"), xLi("ligne6"))
@@ -95,7 +95,7 @@ public class ScnAdminMain extends XHTMLPart {
 						._var("t1", txt("bizaroid que ca marche"))
 						
 						// creation d'un template
-						._var(template, xDiv(xPart(new ActListPage().vProperty(ViewItem.TEST_HANDLE, xSpan(xVar("t1")))
+						._var(template, xDiv(vPart(new ActListPage().vProperty(ViewItem.TEST_HANDLE, xSpan(xVar("t1")))
 								, xLi(xAttr("data-d", "d"), "ligne ",  xVar("a"))
 								, xLi("ligne ", xVar("c"))
 								), xDiv(xAttr("style", txt("height: 800px; width:400px")),xAttr("id",txt("content")))))
@@ -123,7 +123,7 @@ public class ScnAdminMain extends XHTMLPart {
 	
 	public static XMLElement xTemplateDataDriven(Object value, Object value2)
 	{
-		IXHTMLTemplate template = new IXHTMLTemplate() {
+		IJSDomTemplate template = new IJSDomTemplate() {
 			@Override
 			public XMLElement getTemplate()
 			{

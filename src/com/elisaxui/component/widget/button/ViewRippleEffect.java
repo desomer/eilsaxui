@@ -7,7 +7,7 @@ import static com.elisaxui.component.transition.ConstTransition.SPEED_RIPPLE_EFF
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
-import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -19,9 +19,9 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
 public class ViewRippleEffect extends XHTMLPart {
 
 	
-	public static XClass cRippleEffect;
-	public static XClass cRippleEffectShow;
-	public static XClass cRippleEffectColorBack;
+	public static CSSClass cRippleEffect;
+	public static CSSClass cRippleEffectShow;
+	public static CSSClass cRippleEffectColorBack;
 
 	@xTarget(AFTER_BODY.class)
 	@xRessource

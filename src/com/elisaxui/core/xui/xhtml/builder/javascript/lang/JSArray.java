@@ -12,6 +12,7 @@ import javax.json.JsonValue;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ArrayMethod;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ILitteral;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 
@@ -100,11 +101,52 @@ public class JSArray<E> extends JSAny  implements ILitteral, IJSClassInterface {
 	public E pop() {
 		return (E) callMth("pop");
 	}
+	
+	public JSArray<E> concat(JSArray<E> array) {
+		return (JSArray<E>) callMth("concat", array);
+	}
 
 	public JSArray<E> splice(Object debut, Object nbASupprimer) {
 		return (JSArray<E>) callMth("splice", debut, nbASupprimer);
 	}
 
+	public void pushAll(JSArray<E> arrSrc) {
+		   // E 
+
+			ArrayMethod<Object> arr = new ArrayMethod<>();
+			
+			arr.add("for (var i = 0, l = ");
+			Object src =arrSrc._getValueOrName();
+			if (src instanceof ArrayMethod)
+				arr.addAll((ArrayMethod<?>) src);
+			else
+				arr.add(src);
+			
+			arr.add(".length; i < l; i++) {");
+			
+			Object content =_getValueOrName();
+			if (content instanceof ArrayMethod)
+				arr.addAll((ArrayMethod<?>) content);
+			else
+				arr.add(content);
+
+			arr.add(".push(");
+			
+			if (src instanceof ArrayMethod)
+				arr.addAll((ArrayMethod<?>) src);
+			else
+				arr.add(src);
+			
+			arr.add("[i]);}");
+			
+			JSAny type = getReturnType();
+
+			type._setValue(arr);
+			
+			zzRegisterMethod(type);
+
+	}
+	
 	public E at(Object idx) {
 		JSArray<?> ret = new JSArray<Object>()._setName(_getValueOrName());
 		ret.addContent("[");

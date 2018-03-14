@@ -7,8 +7,8 @@ import static com.elisaxui.component.transition.CssTransition.*;
 
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.html.XClass;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
+import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -37,14 +37,14 @@ public class ViewFloatAction extends XHTMLPart {
 //.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
 
 
-	static XClass cFloatAction;
+	static CSSClass cFloatAction;
 	
 	@xTarget(HEADER.class)
 	@xRessource
 	public XMLElement xStylePart() {
 
 		return xStyle().path(cFloatAction)
-						.add(""
+						.set(""
 							//+ "z-index:"+XUIScene.ZINDEX_FLOAT+";"
 							+ " position: fixed; "
 							+ "left: calc("+XUIScene.widthScene+" - "+ViewBtnCircle.SIZE_CIRCLE+" - 1rem); "
@@ -56,11 +56,11 @@ public class ViewFloatAction extends XHTMLPart {
 	@xTarget(CONTENT.class)
 	public static XMLElement getTemplateBtnFloat() {
 		
-		IXHTMLTemplate template = new IXHTMLTemplate() {
+		IJSDomTemplate template = new IJSDomTemplate() {
 			@Override
 			public XMLElement getTemplate()
 			{
-				return xDiv(cFloatAction, cFixedElement, xIdAction("\"BtnFloatMain\""),	xPart(new ViewBtnCircle().vProperty(ViewBtnCircle.PROPERTY_ICON, "history")));
+				return xDiv(cFloatAction, cFixedElement, xIdAction("\"BtnFloatMain\""),	vPart(new ViewBtnCircle().vProperty(ViewBtnCircle.PROPERTY_ICON, "history")));
 			}
 		};
 		
@@ -68,7 +68,7 @@ public class ViewFloatAction extends XHTMLPart {
 	}
 	
 	public static XMLElement getTemplate() {
-		return xPart(new ViewFloatAction());
+		return vPart(new ViewFloatAction());
 	}
 	
 }

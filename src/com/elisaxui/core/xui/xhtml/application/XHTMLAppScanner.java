@@ -19,7 +19,7 @@ import com.elisaxui.core.helper.ReflectionHelper;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.XUILaucher;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
@@ -189,7 +189,7 @@ public class XHTMLAppScanner {
 			{
 				doVarJSClass(cl, obj, field);
 			}
-			else if (doStatic==isStatic && XClass.class.isAssignableFrom(field.getType()))
+			else if (doStatic==isStatic && CSSClass.class.isAssignableFrom(field.getType()))
 			{
 				doVarXClass(cl, obj, field); 
 			}
@@ -259,7 +259,7 @@ public class XHTMLAppScanner {
 	private static void doVarXClass(Class<? extends XMLPart> cl, Object obj, Field field) {
 		if (debug)
 			System.out.println("[XMLPart] init var CSSClass on " + cl + " name "+ field.getName() );
-		XClass classCss = new XClass();
+		CSSClass classCss = new CSSClass();
 		String name = field.getName();
 		xComment comment = field.getAnnotation(xComment.class);
 		if (comment != null) {

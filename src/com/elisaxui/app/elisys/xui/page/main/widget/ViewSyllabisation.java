@@ -8,8 +8,8 @@ import static com.elisaxui.component.transition.CssTransition.cFixedElement;
 import com.elisaxui.app.elisys.xui.page.main.JSONPage1;
 import com.elisaxui.component.widget.button.ViewBtnCircle;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.html.XClass;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
+import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -22,32 +22,32 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
  */
 public class ViewSyllabisation extends XHTMLPart {
 
-	static XClass cDivSyllabisation;
-	static XClass cSyllabeMot;
-	static XClass cSyllabe;
-	static XClass cSyllabeImpaire;
+	static CSSClass cDivSyllabisation;
+	static CSSClass cSyllabeMot;
+	static CSSClass cSyllabe;
+	static CSSClass cSyllabeImpaire;
 	
-	public static XClass cMicro;
+	public static CSSClass cMicro;
 	
 	@xTarget(HEADER.class)
 	@xRessource
 	public XMLElement xStylePart() {
 
 		return xStyle().path(cDivSyllabisation)
-						.add("min-height:20vh; line-height: 45px;"
+						.set("min-height:20vh; line-height: 45px;"
 							//*	+ "font-family: 'Open Sans', sans-serif;"
 								+ "    font-size: 25px; font-stretch: expanded;"
 								+ " background-color: #feffc7;"
 								)
 					
 					 .path(cSyllabeMot)
-					 	.add("margin:10px")
+					 	.set("margin:10px")
 					 	
 //					 .select(cMicro)
 //					 	.set("width:100%")
 						
 					 .path(cSyllabeImpaire)
-						.add("border: 1px solid rgba(255, 0, 239, 0.56);background: rgba(255, 53, 157, 0.14);") 	
+						.set("border: 1px solid rgba(255, 0, 239, 0.56);background: rgba(255, 53, 157, 0.14);") 	
 								    
 		;
 	}
@@ -59,7 +59,7 @@ public class ViewSyllabisation extends XHTMLPart {
 	}
 	
 	public static XMLElement getMot(Object text) {
-		IXHTMLTemplate template = new IXHTMLTemplate() {
+		IJSDomTemplate template = new IJSDomTemplate() {
 			@Override
 			public XMLElement getTemplate()
 			{
@@ -71,7 +71,7 @@ public class ViewSyllabisation extends XHTMLPart {
 	}
 	
 	public static XMLElement getSyl(Object text) {
-		IXHTMLTemplate template = new IXHTMLTemplate() {
+		IJSDomTemplate template = new IJSDomTemplate() {
 			@Override
 			public XMLElement getTemplate()
 			{

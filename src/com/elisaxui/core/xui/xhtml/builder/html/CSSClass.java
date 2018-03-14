@@ -9,7 +9,7 @@ import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
  * @author Bureau
  *
  */
-public class XClass {
+public class CSSClass {
 	String id;
 	
 	
@@ -23,7 +23,7 @@ public class XClass {
 		return id;
 	}
 
-	public XClass setId(String id) {
+	public CSSClass setId(String id) {
 		this.id = id;
 		return this;
 	}

@@ -35,7 +35,7 @@ import com.elisaxui.component.widget.navbar.JSNavBar;
 import com.elisaxui.component.widget.navbar.ViewNavBar;
 import com.elisaxui.component.widget.overlay.JSOverlay;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
@@ -76,8 +76,8 @@ public abstract class XUIScene extends XHTMLPart {
 
 	public static final String PREFORM_CHANGE_OPACITY = "will-change:opacity, display;";
 
-	public static XClass scene;
-	public static XClass cShell;
+	public static CSSClass scene;
+	public static CSSClass cShell;
 
 	public abstract JSContentInterface createScene();
 
@@ -87,7 +87,7 @@ public abstract class XUIScene extends XHTMLPart {
 	@xRessource
 	@xPriority(1)
 	public XMLElement xImportCssXUIScene() {
-		return xList(
+		return xListNode(
 				xLinkCssAsync("https://fonts.googleapis.com/icon?family=Material+Icons"),
 				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"),
 				xLinkCssAsync("https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css"));
@@ -97,7 +97,7 @@ public abstract class XUIScene extends XHTMLPart {
 	@xRessource
 	@xPriority(1)
 	public XMLElement xImportXUIScene() {
-		return xList(
+		return xListNode(
 
 				xTitle(getConfigScene().getTitle()),
 				xMeta(xAttr("name", xTxt("theme-color")), xAttr("content", xTxt(getConfigScene().getBgColorTheme()))),
@@ -156,8 +156,8 @@ public abstract class XUIScene extends XHTMLPart {
 	@xRessource
 	public XMLElement xImportAfterXUIScene() {
 
-		return xList(
-				xPart(new TKQueue()), // TODO Remplacer par une class js
+		return xListNode(
+				vPart(new TKQueue()), // TODO Remplacer par une class js
 				xImport(JSXHTMLPart.class),
 				xImport(TKPubSub.class),
 				xImport(JSDataDriven.class),
@@ -167,7 +167,7 @@ public abstract class XUIScene extends XHTMLPart {
 				xImport(JSContainer.class),
 				xImport(JSPageLayout.class),
 				xImport(TKRouterEvent.class),
-				xPart(new CssTransition()), // TODO Remplacer
+				vPart(new CssTransition()), // TODO Remplacer
 				xImport(JSTransition.class),
 				xImport(JSMenu.class),
 				xImport(TKActivity.class),
@@ -180,13 +180,13 @@ public abstract class XUIScene extends XHTMLPart {
 	public XMLElement xStyleXUIScene() {
 
 		return xStyle()
-				.path("*, *:before, *:after").add(
+				.path("*, *:before, *:after").set(
 						"-webkit-tap-highlight-color: rgba(0,0,0,0); " // pas de coulour au click => ripple a la place
 								+ "box-sizing: border-box;   "
 								+ "margin: 0;" +
 								"  padding: 0;")
 
-				.path("html").add("font-size: 16px;")
+				.path("html").set("font-size: 16px;")
 
 				// //+"overflow-y: scroll;"
 				// //+ "overflow-x: hidden;" // pour que le 100vw ne prennent pas en compte la
@@ -194,31 +194,31 @@ public abstract class XUIScene extends XHTMLPart {
 				// + " line-height: 1.5;"
 				// + "font-family: 'Roboto', sans-serif;font-weight: normal;")
 
-				.path("body").add("background-color: " + getConfigScene().getBgColorScene() + ";"
+				.path("body").set("background-color: " + getConfigScene().getBgColorScene() + ";"
 						+ "line-height: 1.5;"
 						+ "font-family: 'Roboto', sans-serif;"
 						+ "font-weight: normal;")
 
 				// ----------------------------------------------------------------
-				.path(scene).add("overflow-x: hidden; background-color: " + getConfigScene().getBgColorScene() + ";" // overflow:
+				.path(scene).set("overflow-x: hidden; background-color: " + getConfigScene().getBgColorScene() + ";" // overflow:
 																														// auto;
 																														// -webkit-overflow-scrolling:
 																														// auto
 				// + "min-width: 100vw; "
 						+ "min-height: 100vh; ")
-				.andChildPath(xStyle(cShell).add("background-color: " + getConfigScene().getBgColorContent() + ";"
+				.andChild(xStyle(cShell).set("background-color: " + getConfigScene().getBgColorContent() + ";"
 						+ "width: " + widthScene + ";"
 						+ "  min-height: 100vh; "))
-				.andChildPath(xStyle("#NavBarShell h1")
-						.add("text-align:center;color: inherit;  font-size: 2.1rem; margin-top: 50px"))
+				.andChild(xStyle("#NavBarShell h1")
+						.set("text-align:center;color: inherit;  font-size: 2.1rem; margin-top: 50px"))
 				// ----------------------------------------------------------------
 				.path(activity)
-				.add("background-color: " + getConfigScene().getBgColorContent() + ";"
+				.set("background-color: " + getConfigScene().getBgColorContent() + ";"
 						+ " width:" + widthScene + ";"
 						+ " will-change:overflow,z-index;") // will-change:transform =bug : les header et footer ne se
 															// fixe plus au body
-				.andChildPath(xStyle(ViewPageLayout.content)
-						.add(" min-height: 100vh; "
+				.andChild(xStyle(ViewPageLayout.content)
+						.set(" min-height: 100vh; "
 								+ "min-width: " + widthScene + "; "
 								+ "background-color:" + getConfigScene().getBgColorContent() + ";will-change:contents") // changement
 																														// durant
@@ -231,7 +231,7 @@ public abstract class XUIScene extends XHTMLPart {
 				)
 
 				// ----------------------------------------------------------------
-				.path(ViewPageLayout.content).add( // ne pas ajouter a cActivity
+				.path(ViewPageLayout.content).set( // ne pas ajouter a cActivity
 						"padding-top: " + heightNavBar + "; "
 								+ "padding-bottom: " + heightTabBar)
 
@@ -240,18 +240,18 @@ public abstract class XUIScene extends XHTMLPart {
 
 	@xTarget(CONTENT.class)
 	public XMLElement xContenuXUIScene() {
-		return xList(
-				xPart(new ViewMenu()),
+		return xListNode(
+				vPart(new ViewMenu()),
 				xDiv(scene, xDiv(cShell,
-						xPart(new ViewNavBar().vProperty(ViewNavBar.PROPERTY_NAME, "NavBarShell"), xH1("Loading...")),
-						xPart(new ViewLoader()))));
+						vPart(new ViewNavBar().vProperty(ViewNavBar.PROPERTY_NAME, "NavBarShell"), xH1("Loading...")),
+						vPart(new ViewLoader()))));
 	}
 
 	@xTarget(AFTER_CONTENT.class)
 	@xPriority(500)
 	@xRessource
 	public XMLElement xImportStartXUIScene() {
-		return xList(
+		return xListNode(
 				xScriptJS(js()
 						// a mettre dans TKConfig
 						._set($xui(),

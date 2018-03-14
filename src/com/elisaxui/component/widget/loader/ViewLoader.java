@@ -8,8 +8,8 @@ import static com.elisaxui.component.widget.button.ViewRippleEffect.cRippleEffec
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.html.XClass;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
+import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -23,16 +23,16 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 public class ViewLoader extends XHTMLPart {
 
 	
-	static XClass cLoaderContainer;
-	static XClass cLoaderLoader;
+	static CSSClass cLoaderContainer;
+	static CSSClass cLoaderLoader;
 	
 	@xTarget(HEADER.class)
 	@xRessource
 	public XMLElement xStylePart() {
 
 		
-		return xStyle().path(cLoaderContainer) .add(" position:absolute;left:50%; width:50vw; height:50vw;  top:50%; transform: translate(-50%,-50%);")
-					 .path(cLoaderLoader) .add(" transition: all 0.7s ease-in-out;"
+		return xStyle().path(cLoaderContainer) .set(" position:absolute;left:50%; width:50vw; height:50vw;  top:50%; transform: translate(-50%,-50%);")
+					 .path(cLoaderLoader) .set(" transition: all 0.7s ease-in-out;"
 					 		+ "border:10px solid #ebebeb; border-bottom-color:"+((XUIScene)XUIFactoryXHtml.getXHTMLFile().getScene()).getConfigScene().getBgColorTheme()+";"
 					 		+ "width:100%;height:100%;border-radius:50%;"
 					 		+ "box-shadow: 0px 13px 20px 0px #fd42a430;"
@@ -47,7 +47,7 @@ public class ViewLoader extends XHTMLPart {
 	
 	@xTarget(CONTENT.class)
 	public static XMLElement getTemplateBtnFloat() {
-		IXHTMLTemplate template = new IXHTMLTemplate() {
+		IJSDomTemplate template = new IJSDomTemplate() {
 			@Override
 			public XMLElement getTemplate()
 			{

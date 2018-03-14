@@ -3,11 +3,6 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.xtemplate;
 
-import com.elisaxui.component.toolkit.datadriven.JSChangeCtx;
-import com.elisaxui.component.toolkit.datadriven.JSDataCtx;
-import com.elisaxui.component.toolkit.datadriven.JSDataSet;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSLambda;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
@@ -17,7 +12,7 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  * @author gauth
  *
  */
-public class XHTMLTemplate extends JSDomElement implements IXHTMLTemplate
+public class JSDomTemplate extends JSDomElement implements IJSDomTemplate
 {
 	XMLElement xml;
 	boolean modeJs = false;
@@ -32,7 +27,7 @@ public class XHTMLTemplate extends JSDomElement implements IXHTMLTemplate
 	/**
 	 * @param modeJs the modeJs to set
 	 */
-	public final XHTMLTemplate setModeJS(boolean modeJs) {
+	public final JSDomTemplate setModeJS(boolean modeJs) {
 		this.modeJs = modeJs;
 		return this;
 	}
@@ -52,7 +47,7 @@ public class XHTMLTemplate extends JSDomElement implements IXHTMLTemplate
 	/**
 	 * @param xml
 	 */
-	public XHTMLTemplate(XMLElement xml) {
+	public JSDomTemplate(XMLElement xml) {
 		super();
 		this.xml = xml;
 	}

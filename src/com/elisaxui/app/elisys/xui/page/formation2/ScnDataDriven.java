@@ -11,16 +11,16 @@ import com.elisaxui.component.toolkit.datadriven.JSChangeCtx;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.html.XClass;
+import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
-import com.elisaxui.core.xui.xhtml.builder.json.JSONType;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSXHTMLTemplate;
+import com.elisaxui.core.xui.xhtml.builder.json.JSType;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -36,14 +36,14 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 @xFile(id = "ScnDataDriven")
 public class ScnDataDriven extends XHTMLPart {
 
-	static XClass cMain;
+	static CSSClass cMain;
 
 	@xTarget(HEADER.class)
 	@xRessource // une seule fois par vue
 	public XMLElement xImport() {
-		return xList(
+		return xListNode(
 				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"),
-				xImport(JSXHTMLTemplate.class,
+				xImport(JSDomBuilder.class,
 						TKPubSub.class,
 						JSDataDriven.class,
 						JSDataSet.class));
@@ -62,7 +62,7 @@ public class ScnDataDriven extends XHTMLPart {
 
 	// une class JS
 	@xTarget(AFTER_CONTENT.class) // une seule fois par vue car class
-	public interface JSTestDataDriven extends JSClass, IXHTMLTemplate, IJSDataDriven {
+	public interface JSTestDataDriven extends JSClass, IJSDomTemplate, IJSDataDriven {
 
 		@xStatic(autoCall = true) // appel automatique de la methode static
 		default void main() {
@@ -121,7 +121,7 @@ public class ScnDataDriven extends XHTMLPart {
 
 			JSDomElement row = that.xRow(aTestData.name(), aTestData.oneToOne().name2());
 			
-			return jsTemplate(
+			return createDomTemplate(
 					xUl(
 							xDataDriven(data,
 									onEnter(aTestData, row)	,
@@ -131,12 +131,12 @@ public class ScnDataDriven extends XHTMLPart {
 		}
 
 		default JSDomElement xRow(JSString text, JSString id) {
-			return jsTemplate(xLi(text, xSpan(id)));
+			return createDomTemplate(xLi(text, xSpan(id)));
 		}
 
 	}
 
-	public interface TestData extends JSONType {
+	public interface TestData extends JSType {
 		JSString id();
 
 		JSString name();
@@ -146,7 +146,7 @@ public class ScnDataDriven extends XHTMLPart {
 		JSArray<TestDataRow> oneToMany();
 	}
 
-	public interface TestDataRow extends JSONType {
+	public interface TestDataRow extends JSType {
 		JSString name2();
 	}
 

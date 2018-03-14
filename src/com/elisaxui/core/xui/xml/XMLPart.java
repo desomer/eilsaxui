@@ -1,6 +1,5 @@
 package com.elisaxui.core.xui.xml;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -11,10 +10,6 @@ import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.application.XHTMLAppScanner;
-import com.elisaxui.core.xui.xhtml.builder.html.XClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -65,6 +60,12 @@ public class XMLPart  {
 		return this;
 	}
 	
+	/**
+	 * ajout de property multiple
+	 * @param key
+	 * @param value
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public XMLPart vProperties(Object key, Object value)
 	{
@@ -274,7 +275,7 @@ public class XMLPart  {
 	 * @param inner
 	 * @return
 	 */
-	public final static XMLElement xPart(XMLPart part, Object... inner) {
+	public final static XMLElement vPart(XMLPart part, Object... inner) {
 		return xElement(null, XMLBuilder.createPart(part, inner));
 	}
 	
@@ -283,6 +284,8 @@ public class XMLPart  {
 		return tag;
 	}
 
+	@Deprecated
+	// xList
 	public final static XMLElement xListElement(Object... array) {
 		return xElement(NONAME, array);
 	}

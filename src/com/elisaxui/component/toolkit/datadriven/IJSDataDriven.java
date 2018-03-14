@@ -9,7 +9,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.XHTMLTemplate;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomTemplate;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 
 /**
@@ -18,6 +18,7 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  */
 public interface IJSDataDriven {
 	
+	/**TODO vFor( control type , ()->{})*/
 	default JSFunction vFor(JSElement data, JSElement aRow,  XMLElement elem )
 	{
 		JSon domparent =  JSContent.declareType(JSon.class, "domparent");
@@ -60,7 +61,7 @@ public interface IJSDataDriven {
 	public default JSFunction onEnter(Object row, XMLElement elem)
 	{
 		return (JSFunction) new JSFunction().setParam(new Object[] {row, "ctx"})
-				._return( new XHTMLTemplate(elem).setModeJS(true) );
+				._return( new JSDomTemplate(elem).setModeJS(true) );
 
 	}
 	

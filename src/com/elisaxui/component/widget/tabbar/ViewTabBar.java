@@ -11,8 +11,8 @@ import com.elisaxui.component.transition.ConstTransition;
 import com.elisaxui.component.widget.navbar.ViewNavBar;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.html.XClass;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.IXHTMLTemplate;
+import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -29,12 +29,12 @@ public class ViewTabBar extends XHTMLPart {
 
 	public static final String PROPERTY_NAME = "PROPERTY_NAME";
 	
-	public static XClass cTabbar;
-	public static XClass cFixedBottom;
-	private static XClass cListReset;
-	private static XClass cFlex;
-	public static XClass cFlex_1;
-	public static XClass cTextAlignCenter;
+	public static CSSClass cTabbar;
+	public static CSSClass cFixedBottom;
+	private static CSSClass cListReset;
+	private static CSSClass cFlex;
+	public static CSSClass cFlex_1;
+	public static CSSClass cTextAlignCenter;
 	
 
 	@xTarget(AFTER_BODY.class)
@@ -42,7 +42,7 @@ public class ViewTabBar extends XHTMLPart {
 	public XMLElement xStylePart() {
 		
 		return xStyle()   
-				.path(cTabbar).add("z-index: "+XUIScene.ZINDEX_NAV_BAR+";"
+				.path(cTabbar).set("z-index: "+XUIScene.ZINDEX_NAV_BAR+";"
 						+ "background:"+((XUIScene)XUIFactoryXHtml.getXHTMLFile().getScene()).getConfigScene().getBgColorNavBar()+";"
 						+ "height: "+XUIScene.heightTabBar+";"
 						+ "width: "+XUIScene.widthScene+"; "
@@ -51,11 +51,11 @@ public class ViewTabBar extends XHTMLPart {
 						+ "transition: transform "+ConstTransition.SPEED_ANIM_SCROLL+"ms ease-in-out;" 
 						+ "box-shadow: 16px -14px 20px 0 rgba(0, 0, 0, 0.21), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);")
 				
-				.path(cFixedBottom).add("position:fixed; bottom:0px; "+XUIScene.PREFORM_3D)
-				.path(cListReset).add("list-style: none;margin: 0; padding: 0;")
-				.path(cFlex).add("display:flex;")
-				.path(cFlex_1).add("flex:1;")
-				.path(cTextAlignCenter).add("text-align: center;")
+				.path(cFixedBottom).set("position:fixed; bottom:0px; "+XUIScene.PREFORM_3D)
+				.path(cListReset).set("list-style: none;margin: 0; padding: 0;")
+				.path(cFlex).set("display:flex;")
+				.path(cFlex_1).set("flex:1;")
+				.path(cTextAlignCenter).set("text-align: center;")
 				;
 	}
 	
@@ -67,7 +67,7 @@ public class ViewTabBar extends XHTMLPart {
 	
 	public static XMLElement getTemplateAction(Object name, Object action) {
 		
-		IXHTMLTemplate template = new IXHTMLTemplate() {
+		IJSDomTemplate template = new IJSDomTemplate() {
 			@Override
 			public XMLElement getTemplate()
 			{		

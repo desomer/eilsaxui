@@ -36,19 +36,24 @@ public interface JSContentInterface  {
 	/**
 	 * exemple <br>  
 	 * txt("do ", var("event"), "on", var("variable")) <br>
-	 * consoleDebug(txt("do event typed ", jsvar("event")), txt(" on "), "jsonAct")
+	 * consoleDebug(txt("do event typed ", var("event")), txt(" on "), "jsonAct")
 	 * @param param
 	 * @return
 	 */
 	JSString txt(Object... param);
 	
 	/**
-	 * creation d'un JSVariable <br>
-	 * exemple   jsvar("name", "[", 1 ,"]") 
+	 * creation d'un JSAny <br>
+	 * exemple   var("name", "[", 1 ,"]") 
 	 * @param param
 	 * @return
 	 */
 	JSAny var(Object... param);
+	/**
+	 * idem var sauf ajout parenthese  ex :calc(toto, "+12")   =>   (toto+12)
+	 * @param param
+	 * @return
+	 */
 	Object calc(Object... param);
 	
 	/**********************************************************************/

@@ -6,7 +6,7 @@ package com.elisaxui.core.xui.xhtml.builder.javascript.lang;
 import javax.json.Json;
 
 import com.elisaxui.core.helper.log.CoreLogger;
-import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
+import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;

@@ -6,7 +6,7 @@ package com.elisaxui.component.toolkit;
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.component.widget.activity.JActivity;
 import com.elisaxui.component.widget.container.JSContainer;
-import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
+import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;

@@ -6,7 +6,7 @@ package com.elisaxui.component.widget.button;
 import static com.elisaxui.component.transition.ConstTransition.SPEED_RIPPLE_EFFECT;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
+import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xml.annotation.xRessource;

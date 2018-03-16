@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.core.xui.xhtml.builder.css;
+package com.elisaxui.core.xui.xhtml.builder.css.selector;
 
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;

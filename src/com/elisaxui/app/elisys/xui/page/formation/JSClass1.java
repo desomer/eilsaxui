@@ -5,7 +5,7 @@ package com.elisaxui.app.elisys.xui.page.formation;
 
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.component.widget.overlay.ViewOverlay;
-import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
+import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;

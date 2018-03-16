@@ -2,26 +2,39 @@ package com.elisaxui.core.xui.xhtml.builder.css;
 
 import java.util.LinkedList;
 
+import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;
 import com.elisaxui.core.xui.xml.builder.XMLAttr;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 
-public class CSSDomElement  extends XMLElement {
+public class CSSElement  extends XMLElement {
 	
-	public CSSDomElement()
+	public CSSElement()
 	{
 		super("style", null);
 	}
 	
-	public CSSDomElement(Object... inner)
+	public CSSElement(Object... inner)
 	{
 		super("style", inner);
 	}
 	
-
-
 	private LinkedList<CSSStyleRow> listStyle = new LinkedList<>();
 	private CSSStyleRow currentCSSStyle =null;
+
+	/**
+	 * @return the currentCSSStyle
+	 */
+	public final CSSStyleRow getCurrentCSSStyle() {
+		return currentCSSStyle;
+	}
+
+	/**
+	 * @param currentCSSStyle the currentCSSStyle to set
+	 */
+	public final void setCurrentCSSStyle(CSSStyleRow currentCSSStyle) {
+		this.currentCSSStyle = currentCSSStyle;
+	}
 
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
@@ -40,13 +53,13 @@ public class CSSDomElement  extends XMLElement {
 	}
 	
 	@Deprecated
-	public CSSDomElement on(Object path, Object content)
+	public CSSElement on(Object path, Object content)
 	{
 		getListStyle().add(new CSSStyleRow(path, content));
 		return this;
 	}
 	
-	public CSSDomElement path(Object... path)
+	public CSSElement path(Object... path)
 	{
 		getListStyle().add(new CSSStyleRow(CSSSelector.onPath(path), null));
 		currentCSSStyle = getListStyle().getLast();
@@ -54,7 +67,7 @@ public class CSSDomElement  extends XMLElement {
 	}
 	
 	
-	public CSSDomElement andChild(CSSDomElement content)
+	public CSSElement andChild(CSSElement content)
 	{
 		LinkedList<CSSStyleRow> path = content.getListStyle();
 		
@@ -65,7 +78,7 @@ public class CSSDomElement  extends XMLElement {
 		return this;
 	}
 	
-	public CSSDomElement andDirectChild(CSSDomElement content)
+	public CSSElement andDirectChild(CSSElement content)
 	{
 		LinkedList<CSSStyleRow> path = content.getListStyle();
 		
@@ -76,7 +89,7 @@ public class CSSDomElement  extends XMLElement {
 		return this;
 	}
 	
-	public CSSDomElement or(CSSDomElement content)
+	public CSSElement or(CSSElement content)
 	{
 		LinkedList<CSSStyleRow> path = content.getListStyle();
 		
@@ -87,7 +100,7 @@ public class CSSDomElement  extends XMLElement {
 		return this;
 	}
 	
-	public CSSDomElement and(CSSDomElement content)
+	public CSSElement and(CSSElement content)
 	{
 		LinkedList<CSSStyleRow> path = content.getListStyle();
 		
@@ -98,7 +111,7 @@ public class CSSDomElement  extends XMLElement {
 		return this;
 	}
 	
-	public CSSDomElement set(String content)
+	public CSSElement set(String content)
 	{
 		String cssContent = (String) getListStyle().getLast().content;
 		content=content.trim();
@@ -107,7 +120,7 @@ public class CSSDomElement  extends XMLElement {
 		else
 		{
 			boolean endWithSep = cssContent.length()==0?false:(cssContent.charAt(cssContent.length()-1)==';');
-			boolean startWithSep = content.charAt(0)==';';
+			boolean startWithSep = cssContent.length()==0?true:(content.charAt(0)==';');
 			
 			getListStyle().getLast().content = cssContent+( (!endWithSep && !startWithSep)?";":"")+content;
 		}

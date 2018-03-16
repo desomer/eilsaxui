@@ -3,7 +3,7 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.html;
 
-import com.elisaxui.core.xui.xhtml.builder.css.CSSSelector;
+import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;
 
 /**
  * @author Bureau

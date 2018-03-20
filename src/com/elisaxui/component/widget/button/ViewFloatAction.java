@@ -43,7 +43,7 @@ public class ViewFloatAction extends XHTMLPart {
 	@xRessource
 	public XMLElement xStylePart() {
 
-		return xStyle().path(cFloatAction)
+		return cStyle().path(cFloatAction)
 						.set(""
 							//+ "z-index:"+XUIScene.ZINDEX_FLOAT+";"
 							+ " position: fixed; "

@@ -43,7 +43,7 @@ public class ViewMenu extends XHTMLPart {
 	@xRessource
 	public XMLElement xStylePart() {
 
-		return xStyle()
+		return cStyle()
 				.on(menu, "z-index: "+XUIScene.ZINDEX_MENU+";background-color: #ffffff;height: 100vh;width: " + XUIScene.widthMenu
 						+ "px; color:black;"
 						+ XUIScene.PREFORM_3D

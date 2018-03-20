@@ -263,7 +263,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 
 		} else if (inner instanceof CSSStyleRow) { // un css
 			CSSStyleRow part = ((CSSStyleRow) inner);
-			part.nbTabInternal = this.nbTabInternal + 1;
+			part.nbTabInternal = this.nbTabInternal + part.nbTabInternal+ 1;
 			part.nbTabForNewLine = this.nbTabForNewLine;
 			part.toXML(buf);
 			nbChild++;

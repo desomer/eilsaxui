@@ -36,7 +36,7 @@ public class ViewBtnCircle extends XHTMLPart {
 	@xRessource
 	public XMLElement xStylePart() {
 
-		return xStyle()
+		return cStyle()
 				.on(cBtnCircle,
 								"border-radius: 50%;  "
 								//+ "font-size: 24px; "

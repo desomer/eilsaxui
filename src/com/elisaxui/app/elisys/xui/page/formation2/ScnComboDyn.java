@@ -72,7 +72,7 @@ public class ScnComboDyn implements IJSONBuilder {
 		@xTarget(HEADER.class)
 		@xRessource
 		public XMLElement xStylePart() {
-			return xStyle().path(cMain).set("display:block");
+			return cStyle().path(cMain).set("display:block");
 		}
 
 		@xTarget(CONTENT.class) // la vue App Shell

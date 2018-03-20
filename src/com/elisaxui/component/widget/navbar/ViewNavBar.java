@@ -46,7 +46,7 @@ public class ViewNavBar extends XHTMLPart {
 	@xRessource
 	public XMLElement xStylePart() {
 		
-		return xStyle()  
+		return cStyle()  
 				.path(navbar).set("z-index: "+XUIScene.ZINDEX_NAV_BAR+";"
 						+ "height: 3rem;"
 						+ "width: "+XUIScene.widthScene+"; "

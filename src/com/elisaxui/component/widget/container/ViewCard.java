@@ -25,7 +25,7 @@ public class ViewCard extends XHTMLPart {
 	@xRessource
 	public XMLElement xStylePart() {
 
-		return xStyle()
+		return cStyle()
 				.path(cCard).set("padding: 10px;"
 					//	+ "opacity:0;"
 						+ "margin: 10px 5px 0 5px;"

@@ -80,9 +80,9 @@ public class ScnTemplatePage extends XHTMLPart {
 		
 		@xTarget(HEADER.class)
 		public XMLElement style() {
-			return xStyle()
+			return cStyle()
 					  .path(cPageContainer).set("display:flex")
-					  .andDirectChild(xStyle().path("*").set("flex:1 1 auto"));
+					  .andDirectChild(cStyle().path("*").set("flex:1 1 auto"));
 					
 		}
 		
@@ -107,7 +107,7 @@ public class ScnTemplatePage extends XHTMLPart {
 		
 		@xTarget(HEADER.class)
 		public XMLElement style() {
-			return xStyle().path(cSection).set("border:1px solid black");
+			return cStyle().path(cSection).set("border:1px solid black");
 		}
 		
 		@xTarget(CONTENT.class)

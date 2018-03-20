@@ -13,8 +13,12 @@ import com.elisaxui.core.xui.xml.builder.XUIFormatManager;
  * @author gauth
  *
  */
-public final class CSSStyleRow extends XUIFormatManager implements IXMLBuilder {
+public class CSSStyleRow extends XUIFormatManager implements IXMLBuilder {
 	Object path;
+	public final Object getPath() {
+		return path;
+	}
+
 	Object content;
 
 	@Override

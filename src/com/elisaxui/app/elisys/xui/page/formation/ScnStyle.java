@@ -7,8 +7,8 @@ import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.component.widget.overlay.ViewOverlay;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLFile;
-import com.elisaxui.core.xui.xhtml.builder.css.CSSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSElement;
+import com.elisaxui.core.xui.xhtml.builder.css.ICSSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
@@ -16,7 +16,7 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder;
  * @author gauth
  *
  */
-public class ScnStyle extends CSSBuilder {
+public class ScnStyle implements ICSSBuilder {
 
 	static CSSClass cAB = new CSSClass().setId("cAB");
 	static CSSClass cABC = new CSSClass().setId("cABC");
@@ -24,17 +24,17 @@ public class ScnStyle extends CSSBuilder {
 	void doStyle()
 	{
 		
-	    on(media("screen and (max-width: 640px)"), ()->{
-			on(sel("a"), ()->{
+	    xStyle(sMedia("screen and (max-width: 640px)"), ()->{
+			xStyle(sSel("a"), ()->{
 				css("display:blocka");
-				on(sel(XUIScene.scene.and(XUIScene.cShell).directChildren(ViewOverlay.cBlackOverlay)), 
+				xStyle(sSel(XUIScene.scene.and(XUIScene.cShell).directChildren(ViewOverlay.cBlackOverlay)), 
 				()->{
 					css("display:blockb");
 					css("display:blockc");
 				});
 			});
 
-			on(keyFrame("nom"), ()->{
+			xStyle(skeyFrame("nom"), ()->{
 				from(()-> css("display:blockd") );
 				to(()-> css("display:blocke"));
 				prct(10, ()-> css("display:blockf"));
@@ -46,21 +46,21 @@ public class ScnStyle extends CSSBuilder {
 	
 	void doStyle2()
 	{
-		CSSElement d = on(sel(cAB, ">", cABC), ()->{
+		CSSElement d = xStyle(sSel(cAB, ">", cABC), ()->{
 			css("display:blocka");
 			css("display:blockb");
-			on(sel("&", cAB, "," ,cABC), ()->{ 
+			xStyle(sSel("&", cAB, "," ,cABC), ()->{ 
 				css("display:blockc");
 				css("display:blockd");
-				on(sel("div"), ()->{
+				xStyle(sSel("div,h1"), ()->{
 					css("display:blocked");
 					css("display:blockfd");
 				});
 			});
-//			on(sel("span"), ()->{
-//				css("display:blocke");
-//				css("display:blockf");
-//			});
+			xStyle(sSel("span"), ()->{
+				css("display:blocke");
+				css("display:blockf");
+			});
 		});
 		
 		

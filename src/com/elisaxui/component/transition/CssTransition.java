@@ -55,7 +55,7 @@ public class CssTransition extends XHTMLPart {
 	@xPriority(5)
 	public XMLElement xStylePart() {
 
-		return xStyle()
+		return cStyle()
 				.path(animated).set("animation-duration:"+SPEED_ANIMATED+"ms")
 				
 				.path(activity)

@@ -23,6 +23,20 @@ public class XUIFormatManager {
 	}
 
 	protected int nbTabInternal = 0;
+	/**
+	 * @return the nbTabInternal
+	 */
+	public final int getNbTabInternal() {
+		return nbTabInternal;
+	}
+
+	/**
+	 * @param nbTabInternal the nbTabInternal to set
+	 */
+	public final void setNbTabInternal(int nbTabInternal) {
+		this.nbTabInternal = nbTabInternal;
+	}
+
 	protected int nbTabForNewLine = 0;
 
 	/**

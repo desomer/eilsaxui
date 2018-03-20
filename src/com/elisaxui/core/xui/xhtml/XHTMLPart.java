@@ -119,7 +119,7 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 				xAttr("href", xTxt(url)));
 	}
 
-	public static final CSSElement xStyle() {
+	public static final CSSElement cStyle() {
 		return new CSSElement();
 	}
 

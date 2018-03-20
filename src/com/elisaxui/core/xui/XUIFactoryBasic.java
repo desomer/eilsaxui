@@ -6,6 +6,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
 import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletException;
@@ -20,6 +21,7 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
 import com.elisaxui.core.helper.URLLoader;
+import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.xui.xhtml.builder.javascript.utility.JSMinifier;
 
 public class XUIFactoryBasic extends AbstractHandler {
@@ -36,6 +38,14 @@ public class XUIFactoryBasic extends AbstractHandler {
 		String content = cache.get(url);
 		
 		if (content==null) {
+			
+			if (url==null)
+			{
+				CoreLogger.getLogger(1).log(Level.SEVERE, () -> "pb param url " + request);
+				baseRequest.setHandled(true);
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+				return;
+			}
 			
 			StringBuilder js = URLLoader.loadTextFromUrl(url);
 			

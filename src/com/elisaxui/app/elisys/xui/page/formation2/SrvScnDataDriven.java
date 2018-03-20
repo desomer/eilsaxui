@@ -60,7 +60,7 @@ public class SrvScnDataDriven implements IJSONBuilder {
 		@xTarget(HEADER.class)
 		@xRessource
 		public XMLElement xStylePart() {
-			return xStyle().path(cMain, " span").set("color:blue");
+			return cStyle().path(cMain, " span").set("color:blue");
 		}
 
 		@xTarget(CONTENT.class) // la vue App Shell

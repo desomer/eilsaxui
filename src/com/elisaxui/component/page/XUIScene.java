@@ -179,7 +179,7 @@ public abstract class XUIScene extends XHTMLPart {
 	@xPriority(2)
 	public XMLElement xStyleXUIScene() {
 
-		return xStyle()
+		return cStyle()
 				.path("*, *:before, *:after").set(
 						"-webkit-tap-highlight-color: rgba(0,0,0,0); " // pas de coulour au click => ripple a la place
 								+ "box-sizing: border-box;   "

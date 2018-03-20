@@ -16,6 +16,7 @@ import java.net.URLEncoder;
 import org.mozilla.javascript.ErrorReporter;
 import org.mozilla.javascript.EvaluatorException;
 
+import com.elisaxui.core.helper.log.CoreLogger;
 import com.yahoo.platform.yui.compressor.JavaScriptCompressor;
 
 /**
@@ -124,8 +125,8 @@ public class JSMinifier {
 
 		  //  System.out.println("\n----");
 		} else {
-		    System.out.println("erreur acces https://javascript-minifier.com/raw");
-		    return null;
+		    CoreLogger.getLogger(1).severe("erreur acces https://javascript-minifier.com/raw");
+		    buf.append(js);  // non minifier
 		}
 	} catch (IOException e) {
 		e.printStackTrace();

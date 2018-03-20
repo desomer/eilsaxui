@@ -27,7 +27,7 @@ public class ViewRippleEffect extends XHTMLPart {
 	@xRessource
 	public XMLElement xStylePart() {
 
-		return xStyle()
+		return cStyle()
 				.on(cRippleEffect, "overflow: hidden; ")  /*position: relative;*/
 				.on(CSSSelector.onPath(cRippleEffect, ":after"), " content: ''; "
 						+ "  position: absolute; top: 50%;  left: 50%;  width: 5px;  height: 5px;"

@@ -3,7 +3,6 @@ package com.elisaxui.core.xui.xhtml.builder.css;
 import java.util.LinkedList;
 
 import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;
-import com.elisaxui.core.xui.xml.builder.XMLAttr;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 
@@ -39,17 +38,26 @@ public class CSSElement  extends XMLElement {
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
 		
-		for (Object object : getListStyle()) {
-			if (object instanceof XMLAttr) {
-				listAttr.add((XMLAttr) object);   //????????? pourquoi XMLAttr
-			} else if (object instanceof CSSStyleRow) {
+		
+		before();
+		
+		for (CSSStyleRow object : getListStyle()) {
 				listInner.add(((CSSStyleRow) object));
-			} else {
-				listInner.add(object.toString());
-			}
 		}
 		
+		after();
+		
 		return super.toXML(buf);
+	}
+	
+	protected void before()
+	{
+		
+	}
+	
+	protected void after()
+	{
+		
 	}
 	
 	@Deprecated

@@ -42,7 +42,7 @@ public class ViewBtnBurger extends XHTMLPart {
 	@xRessource
 	public XMLElement xStylePart() {
 
-		return xStyle()
+		return cStyle()
 				.path(hamburger).set("will-change:transform")
 				.path(	hamburger.__(hamburger_inner)
 						.or(hamburger.__(hamburger_inner).pseudoClass("after"))

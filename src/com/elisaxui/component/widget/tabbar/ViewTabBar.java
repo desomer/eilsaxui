@@ -41,7 +41,7 @@ public class ViewTabBar extends XHTMLPart {
 	@xRessource
 	public XMLElement xStylePart() {
 		
-		return xStyle()   
+		return cStyle()   
 				.path(cTabbar).set("z-index: "+XUIScene.ZINDEX_NAV_BAR+";"
 						+ "background:"+((XUIScene)XUIFactoryXHtml.getXHTMLFile().getScene()).getConfigScene().getBgColorNavBar()+";"
 						+ "height: "+XUIScene.heightTabBar+";"

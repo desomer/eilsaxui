@@ -4,6 +4,8 @@
 package com.elisaxui.app.elisys.xui.page.formation;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.builder.css.ICSSBuilder;
+import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.target.BODY;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
@@ -23,7 +25,10 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
  */
 @xFile(id = "custom1")
 @xComment("activite custom1") // commentaire a ajouter en prefixe sur les commentaire des nom de methodes
-public class ScnCustom1 extends XHTMLPart {
+public class ScnCustom1 extends XHTMLPart implements ICSSBuilder {
+
+	static CSSClass cAB;
+	static CSSClass cABC;
 
 	@xTarget(HEADER.class)
 	@xRessource // une seule fois par vue
@@ -36,7 +41,7 @@ public class ScnCustom1 extends XHTMLPart {
 	@xTarget(HEADER.class)
 	@xRessource // une seule fois par vue
 	public XMLElement xImportCss() {
-		return xStyle().path("tutu").set("display: none;");
+		return xStyle(sSel("tutu"), () -> css("display:block"));
 	}
 
 	@xTarget(BODY.class)
@@ -61,7 +66,7 @@ public class ScnCustom1 extends XHTMLPart {
 	@xRessource
 	@xPriority(200) // par defaut 100
 	public XMLElement xImportStyle() {
-		return xStyle().path("import").set("display: none;");
+		return xStyle(sSel(".toto"), () -> css("display:block"));
 	}
 
 	/***********************************************************/
@@ -69,25 +74,29 @@ public class ScnCustom1 extends XHTMLPart {
 	@xTarget(AFTER_BODY.class)
 	@xRessource
 	public XMLElement xStylePart() {
-		return xStyle()
-				/**********************************/
-				.path(".toto1").set("display: none;")
-					.and(xStyle(":toto2").set("display: none").set(";display: none")
-								.and(xStyle(":toto3").set("display: none;"))
-								.andChild(xStyle("img").set("display: none;"))
-								.andDirectChild(xStyle("span").set("display: none;"))
-						)
-					.or(xStyle("titi").or(xStyle("tutu")	
-							.set("display: none;")
-							.and(xStyle(":titi1").set("display: none;"))
-							))
-					.or(xStyle("tata").set("display: none;"))
-					.andChild(xStyle(".toto5").set("display: none;"))
-				/***************************************/
-				.path("#toto6").set("display: block2;")
-				    .andChild(xStyle(".eee").or(xStyle(".fff")).set("display: block;"))
-		
-				/****************************************/
-				;
+
+		return xListNode(
+				xStyle(sMedia("all and (min-width: 1024px) and (max-width: 1280px) and (orientation: portrait)"), 
+						() -> {
+							sOn(sSel(cAB, ">", cABC), () ->  css("display:blocka") );
+							sOn(sSel(cAB), () -> css("display:blocka") );
+						}),
+				
+				xStyle(sSel(cAB, ">", cABC), () -> {
+					css("display:blocka");
+					css("display:blockb");
+					sOn(sSel("&", cAB, ",", cABC), () -> {
+						css("display:blockc");
+						css("display:blockd");
+						sOn(sSel("div,h1"), () -> {
+							css("display:blocked");
+							css("display:blockfd");
+						});
+					});
+					sOn(sSel("span"), () -> {
+						css("display:blocke");
+						css("display:blockf");
+					});
+				}));
 	}
 }

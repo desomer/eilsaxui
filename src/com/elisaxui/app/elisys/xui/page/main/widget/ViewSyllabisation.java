@@ -33,7 +33,7 @@ public class ViewSyllabisation extends XHTMLPart {
 	@xRessource
 	public XMLElement xStylePart() {
 
-		return xStyle().path(cDivSyllabisation)
+		return cStyle().path(cDivSyllabisation)
 						.set("min-height:20vh; line-height: 45px;"
 							//*	+ "font-family: 'Open Sans', sans-serif;"
 								+ "    font-size: 25px; font-stretch: expanded;"

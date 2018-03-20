@@ -28,7 +28,7 @@ public class ViewOverlay extends XHTMLPart {
 		
 		
 		
-		return xStyle()
+		return cStyle()
 				.path(cBlackOverlay).set("display: none;"
 						+ "position: absolute;	"
 						+ "top: 0px; left: 0px;"

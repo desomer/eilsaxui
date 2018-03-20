@@ -87,7 +87,7 @@ public class ScnTemplate2 extends XHTMLPart {
 		@xTarget(HEADER.class)
 		@xRessource // une seule fois par vue
 		public XMLElement xImportCss() {
-			return xStyle().path("button").set("background-color: #4CAF50;");
+			return cStyle().path("button").set("background-color: #4CAF50;");
 		}
 
 	}

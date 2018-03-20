@@ -32,7 +32,7 @@ public class ViewOverlayRipple extends XHTMLPart {
 	@xRessource
 	public XMLElement xStylePart() {
 		
-		return xStyle()
+		return cStyle()
 				.path(ripple_overlay).set(""
 					+ "position: absolute;"
 					+ "top: 0px; left: 0px; "

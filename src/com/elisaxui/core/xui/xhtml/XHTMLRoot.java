@@ -31,7 +31,7 @@ public class XHTMLRoot extends XHTMLPart {
 		}
 	}
 
-
+	
 	private Object lang;
 
 	public Object getLang() {

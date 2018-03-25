@@ -43,20 +43,14 @@ public class CSSClass {
 		return CSSSelector.onPath(this, ",", desc);
 	}
 	
-	public CSSSelector descendant(Object desc)
-	{
-		return CSSSelector.onPath(this, " ", desc);
-	}
-
 	/**
 	 * descendant  .cA .cB
 	 * @param desc
 	 * @return
 	 */
-	@Deprecated
-	public CSSSelector __(Object desc)
+	public CSSSelector descendant(Object desc)
 	{
-		return descendant(desc) ;
+		return CSSSelector.onPath(this, " ", desc);
 	}
 	
 	public CSSSelector directChildren(Object desc)

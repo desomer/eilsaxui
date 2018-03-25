@@ -123,7 +123,7 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 		return new CSSElement();
 	}
 
-	public static final CSSElement xStyle(Object... path) {
+	public static final CSSElement cStyle(Object... path) {
 		return new CSSElement().path(path);
 	}
 	

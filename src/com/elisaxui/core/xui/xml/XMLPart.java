@@ -187,10 +187,11 @@ public class XMLPart  {
 				if (elem== null) return;
 				
 				// ajoute le hashcode du nom pour avoir toujours le même tri sur une priorite identique
-				int h = method.getName().hashCode();
+				long h = method.getName().hashCode()+ this.getClass().getName().hashCode();
 				double p = (double)(h)/PRECISION;
 				int d = (int)p;
 				p=(p-d);
+				
 				
 				xPriority priority = method.getAnnotation(xPriority.class);
 				if (priority != null) {
@@ -201,7 +202,7 @@ public class XMLPart  {
 					elem.setPriority(100.0+p);
 
 				String comment = getComment(method);
-				elem.setComment(comment!=null?comment+ " priority "+((int)(elem.getPriority())) : null );
+				elem.setComment(comment!=null?comment+ " priority "+((int)(elem.getPriority())) : "["+this.getClass().getSimpleName() + "." + method.getName()+ "] priority "+((int)(elem.getPriority())) );
 				
 				Class<? extends XMLTarget> targetClass = target.value();
 				if (debug)

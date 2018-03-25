@@ -44,9 +44,9 @@ public class ViewBtnBurger extends XHTMLPart {
 
 		return cStyle()
 				.path(hamburger).set("will-change:transform")
-				.path(	hamburger.__(hamburger_inner)
-						.or(hamburger.__(hamburger_inner).pseudoClass("after"))
-						.or(hamburger.__(hamburger_inner).pseudoClass("before"))
+				.path(	hamburger.descendant(hamburger_inner)
+						.or(hamburger.descendant(hamburger_inner).pseudoClass("after"))
+						.or(hamburger.descendant(hamburger_inner).pseudoClass("before"))
 						)
 						.set("background-color: #fFf; "
 								+ "transition-property:all !important; "

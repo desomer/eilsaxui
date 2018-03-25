@@ -116,8 +116,10 @@ public interface ICSSBuilder {
 		return dom.path("@media "+ selector[0]);
 	}
 
-	default CSSElement skeyFrame(Object selector) {
-		return null;
+	default CSSElement sKeyFrame(Object... selector) {
+		CSSMedia dom = new CSSMedia();
+		list.add(dom);
+		return dom.path("@keyframes "+ selector[0]);
 	}
 
 	default void from(CssBlock css) {

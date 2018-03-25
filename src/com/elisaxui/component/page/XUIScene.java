@@ -206,10 +206,10 @@ public abstract class XUIScene extends XHTMLPart {
 																														// auto
 				// + "min-width: 100vw; "
 						+ "min-height: 100vh; ")
-				.andChild(xStyle(cShell).set("background-color: " + getConfigScene().getBgColorContent() + ";"
+				.andChild(cStyle(cShell).set("background-color: " + getConfigScene().getBgColorContent() + ";"
 						+ "width: " + widthScene + ";"
 						+ "  min-height: 100vh; "))
-				.andChild(xStyle("#NavBarShell h1")
+				.andChild(cStyle("#NavBarShell h1")
 						.set("text-align:center;color: inherit;  font-size: 2.1rem; margin-top: 50px"))
 				// ----------------------------------------------------------------
 				.path(activity)
@@ -217,7 +217,7 @@ public abstract class XUIScene extends XHTMLPart {
 						+ " width:" + widthScene + ";"
 						+ " will-change:overflow,z-index;") // will-change:transform =bug : les header et footer ne se
 															// fixe plus au body
-				.andChild(xStyle(ViewPageLayout.content)
+				.andChild(cStyle(ViewPageLayout.content)
 						.set(" min-height: 100vh; "
 								+ "min-width: " + widthScene + "; "
 								+ "background-color:" + getConfigScene().getBgColorContent() + ";will-change:contents") // changement

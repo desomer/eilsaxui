@@ -25,7 +25,7 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
  */
 @xFile(id = "custom1")
 @xComment("activite custom1") // commentaire a ajouter en prefixe sur les commentaire des nom de methodes
-public class ScnCustom1 extends XHTMLPart implements ICSSBuilder {
+public class ScnExemple1 extends XHTMLPart implements ICSSBuilder {
 
 	static CSSClass cAB;
 	static CSSClass cABC;
@@ -41,7 +41,7 @@ public class ScnCustom1 extends XHTMLPart implements ICSSBuilder {
 	@xTarget(HEADER.class)
 	@xRessource // une seule fois par vue
 	public XMLElement xImportCss() {
-		return xStyle(sSel("tutu"), () -> css("display:block"));
+		return xStyle(sSel("tutu"), () -> css("display:block5"));
 	}
 
 	@xTarget(BODY.class)
@@ -76,13 +76,17 @@ public class ScnCustom1 extends XHTMLPart implements ICSSBuilder {
 	public XMLElement xStylePart() {
 
 		return xListNode(
-				xStyle(sMedia("all and (min-width: 1024px) and (max-width: 1280px) and (orientation: portrait)"), 
-						() -> {
-							sOn(sSel(cAB, ">", cABC), () ->  css("display:blocka") );
-							sOn(sSel(cAB), () -> css("display:blocka") );
+				xStyle(sMedia("all and (min-width: 1024px) "
+						+ "and (max-width: 1280px) "
+						+ "and (orientation: portrait)"), () -> {
+							sOn(sSel(cAB.or(cABC)), () -> {
+								css("display:block");
+								sOn(sSel("div"), () -> css("display:blockb"));
+							});
+							sOn(sSel(cAB), () -> css("display:blocka"));
 						}),
-				
-				xStyle(sSel(cAB, ">", cABC), () -> {
+
+				xStyle(sSel(cAB.directChildren(cABC)), () -> {
 					css("display:blocka");
 					css("display:blockb");
 					sOn(sSel("&", cAB, ",", cABC), () -> {

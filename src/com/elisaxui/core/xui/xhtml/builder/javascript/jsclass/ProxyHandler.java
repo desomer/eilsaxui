@@ -44,35 +44,32 @@ public final class ProxyHandler implements InvocationHandler {
 	static boolean debug3 = false;
 	static boolean debug4 = false;
 
-	
 	public static final ThreadLocal<Boolean> ThreadLocalMode = new ThreadLocal<>();
 	public static final ThreadLocal<XUIFormatManager> ThreadLocalXUIFormatManager = new ThreadLocal<>();
 	// methode en attente d'ajout dans le code
 	public static final ThreadLocal<ProxyMethodDesc> ThreadLocalMethodDesc = new ThreadLocal<>(); // regrouper le 2
 																									// ThreadLocal
-	
-	
+
 	/***************************************************************************/
 	private Object varname; // nom de la variable du proxy
 	private Object varContent; // contenu code du proxy
 	private Class<? extends JSClass> implementClass; // type js de la class
 	private JsonObjectBuilder jsonBuilder = null;
 	private Object parentLitteral;
-	
+
 	private String currentFctBuildByProxy = null; //
 	private boolean testInLineInProgress = false; // test si la methode doit retourner une fonction anonym
-	
 
 	/**
 	 * interception des appel de methode de interface - creer une JSClassImpl si
 	 * n'existe pas - creer les fct javascript
 	 */
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-		
+
 		ProxyMethodDesc mthInvoke = new ProxyMethodDesc(null, null, proxy, method, args);
-		
+
 		Object ret = invokeDirectMethod(mthInvoke);
-		
+
 		if (ret != null)
 			return ret == NOT_USED ? null : ret;
 
@@ -101,16 +98,16 @@ public final class ProxyHandler implements InvocationHandler {
 
 			} else if (checkMethodIsInJSContent(method)) {
 				/******************************************************************************/
-				/***** APPEL DES FUNCTION INTERNE  sur la class JSContent *****/
+				/***** APPEL DES FUNCTION INTERNE sur la class JSContent *****/
 				/******************************************************************************/
-				ret = doCallInternalJSContent(mthInvoke);   // var, set, if
+				ret = doCallInternalJSContent(mthInvoke); // var, set, if
 
 			} else {
 				/******************************************************************************/
 				/***** INSERT le nom de la methode abstract de type Interface de variable ****/
 				/******************************************************************************/
-				ret = doCallAttribut(method);  // Object attr()    sans default
-				
+				ret = doCallAttribut(method); // Object attr() sans default
+
 			}
 		}
 
@@ -188,12 +185,13 @@ public final class ProxyHandler implements InvocationHandler {
 			ret = constructor.newInstance(declaringClass, MethodHandles.Lookup.PRIVATE)
 					.unreflectSpecial(mthInvoke.method, declaringClass).bindTo(mthInvoke.proxy)
 					.invokeWithArguments(mthInvoke.args);
-			
-			// on ajoute pas le code JS dans la class dans le cas "xDiv( codeJS )" car deja ajouté dans le xDiv
+
+			// on ajoute pas le code JS dans la class dans le cas "xDiv( codeJS )" car deja
+			// ajouté dans le xDiv
 			ThreadLocalMethodDesc.get().lastMthNoInserted = null;
 
 		} else {
-			JSFunction anon = null; // isAnonymous(mthInvoke);
+			JSFunction anon = isInLineMethod(mthInvoke);
 			if (anon != null)
 				ret = anon;
 			else {
@@ -210,7 +208,7 @@ public final class ProxyHandler implements InvocationHandler {
 				registerCallMethodJS(ret, ThreadLocalMethodDesc.get());
 			}
 		}
-		
+
 		return ret;
 	}
 
@@ -219,6 +217,10 @@ public final class ProxyHandler implements InvocationHandler {
 	 * @throws Throwable
 	 */
 	private JSFunction isInLineMethod(ProxyMethodDesc mthInvoke) throws Throwable {
+		
+		if (mthInvoke!=NOT_USED)
+			return null;   // ne fait jamais rien
+		
 		/**************************
 		 * test si utilisation class Anonym
 		 **********************************/
@@ -231,11 +233,7 @@ public final class ProxyHandler implements InvocationHandler {
 		JSFunction fctAnomyn = createJSFunctionImpl(mthInvoke, TEST_ANONYM);
 		this.varname = nameProxy;
 
-		if (fctAnomyn != null) {
-			return fctAnomyn; // retourne anonym
-		}
-
-		return null;
+		return fctAnomyn != null?fctAnomyn:null;
 	}
 
 	/**
@@ -256,14 +254,12 @@ public final class ProxyHandler implements InvocationHandler {
 			}
 
 			((JSAny) ret)._setParentLitteral(this);
-		}
-		else
-		{
+		} else {
 			// proxy
 			ProxyHandler mh = (ProxyHandler) Proxy.getInvocationHandler(ret);
 			// ajouter uniquement si literral
 			mh.setParentLitteral(this);
-			
+
 		}
 		return ret;
 	}
@@ -293,6 +289,7 @@ public final class ProxyHandler implements InvocationHandler {
 
 	/**
 	 * Appel un methode non implementer ailleur
+	 * 
 	 * @param proxy
 	 * @param method
 	 * @param args
@@ -318,7 +315,7 @@ public final class ProxyHandler implements InvocationHandler {
 
 		if (mthInvoke.method.getName().equals("set")) {
 			Object[] param = (Object[]) mthInvoke.args[0];
-			/*****  FAUT LE METTRE DIRECTEMENT dans le content   ************/ 
+			/***** FAUT LE METTRE DIRECTEMENT dans le content ************/
 			return ThreadLocalMethodDesc.get().content._set(mthInvoke.proxy, param);
 		}
 
@@ -329,7 +326,7 @@ public final class ProxyHandler implements InvocationHandler {
 		if (mthInvoke.method.getName().equals("declareType")) {
 			return JSContent.declareType((Class<?>) mthInvoke.args[0], mthInvoke.args[1]);
 		}
-		
+
 		if (mthInvoke.method.getName().equals("asLitteral")) {
 			this.jsonBuilder = Json.createObjectBuilder();
 			return mthInvoke.proxy;
@@ -419,7 +416,7 @@ public final class ProxyHandler implements InvocationHandler {
 		if (returnType instanceof ParameterizedType) {
 			ParameterizedType paramType = (ParameterizedType) returnType;
 			Type[] argTypes = paramType.getActualTypeArguments();
-			if (argTypes.length > 0 ) {
+			if (argTypes.length > 0) {
 				String cl = argTypes[0].getTypeName();
 				if (!cl.equals("?"))
 					((JSArray<?>) ret).setArrayType(Class.forName(cl));
@@ -430,7 +427,6 @@ public final class ProxyHandler implements InvocationHandler {
 	public static final void println(String t) {
 		CoreLogger.getLogger(1).fine(t);
 	}
-
 
 	/**
 	 * @param implcl
@@ -507,19 +503,17 @@ public final class ProxyHandler implements InvocationHandler {
 
 				if (lastMethodDesc.lastMthNoInserted != null) {
 					boolean add = true;
-					if (isInFct && methodDesc.lastMthNoInserted==null)
-					{
+					if (isInFct && methodDesc.lastMthNoInserted == null) {
 						// test si la ligne est deja ajouter
-						if (lastMethodDesc.content.getListElem().size()>2)
-						{
-							Object lastInsert =lastMethodDesc.content.getListElem().get(lastMethodDesc.content.getListElem().size()-2);
-							if (lastInsert==lastMethodDesc.lastMthNoInserted)
-								add=false;   // deja ajouter
+						if (lastMethodDesc.content.getListElem().size() > 2) {
+							Object lastInsert = lastMethodDesc.content.getListElem()
+									.get(lastMethodDesc.content.getListElem().size() - 2);
+							if (lastInsert == lastMethodDesc.lastMthNoInserted)
+								add = false; // deja ajouter
 						}
 					}
-					
-					if (add)	
-					{
+
+					if (add) {
 						// INSERE LA LIGNE
 						lastMethodDesc.content.lastNumLigne = lastMethodDesc.lastLineNoInsered;
 						lastMethodDesc.content.__(lastMethodDesc.lastMthNoInserted);
@@ -610,8 +604,8 @@ public final class ProxyHandler implements InvocationHandler {
 				.unreflectSpecial(handle.method, declaringClass).bindTo(handle.proxy).invokeWithArguments(p);
 
 		// permet d'inserer la derniere ligne d'une fct sauf si un retour
-		doLastSourceLineInsered(retProxyMth==null?true:false);
-		
+		doLastSourceLineInsered(retProxyMth == null ? true : false);
+
 		JSFunction fct = null;
 
 		if (testInline && retProxyMth instanceof JSLambda) {
@@ -781,7 +775,7 @@ public final class ProxyHandler implements InvocationHandler {
 				new ProxyHandler(cl));
 		return (E) proxy;
 	}
-	
+
 	/**
 	 * @return the jsonBuilder
 	 */
@@ -797,7 +791,6 @@ public final class ProxyHandler implements InvocationHandler {
 		this.jsonBuilder = jsonBuilder;
 	}
 
-	
 	public static XUIFormatManager getFormatManager() {
 		XUIFormatManager jsb = ThreadLocalXUIFormatManager.get();
 		if (jsb == null) {
@@ -806,7 +799,6 @@ public final class ProxyHandler implements InvocationHandler {
 		}
 		return jsb;
 	}
-
 
 	public ProxyHandler(Class<? extends JSClass> impl) {
 		this.setImplementClass(impl);
@@ -825,7 +817,8 @@ public final class ProxyHandler implements InvocationHandler {
 	}
 
 	/**
-	 * @param parentLitteral the parentLitteral to set
+	 * @param parentLitteral
+	 *            the parentLitteral to set
 	 */
 	public void setParentLitteral(Object parentLitteral) {
 		this.parentLitteral = parentLitteral;

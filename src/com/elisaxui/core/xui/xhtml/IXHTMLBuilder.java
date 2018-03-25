@@ -76,11 +76,19 @@ public interface IXHTMLBuilder {
 	default XMLElement xP(Object... inner) {
 		return xNode("p", inner);
 	}
-	
+	/************************************************/
 	default XMLElement xButton(Object... inner) {
 		return xNode("button", inner);
 	}
-
+	
+	default XMLElement xInput(Object... inner) {
+		return xNode("input", inner);
+	}
+	
+	default XMLElement xLabel(Object... inner) {
+		return xNode("label", inner);
+	}
+	/************************************************/
 	default XMLElement xH1(Object... inner) {
 		return xNode("h1", inner);
 	}
@@ -89,6 +97,7 @@ public interface IXHTMLBuilder {
 		return xNode("h2", inner);
 	}
 
+	/************************************************/
 	default XMLElement xUl(Object... inner) {
 		return xNode("ul", inner);
 	}
@@ -96,7 +105,7 @@ public interface IXHTMLBuilder {
 	default XMLElement xLi(Object... inner) {
 		return xNode("li", inner);
 	}
-	
+	/************************************************/
 	default XMLElement xImg(Object... inner) {
 		return xNode("img", inner);
 	}

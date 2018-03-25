@@ -59,9 +59,9 @@ public class CssTransition extends XHTMLPart {
 				.path(animated).set("animation-duration:"+SPEED_ANIMATED+"ms")
 				
 				.path(activity)
-						.and(xStyle(cStateFixedForFreeze).set("top:0px; position: fixed; overflow:hidden "))
-						.and(xStyle(cStateFrontActivity).set("z-index:"+XUIScene.ZINDEX_ANIM_FRONT+";"))	
-						.and(xStyle(cStateBackActivity).set("z-index:"+XUIScene.ZINDEX_ANIM_BACK+";"))		
+						.and(cStyle(cStateFixedForFreeze).set("top:0px; position: fixed; overflow:hidden "))
+						.and(cStyle(cStateFrontActivity).set("z-index:"+XUIScene.ZINDEX_ANIM_FRONT+";"))	
+						.and(cStyle(cStateBackActivity).set("z-index:"+XUIScene.ZINDEX_ANIM_BACK+";"))		
 	
 				.path(activity.and(cStateMoveToBottom)).set(
 						"transform: translate3d(0px,100%,0px);"
@@ -72,9 +72,9 @@ public class CssTransition extends XHTMLPart {
 				.path(activity.and(cStateNoDisplay)).set("display:none;")
 				
 				.path(activity)
-						.and(xStyle(cStateZoom12).set("transform: scale3d(1.2,1.2,1)"))
-						.and(xStyle(cStateZoom1).set("transform: scale3d(1,1,1)"))	
-						.and(xStyle(cStateZoom09).set("transform: scale3d(0.9,0.9,1)"))
+						.and(cStyle(cStateZoom12).set("transform: scale3d(1.2,1.2,1)"))
+						.and(cStyle(cStateZoom1).set("transform: scale3d(1,1,1)"))	
+						.and(cStyle(cStateZoom09).set("transform: scale3d(0.9,0.9,1)"))
 				
 				.path(activityMoveForShowMenu).set(
 						"transition:transform "+SPEED_SHOW_MENU+"ms ease-out;"

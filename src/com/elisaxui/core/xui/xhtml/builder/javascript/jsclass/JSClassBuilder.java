@@ -2,6 +2,7 @@ package com.elisaxui.core.xui.xhtml.builder.javascript.jsclass;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,7 +28,7 @@ public final class JSClassBuilder extends JSContent {
 	
 	Object name;   // nom de la class
 	
-	LinkedList<JSFunction> listFuntion = new LinkedList<>();
+	LinkedList<JSFunction> listFunction = new LinkedList<>();
 	private Map<String, String> listDistinctFct = new HashMap<>();
 	
 	private LinkedList<ProxyMethodDesc> listHandleFuntionPrivate = new LinkedList<>();
@@ -101,7 +102,7 @@ public final class JSClassBuilder extends JSContent {
 	}
 	
 	public JSClassBuilder addFunction(JSFunction fct) {
-		listFuntion.add(fct);
+		listFunction.add(fct);
 		return this;
 	}
 
@@ -129,10 +130,13 @@ public final class JSClassBuilder extends JSContent {
 		ProxyHandler.getFormatManager().setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine()+1);
 		ProxyHandler.getFormatManager().newLine(buf);
 		int i=0;
-		for (JSFunction jsFunction : listFuntion) {
+		
+		listFunction.sort((JSFunction o1, JSFunction o2)-> o1.getName().toString().compareTo(o2.getName().toString()));
+		
+		for (JSFunction jsFunction : listFunction) {
 			i++;
 			jsFunction.toXML(buf);
-			if (i<listFuntion.size())
+			if (i<listFunction.size())
 				ProxyHandler.getFormatManager().newLine(buf);
 		}
 		ProxyHandler.getFormatManager().setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine()-1);

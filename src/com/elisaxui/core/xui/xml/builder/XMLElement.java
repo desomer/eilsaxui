@@ -158,7 +158,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 	 * @param buf
 	 */
 	private void doElementModeXML(XMLBuilder buf) {
-		if (comment != null && XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS()) {
+		if (comment != null && !buf.isModeString() && XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS()) {
 			newLine(buf);
 			newTabInternal(buf);
 			buf.addContentOnTarget("<!--" + comment + "-->");
@@ -196,7 +196,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			buf.addContentOnTarget("</" + name + ">");
 		}
 
-		if (comment != null && XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS()) {
+		if (comment != null && !buf.isModeString() && XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS()) {
 			newLine(buf);
 			newTabInternal(buf);
 			buf.addContentOnTarget("<!--end of " + comment + "-->");

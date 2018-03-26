@@ -306,7 +306,7 @@ public class XMLPart  {
 	 * @param name
 	 * @return
 	 */
-	@Deprecated
+	@Deprecated  	/*utiliser les vProperty*/
 	public static final Handle vSearchProperty(String name) {
 		Handle attr = XMLBuilder.createHandle(name);
 		return attr;

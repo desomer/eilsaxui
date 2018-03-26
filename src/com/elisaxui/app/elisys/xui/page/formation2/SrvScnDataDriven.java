@@ -3,6 +3,7 @@
  */
 package com.elisaxui.app.elisys.xui.page.formation2;
 
+import static com.elisaxui.component.toolkit.com.JSCom.xuiCom;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDocument.document;
 
 import javax.ws.rs.GET;
@@ -79,9 +80,8 @@ public class SrvScnDataDriven implements IJSONBuilder {
 			@xStatic(autoCall = true) // appel automatique de la methode static
 			default void main() {
 				ImgType data = declareType(ImgType.class, "data");
-				TKCom tkcom = declareType(TKCom.class, "TKCom");  // TODO a ameilorer
 
-				tkcom.requestUrl(JSString.value(REST_JSON_TEST+"OK"))
+				xuiCom().requestUrl(JSString.value(REST_JSON_TEST+"OK"))
 						.then(fct(data, () -> document().querySelector(cMain).appendChild(
 								newJS(JSTestTemplate.class).xImageOK(data.name(), data.urlImage()))));
 			}

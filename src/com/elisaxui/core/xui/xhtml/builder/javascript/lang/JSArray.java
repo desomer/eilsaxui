@@ -90,6 +90,8 @@ public class JSArray<E> extends JSAny  implements ILitteral, IJSClassInterface {
 				jsonBuilder.add((Integer)value);
 			else if (value instanceof Double)
 				jsonBuilder.add((Double)value);
+			else if (value instanceof JSString)
+				jsonBuilder.add(((JSString)value)._getDirectValue().toString());
 			else
 				jsonBuilder.add(value.toString());
 			return this;

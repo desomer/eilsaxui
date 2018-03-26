@@ -4,6 +4,7 @@
 package com.elisaxui.core.xui.xhtml.builder.javascript.lang;
 
 import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 
 /**
  * @author gauth
@@ -21,6 +22,10 @@ public class JSDomElement extends JSAny  implements IJSClassInterface {
 	
 	public JSString textContent() {
 		return castAttr(new JSString(), "textContent");
+	}
+	
+	public void addEventListener(Object event, JSFunction fct) {
+		callMth("addEventListener", event, fct);
 	}
 	
 	public JSArray<JSDomElement> childNodes() {

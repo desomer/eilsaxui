@@ -6,7 +6,6 @@ package com.elisaxui.component.widget.input;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.ICSSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
-import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -21,6 +20,8 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 public class ViewInputText extends XHTMLPart implements ICSSBuilder {
 
 	public static VProperty pLabel;
+	public static VProperty pValue;
+	
 
 	CSSClass group;
 	CSSClass highlight;
@@ -29,7 +30,8 @@ public class ViewInputText extends XHTMLPart implements ICSSBuilder {
 	@xTarget(CONTENT.class)
 	public XMLElement xDesign() {
 		return xDiv(group,
-				xInput(xAttr("type", xTxt("text")), xAttr("required")),
+				xInput(xAttr("type", xTxt("text")), xAttr("required"), 
+						vIfExist(pValue, xAttr("value", pValue))),
 				xSpan(highlight),
 				xSpan(bar),
 				xLabel(pLabel));
@@ -43,13 +45,14 @@ public class ViewInputText extends XHTMLPart implements ICSSBuilder {
 				xStyle(sMedia("all"), () -> {
 					sOn(sSel("*"), () -> css("box-sizing:border-box;"));
 					sOn(sSel(group), () -> {
-						css("position:relative;  margin-bottom:45px");
+						css("position:relative;  margin-bottom:25px");
 						// input
 						sOn(sSel("input"), () -> {
-							css("font-size:18px; padding:10px 10px 10px 5px; display:block;");
+							css("font-size:18px; padding:10px 10px 2px 5px; display:block;");
 							css(" width:300px;border:none;border-bottom:1px solid #757575;");
 							sOn(sSel("&:focus"), () -> {
 								css("outline:none;");
+								// label
 								sOn(sSel("~ label"), () -> css("top:-10px;font-size:14px;color:#5264AE;"));
 								// bar
 								sOn(sSel("~ ", bar, ":before,~ ", bar, ":after"), () -> css("width:50%;"));
@@ -78,11 +81,13 @@ public class ViewInputText extends XHTMLPart implements ICSSBuilder {
 						// highlight
 						sOn(sSel(highlight), () -> {
 							css("position:absolute;height:60%;width:300px;top:25%;left:0;pointer-events:none;opacity:0.5;");
-
 						});
 					});
 
-				}), xStyle(sKeyFrame("inputHighlighter"), () -> {
+				}),
+
+				// animation
+				xStyle(sKeyFrame("inputHighlighter"), () -> {
 					sOn(sSel("from"), () -> css("background:#5264AE;"));
 					sOn(sSel("to"), () -> css("width:0; background:transparent;"));
 				}));
@@ -90,15 +95,8 @@ public class ViewInputText extends XHTMLPart implements ICSSBuilder {
 
 }
 
-// @-webkit-keyframes inputHighlighter {
-// from { background:#5264AE; }
-// to { width:0; background:transparent; }
-// }
-// @-moz-keyframes inputHighlighter {
-// from { background:#5264AE; }
-// to { width:0; background:transparent; }
-// }
-// @keyframes inputHighlighter {
-// from { background:#5264AE; }
-// to { width:0; background:transparent; }
-// }
+// https://codepen.io/sammurphey/pen/BQvZbq
+// ex : combobox
+// background: url(data:image/svg+xml;utf8,<svg fill='#007BED' height='24'
+// viewBox='0 0 24 24'…9-4.58L18 9.25l-6 6-6-6z'/> <path d='M0-.75h24v24H0z'
+// fill='none'/> </svg>), no-repeat;

@@ -3,6 +3,8 @@
  */
 package com.elisaxui.core.xui.xml.builder;
 
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.Handle;
+
 /**
  * un attribut XML
  * 
@@ -36,7 +38,13 @@ public class XMLAttr implements IXMLBuilder {
 		if (value!=null)
 		{
 			buf.addContentOnTarget("=");
-			buf.addContentOnTarget(value);
+			if (value instanceof VProperty)
+			{
+				Object v = XMLElement.zzGetProperties(new Handle(((VProperty)value).getName()));
+				buf.addContentOnTarget(v);
+			}
+			else
+				buf.addContentOnTarget(value);
 		}
 		return buf;
 	}

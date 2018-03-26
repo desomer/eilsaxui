@@ -26,7 +26,7 @@ public class JSAny implements JSElement {
 	private static Object NULL = null;
 	
 	private Object name;
-	private Object value = null;
+	protected Object value = null;
 	private ArrayMethod<Object> listContent = new ArrayMethod<>();
 	
 	protected Object parentLitteral;
@@ -331,6 +331,10 @@ public class JSAny implements JSElement {
 
 	/*******************************************************************************/
 	public Object _getValue() { 
+		return value;
+	}
+	
+	public Object _getDirectValue() { 
 		return value;
 	}
 	

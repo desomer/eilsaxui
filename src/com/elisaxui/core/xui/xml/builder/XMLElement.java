@@ -171,11 +171,27 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 		newTabInternal(buf);
 		if (name != null) {
 			buf.addContentOnTarget("<" + name);
-
+			
 			for (XMLAttr attr : listAttr) {
 				buf.addContentOnTarget(" ");
 				attr.toXML(buf);
 			}
+			
+			// recherche un handle de type XMLAttr
+			for (Object inner : listInner) {
+				if (inner != null) {
+					if (inner instanceof Handle) { // un handle
+						Handle h = (Handle) inner;
+						Object handledObject = zzGetProperties(h);
+						if (handledObject instanceof XMLAttr)
+						{
+							buf.addContentOnTarget(" ");
+							((XMLAttr)handledObject).toXML(buf);
+						}
+					}
+				}
+			}
+			
 			buf.addContentOnTarget(">");
 		}
 
@@ -271,12 +287,17 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 		} else if (inner instanceof XMLAttr) { // un attribut
 			XMLAttr attr = ((XMLAttr) inner);
 			if (buf.isTemplate) {
+				Object v = attr.getValue();
+				if (v instanceof VProperty)
+				{
+					v = XMLElement.zzGetProperties(new Handle(((VProperty)v).getName()));
+				}
 				buf.getJSContent().getListElem().add(MTH_ADD_ATTR+"([");
-				buf.getJSContent().getListElem().add("\"" + attr.getName() + "\"," + attr.getValue() + "");
+				buf.getJSContent().getListElem().add("\"" + attr.getName() + "\"," + v + "");
 				buf.getJSContent().getListElem().add("]),");
 			}
-			else
-				attr.toXML(buf);
+			//else
+			//	attr.toXML(buf);   // pas en children
 			
 		} else {
 			if (buf.isTemplate) {
@@ -305,8 +326,17 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 		return nbChild;
 	}
 
-
 	private int doProperties(XMLBuilder buf, int nbChild, Handle h) {
+		Object handledObject = zzGetProperties(h);
+		
+		if (handledObject != null) {
+			nbChild = doChild(buf, nbChild, handledObject);
+		}
+		return nbChild;
+	}
+	
+
+	public static Object zzGetProperties(Handle h) {
 		String nameHandle = h.getName();
 		// recherche dans les parents
 		LinkedList<Object> listParent = XUIFactoryXHtml.getXHTMLFile().listParent;
@@ -320,6 +350,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 				// MgrErrorNotificafion.doError("Handle on Element", null)
 			} else if (elm instanceof XMLPartElement) {
 				XMLPart part = ((XMLPartElement) elm).part;
+				// getsion du prefix
 				if (firstPrefix==null)
 				{
 					firstPart = part;
@@ -346,10 +377,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 		if (h.getIfExistAdd()!=null && handledObject!=null)
 			handledObject = h.getIfExistAdd();
 		
-		if (handledObject != null) {
-			nbChild = doChild(buf, nbChild, handledObject);
-		}
-		return nbChild;
+		return handledObject;
 	}
 
 }

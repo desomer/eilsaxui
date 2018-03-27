@@ -405,7 +405,15 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 			addElem(null);
 		} else {
 			for (Object object : content) {
-				addElem(name, object); // pour le new class
+				if (object instanceof JSArray)
+				{
+					// force en literal si array 
+					JSArray<?> arr = (JSArray<?>)object;
+					if (!arr.isLitteral() && arr._getDirectValue()==null && arr._getName()==null)
+						arr.asLitteral();
+				}
+					
+				addElem(name, object); 
 			}
 		}
 		getListElem().add(";");

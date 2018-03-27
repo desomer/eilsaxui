@@ -5,9 +5,6 @@ package com.elisaxui.app.elisys.xui.page.formation2;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDocument.document;
 
-import com.elisaxui.app.elisys.xui.page.formation2.ScnTemplatePageDyn.CmpPage;
-import com.elisaxui.app.elisys.xui.page.formation2.ScnTemplatePageDyn.Menu;
-import com.elisaxui.app.elisys.xui.page.formation2.ScnTemplatePageDyn.Phrase;
 import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
@@ -58,7 +55,8 @@ public class ScnInputDyn extends XHTMLPart {
 				vPart(new ViewInputText()
 						.vProperties(ViewInputText.pLabel, "Color")
 						.vProperties(ViewInputText.pValue, "FF00FF")),
-				vPart(new ViewInputText().vProperties(ViewInputText.pLabel, "Font size"))));
+				vPart(new ViewInputText()
+						.vProperties(ViewInputText.pLabel, "Font size"))));
 	}
 
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
@@ -73,7 +71,6 @@ public class ScnInputDyn extends XHTMLPart {
 
 		@xStatic(autoCall = true)
 		default void main() {
-			// change click keyup input paste blur
 			JSDomElement dom = let("dom", document().querySelector(cMain));
 
 			JSArray<JSString> listEventLitteral = new JSArray<JSString>().asLitteral();
@@ -83,6 +80,7 @@ public class ScnInputDyn extends XHTMLPart {
 			listEventLitteral.push(JSString.value("input"));
 			listEventLitteral.push(JSString.value("paste"));
 			listEventLitteral.push(JSString.value("blur"));
+			
 			JSArray<JSString> listEvent = let("listEvent", listEventLitteral);
 
 			JSAny event = declareType(JSAny.class, "event");
@@ -90,17 +88,23 @@ public class ScnInputDyn extends XHTMLPart {
 			JSInt idx = declareType(JSInt.class, "idx");
 			_forIdx(idx, listEvent)._do(() -> {
 				document().addEventListener(listEvent.at(idx), fct(event, () -> {
-					consoleDebug(event);
+					consoleDebug(event, event+".target.datadriveninfo");
 				}));
 			});
 
-			JSArray<ItemInput> listItem = let("listItem", new JSArray<ItemInput>().asLitteral());
+			JSArray<ItemInput> listItem = let("listItem", new JSArray<ItemInput>());
+			
 			ItemInput item = declareType(ItemInput.class, "item");
+			JSDomElement domItem = declareType(JSDomElement.class, "domItem");
+			
 			dom.appendChild(createDomTemplate(xElem(
 					vFor(listItem, item,
 							vPart(new ViewInputText()
 									.vProperties(ViewInputText.pLabel, item.label())
-									.vProperties(ViewInputText.pValue, item.value()))))));
+									.vProperties(ViewInputText.pValue, fct(domItem, ()->{ 
+										__(domItem, ".datadriveninfo={row:", item ,", attr:'"+item.value()+"'}" );
+										_return( item.value() );
+									}) ))))));
 
 			ItemInput newItem = newJS(ItemInput.class);
 			newItem.label().set("toto");

@@ -56,6 +56,11 @@ public class JSArray<E> extends JSAny  implements ILitteral, IJSClassInterface {
 		return this;
 	}
 	
+	public JSArray<E> asNonLitteral() {
+		jsonBuilder = null;
+		return this;
+	}
+	
 	@Override
 	public boolean isLitteral() {
 		return jsonBuilder!=null;

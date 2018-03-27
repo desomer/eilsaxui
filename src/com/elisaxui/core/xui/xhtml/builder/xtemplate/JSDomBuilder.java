@@ -3,13 +3,9 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.xtemplate;
 
-import com.elisaxui.component.toolkit.datadriven.JSChangeCtx;
-import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
-import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
@@ -44,7 +40,14 @@ public interface JSDomBuilder extends JSClass {
 			})._else(() -> {
 				JSArray<?> el = cast(JSArray.class, "elem");
 				_forIdx(i, el)._do(() -> {
-					let("attr", el.at(i));
+					JSAny attr = let(JSAny.class, "attr", el.at(i));
+					_if("attr['_fct_'] instanceof Function").then(() -> {
+						let("r", "attr['_fct_'].call(attr, eldom)");
+						_if("r!=null").then(() -> {
+							__("attr.value=r");
+						});
+					});
+					
 					__("eldom.setAttributeNode(attr)");
 				});
 			});
@@ -66,12 +69,16 @@ public interface JSDomBuilder extends JSClass {
 			JSon attr = let(JSon.class, "attr", null);
 			JSArray<Object> ret = let("ret", new JSArray<>().asLitteral());
 			_forIdx(j, child)._do(() -> {
-				let("elem", child.at(j));
+				JSAny elemC = let(JSAny.class, "elemC", child.at(j));
 				_if(j.modulo(2).isEqual(0)).then(() -> {
-					attr.set("document.createAttribute(elem)");
+					attr.set("document.createAttribute(elemC)");
 					ret.push(attr);
 				})._else(() -> {
-					attr.attr("value").set("elem");
+					_if(elemC, " instanceof Function").then(() -> {
+						attr.attr("_fct_").set(elemC);
+					})._else(()->{
+						attr.attr("value").set(elemC);
+					});
 				});
 
 			});

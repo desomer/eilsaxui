@@ -82,7 +82,7 @@ public interface JSClass1 extends JSClass {
 		JSBool bool = declareType(JSBool.class, "bool");
 
 		let(test, 1);
-		let(bool, test.isEqual(555));
+		let(bool, test.equalsJS(555));
 		test.set(569);
 
 		JSString p = let("p", OK); // let & declare type

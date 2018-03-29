@@ -60,12 +60,12 @@ public class JSNodeElement extends JSAny  implements IJSClassInterface {
 	
 	public JSArray<JSNodeElement> querySelectorAll(CSSSelector selector)
 	{
-		return callTyped(new JSArray<JSNodeElement>(), "querySelectorAll", ""+selector);
+		return callTyped(new JSArray<JSNodeElement>().setArrayType(JSNodeElement.class), "querySelectorAll", ""+selector);
 	}
 	
 	public JSArray<JSNodeElement> querySelectorAll(JSAny variable)
 	{
-		return callTyped(new JSArray<JSNodeElement>(), "querySelectorAll", variable);
+		return callTyped(new JSArray<JSNodeElement>().setArrayType(JSNodeElement.class), "querySelectorAll", variable);
 	}
 	
 	public JSArray<JSNodeElement> querySelectorAll(Object... selector)

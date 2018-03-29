@@ -70,7 +70,7 @@ public interface JSDomBuilder extends JSClass {
 			JSArray<Object> ret = let("ret", new JSArray<>().asLitteral());
 			_forIdx(j, child)._do(() -> {
 				JSAny elemC = let(JSAny.class, "elemC", child.at(j));
-				_if(j.modulo(2).isEqual(0)).then(() -> {
+				_if(j.modulo(2).equalsJS(0)).then(() -> {
 					attr.set("document.createAttribute(elemC)");
 					ret.push(attr);
 				})._else(() -> {

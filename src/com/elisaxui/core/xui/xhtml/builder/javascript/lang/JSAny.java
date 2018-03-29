@@ -80,7 +80,7 @@ public class JSAny implements JSElement {
 	}
 	
 	/**************************************************************/
-	public final JSBool isEqual(Object obj)
+	public final JSBool equalsJS(Object obj)
 	{
 		JSBool ret = new JSBool();
 		doOperator(ret, "==", obj);

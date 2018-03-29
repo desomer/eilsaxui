@@ -30,6 +30,18 @@ public interface IJSDataDriven {
 				;
 	}
 	
+	default JSFunction vFor(JSElement data, JSElement aRow,  XMLElement elem, JSElement change)
+	{
+		JSon domparent =  JSContent.declareType(JSon.class, "domparent");
+		
+		JSFunction enter = onEnter(aRow, elem);
+		
+		return (JSFunction) new JSFunction().zzSetComment("xDataDriven").setParam(new Object[] {domparent})
+				.__("JSDataDriven.doTemplateDataDriven(",domparent,",",data,","+enter+",null, "+change+")")
+				;
+	}
+	
+	
 	default JSFunction xDataDriven(JSElement data, JSElement enter )
 	{
 		JSon domparent =  JSContent.declareType(JSon.class, "domparent");

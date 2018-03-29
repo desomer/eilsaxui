@@ -60,7 +60,7 @@ public interface TKRouterEvent extends JSClass {
 				_if(self.navigo().attr("nextenable"));
 				
 				    JRoute toRoute = let(JRoute.class, "toRoute", self.navigo().attr("_lastRouteResolved"));
-				    _if(toRoute.url().substring(0, 1).isEqual("!"));
+				    _if(toRoute.url().substring(0, 1).equalsJS("!"));
 				    	toRoute.url().set(toRoute.url().substring(1));
 				    endif();
 	
@@ -69,7 +69,7 @@ public interface TKRouterEvent extends JSClass {
 					
 					systemDebugIf(TKCoreConfig.debugPushState, "'pushState ENABLE action=', this.toString() , ' toRoute =',toRoute,' backFromIntent =', backFromIntent, 'fromIntent='", fromIntent)	;				
 					/**************** gestion toogle menu  **********************/
-					_if(backFromIntent,"!=null &&", backFromIntent.url().isEqual(URL_MENU));
+					_if(backFromIntent,"!=null &&", backFromIntent.url().equalsJS(URL_MENU));
 						self.doAction(txt(ACTION_TOGGLE_MENU));
 						_return() ;   // exit 
 					_elseif_("this.toString()==",txt(STATE_MENU)); // is next

@@ -201,7 +201,7 @@ public interface JSTransition extends JSClass {
 	default JSVoid doActivityFreeze(JQuery act, JSInt sct) {
 		act.addClass(cStateFixedForFreeze);
 
-		_if(sct.isEqual(-1));
+		_if(sct.equalsJS(-1));
 				sct.set(act.data(DATA_SCROLLTOP));
 				sct.set(calc(sct,"==null?0:",sct));  // met à 0 si null
 		endif();

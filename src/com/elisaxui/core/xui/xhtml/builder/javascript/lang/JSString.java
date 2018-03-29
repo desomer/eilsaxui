@@ -38,4 +38,12 @@ public class JSString extends JSValue {
 		return callMth("substring", start, end);
 	}
 	
+	/********************************************************************/
+	public JSArray<JSString> split(Object separateur)
+	{
+		JSArray<JSString> ret= callTyped(new JSArray<JSString>(), "split", separateur);
+		ret.setArrayType(JSString.class);
+		return ret;
+	}
+	
 }

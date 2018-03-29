@@ -12,14 +12,10 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  */
 public interface IJSDomTemplate extends IXHTMLBuilder {
 	XMLElement getTemplate();
-	
 
-	default JSDomTemplate createDomTemplate(XMLElement xmlElement)
-	{
+	default JSDomTemplate createDomTemplate(XMLElement xmlElement) {
 		return new JSDomTemplate(xmlElement).setModeJS(true);
-		
+
 	}
-
-
 
 }

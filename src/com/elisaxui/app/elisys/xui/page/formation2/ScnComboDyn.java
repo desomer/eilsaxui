@@ -4,7 +4,7 @@
 package com.elisaxui.app.elisys.xui.page.formation2;
 
 import static com.elisaxui.component.toolkit.com.JSCom.xuiCom;
-import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDocument.document;
+import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

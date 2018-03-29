@@ -3,7 +3,7 @@
  */
 package com.elisaxui.app.elisys.xui.page.formation2;
 
-import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDocument.document;
+import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
 import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
@@ -15,10 +15,10 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSObject;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
@@ -85,7 +85,7 @@ public class ScnTemplateDyn extends XHTMLPart {
 			JSArray<JSObject> arr = let("arr", new JSArray<JSObject>().asLitteral());
 			
 			JSon aRow = declareType(JSon.class, "aRow");
-			JSDomElement aDom = declareType(JSDomElement.class, "aDom");
+			JSNodeElement aDom = declareType(JSNodeElement.class, "aDom");
 			
 			// btn data driven
 			XMLElement btnOnDataDriven = vPart(new CmpButton().vProperty(CmpButton.PROPERTY_LABEL, aRow.attr("t")));
@@ -100,7 +100,7 @@ public class ScnTemplateDyn extends XHTMLPart {
 			XMLElement listElem = xListNode(f, xDiv("LLL"), barDataDriven);
 			
 			// appel meth de JSDomElement
-			JSDomElement ko = let("ko", xPicture(JSString.value("KO")));
+			JSNodeElement ko = let("ko", xPicture(JSString.value("KO")));
 			
 			Object attrRed = xAttr("style",txt("border:1px red solid"));
 			Object attrGreen = xAttr("style",txt("border:1px green solid"));
@@ -140,7 +140,7 @@ public class ScnTemplateDyn extends XHTMLPart {
 		}
 		
 		@xStatic
-		default JSDomElement xPicture(JSAny url) {
+		default JSNodeElement xPicture(JSAny url) {
 			return createDomTemplate(vPart(new CmpButton().vProperty(CmpButton.PROPERTY_LABEL, url)));
 		}
 

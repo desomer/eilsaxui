@@ -7,8 +7,8 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomTemplate;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 
@@ -65,7 +65,7 @@ public interface IJSDataDriven {
 
 	}
 	
-	public default JSFunction onEnter(Object row, JSDomElement elem)
+	public default JSFunction onEnter(Object row, JSNodeElement elem)
 	{
 		return (JSFunction) new JSFunction().zzSetComment("onEnter").setParam(new Object[] {row, "ctx"})
 				._return( elem );
@@ -80,7 +80,7 @@ public interface IJSDataDriven {
 				.endif();
 	}
 	
-	public default JSFunction onChange(JSChangeCtx ctx, JSDomElement aDom, JSFunction action )
+	public default JSFunction onChange(JSChangeCtx ctx, JSNodeElement aDom, JSFunction action )
 	{
 		return (JSFunction) new JSFunction().zzSetComment("onChange").setParam(new Object[] {"ctx"})
 				._var("dom" , "ctx.row['"+JSDataSet.ATTR_DOM_LINK+"']")

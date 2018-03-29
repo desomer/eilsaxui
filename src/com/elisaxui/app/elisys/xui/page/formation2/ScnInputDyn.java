@@ -3,9 +3,10 @@
  */
 package com.elisaxui.app.elisys.xui.page.formation2;
 
-import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDocument.document;
+import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
 import com.elisaxui.component.toolkit.TKPubSub;
+import com.elisaxui.component.toolkit.datadriven.IJSDataBinding;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
@@ -15,9 +16,12 @@ import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSEvent;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeHTMLInputElement;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
@@ -67,11 +71,11 @@ public class ScnInputDyn extends XHTMLPart {
 	/********************************************************/
 	// une class js avec template et datadriven
 	/********************************************************/
-	public interface JSTest extends JSClass, IJSDomTemplate, IJSDataDriven {
+	public interface JSTest extends JSClass, IJSDomTemplate, IJSDataBinding, IJSDataDriven {
 
 		@xStatic(autoCall = true)
 		default void main() {
-			JSDomElement dom = let("dom", document().querySelector(cMain));
+			JSNodeElement dom = let("dom", document().querySelector(cMain));
 
 			JSArray<JSString> listEventLitteral = new JSArray<JSString>().asLitteral();
 			listEventLitteral.push(JSString.value("change"));
@@ -80,31 +84,35 @@ public class ScnInputDyn extends XHTMLPart {
 			listEventLitteral.push(JSString.value("input"));
 			listEventLitteral.push(JSString.value("paste"));
 			listEventLitteral.push(JSString.value("blur"));
-			
+
 			JSArray<JSString> listEvent = let("listEvent", listEventLitteral);
 
-			JSAny event = declareType(JSAny.class, "event");
+			JSEvent event = declareType(JSEvent.class, "event");
 
 			JSInt idx = declareType(JSInt.class, "idx");
 			_forIdx(idx, listEvent)._do(() -> {
 				document().addEventListener(listEvent.at(idx), fct(event, () -> {
-					consoleDebug(event, event+".target.datadriveninfo");
+					_if(event.target().nodeName(),"=='INPUT'").then(() -> {
+						_if(event.type(),"=='change'").then(() -> {
+							JSNodeHTMLInputElement inputelem = let(JSNodeHTMLInputElement.class, "inputelem", event.target());
+							XuiBindInfo ddi = let(XuiBindInfo.class, "ddi", inputelem+".datadriveninfo");
+							JSString attr = let("attr", ddi.attr().split(".").at(1));
+							ddi.row().attrByString(attr).set(inputelem.value());
+							consoleDebug(event, ddi);
+						});
+					});
 				}));
 			});
 
 			JSArray<ItemInput> listItem = let("listItem", new JSArray<ItemInput>());
-			
+
 			ItemInput item = declareType(ItemInput.class, "item");
-			JSDomElement domItem = declareType(JSDomElement.class, "domItem");
-			
+
 			dom.appendChild(createDomTemplate(xElem(
 					vFor(listItem, item,
 							vPart(new ViewInputText()
 									.vProperties(ViewInputText.pLabel, item.label())
-									.vProperties(ViewInputText.pValue, fct(domItem, ()->{ 
-										__(domItem, ".datadriveninfo={row:", item ,", attr:'"+item.value()+"'}" );
-										_return( item.value() );
-									}) ))))));
+									.vProperties(ViewInputText.pValue, vBind(item, item.value())))))));
 
 			ItemInput newItem = newJS(ItemInput.class);
 			newItem.label().set("toto");
@@ -123,5 +131,6 @@ public class ScnInputDyn extends XHTMLPart {
 
 		JSString value();
 	}
+
 
 }

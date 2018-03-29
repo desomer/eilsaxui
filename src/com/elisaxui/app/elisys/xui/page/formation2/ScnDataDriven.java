@@ -3,7 +3,7 @@
  */
 package com.elisaxui.app.elisys.xui.page.formation2;
 
-import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDocument.document;
+import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
 import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
@@ -15,9 +15,9 @@ import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
@@ -92,7 +92,7 @@ public class ScnDataDriven extends XHTMLPart {
 				listData.push(row);
 			});
 
-			// change les text en asynchrone
+			// change les text en asynchrone tout les i*50ms
 			_forIdxBetween(i, 0, 100)._do(
 					() -> setTimeout(fct(j, () -> {
 						listData.at(j).name().set(txt("wor ", j));
@@ -102,11 +102,11 @@ public class ScnDataDriven extends XHTMLPart {
 
 		}
 
-		// le template
+		// le controleur
 		default Object xArray(JSArray<TestData> data) {
 
 			TestData aTestData = declareType(TestData.class, "aTestData");
-			JSDomElement aDom = declareType(JSDomElement.class, "aDom");
+			JSNodeElement aDom = declareType(JSNodeElement.class, "aDom");
 			JSChangeCtx changeCtx = declareType(JSChangeCtx.class, "changeCtx");
 
 			JSTestDataDriven that = let(JSTestDataDriven.class, "that", _this());
@@ -119,23 +119,25 @@ public class ScnDataDriven extends XHTMLPart {
 						() -> aDom.querySelector("span").firstNodeValue().set(changeCtx.value()));
 			});
 
-			JSDomElement row = that.xRow(aTestData.name(), aTestData.oneToOne().name2());
+			JSNodeElement aNewDomRow = that.xRow(aTestData.name(), aTestData.oneToOne().name2());
 			
 			return createDomTemplate(
 					xUl(
 							xDataDriven(data,
-									onEnter(aTestData, row)	,
+									onEnter(aTestData, aNewDomRow)	,
 									onExit(aTestData, aDom),
 									onChange(changeCtx, aDom, onChange))));
 
 		}
-
-		default JSDomElement xRow(JSString text, JSString id) {
+		
+		// le template
+		default JSNodeElement xRow(JSString text, JSString id) {
 			return createDomTemplate(xLi(text, xSpan(id)));
 		}
 
 	}
 
+	// les dto
 	public interface TestData extends JSType {
 		JSString id();
 

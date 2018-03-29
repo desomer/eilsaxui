@@ -15,7 +15,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ArrayMethod;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomFuntion;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Handle;
@@ -305,7 +305,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 					buf.addContentOnTarget("\""+inner+"\"");
 				} else if (inner instanceof JSDomFuntion) {
 					buf.addContentOnTarget(inner);
-				} else if (inner instanceof JSDomElement) {
+				} else if (inner instanceof JSNodeElement) {
 					buf.addContentOnTarget(inner);
 				} else {
 					buf.addContentOnTarget(MTH_ADD_TEXT+"(");

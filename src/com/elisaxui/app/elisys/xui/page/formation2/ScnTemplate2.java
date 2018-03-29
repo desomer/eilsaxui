@@ -3,13 +3,13 @@
  */
 package com.elisaxui.app.elisys.xui.page.formation2;
 
-import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDocument.document;
+import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
@@ -62,7 +62,7 @@ public class ScnTemplate2 extends XHTMLPart {
 		}
 
 		@xStatic
-		default JSDomElement xPicture(JSString url) {
+		default JSNodeElement xPicture(JSString url) {
 			return createDomTemplate(xListNode(
 					vPart(new CmpButton2().vProperty(CmpButton2.PROPERTY_LABEL, "OK")),
 					xImg(xAttr("src", url))));

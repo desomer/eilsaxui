@@ -4,7 +4,7 @@
 package com.elisaxui.core.xui.xhtml.builder.xtemplate;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 
@@ -12,7 +12,7 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  * @author gauth
  *
  */
-public class JSDomTemplate extends JSDomElement implements IJSDomTemplate
+public class JSDomTemplate extends JSNodeElement implements IJSDomTemplate
 {
 	XMLElement xml;
 	boolean modeJs = false;

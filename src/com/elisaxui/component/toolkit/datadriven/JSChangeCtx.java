@@ -7,8 +7,8 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 
 /**
  * @author gauth
@@ -16,7 +16,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
  */
 public interface JSChangeCtx extends JSClass {
 
-	public JSDomElement parent();
+	public JSNodeElement parent();
 	public JSString ope();
 	public JSon row();
 	public JSInt idx();

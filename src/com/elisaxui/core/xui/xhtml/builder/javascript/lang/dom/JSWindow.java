@@ -1,7 +1,10 @@
 /**
  * 
  */
-package com.elisaxui.core.xui.xhtml.builder.javascript.lang;
+package com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom;
+
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.IJSClassInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 
 /**
  * @author gauth

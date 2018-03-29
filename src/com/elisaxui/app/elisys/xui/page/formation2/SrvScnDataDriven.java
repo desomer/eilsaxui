@@ -4,7 +4,7 @@
 package com.elisaxui.app.elisys.xui.page.formation2;
 
 import static com.elisaxui.component.toolkit.com.JSCom.xuiCom;
-import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDocument.document;
+import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -22,8 +22,8 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSDomElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
@@ -86,11 +86,11 @@ public class SrvScnDataDriven implements IJSONBuilder {
 								newJS(JSTestTemplate.class).xImageOK(data.name(), data.urlImage()))));
 			}
 
-			default JSDomElement xImageOK(JSAny id, JSString url) {
+			default JSNodeElement xImageOK(JSAny id, JSString url) {
 				return createDomTemplate(xDiv(xSpan(id), xPicture(url)));
 			}
 
-			default JSDomElement xPicture(JSString url) {
+			default JSNodeElement xPicture(JSString url) {
 				return createDomTemplate(xImg(xAttr("src", url)));
 			}
 		}

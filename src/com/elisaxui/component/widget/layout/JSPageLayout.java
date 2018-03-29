@@ -10,7 +10,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 
 import static com.elisaxui.component.toolkit.json.JXui.$xui;
-import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSWindow.*;
+import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSWindow.*;
 import static com.elisaxui.component.toolkit.JQuery.*;
 
 import com.elisaxui.component.toolkit.JQuery;

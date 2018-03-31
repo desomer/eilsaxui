@@ -55,7 +55,7 @@ public interface JSDomBuilder extends JSClass {
 
 		let("e", funct("id", child, "attr").__(() -> {
 			JSAny newdom = let(JSAny.class, "newdom", "document.createElement(id)");
-			_if(child.isNotEqual(null)).then(() -> {
+			_if(child.notEqualsJS(null)).then(() -> {
 				_forIdx(j, child)._do(() -> {
 					let("elem", child.at(j));
 					__("doElem(newdom, elem)");
@@ -63,7 +63,7 @@ public interface JSDomBuilder extends JSClass {
 			});
 			_return(newdom);
 		}));
-		__("window."+XMLElement.MTH_ADD_ELEM+"=e");
+		__("window."+JSDomTemplate.MTH_ADD_ELEM+"=e");
 
 		let("a", fct(child, () -> {
 			JSon attr = let(JSon.class, "attr", null);
@@ -84,7 +84,7 @@ public interface JSDomBuilder extends JSClass {
 			});
 			_return(ret);
 		}));
-		__("window."+XMLElement.MTH_ADD_ATTR+"=a");
+		__("window."+JSDomTemplate.MTH_ADD_ATTR+"=a");
 
 		let("t", fct(child, () -> {
 			JSon text = let(JSon.class, "text", null);
@@ -92,7 +92,7 @@ public interface JSDomBuilder extends JSClass {
 			_return(text);
 		}));
 		
-		__("window."+XMLElement.MTH_ADD_TEXT+"=t");
+		__("window."+JSDomTemplate.MTH_ADD_TEXT+"=t");
 	}
 	
 }

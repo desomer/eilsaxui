@@ -51,14 +51,14 @@ public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
 
 	@xTarget(CONTENT.class) // la vue App Shell
 	public XMLElement xAppShell() {
-		vProperties(CmpPage.pContentMain, vPart(new CmpSection()
+		vProp(CmpPage.pContentMain, vPart(new CmpSection()
 				.vProperty(CmpSection.pSectionH1, "section static")
 				.vProperty(CmpSection.pArticleH1, "article static")
 				.vProperty(CmpSection.pContentArticle, "un texte article static")));
 
 		CmpNavVertical nav = new CmpNavVertical();
 
-		vProperties(CmpPage.pContentNav, vPart(nav, nav.xItem("a1"), 
+		vProp(CmpPage.pContentNav, vPart(nav, nav.xItem("a1"), 
 													nav.xItem("a2"), 
 													nav.xItem("a3")));
 

@@ -5,7 +5,6 @@ package com.elisaxui.app.elisys.xui.page.formation2;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
-import com.elisaxui.app.elisys.xui.page.formation2.ScnDataDriven.JSTestDataDriven;
 import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.component.toolkit.datadriven.IJSDataBinding;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
@@ -17,6 +16,7 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
@@ -58,10 +58,10 @@ public class ScnInputDyn extends XHTMLPart {
 	public XMLElement xAppShell() {
 		return xDiv(xH1("ScnInput"), xArticle(cMain,
 				vPart(new ViewInputText()
-						.vProperties(ViewInputText.pLabel, "Color")
-						.vProperties(ViewInputText.pValue, "FF00FF")),
+						.vProp(ViewInputText.pLabel, "Color")
+						.vProp(ViewInputText.pValue, "FF00FF")),
 				vPart(new ViewInputText()
-						.vProperties(ViewInputText.pLabel, "Font size"))));
+						.vProp(ViewInputText.pLabel, "Font size"))));
 	}
 
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
@@ -93,41 +93,69 @@ public class ScnInputDyn extends XHTMLPart {
 			_forIdx(idx, listEvent)._do(() -> {
 				document().addEventListener(listEvent.at(idx), fct(event, () -> {
 					_if(event.target().nodeName().equalsJS("INPUT")).then(() -> {
-							JSNodeHTMLInputElement inputelem = let(JSNodeHTMLInputElement.class, "inputelem",
-									event.target());
-							XuiBindInfo ddi = let(XuiBindInfo.class, "ddi", inputelem + ".datadriveninfo");
-							JSString attr = let("attr", ddi.attr().split(".").at(1));
-							ddi.row().attrByString(attr).set(inputelem.value());
+						JSNodeHTMLInputElement inputelem = let(JSNodeHTMLInputElement.class, "inputelem",
+								event.target());
+						XuiBindInfo ddi = let(XuiBindInfo.class, "ddi", inputelem + ".XuiBindInfo");
+						_if(ddi, "!=null &&", ddi.row().notEqualsJS(null)).then(() -> {
+							ddi.row().attrByString(ddi.attr()).set(inputelem.value());
+						});
 					});
 				}));
 			});
-			
+
 			/*******************************************************/
 			JSNodeElement aDom = declareType(JSNodeElement.class, "aDom");
 			JSChangeCtx changeCtx = declareType(JSChangeCtx.class, "changeCtx");
 
 			JSFunction onChange = fct(() -> {
-				JSString sel = let(JSString.class, "sel", "'[data-xui'+",changeCtx.property(),"+']'");
+				JSString sel = let(JSString.class, "sel", "'[data-xui'+", changeCtx.property(), "+']'");
 				JSArray<JSNodeElement> listNode = let("listNode", aDom.querySelectorAll(sel));
 				listNode.setArrayType(JSNodeElement.class);
 				JSInt i = declareType(JSInt.class, "i");
 				_forIdx(i, listNode)._do(() -> {
-					listNode.at(i).textContent().set(changeCtx.value());
+					JSNodeElement elem = let("elem", listNode.at(i));
+					XuiBindInfo ddi = let(XuiBindInfo.class, "ddi", elem + ".XuiBindInfo");
+					JSAny r = let("r", changeCtx.value());
+					_if(ddi, "!=null &&", ddi.fct().notEqualsJS(null)).then(() -> {
+						JSAny rf = let("rf", ddi.fct().call(elem, changeCtx));
+						_if(rf.equalsJS(null)).then(() -> {
+							_return();
+						});
+						
+						r.set(rf);
+					});
+					
+					elem.textContent().set(r);
 				});
 			});
 			/*******************************************************/
 			JSNodeElement dom = let("dom", document().querySelector(cMain));
-			
+
 			JSArray<ItemInput> listItem = let("listItem", new JSArray<ItemInput>());
 			ItemInput item = declareType(ItemInput.class, "item");
+
+			JSFunction fctReverse = fct(changeCtx, () -> {
+				_return(cast(JSString.class, changeCtx.value()).split(txt()).reverse().join(txt()));
+			});
 			
-			dom.appendChild(createDomTemplate(xDiv(
+			dom.appendChildTemplate(
 					vFor(listItem, item, xListNode(
-							vPart(new ViewInputText()
-									.vProperties(ViewInputText.pLabel, item.label())
-									.vProperties(ViewInputText.pValue, vBind(item, item.value()))),
-							xDiv(vChangeable("value", item.value()))),
-							onChange(changeCtx, aDom, onChange)))));
+							vPart(new ViewInputText()   // template static ou dynamic
+									.vProp(ViewInputText.pLabel, vChangeable(item.label()))
+									.vProp(ViewInputText.pValue, vBindable(item, item.value()))),
+							/**************************************************************************/
+							xDiv("static => ", item.value(), " <="),
+							/**************************************************************************/
+							xDiv("changeable => ", xSpan(vChangeable(item.value())), " <="),
+							/**************************************************************************/
+							xDiv("reverse => ", xSpan(vChangeable(item, item.value(), fctReverse)), " <="),
+							/*************************************************************************/
+							xDiv("class => ", vOnChange(item, item.value(), fct(changeCtx, ()->{
+								consoleDebug(txt("vOnChange "),changeCtx);
+							})))
+							),
+					/*************************************************************************/
+					onChange(changeCtx, aDom, onChange)));
 
 			/*******************************************************/
 			ItemInput newItem = newJS(ItemInput.class);
@@ -139,6 +167,11 @@ public class ScnInputDyn extends XHTMLPart {
 			newItem.label().set("style");
 			newItem.value().set("block");
 			listItem.push(newItem);
+
+			setTimeout(() -> {
+				listItem.at(0).label().set(listItem.at(0).label().add(" OK"));
+				listItem.at(1).label().set("yeah");
+			}, 5000);
 		}
 	}
 

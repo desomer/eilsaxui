@@ -22,7 +22,6 @@ public class ViewInputText extends XHTMLPart implements ICSSBuilder {
 	public static VProperty pLabel;
 	public static VProperty pValue;
 	
-
 	CSSClass group;
 	CSSClass highlight;
 	CSSClass bar;
@@ -45,7 +44,7 @@ public class ViewInputText extends XHTMLPart implements ICSSBuilder {
 				xStyle(sMedia("all"), () -> {
 					sOn(sSel("*"), () -> css("box-sizing:border-box;"));
 					sOn(sSel(group), () -> {
-						css("position:relative;  margin-bottom:25px");
+						css("position:relative;  margin-top:15px");
 						// input
 						sOn(sSel("input"), () -> {
 							css("font-size:18px; padding:10px 10px 2px 5px; display:block;");

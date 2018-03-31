@@ -67,7 +67,7 @@ public class XMLPart  {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public XMLPart vProperties(Object key, Object value)
+	public XMLPart vProp(Object key, Object value)
 	{
 		Object obj = listProperties.get(key.toString());
 		if (obj!=null)
@@ -312,7 +312,7 @@ public class XMLPart  {
 		return attr;
 	}
 	
-	@Deprecated
+	@Deprecated /* use vIfExist(VProperty */
 	public static final Handle vIfExistProperty(String iff, Object then) {
 		Handle attr = XMLBuilder.createHandle(iff);
 		attr.setIfExistAdd(then);

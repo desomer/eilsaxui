@@ -9,8 +9,8 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
  * @author gauth
  *
  */
-/*xIf() xFor() */
+/*xIf() xFor()   */
 
-public class JSDomFuntion extends JSAny {
+public class JSDomFunction extends JSAny {
 
 }

@@ -87,7 +87,7 @@ public class JSAny implements JSElement {
 		return ret;
 	}
 	
-	public final JSBool isNotEqual(Object obj)
+	public final JSBool notEqualsJS(Object obj)
 	{
 		JSBool ret = new JSBool();
 		doOperator(ret, "!=", obj);

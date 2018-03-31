@@ -14,6 +14,10 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  */
 public class JSDomTemplate extends JSNodeElement implements IJSDomTemplate
 {
+	public static final String MTH_ADD_ELEM = "e";
+	public static final String MTH_ADD_ATTR = "a";
+	public static final String MTH_ADD_TEXT = "t";
+	
 	XMLElement xml;
 	boolean modeJs = false;
 	

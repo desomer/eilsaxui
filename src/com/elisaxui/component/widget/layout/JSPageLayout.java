@@ -69,7 +69,7 @@ public interface JSPageLayout extends JSClass {
 				_if( deltaTime,">", interval, "&&", "window.disableScrollEvent==null", "&&", "window.animInProgess==false");
 					scrollTop.set($window.scrollTop()); //position du scroll
 						
-					_if(lastScrollTop.isNotEqual(scrollTop), "&&", $activity.hasClass(CssTransition.active) ); 
+					_if(lastScrollTop.notEqualsJS(scrollTop), "&&", $activity.hasClass(CssTransition.active) ); 
 					
 						JSInt deltas = let(JSInt.class, "deltas", lastScrollTop.substact(scrollTop));
 						

@@ -9,13 +9,28 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.IJSClassInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomTemplate;
+import com.elisaxui.core.xui.xml.XMLPart;
+import com.elisaxui.core.xui.xml.builder.XMLElement;
 
 /**
  * @author gauth
  *
  */
 public class JSNodeElement extends JSAny  implements IJSClassInterface {
-
+	
+	public JSNodeElement appendChildTemplate(Object... element) {
+		XMLElement e = null;
+		
+		if (element.length==0 && element[0] instanceof XMLElement)
+			e = (XMLElement)element[0];
+		else
+			e = XMLPart.xListElement(element);
+		
+		return  callMth("appendChild", new JSDomTemplate(e).setModeJS(true));
+	}
+	
+	/**************************************************/
 	public JSNodeElement appendChild(Object element) {
 		return  callMth("appendChild", element);
 	}

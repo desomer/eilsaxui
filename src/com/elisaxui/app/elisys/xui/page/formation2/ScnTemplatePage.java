@@ -47,22 +47,22 @@ public class ScnTemplatePage extends XHTMLPart {
 									.vProperty(CmpSection.pContentArticle, "un article 3")
 									));
 		/***********************************************/
-		vProperties(CmpPage.pContentHeader, "HEADER");
-		vProperties(CmpPage.pContentMain, listSection);
-		vProperties(CmpPage.pContentFooter, "FOOTER");
+		vProp(CmpPage.pContentHeader, "HEADER");
+		vProp(CmpPage.pContentMain, listSection);
+		vProp(CmpPage.pContentFooter, "FOOTER");
 		
-		vProperties(CmpPage.pContentMain, vPart(new CmpSection()
+		vProp(CmpPage.pContentMain, vPart(new CmpSection()
 				.vProperty(CmpSection.pArticleH1, "article test 4")
 				.vProperty(CmpSection.pContentArticle, "un article 4")
 		));
 		
-		vProperties(CmpPage.pContentMain, vPart(new CmpSection()
+		vProp(CmpPage.pContentMain, vPart(new CmpSection()
 				.vProperty(CmpSection.pSectionH1, "section 5")
 				.vProperty(CmpSection.pArticleH1, "article test 5")
 				.vProperty(CmpSection.pContentArticle, "un article 5 bis")
 		));
 		
-		vProperties(CmpPage.pContentNav, xUl(xLi("a"), xLi("b"), xLi("c")));
+		vProp(CmpPage.pContentNav, xUl(xLi("a"), xLi("b"), xLi("c")));
 		
 		return vPart(new CmpPage());
 	}

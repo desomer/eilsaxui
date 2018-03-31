@@ -28,8 +28,6 @@ public interface JSDataDriven extends JSClass {
 	TKPubSub callBackExit();
 	TKPubSub callBackChange();
 	
-	JSDataDriven _this = null;
-	JSDataDriven _self = null;
 
 	@xStatic
 	default void doTemplateDataDriven(JSNodeElement parent, JSArray<?> data, JSAny fctEnter, JSAny fctExit, JSAny fctChange )
@@ -63,15 +61,15 @@ public interface JSDataDriven extends JSClass {
 			_if(fctExit, "!=null").then(() -> {
 				__(fctExit, ".call(this, ctx.row, ctx.row['"+JSDataSet.ATTR_DOM_LINK+"'], ctx)");
 			})._else(()->{
-				_if(ctx.row().attrByString(JSDataSet.ATTR_DOM_LINK).isNotEqual(null)).then(() -> {
+				_if(ctx.row().attrByString(JSDataSet.ATTR_DOM_LINK).notEqualsJS(null)).then(() -> {
 					cast(JSNodeElement.class, ctx.row().attrByString(JSDataSet.ATTR_DOM_LINK)).remove();
 				});
 			});
 		}));
 		
-		_if(fctChange.isNotEqual(null)).then(() -> {
+		_if(fctChange.notEqualsJS(null)).then(() -> {
 			aDataDriven.onChange(funct(ctx).zzSetComment("onChange").__(()->{
-				_if(ctx.row().attrByString(JSDataSet.ATTR_DOM_LINK).isNotEqual(null)).then(() -> {
+				_if(ctx.row().attrByString(JSDataSet.ATTR_DOM_LINK).notEqualsJS(null)).then(() -> {
 					__(fctChange, ".call(this, ctx)");
 				});
 		}));
@@ -115,22 +113,22 @@ public interface JSDataDriven extends JSClass {
 	}
 
 	default JSVoid start() {
+		JSDataDriven self = let(JSDataDriven.class, "self", _this());
 		
 		JSContentInterface fctChange =  funct("value").__(()->{
 			_if("value.ope=='enter'");
-				_self.doEnter("value");
+				self.doEnter("value");
 			endif();
 			_if("value.ope=='exit'");
-				_self.doExit("value");
+				self.doExit("value");
 			endif();
 			_if("value.ope=='change'");
-				_self.doChange("value");
+				self.doChange("value");
 			endif();
 		});
 		
 		/******************************************/
 		_var("data", dataSet().getData());
-		_var(_self, _this);
 		_var("fctChange", fctChange);
 		
 		dataSet().onChange("fctChange");

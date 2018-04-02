@@ -10,6 +10,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
  * @author Bureau
  *
  */
+@Deprecated
 public interface JSXHTMLPart extends JSClass {
 
 	JSString html=null;

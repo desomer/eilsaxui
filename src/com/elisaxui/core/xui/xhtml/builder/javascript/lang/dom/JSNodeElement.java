@@ -9,7 +9,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.IJSClassInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomTemplate;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSNodeTemplate;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 
@@ -27,7 +27,7 @@ public class JSNodeElement extends JSAny  implements IJSClassInterface {
 		else
 			e = XMLPart.xListElement(element);
 		
-		return  callMth("appendChild", new JSDomTemplate(e).setModeJS(true));
+		return  callMth("appendChild", new JSNodeTemplate(e).setModeJS(true));
 	}
 	
 	/**************************************************/
@@ -41,6 +41,10 @@ public class JSNodeElement extends JSAny  implements IJSClassInterface {
 	
 	public JSString textContent() {
 		return castAttr(new JSString(), "textContent");
+	}
+	
+	public JSDomTokenList classList() {
+		return castAttr(new JSDomTokenList(), "classList");
 	}
 	
 	public JSString nodeName() {

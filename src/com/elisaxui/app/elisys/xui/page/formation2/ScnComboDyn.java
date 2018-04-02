@@ -57,6 +57,9 @@ public class ScnComboDyn implements IJSONBuilder {
 		static CSSClass cMain;
 		static Telephone aRow;
 
+		/********************************************
+		 * IMPORT
+		 ********************************************/
 		@xTarget(HEADER.class)
 		@xRessource  
 		public XMLElement xImport() {
@@ -68,18 +71,26 @@ public class ScnComboDyn implements IJSONBuilder {
 							JSDataSet.class,
 							TKCom.class));
 		}
-		
+		/********************************************
+		 * STYLE
+		 ********************************************/
 		@xTarget(HEADER.class)
 		@xRessource
 		public XMLElement xStylePart() {
 			return cStyle().path(cMain).set("display:block");
 		}
 
+		/********************************************
+		 * APP SHELL
+		 ********************************************/
 		@xTarget(CONTENT.class) // la vue App Shell
 		public XMLElement xAppShell() {
 			return xUl(cMain);
 		}
 
+		/********************************************
+		 * TEMPLATE
+		 ********************************************/
 		public XMLElement xItem(JSAny code, JSAny Libelle) {
 			return xLi(code, "- ", Libelle);
 		}
@@ -90,21 +101,23 @@ public class ScnComboDyn implements IJSONBuilder {
 					));
 		}
 		
+		/********************************************
+		 * CONTROLEUR
+		 ********************************************/
 		@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
 		public XMLElement xLoad() {
 			return xImport(JSTestTemplate.class);
 		}
-
 		// une class JS
 		public interface JSTestTemplate extends JSClass, IJSDomTemplate {
 
 			@xStatic(autoCall = true)
 			default void main() {
 				
-				JSArray<Telephone> data = let("data", new JSArray<Telephone>().asLitteral());
+				JSArray<Telephone> data = let("data", new JSArray<Telephone>());
 
-				document().querySelector(cMain).appendChild(
-						createDomTemplate(new CmpComboTelephone().xListItem(data)));
+				document().querySelector(cMain)
+					.appendChildTemplate(new CmpComboTelephone().xListItem(data));
 				
 				JSArray<Telephone> result = JSContent.declareArray(Telephone.class, "result");
 				xuiCom().requestUrl(JSString.value(REST_JSON_TEST+"A"))

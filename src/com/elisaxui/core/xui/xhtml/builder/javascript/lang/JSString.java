@@ -45,5 +45,8 @@ public class JSString extends JSValue {
 		ret.setArrayType(JSString.class);
 		return ret;
 	}
-	
+
+	public JSInt length() {
+		return castAttr(new JSInt(), "length");
+	}
 }

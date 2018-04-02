@@ -11,12 +11,19 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
 /**
  * @author gauth
  *
+ * class representant un template dom   
+ * a retirer apres le retrait du dom text JSXHTMLPart du paquet template
+ * car peux etre fait en automatique si le fct append child recupere un xDiv en parametre 
  */
-public class JSDomTemplate extends JSNodeElement implements IJSDomTemplate
+public class JSNodeTemplate extends JSNodeElement implements IJSDomTemplate
 {
+	public static final String MTH_ADD_PART = "e";
 	public static final String MTH_ADD_ELEM = "e";
 	public static final String MTH_ADD_ATTR = "a";
 	public static final String MTH_ADD_TEXT = "t";
+	public static final String MTH_ADD_DATA_BINDING = "dbb";
+	
+	public static final String ATTR_BIND_INFO = "XuiBindInfo";
 	
 	XMLElement xml;
 	boolean modeJs = false;
@@ -31,7 +38,7 @@ public class JSDomTemplate extends JSNodeElement implements IJSDomTemplate
 	/**
 	 * @param modeJs the modeJs to set
 	 */
-	public final JSDomTemplate setModeJS(boolean modeJs) {
+	public final JSNodeTemplate setModeJS(boolean modeJs) {
 		this.modeJs = modeJs;
 		return this;
 	}
@@ -43,7 +50,7 @@ public class JSDomTemplate extends JSNodeElement implements IJSDomTemplate
 		XMLBuilder elemJS =  new XMLBuilder("js", txtXML, txtXMLAfter);
 		xml.setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine()+3);
 		
-		xml.toXML(elemJS.setModeString(!modeJs).setModeTemplate(modeJs));  // charge les string
+		xml.toXML(elemJS.setModeString(!modeJs).setModeTemplate(modeJs));  // mode template et pas les vieux string
 		
 		return this.modeJs?elemJS.getJSContent() :  "'"+txtXML.toString()+"'";
 	}
@@ -51,7 +58,7 @@ public class JSDomTemplate extends JSNodeElement implements IJSDomTemplate
 	/**
 	 * @param xml
 	 */
-	public JSDomTemplate(XMLElement xml) {
+	public JSNodeTemplate(XMLElement xml) {
 		super();
 		this.xml = xml;
 	}

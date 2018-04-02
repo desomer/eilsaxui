@@ -17,6 +17,8 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 public interface JSChangeCtx extends JSClass {
 
 	public JSNodeElement parent();
+	public JSNodeElement element();
+	
 	public JSString ope();
 	public JSon row();
 	public JSInt idx();

@@ -19,7 +19,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
-import static com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomTemplate.*;
+import static com.elisaxui.core.xui.xhtml.builder.xtemplate.JSNodeTemplate.*;
 
 /**
  * @author gauth

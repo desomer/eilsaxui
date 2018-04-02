@@ -21,7 +21,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.json.JsonNumberImpl;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomTemplate;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSNodeTemplate;
 import com.elisaxui.core.xui.xml.builder.IXMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -178,8 +178,8 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 		} else if (object instanceof XMLElement) {
 			doXMLElementToJSXHTMLPart(buf, ((XMLElement) object));
 
-		} else if (object instanceof JSDomTemplate) {
-			JSDomTemplate template = ((JSDomTemplate) object);
+		} else if (object instanceof JSNodeTemplate) {
+			JSNodeTemplate template = ((JSNodeTemplate) object);
 
 			if (template.isModeJS())
 				((JSContent) template.getContent()).toXML(buf);

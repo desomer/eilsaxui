@@ -17,7 +17,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomFunction;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomTemplate;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSNodeTemplate;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.Handle;
 import com.elisaxui.core.xui.xml.target.CONTENT;
@@ -113,15 +113,16 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 	 */
 	private void doElementModeTemplate(XMLBuilder buf) {
 		if (name==IS_XPART)  
-			name="xpart";
-		
-		buf.getJSContent().getListElem().add(JSDomTemplate.MTH_ADD_ELEM+"('" + name + "'");
+			buf.getJSContent().getListElem().add(JSNodeTemplate.MTH_ADD_PART+"('xui'");  // TODO a changer le null par p(
+		else
+			buf.getJSContent().getListElem().add(JSNodeTemplate.MTH_ADD_ELEM+"('" + name + "'");
 
+		
 		buf.getJSContent().getListElem().add(",[");
 		int nbAttr = 0;
 		for (XMLAttr attr : listAttr) {
 			if (nbAttr == 0)
-				buf.getJSContent().getListElem().add(JSDomTemplate.MTH_ADD_ATTR+"([");
+				buf.getJSContent().getListElem().add(JSNodeTemplate.MTH_ADD_ATTR+"([");
 			else
 				buf.getJSContent().getListElem().add(",");
 
@@ -289,7 +290,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 				{
 					v = XMLElement.zzGetProperties(new Handle(((VProperty)v).getName()));
 				}
-				buf.getJSContent().getListElem().add(JSDomTemplate.MTH_ADD_ATTR+"([");
+				buf.getJSContent().getListElem().add(JSNodeTemplate.MTH_ADD_ATTR+"([");
 				buf.getJSContent().getListElem().add("\"" + attr.getName() + "\"," + v + "");
 				buf.getJSContent().getListElem().add("]),");
 			}
@@ -305,7 +306,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 				} else if (inner instanceof JSNodeElement) {
 					buf.addContentOnTarget(inner);
 				} else {
-					buf.addContentOnTarget(JSDomTemplate.MTH_ADD_TEXT+"(");
+					buf.addContentOnTarget(JSNodeTemplate.MTH_ADD_TEXT+"(");
 					buf.addContentOnTarget(inner);  
 					buf.addContentOnTarget(")");
 				}

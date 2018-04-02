@@ -39,6 +39,12 @@ public class JSAny implements JSElement {
 	}
 
 	/***************************************************************/
+	
+	public JSString toStringJS()
+	{
+		return callTyped(new JSString(), "toString");
+	}
+	/***************************************************************/
 	public final <E extends JSAny> E attrByString(Object attr) {
 		E ret = getReturnType();
 

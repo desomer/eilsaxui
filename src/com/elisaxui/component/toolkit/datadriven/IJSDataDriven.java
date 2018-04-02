@@ -9,7 +9,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomTemplate;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSNodeTemplate;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 
 /**
@@ -73,7 +73,7 @@ public interface IJSDataDriven {
 	public default JSFunction onEnter(Object row, XMLElement elem)
 	{
 		return (JSFunction) new JSFunction().setParam(new Object[] {row, "ctx"})
-				._return( new JSDomTemplate(elem).setModeJS(true) );
+				._return( new JSNodeTemplate(elem).setModeJS(true) );
 
 	}
 	

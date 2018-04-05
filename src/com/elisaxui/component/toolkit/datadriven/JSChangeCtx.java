@@ -3,18 +3,18 @@
  */
 package com.elisaxui.component.toolkit.datadriven;
 
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
+import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 
 /**
  * @author gauth
  *
  */
-public interface JSChangeCtx extends JSClass {
+public interface JSChangeCtx extends JSType {
 
 	public JSNodeElement parent();
 	public JSNodeElement element();

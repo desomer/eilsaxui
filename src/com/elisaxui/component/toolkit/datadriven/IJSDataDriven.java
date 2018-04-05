@@ -19,20 +19,15 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
 public interface IJSDataDriven {
 	
 	/**TODO vFor( control type , ()->{})*/
-	default JSFunction vFor(JSElement data, JSElement aRow,  XMLElement elem )
-	{
-		JSon domparent =  JSContent.declareType(JSon.class, "domparent");
-		
-		JSFunction enter = onEnter(aRow, elem);
-		
-		return (JSFunction) new JSFunction().zzSetComment("xDataDriven").setParam(new Object[] {domparent})
-				.__("JSDataDriven.doTemplateDataDriven(",domparent,",",data,","+enter+",null, null)")
-				;
-	}
 	
-	default JSFunction vFor(JSElement data, JSElement aRow,  XMLElement elem, JSElement change)
+	default JSFunction vFor(JSElement data, JSElement aRow,  XMLElement elem)
 	{
 		JSon domparent =  JSContent.declareType(JSon.class, "domparent");
+		
+		
+		JSElement change = (JSFunction) new JSFunction().zzSetComment("onChange").setParam(new Object[] {"ctx"})
+		.__("JSDataBinding.initChangeHandler(ctx, ctx.row['"+JSDataSet.ATTR_DOM_LINK+"'])")
+		;
 		
 		JSFunction enter = onEnter(aRow, elem);
 		
@@ -41,6 +36,7 @@ public interface IJSDataDriven {
 				;
 	}
 	
+	/******************************************************************************/
 	
 	default JSFunction xDataDriven(JSElement data, JSElement enter )
 	{

@@ -9,6 +9,7 @@ import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.component.toolkit.datadriven.IJSDataBinding;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSChangeCtx;
+import com.elisaxui.component.toolkit.datadriven.JSDataBinding;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.component.widget.input.ViewInputText;
@@ -17,15 +18,12 @@ import com.elisaxui.core.xui.xhtml.builder.css.ICSSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder.XuiBindInfo;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xFile;
 import com.elisaxui.core.xui.xml.annotation.xRessource;
@@ -52,7 +50,9 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 				xImport(JSDomBuilder.class,
 						TKPubSub.class,
 						JSDataDriven.class,
-						JSDataSet.class));
+						JSDataSet.class,
+						JSDataBinding.class
+						));
 	}
 
 	@xTarget(CONTENT.class) // la vue App Shell
@@ -90,36 +90,7 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 		@xStatic(autoCall = true)
 		default void main() {
 
-			/*******************************************************/
-			JSNodeElement aDom = declareType(JSNodeElement.class, "aDom");
 			JSChangeCtx changeCtx = declareType(JSChangeCtx.class, "changeCtx");
-
-			JSFunction onBindChange = fct(() -> {
-				JSString sel = let(JSString.class, "sel", "'[data-xui'+", changeCtx.property(), "+']'");
-				JSArray<JSNodeElement> listNode = let(JSArray.class, "listNode", "Array.from(", aDom.querySelectorAll(sel), ")");
-				_if(aDom, ".XuiBindInfo!=null").then(() -> {
-					listNode.push(aDom);
-				});
-				listNode.setArrayType(JSNodeElement.class);
-				JSInt i = declareType(JSInt.class, "i");
-				_forIdx(i, listNode)._do(() -> {
-					JSNodeElement elem = let("elem", listNode.at(i));
-					XuiBindInfo ddi = let(XuiBindInfo.class, "ddi", elem + ".XuiBindInfo");
-					JSAny valueChange = let("valueChange", changeCtx.value());
-					_if(ddi, "!=null &&", ddi.fct().notEqualsJS(null)).then(() -> {
-						changeCtx.element().set(elem);
-						JSAny rf = let("rf", ddi.fct().call(elem, changeCtx));  // appel de la fct vOnChange( fct )
-						_if(rf.equalsJS(null)).then(() -> {
-							__("continue");   // ne change pas la value du text du dom
-						});
-
-						valueChange.set(rf);  // la fct retour la valeur a changer
-					});
-
-					elem.textContent().set(valueChange);
-				});
-			});
-			/*******************************************************/
 			ItemInput item = declareType(ItemInput.class, "item");
 			
 			JSNodeElement dom = let("dom", document().querySelector(cMain));
@@ -157,9 +128,9 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 								})._else(() -> {
 									changeCtx.element().classList().remove(cSizeOk);
 								});
-							})))),
+							})))))
 							/*************************************************************************/
-							onChange(changeCtx, aDom, onBindChange)));
+							);
 
 			/*******************************************************/
 			ItemInput newItem = newJS(ItemInput.class);

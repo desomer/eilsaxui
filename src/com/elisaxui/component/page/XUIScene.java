@@ -41,7 +41,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
-import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
@@ -84,7 +84,7 @@ public abstract class XUIScene extends XHTMLPart {
 	public abstract ConfigScene getConfigScene();
 
 	@xTarget(AFTER_BODY.class)
-	@xRessource
+	@xResource
 	@xPriority(1)
 	public XMLElement xImportCssXUIScene() {
 		return xListNode(
@@ -94,7 +94,7 @@ public abstract class XUIScene extends XHTMLPart {
 	}
 
 	@xTarget(HEADER.class)
-	@xRessource
+	@xResource
 	@xPriority(1)
 	public XMLElement xImportXUIScene() {
 		return xListNode(
@@ -153,7 +153,7 @@ public abstract class XUIScene extends XHTMLPart {
 	}
 
 	@xTarget(AFTER_CONTENT.class)
-	@xRessource
+	@xResource
 	public XMLElement xImportAfterXUIScene() {
 
 		return xListNode(
@@ -175,7 +175,7 @@ public abstract class XUIScene extends XHTMLPart {
 	}
 
 	@xTarget(HEADER.class)
-	@xRessource
+	@xResource
 	@xPriority(2)
 	public XMLElement xStyleXUIScene() {
 
@@ -249,7 +249,7 @@ public abstract class XUIScene extends XHTMLPart {
 
 	@xTarget(AFTER_CONTENT.class)
 	@xPriority(500)
-	@xRessource
+	@xResource
 	public XMLElement xImportStartXUIScene() {
 		return xListNode(
 				xScriptJS(js()

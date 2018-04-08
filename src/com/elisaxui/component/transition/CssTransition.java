@@ -9,7 +9,7 @@ import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
-import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 
@@ -51,7 +51,7 @@ public class CssTransition extends XHTMLPart {
 	public static CSSClass cStateNoDisplay;
 	
 	@xTarget(HEADER.class)
-	@xRessource
+	@xResource
 	@xPriority(5)
 	public XMLElement xStylePart() {
 

@@ -7,7 +7,7 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.ICSSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
-import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.VProperty;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -37,7 +37,7 @@ public class ViewInputText extends XHTMLPart implements ICSSBuilder {
 	}
 
 	@xTarget(HEADER.class)
-	@xRessource
+	@xResource(id="input.css")
 	public XMLElement xStylePart() {
 
 		return xListNode(

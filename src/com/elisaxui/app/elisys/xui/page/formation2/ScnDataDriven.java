@@ -22,8 +22,8 @@ import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
-import com.elisaxui.core.xui.xml.annotation.xFile;
-import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -33,13 +33,13 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 /**
  * @author gauth
  */
-@xFile(id = "ScnDataDriven")
+@xResource(id = "ScnDataDriven")
 public class ScnDataDriven extends XHTMLPart {
 
 	static CSSClass cMain;
 
 	@xTarget(HEADER.class)
-	@xRessource // une seule fois par vue
+	@xResource // une seule fois par vue
 	public XMLElement xImport() {
 		return xListNode(
 				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"),
@@ -55,7 +55,7 @@ public class ScnDataDriven extends XHTMLPart {
 	}
 
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
-	@xRessource // une seule fois par vue
+	@xResource // une seule fois par vue
 	public XMLElement xLoad() {
 		return xImport(JSTestDataDriven.class);
 	}

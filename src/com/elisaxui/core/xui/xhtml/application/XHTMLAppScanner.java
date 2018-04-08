@@ -16,6 +16,7 @@ import java.util.List;
 import com.elisaxui.core.helper.ClassLoaderHelper;
 import com.elisaxui.core.helper.ClassLoaderHelper.FileEntry;
 import com.elisaxui.core.helper.ReflectionHelper;
+import com.elisaxui.core.xui.CacheManager;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.XUILaucher;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
@@ -26,7 +27,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.IJSClassInterface;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.annotation.xComment;
-import com.elisaxui.core.xui.xml.annotation.xFile;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.builder.VProperty;
 
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
@@ -49,7 +50,7 @@ public class XHTMLAppScanner {
 		changeInfo.listFileChanged.clear();
 
 		long olderFile = 0;
-		long last = XUIFactoryXHtml.getLastDate();
+		long last = CacheManager.getLastDate();
 
 		try {
 			Iterable<FileEntry> list = ClassLoaderHelper.listFilesRelativeToClass(XUILaucher.class, "com");
@@ -88,7 +89,7 @@ public class XHTMLAppScanner {
 			changeInfo.lastOlderFile = olderFile;
 			changeInfo.nbChangement++;
 		}
-		XUIFactoryXHtml.setLastDate(changeInfo.lastOlderFile);
+		CacheManager.setLastDate(changeInfo.lastOlderFile);
 
 		Date input = new Date(olderFile);
 		Instant instant = input.toInstant();
@@ -111,7 +112,7 @@ public class XHTMLAppScanner {
 					"[XHTMLAppBuilder]********************************************* START SCAN XHTMLPart ************************************");
 
 		for (Class<? extends XHTMLPart> pageClass : listXHTMLPart) {
-			xFile annPage = pageClass.getAnnotation(xFile.class);
+			xResource annPage = pageClass.getAnnotation(xResource.class);
 			if (annPage != null) {
 				if (debug) {
 					System.out.println(

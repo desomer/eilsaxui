@@ -10,9 +10,9 @@ import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.target.BODY;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
-import com.elisaxui.core.xui.xml.annotation.xFile;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
-import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
@@ -23,7 +23,7 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
  *
  *         https://localhost:9998/rest/page/fr/fra/id/custom1
  */
-@xFile(id = "custom1")
+@xResource(id = "custom1")
 @xComment("activite custom1") // commentaire a ajouter en prefixe sur les commentaire des nom de methodes
 public class ScnExemple1 extends XHTMLPart implements ICSSBuilder {
 
@@ -31,7 +31,7 @@ public class ScnExemple1 extends XHTMLPart implements ICSSBuilder {
 	static CSSClass cABC;
 
 	@xTarget(HEADER.class)
-	@xRessource // une seule fois par vue
+	@xResource // une seule fois par vue
 	public XMLElement xImportMeta() {
 		return xListNode( // ajout plusieur element sans balise parent
 				xTitle("titre"),
@@ -39,13 +39,13 @@ public class ScnExemple1 extends XHTMLPart implements ICSSBuilder {
 	}
 
 	@xTarget(HEADER.class)
-	@xRessource // une seule fois par vue
+	@xResource // une seule fois par vue
 	public XMLElement xImportCss() {
 		return xStyle(sSel("tutu"), () -> css("display:block5"));
 	}
 
 	@xTarget(BODY.class)
-	@xRessource
+	@xResource
 	public XMLElement xBody() {
 		return xDiv("body");
 	}
@@ -63,7 +63,7 @@ public class ScnExemple1 extends XHTMLPart implements ICSSBuilder {
 	}
 
 	@xTarget(AFTER_CONTENT.class)
-	@xRessource
+	@xResource
 	@xPriority(200) // par defaut 100
 	public XMLElement xImportStyle() {
 		return xStyle(sSel(".toto"), () -> css("display:block"));
@@ -72,7 +72,7 @@ public class ScnExemple1 extends XHTMLPart implements ICSSBuilder {
 	/***********************************************************/
 
 	@xTarget(AFTER_BODY.class)
-	@xRessource
+	@xResource
 	public XMLElement xStylePart() {
 
 		return xListNode(

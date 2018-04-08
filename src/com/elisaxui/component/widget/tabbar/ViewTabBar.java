@@ -14,7 +14,7 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
-import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.CONTENT;
@@ -38,7 +38,7 @@ public class ViewTabBar extends XHTMLPart {
 	
 
 	@xTarget(AFTER_BODY.class)
-	@xRessource
+	@xResource
 	public XMLElement xStylePart() {
 		
 		return cStyle()   
@@ -71,7 +71,7 @@ public class ViewTabBar extends XHTMLPart {
 			@Override
 			public XMLElement getTemplate()
 			{		
-				return xElement("button", xAttr("data-x-action", txt(xVar(action))), ViewNavBar.actionBtnContainer, cRippleEffect , xAttr("type", "\"button\""),  "<i class=\"actionBtn material-icons\">",xVar(name),"</i>");
+				return xNode("button", xAttr("data-x-action", txt(xVar(action))), ViewNavBar.actionBtnContainer, cRippleEffect , xAttr("type", "\"button\""),  "<i class=\"actionBtn material-icons\">",xVar(name),"</i>");
 			}
 		};
 		

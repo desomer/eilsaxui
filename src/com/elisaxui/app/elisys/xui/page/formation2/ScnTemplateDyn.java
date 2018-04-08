@@ -22,8 +22,8 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
-import com.elisaxui.core.xui.xml.annotation.xFile;
-import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -34,7 +34,7 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
  * @author gauth
  *
  */
-@xFile(id = "ScnTemplateDyn")
+@xResource(id = "ScnTemplateDyn")
 public class ScnTemplateDyn extends XHTMLPart {
 
 	/********************************************************/
@@ -43,7 +43,7 @@ public class ScnTemplateDyn extends XHTMLPart {
 	static CSSClass cMain;
 
 	@xTarget(HEADER.class)
-	@xRessource // une seule fois par vue  
+	@xResource // une seule fois par vue  
 	/**TODO a gerer en automatique if script ou style */
 	public XMLElement xImport() {
 		return xListNode(

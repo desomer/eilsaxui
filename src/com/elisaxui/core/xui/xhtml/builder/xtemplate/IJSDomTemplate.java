@@ -27,10 +27,7 @@ public interface IJSDomTemplate extends IXHTMLBuilder {
 	default JSFunction vBindable(JSElement row, JSAny value) {
 		JSNodeElement domItem = JSContent.declareType(JSNodeElement.class, "domItem");
 		JSFunction fct = new JSFunction().setParam(new Object[] { domItem });
-		String[] attr = value.toString().split("\\.");
-//		fct.__(domItem, ".XuiBindInfo={row:", row, ", attr:'" + attr[1] + "'}")
-//			._return(value);
-		
+		String[] attr = value.toString().split("\\.");		
 		fct._return(JSNodeTemplate.MTH_ADD_DATA_BINDING,"(", domItem, ",", row ,",'",  attr[1],"',", value  , ")");
 		return fct;
 	}

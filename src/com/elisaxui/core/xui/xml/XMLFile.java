@@ -7,21 +7,20 @@ import com.elisaxui.core.xui.config.ConfigFormat;
 
 public class XMLFile {
 
-	private HashMap<Class<?>, Class<?>> mapResource = new HashMap<Class<?>, Class<?>>();
-	public LinkedList<Object> listParent = new LinkedList<Object>();
+	private HashMap<Class<?>, Class<?>> mapSingletonResource = new HashMap<Class<?>, Class<?>>();   
+	public LinkedList<Object> listTreeXMLParent = new LinkedList<Object>();   // pour recherche de vProperty
 	private ConfigFormat configMgr = new ConfigFormat();
-
-
+	private XMLPart root;
+	public HashMap<String, XMLFile> listSubFile = new HashMap<>();
+	
 
 	public boolean isXMLPartAlreadyInFile(XMLPart part) {
-		return mapResource.put(part.getClass(), part.getClass()) != null;
+		return mapSingletonResource.put(part.getClass(), part.getClass()) != null;
 	}
 
 	public ConfigFormat getConfigMgr() {
 		return configMgr;
 	}
-
-	private XMLPart root;
 
 	public XMLPart getRoot() {
 		return root;

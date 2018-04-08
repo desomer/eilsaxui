@@ -9,7 +9,7 @@ package com.elisaxui;
  */
 public class AppConfig {
 
-	
+	/** TODO a mettre par introspection d'annotation */
 	public static String getRestPackage()
 	{
 		StringBuilder buf = new StringBuilder();

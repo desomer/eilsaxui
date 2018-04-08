@@ -16,6 +16,7 @@ import com.elisaxui.core.xui.xml.annotation.xStatic;
  * @author gauth
  *
  */
+/** TODO a ajouter : le fct  IJSDataBinding */
 public interface JSDataBinding extends JSClass {
 
 	@xStatic

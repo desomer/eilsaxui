@@ -1,12 +1,29 @@
 package com.elisaxui.core.xui.config;
 
 public class ConfigFormat {
-	private boolean enableCrXML = true;   //true
-	private boolean enableTabXML = false;
+	private boolean minify = false;
+	
+	private boolean enableCommentFctJS = !minify;    //===================>true
+	private boolean enableCrXML = !minify;   //===============> true
+	private boolean enableTabXML = !minify;   //===============> true
+	private boolean enableSpaceJS = !minify;   //===============> true
+	
 	private boolean enableCrXMLinJS = true;   //true
-	private boolean enableTabXMLinJS = false;
-	private boolean enableCrJS = true;    //true
-	private boolean enableCommentFctJS = true;    //true
+	private boolean enableTabXMLinJS = false; //false
+	private boolean enableCrinJS = true;    //true
+	
+	/**
+	 * @return the enableSpaceJS
+	 */
+	public final boolean isEnableSpaceJS() {
+		return enableSpaceJS;
+	}
+	/**
+	 * @param enableSpaceJS the enableSpaceJS to set
+	 */
+	public final void setEnableSpaceJS(boolean enableSpaceJS) {
+		this.enableSpaceJS = enableSpaceJS;
+	}
 	
 	/**
 	 * @return the enableCommentFctJS
@@ -45,9 +62,9 @@ public class ConfigFormat {
 		this.enableTabXMLinJS = enableTabXMLinJS;
 	}
 	public boolean isEnableCrJS() {
-		return enableCrJS;
+		return enableCrinJS;
 	}
 	public void setEnableCrJS(boolean enableCrJS) {
-		this.enableCrJS = enableCrJS;
+		this.enableCrinJS = enableCrJS;
 	}
 }

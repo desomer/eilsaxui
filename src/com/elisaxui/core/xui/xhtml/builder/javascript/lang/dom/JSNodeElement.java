@@ -3,6 +3,7 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom;
 
+import com.elisaxui.core.xui.xhtml.IXHTMLBuilder;
 import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.IJSClassInterface;
@@ -17,7 +18,7 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  * @author gauth
  *
  */
-public class JSNodeElement extends JSAny  implements IJSClassInterface {
+public class JSNodeElement extends JSAny  implements IJSClassInterface, IXHTMLBuilder {
 	
 	public JSNodeElement appendChildTemplate(Object... element) {
 		XMLElement e = null;
@@ -25,7 +26,7 @@ public class JSNodeElement extends JSAny  implements IJSClassInterface {
 		if (element.length==0 && element[0] instanceof XMLElement)
 			e = (XMLElement)element[0];
 		else
-			e = XMLPart.xListElement(element);
+			e = xListNode(element);
 		
 		return  callMth("appendChild", new JSNodeTemplate(e).setModeJS(true));
 	}

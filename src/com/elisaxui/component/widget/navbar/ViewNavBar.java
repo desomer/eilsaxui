@@ -15,7 +15,7 @@ import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xml.annotation.xComment;
-import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.CONTENT;
@@ -43,7 +43,7 @@ public class ViewNavBar extends XHTMLPart {
 	public static final String PROPERTY_NAME = "PROPERTY_NAME";
 	
 	@xTarget(AFTER_BODY.class)
-	@xRessource
+	@xResource
 	public XMLElement xStylePart() {
 		
 		return cStyle()  
@@ -110,7 +110,7 @@ public class ViewNavBar extends XHTMLPart {
 	}
 	
 	@xTarget(AFTER_BODY.class)
-	@xRessource
+	@xResource
 	public XMLElement xImportAllClass() {
 		return	xImport(JSNavBar.class);
 	}
@@ -158,7 +158,7 @@ public class ViewNavBar extends XHTMLPart {
 			@Override
 			public XMLElement getTemplate()
 			{
-				return xElement("button", actionBtnContainer, cRippleEffect , 
+				return xNode("button", actionBtnContainer, cRippleEffect , 
 						xAttr("data-x-action", 
 						txt(xVar(action))), 
 						xAttr("type", "\"button\""), 
@@ -170,11 +170,11 @@ public class ViewNavBar extends XHTMLPart {
 	}
 	
 	public static XMLElement getTemplateBgCanvas() {
-		return xElement("canvas", animatedBg); // pour granim
+		return xNode("canvas", animatedBg); // pour granim
 	}
 	
 	public static XMLElement getTemplateBgDiv() {
-		return xElement("div", animatedBg); 
+		return xNode("div", animatedBg); 
 	}
 		
 

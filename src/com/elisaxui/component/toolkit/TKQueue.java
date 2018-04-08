@@ -9,7 +9,7 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent.JSNewLine;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
-import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
@@ -82,7 +82,7 @@ public class TKQueue extends XHTMLPart {
 			"}";
 			
 	@xTarget(AFTER_CONTENT.class)
-	@xRessource
+	@xResource
 	@xPriority(200)	
 	public XMLElement xAddJS() {
 		return xScriptJS( js().__(queuejs)

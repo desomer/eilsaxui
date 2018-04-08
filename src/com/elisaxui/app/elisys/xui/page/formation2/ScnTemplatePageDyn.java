@@ -19,8 +19,8 @@ import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
-import com.elisaxui.core.xui.xml.annotation.xFile;
-import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.VProperty;
@@ -32,14 +32,14 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
  * @author gauth
  *
  */
-@xFile(id = "ScnTemplatePageDyn")
+@xResource(id = "ScnTemplatePageDyn")
 public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
 
 	static Section aSection;
 	static Phrase aPhrase;
 	
 	@xTarget(HEADER.class)
-	@xRessource  
+	@xResource  
 	public XMLElement xImport() {
 		return xListNode(
 				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"),
@@ -66,7 +66,7 @@ public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
 	}
 
 	public XMLElement xSessionDyn(JSArray<Section> arr) {
-		return xElem(
+		return xListNode(
 				vFor(arr, aSection,
 						vPart(new CmpSection()
 								.vProperty(CmpSection.pSectionH1, aSection.titre())
@@ -181,7 +181,7 @@ public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
 		static CSSClass cPageMain;
 
 		@xTarget(HEADER.class)
-		@xRessource
+		@xResource
 		public XMLElement style() {
 			return cStyle()
 					.path(cPageContainer).set("display:flex")
@@ -208,7 +208,7 @@ public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
 		static CSSClass cSection;
 
 		@xTarget(HEADER.class)
-		@xRessource
+		@xResource
 		public XMLElement style() {
 			return cStyle().path(cSection).set("border:1px solid black");
 		}

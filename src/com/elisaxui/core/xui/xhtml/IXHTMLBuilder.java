@@ -16,17 +16,14 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  */
 public interface IXHTMLBuilder {
 	
-	default XMLElement xElem(Object... array) {
-		return XMLPart.xListElement(array);
-	}
 	
 	default XMLElement xListNode(Object... array) {
-		return XMLPart.xListElement(array);
+		return XMLPart.xListNodeStatic(array);
 	}
 	
 	
 	static XMLElement xNode(String name, Object... inner) {
-		return XMLPart.xElement(name, inner);
+		return XMLPart.xNode(name, inner);
 	}
 	/******************************************************************************/
 	default XMLElement xDiv(Object... inner) {

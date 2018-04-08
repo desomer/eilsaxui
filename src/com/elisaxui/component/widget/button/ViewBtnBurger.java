@@ -11,7 +11,7 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
-import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.CONTENT;
@@ -39,7 +39,7 @@ public class ViewBtnBurger extends XHTMLPart {
 	CSSClass hamburger_arrow;
 
 	@xTarget(HEADER.class)
-	@xRessource
+	@xResource
 	public XMLElement xStylePart() {
 
 		return cStyle()
@@ -66,7 +66,7 @@ public class ViewBtnBurger extends XHTMLPart {
 	@xTarget(CONTENT.class)
 	public XMLElement xBurgerBtn() {
 		boolean modeXCross = true;
-		return xElement( "button", /*ViewRippleEffect.cRippleEffect(),*/ xIdAction(txt("burger")), xAttr("aria-label", txt("burger")), xAttr("type", "\"button\""), cLeftBtn,  hamburger, modeXCross? hamburger_elastic:hamburger_arrow,
+		return xNode( "button", /*ViewRippleEffect.cRippleEffect(),*/ xIdAction(txt("burger")), xAttr("aria-label", txt("burger")), xAttr("type", "\"button\""), cLeftBtn,  hamburger, modeXCross? hamburger_elastic:hamburger_arrow,
 				xSpan(hamburger_box, xSpan(hamburger_inner)));
 	}
 

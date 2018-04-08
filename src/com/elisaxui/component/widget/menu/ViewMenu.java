@@ -17,7 +17,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
-import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.CONTENT;
@@ -40,7 +40,7 @@ public class ViewMenu extends XHTMLPart {
 	CSSClass cHeaderMenu;
 
 	@xTarget(HEADER.class)
-	@xRessource
+	@xResource
 	public XMLElement xStylePart() {
 
 		return cStyle()
@@ -48,7 +48,6 @@ public class ViewMenu extends XHTMLPart {
 						+ "px; color:black;"
 						+ XUIScene.PREFORM_3D
 						//+ "box-shadow: 4px 4px 2px 0 rgba(0,0,0,0.14);"
-						//+ "will-change:transform;"
 						)
 				.on(cFixedLeft,
 						"position:absolute; top:0px; transform:translate3d(-" + (XUIScene.widthMenu+5) + "px,0px,0px)")
@@ -79,7 +78,7 @@ public class ViewMenu extends XHTMLPart {
 	}
 
 	@xTarget(HEADER.class)
-	@xRessource
+	@xResource
 	public XMLElement xImportAllClass() {
 		return xListNode(
 			//	xImport(JSMenu.class)
@@ -93,7 +92,7 @@ public class ViewMenu extends XHTMLPart {
 			@Override
 			public XMLElement getTemplate()
 			{
-				return xListElement(vPart(new ViewMenuItems()
+				return xListNode(vPart(new ViewMenuItems()
 						.vProperty(ViewMenuItems.PROPERTY_NAME, xVar(name))
 						.vProperty(ViewMenuItems.PROPERTY_ICON, xVar(icon))
 						.vProperty(ViewMenuItems.PROPERTY_ACTION, xVar(idAction))
@@ -106,6 +105,6 @@ public class ViewMenu extends XHTMLPart {
 	}
 	
 	public static XMLElement getTemplateMenuDivider() {
-		return xListElement(vPart(new ViewMenuDivider()));
+		return xListNodeStatic(vPart(new ViewMenuDivider()));
 	}
 }

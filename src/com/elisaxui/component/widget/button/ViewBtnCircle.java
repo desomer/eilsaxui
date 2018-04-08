@@ -13,7 +13,7 @@ import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
-import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.CONTENT;
@@ -33,7 +33,7 @@ public class ViewBtnCircle extends XHTMLPart {
 	CSSClass cBtnCircleChangeForm;
 
 	@xTarget(HEADER.class)
-	@xRessource
+	@xResource
 	public XMLElement xStylePart() {
 
 		return cStyle()
@@ -69,7 +69,7 @@ public class ViewBtnCircle extends XHTMLPart {
 	@xTarget(CONTENT.class)
 	public XMLElement xBurgerBtn() {
 		return  xListNode( vPart(new ViewRippleEffect()),   ////////////////// IMPORT //////////////////
-				xElement("button", cRippleEffect, cBtnCircle, xAttr("type", "\"button\""),
+				xNode("button", cRippleEffect, cBtnCircle, xAttr("type", "\"button\""),
 				"<i class=\"material-icons\">", this.vProperty(PROPERTY_ICON), "</i>")
 		       );
 	}

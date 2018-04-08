@@ -3,7 +3,7 @@ package com.elisaxui.test;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.target.BODY;
 import com.elisaxui.core.xui.xml.annotation.xComment;
-import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.annotation.xVersion;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -16,7 +16,7 @@ public class ActListPage extends XHTMLPart {
 	public static final String PROPERTY_NAME = "name";
 
 	@xTarget(BODY.class)
-	@xRessource
+	@xResource
 	@xVersion("1.2")
 	public XMLElement xAddBody() {
 		return xSpan("ca marche target body ", this.vPropertyElement(PROPERTY_NAME));
@@ -28,7 +28,7 @@ public class ActListPage extends XHTMLPart {
 	}
 
 	@xTarget(AFTER_CONTENT.class)
-//	@xRessource
+//	@xResource
 	public XMLElement xAddJS() {
 		return xScriptJS(js().__("console.debug('ActListPage.xAddJS')"));
 	}

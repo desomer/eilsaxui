@@ -19,6 +19,22 @@ public class XMLBuilder {
 
 	boolean isString = false; // creer un string '<div>'
 	boolean isTemplate = false; // e("div",[])
+	boolean isResource = false; // pas de XML
+	/**
+	 * @return the isResource
+	 */
+	public final boolean isResource() {
+		return isResource;
+	}
+
+	/**
+	 * @param isResource the isResource to set
+	 */
+	public final XMLBuilder setModeResource(boolean isResource) {
+		this.isResource = isResource;
+		return this;
+	}
+
 	JSContent jsTemplate = null;
 
 	/**
@@ -59,6 +75,13 @@ public class XMLBuilder {
 		this.content = content;
 		this.afterContent = afterContent;
 		this.id = id;
+	}
+
+	/**
+	 * @return the content
+	 */
+	public final StringBuilder getContent() {
+		return content;
 	}
 
 	public static XMLElement createElement(Object name, Object... inner) {

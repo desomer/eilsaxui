@@ -63,7 +63,6 @@ public interface IJSDataBinding {
 			.__(changeCtx, ".row=", row)
 			.__(changeCtx, ".element=", domItem)
 			.__("domItem.XuiBindInfo.fct.call(",domItem,",",changeCtx,")")
-		//	._return("")
 			;
 		
 		return fct;

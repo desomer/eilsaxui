@@ -29,8 +29,8 @@ import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
-import com.elisaxui.core.xui.xml.annotation.xFile;
-import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -47,19 +47,19 @@ public class SrvScnDataDriven implements IJSONBuilder {
 	/********************************************
 	 * VIEW
 	 ***********************************************/
-	@xFile(id = "SrvScnDataDriven")
+	@xResource(id = "SrvScnDataDriven")
 	public static class ScnDataDriven extends XHTMLPart {
 
 		static CSSClass cMain;
 
 		@xTarget(HEADER.class)
-		@xRessource // une seule fois par vue
+		@xResource // une seule fois par vue
 		public XMLElement xImportVue() {
 			return xImport(JSDomBuilder.class, TKCom.class);
 		}
 
 		@xTarget(HEADER.class)
-		@xRessource
+		@xResource
 		public XMLElement xStylePart() {
 			return cStyle().path(cMain, " span").set("color:blue");
 		}

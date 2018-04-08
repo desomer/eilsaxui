@@ -11,7 +11,7 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
-import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.CONTENT;
@@ -29,7 +29,7 @@ public class ViewOverlayRipple extends XHTMLPart {
 	public static CSSClass transitionOpacity;
 	
 	@xTarget(HEADER.class)
-	@xRessource
+	@xResource
 	public XMLElement xStylePart() {
 		
 		return cStyle()
@@ -55,7 +55,7 @@ public class ViewOverlayRipple extends XHTMLPart {
 	}
 	
 	public static XMLElement xTemplate() {
-			return xListElement( vPart( new ViewOverlayRipple()  ));	
+			return xListNodeStatic( vPart( new ViewOverlayRipple()  ));	
 	}
 
 }

@@ -27,7 +27,7 @@ public class XMLPartElement implements IXMLBuilder {
 
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
-		XUIFactoryXHtml.getXHTMLFile().listParent.add(this);
+		XUIFactoryXHtml.getXHTMLFile().listTreeXMLParent.add(this);
 		buf.after = false;
 		for (XMLElement elem : part.getListElementFromTarget(CONTENT.class)) {
 			elem.toXML(buf);
@@ -37,7 +37,7 @@ public class XMLPartElement implements IXMLBuilder {
 			elem.toXML(buf);
 		}
 		buf.after = false;
-		XUIFactoryXHtml.getXHTMLFile().listParent.removeLast();
+		XUIFactoryXHtml.getXHTMLFile().listTreeXMLParent.removeLast();
 		return buf;
 	}
 }

@@ -1,8 +1,11 @@
 package com.elisaxui.core.xui;
 
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
 import java.net.URL;
 import java.security.CodeSource;
+import java.util.List;
 
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
 import org.eclipse.jetty.http2.HTTP2Cipher;
@@ -61,9 +64,16 @@ public class XUILaucher {
 		
 		JSExecutorHelper.initGlobal();
 
+		System.out.println("start " + System.getProperty("sun.java.command"));
+		
+	    RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
+	    List<String> arguments = runtimeMXBean.getInputArguments();
+	    for (String string : arguments) {
+		    System.out.println(string);
+		}
 
 		Server server = new Server();
-		
+	    System.out.println("start jetty server " + server.getVersion());
         //*******************************************************************/
 		RewriteHandler rewrite = new RewriteHandler();
 		rewrite.setRewriteRequestURI(true);

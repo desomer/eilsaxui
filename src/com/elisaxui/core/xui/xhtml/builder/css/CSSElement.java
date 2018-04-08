@@ -2,6 +2,7 @@ package com.elisaxui.core.xui.xhtml.builder.css;
 
 import java.util.LinkedList;
 
+import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -10,12 +11,12 @@ public class CSSElement  extends XMLElement {
 	
 	public CSSElement()
 	{
-		super("style", null);
+		super(XHTMLPart.STYLE, null);
 	}
 	
 	public CSSElement(Object... inner)
 	{
-		super("style", inner);
+		super(XHTMLPart.STYLE, inner);
 	}
 	
 	private LinkedList<CSSStyleRow> listStyle = new LinkedList<>();

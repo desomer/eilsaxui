@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSStyleRow;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
@@ -95,16 +96,16 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
 		
-		XUIFactoryXHtml.getXHTMLFile().listParent.add(this);
+		XUIFactoryXHtml.getXHTMLFile().listTreeXMLParent.add(this);
 
 		if (buf.isTemplate) {
 			doElementModeTemplate(buf);
 		} else
-			doElementModeXML(buf);
+			doElementModeText(buf);
 
 		nbTabInternal = 0;
 		nbTabForNewLine = 0;
-		XUIFactoryXHtml.getXHTMLFile().listParent.removeLast();
+		XUIFactoryXHtml.getXHTMLFile().listTreeXMLParent.removeLast();
 		return buf;
 	}
 
@@ -155,19 +156,37 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 	/**
 	 * @param buf
 	 */
-	private void doElementModeXML(XMLBuilder buf) {
+	private void doElementModeText(XMLBuilder buf) {
+		
+		boolean isScript = buf.isResource && name!=null && name.equals(XHTMLPart.SCRIPT);
+		boolean isCss = buf.isResource && name!=null && name.equals(XHTMLPart.STYLE);
+		boolean isCommentCss = buf.isResource && buf.id.endsWith("css");
+		
 		if (comment != null && !buf.isModeString() && XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS()) {
 			newLine(buf);
 			newTabInternal(buf);
-			buf.addContentOnTarget("<!--" + comment + "-->");
+			if (isCommentCss)
+			{
+				buf.addContentOnTarget("/*" + comment + "*/");
+			}
+			else
+			{
+				buf.addContentOnTarget("<!--" + comment + "-->");
+			}
 		}
 
 		if (name != null) { // && !name.equals(XMLPart.NONAME)
 			newLine(buf);
 		}
 
+		if (isScript || isCss)
+		{
+			name=null;	
+		}
+		
 		newTabInternal(buf);
 		if (name != null) {
+			
 			buf.addContentOnTarget("<" + name);
 			
 			for (XMLAttr attr : listAttr) {
@@ -213,7 +232,14 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 		if (comment != null && !buf.isModeString() && XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS()) {
 			newLine(buf);
 			newTabInternal(buf);
-			buf.addContentOnTarget("<!--end of " + comment + "-->");
+			if (isCommentCss)
+			{
+				buf.addContentOnTarget("/* end of " + comment + "*/");
+			}
+			else
+			{
+				buf.addContentOnTarget("<!--end of " + comment + "-->");
+			}
 		}
 	}
 
@@ -337,7 +363,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 	public static Object zzGetProperties(Handle h) {
 		String nameHandle = h.getName();
 		// recherche dans les parents
-		LinkedList<Object> listParent = XUIFactoryXHtml.getXHTMLFile().listParent;
+		LinkedList<Object> listParent = XUIFactoryXHtml.getXHTMLFile().listTreeXMLParent;
 		Object handledObject = null;
 		String firstPrefix = null;
 		XMLPart firstPart = null;

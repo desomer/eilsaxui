@@ -1,11 +1,7 @@
 package com.elisaxui.core.xui;
 
-import java.io.File;
-import java.lang.reflect.Method;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -24,14 +20,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
-import org.mapdb.Atomic.Var;
-import org.mapdb.DB;
-import org.mapdb.DBMaker;
-import org.mapdb.HTreeMap;
-import org.mapdb.Serializer;
-
 import com.elisaxui.component.page.JSServiceWorker;
-import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.core.helper.JSExecutorHelper;
 import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
@@ -48,61 +37,12 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.target.CONTENT;
 
-import difflib.Delta;
-import difflib.DiffRow;
-import difflib.DiffRowGenerator;
-import difflib.DiffUtils;
-import difflib.Patch;
-
 @Path("/")
 public class XUIFactoryXHtml {
 
 	public static final ThreadLocal<XHTMLFile> ThreadLocalXUIFactoryPage = new ThreadLocal<>();
-
 	public static final XHTMLChangeManager changeMgr = new XHTMLChangeManager();
 	
-	private static Map<String, ArrayList<String>> listeVersionId = null; 
-	
-	private static HashMap<String, String> pageCacheMem = new HashMap<>() ;
-
-	private static DB db = null;
-	private static HTreeMap<String, String> pageCache = null;
-	private static  Var<Object> listeDico= null;
-	private static  Var<Object> lastDateFile= null;
-
-	public static final long getLastDate() {
-		Long r = (Long) lastDateFile.get();
-		if (r==null)
-		{
-			lastDateFile.set(System.currentTimeMillis());
-			r = (Long) lastDateFile.get();
-		}
-		return r;
-	}
-
-	/**
-	 * @param lastDate the lastDate to set
-	 */
-	public static final void setLastDate(long lastDate) {
-		lastDateFile.set(lastDate);
-		db.commit();
-	}
-
-	static {	
-			String home = System.getProperty("user.home");
-			String pathdb = home+ File.separator+"fileMapdb.db";
-			
-			CoreLogger.getLogger(1).info(()->"start db at "+pathdb);
-			
-			db = DBMaker.fileDB(pathdb).checksumHeaderBypass().closeOnJvmShutdown().make();	
-			pageCache = db.hashMap("mapFileHtml",Serializer.STRING,Serializer.STRING).createOrOpen();
-			listeDico = db.atomicVar("pageDico").createOrOpen();
-			lastDateFile = db.atomicVar("lastDate").createOrOpen();
-			
-			listeVersionId = (Map<String, ArrayList<String>>) listeDico.get();
-			if (listeVersionId==null)
-				listeVersionId = new HashMap<>();
-	}
 	
 	public static final XMLPart getXMLRoot() {
 		return ThreadLocalXUIFactoryPage.get().getRoot();
@@ -114,7 +54,7 @@ public class XUIFactoryXHtml {
 
 	
 	boolean enableCache = true;
-	boolean enableDynamic = false;
+	boolean enableDynamic = false;  // si true recherche les nouvelle ressource des nouveau fichier ajouter ( page, js)
 	
 	@GET
 	@Path("/page/{pays}/{lang}/id/{id}")
@@ -146,42 +86,13 @@ public class XUIFactoryXHtml {
 		// cherche les changements
 		initChangeManager();
 		
-		/********************************************************/
-		String htmlInCache=null;
-		String idCache = null;
-		String idCacheVersionning = id+es5;
-		
-	
-		if (enableCache)
-		{
-			idCache = id+changeMgr.lastOlderFile+es5;
-			if (!noCache)
-			{
-				if (version<0)
-				{
-					String htmlInCacheOriginal = pageCache.get(idCache);
-					ArrayList<String> version1 = listeVersionId.get(idCacheVersionning);
-					if (version1!=null &&  -version<version1.size())
-						idCache = version1.get(version1.size()+version-1);
-					
-					htmlInCache = pageCache.get(idCache);
-					
-					if (htmlInCacheOriginal!=null ) {
-						changeMgr.initLineDiff( htmlInCache, htmlInCacheOriginal);
-					}
-				}
-				else
-				{
-					htmlInCache = pageCacheMem.computeIfAbsent(idCache, k-> pageCache.get(k));
-				}
-			}
-			
-		}
-		
-		if (htmlInCache == null) {   // si pas en cache
+		CacheManager cache = new CacheManager(id, ""+es5);
+		cache.getVersion(noCache, version);
+				
+		if (cache.result == null) {   // si pas en cache
 			// recupere la classe de page
-			Class<? extends XHTMLPart> pageClass = changeMgr.mapClass.get(id);
-			if (pageClass != null) {
+			Class<? extends XHTMLPart> xHTMLPartClass = changeMgr.mapClass.get(id);
+			if (xHTMLPartClass != null) {
 				
 				JSExecutorHelper.initThread();
 				
@@ -192,7 +103,7 @@ public class XUIFactoryXHtml {
 				Locale loc = languages.get(0);
 
 				// premier passe (execute les annotation)
-				initXMLFile(pageClass, fileXML, param);
+				initXMLFile(xHTMLPartClass, fileXML, param);
 
 				if (ErrorNotificafionMgr.hasErrorMessage()) {
 					// affiche la page d'erreur
@@ -201,38 +112,35 @@ public class XUIFactoryXHtml {
 				}
 
 				// generation page
-				CoreLogger.getLogger(1).info(() -> "*******"
-						+ " GENERATE XML File of "
-						+ pageClass + " ********");
+				CoreLogger.getLogger(1).info(() -> "*******"+ " GENERATE XML File of "	+ xHTMLPartClass + " ********");
 				
 				// deuxieme passe (execute les toXML)
-				String html = toXML(fileXML, loc);
+				String html = toXML(fileXML, loc, null);
+				cache.result = html;
 				
-				addInCache(idCache, idCacheVersionning, html);
+				HashMap<String, XMLFile> subFile = fileXML.listSubFile;
+				for (Map.Entry<String,XMLFile> entry : subFile.entrySet()) {
+					    String name = entry.getKey();
+					    XMLFile xmlFile = entry.getValue();
+						ThreadLocalXUIFactoryPage.set((XHTMLFile)xmlFile);
+					    String contentFile = toXML(xmlFile, null, new XMLBuilder(name, new StringBuilder(1000), null).setModeResource(true));
+					    name=name.substring(0, name.lastIndexOf('.'));
+						CacheManager.resourceDB.put(name, contentFile);
+				}
+
+				
+				cache.storeResultInDb();
+				cache.getVersionDB(0);
+				
 				JSExecutorHelper.stopThread();					
-				htmlInCache = html;
 			}
 		} else {
-			CoreLogger.getLogger(1).info(() -> "get from cache " + idCacheVersionning);
+			CoreLogger.getLogger(1).info(() -> "get from cache " + cache.idCacheDB);
 		}
 		
-		if (htmlInCache==null)
+		if (cache.result==null)
 			return Response.status(Status.NOT_FOUND).entity("no found " + id).header("a", "b").build();
-		
-		if ( version==0)
-		{
-			version = -1;
-			ArrayList<String> version1 = listeVersionId.get(idCacheVersionning);
-			if (version1!=null &&  -version<version1.size())
-				idCache = version1.get(version1.size()+version-1);
-			
-			String htmlInCacheOld = pageCache.get(idCache);
-			if (htmlInCacheOld!=null ) {
-				changeMgr.initLineDiff(htmlInCacheOld ,  htmlInCache);
-			}
-		}
-		
-		
+				
 		StringBuilder dif = new StringBuilder("\n\n<script id='srcdiff' type='application/json'>");  //\r\n
 		dif.append(changeMgr.listLineDiff);
 		dif.append("\n</script>");
@@ -242,7 +150,8 @@ public class XUIFactoryXHtml {
 //		.header("XUI", "ok")
 //		//.header("Access-Control-Allow-Origin", "*")
 //		.build();
-		String ret = htmlInCache+dif;
+		
+		String ret = cache.result+dif;
 		
 		return Response.status(Status.OK)
 				.entity(ret)
@@ -268,49 +177,30 @@ public class XUIFactoryXHtml {
 		return "?";
 	}
 	
-	/**
-	 * @param idCache
-	 * @param idCacheVersionning
-	 * @param html
-	 */
-	private void addInCache(String idCache, String idCacheVersionning, String html) {
-		if (idCache!=null)
-		{
-			CoreLogger.getLogger(1).info(()->" add cache "+idCache);
-			
-			ArrayList<String> version1 = listeVersionId.get(idCacheVersionning);
-			if (version1==null)
-			{
-				version1=new ArrayList<>();
-				listeVersionId.put(idCacheVersionning, version1);
-			}
-			version1.add(idCache);
-			
-			pageCache.put(idCache, html);
-			listeDico.set(listeVersionId);
-			db.commit();
-			
-			pageCacheMem.put(idCache, html);
-		}
-	}
 
 	/**
 	 * @param fileXML
 	 * @param loc
 	 * @return
 	 */
-	private String toXML(XMLFile fileXML, Locale loc) {
-		StringBuilder buf = new StringBuilder(1000);
-		buf.append("<!doctype html>");
-		((XHTMLRoot) fileXML.getRoot()).setLang(loc.toLanguageTag());
+	private static final String toXML(XMLFile fileXML, Locale loc, XMLBuilder xmlBuf) {
+		
+		if (xmlBuf==null)
+		{
+			StringBuilder buf = new StringBuilder(1000);
+			buf.append("<!doctype html>");
+			((XHTMLRoot) fileXML.getRoot()).setLang(loc.toLanguageTag());
+			xmlBuf = new XMLBuilder("page", buf, null);
+		}
+		
 		fileXML.getRoot().doContent(null);
 		List<XMLElement> rootContent = fileXML.getRoot().getListElementFromTarget(CONTENT.class);
 
 		for (XMLElement elem : rootContent) {
-			elem.toXML(new XMLBuilder("page", buf, null));
+			elem.toXML(xmlBuf);
 		}
 
-		return  buf.toString();
+		return  xmlBuf.getContent().toString();
 	}
 
 	/**
@@ -356,7 +246,7 @@ public class XUIFactoryXHtml {
 		ThreadLocalXUIFactoryPage.set(file);
 		return file;
 	}
-
+/*************************************************************************************************/
 	
 	@GET
 	@Path("/js/{name}.js")
@@ -365,30 +255,67 @@ public class XUIFactoryXHtml {
 		
 		String reponseInCache=null;
 		if (enableCache)
-			reponseInCache = pageCache.get(name);
+			reponseInCache = CacheManager.resourceDB.get(name);
+		
 		
 		if (reponseInCache==null) {
-			XMLFile fileXML = createXHTMLFile();
-			
-			XHTMLPart part = new JSServiceWorker();
-			
-			fileXML.setRoot(part);
-			
+			List<XMLElement> rootContent = null;
 			StringBuilder buf = new StringBuilder(1000);
-			part.doContent(null);
-			List<XMLElement> rootContent = part.getListElementFromTarget(CONTENT.class);
-	
+			
+			if (name.equals("sw"))
+			{
+				XMLFile fileXML = createXHTMLFile();
+				XHTMLPart part = new JSServiceWorker();
+				fileXML.setRoot(part);
+				
+				part.doContent(null);
+				rootContent = part.getListElementFromTarget(CONTENT.class);
+			}
+			else
+			{
+				XMLElement elem = XHTMLPart.xListNodeStatic(XHTMLPart.js().consoleDebug("'OK "+ name +"'"));
+				rootContent= new ArrayList<XMLElement>();		
+				rootContent.add(elem);
+			}
+			
+
 			for (XMLElement elem : rootContent) {
 				elem.toXML(new XMLBuilder("page", buf, null));
 			}
 			
 			reponseInCache = buf.toString();
-			pageCache.put(name, reponseInCache);
+			 CacheManager.resourceDB.put(name, reponseInCache);
 		}
 		
 		return Response.status(Status.OK)
 				.entity(reponseInCache).header("content-type","application/javascript").header("XUI", "ok").build();
 	}
+	
+	
+	@GET
+	@Path("/css/{name}.css")
+	@Produces("text/css")
+	public Response getCSS(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("name") String name) {
+		
+		String reponseInCache=null;
+		if (enableCache)
+			reponseInCache = CacheManager.resourceDB.get(name);
+		
+		if (reponseInCache==null) {
+			List<XMLElement> rootContent = null;
+			StringBuilder buf = new StringBuilder(1000);
+			
+//			XMLElement elem = XHTMLPart.xListNodeStatic(XHTMLPart.js().consoleDebug("'OK "+ name +"'"));
+//			elem.toXML(new XMLBuilder("page", buf, null));
+			
+			reponseInCache = buf.toString();
+			CacheManager.resourceDB.put(name, reponseInCache);
+		}
+		
+		return Response.status(Status.OK)
+				.entity(reponseInCache).header("content-type","text/css").header("XUI", "ok").build();
+	}
+
 	
 	@GET
 	@Path("/page/challenge/{token}")

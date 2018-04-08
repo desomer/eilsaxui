@@ -20,8 +20,10 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 	private static final String ASYNC = "async";
 	private static final String ONLOAD = "onload";
 	private static final String STYLESHEET = "stylesheet";
-	private static final String SCRIPT = "script";
-
+	
+	public static final String SCRIPT = "script";
+	public static final String STYLE = "style";
+	
 	public final XMLPart vBody(XMLElement body) {
 		XUIFactoryXHtml.getXMLRoot().addElementOnTarget(BODY.class, body);
 		return this;
@@ -82,40 +84,40 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 	}
 
 	public static final XMLElement xScriptJS(Object js) {
-		return xElement(SCRIPT, xAttr("type", "\"text/javascript\""), js);
+		return xNode(SCRIPT, xAttr("type", "\"text/javascript\""), js);
 	}
 
 	public static final XMLElement xScriptSrc(Object js) {
-		return xElement(SCRIPT, xAttr("src", "\"" + js + "\""));
+		return xNode(SCRIPT, xAttr("src", "\"" + js + "\""));
 	}
 
 	public static final XMLElement xScriptSrcAsync(Object js) {
-		return xElement(SCRIPT, xAttr("src", "\"" + js + "\""), xAttr(ASYNC));
+		return xNode(SCRIPT, xAttr("src", "\"" + js + "\""), xAttr(ASYNC));
 	}
 
 	public static final XMLElement xScriptSrcAsync(Object js, Object fct) {
-		return xElement(SCRIPT, xAttr("src", "\"" + js + "\""), xAttr(ASYNC), xAttr(ONLOAD, txt(fct)));
+		return xNode(SCRIPT, xAttr("src", "\"" + js + "\""), xAttr(ASYNC), xAttr(ONLOAD, txt(fct)));
 	}
 
 	public static final XMLElement xLinkCss(String url) {
-		return xElement("link", xAttr("rel", xTxt(STYLESHEET)), xAttr("href", xTxt(url)));
+		return xNode("link", xAttr("rel", xTxt(STYLESHEET)), xAttr("href", xTxt(url)));
 	}
 
 	public static final XMLElement xLinkManifest(String url) {
-		return xElement("link", xAttr("rel", xTxt("manifest")), xAttr("href", xTxt(url)));
+		return xNode("link", xAttr("rel", xTxt("manifest")), xAttr("href", xTxt(url)));
 	}
 
 	public static final XMLElement xLinkIcon(String url) {
-		return xElement("link", xAttr("rel", xTxt("icon")), xAttr("href", xTxt(url)));
+		return xNode("link", xAttr("rel", xTxt("icon")), xAttr("href", xTxt(url)));
 	}
 
 	public static final XMLElement xLinkCssAsync(String url) {
-		return xElement("link", xAttr("rel", xTxt(STYLESHEET)), xAttr("media", xTxt(ASYNC)), xAttr("href", xTxt(url)),
+		return xNode("link", xAttr("rel", xTxt(STYLESHEET)), xAttr("media", xTxt(ASYNC)), xAttr("href", xTxt(url)),
 				xAttr(ONLOAD, txt("resLoadedCss(this, 'all');")));
 	}
 
 	public static final XMLElement xLinkCssAsync(String url, Object fctTxt) {
-		return xElement("link", xAttr("rel", xTxt(STYLESHEET)), xAttr("media", xTxt(ASYNC)), xAttr(ONLOAD, txt(fctTxt)),
+		return xNode("link", xAttr("rel", xTxt(STYLESHEET)), xAttr("media", xTxt(ASYNC)), xAttr(ONLOAD, txt(fctTxt)),
 				xAttr("href", xTxt(url)));
 	}
 
@@ -134,7 +136,7 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 			r[i] = doImport((Class<? extends JSClass>) cl[i]);
 		}
 		
-		return xListElement(r);
+		return xListNodeStatic(r);
 	}
 
 	public static final XMLElement xImport(Class<? extends JSClass> cl) {
@@ -154,7 +156,7 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 			autocall = new JSContent().__(jsclass, ".", script.getAutoCallMeth());
 		}
 
-		return xElement(SCRIPT, xAttr("type", "\"text/javascript\""), script, autocall);
+		return xNode(SCRIPT, xAttr("type", "\"text/javascript\""), script, autocall);
 	}
 
 	/**************************************************************************/

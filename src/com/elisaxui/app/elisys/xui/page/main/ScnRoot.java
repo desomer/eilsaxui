@@ -21,8 +21,8 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
-import com.elisaxui.core.xui.xml.annotation.xFile;
-import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
@@ -32,7 +32,7 @@ import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
  *
  */
 
-@xFile(id = "main")
+@xResource(id = "main")
 @xComment("activite standard")
 public class ScnRoot extends XUIScene {
 
@@ -54,7 +54,7 @@ public class ScnRoot extends XUIScene {
 	
 	
 	@xTarget(AFTER_CONTENT.class) 
-	@xRessource
+	@xResource
 	public XMLElement xImportAfter() {
 		return xListNode(
 				xImport(JSSyllabisation.class), 

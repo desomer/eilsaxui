@@ -7,13 +7,13 @@ import com.elisaxui.component.page.ConfigScene;
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
 import com.elisaxui.core.xui.xml.annotation.xComment;
-import com.elisaxui.core.xui.xml.annotation.xFile;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 
 /**
  * @author gauth
  *
  */
-@xFile(id = "shop")
+@xResource(id = "shop")
 @xComment("activite shop")
 public class ScnShop extends XUIScene {
 

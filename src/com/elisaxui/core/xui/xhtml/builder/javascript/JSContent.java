@@ -516,11 +516,22 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	@Override
 	public JSContentInterface _if(Object... content) {
 		getListElem().add(JSNewLine.class);
-		getListElem().add("if (");
-		for (Object object : content) {
-			addElem(object);
+		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableSpaceJS())
+		{
+			getListElem().add("if (");
+			for (Object object : content) {
+				addElem(object);
+			}
+			getListElem().add(") {");
 		}
-		getListElem().add(") {");
+		else
+		{
+			getListElem().add("if(");
+			for (Object object : content) {
+				addElem(object);
+			}
+			getListElem().add("){");
+		}
 		getListElem().add(JSAddTab.class);
 		return this;
 	}
@@ -529,7 +540,14 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	public JSContentInterface _else() {
 		getListElem().add(JSRemoveTab.class);
 		getListElem().add(JSNewLine.class);
-		getListElem().add("} else {");
+		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableSpaceJS())
+		{
+			getListElem().add("} else {");
+		}
+		else
+		{
+			getListElem().add("}else{");
+		}
 		getListElem().add(JSAddTab.class);
 		return this;
 	}
@@ -538,22 +556,44 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	public JSContentInterface _elseif_(Object... content) {
 		getListElem().add(JSRemoveTab.class);
 		getListElem().add(JSNewLine.class);
-		getListElem().add("} else if(");
-		for (Object object : content) {
-			addElem(object);
+		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableSpaceJS())
+		{
+			getListElem().add("} else if(");
+			for (Object object : content) {
+				addElem(object);
+			}
+			getListElem().add(") {");
 		}
-		getListElem().add(") {");
+		else
+		{
+			getListElem().add("}elseif(");
+			for (Object object : content) {
+				addElem(object);
+			}
+			getListElem().add("){");	
+		}
 		getListElem().add(JSAddTab.class);
 		return this;
 	}
 
 	@Override
 	public JSContentInterface _elseif(Object... content) {
-		getListElem().add(" else if(");
-		for (Object object : content) {
-			addElem(object);
+		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableSpaceJS())
+		{
+			getListElem().add(" else if(");
+			for (Object object : content) {
+				addElem(object);
+			}
+			getListElem().add(") {");
 		}
-		getListElem().add(") {");
+		else
+		{
+			getListElem().add("else if(");
+			for (Object object : content) {
+				addElem(object);
+			}
+			getListElem().add("){");	
+		}
 		getListElem().add(JSAddTab.class);
 		return this;
 	}

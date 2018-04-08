@@ -25,8 +25,8 @@ import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
-import com.elisaxui.core.xui.xml.annotation.xFile;
-import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xPriority;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -36,23 +36,50 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 /**
  * @author gauth
  */
-@xFile(id = "ScnInput")
+@xResource(id = "ScnInput")
 public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 
 	static CSSClass cMain;
 	static CSSClass cSizeOk;
 
 	@xTarget(HEADER.class)
-	@xRessource // une seule fois par vue
-	public XMLElement xImport() {
+	@xResource // une seule fois par vue
+	public XMLElement xImportLib() {
 		return xListNode(
-				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"),
-				xImport(JSDomBuilder.class,
+				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"));
+	}
+
+	@xTarget(HEADER.class)
+	@xResource(id = "xdatadriven.js") // gestion du required
+	public XMLElement xImportDataDriven() {
+		return xListNode(
+				xImport(
 						TKPubSub.class,
 						JSDataDriven.class,
-						JSDataSet.class,
-						JSDataBinding.class
+						JSDataSet.class
 						));
+	}
+	
+	@xTarget(HEADER.class)
+	@xResource(id = "xdatadriven.js") // gestion du required
+	public XMLElement xImportBinding() {
+		return xListNode(
+				xImport(
+						JSDomBuilder.class,
+						JSDataBinding.class));
+	}
+	
+	@xTarget(AFTER_CONTENT.class)
+	@xResource(id = "xCss.css") // gestion du required
+	@xPriority(200)
+	public XMLElement xStylePart() {
+
+		return xListNode(
+				xStyle(sMedia("all"), () -> {
+					sOn(sSel(cSizeOk), () -> {
+						css("color:red;");
+					});
+				}));
 	}
 
 	@xTarget(CONTENT.class) // la vue App Shell
@@ -65,26 +92,15 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 						.vProp(ViewInputText.pLabel, "Font size"))));
 	}
 
+	/********************************************************/
+	// une class js avec template et datadriven
+	/********************************************************/
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
+	@xResource(id = "xLoad.js") // gestion du required
 	public XMLElement xLoad() {
 		return xImport(JSTest.class);
 	}
 
-	@xTarget(HEADER.class)
-	@xRessource
-	public XMLElement xStylePart() {
-
-		return xListNode(
-				xStyle(sMedia("all"), () -> {
-					sOn(sSel(cSizeOk), () -> {
-						css("color:red;");
-					});
-				}));
-	}
-
-	/********************************************************/
-	// une class js avec template et datadriven
-	/********************************************************/
 	public interface JSTest extends JSClass, IJSDomTemplate, IJSDataBinding, IJSDataDriven {
 
 		@xStatic(autoCall = true)
@@ -92,15 +108,14 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 
 			JSChangeCtx changeCtx = declareType(JSChangeCtx.class, "changeCtx");
 			ItemInput item = declareType(ItemInput.class, "item");
-			
+
 			JSNodeElement dom = let("dom", document().querySelector(cMain));
 
-			JSFunction fctReverse = fct(changeCtx, () -> {
-				_return(cast(JSString.class, changeCtx.value()).split(txt()).reverse().join(txt()));
-			});
+			JSFunction fctReverse = fct(changeCtx,
+					() -> _return(cast(JSString.class, changeCtx.value()).split(txt()).reverse().join(txt())));
 
-			JSFunction fctNbChar = fct(()-> _return(calc("'nb car '+", item.value().length())));
-			
+			JSFunction fctNbChar = fct(() -> _return(calc("'nb car '+", item.value().length())));
+
 			JSArray<ItemInput> listItem = let("listItem", new JSArray<ItemInput>());
 			dom.appendChildTemplate(
 					vFor(listItem, item, xListNode(
@@ -110,7 +125,7 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 							/**************************************************************************/
 							xDiv("static => ", item.value(), " <="),
 							/*************************************************************************/
-							xDiv("static by fct => ", fctNbChar  , " <="),
+							xDiv("static by fct => ", fctNbChar, " <="),
 							/**************************************************************************/
 							xDiv(vChangeable(item.value())),
 							/*************************************************************************/
@@ -118,19 +133,15 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 							/**************************************************************************/
 							xDiv("reverse => ", xSpan(vChangeable(item, item.value(), fctReverse)), " <="),
 							/*************************************************************************/
-							vOnDataChange(item, item.value(), fct(changeCtx, () -> {
-								consoleDebug(changeCtx)	;						
-							})),
+							vOnDataChange(item, item.value(), fct(changeCtx, () -> consoleDebug(changeCtx))),
 							/*************************************************************************/
-							xDiv("Plus de 10 char", vOnDataChange(item, item.value(), fct(changeCtx, () -> {
-								_if(changeCtx.value().toStringJS().length(), ">10").then(() -> {
-									changeCtx.element().classList().add(cSizeOk);
-								})._else(() -> {
-									changeCtx.element().classList().remove(cSizeOk);
-								});
-							})))))
-							/*************************************************************************/
-							);
+							xDiv("Plus de 10 char", vOnDataChange(item, item.value(), fct(changeCtx,
+									() -> _if(changeCtx.value().toStringJS().length(), ">10")
+											.then(() -> changeCtx.element().classList().add(cSizeOk))
+											._else(() -> changeCtx.element().classList()
+													.remove(cSizeOk)))))))
+			/*************************************************************************/
+			);
 
 			/*******************************************************/
 			ItemInput newItem = newJS(ItemInput.class);

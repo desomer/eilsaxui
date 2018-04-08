@@ -34,8 +34,8 @@ import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
-import com.elisaxui.core.xui.xml.annotation.xFile;
-import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -52,7 +52,7 @@ public class ScnComboDyn implements IJSONBuilder {
 	/********************************************
 	 * VIEW
 	 ***********************************************/
-	@xFile(id = "ScnComboDyn")
+	@xResource(id = "ScnComboDyn")
 	public static class CmpComboTelephone extends XHTMLPart implements IJSDataDriven {
 		static CSSClass cMain;
 		static Telephone aRow;
@@ -61,7 +61,7 @@ public class ScnComboDyn implements IJSONBuilder {
 		 * IMPORT
 		 ********************************************/
 		@xTarget(HEADER.class)
-		@xRessource  
+		@xResource  
 		public XMLElement xImport() {
 			return xListNode(
 					xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"),
@@ -75,7 +75,7 @@ public class ScnComboDyn implements IJSONBuilder {
 		 * STYLE
 		 ********************************************/
 		@xTarget(HEADER.class)
-		@xRessource
+		@xResource
 		public XMLElement xStylePart() {
 			return cStyle().path(cMain).set("display:block");
 		}
@@ -96,7 +96,7 @@ public class ScnComboDyn implements IJSONBuilder {
 		}
 
 		public XMLElement xListItem(JSArray<Telephone> listTelephone) {			
-			return xElem(
+			return xListNode(
 					   vFor(listTelephone, aRow, xItem(aRow.nom(), aRow.marque()) 
 					));
 		}

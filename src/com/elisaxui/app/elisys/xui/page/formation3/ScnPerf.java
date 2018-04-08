@@ -9,9 +9,9 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
-import com.elisaxui.core.xui.xml.annotation.xFile;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
-import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.annotation.xVersion;
@@ -24,11 +24,11 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
  *
  */
 
-@xFile(id = "ScnPerf")
+@xResource(id = "ScnPerf")
 public class ScnPerf extends XHTMLPart {
 
 	@xTarget(HEADER.class)
-	@xRessource // une seule fois par vue
+	@xResource // une seule fois par vue
 	public XMLElement xImportVue() {
 		return xListNode(
 				xImport(JSPerfVuesJS.class), 
@@ -41,7 +41,7 @@ public class ScnPerf extends XHTMLPart {
 	}
 
 	@xTarget(HEADER.class)
-	@xRessource // une seule fois par vue
+	@xResource // une seule fois par vue
 	@xPriority(1)
 	public XMLElement xImport() {
 		if (JSPerfVuesJS.isVueJS())
@@ -63,7 +63,7 @@ public class ScnPerf extends XHTMLPart {
 	}
 
 	@xTarget(AFTER_CONTENT.class)
-	@xRessource // une seule fois par vue
+	@xResource // une seule fois par vue
 	@xVersion("1.0")  // a terminer
 	public XMLElement xDo() {		
 		return xListNode(

@@ -10,7 +10,7 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.XMLPart;
-import com.elisaxui.core.xui.xml.annotation.xFile;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.VProperty;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -20,7 +20,7 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
  * @author gauth
  *
  */
-@xFile(id = "ScnTemplatePage")
+@xResource(id = "ScnTemplatePage")
 public class ScnTemplatePage extends XHTMLPart {
 
 	@xTarget(CONTENT.class) // la vue App Shell

@@ -9,7 +9,7 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
-import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 /**
@@ -24,7 +24,7 @@ public class ViewRippleEffect extends XHTMLPart {
 	public static CSSClass cRippleEffectColorBack;
 
 	@xTarget(AFTER_BODY.class)
-	@xRessource
+	@xResource
 	public XMLElement xStylePart() {
 
 		return cStyle()

@@ -6,13 +6,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.xhtml.XHTMLFile;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.XHTMLRootResource;
 import com.elisaxui.core.xui.xhtml.application.XHTMLAppScanner;
+import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
-import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.VProperty;
 import com.elisaxui.core.xui.xml.builder.XMLAttr;
@@ -115,6 +119,25 @@ public class XMLPart  {
 		partData.add(value);
 
 	}
+	
+	public final void addImportOnTarget(String idResource, Class<? extends XMLTarget> target, XMLElement elem) {
+		
+		String ext = idResource.substring(idResource.indexOf(".")+1);
+		XMLFile file = XUIFactoryXHtml.getXHTMLFile();
+		XMLFile subfile =   file.listSubFile.computeIfAbsent(idResource, keyResource -> {
+			
+			if (ext.equals("css"))
+				addElementOnTarget(target, (XMLElement)(XHTMLPart.xLinkCss("/rest/css/"+idResource).setPriority(elem.getPriority())));
+			else
+				addElementOnTarget(target, (XMLElement)(XHTMLPart.xScriptSrc("/rest/js/"+idResource).setPriority(elem.getPriority())));
+			
+			XHTMLFile f = new XHTMLFile();
+			f.setRoot(new XHTMLRootResource());
+			return f;
+		});
+		
+		((XHTMLRootResource)subfile.getRoot()).addElementOnTarget(HEADER.class, elem);
+	}
 
 	private ArrayList<XMLElement> none = new ArrayList<>();
 	public List<XMLElement> getListElementFromTarget(Class<? extends XMLTarget> target) {
@@ -140,11 +163,16 @@ public class XMLPart  {
 		
 		Method[] listMth = getXMLMethod();
 		for (Method method : listMth) {
-			boolean isResource = method.getAnnotation(xRessource.class)!=null;
+			xResource resource = method.getAnnotation(xResource.class);
+			boolean isResource =resource!=null;
+			String idResource = isResource? resource.id():null;
+			if (idResource!=null && idResource.equals(""))
+				idResource=null;
+			
 			// execute les methode target non ressource
 			if (isfirstInit || !isResource)
 			{
-				initMethod(method);
+				addXMLOnTarget(method, idResource);
 			}
 		}
 		
@@ -178,7 +206,7 @@ public class XMLPart  {
 	 * ajoute les methode avec xTarget
 	 * @param method
 	 */
-	private void initMethod(Method method) {
+	private void addXMLOnTarget(Method method, String idResource) {
 		xTarget target = method.getAnnotation(xTarget.class);
 		if (target != null) {
 			try {
@@ -186,39 +214,62 @@ public class XMLPart  {
 				XMLElement elem = ((XMLElement) method.invoke(this, new Object[] {}));
 				if (elem== null) return;
 				
-				// ajoute le hashcode du nom pour avoir toujours le même tri sur une priorite identique
-				long h = method.getName().hashCode()+ this.getClass().getName().hashCode();
-				double p = (double)(h)/PRECISION;
-				int d = (int)p;
-				p=(p-d);
-				
-				
-				xPriority priority = method.getAnnotation(xPriority.class);
-				if (priority != null) {
-					p = priority.value()+p;
-					elem.setPriority(p);
-				}
-				else
-					elem.setPriority(100.0+p);
+				initBlockPriority(method, elem);
 
 				String comment = getComment(method);
 				elem.setComment(comment!=null?comment+ " priority "+((int)(elem.getPriority())) : "["+this.getClass().getSimpleName() + "." + method.getName()+ "] priority "+((int)(elem.getPriority())) );
 				
 				Class<? extends XMLTarget> targetClass = target.value();
 				if (debug)
-					System.out.println("[XMLPart] add Target mth "+ this.getClass().getSimpleName() + " # " + method.getName() + " priority " + elem.getPriority() );
-				if (elem != null && targetClass!=null ) {
+					CoreLogger.getLogger(1).fine(()->"[XMLPart] add Target mth "+ this.getClass().getSimpleName() + " # " + method.getName() + " priority " + elem.getPriority());
+			
+				if (targetClass!=null ) {
 					int nbTab = targetClass.newInstance().getInitialNbTab();
 					if (ITargetRoot.class.isAssignableFrom(targetClass))
-						XUIFactoryXHtml.getXMLRoot().addElementOnTarget(targetClass, elem.getXMLElementTabbed(nbTab));
+					{
+						// ajoute en root ex BODY, HEADER
+						if (idResource==null)
+							XUIFactoryXHtml.getXMLRoot().addElementOnTarget(targetClass, elem.getXMLElementTabbed(nbTab));
+						else
+						{
+							XUIFactoryXHtml.getXMLRoot().addImportOnTarget(idResource, targetClass, elem.getXMLElementTabbed(0));
+						}
+					}
 					else
-						addElementOnTarget(targetClass, elem.getXMLElementTabbed(nbTab));
+					{
+						// ajoute dans un block enfant CONTENT, AFTER_CONTENT
+						if (idResource==null)
+							addElementOnTarget(targetClass, elem.getXMLElementTabbed(nbTab));
+						else
+							addImportOnTarget(idResource, targetClass, elem.getXMLElementTabbed(0));
+					}
 				}
 			} 
 			catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				ErrorNotificafionMgr.doError("pb initMethod "+method.getName(), e);
+				ErrorNotificafionMgr.doError("pb addXMLOnTarget "+method.getName(), e);
 			}
 		}
+	}
+
+
+	/**
+	 * @param method
+	 * @param elem
+	 */
+	private void initBlockPriority(Method method, XMLElement elem) {
+		// ajoute le hashcode du nom pour avoir toujours le même tri sur une priorite identique
+		long h = method.getName().hashCode()+ this.getClass().getName().hashCode();
+		double p = (double)(h)/PRECISION;
+		int d = (int)p;
+		p=(p-d);
+		
+		xPriority priority = method.getAnnotation(xPriority.class);
+		if (priority != null) {
+			p = priority.value()+p;
+			elem.setPriority(p);
+		}
+		else
+			elem.setPriority(100.0+p);
 	}
 
 	/**************************************************************/
@@ -231,23 +282,6 @@ public class XMLPart  {
 		return null;
 	}
 
-//	private void initComment() {
-//		String comment = getComment();
-//		if (comment != null) {
-//			
-//			for (Entry<Class<? extends XMLTarget>, ArrayList<Element>> entryListElem : listPart.entrySet()) {
-//				entryListElem.getKey();
-//				/**todo get prefixe block */
-//				for (ArrayList<Element> listElem : listPart.values()) {
-//					for (Element elem : listElem) {
-//						if (elem != null) {
-//							elem.setComment(comment);
-//						}
-//					}
-//				}
-//			}
-//		}
-//	}
 
 	/**************************************************************/
 	@SuppressWarnings("unchecked")
@@ -277,18 +311,18 @@ public class XMLPart  {
 	 * @return
 	 */
 	public final static XMLElement vPart(XMLPart part, Object... inner) {
-		return xElement(null, XMLBuilder.createPart(part, inner));
+		return xNode(null, XMLBuilder.createPart(part, inner));
 	}
 	
-	public final static XMLElement xElement(String name, Object... inner) {
+	public final static XMLElement xNode(String name, Object... inner) {
 		XMLElement tag = XMLBuilder.createElement(name, inner);
 		return tag;
 	}
 
-	@Deprecated
-	// xList
-	public final static XMLElement xListElement(Object... array) {
-		return xElement(NONAME, array);
+	@Deprecated 
+	//xListNode
+	public final static XMLElement xListNodeStatic(Object... array) {
+		return xNode(NONAME, array);
 	}
 
 	public final static XMLAttr xAttr(String name, Object value) {

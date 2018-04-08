@@ -8,8 +8,8 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
-import com.elisaxui.core.xui.xml.annotation.xFile;
-import com.elisaxui.core.xui.xml.annotation.xRessource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
+import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
@@ -21,20 +21,20 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
  * 
  *                  http://localhost:8080/rest/page/fr/fra/id/admin.html
  */
-@xFile(id = "admin.html")
+@xResource(id = "admin.html")
 @xComment("activite d'admin")
 public class ScnAdminMain extends XHTMLPart {
 
 	@xTarget(HEADER.class)
-	@xRessource
+	@xResource
 	public XMLElement xTitle() {
-		return xElement("title", "un titre");
+		return xNode("title", "un titre");
 	}
 
 	@xTarget(HEADER.class)
-	@xRessource
+	@xResource
 	public XMLElement xImportJQUERY() {
-		return	xElement("/","<script  src='http://code.jquery.com/jquery-3.2.1.min.js'"
+		return	xNode("/","<script  src='http://code.jquery.com/jquery-3.2.1.min.js'"
 				+ "  integrity='sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4='  crossorigin='anonymous'></script>"
 				+"<script  src='https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js'></script>"
 				+"<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css'>"
@@ -42,7 +42,7 @@ public class ScnAdminMain extends XHTMLPart {
 	}
 	
 	@xTarget(HEADER.class)
-	@xRessource
+	@xResource
 	public XMLElement xImportAllClass() {
 		return xListNode(
 				xImport(JSTestClass.class),
@@ -112,7 +112,7 @@ public class ScnAdminMain extends XHTMLPart {
 						.__(testDataDriven.startTest())
 						
 						
-						._var(template, xElement("input", xId("\"test\""), xAttr("type","\"text\"")))
+						._var(template, xNode("input", xId("\"test\""), xAttr("type","\"text\"")))
 						.__(template.appendInto("$('body')"))	
 						
 				);		

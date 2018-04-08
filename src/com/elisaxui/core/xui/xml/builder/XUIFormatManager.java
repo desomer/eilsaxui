@@ -6,23 +6,23 @@ package com.elisaxui.core.xui.xml.builder;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 
 /**
- * @author Bureau
- *    pour le css et le html    (JS grace a un ThreadLocal)
+ * @author Bureau pour le css et le html (JS grace a un ThreadLocal)
  */
 public class XUIFormatManager {
 
-	
 	private double priority = 100.0;
-	
+
 	public double getPriority() {
 		return priority;
 	}
 
-	public void setPriority(double priority) {
+	public XUIFormatManager setPriority(double priority) {
 		this.priority = priority;
+		return this;
 	}
 
 	protected int nbTabInternal = 0;
+
 	/**
 	 * @return the nbTabInternal
 	 */
@@ -31,7 +31,8 @@ public class XUIFormatManager {
 	}
 
 	/**
-	 * @param nbTabInternal the nbTabInternal to set
+	 * @param nbTabInternal
+	 *            the nbTabInternal to set
 	 */
 	public final void setNbTabInternal(int nbTabInternal) {
 		this.nbTabInternal = nbTabInternal;
@@ -54,10 +55,8 @@ public class XUIFormatManager {
 		this.nbTabForNewLine = nbInitialTab;
 	}
 
-
-	
 	public void newLine(XMLBuilder buf) {
-	
+
 		if (buf.isModeString()) {
 			if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCrXMLinJS())
 				buf.addContentOnTarget("'+\n");
@@ -65,11 +64,12 @@ public class XUIFormatManager {
 			if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCrXML())
 				buf.addContentOnTarget("\n");
 		}
-		
-		for (int i = 0; i < nbTabForNewLine; i++) {
-			buf.addContentOnTarget("\t");
-		}
-		
+
+		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableTabXML())
+			for (int i = 0; i < nbTabForNewLine; i++) {
+				buf.addContentOnTarget("\t");
+			}
+
 		if (buf.isModeString()) {
 			if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCrXMLinJS())
 				buf.addContentOnTarget("'");
@@ -77,9 +77,10 @@ public class XUIFormatManager {
 	}
 
 	public void newTabInternal(XMLBuilder buf) {
-		for (int i = 0; i < nbTabInternal; i++) {
-			buf.addContentOnTarget("\t");
-		}
+		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableTabXML())
+			for (int i = 0; i < nbTabInternal; i++) {
+				buf.addContentOnTarget("\t");
+			}
 	}
 
 }

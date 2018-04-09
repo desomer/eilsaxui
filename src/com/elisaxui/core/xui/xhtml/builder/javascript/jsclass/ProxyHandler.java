@@ -23,6 +23,7 @@ import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSLambda;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
@@ -729,7 +730,13 @@ public final class ProxyHandler implements InvocationHandler {
 			JSClass prox = getProxy((Class<? extends JSClass>) type);
 			setNameOfProxy(prefix, prox, name);
 			return prox;
-		} else
+		} else if (JSElement.class.isAssignableFrom(type))
+		{
+			JSAny retJSVar = new JSAny();
+			retJSVar._setName(prefix + name);
+			return retJSVar;
+		}
+		else
 			return prefix + name;
 	}
 

@@ -131,6 +131,16 @@ public class JSFunction extends JSContent implements JSElement {
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
 
+		Object comment = null;
+		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS())
+		{
+			comment = getComment();
+			if (comment!=null && comment.toString().length()==0)
+				comment=null;
+			else
+				comment = (comment==null?"anonymous":comment);
+		}
+		
 		if (!isFragment) {
 			if (name == null) {
 				buf.addContentOnTarget("function");
@@ -156,8 +166,8 @@ public class JSFunction extends JSContent implements JSElement {
 			buf.addContentOnTarget(" {");
 			
 			if (!isFragment && name == null) {
-				if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS())
-					buf.addContentOnTarget("/*** start " + (getComment()==null?"anonymous":getComment())+ " ***/");
+				if (comment!=null)
+					buf.addContentOnTarget("/*** start "+comment+ " ***/");
 			}
 
 			ProxyHandler.getFormatManager().setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine() + 1);
@@ -176,9 +186,10 @@ public class JSFunction extends JSContent implements JSElement {
 			ProxyHandler.getFormatManager().newLine(buf);
 			ProxyHandler.getFormatManager().newTabInternal(buf);
 			buf.addContentOnTarget("}");
+			// fin anomyn
 			if (name == null) {
-				if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS())
-					buf.addContentOnTarget("/*** end " + (getComment()==null?"anonymous":getComment())+ " ***/");
+				if (comment!=null)
+					buf.addContentOnTarget("/*** end " +comment+ " ***/");
 			}
 		}
 

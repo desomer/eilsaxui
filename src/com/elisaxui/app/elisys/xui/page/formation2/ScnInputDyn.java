@@ -61,7 +61,7 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 	}
 	
 	@xTarget(HEADER.class)
-	@xResource(id = "xdatadriven.js") // gestion du required
+	@xResource(id = "xBinding.js") // gestion du required
 	public XMLElement xImportBinding() {
 		return xListNode(
 				xImport(
@@ -70,7 +70,7 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 	}
 	
 	@xTarget(AFTER_CONTENT.class)
-	@xResource(id = "xCss.css") // gestion du required
+	@xResource(id = "xCss.css")
 	@xPriority(200)
 	public XMLElement xStylePart() {
 

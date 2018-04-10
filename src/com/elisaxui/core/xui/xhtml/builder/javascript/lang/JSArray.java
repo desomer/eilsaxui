@@ -14,6 +14,8 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ArrayMethod;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ILitteral;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 
 /**
  * @author Bureau

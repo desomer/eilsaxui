@@ -19,8 +19,8 @@ import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
@@ -29,10 +29,11 @@ import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
+import com.elisaxui.core.xui.xml.annotation.xImport;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.target.CONTENT;
-
+import com.elisaxui.core.xui.xml.target.MODULE;
 /**
  * @author gauth
  */
@@ -49,8 +50,9 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"));
 	}
 
+	/**************************************************************/
 	@xTarget(HEADER.class)
-	@xResource(id = "xdatadriven.js") // gestion du required
+	@xResource(id = "xdatadriven.js")
 	public XMLElement xImportDataDriven() {
 		return xListNode(
 				xImport(
@@ -59,15 +61,36 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 						JSDataSet.class
 						));
 	}
-	
+	/**************************************************************/
 	@xTarget(HEADER.class)
-	@xResource(id = "xBinding.js") // gestion du required
+	@xResource(id = "xBinding.js")
 	public XMLElement xImportBinding() {
 		return xListNode(
 				xImport(
 						JSDomBuilder.class,
 						JSDataBinding.class));
 	}
+	
+	/**************************************************************/
+	@xTarget(MODULE.class)
+	@xResource(id = "FileImport.js") // gestion du required
+	public XMLElement xImportFile() {
+		return xListNode(xImport(JSTest2.class));
+	}
+	
+	public interface JSTest2 extends JSClass{
+
+		@xStatic(autoCall = true)
+		default void main() {
+			consoleDebug("'ok'");
+		}
+	}
+	
+	@xTarget(CONTENT.class)
+	public XMLElement xTextScriptImport() {
+		return xNode("script", xAttr("type", "'module'"), js().__("import \"/rest/js/FileImport.js\""));
+	}
+	/***************************************************************/
 	
 	@xTarget(AFTER_CONTENT.class)
 	@xResource(id = "xCss.css")
@@ -91,16 +114,18 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 				vPart(new ViewInputText()
 						.vProp(ViewInputText.pLabel, "Font size"))));
 	}
-
+	
 	/********************************************************/
 	// une class js avec template et datadriven
 	/********************************************************/
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
 	@xResource(id = "xLoad.js") // gestion du required
+	@xImport(module="xdatadriven.js")
+	@xImport(module="xBinding.js")
 	public XMLElement xLoad() {
 		return xImport(JSTest.class);
 	}
-
+	
 	public interface JSTest extends JSClass, IJSDomTemplate, IJSDataBinding, IJSDataDriven {
 
 		@xStatic(autoCall = true)

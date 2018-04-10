@@ -1,4 +1,7 @@
-package com.elisaxui.core.xui.xhtml.builder.javascript.lang;
+package com.elisaxui.core.xui.xhtml.builder.javascript.lang.value;
+
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 
 public class JSString extends JSValue {
 	

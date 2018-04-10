@@ -1,9 +1,10 @@
 /**
  * 
  */
-package com.elisaxui.core.xui.xhtml.builder.javascript.lang;
+package com.elisaxui.core.xui.xhtml.builder.javascript.lang.value;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ArrayMethod;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 
 /**
  * @author gauth

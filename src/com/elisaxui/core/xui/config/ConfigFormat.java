@@ -12,6 +12,21 @@ public class ConfigFormat {
 	private boolean enableTabXMLinJS = false; //false
 	private boolean enableCrinJS = true;    //true
 	
+	
+	private boolean singlefile = false;
+	
+	/**
+	 * @return the singlefile
+	 */
+	public final boolean isSinglefile() {
+		return singlefile;
+	}
+	/**
+	 * @param singlefile the singlefile to set
+	 */
+	public final void setSinglefile(boolean singlefile) {
+		this.singlefile = singlefile;
+	}
 	/**
 	 * @return the enableSpaceJS
 	 */

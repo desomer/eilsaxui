@@ -9,7 +9,6 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
-import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
@@ -64,7 +63,7 @@ public class ScnPerf extends XHTMLPart {
 
 	@xTarget(AFTER_CONTENT.class)
 	@xResource // une seule fois par vue
-	@xVersion("1.0")  // a terminer
+	@xVersion("appli")  // a terminer
 	public XMLElement xDo() {		
 		return xListNode(
 					xImport(A.class)

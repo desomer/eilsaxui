@@ -24,5 +24,19 @@ public class AppConfig {
 		return buf.toString();
 	}
 	
+	
+	public static String getModuleJSConfig(String module)
+	{
+		if (module.contains("File"))
+			return module;
+//		
+//		if (module.endsWith("css"))
+//			return "allcss.css";
+//		
+//		if (module.endsWith("js"))
+//			return "alljs.js";
 		
+		return module;
+	}
+	
 }

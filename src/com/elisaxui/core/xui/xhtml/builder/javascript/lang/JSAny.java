@@ -14,6 +14,9 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ArrayMethod;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyMethodDesc;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSBool;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSValue;
 import com.elisaxui.core.xui.xhtml.builder.json.JsonNumberImpl;
 
 /**

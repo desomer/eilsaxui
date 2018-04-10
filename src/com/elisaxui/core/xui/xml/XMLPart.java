@@ -2,10 +2,13 @@ package com.elisaxui.core.xui.xml;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import com.elisaxui.AppConfig;
 import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
@@ -25,6 +28,7 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder.Handle;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.target.CONTENT;
+import com.elisaxui.core.xui.xml.target.MODULE;
 import com.elisaxui.core.xui.xml.target.XMLTarget;
 import com.elisaxui.core.xui.xml.target.XMLTarget.ITargetRoot;
 
@@ -124,18 +128,32 @@ public class XMLPart  {
 		
 		String ext = idResource.substring(idResource.indexOf(".")+1);
 		XMLFile file = XUIFactoryXHtml.getXHTMLFile();
-		XMLFile subfile =   file.listSubFile.computeIfAbsent(idResource, keyResource -> {
-			
+		long date = XUIFactoryXHtml.changeMgr.lastOlderFile;
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-hhmmss");
+		String textdate = formatter.format(new Date(date));
+		String fn = null;
+		if (target == MODULE.class)
+			fn= idResource;
+		else
+			fn=textdate+"_"+idResource;
+		
+		final String name = fn;
+		
+		XMLFile subfile =   file.listSubFile.computeIfAbsent(name, keyResource -> {
+
 			if (ext.equals("css"))
-				addElementOnTarget(target, (XMLElement)(XHTMLPart.xLinkCss("/rest/css/"+idResource).setPriority(elem.getPriority())));
+				addElementOnTarget(target, (XMLElement)(XHTMLPart.xLinkCss("/rest/css/"+name).setPriority(elem.getPriority())));
 			else
-				addElementOnTarget(target, (XMLElement)(XHTMLPart.xScriptSrc("/rest/js/"+idResource).setPriority(elem.getPriority())));
+				addElementOnTarget(target, (XMLElement)(XHTMLPart.xScriptSrc("/rest/js/"+name).setPriority(elem.getPriority())));
 			
 			XHTMLFile f = new XHTMLFile();
 			f.setRoot(new XHTMLRootResource());
 			return f;
 		});
 		
+		CoreLogger.getLogger(1).fine("Generate file ====>"+ name);;
+		
+		// ajoute dans le root du ficher
 		((XHTMLRootResource)subfile.getRoot()).addElementOnTarget(HEADER.class, elem);
 	}
 
@@ -225,23 +243,27 @@ public class XMLPart  {
 			
 				if (targetClass!=null ) {
 					int nbTab = targetClass.newInstance().getInitialNbTab();
+					String idModule = null;
+					if (idResource!=null)
+						idModule = AppConfig.getModuleJSConfig(idResource);
+					
 					if (ITargetRoot.class.isAssignableFrom(targetClass))
 					{
 						// ajoute en root ex BODY, HEADER
-						if (idResource==null)
+						if (idModule==null || XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isSinglefile())
 							XUIFactoryXHtml.getXMLRoot().addElementOnTarget(targetClass, elem.getXMLElementTabbed(nbTab));
 						else
 						{
-							XUIFactoryXHtml.getXMLRoot().addImportOnTarget(idResource, targetClass, elem.getXMLElementTabbed(0));
+							XUIFactoryXHtml.getXMLRoot().addImportOnTarget(idModule, targetClass, elem.getXMLElementTabbed(0));
 						}
 					}
 					else
 					{
 						// ajoute dans un block enfant CONTENT, AFTER_CONTENT
-						if (idResource==null)
+						if (idModule==null|| XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isSinglefile())
 							addElementOnTarget(targetClass, elem.getXMLElementTabbed(nbTab));
 						else
-							addImportOnTarget(idResource, targetClass, elem.getXMLElementTabbed(0));
+							addImportOnTarget(idModule, targetClass, elem.getXMLElementTabbed(0));
 					}
 				}
 			} 

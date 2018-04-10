@@ -5,7 +5,7 @@ package com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom;
 
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 
 /**
  * @author gauth

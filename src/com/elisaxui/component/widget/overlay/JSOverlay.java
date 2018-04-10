@@ -9,8 +9,8 @@ import static com.elisaxui.component.widget.overlay.ViewOverlay.*;
 
 import com.elisaxui.component.toolkit.JQuery;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSFloat;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSFloat;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 
 /**
  * @author Bureau

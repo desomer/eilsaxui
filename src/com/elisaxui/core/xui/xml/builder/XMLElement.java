@@ -160,12 +160,12 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 		
 		boolean isScript = buf.isResource && name!=null && name.equals(XHTMLPart.SCRIPT);
 		boolean isCss = buf.isResource && name!=null && name.equals(XHTMLPart.STYLE);
-		boolean isCommentCss = buf.isResource && buf.id.endsWith("css");
+		boolean isCommentText = buf.isResource && (buf.id.endsWith("css") || buf.id.endsWith("js"));
 		
 		if (comment != null && !buf.isModeString() && XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS()) {
 			newLine(buf);
 			newTabInternal(buf);
-			if (isCommentCss)
+			if (isCommentText)
 			{
 				buf.addContentOnTarget("/*" + comment + "*/");
 			}
@@ -232,7 +232,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 		if (comment != null && !buf.isModeString() && XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS()) {
 			newLine(buf);
 			newTabInternal(buf);
-			if (isCommentCss)
+			if (isCommentText)
 			{
 				buf.addContentOnTarget("/* end of " + comment + "*/");
 			}

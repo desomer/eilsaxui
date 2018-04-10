@@ -5,9 +5,9 @@ package com.elisaxui.component.widget.layout;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSFloat;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSInt;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSFloat;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 
 import static com.elisaxui.component.toolkit.json.JXui.$xui;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSWindow.*;

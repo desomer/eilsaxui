@@ -6,8 +6,8 @@ package com.elisaxui.component.toolkit.com;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSObject;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSPromise;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.es6.JSPromise;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 
 /**

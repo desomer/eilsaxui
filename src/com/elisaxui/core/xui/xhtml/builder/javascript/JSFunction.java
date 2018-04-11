@@ -17,11 +17,6 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 public class JSFunction extends JSContent implements JSElement {
 	// "use strict"
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder strBuf = new StringBuilder();

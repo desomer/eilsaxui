@@ -76,7 +76,7 @@ public interface JSContentInterface  {
 
 	/**********************************************************************/
 	JSContentInterface _if(Object... content);
-	JSContentInterface then(JSLambda content);
+	JSContentInterface _then(JSLambda content);
 	
 	JSContentInterface _else();
 	JSContentInterface _else(JSLambda content);

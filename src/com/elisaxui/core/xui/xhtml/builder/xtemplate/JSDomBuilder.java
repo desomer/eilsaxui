@@ -34,13 +34,13 @@ public interface JSDomBuilder extends JSClass {
 		JSon eldom = declareType(JSon.class, "eldom");
 
 		let("doElem", fct(eldom, elem, () -> {
-			_if("elem instanceof Element || elem instanceof Text").then(() -> { // nodeType = Node.TextNode
+			_if("elem instanceof Element || elem instanceof Text")._then(() -> { // nodeType = Node.TextNode
 				__("eldom.appendChild(elem)");
-			})._elseif("typeof(elem) === 'string' || elem instanceof String").then(() -> {
+			})._elseif("typeof(elem) === 'string' || elem instanceof String")._then(() -> {
 				__("eldom.appendChild(document.createTextNode(elem))");
-			})._elseif("elem instanceof Function").then(() -> {
+			})._elseif("elem instanceof Function")._then(() -> {
 				let("r", "elem.call(elem, eldom)");
-				_if("r!=null").then(() -> {
+				_if("r!=null")._then(() -> {
 					__("doElem(eldom, r)");
 				});
 			})._else(() -> {
@@ -49,9 +49,9 @@ public interface JSDomBuilder extends JSClass {
 				_forIdx(i, el)._do(() -> {
 					JSAny attr = let(JSAny.class, "attr", el.at(i));
 					// _if(attr.attrByString("_fct_"), " instanceof Function").then(() -> { //TODO faire marcher
-					_if("attr['_fct_'] instanceof Function").then(() -> {
+					_if("attr['_fct_'] instanceof Function")._then(() -> {
 						let("r", "attr['_fct_'].call(attr, eldom)");
-						_if("r!=null").then(() -> {
+						_if("r!=null")._then(() -> {
 							__("attr.value=r");
 						});
 					});
@@ -63,7 +63,7 @@ public interface JSDomBuilder extends JSClass {
 
 		let("e", funct("id", child, "attr").__(() -> {
 			JSAny newdom = let(JSAny.class, "newdom", "document.createElement(id)");
-			_if(child.notEqualsJS(null)).then(() -> {
+			_if(child.notEqualsJS(null))._then(() -> {
 				_forIdx(j, child)._do(() -> {
 					let("elem", child.at(j));
 					__("doElem(newdom, elem)");
@@ -78,11 +78,11 @@ public interface JSDomBuilder extends JSClass {
 			JSArray<Object> ret = let("ret", new JSArray<>().asLitteral());
 			_forIdx(j, child)._do(() -> {
 				JSAny elemC = let(JSAny.class, "elemC", child.at(j));
-				_if(j.modulo(2).equalsJS(0)).then(() -> {
+				_if(j.modulo(2).equalsJS(0))._then(() -> {
 					attr.set("document.createAttribute(elemC)");
 					ret.push(attr);
 				})._else(() -> {
-					_if(elemC, " instanceof Function").then(() -> {
+					_if(elemC, " instanceof Function")._then(() -> {
 						attr.attr("_fct_").set(elemC);  // attribut de type function comme vBindable qui affecte 
 						//la valeur et affecte le  XuiBindInfo du node dom
 					})._else(() -> {
@@ -135,11 +135,11 @@ public interface JSDomBuilder extends JSClass {
 		JSInt idx = declareType(JSInt.class, "idx");
 		_forIdx(idx, listEvent)._do(() -> {
 			document().addEventListener(listEvent.at(idx), fct(event, () -> {
-				_if(event.target().nodeName().equalsJS("INPUT")).then(() -> {
+				_if(event.target().nodeName().equalsJS("INPUT"))._then(() -> {
 					JSNodeHTMLInputElement inputelem = let(JSNodeHTMLInputElement.class, "inputelem",
 							event.target());
 					XuiBindInfo ddi = let(XuiBindInfo.class, "ddi", inputelem.attr(JSNodeTemplate.ATTR_BIND_INFO));
-					_if(ddi, "!=null &&", ddi.row().notEqualsJS(null)).then(() -> {
+					_if(ddi, "!=null &&", ddi.row().notEqualsJS(null))._then(() -> {
 						ddi.row().attrByString(ddi.attr()).set(inputelem.value());
 					});
 				});

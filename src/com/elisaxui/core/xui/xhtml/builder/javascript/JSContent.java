@@ -841,7 +841,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	}
 
 	@Override
-	public JSContentInterface then(JSLambda content) {
+	public JSContentInterface _then(JSLambda content) {
 
 		try {
 			content.run();

@@ -5,13 +5,9 @@ package com.elisaxui.app.elisys.xui.page.formation2;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
-import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.component.toolkit.datadriven.IJSDataBinding;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSChangeCtx;
-import com.elisaxui.component.toolkit.datadriven.JSDataBinding;
-import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
-import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.component.widget.input.ViewInputText;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.ICSSBuilder;
@@ -23,17 +19,16 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
+import com.elisaxui.core.xui.xml.annotation.xImport;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
-import com.elisaxui.core.xui.xml.annotation.xImport;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.target.CONTENT;
-import com.elisaxui.core.xui.xml.target.MODULE;
+
 /**
  * @author gauth
  */
@@ -46,63 +41,20 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 	@xTarget(HEADER.class)
 	@xResource // une seule fois par vue
 	public XMLElement xImportLib() {
-		return xListNode(
-				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"));
+		return xListNode(vPart(new CmpModule())); // configure et genere les modules
 	}
 
-	/**************************************************************/
-	@xTarget(HEADER.class)
-	@xResource(id = "xdatadriven.js")
-	public XMLElement xImportDataDriven() {
-		return xListNode(
-				xImport(
-						TKPubSub.class,
-						JSDataDriven.class,
-						JSDataSet.class
-						));
-	}
-	/**************************************************************/
-	@xTarget(HEADER.class)
-	@xResource(id = "xBinding.js")
-	public XMLElement xImportBinding() {
-		return xListNode(
-				xImport(
-						JSDomBuilder.class,
-						JSDataBinding.class));
-	}
-	
-	/**************************************************************/
-	@xTarget(MODULE.class)
-	@xResource(id = "FileImport.js") // gestion du required
-	public XMLElement xImportFile() {
-		return xListNode(xImport(JSTest2.class));
-	}
-	
-	public interface JSTest2 extends JSClass{
-
-		@xStatic(autoCall = true)
-		default void main() {
-			consoleDebug("'ok'");
-		}
-	}
-	
-	@xTarget(CONTENT.class)
-	public XMLElement xTextScriptImport() {
-		return xNode("script", xAttr("type", "'module'"), js().__("import \"/rest/js/FileImport.js\""));
-	}
-	/***************************************************************/
-	
 	@xTarget(AFTER_CONTENT.class)
-	@xResource(id = "xCss.css")
-	@xPriority(200)
+	@xResource(id = "xScnInput.css")
+	@xPriority(10)
 	public XMLElement xStylePart() {
-
 		return xListNode(
-				xStyle(sMedia("all"), () -> {
-					sOn(sSel(cSizeOk), () -> {
-						css("color:red;");
-					});
-				}));
+				xStyle(sMedia("all"), () ->
+					sOn(sSel(cSizeOk), () -> 
+						css("color:red;")
+						)
+					)
+				);
 	}
 
 	@xTarget(CONTENT.class) // la vue App Shell
@@ -114,14 +66,14 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 				vPart(new ViewInputText()
 						.vProp(ViewInputText.pLabel, "Font size"))));
 	}
-	
+
 	/********************************************************/
 	// une class js avec template et datadriven
 	/********************************************************/
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
-	@xResource(id = "xLoad.js") // gestion du required
-	@xImport(module="xdatadriven.js")
-	@xImport(module="xBinding.js")
+	@xResource(id = "xLoad.js")
+	@xImport(module = "xdatadriven.js")
+	@xImport(module = "xBinding.js")
 	public XMLElement xLoad() {
 		return xImport(JSTest.class);
 	}
@@ -131,20 +83,26 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 		@xStatic(autoCall = true)
 		default void main() {
 
+			// declaration des types
 			JSChangeCtx changeCtx = declareType(JSChangeCtx.class, "changeCtx");
 			ItemInput item = declareType(ItemInput.class, "item");
 
-			JSNodeElement dom = let("dom", document().querySelector(cMain));
-
+			// fct reverse des caracteres
 			JSFunction fctReverse = fct(changeCtx,
 					() -> _return(cast(JSString.class, changeCtx.value()).split(txt()).reverse().join(txt())));
 
+			// fct calcul le nb de caracteres
 			JSFunction fctNbChar = fct(() -> _return(calc("'nb car '+", item.value().length())));
 
+			// les datas
 			JSArray<ItemInput> listItem = let("listItem", new JSArray<ItemInput>());
+
+			// la vues dynamique
+			JSNodeElement dom = let("dom", document().querySelector(cMain));
 			dom.appendChildTemplate(
 					vFor(listItem, item, xListNode(
 							vPart(new ViewInputText() // template static ou dynamic
+									// gestion auto de methode ?
 									.vProp(ViewInputText.pLabel, vChangeable(item.label()))
 									.vProp(ViewInputText.pValue, vBindable(item, item.value()))),
 							/**************************************************************************/
@@ -158,17 +116,17 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 							/**************************************************************************/
 							xDiv("reverse => ", xSpan(vChangeable(item, item.value(), fctReverse)), " <="),
 							/*************************************************************************/
-							vOnDataChange(item, item.value(), fct(changeCtx, () -> consoleDebug(changeCtx))),
+							vOnDataChange(item,  /*????*/ item.value(), fct(changeCtx, () -> consoleDebug(changeCtx))),
 							/*************************************************************************/
 							xDiv("Plus de 10 char", vOnDataChange(item, item.value(), fct(changeCtx,
 									() -> _if(changeCtx.value().toStringJS().length(), ">10")
-											.then(() -> changeCtx.element().classList().add(cSizeOk))
-											._else(() -> changeCtx.element().classList()
-													.remove(cSizeOk)))))))
-			/*************************************************************************/
-			);
+											._then(() -> changeCtx.element().classList().add(cSizeOk))
+											._else(() -> changeCtx.element().classList().remove(cSizeOk))))),
+							xNode("hr")
+							)));
 
 			/*******************************************************/
+			// ajout des datas
 			ItemInput newItem = newJS(ItemInput.class);
 			newItem.label().set("border");
 			newItem.value().set("5px solid red");
@@ -179,6 +137,7 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 			newItem.value().set("block");
 			listItem.push(newItem);
 
+			// changement des datas
 			setTimeout(() -> {
 				listItem.at(0).label().set(listItem.at(0).label().add(" OK"));
 				listItem.at(1).label().set("DISPLAY");

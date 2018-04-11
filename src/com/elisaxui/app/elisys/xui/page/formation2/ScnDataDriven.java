@@ -113,9 +113,9 @@ public class ScnDataDriven extends XHTMLPart {
 
 			
 			JSFunction onChange = fct(() -> {
-				_if(changeCtx.property().equalsJS("name")).then(
+				_if(changeCtx.property().equalsJS("name"))._then(
 						() -> aDom.firstNodeValue().set(changeCtx.value()));
-				_if(changeCtx.property().equalsJS("name2")).then(
+				_if(changeCtx.property().equalsJS("name2"))._then(
 						() -> aDom.querySelector("span").firstNodeValue().set(changeCtx.value()));
 			});
 

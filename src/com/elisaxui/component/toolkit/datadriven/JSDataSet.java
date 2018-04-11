@@ -60,7 +60,7 @@ public interface JSDataSet extends JSClass {
 		changeHandler.attr("get").set(fct(target, property,
 				() -> {
 					JSObject obj = let("obj", target.attrByString(property));
-					_if("typeof ", obj, "=== 'object' && !(" , obj, " instanceof Array) && ", obj, "!==null && ",property, "!='", JSDataSet.ATTR_DOM_LINK, "'" ).then(() -> {
+					_if("typeof ", obj, "=== 'object' && !(" , obj, " instanceof Array) && ", obj, "!==null && ",property, "!='", JSDataSet.ATTR_DOM_LINK, "'" )._then(() -> {
 						_return("new Proxy(",obj,",", changeHandler, ")");
 					})._else(() -> {
 						_return(obj);
@@ -75,7 +75,7 @@ public interface JSDataSet extends JSClass {
 				}));
 		changeHandler.attr("set").set(fct(target, property, value, receiver, 
 				() -> {
-					_if("property!='" + ATTR_DOM_LINK + "' && target[property]!==value").then(() -> {
+					_if("property!='" + ATTR_DOM_LINK + "' && target[property]!==value")._then(() -> {
 						JSChangeCtx obj = newJS(JSChangeCtx.class).asLitteral();
 						obj.ope().set("change");
 						obj.row().set(target);

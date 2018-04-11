@@ -16,8 +16,13 @@ import com.elisaxui.core.xui.xhtml.XHTMLFile;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRootResource;
 import com.elisaxui.core.xui.xhtml.application.XHTMLAppScanner;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
+import com.elisaxui.core.xui.xhtml.builder.module.ModuleDesc;
+import com.elisaxui.core.xui.xhtml.target.BODY;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
+import com.elisaxui.core.xui.xml.annotation.xImport;
+import com.elisaxui.core.xui.xml.annotation.xImportList;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -124,17 +129,18 @@ public class XMLPart  {
 
 	}
 	
-	public final void addImportOnTarget(String idResource, Class<? extends XMLTarget> target, XMLElement elem) {
+	public final void addImportOnTarget(ModuleDesc moduleDesc, Class<? extends XMLTarget> target, XMLElement elem) {
 		
+		String idResource = moduleDesc.getResourceID();
 		String ext = idResource.substring(idResource.indexOf(".")+1);
 		XMLFile file = XUIFactoryXHtml.getXHTMLFile();
 		long date = XUIFactoryXHtml.changeMgr.lastOlderFile;
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-hhmmss");
 		String textdate = formatter.format(new Date(date));
 		String fn = null;
-		if (target == MODULE.class)
-			fn= idResource;
-		else
+	//	if (target == MODULE.class)
+	//		fn= idResource;
+	//	else
 			fn=textdate+"_"+idResource;
 		
 		final String name = fn;
@@ -143,18 +149,38 @@ public class XMLPart  {
 
 			if (ext.equals("css"))
 				addElementOnTarget(target, (XMLElement)(XHTMLPart.xLinkCss("/rest/css/"+name).setPriority(elem.getPriority())));
-			else
-				addElementOnTarget(target, (XMLElement)(XHTMLPart.xScriptSrc("/rest/js/"+name).setPriority(elem.getPriority())));
-			
+			else  // todo CHANGE TO assert ET non rest
+			{
+				if (moduleDesc.getListImport()==null)
+					addElementOnTarget(target, (XMLElement)(XHTMLPart.xScriptSrc("/rest/js/"+name).setPriority(elem.getPriority())));
+				else
+					addElementOnTarget(target, (XMLElement)(XHTMLPart.xScriptModule("/rest/js/"+name).setPriority(elem.getPriority())));
+					
+			}
 			XHTMLFile f = new XHTMLFile();
 			f.setRoot(new XHTMLRootResource());
 			return f;
 		});
 		
-		CoreLogger.getLogger(1).fine("Generate file ====>"+ name);;
+		CoreLogger.getLogger(1).fine("Generate file ====>"+ name);
 		
 		// ajoute dans le root du ficher
-		((XHTMLRootResource)subfile.getRoot()).addElementOnTarget(HEADER.class, elem);
+		if (moduleDesc.getListImport()!=null)
+		{
+			int i=0;
+			for (String aImport : moduleDesc.getListImport()) {
+				fn=textdate+"_"+aImport;
+				i++;
+				//fn=aImport;
+				String s = null;
+				if (i==1) s="JSDataDriven";
+				if (i==2) s="JSDataBinding";
+				
+				
+				((XHTMLRootResource)subfile.getRoot()).addElementOnTarget(HEADER.class, xNode(null, "\nimport {"+s+"} from '/rest/js/"+fn+"';") ); 
+			}
+		}
+		((XHTMLRootResource)subfile.getRoot()).addElementOnTarget(BODY.class, elem);
 	}
 
 	private ArrayList<XMLElement> none = new ArrayList<>();
@@ -190,7 +216,20 @@ public class XMLPart  {
 			// execute les methode target non ressource
 			if (isfirstInit || !isResource)
 			{
-				addXMLOnTarget(method, idResource);
+				ModuleDesc moduleDesc = new ModuleDesc();
+				moduleDesc.setResourceID(idResource);
+				
+				xImportList listImport = method.getAnnotation(xImportList.class);
+				if (listImport!=null)
+				{
+					ArrayList<String> listImportStr = new ArrayList<>();
+					for (xImport aImport : listImport.value()) {
+						listImportStr.add(aImport.module());
+					}
+					moduleDesc.setListImport(listImportStr);
+				}
+				
+				addXMLOnTarget(method, moduleDesc);
 			}
 		}
 		
@@ -224,7 +263,7 @@ public class XMLPart  {
 	 * ajoute les methode avec xTarget
 	 * @param method
 	 */
-	private void addXMLOnTarget(Method method, String idResource) {
+	private void addXMLOnTarget(Method method, ModuleDesc moduleDesc) {
 		xTarget target = method.getAnnotation(xTarget.class);
 		if (target != null) {
 			try {
@@ -244,26 +283,26 @@ public class XMLPart  {
 				if (targetClass!=null ) {
 					int nbTab = targetClass.newInstance().getInitialNbTab();
 					String idModule = null;
-					if (idResource!=null)
-						idModule = AppConfig.getModuleJSConfig(idResource);
+					if (moduleDesc.getResourceID()!=null)
+						moduleDesc.setResourceID(AppConfig.getModuleJSConfig(moduleDesc.getResourceID()));
 					
 					if (ITargetRoot.class.isAssignableFrom(targetClass))
 					{
 						// ajoute en root ex BODY, HEADER
-						if (idModule==null || XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isSinglefile())
+						if (moduleDesc.getResourceID()==null || XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isSinglefile())
 							XUIFactoryXHtml.getXMLRoot().addElementOnTarget(targetClass, elem.getXMLElementTabbed(nbTab));
 						else
 						{
-							XUIFactoryXHtml.getXMLRoot().addImportOnTarget(idModule, targetClass, elem.getXMLElementTabbed(0));
+							XUIFactoryXHtml.getXMLRoot().addImportOnTarget(moduleDesc, targetClass, elem.getXMLElementTabbed(0));
 						}
 					}
 					else
 					{
 						// ajoute dans un block enfant CONTENT, AFTER_CONTENT
-						if (idModule==null|| XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isSinglefile())
+						if (moduleDesc.getResourceID()==null|| XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isSinglefile())
 							addElementOnTarget(targetClass, elem.getXMLElementTabbed(nbTab));
 						else
-							addImportOnTarget(idModule, targetClass, elem.getXMLElementTabbed(0));
+							addImportOnTarget(moduleDesc, targetClass, elem.getXMLElementTabbed(0));
 					}
 				}
 			} 

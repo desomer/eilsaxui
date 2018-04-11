@@ -67,7 +67,7 @@ public interface JSDataBinding extends JSClass {
 		JSString sel = let(JSString.class, "sel", "'[data-xui'+", changeCtx.property(), "+']'");
 		JSArray<JSNodeElement> listNode = let(JSArray.class, "listNode", "Array.from(", aDom.querySelectorAll(sel),
 				")");
-		_if(aDom, ".XuiBindInfo!=null").then(() -> {
+		_if(aDom, ".XuiBindInfo!=null")._then(() -> {
 			listNode.push(aDom);
 		});
 		listNode.setArrayType(JSNodeElement.class);
@@ -76,10 +76,10 @@ public interface JSDataBinding extends JSClass {
 			JSNodeElement elem = let("elem", listNode.at(i));
 			XuiBindInfo ddi = let(XuiBindInfo.class, "ddi", elem + ".XuiBindInfo");
 			JSAny valueChange = let("valueChange", changeCtx.value());
-			_if(ddi, "!=null &&", ddi.fct().notEqualsJS(null)).then(() -> {
+			_if(ddi, "!=null &&", ddi.fct().notEqualsJS(null))._then(() -> {
 				changeCtx.element().set(elem);
 				JSAny rf = let("rf", ddi.fct().call(elem, changeCtx)); // appel de la fct vOnChange( fct )
-				_if(rf.equalsJS(null)).then(() -> {
+				_if(rf.equalsJS(null))._then(() -> {
 					__("continue"); // ne change pas la value du text du dom
 				});
 

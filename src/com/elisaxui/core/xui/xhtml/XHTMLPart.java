@@ -90,6 +90,10 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 	public static final XMLElement xScriptSrc(Object js) {
 		return xNode(SCRIPT, xAttr("src", "\"" + js + "\""));
 	}
+	
+	public static final XMLElement xScriptModule(Object js) {
+		return xNode(SCRIPT, xAttr("type","'module'"), xAttr("src", "\"" + js + "\""));
+	}
 
 	public static final XMLElement xScriptSrcAsync(Object js) {
 		return xNode(SCRIPT, xAttr("src", "\"" + js + "\""), xAttr(ASYNC));

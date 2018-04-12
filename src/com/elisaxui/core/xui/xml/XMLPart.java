@@ -16,10 +16,11 @@ import com.elisaxui.core.xui.xhtml.XHTMLFile;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRootResource;
 import com.elisaxui.core.xui.xhtml.application.XHTMLAppScanner;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
+import com.elisaxui.core.xui.xhtml.builder.module.ImportDesc;
 import com.elisaxui.core.xui.xhtml.builder.module.ModuleDesc;
 import com.elisaxui.core.xui.xhtml.target.BODY;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
+import com.elisaxui.core.xui.xml.target.MODULE;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xImport;
 import com.elisaxui.core.xui.xml.annotation.xImportList;
@@ -33,7 +34,6 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder.Handle;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.target.CONTENT;
-import com.elisaxui.core.xui.xml.target.MODULE;
 import com.elisaxui.core.xui.xml.target.XMLTarget;
 import com.elisaxui.core.xui.xml.target.XMLTarget.ITargetRoot;
 
@@ -137,13 +137,7 @@ public class XMLPart  {
 		long date = XUIFactoryXHtml.changeMgr.lastOlderFile;
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-hhmmss");
 		String textdate = formatter.format(new Date(date));
-		String fn = null;
-	//	if (target == MODULE.class)
-	//		fn= idResource;
-	//	else
-			fn=textdate+"_"+idResource;
-		
-		final String name = fn;
+		final String name = textdate+"_"+idResource;
 		
 		XMLFile subfile =   file.listSubFile.computeIfAbsent(name, keyResource -> {
 
@@ -167,17 +161,10 @@ public class XMLPart  {
 		// ajoute dans le root du ficher
 		if (moduleDesc.getListImport()!=null)
 		{
-			int i=0;
-			for (String aImport : moduleDesc.getListImport()) {
-				fn=textdate+"_"+aImport;
-				i++;
-				//fn=aImport;
-				String s = null;
-				if (i==1) s="JSDataDriven";
-				if (i==2) s="JSDataBinding";
+			for (ImportDesc aImport : moduleDesc.getListImport()) {
+				String fn=textdate+"_"+aImport.getModule();
 				
-				
-				((XHTMLRootResource)subfile.getRoot()).addElementOnTarget(HEADER.class, xNode(null, "\nimport {"+s+"} from '/rest/js/"+fn+"';") ); 
+				((XHTMLRootResource)subfile.getRoot()).addElementOnTarget(HEADER.class, xNode(null, "\nimport {"+aImport.getExport()+"} from '/rest/js/"+fn+"';") ); 
 			}
 		}
 		((XHTMLRootResource)subfile.getRoot()).addElementOnTarget(BODY.class, elem);
@@ -222,9 +209,9 @@ public class XMLPart  {
 				xImportList listImport = method.getAnnotation(xImportList.class);
 				if (listImport!=null)
 				{
-					ArrayList<String> listImportStr = new ArrayList<>();
+					ArrayList<ImportDesc> listImportStr = new ArrayList<>();
 					for (xImport aImport : listImport.value()) {
-						listImportStr.add(aImport.module());
+						listImportStr.add(new ImportDesc(aImport.export(),  aImport.module()));
 					}
 					moduleDesc.setListImport(listImportStr);
 				}
@@ -269,8 +256,8 @@ public class XMLPart  {
 			try {
 				method.setAccessible(true);
 				XMLElement elem = ((XMLElement) method.invoke(this, new Object[] {}));
-				if (elem== null) return;
-				
+				if (elem==null) return;
+									
 				initBlockPriority(method, elem);
 
 				String comment = getComment(method);
@@ -281,8 +268,14 @@ public class XMLPart  {
 					CoreLogger.getLogger(1).fine(()->"[XMLPart] add Target mth "+ this.getClass().getSimpleName() + " # " + method.getName() + " priority " + elem.getPriority());
 			
 				if (targetClass!=null ) {
+					
+					if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isSinglefile() && targetClass==MODULE.class)
+					{	// force en single file
+						targetClass= HEADER.class;
+					}
+					
 					int nbTab = targetClass.newInstance().getInitialNbTab();
-					String idModule = null;
+
 					if (moduleDesc.getResourceID()!=null)
 						moduleDesc.setResourceID(AppConfig.getModuleJSConfig(moduleDesc.getResourceID()));
 					

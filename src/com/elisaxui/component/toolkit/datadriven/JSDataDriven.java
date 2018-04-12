@@ -8,6 +8,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
+import com.elisaxui.core.xui.xml.annotation.xExport;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 /**
  * 
@@ -20,6 +21,7 @@ import com.elisaxui.core.xui.xml.annotation.xStatic;
  * @author Bureau
  *
  */
+@xExport
 public interface JSDataDriven extends JSClass {
 
 	JSDataSet dataSet();

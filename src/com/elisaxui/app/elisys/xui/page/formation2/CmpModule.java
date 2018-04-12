@@ -37,8 +37,7 @@ public class CmpModule extends XHTMLPart {
 		return xListNode( xImport(
 				TKPubSub.class,
 				JSDataDriven.class,
-				JSDataSet.class),
-				"\nexport {JSDataDriven};"
+				JSDataSet.class)
 				);
 	}
 
@@ -48,8 +47,7 @@ public class CmpModule extends XHTMLPart {
 	public XMLElement xImportBinding() {
 		return xListNode(  xImport(
 				JSDomBuilder.class,
-				JSDataBinding.class),
-				"\nexport {JSDataBinding};"
+				JSDataBinding.class)
 				);
 	}
 		

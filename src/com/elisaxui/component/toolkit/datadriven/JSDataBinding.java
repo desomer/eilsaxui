@@ -3,28 +3,23 @@
  */
 package com.elisaxui.component.toolkit.datadriven;
 
-import java.net.NetworkInterface;
-
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSCallBack;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSObject;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder.XuiBindInfo;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSNodeTemplate;
+import com.elisaxui.core.xui.xml.annotation.xExport;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 
 /**
  * @author gauth
  *
  */
+@xExport
 public interface JSDataBinding extends JSClass {
 
 	@xStatic

@@ -15,7 +15,7 @@ public class ModuleDesc {
 	String resourceID;
 	String type;
 	XMLTarget target;
-	ArrayList<String> listImport;
+	ArrayList<ImportDesc> listImport;
 	
 	/**
 	 * @return the resourceID
@@ -44,13 +44,13 @@ public class ModuleDesc {
 	/**
 	 * @return the listImport
 	 */
-	public final ArrayList<String> getListImport() {
+	public final ArrayList<ImportDesc> getListImport() {
 		return listImport;
 	}
 	/**
 	 * @param listImport the listImport to set
 	 */
-	public final void setListImport(ArrayList<String> listImport) {
+	public final void setListImport(ArrayList<ImportDesc> listImport) {
 		this.listImport = listImport;
 	}
 	/**

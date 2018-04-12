@@ -1,8 +1,6 @@
 package com.elisaxui.core.xui.xhtml.builder.javascript.jsclass;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +26,7 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 public final class JSClassBuilder extends JSContent {
 	
 	Object name;   // nom de la class
+	boolean isExportable = false;
 	
 	LinkedList<JSFunction> listFunction = new LinkedList<>();
 	private Map<String, String> listDistinctFct = new HashMap<>();
@@ -35,7 +34,7 @@ public final class JSClassBuilder extends JSContent {
 	private LinkedList<ProxyMethodDesc> listHandleFuntionPrivate = new LinkedList<>();
 	public Map<String, ProxyMethodDesc> mapContentMthBuildByProxy = new HashMap<>(); // contenu des methodes crée par proxy , ThreadLocal?
 	
-	
+	/** todo mettre une liste */
 	Object autoCallMeth;
 	
 	/**
@@ -45,6 +44,19 @@ public final class JSClassBuilder extends JSContent {
 		return autoCallMeth;
 	}
 
+	/**
+	 * @return the isExportable
+	 */
+	public final boolean isExportable() {
+		return isExportable;
+	}
+
+	/**
+	 * @param isExportable the isExportable to set
+	 */
+	public final void setExportable(boolean isExportable) {
+		this.isExportable = isExportable;
+	}
 
 	/**
 	 * @param autoCallMeth the autoCallMeth to set
@@ -126,7 +138,7 @@ public final class JSClassBuilder extends JSContent {
 		
 		ProxyHandler.getFormatManager().newLine(buf);
 		ProxyHandler.getFormatManager().newTabInternal(buf);
-		buf.addContentOnTarget("class ");
+		buf.addContentOnTarget(isExportable?"export class ":"class ");
 		buf.addContentOnTarget(name);
 		buf.addContentOnTarget(" {");
 	

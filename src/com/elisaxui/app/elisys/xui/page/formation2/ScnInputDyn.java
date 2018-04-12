@@ -72,8 +72,9 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 	/********************************************************/
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
 	@xResource(id = "xLoad.js")
-	@xImport(module = "xdatadriven.js")
-	@xImport(module = "xBinding.js")
+	@xImport(export = "JSDataDriven", module = "xdatadriven.js")
+	@xImport(export = "JSDataBinding", module = "xBinding.js")
+	
 	public XMLElement xLoad() {
 		return xImport(JSTest.class);
 	}

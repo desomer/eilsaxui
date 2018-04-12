@@ -26,13 +26,13 @@ public class XHTMLRootResource extends XHTMLPart {
 	@xResource
 	public XMLElement xGetContent() {
 
-		LocalDateTime now = LocalDateTime.now();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//		LocalDateTime now = LocalDateTime.now();
+//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-		LocalDateTime dateBuild = XUIFactoryXHtml.changeMgr.dateBuild;
+//		LocalDateTime dateBuild = XUIFactoryXHtml.changeMgr.dateBuild;
 		
-		String formatDateTimeBuild =   dateBuild.format(formatter);
-		String formatDateTimeNow = now.format(formatter);
+//		String formatDateTimeBuild =   dateBuild.format(formatter);
+//		String formatDateTimeNow = now.format(formatter);
 
 		
 		List<XMLElement> body = getListElementFromTarget(BODY.class);
@@ -43,7 +43,7 @@ public class XHTMLRootResource extends XHTMLPart {
 		Collections.sort(body, new XHTMLRoot.XMLElementComparator() );
 		Collections.sort(afterBody, new XHTMLRoot.XMLElementComparator() );
 		
-		return xListNode(header, body, afterBody );
+		return xListNode( header, body, afterBody );
 	}
 
 	// + "<head>\n" + getPart(null, null, 0, HtmlPart.HEADER) +

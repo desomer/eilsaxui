@@ -12,7 +12,6 @@ public class ConfigFormat {
 	private boolean enableTabXMLinJS = false; //false
 	private boolean enableCrinJS = true;    //true
 	
-	
 	private boolean singlefile = false;
 	
 	/**

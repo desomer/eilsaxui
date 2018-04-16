@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.xui.page.formation2;
+package com.elisaxui.app.core.module;
 
 import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.component.toolkit.datadriven.JSDataBinding;
@@ -22,7 +22,7 @@ import com.elisaxui.core.xui.xml.target.MODULE;
  * @author gauth
  *
  */
-public class CmpModule extends XHTMLPart {
+public class CmpModuleBinding extends XHTMLPart {
 
 	@xTarget(HEADER.class)
 	@xResource // une seule fois par vue

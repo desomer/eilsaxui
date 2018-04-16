@@ -12,9 +12,7 @@ import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
@@ -28,7 +26,6 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSLambda;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.builder.XUIFormatManager;
 
@@ -189,7 +186,21 @@ public final class ProxyHandler implements InvocationHandler {
 
 			// on ajoute pas le code JS dans la class dans le cas "xDiv( codeJS )" car deja
 			// ajouté dans le xDiv
-			ThreadLocalMethodDesc.get().lastMthNoInserted = null;
+			
+
+			StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+
+			int numLigne = -1;
+			for (StackTraceElement stackTraceElement : stack) {
+				if (stackTraceElement.getLineNumber() != -1
+						&& JSClass.class.isAssignableFrom(Class.forName(stackTraceElement.getClassName()))) {
+					numLigne = stackTraceElement.getLineNumber();
+					break;
+				}
+			}
+			int lastNumLine = ThreadLocalMethodDesc.get().lastLineNoInsered;
+			if (lastNumLine>=numLigne)
+				ThreadLocalMethodDesc.get().lastMthNoInserted = null;
 
 		} else {
 			JSFunction anon = isInLineMethod(mthInvoke);

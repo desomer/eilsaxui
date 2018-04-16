@@ -305,9 +305,6 @@ public class XUIFactoryXHtml {
 			List<XMLElement> rootContent = null;
 			StringBuilder buf = new StringBuilder(1000);
 			
-//			XMLElement elem = XHTMLPart.xListNodeStatic(XHTMLPart.js().consoleDebug("'OK "+ name +"'"));
-//			elem.toXML(new XMLBuilder("page", buf, null));
-			
 			reponseInCache = buf.toString();
 			CacheManager.resourceDB.put(name, reponseInCache);
 		}

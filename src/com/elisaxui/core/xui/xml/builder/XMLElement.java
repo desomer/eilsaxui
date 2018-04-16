@@ -244,7 +244,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 	}
 
 	@SuppressWarnings("deprecation")
-	private int doChild(XMLBuilder buf, int nbChild, Object inner) {
+	public int doChild(XMLBuilder buf, int nbChild, Object inner) {
 
 		if (inner instanceof XMLElement) { // une div
 			nbChild++;
@@ -318,7 +318,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 				}
 				buf.getJSContent().getListElem().add(JSNodeTemplate.MTH_ADD_ATTR+"([");
 				buf.getJSContent().getListElem().add("\"" + attr.getName() + "\"," + v + "");
-				buf.getJSContent().getListElem().add("]),");
+				buf.getJSContent().getListElem().add("])"+ (nbChild>=0?",":""));
 			}
 			//else
 			//	attr.toXML(buf);   // pas en children

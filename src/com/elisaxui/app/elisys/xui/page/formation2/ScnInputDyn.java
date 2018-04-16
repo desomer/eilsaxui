@@ -5,6 +5,7 @@ package com.elisaxui.app.elisys.xui.page.formation2;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
+import com.elisaxui.app.core.module.CmpModuleBinding;
 import com.elisaxui.component.toolkit.datadriven.IJSDataBinding;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSChangeCtx;
@@ -41,7 +42,7 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 	@xTarget(HEADER.class)
 	@xResource // une seule fois par vue
 	public XMLElement xImportLib() {
-		return xListNode(vPart(new CmpModule())); // configure et genere les modules
+		return xListNode(vPart(new CmpModuleBinding())); // configure et genere les modules
 	}
 
 	@xTarget(AFTER_CONTENT.class)

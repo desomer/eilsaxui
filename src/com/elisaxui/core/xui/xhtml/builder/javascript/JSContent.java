@@ -23,6 +23,7 @@ import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.json.JsonNumberImpl;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSNodeTemplate;
 import com.elisaxui.core.xui.xml.builder.IXMLBuilder;
+import com.elisaxui.core.xui.xml.builder.XMLAttr;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 
@@ -176,7 +177,18 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 
 			/***************************************************/
 		} else if (object instanceof XMLElement) {
-			doXMLElementToJSXHTMLPart(buf, ((XMLElement) object));
+			if (buf.isTemplate())
+			{
+				((XMLElement) object).toXML(buf);
+			}
+			else
+				doXMLElementToJSXHTMLPart(buf, ((XMLElement) object));
+
+		} else if (object instanceof XMLAttr) {
+			if (buf.isTemplate())
+			{
+				new XMLElement(null).doChild(buf, -1, object);
+			}
 
 		} else if (object instanceof JSNodeTemplate) {
 			JSNodeTemplate template = ((JSNodeTemplate) object);
@@ -755,6 +767,14 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 			addElem(object);
 		}
 		getListElem().add(";");
+		return this;
+	}
+	
+	@Override
+	public JSContentInterface _continue()
+	{
+		getListElem().add(JSNewLine.class);
+		getListElem().add("continue;");
 		return this;
 	}
 

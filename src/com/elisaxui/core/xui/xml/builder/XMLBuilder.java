@@ -35,6 +35,7 @@ public class XMLBuilder {
 		return this;
 	}
 
+	// contenu js du template
 	JSContent jsTemplate = null;
 
 	/**

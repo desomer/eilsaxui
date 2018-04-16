@@ -94,6 +94,7 @@ public interface JSContentInterface  {
 	
 	/**********************************************************************/
 	JSContentInterface _return(Object... content);
+	JSContentInterface _continue();
 	Object _this();
 	
 	@Deprecated

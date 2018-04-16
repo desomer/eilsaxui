@@ -9,6 +9,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.IJSClassInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSNodeTemplate;
 import com.elisaxui.core.xui.xml.XMLPart;
@@ -50,6 +51,10 @@ public class JSNodeElement extends JSAny  implements IJSClassInterface, IXHTMLBu
 	
 	public JSString nodeName() {
 		return castAttr(new JSString(), "nodeName");
+	}
+	
+	public JSon dataset() {
+		return castAttr(new JSon(), "dataset");
 	}
 	
 	public void addEventListener(Object event, JSFunction fct) {

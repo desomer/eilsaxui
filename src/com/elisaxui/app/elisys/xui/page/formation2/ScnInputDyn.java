@@ -118,7 +118,8 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 							/**************************************************************************/
 							xDiv("reverse => ", xSpan(vChangeable(item, item.value(), fctReverse)), " <="),
 							/*************************************************************************/
-							vOnDataChange(item,  /*????*/ item.value(), fct(changeCtx, () -> consoleDebug(changeCtx))),
+							// a faire fonctionner : voir les ligne en commentaire JSDataBinding.initChangeHandler
+							vOnDataChange(item,  /*????*/ item.value(), fct(changeCtx, () -> consoleDebug(txt("vOnDataChange"), changeCtx))),
 							/*************************************************************************/
 							xDiv("Plus de 10 char", vOnDataChange(item, item.value(), fct(changeCtx,
 									() -> _if(changeCtx.value().toStringJS().length(), ">10")

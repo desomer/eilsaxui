@@ -6,6 +6,8 @@ package com.elisaxui.app.core.admin;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
 import com.elisaxui.app.core.module.CmpModuleBinding;
+import com.elisaxui.component.toolkit.com.JSCom;
+import com.elisaxui.component.toolkit.com.TKCom;
 import com.elisaxui.component.toolkit.datadriven.IJSDataBinding;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
 import com.elisaxui.component.widget.input.ViewCheckRadio;
@@ -14,12 +16,12 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSCallBack;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSBool;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xImport;
 import com.elisaxui.core.xui.xml.annotation.xResource;
@@ -57,6 +59,12 @@ public class ScnAdmin extends XHTMLPart {
 	public XMLElement xLoad() {
 		return xImport(JSTest.class);
 	}
+	
+	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
+	@xResource()
+	public XMLElement xTest() {
+		return xImport(TKCom.class);
+	}
 
 	public interface JSTest extends JSClass, IJSDomTemplate, IJSDataBinding, IJSDataDriven {
 
@@ -66,22 +74,29 @@ public class ScnAdmin extends XHTMLPart {
 
 			JSArray<JSAppConfiguration> data = let("data", new JSArray<JSAppConfiguration>());
 			JSAppConfiguration row = let("row", newJS(JSAppConfiguration.class));
-			row.minify().set(true);
+			row.minify().set(false);
+			row.es5().set(false);
+			row.disableComment().set(false);
+			row.singleFile().set(false);
 
 			JSNodeElement dom = let("dom", document().querySelector(cMain));
 			dom.appendChildTemplate(
 					vFor(data, item, xListNode(
 							vPart(new ViewCheckRadio().vProp(ViewCheckRadio.pLabel, "Minify")
-//									.vProp(ViewCheckRadio.pValue, vIf(vBindable(item, item.minify()), new JSNodeTemplate(xDiv("'OK'")).setModeJS(true)))),
 									.vProp(ViewCheckRadio.pValue, vIf(vBindable(item, item.minify()), xAttr("checked")))),
 
-							vPart(new ViewCheckRadio().vProp(ViewCheckRadio.pLabel, "ES5 Compatibility")),
-							vPart(new ViewCheckRadio().vProp(ViewCheckRadio.pLabel, "Disable comment")),
-							vPart(new ViewCheckRadio().vProp(ViewCheckRadio.pLabel, "Single File")),
+							vPart(new ViewCheckRadio().vProp(ViewCheckRadio.pLabel, "ES5 Compatibility")
+									.vProp(ViewCheckRadio.pValue, vIf(vBindable(item, item.es5()), xAttr("checked")))
+									),
+							vPart(new ViewCheckRadio().vProp(ViewCheckRadio.pLabel, "Disable comment")
+									.vProp(ViewCheckRadio.pValue, vIf(vBindable(item, item.disableComment()), xAttr("checked")))
+									),
+							vPart(new ViewCheckRadio().vProp(ViewCheckRadio.pLabel, "Single File")
+									.vProp(ViewCheckRadio.pValue, vIf(vBindable(item, item.singleFile()), xAttr("checked")))
+									),
 							vPart(new ViewInputText() 
 									.vProp(ViewInputText.pLabel, "Color")
 									.vProp(ViewInputText.pValue, txt("FF00FF"))),
-							vIf(vBindable(item, item.minify()),xDiv("OK")),
 							vPart(new ViewInputText()
 									.vProp(ViewInputText.pLabel, "Font size")
 									.vProp(ViewInputText.pValue, txt("12rem")))
@@ -89,10 +104,16 @@ public class ScnAdmin extends XHTMLPart {
 					)));
 			
 			data.push(row);
+			JSon json = let(JSon.class, "json", "{ a:12}");
+			JSCom.xuiCom().postUrl(JSString.value("/rest/json/save"), json);
+			
 		}
 	}
 
 	public interface JSAppConfiguration extends JSType {
 		JSBool minify();
+		JSBool es5();
+		JSBool disableComment();
+		JSBool singleFile();
 	}
 }

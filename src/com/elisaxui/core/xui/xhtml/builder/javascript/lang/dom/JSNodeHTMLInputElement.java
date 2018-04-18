@@ -13,4 +13,8 @@ public class JSNodeHTMLInputElement extends JSNodeElement {
 	public JSString value() {
 		return castAttr(new JSString(), "value");
 	}
+	
+	public JSString checked() {
+		return castAttr(new JSString(), "checked");
+	}
 }

@@ -8,11 +8,27 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.StringReader;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
+import javax.imageio.stream.FileImageOutputStream;
+import javax.imageio.stream.ImageOutputStream;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import javax.json.JsonValue;
+import javax.json.stream.JsonParser;
+import javax.json.stream.JsonParser.Event;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -134,6 +150,34 @@ public class SrvMain {
     	return Response.status(Status.OK).build();
     }
     
+    @POST
+    @Path("/save")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response savePost(@Context HttpHeaders headers, @Context UriInfo uri, String content) {
+    	
+    	JsonReader rdr = Json.createReader(new StringReader(content));
+        JsonObject obj = rdr.readObject();
+        Object a = obj.get("a");
+        
+//        JsonParser parser = Json.createParser(new StringReader(content));
+//        
+//        while (parser.hasNext()) {
+//            Event event = parser.next();
+//            if (event == JsonParser.Event.KEY_NAME ) {
+//                String key = parser.getString();
+//                event = parser.next();
+//                if (key.equals("phoneNumber")) {
+//                	String value = parser.getString();
+//                }
+//            }
+//        }
+        
+        rdr.close();
+        
+        
+    	return  Response.status(Status.OK).build();
+    }
+    
     /***************************************************************************************/
 	@GET
 	@Path("/manifest.json")
@@ -218,6 +262,49 @@ public class SrvMain {
         return Response.ok(new ByteArrayInputStream(imageData)).build();
     }
     
+
+	public void encode(BufferedImage bufferedImage, OutputStream outputStream) 
+	        throws IOException {
+	    if (bufferedImage == null) {
+	        throw new IllegalArgumentException("Null 'image' argument.");
+	    }
+	    if (outputStream == null) {
+	        throw new IllegalArgumentException("Null 'outputStream' argument.");
+	    }
+	    Iterator iterator = ImageIO.getImageWritersByFormatName("jpeg");
+	    ImageWriter writer = (ImageWriter) iterator.next();
+	    ImageWriteParam p = writer.getDefaultWriteParam();
+	    p.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+		p.setProgressiveMode(ImageWriteParam.MODE_EXPLICIT);
+	    p.setCompressionQuality(0.75f);
+	    ImageOutputStream ios = ImageIO.createImageOutputStream(outputStream);
+	    writer.setOutput(ios);
+	    writer.write(null, new IIOImage(bufferedImage, null, null), p);
+	    ios.flush();
+	    writer.dispose();
+	    ios.close();
+	}
+	
+	public static void writeJPG( BufferedImage rendered, float quality, File f ) {
+
+		try {
+			JPEGImageWriteParam jpegParams = new JPEGImageWriteParam( null );
+			jpegParams.setCompressionMode( ImageWriteParam.MODE_EXPLICIT );
+			jpegParams.setCompressionQuality( 1f );
+			jpegParams.setProgressiveMode(ImageWriteParam.MODE_EXPLICIT);
+
+			ImageWriter writer = ImageIO.getImageWritersByFormatName( "jpeg" ).next();
+//			ImageWriteParam param = writer.getDefaultWriteParam();
+//			param.setCompressionMode( ImageWriteParam.MODE_EXPLICIT ); // Needed see javadoc
+//			param.setCompressionQuality( quality ); // Highest quality
+//			param.setProgressiveMode(ImageWriteParam.MODE_EXPLICIT);
+			writer.setOutput( new FileImageOutputStream( f ) );
+			writer.write( null, new IIOImage( rendered, null, null ), jpegParams );
+		} catch ( Throwable th ) {
+			th.printStackTrace();
+		}
+	}
+	
     
 //    import org.apache.commons.lang3.time.DateUtils;
 //    import org.slf4j.Logger;

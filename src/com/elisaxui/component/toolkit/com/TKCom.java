@@ -5,7 +5,9 @@ package com.elisaxui.component.toolkit.com;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSObject;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.es6.JSPromise;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
@@ -39,6 +41,60 @@ public interface TKCom extends JSClass {
 		
 		return cast(JSPromise.class, "new Promise("+fct+")");
 	}
+	
+	@xStatic
+	default JSPromise postUrl(JSString url, JSon data)
+	{
+		JSon param = let(JSon.class, "param", "{}");
+		param.attr("method").set("'post'");
+		param.attr("mode").set("'cors'");   // same origin
+		param.attr("redirect").set("'follow'");
+		param.attr("body").set("JSON.stringify(", data ,")");
+		param.attr("headers").set("{'Accept': 'application/json', 'Content-Type': 'application/json'}");
+		
+		JSAny request = let(JSAny.class, "request", "new Request(",url,",", param, ")");
+		
+		return cast(JSPromise.class, var("fetch(",request,")") );
+	}
+	
+
+	/*
+	 
+	 const api = function(method, url, data, headers = {}){
+		  return fetch(url, {
+		    method: method.toUpperCase(),
+		    body: JSON.stringify(data),  // send it as stringified json
+		    credentials: api.credentials,  // to keep the session on the request
+		    headers: Object.assign({}, api.headers, headers)  // extend the headers
+		  }).then(res => res.ok ? res.json() : Promise.reject(res));
+		};
+		
+		// Defaults that can be globally overwritten
+		api.credentials = 'include';
+		api.headers = {
+		  'csrf-token': window.csrf || '',    // only if globally set, otherwise ignored
+		  'Accept': 'application/json',       // receive json
+		  'Content-Type': 'application/json'  // send json
+		};
+		
+		// Convenient methods
+		['get', 'post', 'put', 'delete'].forEach(method => {
+		  api[method] = api.bind(null, method);
+		});
+			 
+	 */
+	
+	/*
+	 $('.like').on('click', async e => {
+  const id = 123;  // Get it however it is better suited
+
+  await api.put(`/like/${id}`, { like: true });
+
+  // Whatever:
+  $(e.target).addClass('active dislike').removeClass('like');
+});
+	 */
+	
 	
 	/*
 	

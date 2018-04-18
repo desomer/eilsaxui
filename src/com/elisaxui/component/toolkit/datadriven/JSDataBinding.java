@@ -71,9 +71,9 @@ public interface JSDataBinding extends JSClass {
 
 		JSString sel = let(JSString.class, "sel", "'[data-xui'+", changeCtx.property(), "+']'");
 		JSArray<JSNodeElement> listNode = let(JSArray.class, "listNode", "Array.from(", aDom.querySelectorAll(sel),")");
-		_if(aDom.attr(JSNodeTemplate.ATTR_BIND_INFO).notEqualsJS(null))._then(() -> 
-			listNode.push(aDom)
-		);
+//		_if(aDom.attr(JSNodeTemplate.ATTR_BIND_INFO).notEqualsJS(null))._then(() -> 
+//			listNode.push(aDom)
+//		);
 		listNode.setArrayType(JSNodeElement.class);
 		JSInt i = declareType(JSInt.class, "i");
 		_forIdx(i, listNode)._do(() -> {

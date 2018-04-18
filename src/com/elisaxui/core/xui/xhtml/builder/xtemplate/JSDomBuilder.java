@@ -140,7 +140,11 @@ public interface JSDomBuilder extends JSClass {
 							event.target());
 					XuiBindInfo ddi = let(XuiBindInfo.class, "ddi", inputelem.attr(JSNodeTemplate.ATTR_BIND_INFO));
 					_if(ddi, "!=null &&", ddi.row().notEqualsJS(null))._then(() -> {
-						ddi.row().attrByString(ddi.attr()).set(inputelem.value());
+						_if("typeof(", inputelem.checked(), ")!='undefined'")._then(() -> {
+							ddi.row().attrByString(ddi.attr()).set(inputelem.checked());
+						})._else(()->{
+							ddi.row().attrByString(ddi.attr()).set(inputelem.value());
+						});
 					});
 				});
 			}));

@@ -3,6 +3,7 @@
  */
 package com.elisaxui.component.toolkit.com;
 
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
@@ -43,7 +44,7 @@ public interface TKCom extends JSClass {
 	}
 	
 	@xStatic
-	default JSPromise postUrl(JSString url, JSon data)
+	default JSPromise postUrl(JSString url, JSElement data)
 	{
 		JSon param = let(JSon.class, "param", "{}");
 		param.attr("method").set("'post'");

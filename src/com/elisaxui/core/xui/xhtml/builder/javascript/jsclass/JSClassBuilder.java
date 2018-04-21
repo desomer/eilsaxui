@@ -13,7 +13,6 @@ import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
-import com.elisaxui.core.xui.xhtml.builder.javascript.utility.JSMinifier;
 import com.elisaxui.core.xui.xml.annotation.xForceInclude;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
@@ -122,11 +121,10 @@ public final class JSClassBuilder extends JSContent {
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
 		
-		boolean minify = false;
 		
 		XMLBuilder oldBuf = null;
 		StringBuilder txtJS = null;
-		if (minify || JSExecutorHelper.isWithPreprocessor())
+		if (JSExecutorHelper.isWithPreprocessor())
 		{
 			txtJS = new StringBuilder(1000);
 			StringBuilder txtJSAfter = new StringBuilder();
@@ -163,10 +161,7 @@ public final class JSClassBuilder extends JSContent {
 		{
 			try {
 				String str = null;
-				if (minify)
-					str = JSMinifier.doMinifyJS2(txtJS.toString()).toString();
-				else
-					str = JSExecutorHelper.doBabel(txtJS.toString());
+				str = JSExecutorHelper.doBabel(txtJS.toString());
 				
 				oldBuf.addContentOnTarget(str);
 			} catch (ScriptException | NoSuchMethodException e) {

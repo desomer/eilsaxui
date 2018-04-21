@@ -24,6 +24,7 @@ import com.elisaxui.component.page.JSServiceWorker;
 import com.elisaxui.core.helper.JSExecutorHelper;
 import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
+import com.elisaxui.core.xui.config.ConfigFormat;
 import com.elisaxui.core.xui.xhtml.XHTMLFile;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLRoot;
@@ -72,6 +73,12 @@ public class XUIFactoryXHtml {
 		boolean noCache = cacheControl!=null && cacheControl.get(0).equals("no-cache");
 		
 		CoreLogger.getLogger(1).info(() -> "cacheControl="+cacheControl);
+		
+		if (ConfigFormat.getData().reload)
+		{
+			noCache=true;
+			ConfigFormat.getData().reload=false;
+		}
 		
 		MultivaluedMap<String, String> param = uri.getQueryParameters();
 		
@@ -320,7 +327,7 @@ public class XUIFactoryXHtml {
 	public Response getChallenge(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("token") String token) {
 		System.out.println("token ="+token);
 		return Response.status(Status.OK)
-				.entity("ow8QTs-0I4ywbbrmp-IHJcXPFpqRKXurs5T2gZAjmqE.r7EgwbRaRypDDfgAupsAWglRb_MsRoBAAvUQ8ao1p6w").build();
+				.entity("S82b-qkkEFYbLjsTOOoDny1_6ZOJeRTZCrZHrRZBf9Y._kDi-Kd_nFPpc1VeAbWRbNnNofTvn-iQ8CsSM0GceYE").build();
 	}
 	
 }

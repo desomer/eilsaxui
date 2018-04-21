@@ -393,10 +393,10 @@ public abstract class XUIScene extends XHTMLPart {
 				// recherche le ripple btn
 				._var(ripple, btn)
 				._if("!", ripple.hasClass(cRippleEffect))
-				._set(ripple, btn.closest(cRippleEffect))
-				._if("!", ripple.hasClass(cRippleEffect))
-				._set(ripple, btn.children(cRippleEffect))
-				.endif()
+					._set(ripple, btn.closest(cRippleEffect))
+					._if("!", ripple.hasClass(cRippleEffect))
+						._set(ripple, btn.children(cRippleEffect))
+					.endif()
 				.endif();
 	}
 

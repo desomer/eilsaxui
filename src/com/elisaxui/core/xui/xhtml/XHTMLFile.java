@@ -10,8 +10,10 @@ import java.util.Map;
 import javax.ws.rs.core.MultivaluedMap;
 
 import com.elisaxui.component.page.XUIScene;
+import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassBuilder;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xml.XMLFile;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.annotation.xExport;
@@ -73,7 +75,8 @@ public class XHTMLFile extends XMLFile {
 				System.out.println("[XHTMLFile] import JSClass " + name);
 			impl = new JSClassBuilder();
 			impl.setName(cl.getSimpleName());
-			impl.setExportable(cl.getAnnotation(xExport.class)!=null);
+			if (! XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isSinglefile())
+				impl.setExportable(cl.getAnnotation(xExport.class)!=null);
 			
 			listClass.put(name, impl);
 

@@ -47,6 +47,7 @@ import com.elisaxui.app.elisys.xui.asset.AssetHandler;
 import com.elisaxui.component.page.ConfigScene;
 import com.elisaxui.component.widget.menu.JSONMenu;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
+import com.elisaxui.core.xui.config.ConfigFormat;
 import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -157,7 +158,9 @@ public class SrvMain {
     	
     	JsonReader rdr = Json.createReader(new StringReader(content));
         JsonObject obj = rdr.readObject();
-        Object a = obj.get("a");
+        boolean minify = obj.getBoolean("minify");
+        
+        ConfigFormat.getData().setMinify(minify);
         
 //        JsonParser parser = Json.createParser(new StringReader(content));
 //        

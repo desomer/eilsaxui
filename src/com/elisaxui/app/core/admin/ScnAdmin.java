@@ -10,6 +10,7 @@ import com.elisaxui.component.toolkit.com.JSCom;
 import com.elisaxui.component.toolkit.com.TKCom;
 import com.elisaxui.component.toolkit.datadriven.IJSDataBinding;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
+import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.component.widget.input.ViewCheckRadio;
 import com.elisaxui.component.widget.input.ViewInputText;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
@@ -24,6 +25,7 @@ import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xImport;
+import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -39,6 +41,7 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 public class ScnAdmin extends XHTMLPart {
 
 	static CSSClass cMain;
+	static CSSClass cBtnOk;
 
 	@xTarget(HEADER.class)
 	@xResource // une seule fois par vue
@@ -52,18 +55,19 @@ public class ScnAdmin extends XHTMLPart {
 	}
 
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
+	@xResource()
+	@xPriority(50)
+	public XMLElement xTest() {
+		return xImport(TKCom.class);
+	}
+	
+	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
 	@xResource(id = "xLoad.js")
 	@xImport(export = "JSDataDriven", module = "xdatadriven.js")
 	@xImport(export = "JSDataBinding", module = "xBinding.js")
 
 	public XMLElement xLoad() {
 		return xImport(JSTest.class);
-	}
-	
-	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
-	@xResource()
-	public XMLElement xTest() {
-		return xImport(TKCom.class);
 	}
 
 	public interface JSTest extends JSClass, IJSDomTemplate, IJSDataBinding, IJSDataDriven {
@@ -99,14 +103,27 @@ public class ScnAdmin extends XHTMLPart {
 									.vProp(ViewInputText.pValue, txt("FF00FF"))),
 							vPart(new ViewInputText()
 									.vProp(ViewInputText.pLabel, "Font size")
-									.vProp(ViewInputText.pValue, txt("12rem")))
+									.vProp(ViewInputText.pValue, txt("12rem"))),
+							
+							xButton(cBtnOk, "SAVE")
 
 					)));
 			
 			data.push(row);
-			JSon json = let(JSon.class, "json", "{ a:12}");
-			JSCom.xuiCom().postUrl(JSString.value("/rest/json/save"), json);
-			
+
+			setTimeout(fct(()->{
+				document().querySelector(cBtnOk).addEventListener("click", fct(()->{
+					
+					JSNodeElement rowDom = let(JSNodeElement.class, "rowDom", cast(JSon.class, row).attrByString(JSDataSet.ATTR_DOM_LINK));
+					cast(JSon.class, row).attrByString(JSDataSet.ATTR_DOM_LINK).set(null);
+					JSCom.xuiCom().postUrl(JSString.value("/rest/json/save"), row).then(fct(()->{
+						__("location.reload(true)");
+					}));
+					cast(JSon.class, row).attrByString(JSDataSet.ATTR_DOM_LINK).set(rowDom);
+					
+				}));
+			}), 1000);
+						
 		}
 	}
 

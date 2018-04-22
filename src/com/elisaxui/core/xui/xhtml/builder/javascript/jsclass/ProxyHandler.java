@@ -42,7 +42,7 @@ public final class ProxyHandler implements InvocationHandler {
 	static boolean debug3 = false;
 	static boolean debug4 = false;
 
-	public static final ThreadLocal<Boolean> ThreadLocalMode = new ThreadLocal<>();
+	public static final ThreadLocal<Boolean> ThreadLocalModeJava = new ThreadLocal<>();
 	public static final ThreadLocal<XUIFormatManager> ThreadLocalXUIFormatManager = new ThreadLocal<>();
 	// methode en attente d'ajout dans le code
 	public static final ThreadLocal<ProxyMethodDesc> ThreadLocalMethodDesc = new ThreadLocal<>(); // regrouper le 2
@@ -311,6 +311,14 @@ public final class ProxyHandler implements InvocationHandler {
 			return getStringProxyContent();
 		}
 
+		if (mthInvoke.method.getName().equals("getStringJSON")) {
+			JsonObjectBuilder objLitteral = getJsonBuilder();
+			if (objLitteral!=null)
+				return objLitteral.build().toString();
+			else
+				return "{}";
+		}
+		
 		if (mthInvoke.method.getName().equals("_getContent")) {
 			if (jsonBuilder != null)
 				return jsonBuilder.build().toString();
@@ -345,9 +353,9 @@ public final class ProxyHandler implements InvocationHandler {
 		}
 
 		if (mthInvoke.method.getName().equals("callJava")) {
-			ThreadLocalMode.set(Boolean.TRUE);
+			ThreadLocalModeJava.set(Boolean.TRUE);
 			((JSLambda) mthInvoke.args[0]).run();
-			ThreadLocalMode.set(Boolean.FALSE);
+			ThreadLocalModeJava.set(Boolean.FALSE);
 			return mthInvoke.proxy;
 		}
 
@@ -823,7 +831,7 @@ public final class ProxyHandler implements InvocationHandler {
 	}
 
 	public static final boolean isModeJava() {
-		Boolean b = ThreadLocalMode.get();
+		Boolean b = ThreadLocalModeJava.get();
 		return b == null ? false : b;
 	}
 

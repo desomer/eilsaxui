@@ -3,10 +3,8 @@
  */
 package com.elisaxui.app.elisys.xui.page.formation3;
 
-import static com.elisaxui.component.toolkit.JQuery.$;
-
-import com.elisaxui.component.toolkit.JQuery;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
+import com.elisaxui.component.toolkit.jquery.JQuery;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSLambda;
@@ -19,6 +17,8 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
+
+import static com.elisaxui.component.toolkit.jquery.JQuery.$;
 import static com.elisaxui.core.xui.xhtml.builder.xtemplate.JSNodeTemplate.*;
 
 /**

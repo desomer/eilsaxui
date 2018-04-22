@@ -124,7 +124,7 @@ public final class JSClassBuilder extends JSContent {
 		
 		XMLBuilder oldBuf = null;
 		StringBuilder txtJS = null;
-		if (JSExecutorHelper.isWithPreprocessor())
+		if (JSExecutorHelper.isWithPreprocessor() && !buf.isResource())
 		{
 			txtJS = new StringBuilder(1000);
 			StringBuilder txtJSAfter = new StringBuilder();

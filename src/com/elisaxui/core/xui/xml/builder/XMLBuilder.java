@@ -95,7 +95,7 @@ public class XMLBuilder {
 
 	public static XMLPartElement createPart(XMLPart part, Object... inner) {
 		XMLPartElement t = new XMLPartElement(part, inner);
-		part.doContent(XUIFactoryXHtml.getXMLRoot());
+		part.doContent();
 		return t;
 	}
 

@@ -11,7 +11,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.StringReader;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
@@ -23,12 +22,6 @@ import javax.imageio.ImageWriter;
 import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import javax.imageio.stream.FileImageOutputStream;
 import javax.imageio.stream.ImageOutputStream;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-import javax.json.JsonValue;
-import javax.json.stream.JsonParser;
-import javax.json.stream.JsonParser.Event;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -47,7 +40,6 @@ import com.elisaxui.app.elisys.xui.asset.AssetHandler;
 import com.elisaxui.component.page.ConfigScene;
 import com.elisaxui.component.widget.menu.JSONMenu;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
-import com.elisaxui.core.xui.config.ConfigFormat;
 import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -149,36 +141,6 @@ public class SrvMain {
     	System.out.println("content="+ content);
     	
     	return Response.status(Status.OK).build();
-    }
-    
-    @POST
-    @Path("/save")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response savePost(@Context HttpHeaders headers, @Context UriInfo uri, String content) {
-    	
-    	JsonReader rdr = Json.createReader(new StringReader(content));
-        JsonObject obj = rdr.readObject();
-        boolean minify = obj.getBoolean("minify");
-        
-        ConfigFormat.getData().setMinify(minify);
-        
-//        JsonParser parser = Json.createParser(new StringReader(content));
-//        
-//        while (parser.hasNext()) {
-//            Event event = parser.next();
-//            if (event == JsonParser.Event.KEY_NAME ) {
-//                String key = parser.getString();
-//                event = parser.next();
-//                if (key.equals("phoneNumber")) {
-//                	String value = parser.getString();
-//                }
-//            }
-//        }
-        
-        rdr.close();
-        
-        
-    	return  Response.status(Status.OK).build();
     }
     
     /***************************************************************************************/

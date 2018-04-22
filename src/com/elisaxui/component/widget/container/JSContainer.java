@@ -3,12 +3,12 @@
  */
 package com.elisaxui.component.widget.container;
 
-import com.elisaxui.component.toolkit.JQuery;
 import com.elisaxui.component.toolkit.JSFactory;
 import com.elisaxui.component.toolkit.TKActivity;
 import com.elisaxui.component.toolkit.TKRouterEvent;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
+import com.elisaxui.component.toolkit.jquery.JQuery;
 import com.elisaxui.component.transition.JSTransition;
 import com.elisaxui.component.widget.button.ViewFloatAction;
 import com.elisaxui.component.widget.layout.ViewPageLayout;

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.script.ScriptException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -74,10 +75,10 @@ public class XUIFactoryXHtml {
 		
 		CoreLogger.getLogger(1).info(() -> "cacheControl="+cacheControl);
 		
-		if (ConfigFormat.getData().reload)
+		if (ConfigFormat.getData().isReload())
 		{
 			noCache=true;
-			ConfigFormat.getData().reload=false;
+			ConfigFormat.getData().setReload(false);
 		}
 		
 		MultivaluedMap<String, String> param = uri.getQueryParameters();
@@ -85,6 +86,9 @@ public class XUIFactoryXHtml {
 		List<String> p = param.get("compatibility");
 		boolean es5 = p!=null && p.get(0).equals("es5");
 		
+		if (ConfigFormat.getData().isEs5())
+			es5=true;
+			
 		p = param.get("version");
 		int version = p==null?0:Integer.parseInt(p.get(0));
 		
@@ -131,6 +135,16 @@ public class XUIFactoryXHtml {
 					    XMLFile xmlFile = entry.getValue();
 						ThreadLocalXUIFactoryPage.set((XHTMLFile)xmlFile);
 					    String contentFile = toXML(xmlFile, null, new XMLBuilder(name, new StringBuilder(1000), null).setModeResource(true));
+					    
+					    String ext = name.substring(name.indexOf(".")+1);
+					    
+					    if (es5 && ext.equals("js"))
+							try {
+								contentFile = JSExecutorHelper.doBabel(contentFile);
+							} catch (NoSuchMethodException | ScriptException e) {
+								e.printStackTrace();
+							}
+					    
 					    name=name.substring(0, name.lastIndexOf('.'));
 						CacheManager.resourceDB.put(name, contentFile);
 				}
@@ -200,7 +214,7 @@ public class XUIFactoryXHtml {
 			xmlBuf = new XMLBuilder("page", buf, null);
 		}
 		
-		fileXML.getRoot().doContent(null);
+		fileXML.getRoot().doContent();
 		List<XMLElement> rootContent = fileXML.getRoot().getListElementFromTarget(CONTENT.class);
 
 		for (XMLElement elem : rootContent) {
@@ -231,7 +245,7 @@ public class XUIFactoryXHtml {
 			
 			((XHTMLFile)file).setScene( page);
 			
-			page.doContent(file.getRoot());
+			page.doContent();
 			for (XMLElement elem : page.getListElementFromTarget(CONTENT.class)) {
 				page.vBody(elem);
 			}
@@ -275,7 +289,7 @@ public class XUIFactoryXHtml {
 				XHTMLPart part = new JSServiceWorker();
 				fileXML.setRoot(part);
 				
-				part.doContent(null);
+				part.doContent();
 				rootContent = part.getListElementFromTarget(CONTENT.class);
 			}
 			else

@@ -6,6 +6,7 @@ package com.elisaxui.component.toolkit;
 import static com.elisaxui.component.toolkit.json.JXui.$xui;
 
 import com.elisaxui.component.config.TKCoreConfig;
+import com.elisaxui.component.toolkit.jquery.JQuery;
 import com.elisaxui.component.toolkit.json.JIntent;
 import com.elisaxui.component.toolkit.json.JRoute;
 import com.elisaxui.component.transition.ConstTransition;

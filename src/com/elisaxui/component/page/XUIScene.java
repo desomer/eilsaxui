@@ -1,6 +1,6 @@
 package com.elisaxui.component.page;
 
-import static com.elisaxui.component.toolkit.JQuery.$;
+import static com.elisaxui.component.toolkit.jquery.JQuery.$;
 import static com.elisaxui.component.toolkit.json.JXui.$xui;
 import static com.elisaxui.component.transition.ConstTransition.NEXT_FRAME;
 import static com.elisaxui.component.transition.ConstTransition.SPEED_RIPPLE_EFFECT;
@@ -11,7 +11,6 @@ import static com.elisaxui.component.widget.button.ViewRippleEffect.cRippleEffec
 
 import com.elisaxui.app.elisys.xui.asset.AssetHandler;
 import com.elisaxui.component.config.TKCoreConfig;
-import com.elisaxui.component.toolkit.JQuery;
 import com.elisaxui.component.toolkit.TKActivity;
 import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.component.toolkit.TKQueue;
@@ -19,6 +18,7 @@ import com.elisaxui.component.toolkit.TKRouterEvent;
 import com.elisaxui.component.toolkit.datadriven.JSDataCtx;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
+import com.elisaxui.component.toolkit.jquery.JQuery;
 import com.elisaxui.component.transition.ConstTransition;
 import com.elisaxui.component.transition.CssTransition;
 import com.elisaxui.component.transition.JSTransition;

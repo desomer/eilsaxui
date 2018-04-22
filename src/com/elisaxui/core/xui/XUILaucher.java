@@ -7,9 +7,14 @@ import java.net.URL;
 import java.security.CodeSource;
 import java.security.Security;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 
 import org.conscrypt.OpenSSLProvider;
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
@@ -35,9 +40,14 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.StdErrLog;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
+import org.glassfish.jersey.logging.LoggingFeature;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
+import org.glassfish.jersey.servlet.ServletContainer;
 
 import com.elisaxui.AppConfig;
 import com.elisaxui.core.helper.JSExecutorHelper;
+import com.elisaxui.core.xui.rest.XUIRestApp;
 import com.elisaxui.core.xui.xhtml.application.WatchDir;
 import com.elisaxui.core.xui.xhtml.application.XHTMLAppScanner;
 
@@ -139,13 +149,13 @@ public class XUILaucher {
 	    ALPNServerConnectionFactory alpn = new ALPNServerConnectionFactory();
 	    alpn.setDefaultProtocol(https2.getProtocol()); // sets default protocol to HTTP 2
 	    
-	    SslConnectionFactory ssl = new SslConnectionFactory(sslContextFactory, https1.getProtocol());  
+	    SslConnectionFactory ssl = new SslConnectionFactory(sslContextFactory, alpn.getProtocol());  
 	    // alpn.getProtocol();
 
 		ServerConnector httpsConnector = new ServerConnector(server,
 				ssl,
-//				alpn,
-//				https2,
+				alpn,
+				https2,
 				https1
 				);
 		httpsConnector.setName("secured"); // named connector
@@ -193,14 +203,33 @@ public class XUILaucher {
 	 */
 	private static void initJersey(ServletContextHandler restHandler) {
 
-		ServletHolder jerseyServlet = restHandler.addServlet(org.glassfish.jersey.servlet.ServletContainer.class, "/*");
+		ServletHolder jerseyServlet = new ServletHolder(new ServletContainer(resourceConfig()));
+		restHandler.addServlet(jerseyServlet, "/*");
 		jerseyServlet.setInitOrder(0);
-		jerseyServlet.setInitParameter("jersey.config.server.provider.classnames",
-				XUIFactoryXHtml.class.getCanonicalName());
-		jerseyServlet.setInitParameter("jersey.config.server.provider.packages", AppConfig.getRestPackage());
+//		jerseyServlet.setInitParameter("jersey.config.server.provider.classnames",	XUIFactoryXHtml.class.getCanonicalName());
+//		jerseyServlet.setInitParameter("jersey.config.server.provider.packages", AppConfig.getRestPackage());
+		
 	}
 
-
+	private static ResourceConfig resourceConfig() {
+	    // manually injecting dependencies (clock) to Jersey resource classes
+		ResourceConfig config = new ResourceConfig();
+		
+		config.register(XUIFactoryXHtml.class);
+		config.packages(AppConfig.getRestPackage());
+	//	config.forApplication(null);
+		
+	// config.register(new LoggingFeature(Logger.getLogger(this.class.getName()), Level.INFO, LoggingFeature.Verbosity.PAYLOAD_TEXT, 2048));
+		
+		final Map<String, Object> properties = new HashMap<String, Object>();
+      //  properties.put(ServerProperties.TRACING, "ALL");
+		
+		config.addProperties(properties);
+		
+		return config;
+	}
+	
+	
 	/**
 	 * @param rewrite
 	 */

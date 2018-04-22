@@ -3,10 +3,10 @@
  */
 package com.elisaxui.component.widget.container;
 
-import com.elisaxui.component.toolkit.JQuery;
 import com.elisaxui.component.toolkit.JSFactory;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
+import com.elisaxui.component.toolkit.jquery.JQuery;
 import com.elisaxui.component.widget.button.ViewRippleEffect;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;

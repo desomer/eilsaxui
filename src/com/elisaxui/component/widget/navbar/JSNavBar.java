@@ -3,14 +3,14 @@
  */
 package com.elisaxui.component.widget.navbar;
 
-import static com.elisaxui.component.toolkit.JQuery.$;
+import static com.elisaxui.component.toolkit.jquery.JQuery.$;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.*;
 
-import com.elisaxui.component.toolkit.JQuery;
 import com.elisaxui.component.toolkit.JSFactory;
 import com.elisaxui.component.toolkit.datadriven.JSChangeCtx;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
+import com.elisaxui.component.toolkit.jquery.JQuery;
 import com.elisaxui.component.widget.navbar.JSonNavBar.JSonNavBarBackground;
 import com.elisaxui.component.widget.navbar.JSonNavBar.JSonNavBarBtnAction;
 import com.elisaxui.component.widget.navbar.JSonNavBar.JSonNavBarRow;

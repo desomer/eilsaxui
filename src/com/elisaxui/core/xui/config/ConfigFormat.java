@@ -19,27 +19,27 @@ public class ConfigFormat {
 	 * @return the singlefile
 	 */
 	public final boolean isSinglefile() {
-		return data.singlefile;
+		return data.isSinglefile();
 	}
 	public final boolean isEnableSpaceJS() {
-		return data.enableSpaceJS;
+		return data.isEnableSpaceJS();
 	}
 	public boolean isEnableCommentFctJS() {
-		return data.enableCommentFctJS;
+		return data.isEnableCommentFctJS();
 	}
 	public boolean isEnableCrXML() {
-		return data.enableCrXML;
+		return data.isEnableCrXML();
 	}
 	public boolean isEnableTabXML() {
-		return data.enableTabXML;
+		return data.isEnableTabXML();
 	}
 	public boolean isEnableCrXMLinJS() {
-		return data.enableCrXMLinJS;
+		return data.isEnableCrXMLinJS();
 	}
 	public boolean isEnableTabXMLinJS() {
-		return data.enableTabXMLinJS;
+		return data.isEnableTabXMLinJS();
 	}
 	public boolean isEnableCrJS() {
-		return data.enableCrinJS;
+		return data.isEnableCrinJS();
 	}
 }

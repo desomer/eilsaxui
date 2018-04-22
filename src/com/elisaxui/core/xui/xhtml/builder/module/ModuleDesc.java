@@ -3,8 +3,13 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.module;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
+import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.xml.annotation.xImport;
+import com.elisaxui.core.xui.xml.annotation.xImportList;
 import com.elisaxui.core.xui.xml.target.XMLTarget;
 
 /**
@@ -23,6 +28,26 @@ public class ModuleDesc {
 	public final String getResourceID() {
 		return resourceID;
 	}
+	
+	public String getExtension()
+	{
+		return resourceID.substring(resourceID.indexOf(".")+1);
+	}
+	
+	public boolean isResourceCss()
+	{
+		return getExtension().equals("css");
+	}
+	
+	public String getURI()
+	{
+		long date = XUIFactoryXHtml.changeMgr.lastOlderFile;
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-hhmmss");
+		String textdate = formatter.format(new Date(date));
+		return textdate+"_"+resourceID;
+	}
+	
+	
 	/**
 	 * @param resourceID the resourceID to set
 	 */
@@ -47,6 +72,12 @@ public class ModuleDesc {
 	public final ArrayList<ImportDesc> getListImport() {
 		return listImport;
 	}
+	
+	public boolean isES6Module()
+	{
+		return getListImport()!=null;
+	}
+	
 	/**
 	 * @param listImport the listImport to set
 	 */
@@ -66,5 +97,14 @@ public class ModuleDesc {
 		this.target = target;
 	}
 	
-	
+	public void initES6mport(xImportList listImport) {
+		if (listImport==null)
+			return;
+		
+		ArrayList<ImportDesc> listImportStr = new ArrayList<>();
+		for (xImport aImport : listImport.value()) {
+			listImportStr.add(new ImportDesc(aImport.export(),  aImport.module()));
+		}
+		this.setListImport(listImportStr);
+	}
 }

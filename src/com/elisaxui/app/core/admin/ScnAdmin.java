@@ -60,7 +60,7 @@ public class ScnAdmin extends XHTMLPart {
 	public XMLElement xTest() {
 		return xImport(TKCom.class);
 	}
-	
+
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
 	@xResource(id = "xLoad.js")
 	@xImport(export = "JSDataDriven", module = "xdatadriven.js")
@@ -75,62 +75,66 @@ public class ScnAdmin extends XHTMLPart {
 		@xStatic(autoCall = true)
 		default void main() {
 			JSAppConfiguration item = declareType(JSAppConfiguration.class, "item");
-
 			JSArray<JSAppConfiguration> data = let("data", new JSArray<JSAppConfiguration>());
-			JSAppConfiguration row = let("row", newJS(JSAppConfiguration.class));
-			row.minify().set(false);
-			row.es5().set(false);
-			row.disableComment().set(false);
-			row.singleFile().set(false);
+
+			JSAppConfiguration row = let(JSAppConfiguration.class, "row", null);
 
 			JSNodeElement dom = let("dom", document().querySelector(cMain));
 			dom.appendChildTemplate(
 					vFor(data, item, xListNode(
 							vPart(new ViewCheckRadio().vProp(ViewCheckRadio.pLabel, "Minify")
-									.vProp(ViewCheckRadio.pValue, vIf(vBindable(item, item.minify()), xAttr("checked")))),
+									.vProp(ViewCheckRadio.pValue,
+											vIf(vBindable(item, item.minify()), xAttr("checked")))),
 
 							vPart(new ViewCheckRadio().vProp(ViewCheckRadio.pLabel, "ES5 Compatibility")
-									.vProp(ViewCheckRadio.pValue, vIf(vBindable(item, item.es5()), xAttr("checked")))
-									),
+									.vProp(ViewCheckRadio.pValue, vIf(vBindable(item, item.es5()), xAttr("checked")))),
 							vPart(new ViewCheckRadio().vProp(ViewCheckRadio.pLabel, "Disable comment")
-									.vProp(ViewCheckRadio.pValue, vIf(vBindable(item, item.disableComment()), xAttr("checked")))
-									),
+									.vProp(ViewCheckRadio.pValue,
+											vIf(vBindable(item, item.disableComment()), xAttr("checked")))),
 							vPart(new ViewCheckRadio().vProp(ViewCheckRadio.pLabel, "Single File")
-									.vProp(ViewCheckRadio.pValue, vIf(vBindable(item, item.singleFile()), xAttr("checked")))
-									),
-							vPart(new ViewInputText() 
+									.vProp(ViewCheckRadio.pValue,
+											vIf(vBindable(item, item.singleFile()), xAttr("checked")))),
+							vPart(new ViewInputText()
 									.vProp(ViewInputText.pLabel, "Color")
 									.vProp(ViewInputText.pValue, txt("FF00FF"))),
 							vPart(new ViewInputText()
 									.vProp(ViewInputText.pLabel, "Font size")
 									.vProp(ViewInputText.pValue, txt("12rem"))),
-							
+
 							xButton(cBtnOk, "SAVE")
 
 					)));
-			
-			data.push(row);
 
-			setTimeout(fct(()->{
-				document().querySelector(cBtnOk).addEventListener("click", fct(()->{
-					
-					JSNodeElement rowDom = let(JSNodeElement.class, "rowDom", cast(JSon.class, row).attrByString(JSDataSet.ATTR_DOM_LINK));
-					cast(JSon.class, row).attrByString(JSDataSet.ATTR_DOM_LINK).set(null);
-					JSCom.xuiCom().postUrl(JSString.value("/rest/json/save"), row).then(fct(()->{
-						__("location.reload(true)");
+			JSCom.xuiCom().requestUrl(JSString.value("/rest/app/config/test")).then(fct(item, () -> {
+				row.set(item);
+				data.push(row);
+				setTimeout(fct(() -> {
+					document().querySelector(cBtnOk).addEventListener("click", fct(() -> {
+
+						JSNodeElement rowDom = let(JSNodeElement.class, "rowDom",
+								cast(JSon.class, row).attrByString(JSDataSet.ATTR_DOM_LINK));
+						cast(JSon.class, row).attrByString(JSDataSet.ATTR_DOM_LINK).set(null);
+						JSCom.xuiCom().postUrl(JSString.value("/rest/app/config/test"), row).then(fct(() -> {
+							__("location.reload(true)");
+						}));
+						cast(JSon.class, row).attrByString(JSDataSet.ATTR_DOM_LINK).set(rowDom);
+
 					}));
-					cast(JSon.class, row).attrByString(JSDataSet.ATTR_DOM_LINK).set(rowDom);
-					
-				}));
-			}), 1000);
-						
+				}), 1000);
+			}));
+
+			
+
 		}
 	}
 
 	public interface JSAppConfiguration extends JSType {
 		JSBool minify();
+
 		JSBool es5();
+
 		JSBool disableComment();
+
 		JSBool singleFile();
 	}
 }

@@ -4,7 +4,7 @@
 package com.elisaxui.component.transition;
 
 import static com.elisaxui.component.page.XUIScene.*;
-import static com.elisaxui.component.toolkit.JQuery.$;
+import static com.elisaxui.component.toolkit.jquery.JQuery.$;
 import static com.elisaxui.component.transition.ConstTransition.*;
 import static com.elisaxui.component.transition.CssTransition.*;
 import static com.elisaxui.component.widget.navbar.ViewNavBar.isOpenMenu;
@@ -12,8 +12,8 @@ import static com.elisaxui.component.widget.navbar.ViewNavBar.navbar;
 import static com.elisaxui.component.widget.tabbar.ViewTabBar.cTabbar;
 
 import com.elisaxui.component.page.XUIScene;
-import com.elisaxui.component.toolkit.JQuery;
 import com.elisaxui.component.toolkit.TKQueue;
+import com.elisaxui.component.toolkit.jquery.JQuery;
 import com.elisaxui.component.widget.button.ViewBtnBurger;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
 import com.elisaxui.component.widget.menu.ViewMenu;

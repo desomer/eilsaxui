@@ -27,7 +27,9 @@ public class CmpModuleBinding extends XHTMLPart {
 	@xTarget(HEADER.class)
 	@xResource // une seule fois par vue
 	public XMLElement xImportLib() {
-		return xListNode(xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"));
+		return xListNode(
+				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js")
+				);
 	}
 
 	/**************************************************************/

@@ -24,7 +24,7 @@ public interface IJSDomTemplate extends IXHTMLBuilder {
 
 	}
 	
-	/** todo js a mettre dans JSDataBinding */
+	/** todo js a mettre dans JSDomBuilder */
 	default JSFunction vBindable(JSElement row, JSAny value) {
 		JSNodeElement domItem = JSContent.declareType(JSNodeElement.class, "domItem");
 		JSFunction fct = new JSFunction().setParam(new Object[] { domItem });
@@ -33,7 +33,7 @@ public interface IJSDomTemplate extends IXHTMLBuilder {
 		return fct;
 	}
 	
-	/** todo js a mettre dans JSDataBinding */
+	/** todo js a mettre dans JSDomBuilder */
 	default JSFunction vIf(JSFunction bind, Object elem) {
 		JSNodeElement domItem = JSContent.declareType(JSNodeElement.class, "domItem");
 		JSFunction fct = new JSFunction().setParam(new Object[] { domItem });

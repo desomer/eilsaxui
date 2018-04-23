@@ -3,6 +3,7 @@ package com.elisaxui.core.xui.xhtml;
 import java.util.Collections;
 import java.util.List;
 
+import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.module.ImportDesc;
 import com.elisaxui.core.xui.xhtml.builder.module.ModuleDesc;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
@@ -20,8 +21,13 @@ public class XHTMLRootResource extends XHTMLPart {
 	{
 		if (moduleDesc.isES6Module())
 		{
+			int i=0;
 			for (ImportDesc aImport : moduleDesc.getListImport()) {
-				addElementOnTarget(HEADER.class, xNode(null, "\nimport {"+aImport.getExport()+"} from '/rest/js/"+aImport.getURI()+"';") ); 
+				String newLine = "";
+				if (i>0 && XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCrXML())
+					newLine = "\n";
+				i++;
+				addElementOnTarget(HEADER.class, xNode(null, newLine+"import {"+aImport.getExport()+"} from '/rest/js/"+aImport.getURI()+"';") ); 
 			}
 		}
 		addElementOnTarget(BODY.class, elem);

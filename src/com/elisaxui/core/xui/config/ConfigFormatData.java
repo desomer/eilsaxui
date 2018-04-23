@@ -10,7 +10,6 @@ public class ConfigFormatData {
 	private boolean enableTabXML = !minifyOnStart;
 	private boolean enableSpaceJS = !minifyOnStart;
 	
-	
 	private boolean enableCrXMLinJS=false;
 	private boolean enableTabXMLinJS=false;
 	private boolean enableCrinJS=false;
@@ -18,6 +17,53 @@ public class ConfigFormatData {
 	private boolean singlefile=false;
 	private boolean es5=false;
 	
+	private boolean timeGenerated=true;
+	private boolean fileChanged=true;
+	private boolean patchChanges=true;
+	
+	
+	/**
+	 * @return the timeGenerated
+	 */
+	public final boolean isTimeGenerated() {
+		return timeGenerated;
+	}
+
+	/**
+	 * @param timeGenerated the timeGenerated to set
+	 */
+	public final void setTimeGenerated(boolean timeGenerated) {
+		this.timeGenerated = timeGenerated;
+	}
+
+	/**
+	 * @return the fileChanged
+	 */
+	public final boolean isFileChanged() {
+		return fileChanged;
+	}
+
+	/**
+	 * @param fileChanged the fileChanged to set
+	 */
+	public final void setFileChanged(boolean fileChanged) {
+		this.fileChanged = fileChanged;
+	}
+
+	/**
+	 * @return the patchChanges
+	 */
+	public final boolean isPatchChanges() {
+		return patchChanges;
+	}
+
+	/**
+	 * @param patchChanges the patchChanges to set
+	 */
+	public final void setPatchChanges(boolean patchChanges) {
+		this.patchChanges = patchChanges;
+	}
+
 	private boolean reload = false;
 	
 	public void setMinify(boolean b)
@@ -27,6 +73,9 @@ public class ConfigFormatData {
 		enableCrXML = !b;
 		enableTabXML = !b;
 		enableSpaceJS = !b;
+		timeGenerated=!b;
+		fileChanged=!b;
+		patchChanges=!b;
 	}
 
 	/**

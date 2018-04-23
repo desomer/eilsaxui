@@ -1,6 +1,13 @@
 package com.elisaxui.core.xui;
 
 import java.security.NoSuchAlgorithmException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -108,7 +115,7 @@ public class XUIFactoryXHtml {
 				JSExecutorHelper.initThread();
 				
 				ProxyHandler.ThreadLocalMethodDesc.set(null);
-				XMLFile fileXML = createXHTMLFile();
+				XHTMLFile fileXML = createXHTMLFile();
 				fileXML.setRoot(new XHTMLRoot());
 				List<Locale> languages = headers.getAcceptableLanguages();
 				Locale loc = languages.get(0);
@@ -149,6 +156,7 @@ public class XUIFactoryXHtml {
 						CacheManager.resourceDB.put(name, contentFile);
 				}
 
+				ThreadLocalXUIFactoryPage.set(fileXML);
 				
 				cache.storeResultInDb();
 				cache.getVersionDB(0);
@@ -162,23 +170,30 @@ public class XUIFactoryXHtml {
 		if (cache.result==null)
 			return Response.status(Status.NOT_FOUND).entity("no found " + id).header("a", "b").build();
 				
-		StringBuilder dif = new StringBuilder("\n\n<script id='srcdiff' type='application/json'>");  //\r\n
-		dif.append(changeMgr.listLineDiff);
-		dif.append("\n</script>");
+		StringBuilder dif = new StringBuilder();
+		if (changeMgr.listLineDiff.length()>0)
+		{
+			dif.append("\n\n<script id='srcdiff' type='application/json'>");
+			dif.append(changeMgr.listLineDiff);
+			dif.append("\n</script>");
+		}
+				
+		String response = cache.result+dif;
 		
-//		return Response.status(Status.OK) // .type(MediaType.TEXT_HTML)
-//		.entity(html+dif)
-//		.header("XUI", "ok")
-//		//.header("Access-Control-Allow-Origin", "*")
-//		.build();
+		List<String> etag = headers.getRequestHeader("if-none-match");
+		String eTagRequest = etag==null?"":etag.get(0);
+		String eTagResponse = calculateEtag(response);
 		
-		String ret = cache.result+dif;
+		if (eTagRequest.equals(eTagResponse))
+		{
+			return Response.status(Status.NOT_MODIFIED)
+					.header("etag", eTagResponse)
+					.build();
+		}
 		
 		return Response.status(Status.OK)
-				.entity(ret)
-				.header("XUI", "ok")
-				.header("Cache-Control", "public, max-age=31536000")
-//				.header("ETag", calculateEtag(ret))
+				.entity(response)
+				.header("ETag", calculateEtag(response))
 				.build();
 	}
 
@@ -308,8 +323,24 @@ public class XUIFactoryXHtml {
 			 CacheManager.resourceDB.put(name, reponseInCache);
 		}
 		
+		List<String> etag = headers.getRequestHeader("if-none-match");
+		String eTagRequest = etag==null?"":etag.get(0);
+		String eTagResponse = calculateEtag(reponseInCache);
+		
+		if (eTagRequest.equals(eTagResponse))
+		{
+			return Response.status(Status.NOT_MODIFIED)				
+					.header("etag", eTagResponse)
+					.build();
+		}
+		
 		return Response.status(Status.OK)
-				.entity(reponseInCache).header("content-type","application/javascript").header("XUI", "ok").build();
+				.entity(reponseInCache)
+				.header("cache-control", "public, max-age=30672000")
+				.header("last-modified", getDateHTTP())
+				.header("expire", getNextYearDateHTTP())
+				.header("etag", eTagResponse)
+				.build();
 	}
 	
 	
@@ -330,11 +361,38 @@ public class XUIFactoryXHtml {
 			CacheManager.resourceDB.put(name, reponseInCache);
 		}
 		
+		List<String> etag = headers.getRequestHeader("if-none-match");
+		String eTagRequest = etag==null?"":etag.get(0);
+		String eTagResponse = calculateEtag(reponseInCache);
+		
+		if (eTagRequest.equals(eTagResponse))
+		{
+			return Response.status(Status.NOT_MODIFIED)
+					.header("etag", eTagResponse)
+					.build();
+		}
+		
 		return Response.status(Status.OK)
-				.entity(reponseInCache).header("content-type","text/css").header("XUI", "ok").build();
+				.entity(reponseInCache)
+				.header("cache-control", "public, max-age=30672000")
+				.header("expire", getNextYearDateHTTP())
+				.header("last-modified", getDateHTTP())
+				.header("etag", eTagResponse)
+				.build();
 	}
 
+	private String getNextYearDateHTTP() {
+		ZonedDateTime date = ZonedDateTime.now();
+		date = date.plus(1, ChronoUnit.YEARS);
+		return DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC).format(date);
+	}
 	
+	private String getDateHTTP() {
+		ZonedDateTime date = ZonedDateTime.now();
+		return DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC).format(date);
+	}
+
+	/************************************************************************************************/
 	@GET
 	@Path("/page/challenge/{token}")
 	@Produces(MediaType.TEXT_PLAIN)

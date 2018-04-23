@@ -43,6 +43,10 @@ public class SrvAdmin implements IJSONBuilder {
 		config.disableComment().set(!ConfigFormat.getData().isEnableCommentFctJS());
 		config.es5().set(ConfigFormat.getData().isEs5());
 		config.singleFile().set(ConfigFormat.getData().isSinglefile());
+		
+		config.timeGenerated().set(ConfigFormat.getData().isTimeGenerated());
+		config.fileChanged().set(ConfigFormat.getData().isFileChanged());
+		config.patchChanges().set(ConfigFormat.getData().isPatchChanges());
 
 		return config.getStringJSON();
 	}
@@ -59,16 +63,27 @@ public class SrvAdmin implements IJSONBuilder {
 		boolean disableComment = obj.getBoolean("disableComment");
 		boolean singleFile = obj.getBoolean("singleFile");
 		boolean es5 = obj.getBoolean("es5");
+		boolean timeGenerated = obj.getBoolean("timeGenerated");
+		boolean fileChanged = obj.getBoolean("fileChanged");
+		boolean patchChanges = obj.getBoolean("patchChanges");
 		rdr.close();
 
 		if (ConfigFormat.getData().isMinifyOnStart() != minify)
 			ConfigFormat.getData().setMinify(minify);
-
-		ConfigFormat.getData().setEnableCommentFctJS(!disableComment);
+		else {
+			ConfigFormat.getData().setEnableCommentFctJS(!disableComment);
+			ConfigFormat.getData().setTimeGenerated(timeGenerated);
+			ConfigFormat.getData().setFileChanged(fileChanged);
+			ConfigFormat.getData().setPatchChanges(patchChanges);	
+		}
+		
+		
+		
 		ConfigFormat.getData().setSinglefile(singleFile);
 		ConfigFormat.getData().setEs5(es5);
 		if (es5)
 			ConfigFormat.getData().setSinglefile(true);
+		
 
 		ConfigFormat.getData().setReload(true);
 

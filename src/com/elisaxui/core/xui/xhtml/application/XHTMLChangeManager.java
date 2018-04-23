@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 
 import difflib.DiffRow;
@@ -43,41 +44,40 @@ public class XHTMLChangeManager {
 		listLineDiff.setLength(0);
 		Formatter formatter = new Formatter(listLineDiff, Locale.FRENCH);
 		
-		listLineDiff.append("\n");
-		for (File file : listFileChanged) {
-			listLineDiff.append("\t"+file);
-			Calendar cal = Calendar.getInstance();
-			cal.setTimeInMillis(file.lastModified());
-			formatter.format("\t [%1$tT %1$tD]%n", cal);
-		} 
-		
-		
-		List<String> original = Arrays.asList(htmlInCache.split("\n"));
-		List<String> revised = Arrays.asList(htmlInCacheOriginal.split("\n"));
-
-//				Patch patch = DiffUtils.diff(original, revised);
-//				for (Delta delta: patch.getDeltas()) {
-//		                System.out.println(delta);
-//		        }
-		
-		DiffRowGenerator generator = new DiffRowGenerator.Builder().InlineNewTag("span").InlineNewCssClass("cnew").InlineOldTag("span").InlineOldCssClass("cold").ignoreBlankLines(true).showInlineDiffs(true).ignoreWhiteSpaces(true).columnWidth(100).build();
-		List<DiffRow> text = generator.generateDiffRows(original, revised);
-		int numLine = 1;
-		for (DiffRow diffRow : text) {		 
-			 if (!diffRow.getTag().equals(DiffRow.Tag.EQUAL))
-			 {
-				
-				 if (diffRow.getTag().equals(DiffRow.Tag.DELETE))
-				 {
-					 numLine--; 
-					 listLineDiff.append("\n\t"+String.format ("%05d", numLine) + "-" +String.format ("%05d", numLine+1) + ":"+ diffRow.getTag()  + ": " + diffRow.getOldLine()+"  =>  " + diffRow.getNewLine());
-				 }
-				 else
-					 listLineDiff.append("\n\t"+String.format ("%05d", numLine) + ":"+ diffRow.getTag()  + ": " + diffRow.getOldLine()+"  =>  " + diffRow.getNewLine());
-			 } 
-			 numLine++;
+		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().getData().isFileChanged())
+		{
+			listLineDiff.append("\n");
+			for (File file : listFileChanged) {
+				listLineDiff.append("\t"+file);
+				Calendar cal = Calendar.getInstance();
+				cal.setTimeInMillis(file.lastModified());
+				formatter.format("\t [%1$tT %1$tD]%n", cal);
+			} 
 		}
 		
+		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().getData().isPatchChanges())
+		{
+			List<String> original = Arrays.asList(htmlInCache.split("\n"));
+			List<String> revised = Arrays.asList(htmlInCacheOriginal.split("\n"));
+			
+			DiffRowGenerator generator = new DiffRowGenerator.Builder().InlineNewTag("span").InlineNewCssClass("cnew").InlineOldTag("span").InlineOldCssClass("cold").ignoreBlankLines(true).showInlineDiffs(true).ignoreWhiteSpaces(true).columnWidth(100).build();
+			List<DiffRow> text = generator.generateDiffRows(original, revised);
+			int numLine = 1;
+			for (DiffRow diffRow : text) {		 
+				 if (!diffRow.getTag().equals(DiffRow.Tag.EQUAL))
+				 {
+					
+					 if (diffRow.getTag().equals(DiffRow.Tag.DELETE))
+					 {
+						 numLine--; 
+						 listLineDiff.append("\n\t"+String.format ("%05d", numLine) + "-" +String.format ("%05d", numLine+1) + ":"+ diffRow.getTag()  + ": " + diffRow.getOldLine()+"  =>  " + diffRow.getNewLine());
+					 }
+					 else
+						 listLineDiff.append("\n\t"+String.format ("%05d", numLine) + ":"+ diffRow.getTag()  + ": " + diffRow.getOldLine()+"  =>  " + diffRow.getNewLine());
+				 } 
+				 numLine++;
+			}
+		}
 	}
 	
 	

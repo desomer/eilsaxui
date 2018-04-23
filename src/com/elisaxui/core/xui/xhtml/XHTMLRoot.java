@@ -78,9 +78,12 @@ public class XHTMLRoot extends XHTMLPart {
 		xListNode(afterBody).getXMLElementTabbed(1)
 				.toXML(new XMLBuilder("page", textAfterbody, null));
 		
+		XMLElement timeGenerated = null;
+		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().getData().isTimeGenerated())
+			timeGenerated = xListNode("\n" ,xComment("version 1.0.0" + XUIFactoryXHtml.changeMgr.nbChangement , "generated at " + formatDateTimeNow  , "build at " + formatDateTimeBuild));
+			
 		return xNode("html", xAttr("lang", xTxt(lang)),
-				xListNode("\n"),
-				xComment("version 1.0.0" + XUIFactoryXHtml.changeMgr.nbChangement , "generated at " + formatDateTimeNow  , "build at " + formatDateTimeBuild),
+				timeGenerated, 
 				xNode("head", xNode("meta", xAttr("charset", xTxt("utf-8"))),
 						xNode("meta", xAttr("name", xTxt("mobile-web-app-capable")), xAttr("content", xTxt("yes"))),
 						xNode("meta", xAttr("name", xTxt("apple-mobile-web-app-capable")), xAttr("content", xTxt("yes"))),

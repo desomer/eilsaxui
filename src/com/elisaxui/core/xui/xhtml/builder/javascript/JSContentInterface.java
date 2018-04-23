@@ -86,7 +86,8 @@ public interface JSContentInterface  {
 	JSContentInterface endif();
 	@Deprecated
 	JSContentInterface _elseif_(Object... content);
-
+	/********************************************************************/
+	JSContentInterface delete(Object... content);
 
 	/**********************************************************************/
 	JSContentInterface setTimeout(Object... content);

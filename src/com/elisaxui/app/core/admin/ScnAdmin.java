@@ -20,6 +20,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSBool;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
@@ -77,23 +78,43 @@ public class ScnAdmin extends XHTMLPart {
 			JSAppConfiguration item = declareType(JSAppConfiguration.class, "item");
 			JSArray<JSAppConfiguration> data = let("data", new JSArray<JSAppConfiguration>());
 
-			JSAppConfiguration row = let(JSAppConfiguration.class, "row", null);
-
 			JSNodeElement dom = let("dom", document().querySelector(cMain));
 			dom.appendChildTemplate(
 					vFor(data, item, xListNode(
-							vPart(new ViewCheckRadio().vProp(ViewCheckRadio.pLabel, "Minify")
-									.vProp(ViewCheckRadio.pValue,
-											vIf(vBindable(item, item.minify()), xAttr("checked")))),
-
-							vPart(new ViewCheckRadio().vProp(ViewCheckRadio.pLabel, "ES5 Compatibility")
-									.vProp(ViewCheckRadio.pValue, vIf(vBindable(item, item.es5()), xAttr("checked")))),
-							vPart(new ViewCheckRadio().vProp(ViewCheckRadio.pLabel, "Disable comment")
-									.vProp(ViewCheckRadio.pValue,
-											vIf(vBindable(item, item.disableComment()), xAttr("checked")))),
-							vPart(new ViewCheckRadio().vProp(ViewCheckRadio.pLabel, "Single File")
+							vPart(new ViewCheckRadio()
+									.vProp(ViewCheckRadio.pLabel, "Single File")
 									.vProp(ViewCheckRadio.pValue,
 											vIf(vBindable(item, item.singleFile()), xAttr("checked")))),
+							/*****************************************************************************/
+							vPart(new ViewCheckRadio()
+									.vProp(ViewCheckRadio.pLabel, "Minify")
+									.vProp(ViewCheckRadio.pValue,
+											vIf(vBindable(item, item.minify()), xAttr("checked")))),
+							vPart(new ViewCheckRadio()
+									.vProp(ViewCheckRadio.pLabel, "ES5 Compatibility")
+									.vProp(ViewCheckRadio.pValue, vIf(vBindable(item, item.es5()), xAttr("checked")))),
+							vPart(new ViewCheckRadio()
+									.vProp(ViewCheckRadio.pLabel, "Disable comment")
+									.vProp(ViewCheckRadio.pValue,
+											vIf(vBindable(item, item.disableComment()), xAttr("checked")))),
+							/*****************************************************************************/
+							vPart(new ViewCheckRadio()
+									.vProp(ViewCheckRadio.pLabel, "Display time generated")
+									.vProp(ViewCheckRadio.pValue,
+											vIf(vBindable(item, item.timeGenerated()), xAttr("checked")))),
+							vPart(new ViewCheckRadio()
+									.vProp(ViewCheckRadio.pLabel, "Display File Changed")
+									.vProp(ViewCheckRadio.pValue,
+											vIf(vBindable(item, item.fileChanged()), xAttr("checked")))),
+							vPart(new ViewCheckRadio()
+									.vProp(ViewCheckRadio.pLabel, "Display Patch Changes")
+									.vProp(ViewCheckRadio.pValue,
+											vIf(vBindable(item, item.patchChanges()), xAttr("checked")))),
+							/****************************************************************************/
+							vPart(new ViewInputText()
+									.vProp(ViewInputText.pLabel, "Version time line")
+									.vProp(ViewInputText.pValue, txt("0"))),
+							/*****************************************************************************/
 							vPart(new ViewInputText()
 									.vProp(ViewInputText.pLabel, "Color")
 									.vProp(ViewInputText.pValue, txt("FF00FF"))),
@@ -106,24 +127,23 @@ public class ScnAdmin extends XHTMLPart {
 					)));
 
 			JSCom.xuiCom().requestUrl(JSString.value("/rest/app/config/test")).then(fct(item, () -> {
-				row.set(item);
-				data.push(row);
+				data.push(item);
 				setTimeout(fct(() -> {
 					document().querySelector(cBtnOk).addEventListener("click", fct(() -> {
 
 						JSNodeElement rowDom = let(JSNodeElement.class, "rowDom",
-								cast(JSon.class, row).attrByString(JSDataSet.ATTR_DOM_LINK));
-						cast(JSon.class, row).attrByString(JSDataSet.ATTR_DOM_LINK).set(null);
-						JSCom.xuiCom().postUrl(JSString.value("/rest/app/config/test"), row).then(fct(() -> {
+								cast(JSon.class, item).attrByString(JSDataSet.ATTR_DOM_LINK));
+						
+						delete(cast(JSon.class, item).attrByString(JSDataSet.ATTR_DOM_LINK));
+						
+						JSCom.xuiCom().postUrl(JSString.value("/rest/app/config/test"), item).then(fct(() -> {
 							__("location.reload(true)");
 						}));
-						cast(JSon.class, row).attrByString(JSDataSet.ATTR_DOM_LINK).set(rowDom);
+						cast(JSon.class, item).attrByString(JSDataSet.ATTR_DOM_LINK).set(rowDom);
 
 					}));
 				}), 1000);
 			}));
-
-			
 
 		}
 	}
@@ -136,5 +156,11 @@ public class ScnAdmin extends XHTMLPart {
 		JSBool disableComment();
 
 		JSBool singleFile();
+		
+		JSBool timeGenerated();
+		JSBool fileChanged();
+		JSBool patchChanges();
+		
+		JSInt versionTimeLine();
 	}
 }

@@ -469,6 +469,21 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 		return this;
 	}
 
+	/*******************************************************************/
+	@Override
+	public JSContentInterface delete(Object... content)
+	{
+		getListElem().add(JSNewLine.class);
+		getListElem().add("delete ");
+		for (Object object : content) {
+			addElem(object);
+		}
+		getListElem().add(";");
+		return this;
+	}
+	
+	
+	/******************************************************************/
 	@Override
 	public JSContentInterface consoleDebug(Object... content) {
 		getListElem().add(JSNewLine.class);

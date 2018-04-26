@@ -21,7 +21,23 @@ public class ConfigFormatData {
 	private boolean fileChanged=true;
 	private boolean patchChanges=true;
 	
+	private int versionTimeline = 0;
 	
+	
+	/**
+	 * @return the versionTimeline
+	 */
+	public final int getVersionTimeline() {
+		return versionTimeline;
+	}
+
+	/**
+	 * @param versionTimeline the versionTimeline to set
+	 */
+	public final void setVersionTimeline(int versionTimeline) {
+		this.versionTimeline = versionTimeline;
+	}
+
 	/**
 	 * @return the timeGenerated
 	 */

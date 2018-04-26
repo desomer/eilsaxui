@@ -170,9 +170,10 @@ public final class ProxyHandler implements InvocationHandler {
 		Object ret = null;
 
 		boolean isJSClass = JSClass.class.isAssignableFrom(mthInvoke.method.getDeclaringClass());
-
-		if (!isJSClass) {
-			// appel la fct default de la proxy JSONBuilder ou XHTMLElement
+		boolean isInline = IInlineJS.class.isAssignableFrom(mthInvoke.method.getDeclaringClass());
+		
+		if (!isJSClass || isInline) {
+			// appel la fct default de la proxy JSONBuilder ou XHTMLElement ou IInlineJS
 
 			final Class<?> declaringClass = mthInvoke.method.getDeclaringClass();
 			Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class.getDeclaredConstructor(

@@ -66,7 +66,6 @@ public class ScnAdmin extends XHTMLPart {
 	@xResource(id = "xLoad.js")
 	@xImport(export = "JSDataDriven", module = "xdatadriven.js")
 	@xImport(export = "JSDataBinding", module = "xBinding.js")
-
 	public XMLElement xLoad() {
 		return xImport(JSTest.class);
 	}
@@ -113,7 +112,7 @@ public class ScnAdmin extends XHTMLPart {
 							/****************************************************************************/
 							vPart(new ViewInputText()
 									.vProp(ViewInputText.pLabel, "Version time line")
-									.vProp(ViewInputText.pValue, txt("0"))),
+									.vProp(ViewInputText.pValue, vBindable(item, item.versionTimeLine()))),
 							/*****************************************************************************/
 							vPart(new ViewInputText()
 									.vProp(ViewInputText.pLabel, "Color")
@@ -121,25 +120,27 @@ public class ScnAdmin extends XHTMLPart {
 							vPart(new ViewInputText()
 									.vProp(ViewInputText.pLabel, "Font size")
 									.vProp(ViewInputText.pValue, txt("12rem"))),
-
+							/*****************************************************************************/
+							xNode("HR"),
 							xButton(cBtnOk, "SAVE")
 
 					)));
 
-			JSCom.xuiCom().requestUrl(JSString.value("/rest/app/config/test")).then(fct(item, () -> {
+			JSCom.xuiCom().requestUrl(JSString.value(SrvAdmin.URL_CONFIG)).then(fct(item, () -> {
 				data.push(item);
+				
+				JSon attrDomLink = cast(JSon.class, item).attrByString(JSDataSet.ATTR_DOM_LINK);  //inline
+				
 				setTimeout(fct(() -> {
 					document().querySelector(cBtnOk).addEventListener("click", fct(() -> {
 
-						JSNodeElement rowDom = let(JSNodeElement.class, "rowDom",
-								cast(JSon.class, item).attrByString(JSDataSet.ATTR_DOM_LINK));
+						JSNodeElement rowDom = let(JSNodeElement.class, "rowDom", attrDomLink );
+						delete(attrDomLink);
 						
-						delete(cast(JSon.class, item).attrByString(JSDataSet.ATTR_DOM_LINK));
-						
-						JSCom.xuiCom().postUrl(JSString.value("/rest/app/config/test"), item).then(fct(() -> {
+						JSCom.xuiCom().postUrl(JSString.value(SrvAdmin.URL_CONFIG), item).then(fct(() -> {
 							__("location.reload(true)");
 						}));
-						cast(JSon.class, item).attrByString(JSDataSet.ATTR_DOM_LINK).set(rowDom);
+						attrDomLink.set(rowDom);
 
 					}));
 				}), 1000);

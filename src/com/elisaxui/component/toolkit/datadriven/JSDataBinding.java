@@ -23,9 +23,10 @@ import com.elisaxui.core.xui.xml.annotation.xStatic;
 public interface JSDataBinding extends JSClass {
 
 	@xStatic
-	default void initVChangeableText(JSNodeElement domItem, JSAny value, JSString attr) {
+	default Object initVChangeableText(JSNodeElement domItem, JSAny value, JSString attr) {
 		domItem.dataset().attrByString(var("'xui'+",attr)).set(true);
-		_return(JSNodeTemplate.MTH_ADD_TEXT+"("+value+")");
+		let("elemText", JSNodeTemplate.MTH_ADD_TEXT+"("+value+")" );
+		return "elemText";
 	}
 	
 	@xStatic

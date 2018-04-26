@@ -63,6 +63,18 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 		return jc;
 	}
 	
+	public static final <E> E callstatic(Class<E> cl) {
+		Object jc = declareType(cl, null);
+		if (jc instanceof JSAny)
+		{
+			JSAny jsa = ((JSAny) jc);
+			jsa._setValue(cl.getName())._setName(cl.getSimpleName());
+		}
+		else
+			((JSClass) jc)._setContent(cl.getSimpleName());
+		return (E) jc;
+	}
+	
 	public static final <E extends JSAny> E declareType(E type, String name) {
 		type._setValue(name)._setName(name);
 		return type;

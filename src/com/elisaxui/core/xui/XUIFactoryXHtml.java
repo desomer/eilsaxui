@@ -82,12 +82,6 @@ public class XUIFactoryXHtml {
 		
 		CoreLogger.getLogger(1).info(() -> "cacheControl="+cacheControl);
 		
-		if (ConfigFormat.getData().isReload())
-		{
-			noCache=true;
-			ConfigFormat.getData().setReload(false);
-		}
-		
 		MultivaluedMap<String, String> param = uri.getQueryParameters();
 		
 		List<String> p = param.get("compatibility");
@@ -97,7 +91,14 @@ public class XUIFactoryXHtml {
 			es5=true;
 			
 		p = param.get("version");
-		int version = p==null?0:Integer.parseInt(p.get(0));
+		int version = p==null?ConfigFormat.getData().getVersionTimeline():Integer.parseInt(p.get(0));
+		if (ConfigFormat.getData().isReload())
+		{
+			if (version==0)
+				noCache=true;
+			ConfigFormat.getData().setReload(false);
+		}
+		
 		
 		JSExecutorHelper.setThreadPreprocessor(es5);
 				

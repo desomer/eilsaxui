@@ -1,11 +1,13 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.srv;
+package com.elisaxui.app.core.admin;
 
 import java.io.StringReader;
+import java.util.Optional;
 
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.ws.rs.Consumes;
@@ -14,6 +16,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -32,6 +36,8 @@ import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 @Path("/app")
 public class SrvAdmin implements IJSONBuilder {
 
+	public static final String URL_CONFIG = "/rest/app/config/test";
+	
 	@GET
 	@Path("/config/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -43,10 +49,10 @@ public class SrvAdmin implements IJSONBuilder {
 		config.disableComment().set(!ConfigFormat.getData().isEnableCommentFctJS());
 		config.es5().set(ConfigFormat.getData().isEs5());
 		config.singleFile().set(ConfigFormat.getData().isSinglefile());
-		
 		config.timeGenerated().set(ConfigFormat.getData().isTimeGenerated());
 		config.fileChanged().set(ConfigFormat.getData().isFileChanged());
 		config.patchChanges().set(ConfigFormat.getData().isPatchChanges());
+		config.versionTimeLine().set(ConfigFormat.getData().getVersionTimeline());
 
 		return config.getStringJSON();
 	}
@@ -59,6 +65,8 @@ public class SrvAdmin implements IJSONBuilder {
 
 		JsonReader rdr = Json.createReader(new StringReader(content));
 		JsonObject obj = rdr.readObject();
+		rdr.close();
+		
 		boolean minify = obj.getBoolean("minify");
 		boolean disableComment = obj.getBoolean("disableComment");
 		boolean singleFile = obj.getBoolean("singleFile");
@@ -66,7 +74,14 @@ public class SrvAdmin implements IJSONBuilder {
 		boolean timeGenerated = obj.getBoolean("timeGenerated");
 		boolean fileChanged = obj.getBoolean("fileChanged");
 		boolean patchChanges = obj.getBoolean("patchChanges");
-		rdr.close();
+		
+		int version = 0;
+		try {
+			version = obj.getInt("versionTimeLine");
+		} catch (Throwable e) {
+			String v = obj.getString("versionTimeLine");
+			version = Integer.parseInt(v);
+		}
 
 		if (ConfigFormat.getData().isMinifyOnStart() != minify)
 			ConfigFormat.getData().setMinify(minify);
@@ -77,14 +92,12 @@ public class SrvAdmin implements IJSONBuilder {
 			ConfigFormat.getData().setPatchChanges(patchChanges);	
 		}
 		
-		
-		
 		ConfigFormat.getData().setSinglefile(singleFile);
 		ConfigFormat.getData().setEs5(es5);
 		if (es5)
 			ConfigFormat.getData().setSinglefile(true);
+		ConfigFormat.getData().setVersionTimeline(version);
 		
-
 		ConfigFormat.getData().setReload(true);
 
 		return Response.status(Status.OK).build();
@@ -97,4 +110,13 @@ public class SrvAdmin implements IJSONBuilder {
 	 * parser.next(); // if (key.equals("phoneNumber")) { // String value =
 	 * parser.getString(); // } // } // }
 	 */
+	
+	/*		Client client = ClientBuilder.newClient();
+
+		Response response = client.target("url").request().get();
+		JsonArray arr = response.readEntity(JsonArray.class);
+
+		response.close();
+		client.close();
+		*/
 }

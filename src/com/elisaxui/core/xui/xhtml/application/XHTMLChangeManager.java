@@ -15,6 +15,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.config.ConfigFormat;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 
 import difflib.DiffRow;
@@ -44,7 +45,7 @@ public class XHTMLChangeManager {
 		listLineDiff.setLength(0);
 		Formatter formatter = new Formatter(listLineDiff, Locale.FRENCH);
 		
-		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().getData().isFileChanged())
+		if (ConfigFormat.getData().isFileChanged())
 		{
 			listLineDiff.append("\n");
 			for (File file : listFileChanged) {
@@ -55,7 +56,7 @@ public class XHTMLChangeManager {
 			} 
 		}
 		
-		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().getData().isPatchChanges())
+		if (ConfigFormat.getData().isPatchChanges())
 		{
 			List<String> original = Arrays.asList(htmlInCache.split("\n"));
 			List<String> revised = Arrays.asList(htmlInCacheOriginal.split("\n"));

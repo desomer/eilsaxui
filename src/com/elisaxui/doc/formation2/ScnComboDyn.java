@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.xui.page.formation2;
+package com.elisaxui.doc.formation2;
 
 import static com.elisaxui.component.toolkit.com.JSCom.xuiCom;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
@@ -64,7 +64,7 @@ public class ScnComboDyn implements IJSONBuilder {
 		public XMLElement xImport() {
 			return xListNode(
 					xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"),
-					xImport(JSDomBuilder.class,
+					xInclude(JSDomBuilder.class,
 							TKPubSub.class,
 							JSDataDriven.class,
 							JSDataSet.class,
@@ -105,7 +105,7 @@ public class ScnComboDyn implements IJSONBuilder {
 		 ********************************************/
 		@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
 		public XMLElement xLoad() {
-			return xImport(JSTestTemplate.class);
+			return xInclude(JSTestTemplate.class);
 		}
 		// une class JS
 		public interface JSTestTemplate extends JSClass, IJSDomTemplate {
@@ -116,7 +116,7 @@ public class ScnComboDyn implements IJSONBuilder {
 				JSArray<Telephone> data = let("data", new JSArray<Telephone>());
 
 				document().querySelector(cMain)
-					.appendChildTemplate(new CmpComboTelephone().xListItem(data));
+					.appendChild(new CmpComboTelephone().xListItem(data));
 				
 				JSArray<Telephone> result = JSContent.declareArray(Telephone.class, "result");
 				xuiCom().requestUrl(JSString.value(REST_JSON_TEST+"A"))

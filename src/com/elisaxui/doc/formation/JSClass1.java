@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.xui.page.formation;
+package com.elisaxui.doc.formation;
 
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.component.widget.overlay.ViewOverlay;
@@ -52,7 +52,7 @@ public interface JSClass1 extends JSClass {
 		listObj3.push(JSString.value("12"));
 
 		JSClass1 obj = let(JSClass1.class, "obj", listObj.at(0));
-		_if(false)._then(() -> {
+		_if(false).then(() -> {
 			obj.doSomething();
 		});
 
@@ -65,9 +65,9 @@ public interface JSClass1 extends JSClass {
 		consoleDebug(txt("ok"), a);   // console debug
 
 		// les condition
-		_if(a, ">", 13)._then(() -> {
+		_if(a, ">", 13).then(() -> {
 			a.set(13);
-		})._elseif(a, "<", 13)._then(() -> {
+		})._elseif(a, "<", 13).then(() -> {
 			a.set(null);
 		})._else(() -> {
 			a.set("14");
@@ -113,7 +113,7 @@ public interface JSClass1 extends JSClass {
 
 		// new instance
 		JSClass1 aClass = let("overlay", newJS(JSClass1.class)); // new class
-		_if(false)._then(aClass::doSomething);
+		_if(false).then(aClass::doSomething);
 
 	}
 }

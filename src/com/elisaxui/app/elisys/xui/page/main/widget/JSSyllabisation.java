@@ -58,7 +58,7 @@ public interface JSSyllabisation extends JSClass, IXHTMLBuilder {
 //		};
 //	}
 	
-	@xInLine    //TODO a faire fonctionner     pour retirer le boolean testAnonymInProgress dans la class MethodInvocationHandler
+	//@xInLine    //TODO a faire fonctionner     pour retirer le boolean testAnonymInProgress dans la class MethodInvocationHandler
 	default Object createMicroListener()
 	{
 		_var("f", "webkitSpeechRecognition || SpeechRecognition");

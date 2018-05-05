@@ -25,12 +25,12 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 	public static final String STYLE = "style";
 	
 	public final XMLPart vBody(XMLElement body) {
-		XUIFactoryXHtml.getXMLRoot().addElementOnTarget(BODY.class, body);
+		XUIFactoryXHtml.getXHTMLTemplateRoot().addElementOnTarget(BODY.class, body);
 		return this;
 	}
 
 	public final XMLPart vAfterBody(XMLElement elem) {
-		XUIFactoryXHtml.getXMLRoot().addElementOnTarget(AFTER_BODY.class, elem);
+		XUIFactoryXHtml.getXHTMLTemplateRoot().addElementOnTarget(AFTER_BODY.class, elem);
 		return this;
 	}
 
@@ -133,25 +133,25 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 		return new CSSElement().path(path);
 	}
 	
-	public static final XMLElement xImport(Class<?>...cl) {
+	public static final XMLElement xInclude(Class<?>...cl) {
 		Object[] r = new Object[cl.length];
 		
 		for (int i = 0; i < r.length; i++) {
-			r[i] = doImport((Class<? extends JSClass>) cl[i]);
+			r[i] = doInclude((Class<? extends JSClass>) cl[i]);
 		}
 		
 		return xListNodeStatic(r);
 	}
 
-	public static final XMLElement xImport(Class<? extends JSClass> cl) {
-		return doImport(cl);
+	public static final XMLElement xInclude(Class<? extends JSClass> cl) {
+		return doInclude(cl);
 	}
 
 	/**
 	 * @param cl
 	 * @return
 	 */
-	private static XMLElement doImport(Class<? extends JSClass> cl) {
+	private static XMLElement doInclude(Class<? extends JSClass> cl) {
 		JSClassBuilder script = XUIFactoryXHtml.getXHTMLFile().getClassImpl(cl);
 
 		Object autocall = null;

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.xui.page.formation2;
+package com.elisaxui.doc.formation2;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
@@ -12,6 +12,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xResource;
@@ -35,7 +36,7 @@ public class ScnTemplate2 extends XHTMLPart {
 	@xTarget(HEADER.class)
 	@xResource // une seule fois par vue
 	public XMLElement xImportVue() {
-		return xImport(JSDomBuilder.class);
+		return xInclude(JSDomBuilder.class);
 	}
 
 	@xTarget(CONTENT.class) // la vue App Shell
@@ -45,14 +46,14 @@ public class ScnTemplate2 extends XHTMLPart {
 
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
 	public XMLElement xLoad() {
-		return xImport(JSTestTemplate2.class);
+		return xInclude(JSTestTemplate2.class);
 	}
 
 	/********************************************************/
 	// une class JS
 	/********************************************************/
 	@xTarget(AFTER_CONTENT.class) // une seule fois par vue car class , a mettre @xTarget sur la JSClass pour retirer l'import
-	public interface JSTestTemplate2 extends JSClass, IJSDomTemplate, IJSONBuilder {
+	public interface JSTestTemplate2 extends JSClass, IJSNodeTemplate, IJSONBuilder {
 
 		@xStatic(autoCall = true) // appel automatique de la methode static
 		default void main() {
@@ -63,7 +64,7 @@ public class ScnTemplate2 extends XHTMLPart {
 
 		@xStatic
 		default JSNodeElement xPicture(JSString url) {
-			return createDomTemplate(xListNode(
+			return createNodeTemplate(xListNode(
 					vPart(new CmpButton2().vProperty(CmpButton2.PROPERTY_LABEL, "OK")),
 					xImg(xAttr("src", url))));
 		}

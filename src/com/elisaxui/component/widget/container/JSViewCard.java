@@ -34,9 +34,9 @@ public interface JSViewCard extends JSFactory {
 		_set(aDataDriven, _new(aDataSet));
 
 		aDataDriven.onEnter(funct("ctx").__(() -> {
-			_if("ctx.row['_dom_']==null")._then(() -> {
-				_if("ctx.row.type== " + txt(TYPE_BACKGROUND))._then(() -> {
-					_if("ctx.row.mode=='css'")._then(() -> {
+			_if("ctx.row['_dom_']==null").then(() -> {
+				_if("ctx.row.type== " + txt(TYPE_BACKGROUND)).then(() -> {
+					_if("ctx.row.mode=='css'").then(() -> {
 						_set(template, ViewCard.getTemplateRichMedia());
 						_var("jqdom", template.appendInto("$(selector)"));
 						__("jqdom.css('background', ctx.row.css)");
@@ -45,12 +45,12 @@ public interface JSViewCard extends JSFactory {
 					});
 				});
 
-				_elseif("ctx.row.type==" + txt(TYPE_TEXT))._then(() -> {
+				_elseif("ctx.row.type==" + txt(TYPE_TEXT)).then(() -> {
 					_set(template, ViewCard.getTemplateText("ctx.row.html"));
 					_var("jqdom", template.appendInto("$(selector)"));
 					__("ctx.row['_dom_']=jqdom[0]");
 				});
-				_elseif("ctx.row.type==" + txt(TYPE_CARD_ACTION))._then(() -> {
+				_elseif("ctx.row.type==" + txt(TYPE_CARD_ACTION)).then(() -> {
 					__("$(selector).attr('data-x-action', ctx.row.idAction )");
 					__(JQuery.$(var("selector")).addClass(ViewRippleEffect.cRippleEffect));
 				});

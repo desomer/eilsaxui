@@ -9,13 +9,9 @@ import java.util.Map;
 
 import javax.ws.rs.core.MultivaluedMap;
 
-import com.elisaxui.component.page.XUIScene;
-import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassBuilder;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xml.XMLFile;
-import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.annotation.xExport;
 
 /**
@@ -26,11 +22,13 @@ import com.elisaxui.core.xui.xml.annotation.xExport;
  */
 public class XHTMLFile extends XMLFile {
 
-	private static final boolean debug = false;
+	private static final boolean DEBUG = false;
+	/** liste des classes du fichier */
 	private Map<String, JSClassBuilder> listClass = new HashMap<String, JSClassBuilder>();
-	
-	private XMLPart scene;
+	/**   les parametres des la request */
 	MultivaluedMap<String, String> param;
+	private XHTMLTemplate root;
+	
 	
 	/**
 	 * @param param the param to set
@@ -40,14 +38,6 @@ public class XHTMLFile extends XMLFile {
 	}
 
 
-	/**
-	 * @return the scene
-	 */
-	public final XMLPart getScene() {
-		return scene;
-	}
-
-	
 	public final List<String> getParam(String key)
 	{
 		return param.get(key);
@@ -60,23 +50,15 @@ public class XHTMLFile extends XMLFile {
 		return p==null?def:p.get(0);
 	}
 	
-	/**
-	 * @param scene the scene to set
-	 */
-	public final void setScene(XMLPart scene) {
-		this.scene = scene;
-	}
-
 	public final JSClassBuilder getClassImpl(Class<? extends JSClass> cl) {
 		String name = cl.getSimpleName();
 		JSClassBuilder impl = listClass.get(name);
 		if (impl == null) {
-			if (debug)
+			if (DEBUG)
 				System.out.println("[XHTMLFile] import JSClass " + name);
 			impl = new JSClassBuilder();
 			impl.setName(cl.getSimpleName());
-			if (! XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isSinglefile())
-				impl.setExportable(cl.getAnnotation(xExport.class)!=null);
+			impl.setExportable(cl.getAnnotation(xExport.class)!=null);
 			
 			listClass.put(name, impl);
 
@@ -85,6 +67,16 @@ public class XHTMLFile extends XMLFile {
 			impl.setAutoCallMeth(auto);
 		}
 		return impl;
+	}
+
+
+	public XHTMLTemplate getXHTMLTemplate() {
+		return root;
+	}
+
+
+	public void setXHTMLTemplate(XHTMLTemplate root) {
+		this.root = root;
 	}
 
 

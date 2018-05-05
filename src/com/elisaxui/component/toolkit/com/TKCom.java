@@ -11,12 +11,14 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSObject;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.es6.JSPromise;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
+import com.elisaxui.core.xui.xml.annotation.xExport;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 
 /**
  * @author gauth
  *
  */
+@xExport
 public interface TKCom extends JSClass {
 
 	@xStatic
@@ -29,7 +31,7 @@ public interface TKCom extends JSClass {
 			JSObject xhr = let(JSObject.class, "xhr", "new XMLHttpRequest()");
 			xhr.callMth("open", var(obj,".method || 'GET',",obj,".url"));
 			xhr.attr("onload").set(fct(()->{
-				_if(xhr.attr("status"), ">=200 &&", xhr.attr("status") ,"<300")._then(() -> {
+				_if(xhr.attr("status"), ">=200 &&", xhr.attr("status") ,"<300").then(() -> {
 					__("resolve(JSON.parse(", xhr.attr("response"), "))");
 				})._else(()->{
 					__("reject(", xhr.attr("statusText"), ")");

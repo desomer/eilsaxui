@@ -45,13 +45,13 @@ public class ScnAdminMain extends XHTMLPart {
 	@xResource
 	public XMLElement xImportAllClass() {
 		return xListNode(
-				xImport(JSTestClass.class),
-				xImport(JSTest2Class.class),
-				xImport(JSXHTMLPart.class),
-				xImport(JSTestDataDriven.class),
-				xImport(JSDataDriven.class),
-				xImport(JSDataSet.class),
-				xImport(JSDataCtx.class)
+				xInclude(JSTestClass.class),
+				xInclude(JSTest2Class.class),
+				xInclude(JSXHTMLPart.class),
+				xInclude(JSTestDataDriven.class),
+				xInclude(JSDataDriven.class),
+				xInclude(JSDataSet.class),
+				xInclude(JSDataCtx.class)
 				);
 	}
 	

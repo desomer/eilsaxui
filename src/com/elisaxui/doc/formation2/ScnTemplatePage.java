@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.xui.page.formation2;
+package com.elisaxui.doc.formation2;
 
 import java.util.ArrayList;
 import java.util.List;

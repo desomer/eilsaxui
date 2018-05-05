@@ -30,10 +30,10 @@ public interface JSOverlay extends JSClass {
 	default void doShowOverlay(JQuery act, Object phase) {
 
 		JQuery overlay = let(JQuery.class, "overlay", act.find(cBlackOverlay));
-		_if(phase, "==1")._then(() -> {
+		_if(phase, "==1").then(() -> {
 			overlay.css("display", "block");
 			overlay.css("opacity", 0);
-		})._elseif(phase, "==2")._then(() -> {
+		})._elseif(phase, "==2").then(() -> {
 			overlay.css("transition", txt("opacity ", speed(), "ms linear"));
 			overlay.css("opacity", opacity());
 		});
@@ -43,9 +43,9 @@ public interface JSOverlay extends JSClass {
 
 		JQuery overlay = let(JQuery.class, "overlay", $(active.descendant(cBlackOverlay)));
 
-		_if(phase, "==1")._then(() -> {
+		_if(phase, "==1").then(() -> {
 			overlay.css("opacity", 0);
-		})._elseif(phase, "==2")._then(() -> {
+		})._elseif(phase, "==2").then(() -> {
 			overlay.css("display", "none");
 			overlay.css("transition", "");
 		});

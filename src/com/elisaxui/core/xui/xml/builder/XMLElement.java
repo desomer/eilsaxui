@@ -96,8 +96,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
 		
-		XUIFactoryXHtml.getXHTMLFile().listTreeXMLParent.add(this);
-
+		XUIFactoryXHtml.getXMLFile().listTreeXMLParent.add(this);
 		if (buf.isTemplate) {
 			doElementModeTemplate(buf);
 		} else
@@ -105,7 +104,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 
 		nbTabInternal = 0;
 		nbTabForNewLine = 0;
-		XUIFactoryXHtml.getXHTMLFile().listTreeXMLParent.removeLast();
+		XUIFactoryXHtml.getXMLFile().listTreeXMLParent.removeLast();
 		return buf;
 	}
 
@@ -162,7 +161,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 		boolean isCss = buf.isResource && name!=null && name.equals(XHTMLPart.STYLE);
 		boolean isCommentText = buf.isResource && (buf.id.endsWith("css") || buf.id.endsWith("js"));
 		
-		if (comment != null && !buf.isModeString() && XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS()) {
+		if (comment != null && !buf.isModeString() && XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCommentFctJS()) {
 			newLine(buf);
 			newTabInternal(buf);
 			if (isCommentText)
@@ -229,7 +228,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			buf.addContentOnTarget("</" + name + ">");
 		}
 
-		if (comment != null && !buf.isModeString() && XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS()) {
+		if (comment != null && !buf.isModeString() && XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCommentFctJS()) {
 			newLine(buf);
 			newTabInternal(buf);
 			if (isCommentText)
@@ -363,7 +362,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 	public static Object zzGetProperties(Handle h) {
 		String nameHandle = h.getName();
 		// recherche dans les parents
-		LinkedList<Object> listParent = XUIFactoryXHtml.getXHTMLFile().listTreeXMLParent;
+		LinkedList<Object> listParent = XUIFactoryXHtml.getXMLFile().listTreeXMLParent;
 		Object handledObject = null;
 		String firstPrefix = null;
 		XMLPart firstPart = null;
@@ -390,7 +389,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 		
 		if (handledObject==null)
 		{   // recherche sur la scene
-			handledObject = XUIFactoryXHtml.getXHTMLFile().getScene().vProperty(nameHandle+firstPrefix);
+			handledObject = XUIFactoryXHtml.getXMLFile().getMainXMLPart().vProperty(nameHandle+firstPrefix);
 		}
 		
 		if (firstPart!=null && handledObject==null)

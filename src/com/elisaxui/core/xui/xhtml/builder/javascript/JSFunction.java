@@ -127,7 +127,7 @@ public class JSFunction extends JSContent implements JSElement {
 	public XMLBuilder toXML(XMLBuilder buf) {
 
 		Object comment = null;
-		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS())
+		if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCommentFctJS())
 		{
 			comment = getComment();
 			if (comment!=null && comment.toString().length()==0)
@@ -141,7 +141,7 @@ public class JSFunction extends JSContent implements JSElement {
 				buf.addContentOnTarget("function");
 			} else {
 				ProxyHandler.getFormatManager().newTabInternal(buf);
-				if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS())
+				if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCommentFctJS())
 					buf.addContentOnTarget("/******** start " + name + " *******/");
 				ProxyHandler.getFormatManager().newLine(buf);
 				ProxyHandler.getFormatManager().newTabInternal(buf);

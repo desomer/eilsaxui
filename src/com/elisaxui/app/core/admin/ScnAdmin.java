@@ -24,6 +24,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xImport;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
@@ -56,21 +57,15 @@ public class ScnAdmin extends XHTMLPart {
 	}
 
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
-	@xResource()
-	@xPriority(50)
-	public XMLElement xTest() {
-		return xImport(TKCom.class);
-	}
-
-	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
 	@xResource(id = "xLoad.js")
+	@xImport(export = "TKCom", module = "xComPoly.js")
 	@xImport(export = "JSDataDriven", module = "xdatadriven.js")
 	@xImport(export = "JSDataBinding", module = "xBinding.js")
 	public XMLElement xLoad() {
-		return xImport(JSTest.class);
+		return xInclude(JSTest.class);
 	}
 
-	public interface JSTest extends JSClass, IJSDomTemplate, IJSDataBinding, IJSDataDriven {
+	public interface JSTest extends JSClass, IJSNodeTemplate, IJSDataBinding, IJSDataDriven {
 
 		@xStatic(autoCall = true)
 		default void main() {
@@ -78,7 +73,7 @@ public class ScnAdmin extends XHTMLPart {
 			JSArray<JSAppConfiguration> data = let("data", new JSArray<JSAppConfiguration>());
 
 			JSNodeElement dom = let("dom", document().querySelector(cMain));
-			dom.appendChildTemplate(
+			dom.appendChild(
 					vFor(data, item, xListNode(
 							vPart(new ViewCheckRadio()
 									.vProp(ViewCheckRadio.pLabel, "Single File")

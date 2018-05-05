@@ -10,6 +10,8 @@ import javax.script.ScriptException;
 
 import com.elisaxui.core.helper.JSExecutorHelper;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
+import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.xhtml.XHTMLTemplateResource;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
@@ -136,7 +138,13 @@ public final class JSClassBuilder extends JSContent {
 		
 		ProxyHandler.getFormatManager().newLine(buf);
 		ProxyHandler.getFormatManager().newTabInternal(buf);
-		buf.addContentOnTarget(isExportable?"export class ":"class ");
+		
+		/** export uniquement si fichier de module */ 
+		if (XUIFactoryXHtml.getXHTMLTemplateRoot() instanceof XHTMLTemplateResource)
+			buf.addContentOnTarget(isExportable?"export class ":"class ");	
+		else
+			buf.addContentOnTarget("class ");	
+
 		buf.addContentOnTarget(name);
 		buf.addContentOnTarget(" {");
 	

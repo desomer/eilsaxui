@@ -158,20 +158,20 @@ public abstract class XUIScene extends XHTMLPart {
 
 		return xListNode(
 				vPart(new TKQueue()), // TODO Remplacer par une class js
-				xImport(JSXHTMLPart.class),
-				xImport(TKPubSub.class),
-				xImport(JSDataDriven.class),
-				xImport(JSDataSet.class),
-				xImport(JSDataCtx.class),
-				xImport(JSOverlay.class),
-				xImport(JSContainer.class),
-				xImport(JSPageLayout.class),
-				xImport(TKRouterEvent.class),
+				xInclude(JSXHTMLPart.class),
+				xInclude(TKPubSub.class),
+				xInclude(JSDataDriven.class),
+				xInclude(JSDataSet.class),
+				xInclude(JSDataCtx.class),
+				xInclude(JSOverlay.class),
+				xInclude(JSContainer.class),
+				xInclude(JSPageLayout.class),
+				xInclude(TKRouterEvent.class),
 				vPart(new CssTransition()), // TODO Remplacer
-				xImport(JSTransition.class),
-				xImport(JSMenu.class),
-				xImport(TKActivity.class),
-				xImport(JSViewCard.class));
+				xInclude(JSTransition.class),
+				xInclude(JSMenu.class),
+				xInclude(TKActivity.class),
+				xInclude(JSViewCard.class));
 	}
 
 	@xTarget(HEADER.class)

@@ -38,7 +38,7 @@ public class ViewOverlayRipple extends XHTMLPart {
 					+ "top: 0px; left: 0px; "
 					+ "width: 100vw;  height: 100vh; "
 					+ "z-index:"+XUIScene.ZINDEX_OVERLAY+ ";"
-					+ "background: "+ ((XUIScene)XUIFactoryXHtml.getXHTMLFile().getScene()).getConfigScene().getBgColorTheme() +"; "
+					+ "background: "+ ((XUIScene)XUIFactoryXHtml.getXMLFile().getMainXMLPart()).getConfigScene().getBgColorTheme() +"; "
 					+ "transition: all "+SPEED_ACTIVITY_TRANSITION_EFFECT+"ms linear;"
 					+ XUIScene.PREFORM_CHANGE_OPACITY
 					)

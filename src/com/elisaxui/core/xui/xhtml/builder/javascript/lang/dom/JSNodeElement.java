@@ -21,21 +21,22 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  */
 public class JSNodeElement extends JSAny  implements IJSClassInterface, IXHTMLBuilder {
 	
-	public JSNodeElement appendChildTemplate(Object... element) {
-		XMLElement e = null;
+	public JSNodeElement appendChild(Object... element) {
+		Object e = null;
 		
-		if (element.length==0 && element[0] instanceof XMLElement)
-			e = (XMLElement)element[0];
+		if (element.length==1 && ! (element[0] instanceof JSFunction))
+			e = element[0];
 		else
 			e = xListNode(element);
 		
-		return  callMth("appendChild", new JSNodeTemplate(e).setModeJS(true));
+	//	return  callMth("appendChild", new JSNodeTemplate(e).setModeJS(true));
+		return  callMth("appendChild", e);
 	}
 	
 	/**************************************************/
-	public JSNodeElement appendChild(Object element) {
-		return  callMth("appendChild", element);
-	}
+//	public JSNodeElement appendChild(Object element) {
+//		return  callMth("appendChild", element);
+//	}
 	
 	public JSNodeElement remove() {
 		return  callMth("remove");

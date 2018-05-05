@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.xui.page.formation2;
+package com.elisaxui.doc.formation2;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
@@ -20,6 +20,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xImport;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
@@ -77,10 +78,10 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 	@xImport(export = "JSDataBinding", module = "xBinding.js")
 	
 	public XMLElement xLoad() {
-		return xImport(JSTest.class);
+		return xInclude(JSTest.class);
 	}
 	
-	public interface JSTest extends JSClass, IJSDomTemplate, IJSDataBinding, IJSDataDriven {
+	public interface JSTest extends JSClass, IJSNodeTemplate, IJSDataBinding, IJSDataDriven {
 
 		@xStatic(autoCall = true)
 		default void main() {
@@ -101,7 +102,7 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 
 			// la vues dynamique
 			JSNodeElement dom = let("dom", document().querySelector(cMain));
-			dom.appendChildTemplate(
+			dom.appendChild(
 					vFor(listItem, item, xListNode(
 							vPart(new ViewInputText() // template static ou dynamic
 									// gestion auto de methode ?
@@ -123,7 +124,7 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 							/*************************************************************************/
 							xDiv("Plus de 10 char", vOnDataChange(item, item.value(), fct(changeCtx,
 									() -> _if(changeCtx.value().toStringJS().length(), ">10")
-											._then(() -> changeCtx.element().classList().add(cSizeOk))
+											.then(() -> changeCtx.element().classList().add(cSizeOk))
 											._else(() -> changeCtx.element().classList().remove(cSizeOk))))),
 							xNode("hr")
 							)));

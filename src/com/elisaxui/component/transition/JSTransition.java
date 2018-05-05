@@ -67,7 +67,7 @@ public interface JSTransition extends JSClass {
 			JSInt posTop = let(JSInt.class, "posTop", sct);
 			posTop.set(posTop.add( $(var("this")).get(0), ".getBoundingClientRect().y") );   
 			//TODO add JSElement
-			_if(posTop, ">0")._then(()->	$(var("this")).css(TOP, txt(posTop,"px")));
+			_if(posTop, ">0").then(()->	$(var("this")).css(TOP, txt(posTop,"px")));
 		}));
 		
 		$fixedElem.css(POSITION, ABSOLUTE); // permet la nav de bouger

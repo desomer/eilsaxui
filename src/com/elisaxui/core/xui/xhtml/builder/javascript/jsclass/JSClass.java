@@ -15,6 +15,7 @@ public interface JSClass extends JSContentInterface, JSElement, ILitteral  {
 	Object _getContent();
 	
 	<E> E cast(Class<E> cl, Object obj);
+	<E> E callStatic(Class<E> cl);
 	<E> E set(Object... value);
 	<E> E asLitteral(); 
 	<E> E declareType(Class<E> type, Object name);

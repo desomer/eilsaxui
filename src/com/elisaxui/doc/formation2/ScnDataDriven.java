@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.xui.page.formation2;
+package com.elisaxui.doc.formation2;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
@@ -20,6 +20,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xResource;
@@ -43,7 +44,7 @@ public class ScnDataDriven extends XHTMLPart {
 	public XMLElement xImport() {
 		return xListNode(
 				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"),
-				xImport(JSDomBuilder.class,
+				xInclude(JSDomBuilder.class,
 						TKPubSub.class,
 						JSDataDriven.class,
 						JSDataSet.class));
@@ -57,12 +58,12 @@ public class ScnDataDriven extends XHTMLPart {
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
 	@xResource // une seule fois par vue
 	public XMLElement xLoad() {
-		return xImport(JSTestDataDriven.class);
+		return xInclude(JSTestDataDriven.class);
 	}
 
 	// une class JS
 	@xTarget(AFTER_CONTENT.class) // une seule fois par vue car class
-	public interface JSTestDataDriven extends JSClass, IJSDomTemplate, IJSDataDriven {
+	public interface JSTestDataDriven extends JSClass, IJSNodeTemplate, IJSDataDriven {
 
 		@xStatic(autoCall = true) // appel automatique de la methode static
 		default void main() {
@@ -113,26 +114,25 @@ public class ScnDataDriven extends XHTMLPart {
 
 			
 			JSFunction onChange = fct(() -> {
-				_if(changeCtx.property().equalsJS("name"))._then(
+				_if(changeCtx.property().equalsJS("name")).then(
 						() -> aDom.firstNodeValue().set(changeCtx.value()));
-				_if(changeCtx.property().equalsJS("name2"))._then(
+				_if(changeCtx.property().equalsJS("name2")).then(
 						() -> aDom.querySelector("span").firstNodeValue().set(changeCtx.value()));
 			});
 
-			JSNodeElement aNewDomRow = that.xRow(aTestData.name(), aTestData.oneToOne().name2());
+			Object aNewDomRow = that.xRow(aTestData.name(), aTestData.oneToOne().name2());
 			
-			return createDomTemplate(
-					xUl(
+			return 	xUl(
 							xDataDriven(data,
 									onEnter(aTestData, aNewDomRow)	,
 									onExit(aTestData, aDom),
-									onChange(changeCtx, aDom, onChange))));
+									onChange(changeCtx, aDom, onChange)));
 
 		}
 		
 		// le template
-		default JSNodeElement xRow(JSString text, JSString id) {
-			return createDomTemplate(xLi(text, xSpan(id)));
+		default Object xRow(JSString text, JSString id) {
+			return xLi(text, xSpan(id));
 		}
 
 	}

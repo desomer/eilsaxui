@@ -21,6 +21,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
+import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -34,6 +35,7 @@ import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
 
 @xResource(id = "main")
 @xComment("activite standard")
+@xCoreVersion("0")
 public class ScnRoot extends XUIScene {
 
 	private static final String REST_JSON_MENU_ACTIVITY1 = "/rest/json/menu/activity1";
@@ -57,9 +59,9 @@ public class ScnRoot extends XUIScene {
 	@xResource
 	public XMLElement xImportAfter() {
 		return xListNode(
-				xImport(JSSyllabisation.class), 
-				xImport(JSHistoireManager.class),
-				xImport(JSRoot.class)  
+				xInclude(JSSyllabisation.class), 
+				xInclude(JSHistoireManager.class),
+				xInclude(JSRoot.class)  
 				);
 	}
 	

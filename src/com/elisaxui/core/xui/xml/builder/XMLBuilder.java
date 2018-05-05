@@ -1,6 +1,5 @@
 package com.elisaxui.core.xui.xml.builder;
 
-import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xml.XMLPart;
 
@@ -19,7 +18,11 @@ public class XMLBuilder {
 
 	boolean isString = false; // creer un string '<div>'
 	boolean isTemplate = false; // e("div",[])
-	boolean isResource = false; // pas de XML
+	boolean isResource = false; // pas de XML dans un fichier JS ou CSS
+	
+	// contenu js du template
+	JSContent jsTemplate = null;
+	
 	/**
 	 * @return the isResource
 	 */
@@ -34,9 +37,6 @@ public class XMLBuilder {
 		this.isResource = isResource;
 		return this;
 	}
-
-	// contenu js du template
-	JSContent jsTemplate = null;
 
 	/**
 	 * @return the js
@@ -58,7 +58,10 @@ public class XMLBuilder {
 	 */
 	public final XMLBuilder setModeTemplate(boolean isTemplate) {
 		this.isTemplate = isTemplate;
-		jsTemplate = new JSContent();
+		if (isTemplate)
+			jsTemplate = new JSContent();
+		else
+			jsTemplate = null;
 		return this;
 	}
 

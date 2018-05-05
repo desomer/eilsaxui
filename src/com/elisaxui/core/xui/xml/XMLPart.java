@@ -14,7 +14,7 @@ import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLFile;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.XHTMLRootResource;
+import com.elisaxui.core.xui.xhtml.XHTMLTemplateResource;
 import com.elisaxui.core.xui.xhtml.application.XHTMLAppScanner;
 import com.elisaxui.core.xui.xhtml.builder.module.ImportDesc;
 import com.elisaxui.core.xui.xhtml.builder.module.ModuleDesc;
@@ -121,14 +121,14 @@ public class XMLPart  {
 	public final void addImportOnTarget(ModuleDesc moduleDesc, Class<? extends XMLTarget> target, XMLElement elem) {		
 		XMLFile subfile =   addSubFileOnTarget(moduleDesc, target, elem.getPriority());
 
-		XHTMLRootResource rootSubFile= ((XHTMLRootResource)subfile.getRoot());
+		XHTMLTemplateResource rootSubFile= ((XHTMLTemplateResource)((XHTMLFile)subfile).getXHTMLTemplate());
 		rootSubFile.addElementOnModule(moduleDesc, elem);
 	}
 
 
 	private XMLFile addSubFileOnTarget(ModuleDesc moduleDesc, Class<? extends XMLTarget> target, double priority) {
 		final String name = moduleDesc.getURI();
-		XMLFile file = XUIFactoryXHtml.getXHTMLFile();
+		XMLFile file = XUIFactoryXHtml.getXMLFile();
 		
 		CoreLogger.getLogger(1).fine("Generate sub file ====>"+ name);
 		
@@ -143,7 +143,9 @@ public class XMLPart  {
 					addElementOnTarget(target, (XMLElement)(XHTMLPart.xScriptSrc("/rest/js/"+name).setPriority(priority)));
 			}
 			XHTMLFile f = new XHTMLFile();
-			f.setRoot(new XHTMLRootResource());
+			f.setXHTMLTemplate(new XHTMLTemplateResource());
+			f.setID(moduleDesc.getResourceID());
+			f.setExtension(moduleDesc.getExtension());
 			return f;
 		});
 	}
@@ -164,7 +166,7 @@ public class XMLPart  {
 		if (debug)
 			System.out.println("[XMLPart]--------------- add content of ------------- " + this.getClass() );
 				
-		XMLFile file = XUIFactoryXHtml.getXHTMLFile();
+		XMLFile file = XUIFactoryXHtml.getXMLFile();
 		boolean isfirstInit = !file.isXMLPartAlreadyInFile(this);
 		
 		XHTMLAppScanner.initVar(false, this.getClass(), this);
@@ -232,7 +234,7 @@ public class XMLPart  {
 				Class<? extends XMLTarget> targetClass = target.value();
 				if (targetClass!=null ) {
 					
-					if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isSinglefile() && targetClass==MODULE.class)
+					if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isSinglefile() && targetClass==MODULE.class)
 					{	// force en single file
 						targetClass= HEADER.class;
 					}
@@ -242,10 +244,10 @@ public class XMLPart  {
 					if (moduleDesc.getResourceID()!=null)
 						moduleDesc.setResourceID(AppConfig.getModuleJSConfig(moduleDesc.getResourceID()));
 					
-					boolean isInner = (moduleDesc.getResourceID()==null || XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isSinglefile());
+					boolean isInner = (moduleDesc.getResourceID()==null || XUIFactoryXHtml.getXMLFile().getConfigMgr().isSinglefile());
 					XMLPart targetPart = this;   //	ajoute dans un block enfant : CONTENT, AFTER_CONTENT
 					if (ITargetRoot.class.isAssignableFrom(targetClass))
-						targetPart = XUIFactoryXHtml.getXMLRoot();  //sinon ajoute dans un block root : HEADER
+						targetPart = XUIFactoryXHtml.getXHTMLTemplateRoot();  //sinon ajoute dans un block root : HEADER
 				
 					if (isInner)
 						targetPart.addElementOnTarget(targetClass, elem.getXMLElementTabbed(nbTab));

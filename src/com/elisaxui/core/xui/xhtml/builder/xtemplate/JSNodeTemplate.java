@@ -3,6 +3,7 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.xtemplate;
 
+import com.elisaxui.core.xui.xhtml.IXHTMLBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
@@ -15,7 +16,7 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  * a retirer apres le retrait du dom text JSXHTMLPart du paquet template
  * car peux etre fait en automatique si le fct append child recupere un xDiv en parametre 
  */
-public class JSNodeTemplate extends JSNodeElement implements IJSDomTemplate
+public class JSNodeTemplate extends JSNodeElement implements IXHTMLBuilder
 {
 	public static final String MTH_ADD_PART = "e";
 	public static final String MTH_ADD_ELEM = "e";
@@ -62,11 +63,5 @@ public class JSNodeTemplate extends JSNodeElement implements IJSDomTemplate
 		super();
 		this.xml = xml;
 	}
-
-	@Override
-	public XMLElement getTemplate() {
-		return null;
-	}
-	
-	
+		
 }

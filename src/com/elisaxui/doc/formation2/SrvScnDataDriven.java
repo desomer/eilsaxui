@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.xui.page.formation2;
+package com.elisaxui.doc.formation2;
 
 import static com.elisaxui.component.toolkit.com.JSCom.xuiCom;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
@@ -27,6 +27,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xResource;
@@ -55,7 +56,7 @@ public class SrvScnDataDriven implements IJSONBuilder {
 		@xTarget(HEADER.class)
 		@xResource // une seule fois par vue
 		public XMLElement xImportVue() {
-			return xImport(JSDomBuilder.class, TKCom.class);
+			return xInclude(JSDomBuilder.class, TKCom.class);
 		}
 
 		@xTarget(HEADER.class)
@@ -71,11 +72,11 @@ public class SrvScnDataDriven implements IJSONBuilder {
 
 		@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
 		public XMLElement xLoad() {
-			return xImport(JSTestTemplate.class);
+			return xInclude(JSTestTemplate.class);
 		}
 
 		// une class JS
-		public interface JSTestTemplate extends JSClass, IJSDomTemplate {
+		public interface JSTestTemplate extends JSClass, IJSNodeTemplate {
 
 			@xStatic(autoCall = true) // appel automatique de la methode static
 			default void main() {
@@ -87,11 +88,11 @@ public class SrvScnDataDriven implements IJSONBuilder {
 			}
 
 			default JSNodeElement xImageOK(JSAny id, JSString url) {
-				return createDomTemplate(xDiv(xSpan(id), xPicture(url)));
+				return createNodeTemplate(xDiv(xSpan(id), xPicture(url)));
 			}
 
 			default JSNodeElement xPicture(JSString url) {
-				return createDomTemplate(xImg(xAttr("src", url)));
+				return createNodeTemplate(xImg(xAttr("src", url)));
 			}
 		}
 	}

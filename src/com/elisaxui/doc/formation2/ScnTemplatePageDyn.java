@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.xui.page.formation2;
+package com.elisaxui.doc.formation2;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
@@ -17,6 +17,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSObject;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xResource;
@@ -43,7 +44,7 @@ public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
 	public XMLElement xImport() {
 		return xListNode(
 				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"),
-				xImport(JSDomBuilder.class,
+				xInclude(JSDomBuilder.class,
 						TKPubSub.class,
 						JSDataDriven.class,
 						JSDataSet.class));
@@ -78,13 +79,13 @@ public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
 
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
 	public XMLElement xLoad() {
-		return xImport(JSTest.class);
+		return xInclude(JSTest.class);
 	}
 
 	/********************************************************/
 	// une class js avec template et datadriven
 	/********************************************************/
-	public interface JSTest extends JSClass, IJSDomTemplate {
+	public interface JSTest extends JSClass, IJSNodeTemplate {
 
 		@xStatic(autoCall = true) // appel automatique de la methode static
 		default void main() {
@@ -93,10 +94,10 @@ public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
 			JSArray<Menu> arrNav = let("arrNav", new JSArray<Menu>().asLitteral());
 
 			document().querySelector(CmpPage.cPageMain)
-					.appendChild(createDomTemplate(new ScnTemplatePageDyn().xSessionDyn(arrSection)));
+					.appendChild(createNodeTemplate(new ScnTemplatePageDyn().xSessionDyn(arrSection)));
 			
 			document().querySelector(CmpNavVertical.cNavContainer)
-					.appendChild(createDomTemplate(new CmpNavVertical().xNavDyn(arrNav)));
+					.appendChild(createNodeTemplate(new CmpNavVertical().xNavDyn(arrNav)));
 			
 			/***************************************************/
 			setTimeout(() -> {

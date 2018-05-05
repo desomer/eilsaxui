@@ -58,26 +58,26 @@ public class XUIFormatManager {
 	public void newLine(XMLBuilder buf) {
 
 		if (buf.isModeString()) {
-			if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCrXMLinJS())
+			if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCrXMLinJS())
 				buf.addContentOnTarget("'+\n");
 		} else {
-			if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCrXML())
+			if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCrXML())
 				buf.addContentOnTarget("\n");
 		}
 
-		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableTabXML())
+		if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableTabXML())
 			for (int i = 0; i < nbTabForNewLine; i++) {
 				buf.addContentOnTarget("\t");
 			}
 
 		if (buf.isModeString()) {
-			if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCrXMLinJS())
+			if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCrXMLinJS())
 				buf.addContentOnTarget("'");
 		}
 	}
 
 	public void newTabInternal(XMLBuilder buf) {
-		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableTabXML())
+		if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableTabXML())
 			for (int i = 0; i < nbTabInternal; i++) {
 				buf.addContentOnTarget("\t");
 			}

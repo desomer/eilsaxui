@@ -51,7 +51,7 @@ public class ViewMenu extends XHTMLPart {
 						)
 				.on(cFixedLeft,
 						"position:absolute; top:0px; transform:translate3d(-" + (XUIScene.widthMenu+5) + "px,0px,0px)")
-				.on(cHeaderMenu, "height:53px; background:" + ((XUIScene)XUIFactoryXHtml.getXHTMLFile().getScene()).getConfigScene().getBgColorMenu()
+				.on(cHeaderMenu, "height:53px; background:" + ((XUIScene)XUIFactoryXHtml.getXMLFile().getMainXMLPart()).getConfigScene().getBgColorMenu()
 						+ "box-shadow: 0px 5px 13px 0px #969696;")
 
 				.on(".menu ul", "padding-left: 0;  list-style-type: none; margin:0px;")

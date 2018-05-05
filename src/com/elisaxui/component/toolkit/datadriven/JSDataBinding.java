@@ -3,6 +3,7 @@
  */
 package com.elisaxui.component.toolkit.datadriven;
 
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
@@ -30,7 +31,7 @@ public interface JSDataBinding extends JSClass {
 	}
 	
 	@xStatic
-	default void initVChangeableFct(JSNodeElement domItem, JSAny row, JSAny value, JSString attr, JSCallBack fctOnChange) {
+	default Object initVChangeableFct(JSNodeElement domItem, JSElement row, JSAny value, JSString attr, JSCallBack fctOnChange) {
 		domItem.dataset().attrByString(var("'xui'+",attr)).set(true);
 		
 		XuiBindInfo bi = newJS(XuiBindInfo.class);
@@ -44,11 +45,12 @@ public interface JSDataBinding extends JSClass {
 		ctx.row().set(row);
 		JSChangeCtx changeCtx = let(JSChangeCtx.class, "changeCtx", ctx);
 		JSCallBack ret = let(JSCallBack.class, "ret", cast(XuiBindInfo.class, domItem.attr(JSNodeTemplate.ATTR_BIND_INFO)).fct().call(domItem, changeCtx ));
-		_return(JSNodeTemplate.MTH_ADD_TEXT+"("+ret+")");
+		let("elemText", JSNodeTemplate.MTH_ADD_TEXT+"("+ret+")" );
+		return "elemText";
 	}
 	
 	@xStatic
-	default void initOnDataChange(JSNodeElement domItem, JSAny row, JSAny value, JSString attr,	JSCallBack fctOnChange) {
+	default void initOnDataChange(JSNodeElement domItem, JSElement row, JSAny value, JSString attr,	JSCallBack fctOnChange) {
 		domItem.dataset().attrByString(var("'xui'+",attr)).set(true);
 		
 		XuiBindInfo bi = newJS(XuiBindInfo.class);
@@ -81,10 +83,10 @@ public interface JSDataBinding extends JSClass {
 			JSNodeElement elem = let("elem", listNode.at(i));
 			XuiBindInfo ddi = let(XuiBindInfo.class, "ddi", elem.attr(JSNodeTemplate.ATTR_BIND_INFO));
 			JSAny valueChange = let("valueChange", changeCtx.value());
-			_if(ddi, "!=null &&", ddi.fct().notEqualsJS(null))._then(() -> {
+			_if(ddi, "!=null &&", ddi.fct().notEqualsJS(null)).then(() -> {
 				changeCtx.element().set(elem);
 				JSAny rf = let("rf", ddi.fct().call(elem, changeCtx)); // appel de la fct vOnChange( fct )
-				_if(rf.equalsJS(null))._then(() -> 
+				_if(rf.equalsJS(null)).then(() -> 
 					_continue() // ne change pas la value du text du dom
 				);
 

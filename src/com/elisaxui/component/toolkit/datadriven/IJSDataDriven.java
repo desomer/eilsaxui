@@ -6,7 +6,6 @@ package com.elisaxui.component.toolkit.datadriven;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSNodeTemplate;
@@ -73,7 +72,7 @@ public interface IJSDataDriven {
 
 	}
 	
-	public default JSFunction onEnter(Object row, JSNodeElement elem)
+	public default JSFunction onEnter(Object row, Object elem)
 	{
 		return (JSFunction) new JSFunction().zzSetComment("onEnter").setParam(new Object[] {row, "ctx"})
 				._return( elem );

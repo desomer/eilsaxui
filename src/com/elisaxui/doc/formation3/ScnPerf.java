@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.xui.page.formation3;
+package com.elisaxui.doc.formation3;
 
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
@@ -30,10 +30,10 @@ public class ScnPerf extends XHTMLPart {
 	@xResource // une seule fois par vue
 	public XMLElement xImportVue() {
 		return xListNode(
-				xImport(JSPerfVuesJS.class), 
-				xImport(JSDataSet.class),
-				xImport(JSDataDriven.class),
-				xImport(JSDomBuilder.class),
+				xInclude(JSPerfVuesJS.class), 
+				xInclude(JSDataSet.class),
+				xInclude(JSDataDriven.class),
+				xInclude(JSDomBuilder.class),
 				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js"),
 				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js")
 				);
@@ -66,7 +66,7 @@ public class ScnPerf extends XHTMLPart {
 	@xVersion("appli")  // a terminer
 	public XMLElement xDo() {		
 		return xListNode(
-					xImport(A.class)
+					xInclude(A.class)
 				);
 	}
 

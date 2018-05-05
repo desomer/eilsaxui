@@ -1,7 +1,7 @@
 package com.elisaxui.core.xui.xhtml.builder.javascript;
 
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
@@ -76,7 +76,7 @@ public interface JSContentInterface  {
 
 	/**********************************************************************/
 	JSContentInterface _if(Object... content);
-	JSContentInterface _then(JSLambda content);
+	JSContentInterface then(JSLambda content);
 	
 	JSContentInterface _else();
 	JSContentInterface _else(JSLambda content);

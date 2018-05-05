@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.xui.page.formation2;
+package com.elisaxui.doc.formation2;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
@@ -20,6 +20,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xResource;
@@ -48,7 +49,7 @@ public class ScnTemplateDyn extends XHTMLPart {
 	public XMLElement xImport() {
 		return xListNode(
 				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"),
-				xImport(JSDomBuilder.class,
+				xInclude(JSDomBuilder.class,
 						TKPubSub.class,
 						JSDataDriven.class,
 						JSDataSet.class));
@@ -62,13 +63,13 @@ public class ScnTemplateDyn extends XHTMLPart {
 
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
 	public XMLElement xLoad() {
-		return xImport(JSTest.class);
+		return xInclude(JSTest.class);
 	}
 	
 	/********************************************************/
 	// une class js avec template et datadriven
 	/********************************************************/
-	public interface JSTest extends JSClass, IJSDomTemplate, IJSDataDriven {
+	public interface JSTest extends JSClass, IJSNodeTemplate, IJSDataDriven {
 
 		@xStatic(autoCall = true) // appel automatique de la methode static
 		default void main() {
@@ -79,7 +80,7 @@ public class ScnTemplateDyn extends XHTMLPart {
 
 			// une fct qui retourne un template
 			JSFunction f = fct(() -> {
-				_return(createDomTemplate(xDiv("super")));
+				_return(createNodeTemplate(xDiv("super")));
 			});
 			
 			JSArray<JSObject> arr = let("arr", new JSArray<JSObject>().asLitteral());
@@ -106,7 +107,7 @@ public class ScnTemplateDyn extends XHTMLPart {
 			Object attrGreen = xAttr("style",txt("border:1px green solid"));
 			
 			document().querySelector(cMain).appendChild(
-					createDomTemplate(
+					createNodeTemplate(
 							xListNode(
 									vPart(new CmpBtnBar()
 											.vProperty(CmpBtnBar.PROPERTY_STYLE, attrRed)
@@ -141,7 +142,7 @@ public class ScnTemplateDyn extends XHTMLPart {
 		
 		@xStatic
 		default JSNodeElement xPicture(JSAny url) {
-			return createDomTemplate(vPart(new CmpButton().vProperty(CmpButton.PROPERTY_LABEL, url)));
+			return createNodeTemplate(vPart(new CmpButton().vProperty(CmpButton.PROPERTY_LABEL, url)));
 		}
 
 	}

@@ -26,6 +26,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSLambda;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
+import com.elisaxui.core.xui.xml.annotation.xInLine;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.builder.XUIFormatManager;
 
@@ -170,10 +171,12 @@ public final class ProxyHandler implements InvocationHandler {
 		Object ret = null;
 
 		boolean isJSClass = JSClass.class.isAssignableFrom(mthInvoke.method.getDeclaringClass());
-		boolean isInline = IInlineJS.class.isAssignableFrom(mthInvoke.method.getDeclaringClass());
+//		boolean isInline = IInlineJS.class.isAssignableFrom(mthInvoke.method.getDeclaringClass());
 		
-		if (!isJSClass || isInline) {
-			// appel la fct default de la proxy JSONBuilder ou XHTMLElement ou IInlineJS
+		xInLine isInLine = mthInvoke.method.getAnnotation(xInLine.class);
+		
+		if (!isJSClass || isInLine!=null) {
+			// appel la fct default de la proxy JSONBuilder ou XHTMLElement ou isInLine
 
 			final Class<?> declaringClass = mthInvoke.method.getDeclaringClass();
 			Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class.getDeclaredConstructor(
@@ -185,12 +188,10 @@ public final class ProxyHandler implements InvocationHandler {
 					.unreflectSpecial(mthInvoke.method, declaringClass).bindTo(mthInvoke.proxy)
 					.invokeWithArguments(mthInvoke.args);
 
+			/*******************************************************************************/
 			// on ajoute pas le code JS dans la class dans le cas "xDiv( codeJS )" car deja
 			// ajouté dans le xDiv
-			
-
 			StackTraceElement[] stack = Thread.currentThread().getStackTrace();
-
 			int numLigne = -1;
 			for (StackTraceElement stackTraceElement : stack) {
 				if (stackTraceElement.getLineNumber() != -1
@@ -202,7 +203,7 @@ public final class ProxyHandler implements InvocationHandler {
 			int lastNumLine = ThreadLocalMethodDesc.get().lastLineNoInsered;
 			if (lastNumLine>=numLigne)
 				ThreadLocalMethodDesc.get().lastMthNoInserted = null;
-
+			/******************************************************************************/
 		} else {
 			JSFunction anon = isInLineMethod(mthInvoke);
 			if (anon != null)
@@ -342,6 +343,10 @@ public final class ProxyHandler implements InvocationHandler {
 
 		if (mthInvoke.method.getName().equals("cast")) {
 			return JSContent.cast((Class<?>) mthInvoke.args[0], mthInvoke.args[1]);
+		}
+		
+		if (mthInvoke.method.getName().equals("callStatic")) {
+			return JSContent.callStatic((Class<?>) mthInvoke.args[0]);
 		}
 
 		if (mthInvoke.method.getName().equals("declareType")) {

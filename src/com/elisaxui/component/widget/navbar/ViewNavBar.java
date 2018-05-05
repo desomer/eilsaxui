@@ -101,7 +101,7 @@ public class ViewNavBar extends XHTMLPart {
 					    + "position: absolute; "
 					    + "height:"+ XUIScene.heightNavBar+";"
 					    + XUIScene.PREFORM_3D_2
-						+ "background:"+((XUIScene)XUIFactoryXHtml.getXHTMLFile().getScene()).getConfigScene().getBgColorNavBar()+"; "
+						+ "background:"+((XUIScene)XUIFactoryXHtml.getXMLFile().getMainXMLPart()).getConfigScene().getBgColorNavBar()+"; "
 						//--------------------+ "box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);"
 						+ "box-shadow: 20px 6px 12px 9px rgba(0, 0, 0, 0.22), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);"
 						+ "transition: all "+ConstTransition.SPEED_ANIM_SCROLL+"ms linear;"    //ease-in-out
@@ -112,7 +112,7 @@ public class ViewNavBar extends XHTMLPart {
 	@xTarget(AFTER_BODY.class)
 	@xResource
 	public XMLElement xImportAllClass() {
-		return	xImport(JSNavBar.class);
+		return	xInclude(JSNavBar.class);
 	}
 	
 	@xTarget(CONTENT.class)

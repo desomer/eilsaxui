@@ -12,7 +12,6 @@ import javax.json.JsonValue;
 
 import org.apache.commons.text.StringEscapeUtils;
 
-import com.elisaxui.app.elisys.xui.page.formation2.SrvScnDataDriven.ImgType;
 import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLFile;
@@ -21,6 +20,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
+import com.elisaxui.doc.formation2.SrvScnDataDriven.ImgType;
 
 /**
  * @author Bureau

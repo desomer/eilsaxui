@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.xui.page.formation2;
+package com.elisaxui.doc.formation2;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
@@ -16,7 +16,6 @@ import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xResource;
-import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -25,8 +24,6 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 
 /**
  * @author gauth 
- * TODO xImport( Module("mod.js", JSDataSet, JSDataDriven,
- *         JSXHTMLTemplate ) )
  */
 @xResource(id = "ScnTemplate")
 public class ScnTemplate extends XHTMLPart {
@@ -37,7 +34,7 @@ public class ScnTemplate extends XHTMLPart {
 	@xResource // une seule fois par vue
 	public XMLElement xImportVue() {
 		return xListNode(
-				xImport(JSDomBuilder.class)
+				xInclude(JSDomBuilder.class)
 				);
 	}
 
@@ -48,12 +45,12 @@ public class ScnTemplate extends XHTMLPart {
 
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
 	public XMLElement xLoad() {
-		return xImport(JSTestTemplate.class);
+		return xInclude(JSTestTemplate.class);
 	}
 
 	// une class JS
 	@xTarget(AFTER_CONTENT.class)   // une seule fois par vue car class  ,  a mettre @xTarget sur la JSClass pour retirer l'import
-	public interface JSTestTemplate extends JSClass, IJSDomTemplate, IJSONBuilder {
+	public interface JSTestTemplate extends JSClass, IJSDomTemplate {
 
 		@xStatic(autoCall = true) // appel automatique de la methode static
 		default void main() {
@@ -61,17 +58,19 @@ public class ScnTemplate extends XHTMLPart {
 			data.name().set("Votre creation");
 			data.urlImage().set("https://images.pexels.com/photos/316465/pexels-photo-316465.jpeg?h=350&auto=compress&cs=tinysrgb");			
 			
+			document().querySelector(cMain).appendChild(xDiv("/*/*/*/"));
+			
 			document().querySelector(cMain).appendChild(xImageOK(data.name(), data.urlImage()));
 		}
 
 		@xStatic
 		default Object xImageOK(JSAny text, JSString url) {
-			return createDomTemplate(xDiv(text, xPicture(url) ));
+			return xDiv(text, xPicture(url));
 		}
 
 		@xStatic
 		default Object xPicture(JSString url) {
-			return createDomTemplate(xImg(xAttr("src", url)));
+			return xImg(xAttr("src", url));
 		}
 	}
 

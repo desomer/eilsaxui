@@ -47,9 +47,9 @@ public interface JSDataDriven extends JSClass {
 			ctx.row().attrByString(JSDataSet.ATTR_DOM_LINK).set(dom);
 
 			_for("var ", key ," in ", ctx.row())._do(()->{
-				_if(ctx.row().hasOwnProperty(key))._then(() -> {
+				_if(ctx.row().hasOwnProperty(key)).then(() -> {
 					JSon attr = let("attr", ctx.row().attrByString(key));
-					_if(attr, " instanceof Object")._then(() -> {
+					_if(attr, " instanceof Object").then(() -> {
 						attr.attrByString(JSDataSet.ATTR_DOM_LINK).set(dom);
 					});
 
@@ -60,18 +60,18 @@ public interface JSDataDriven extends JSClass {
 		
 		aDataDriven.onExit(funct(ctx).zzSetComment("onExit").__(()->{
 			ctx.parent().set(parent);
-			_if(fctExit, "!=null")._then(() -> {
+			_if(fctExit, "!=null").then(() -> {
 				__(fctExit, ".call(this, ctx.row, ctx.row['"+JSDataSet.ATTR_DOM_LINK+"'], ctx)");
 			})._else(()->{
-				_if(ctx.row().attrByString(JSDataSet.ATTR_DOM_LINK).notEqualsJS(null))._then(() -> {
+				_if(ctx.row().attrByString(JSDataSet.ATTR_DOM_LINK).notEqualsJS(null)).then(() -> {
 					cast(JSNodeElement.class, ctx.row().attrByString(JSDataSet.ATTR_DOM_LINK)).remove();
 				});
 			});
 		}));
 		
-		_if(fctChange.notEqualsJS(null))._then(() -> {
+		_if(fctChange.notEqualsJS(null)).then(() -> {
 			aDataDriven.onChange(funct(ctx).zzSetComment("onChange").__(()->{
-				_if(ctx.row().attrByString(JSDataSet.ATTR_DOM_LINK).notEqualsJS(null))._then(() -> {
+				_if(ctx.row().attrByString(JSDataSet.ATTR_DOM_LINK).notEqualsJS(null)).then(() -> {
 					__(fctChange, ".call(this, ctx)");
 				});
 		}));

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.xui.page.formation3;
+package com.elisaxui.doc.formation3;
 
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
 import com.elisaxui.component.toolkit.jquery.JQuery;
@@ -17,6 +17,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSNodeTemplate;
 
 import static com.elisaxui.component.toolkit.jquery.JQuery.$;
 import static com.elisaxui.core.xui.xhtml.builder.xtemplate.JSNodeTemplate.*;
@@ -26,7 +27,7 @@ import static com.elisaxui.core.xui.xhtml.builder.xtemplate.JSNodeTemplate.*;
  *
  *         DTOxxx : class json != class JS JSxxx : class JS
  */
-public interface JSPerfVuesJS extends JSClass, IJSONBuilder, IJSDomTemplate, IJSDataDriven {
+public interface JSPerfVuesJS extends JSClass, IJSONBuilder, IJSNodeTemplate, IJSDataDriven {
 
 	public static boolean isVueJS() {
 		return XUIFactoryXHtml.getXHTMLFile().getFirstQueryParam("vue", "false").equals("true");
@@ -115,7 +116,7 @@ public interface JSPerfVuesJS extends JSClass, IJSONBuilder, IJSDomTemplate, IJS
 
 			CSSClass cA = new CSSClass().setId("cA");
 			
-			a.set(createDomTemplate(
+			a.set(createNodeTemplate(
 					xLi(
 							xUl(xId(id), cA),
 							xDiv(

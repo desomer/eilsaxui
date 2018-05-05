@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.elisys.xui.page.formation;
+package com.elisaxui.doc.formation;
 
 /**
  * @author gauth

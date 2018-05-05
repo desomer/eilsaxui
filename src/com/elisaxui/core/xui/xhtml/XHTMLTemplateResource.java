@@ -15,7 +15,7 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.CONTENT;
 
 
-public class XHTMLRootResource extends XHTMLPart {
+public class XHTMLTemplateResource extends XHTMLTemplate {
 
 	public void addElementOnModule(ModuleDesc moduleDesc, XMLElement elem)
 	{
@@ -24,7 +24,7 @@ public class XHTMLRootResource extends XHTMLPart {
 			int i=0;
 			for (ImportDesc aImport : moduleDesc.getListImport()) {
 				String newLine = "";
-				if (i>0 && XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCrXML())
+				if (i>=0 && XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCrXML())
 					newLine = "\n";
 				i++;
 				addElementOnTarget(HEADER.class, xNode(null, newLine+"import {"+aImport.getExport()+"} from '/rest/js/"+aImport.getURI()+"';") ); 
@@ -41,9 +41,9 @@ public class XHTMLRootResource extends XHTMLPart {
 		List<XMLElement> afterBody = getListElementFromTarget(AFTER_BODY.class);
 		List<XMLElement> header = getListElementFromTarget(HEADER.class);
 		
-		Collections.sort(header, new XHTMLRoot.XMLElementComparator() );
-		Collections.sort(body, new XHTMLRoot.XMLElementComparator() );
-		Collections.sort(afterBody, new XHTMLRoot.XMLElementComparator() );
+		Collections.sort(header, new XHTMLTemplateRoot.XMLElementComparator() );
+		Collections.sort(body, new XHTMLTemplateRoot.XMLElementComparator() );
+		Collections.sort(afterBody, new XHTMLTemplateRoot.XMLElementComparator() );
 		
 		return xListNode( header, body, afterBody );
 	}

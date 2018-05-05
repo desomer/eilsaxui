@@ -14,6 +14,7 @@ import org.mapdb.HTreeMap;
 import org.mapdb.Serializer;
 import org.mapdb.Atomic.Var;
 
+import com.elisaxui.core.helper.FileComparator;
 import com.elisaxui.core.helper.log.CoreLogger;
 
 /**
@@ -32,7 +33,9 @@ public class CacheManager {
 	private static  Var<Object> listeDico= null;
 	private static  Var<Object> lastDateFile= null;
 	/**************************************************************************/
-
+	FileComparator fileComparator = new FileComparator();
+	
+	/*************************************************************************/
 	public static final long getLastDate() {
 		Long r = (Long) lastDateFile.get();
 		if (r==null)
@@ -74,15 +77,17 @@ public class CacheManager {
 	/************************************************/
 	String id = null;
 	String cachetype = null;   // es5
+	String extension = null;
 	
 	/**
 	 * @param id
 	 * @param cachetype
 	 */
-	public CacheManager(String id, String cachetype) {
+	public CacheManager(String id, String cachetype, String extension) {
 		super();
 		this.id = id;
 		this.cachetype = cachetype;
+		this.extension = extension;
 	}
 
 	/**********************************************/
@@ -92,14 +97,14 @@ public class CacheManager {
 	String result = null;
 	/************************************************/
 	
-	public void getVersion(boolean noCache, int version)
+	public void initVersion(boolean noCache, int version)
 	{
 
 		if (enableCache)
 		{
 			idCacheDicoVersionning = id+cachetype;
 			idCache = id+XUIFactoryXHtml.changeMgr.lastOlderFile+cachetype;
-			
+				
 			if (!noCache)
 			{
 				result = getVersionDB(version);
@@ -107,40 +112,46 @@ public class CacheManager {
 		}
 	}
 	
+	/**
+	 *   si version = 0   => comparaison par rapport a la precedente
+	 *   si version < 0   => comparaison par rapport a la courant
+	 */
 	public String getVersionDB(int version)
 	{
 		if (idCache==null)
 			return null;
 		
 		int verDB = version;
-		String htmlInCacheOriginal = null;
+		String htmlInCacheMoreRecent = null;
 		if (version==0)
 		{
 			if (result==null)
 				// recherche en base
 				result = resourceCacheMem.computeIfAbsent(idCache, k-> resourceDB.get(k));
 			
-			htmlInCacheOriginal = result;
+			htmlInCacheMoreRecent = result;
 			verDB = -1;  // compare par rapport au dernier
 		}
 		else
-			htmlInCacheOriginal= resourceDB.get(idCache);
+			htmlInCacheMoreRecent= resourceDB.get(idCache);
 		
 		idCacheDB = idCache;
+		/**************************************************************/
+		/** recupere la version de comparaison */
 		ArrayList<String> version1 = listeVersionId.get(idCacheDicoVersionning);
 		if (version1!=null &&  -verDB<version1.size())
 			idCacheDB = version1.get(version1.size()+verDB-1);
-		
 		String htmlInCacheDB = resourceDB.get(idCacheDB);
+		/**************************************************************/
 		
 		// initialize 
-		if (htmlInCacheDB!=null && htmlInCacheOriginal!=null) {
-			XUIFactoryXHtml.changeMgr.initLineDiff(htmlInCacheDB ,  htmlInCacheOriginal);
+		if (htmlInCacheDB!=null && htmlInCacheMoreRecent!=null) {
+			fileComparator.initLineDiff(htmlInCacheDB ,  htmlInCacheMoreRecent, extension.equals("html"));
 		}
 		
 		if (version==0)
 		{
-			idCacheDB = idCache;
+			idCacheDB = idCache;    // affecte la version a tracer dans le log
 			return result;
 		}
 		else
@@ -153,7 +164,7 @@ public class CacheManager {
 		if (idCache==null)
 			return;
 
-		CoreLogger.getLogger(1).info(()->" add cache "+idCache);
+		CoreLogger.getLogger(2).info(()->"****** add cache "+idCache);
 		
 		ArrayList<String> version1 = listeVersionId.get(idCacheDicoVersionning);
 		if (version1==null)

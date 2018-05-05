@@ -8,7 +8,7 @@ import javax.ws.rs.core.Application;
 
 /**
  * @author gauth
- *
+ *  A terminer
  */
 
 @ApplicationPath("/*")

@@ -63,7 +63,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 		return jc;
 	}
 	
-	public static final <E> E callstatic(Class<E> cl) {
+	public static final <E> E callStatic(Class<E> cl) {
 		Object jc = declareType(cl, null);
 		if (jc instanceof JSAny)
 		{
@@ -156,13 +156,13 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 
 	@Deprecated
 	protected final void newLineForInternal(XMLBuilder buf) {
-		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCrJS())
+		if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCrJS())
 			buf.addContentOnTarget("\n");
 	}
 
 	@Deprecated
 	protected final void newTabForInternal(XMLBuilder buf) {
-		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCrJS())
+		if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCrJS())
 			buf.addContentOnTarget("\t");
 	}
 
@@ -189,12 +189,24 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 
 			/***************************************************/
 		} else if (object instanceof XMLElement) {
-			if (buf.isTemplate())
+			boolean forceModeText =  XUIFactoryXHtml.getXMLFile().getCoreVersion().equals("0");
+			if (!forceModeText && !buf.isTemplate())
 			{
+				buf.setModeTemplate(true);
 				((XMLElement) object).toXML(buf);
+				JSContent js = buf.getJSContent();
+				buf.setModeTemplate(false);
+				js.toXML(buf);
 			}
 			else
-				doXMLElementToJSXHTMLPart(buf, ((XMLElement) object));
+			{
+				if (buf.isTemplate())
+				{
+					((XMLElement) object).toXML(buf);
+				}
+				else
+					doXMLElementToJSXHTMLPart(buf, ((XMLElement) object));
+			}
 
 		} else if (object instanceof XMLAttr) {
 			if (buf.isTemplate())
@@ -296,7 +308,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 		for (int i = 0; i < ProxyHandler.getFormatManager().getTabForNewLine() + 2; i++) {
 			newTabForInternal(buf);
 		}
-		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableCommentFctJS())
+		if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCommentFctJS())
 			buf.addContentOnTarget("/*JS Template*/");
 		buf.addContentOnTarget("'");
 		buf.addContentOnTarget(txtJS);
@@ -555,7 +567,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	@Override
 	public JSContentInterface _if(Object... content) {
 		getListElem().add(JSNewLine.class);
-		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableSpaceJS())
+		if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableSpaceJS())
 		{
 			getListElem().add("if (");
 			for (Object object : content) {
@@ -579,7 +591,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	public JSContentInterface _else() {
 		getListElem().add(JSRemoveTab.class);
 		getListElem().add(JSNewLine.class);
-		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableSpaceJS())
+		if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableSpaceJS())
 		{
 			getListElem().add("} else {");
 		}
@@ -595,7 +607,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	public JSContentInterface _elseif_(Object... content) {
 		getListElem().add(JSRemoveTab.class);
 		getListElem().add(JSNewLine.class);
-		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableSpaceJS())
+		if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableSpaceJS())
 		{
 			getListElem().add("} else if(");
 			for (Object object : content) {
@@ -617,7 +629,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 
 	@Override
 	public JSContentInterface _elseif(Object... content) {
-		if (XUIFactoryXHtml.getXHTMLFile().getConfigMgr().isEnableSpaceJS())
+		if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableSpaceJS())
 		{
 			getListElem().add(" else if(");
 			for (Object object : content) {
@@ -888,7 +900,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	}
 
 	@Override
-	public JSContentInterface _then(JSLambda content) {
+	public JSContentInterface then(JSLambda content) {
 
 		try {
 			content.run();

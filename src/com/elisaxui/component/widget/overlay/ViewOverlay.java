@@ -25,16 +25,13 @@ public class ViewOverlay extends XHTMLPart {
 	@xTarget(AFTER_BODY.class)
 	@xResource
 	public XMLElement xStylePart() {
-		
-		
-		
 		return cStyle()
 				.path(cBlackOverlay).set("display: none;"
 						+ "position: absolute;	"
 						+ "top: 0px; left: 0px;"
 						+ " width:100vw ; height:101vh;" 
 						+ "background-color: black;"
-						+ XUIScene.PREFORM_CHANGE_OPACITY
+						+ XUIScene.PERFORM_CHANGE_OPACITY
 						+ "opacity:0; z-index:"+XUIScene.ZINDEX_OVERLAY+";")
 				;
 	}

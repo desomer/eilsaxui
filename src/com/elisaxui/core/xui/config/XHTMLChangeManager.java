@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.core.xui.xhtml.application;
+package com.elisaxui.core.xui.config;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -15,7 +15,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.elisaxui.core.xui.XUIFactoryXHtml;
-import com.elisaxui.core.xui.config.ConfigFormat;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 
 import difflib.DiffRow;

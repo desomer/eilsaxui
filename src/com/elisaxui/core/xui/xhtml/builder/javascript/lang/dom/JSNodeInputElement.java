@@ -9,7 +9,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
  * @author gauth
  *
  */
-public class JSNodeHTMLInputElement extends JSNodeElement {
+public class JSNodeInputElement extends JSNodeElement {
 	public JSString value() {
 		return castAttr(new JSString(), "value");
 	}

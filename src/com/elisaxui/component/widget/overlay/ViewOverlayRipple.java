@@ -40,7 +40,7 @@ public class ViewOverlayRipple extends XHTMLPart {
 					+ "z-index:"+XUIScene.ZINDEX_OVERLAY+ ";"
 					+ "background: "+ ((XUIScene)XUIFactoryXHtml.getXMLFile().getMainXMLPart()).getConfigScene().getBgColorTheme() +"; "
 					+ "transition: all "+SPEED_ACTIVITY_TRANSITION_EFFECT+"ms linear;"
-					+ XUIScene.PREFORM_CHANGE_OPACITY
+					+ XUIScene.PERFORM_CHANGE_OPACITY
 					)
 
 				.path(ripple_overlay.and(transitionOpacity))

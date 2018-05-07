@@ -12,10 +12,10 @@ import com.elisaxui.AppConfig;
 import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.config.XHTMLAppScanner;
 import com.elisaxui.core.xui.xhtml.XHTMLFile;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLTemplateResource;
-import com.elisaxui.core.xui.xhtml.application.XHTMLAppScanner;
 import com.elisaxui.core.xui.xhtml.builder.module.ImportDesc;
 import com.elisaxui.core.xui.xhtml.builder.module.ModuleDesc;
 import com.elisaxui.core.xui.xhtml.target.BODY;
@@ -30,7 +30,7 @@ import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.VProperty;
 import com.elisaxui.core.xui.xml.builder.XMLAttr;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Handle;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLHandle;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.target.CONTENT;
@@ -352,25 +352,25 @@ public class XMLPart  {
 	 * @return
 	 */
 	@Deprecated  	/*utiliser les vProperty*/
-	public static final Handle vSearchProperty(String name) {
-		Handle attr = XMLBuilder.createHandle(name);
+	public static final XMLHandle vSearchProperty(String name) {
+		XMLHandle attr = XMLBuilder.createHandle(name);
 		return attr;
 	}
 	
 	@Deprecated /* use vIfExist(VProperty */
-	public static final Handle vIfExistProperty(String iff, Object then) {
-		Handle attr = XMLBuilder.createHandle(iff);
+	public static final XMLHandle vIfExistProperty(String iff, Object then) {
+		XMLHandle attr = XMLBuilder.createHandle(iff);
 		attr.setIfExistAdd(then);
 		return attr;
 	}
 
-	public static final Handle vSearch(VProperty name) {
-		Handle attr = XMLBuilder.createHandle(name.getName());
+	public static final XMLHandle vSearch(VProperty name) {
+		XMLHandle attr = XMLBuilder.createHandle(name.getName());
 		return attr;
 	}
 	
-	public static final Handle vIfExist(VProperty iff, Object then) {
-		Handle attr = XMLBuilder.createHandle(iff.getName());
+	public static final XMLHandle vIfExist(VProperty iff, Object then) {
+		XMLHandle attr = XMLBuilder.createHandle(iff.getName());
 		attr.setIfExistAdd(then);
 		return attr;
 	}

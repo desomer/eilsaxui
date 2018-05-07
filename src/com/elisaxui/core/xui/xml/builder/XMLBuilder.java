@@ -102,8 +102,8 @@ public class XMLBuilder {
 		return t;
 	}
 
-	public static Handle createHandle(String name) {
-		return new Handle(name);
+	public static XMLHandle createHandle(String name) {
+		return new XMLHandle(name);
 	}
 
 	/**
@@ -123,7 +123,7 @@ public class XMLBuilder {
 		}
 	}
 
-	public static class Handle {
+	public static class XMLHandle {
 
 		private String name;
 		private Object ifExistAdd;
@@ -142,7 +142,7 @@ public class XMLBuilder {
 			this.ifExistAdd = ifExistAdd;
 		}
 
-		public Handle(String name) {
+		public XMLHandle(String name) {
 			super();
 			this.name = name;
 		}

@@ -47,9 +47,9 @@ import org.glassfish.jersey.servlet.ServletContainer;
 
 import com.elisaxui.AppConfig;
 import com.elisaxui.core.helper.JSExecutorHelper;
+import com.elisaxui.core.xui.config.WatchDir;
+import com.elisaxui.core.xui.config.XHTMLAppScanner;
 import com.elisaxui.core.xui.rest.XUIRestApp;
-import com.elisaxui.core.xui.xhtml.application.WatchDir;
-import com.elisaxui.core.xui.xhtml.application.XHTMLAppScanner;
 
 
 public class XUILaucher {

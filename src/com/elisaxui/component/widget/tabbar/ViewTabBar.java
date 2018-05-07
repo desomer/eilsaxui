@@ -8,14 +8,17 @@ import static com.elisaxui.component.widget.button.ViewRippleEffect.cRippleEffec
 
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.component.transition.ConstTransition;
+import com.elisaxui.component.widget.layout.ViewPageLayout;
 import com.elisaxui.component.widget.navbar.ViewNavBar;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.builder.css.ICSSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
+import com.elisaxui.core.xui.xml.builder.VProperty;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.CONTENT;
 
@@ -25,8 +28,11 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
  *    http://www.cssscript.com/material-style-tabs-component-with-javascript-and-css/
  *    https://codepen.io/Touficbatache/pen/eERNdo
  */
-public class ViewTabBar extends XHTMLPart {
+public class ViewTabBar extends XHTMLPart implements ICSSBuilder {
 
+	
+	public static VProperty pStyleViewTabBar;
+	
 	public static final String PROPERTY_NAME = "PROPERTY_NAME";
 	
 	public static CSSClass cTabbar;
@@ -41,22 +47,50 @@ public class ViewTabBar extends XHTMLPart {
 	@xResource
 	public XMLElement xStylePart() {
 		
-		return cStyle()   
-				.path(cTabbar).set("z-index: "+XUIScene.ZINDEX_NAV_BAR+";"
-						+ "background:"+((XUIScene)XUIFactoryXHtml.getXMLFile().getMainXMLPart()).getConfigScene().getBgColorNavBar()+";"
-						+ "height: "+XUIScene.heightTabBar+";"
-						+ "width: "+XUIScene.widthScene+"; "
-						+ "color:white; "
-						+ XUIScene.PREFORM_3D
-						+ "transition: transform "+ConstTransition.SPEED_ANIM_SCROLL+"ms ease-in-out;" 
-						+ "box-shadow: 16px -14px 20px 0 rgba(0, 0, 0, 0.21), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);")
-				
-				.path(cFixedBottom).set("position:fixed; bottom:0px; "+XUIScene.PREFORM_3D)
-				.path(cListReset).set("list-style: none;margin: 0; padding: 0;")
-				.path(cFlex).set("display:flex;")
-				.path(cFlex_1).set("flex:1;")
-				.path(cTextAlignCenter).set("text-align: center;")
-				;
+		String bg = null;		
+		if (XUIFactoryXHtml.getXMLFile().getMainXMLPart() instanceof XUIScene)
+			bg = ((XUIScene)XUIFactoryXHtml.getXMLFile().getMainXMLPart()).getConfigScene().getBgColorNavBar();
+			
+		final String bgColorBar = bg;
+		
+		return xStyle(sMedia("all"), ()-> {
+			sOn(cTabbar, ()-> {
+				css("z-index: "+XUIScene.ZINDEX_NAV_BAR);
+				css(bgColorBar==null?"":("background:"+bgColorBar));
+				css(pStyleViewTabBar);
+				css("height: "+XUIScene.heightTabBar);
+				css("width: "+XUIScene.widthScene);
+				css("color:white");
+				css(XUIScene.PERFORM_3D);
+				css("transition: transform "+ConstTransition.SPEED_ANIM_SCROLL+"ms ease-in-out");
+				css("box-shadow: 16px -14px 20px 0 rgba(0, 0, 0, 0.21), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);");
+			});
+			
+			sOn(cFixedBottom, ()-> css("position:fixed; bottom:0px; "+XUIScene.PERFORM_3D));
+			sOn(cListReset, ()-> css("list-style: none;margin: 0; padding: 0;"));
+			sOn(cFlex, ()-> css("display:flex;"));
+			sOn(cFlex_1, ()-> css("flex:1;"));
+			sOn(cTextAlignCenter, ()-> css("text-align: center;"));
+
+		});
+		
+		
+//		return cStyle()   
+//				.path(cTabbar).set("z-index: "+XUIScene.ZINDEX_NAV_BAR+";"
+//						+ (bgColorBar==null?";":("background:"+bgColorBar+"; "))
+//						+ "height: "+XUIScene.heightTabBar+";"
+//						+ "width: "+XUIScene.widthScene+"; "
+//						+ "color:white; "
+//						+ XUIScene.PREFORM_3D
+//						+ "transition: transform "+ConstTransition.SPEED_ANIM_SCROLL+"ms ease-in-out;" 
+//						+ "box-shadow: 16px -14px 20px 0 rgba(0, 0, 0, 0.21), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);")
+//				
+//				.path(cFixedBottom).set("position:fixed; bottom:0px; "+XUIScene.PREFORM_3D)
+//				.path(cListReset).set("list-style: none;margin: 0; padding: 0;")
+//				.path(cFlex).set("display:flex;")
+//				.path(cFlex_1).set("flex:1;")
+//				.path(cTextAlignCenter).set("text-align: center;")
+//				;
 	}
 	
 	@xTarget(CONTENT.class)

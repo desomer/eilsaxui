@@ -3,7 +3,7 @@
  */
 package com.elisaxui.core.xui.xml.builder;
 
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Handle;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLHandle;
 
 /**
  * un attribut XML
@@ -40,7 +40,7 @@ public class XMLAttr implements IXMLBuilder {
 			buf.addContentOnTarget("=");
 			if (value instanceof VProperty)
 			{
-				Object v = XMLElement.zzGetProperties(new Handle(((VProperty)value).getName()));
+				Object v = XMLElement.zzGetProperties(new XMLHandle(((VProperty)value).getName()));
 				buf.addContentOnTarget(v);
 			}
 			else

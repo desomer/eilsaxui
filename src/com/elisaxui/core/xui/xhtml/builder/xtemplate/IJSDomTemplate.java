@@ -8,9 +8,9 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
 
 /**
  * @author gauth
- *
+ *   @Deprecated
  */
-@Deprecated
+
 public interface IJSDomTemplate extends IXHTMLBuilder {
 	XMLElement getTemplate();
 }

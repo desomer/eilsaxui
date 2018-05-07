@@ -8,6 +8,8 @@ import java.util.LinkedList;
 
 import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSMedia;
 import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;
+import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
+import com.elisaxui.core.xui.xml.builder.VProperty;
 
 /**
  * @author gauth
@@ -19,6 +21,10 @@ public interface ICSSBuilder {
 	
 	default CSSElement sOn(CSSElement parent, CssBlock css) {
 		return xStyle(parent, css);
+	}
+	
+	default CSSElement sOn(CSSClass classCss, CssBlock css) {
+		return xStyle(sSel(classCss), css);
 	}
 	
 	default CSSElement xStyle(CSSElement parent, CssBlock css) {
@@ -105,8 +111,18 @@ public interface ICSSBuilder {
 	}
 
 	default void css(Object... selector) {
-		String content = selector[0].toString();
-		list.getLast().set(content);
+
+		for (Object object : selector) {
+			if (object instanceof VProperty)
+			{
+				list.getLast().getListStyle().getLast().content.add(object);
+			}
+			else
+				list.getLast().set(object.toString());
+		}
+		
+	//	String content = selector[0].toString();
+
 
 	}
 
@@ -122,6 +138,7 @@ public interface ICSSBuilder {
 		return dom.path("@keyframes "+ selector[0]);
 	}
 
+	/**************************************************/
 	default void from(CssBlock css) {
 
 	}
@@ -134,6 +151,8 @@ public interface ICSSBuilder {
 
 	}
 
+	/**************************************************/
+	/**  lambda  */
 	interface CssBlock extends Runnable {
 
 	}

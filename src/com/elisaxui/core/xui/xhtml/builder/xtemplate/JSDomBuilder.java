@@ -13,7 +13,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSCallBack;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSEvent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeHTMLInputElement;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeInputElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
@@ -136,7 +136,7 @@ public interface JSDomBuilder extends JSClass {
 		_forIdx(idx, listEvent)._do(() -> {
 			document().addEventListener(listEvent.at(idx), fct(event, () -> {
 				_if(event.target().nodeName().equalsJS("INPUT")).then(() -> {
-					JSNodeHTMLInputElement inputelem = let(JSNodeHTMLInputElement.class, "inputelem",
+					JSNodeInputElement inputelem = let(JSNodeInputElement.class, "inputelem",
 							event.target());
 					XuiBindInfo ddi = let(XuiBindInfo.class, "ddi", inputelem.attr(JSNodeTemplate.ATTR_BIND_INFO));
 					_if(ddi, "!=null &&", ddi.row().notEqualsJS(null)).then(() -> {

@@ -207,7 +207,7 @@ public interface JSTransition extends JSClass {
 		endif();
 
 		act.data(DATA_SCROLLTOP, sct );   // sauvegarde scroll position
-		JQuery actContent = let(JQuery.class, "actContent", act.find(ViewPageLayout.content));
+		JQuery actContent = let(JQuery.class, "actContent", act.find(ViewPageLayout.getcContent()));
 		// freeze
 		actContent.css(OVERFLOW, HIDDEN); // fait clignoter en ios
 		actContent.css(HEIGHT, "100vh");
@@ -216,7 +216,7 @@ public interface JSTransition extends JSClass {
 	}
 
 	default JSVoid doActivityDeFreeze(JQuery act) {
-		JQuery actContent = let(JQuery.class, "actContent", act.find(ViewPageLayout.content));
+		JQuery actContent = let(JQuery.class, "actContent", act.find(ViewPageLayout.getcContent()));
 		actContent.css(OVERFLOW, "");
 		actContent.css(HEIGHT, "");
 		$(act).removeClass(cStateFixedForFreeze);

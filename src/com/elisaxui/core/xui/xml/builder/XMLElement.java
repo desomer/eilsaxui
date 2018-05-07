@@ -20,7 +20,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomFunction;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSNodeTemplate;
 import com.elisaxui.core.xui.xml.XMLPart;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.Handle;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLHandle;
 import com.elisaxui.core.xui.xml.target.CONTENT;
 
 /**
@@ -196,8 +196,8 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			// recherche un handle de type XMLAttr
 			for (Object inner : listInner) {
 				if (inner != null) {
-					if (inner instanceof Handle) { // un handle
-						Handle h = (Handle) inner;
+					if (inner instanceof XMLHandle) { // un handle
+						XMLHandle h = (XMLHandle) inner;
 						Object handledObject = zzGetProperties(h);
 						if (handledObject instanceof XMLAttr)
 						{
@@ -278,13 +278,13 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 				}
 			}
 
-		} else if (inner instanceof Handle) { // un handle
-			Handle h = (Handle) inner;
+		} else if (inner instanceof XMLHandle) { // un handle
+			XMLHandle h = (XMLHandle) inner;
 			nbChild = doProperties(buf, nbChild, h);
 
 		} else if (inner instanceof VProperty) { // un handle
 			VProperty h = (VProperty) inner;
-			nbChild = doProperties(buf, nbChild, new Handle(h.getName()));
+			nbChild = doProperties(buf, nbChild, new XMLHandle(h.getName()));
 
 		} else if (inner instanceof JSClassBuilder) { // cas d'une class js
 			JSClassBuilder part = ((JSClassBuilder) inner);
@@ -313,7 +313,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 				Object v = attr.getValue();
 				if (v instanceof VProperty)
 				{
-					v = XMLElement.zzGetProperties(new Handle(((VProperty)v).getName()));
+					v = XMLElement.zzGetProperties(new XMLHandle(((VProperty)v).getName()));
 				}
 				buf.getJSContent().getListElem().add(JSNodeTemplate.MTH_ADD_ATTR+"([");
 				buf.getJSContent().getListElem().add("\"" + attr.getName() + "\"," + v + "");
@@ -349,7 +349,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 		return nbChild;
 	}
 
-	private int doProperties(XMLBuilder buf, int nbChild, Handle h) {
+	private int doProperties(XMLBuilder buf, int nbChild, XMLHandle h) {
 		Object handledObject = zzGetProperties(h);
 		
 		if (handledObject != null) {
@@ -359,7 +359,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 	}
 	
 
-	public static Object zzGetProperties(Handle h) {
+	public static Object zzGetProperties(XMLHandle h) {
 		String nameHandle = h.getName();
 		// recherche dans les parents
 		LinkedList<Object> listParent = XUIFactoryXHtml.getXMLFile().listTreeXMLParent;
@@ -373,7 +373,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 				// MgrErrorNotificafion.doError("Handle on Element", null)
 			} else if (elm instanceof XMLPartElement) {
 				XMLPart part = ((XMLPartElement) elm).part;
-				// getsion du prefix
+				// gestion du prefix
 				if (firstPrefix==null)
 				{
 					firstPart = part;
@@ -389,6 +389,8 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 		
 		if (handledObject==null)
 		{   // recherche sur la scene
+			if (firstPrefix==null)
+				firstPrefix="";
 			handledObject = XUIFactoryXHtml.getXMLFile().getMainXMLPart().vProperty(nameHandle+firstPrefix);
 		}
 		
@@ -397,6 +399,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			handledObject = firstPart.vProperty(nameHandle);
 		}
 		
+		// gestion du add if exist
 		if (h.getIfExistAdd()!=null && handledObject!=null)
 			handledObject = h.getIfExistAdd();
 		

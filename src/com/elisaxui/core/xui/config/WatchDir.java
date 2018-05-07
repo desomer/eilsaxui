@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.core.xui.xhtml.application;
+package com.elisaxui.core.xui.config;
 
 import java.nio.file.*;
 import static java.nio.file.StandardWatchEventKinds.*;

@@ -69,12 +69,10 @@ public abstract class XUIScene extends XHTMLPart {
 	// + " transform-style:preserve-3d;"
 	// transform: translate3d(0px,0px,0px); =bug : les header et footer ne se fixe
 	// plus au body
-	;
 
-	public static final String PREFORM_3D_2 = "";
-	public static final String PREFORM_3D = "backface-visibility: hidden; transform: translate3d(0px,0px,0px); will-change:transform;";
+	public static final String PERFORM_3D = "backface-visibility: hidden; transform: translate3d(0px,0px,0px); will-change:transform;";
 
-	public static final String PREFORM_CHANGE_OPACITY = "will-change:opacity, display;";
+	public static final String PERFORM_CHANGE_OPACITY = "will-change:opacity, display;";
 
 	public static CSSClass scene;
 	public static CSSClass cShell;
@@ -167,6 +165,7 @@ public abstract class XUIScene extends XHTMLPart {
 				xInclude(JSContainer.class),
 				xInclude(JSPageLayout.class),
 				xInclude(TKRouterEvent.class),
+				vPart(new CssReset()), 
 				vPart(new CssTransition()), // TODO Remplacer
 				xInclude(JSTransition.class),
 				xInclude(JSMenu.class),
@@ -180,11 +179,11 @@ public abstract class XUIScene extends XHTMLPart {
 	public XMLElement xStyleXUIScene() {
 
 		return cStyle()
-				.path("*, *:before, *:after").set(
-						"-webkit-tap-highlight-color: rgba(0,0,0,0); " // pas de coulour au click => ripple a la place
-								+ "box-sizing: border-box;   "
-								+ "margin: 0;" +
-								"  padding: 0;")
+//				.path("*, *:before, *:after").set(
+//						"-webkit-tap-highlight-color: rgba(0,0,0,0); " // pas de coulour au click => ripple a la place
+//								+ "box-sizing: border-box;   "
+//								+ "margin: 0;" +
+//								"  padding: 0;")
 
 				.path("html").set("font-size: 16px;")
 
@@ -195,7 +194,7 @@ public abstract class XUIScene extends XHTMLPart {
 				// + "font-family: 'Roboto', sans-serif;font-weight: normal;")
 
 				.path("body").set("background-color: " + getConfigScene().getBgColorScene() + ";"
-						+ "line-height: 1.5;"
+//						+ "line-height: 1.5;"
 						+ "font-family: 'Roboto', sans-serif;"
 						+ "font-weight: normal;")
 
@@ -217,7 +216,7 @@ public abstract class XUIScene extends XHTMLPart {
 						+ " width:" + widthScene + ";"
 						+ " will-change:overflow,z-index;") // will-change:transform =bug : les header et footer ne se
 															// fixe plus au body
-				.andChild(cStyle(ViewPageLayout.content)
+				.andChild(cStyle(ViewPageLayout.getcContent())
 						.set(" min-height: 100vh; "
 								+ "min-width: " + widthScene + "; "
 								+ "background-color:" + getConfigScene().getBgColorContent() + ";will-change:contents") // changement
@@ -231,7 +230,7 @@ public abstract class XUIScene extends XHTMLPart {
 				)
 
 				// ----------------------------------------------------------------
-				.path(ViewPageLayout.content).set( // ne pas ajouter a cActivity
+				.path(ViewPageLayout.getcContent()).set( // ne pas ajouter a cActivity
 						"padding-top: " + heightNavBar + "; "
 								+ "padding-bottom: " + heightTabBar)
 

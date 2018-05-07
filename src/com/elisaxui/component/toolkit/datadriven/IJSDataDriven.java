@@ -23,7 +23,6 @@ public interface IJSDataDriven {
 	{
 		JSon domparent =  JSContent.declareType(JSon.class, "domparent");
 		
-		
 		JSElement change = (JSFunction) new JSFunction().zzSetComment("onChange").setParam(new Object[] {"ctx"})
 		.__("JSDataBinding.initChangeHandler(ctx, ctx.row['"+JSDataSet.ATTR_DOM_LINK+"'])")
 		;

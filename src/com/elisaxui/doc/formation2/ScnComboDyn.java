@@ -3,7 +3,6 @@
  */
 package com.elisaxui.doc.formation2;
 
-import static com.elisaxui.component.toolkit.com.JSCom.xuiCom;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
 import javax.ws.rs.GET;
@@ -31,7 +30,6 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xResource;
@@ -60,7 +58,7 @@ public class ScnComboDyn implements IJSONBuilder {
 		 * IMPORT
 		 ********************************************/
 		@xTarget(HEADER.class)
-		@xResource  
+		@xResource
 		public XMLElement xImport() {
 			return xListNode(
 					xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"),
@@ -70,6 +68,7 @@ public class ScnComboDyn implements IJSONBuilder {
 							JSDataSet.class,
 							TKCom.class));
 		}
+
 		/********************************************
 		 * STYLE
 		 ********************************************/
@@ -90,16 +89,15 @@ public class ScnComboDyn implements IJSONBuilder {
 		/********************************************
 		 * TEMPLATE
 		 ********************************************/
-		public XMLElement xItem(JSAny code, JSAny Libelle) {
-			return xLi(code, "- ", Libelle);
+		public XMLElement xItem(JSAny code, JSAny libelle) {
+			return xLi(code, "- ", libelle);
 		}
 
-		public XMLElement xListItem(JSArray<Telephone> listTelephone) {			
+		public XMLElement xListItem(JSArray<Telephone> listTelephone) {
 			return xListNode(
-					   vFor(listTelephone, aRow, xItem(aRow.nom(), aRow.marque()) 
-					));
+					vFor(listTelephone, aRow, xItem(aRow.nom(), aRow.marque())));
 		}
-		
+
 		/********************************************
 		 * CONTROLEUR
 		 ********************************************/
@@ -107,20 +105,21 @@ public class ScnComboDyn implements IJSONBuilder {
 		public XMLElement xLoad() {
 			return xInclude(JSTestTemplate.class);
 		}
+
 		// une class JS
-		public interface JSTestTemplate extends JSClass, IJSDomTemplate {
+		public interface JSTestTemplate extends JSClass {
 
 			@xStatic(autoCall = true)
 			default void main() {
-				
+
 				JSArray<Telephone> data = let("data", new JSArray<Telephone>());
 
-				document().querySelector(cMain)
-					.appendChild(new CmpComboTelephone().xListItem(data));
-				
+				document().querySelector(cMain).appendChild(new CmpComboTelephone().xListItem(data));
+
 				JSArray<Telephone> result = JSContent.declareArray(Telephone.class, "result");
-				xuiCom().requestUrl(JSString.value(REST_JSON_TEST+"A"))
-						.then(fct(result, () -> data.pushAll(result) ));
+				callStatic(TKCom.class)
+						.requestUrl(JSString.value(REST_JSON_TEST + "unID"))
+						.then(fct(result, () -> data.pushAll(result)));
 			}
 
 		}
@@ -131,6 +130,7 @@ public class ScnComboDyn implements IJSONBuilder {
 	 ***********************************************/
 	public interface Telephone extends JSType {
 		JSString nom();
+
 		JSString marque();
 	}
 
@@ -145,12 +145,12 @@ public class ScnComboDyn implements IJSONBuilder {
 	public Response getHtml(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("id") String id) {
 
 		JSArray<Telephone> result = new JSArray<Telephone>().asLitteral();
-		
+
 		Telephone data = newJava(Telephone.class);
 		data.nom().set("IPhone " + id);
 		data.marque().set("Apple");
 		result.push(data);
-		
+
 		data = newJava(Telephone.class);
 		data.nom().set("Galaxy S7" + id);
 		data.marque().set("Samsung");

@@ -10,6 +10,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
 
 import com.elisaxui.core.helper.log.CoreLogger;
 
@@ -19,42 +21,36 @@ import com.elisaxui.core.helper.log.CoreLogger;
  */
 public class JSMinifier {
 
-	
-	
-	private static class Options {
-	    public String charset = "UTF-8";
-	    public int lineBreakPos = -1;
-	    public boolean munge = false;
-	    public boolean verbose = true;
-	    public boolean preserveAllSemiColons = true;
-	    public boolean disableOptimizations = true;
+	private JSMinifier() {
+		super();
 	}
-	
+
 	
 	public static final StringBuilder doMinifyJS(String js)
 	{
 		StringBuilder buf = new StringBuilder();
 	try {
-		System.out.print("javascript-minifier => ");
+		CoreLogger.getLogger(1).info("call javascript-minifier");
 		
 		final URL url = new URL("https://javascript-minifier.com/raw");
 
 		// JS File you want to compress
-		byte[] bytes = js.getBytes( "UTF-8");        //Files.readAllBytes(Paths.get(""));
+		byte[] bytes = js.getBytes( StandardCharsets.UTF_8);       
+		//Files.readAllBytes(Paths.get(""))
 
 		final StringBuilder data = new StringBuilder();
-		data.append(URLEncoder.encode("input", "UTF-8"));
+		data.append(URLEncoder.encode("input", StandardCharsets.UTF_8.name()));
 		data.append('=');
-		data.append(URLEncoder.encode(new String(bytes), "UTF-8"));
+		data.append(URLEncoder.encode(new String(bytes), StandardCharsets.UTF_8.name()));
 
-		bytes = data.toString().getBytes("UTF-8");
+		bytes = data.toString().getBytes(StandardCharsets.UTF_8);
 
 		final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
 		conn.setRequestMethod("POST");
 		conn.setDoOutput(true);
 		conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-		conn.setRequestProperty("charset", "utf-8");
+		conn.setRequestProperty("charset", StandardCharsets.UTF_8.name());
 		conn.setRequestProperty("Content-Length", Integer.toString(bytes.length));
 
 		try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
@@ -63,10 +59,9 @@ public class JSMinifier {
 
 		final int code = conn.getResponseCode();
 
-		System.out.println("Status: " + code);
+		CoreLogger.getLogger(1).info(()->"Status: " + code);
 
 		if (code == 200) {
-		   // System.out.println("----");
 		    final BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 		    String inputLine;
 
@@ -75,13 +70,12 @@ public class JSMinifier {
 		    }
 		    in.close();
 
-		  //  System.out.println("\n----");
 		} else {
 		    CoreLogger.getLogger(1).severe("erreur acces https://javascript-minifier.com/raw");
 		    buf.append(js);  // non minifier
 		}
 	} catch (IOException e) {
-		e.printStackTrace();
+		CoreLogger.getLogger(1).log(Level.SEVERE, "PB javascript-minifier.com",  e );
 	}
 	return buf;
 	}

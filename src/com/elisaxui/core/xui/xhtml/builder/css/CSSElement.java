@@ -39,7 +39,6 @@ public class CSSElement  extends XMLElement {
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
 		
-		
 		before();
 		
 		for (CSSStyleRow object : getListStyle()) {
@@ -51,11 +50,17 @@ public class CSSElement  extends XMLElement {
 		return super.toXML(buf);
 	}
 	
+	/**
+	 * ajout les media dans la sousclasse CSSMedia
+	 */
 	protected void before()
 	{
 		
 	}
 	
+	/**
+	 * ajout les media dans la sousclasse CSSMedia
+	 */
 	protected void after()
 	{
 		
@@ -122,17 +127,20 @@ public class CSSElement  extends XMLElement {
 	
 	public CSSElement set(String content)
 	{
-		String cssContent = (String) getListStyle().getLast().content;
 		content=content.trim();
-		if (cssContent==null)
-			getListStyle().getLast().content = content;
-		else
-		{
-			boolean endWithSep = cssContent.length()==0?false:(cssContent.charAt(cssContent.length()-1)==';');
-			boolean startWithSep = cssContent.length()==0?true:(content.charAt(0)==';');
-			
-			getListStyle().getLast().content = cssContent+( (!endWithSep && !startWithSep)?";":"")+content;
-		}
+		
+		getListStyle().getLast().content.add(content);
+		
+//		if (getListStyle().getLast().content.size()==0)
+//			getListStyle().getLast().content.add(content);
+//		else
+//		{
+//			String cssContent = (String) getListStyle().getLast().content.getFirst();
+//			boolean endWithSep = cssContent.length()==0?false:(cssContent.charAt(cssContent.length()-1)==';');
+//			boolean startWithSep = cssContent.length()==0?true:(content.charAt(0)==';');
+//			
+//			getListStyle().getLast().content.set(0, cssContent+( (!endWithSep && !startWithSep)?";":"")+content);
+//		}
 		return this;	
 	}
 

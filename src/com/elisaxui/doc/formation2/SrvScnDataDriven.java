@@ -3,7 +3,6 @@
  */
 package com.elisaxui.doc.formation2;
 
-import static com.elisaxui.component.toolkit.com.JSCom.xuiCom;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
 import javax.ws.rs.GET;
@@ -26,11 +25,9 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
-import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -82,7 +79,7 @@ public class SrvScnDataDriven implements IJSONBuilder {
 			default void main() {
 				ImgType data = declareType(ImgType.class, "data");
 
-				xuiCom().requestUrl(JSString.value(REST_JSON_TEST+"OK"))
+				callStatic(TKCom.class).requestUrl(JSString.value(REST_JSON_TEST+"OK"))
 						.then(fct(data, () -> document().querySelector(cMain).appendChild(
 								newJS(JSTestTemplate.class).xImageOK(data.name(), data.urlImage()))));
 			}

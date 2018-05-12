@@ -13,6 +13,7 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSStyleRow;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ArrayMethod;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
@@ -24,17 +25,24 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLHandle;
 import com.elisaxui.core.xui.xml.target.CONTENT;
 
 /**
- * un element XML
- *   TODO mettre un heritage  pour mieux gere doElementModeTemplate et doElementModeXML
+ * un element XML TODO mettre un heritage pour mieux gere doElementModeTemplate
+ * et doElementModeXML
  * 
  * @author Bureau
  *
  */
 public class XMLElement extends XUIFormatManager implements IXMLBuilder {
-	
+
 	private static final Object IS_XPART = null;
-	
+
 	private Object name;
+	/**
+	 * @return the name
+	 */
+	public final Object getName() {
+		return name;
+	}
+
 	private Object comment;
 
 	public Object getComment() {
@@ -95,7 +103,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
-		
+
 		XUIFactoryXHtml.getXMLFile().listTreeXMLParent.add(this);
 		if (buf.isTemplate) {
 			doElementModeTemplate(buf);
@@ -112,64 +120,73 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 	 * @param buf
 	 */
 	private void doElementModeTemplate(XMLBuilder buf) {
-		if (name==IS_XPART)  
-			buf.getJSContent().getListElem().add(JSNodeTemplate.MTH_ADD_PART+"('xui'");  // TODO a changer le null par p(
-		else
-			buf.getJSContent().getListElem().add(JSNodeTemplate.MTH_ADD_ELEM+"('" + name + "'");
-
-		
-		buf.getJSContent().getListElem().add(",[");
 		int nbAttr = 0;
-		for (XMLAttr attr : listAttr) {
-			if (nbAttr == 0)
-				buf.getJSContent().getListElem().add(JSNodeTemplate.MTH_ADD_ATTR+"([");
-			else
-				buf.getJSContent().getListElem().add(",");
 
-			buf.getJSContent().getListElem().add("\"" + attr.getName() + "\"," + attr.getValue() + "");
-			nbAttr++;
+		if (name == IS_XPART) {
+			buf.getJSContent().getListElem().add(JSNodeTemplate.MTH_ADD_PART + "(");
+			buf.getJSContent().getListElem().add("[");
+		} else {
+			buf.getJSContent().getListElem().add(JSNodeTemplate.MTH_ADD_ELEM + "('" + name + "',");
+
+			buf.getJSContent().getListElem().add("[");
+			for (XMLAttr attr : listAttr) {
+				if (nbAttr == 0)
+					buf.getJSContent().getListElem().add(JSNodeTemplate.MTH_ADD_ATTR + "([");
+				else
+					buf.getJSContent().getListElem().add(",");
+
+				Object v = attr.getValue();
+
+				if (v instanceof String) {
+					String vs = ((String) v);
+					if (!vs.endsWith("'") && !vs.endsWith("\"") && !vs.startsWith("'") && !vs.startsWith("\""))
+						v = "\"" + vs + "\"";
+				}
+
+				buf.getJSContent().getListElem().add("\"" + attr.getName() + "\"," + v + "");
+				nbAttr++;
+			}
+			if (nbAttr > 0)
+				buf.getJSContent().getListElem().add("])");
 		}
-		if (nbAttr > 0)
-			buf.getJSContent().getListElem().add("])");
 
 		int nbChild = 0;
 		for (Object inner : listInner) {
 			if (inner != null) {
-				if (nbAttr > 0)
-				{
+				if (nbAttr > 0) {
 					buf.getJSContent().getListElem().add(",");
-					nbAttr=0;
+					nbAttr = 0;
 				}
-				
+
 				if (nbChild > 0)
 					buf.getJSContent().getListElem().add(",");
 
 				nbChild = doChild(buf, nbChild, inner);
 			}
 		}
-		buf.getJSContent().getListElem().add("]");
-
-		buf.getJSContent().getListElem().add(")");
+		
+	//	if (name != IS_XPART) {
+			buf.getJSContent().getListElem().add("]");
+			buf.getJSContent().getListElem().add(")");
+	//	}
 	}
 
 	/**
 	 * @param buf
 	 */
 	private void doElementModeText(XMLBuilder buf) {
-		
-		boolean isScript = buf.isResource && name!=null && name.equals(XHTMLPart.SCRIPT);
-		boolean isCss = buf.isResource && name!=null && name.equals(XHTMLPart.STYLE);
+
+		boolean isScript = buf.isResource && name != null && name.equals(XHTMLPart.SCRIPT);
+		boolean isCss = buf.isResource && name != null && name.equals(XHTMLPart.STYLE);
 		boolean isCommentText = buf.isResource && (buf.id.endsWith("css") || buf.id.endsWith("js"));
-		
-		if (comment != null && !buf.isModeString() && XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCommentFctJS()) {
+
+		if (comment != null && !buf.isModeString()
+				&& XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCommentFctJS()) {
 			newLine(buf);
 			newTabInternal(buf);
-			if (isCommentText)
-			{
+			if (isCommentText) {
 				buf.addContentOnTarget("/*" + comment + "*/");
-			}
-			else
-			{
+			} else {
 				buf.addContentOnTarget("<!--" + comment + "-->");
 			}
 		}
@@ -178,36 +195,34 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			newLine(buf);
 		}
 
-		if (isScript || isCss)
-		{
-			name=null;	
+		if (isScript || isCss) {
+			name = null;
 		}
-		
+
 		newTabInternal(buf);
 		if (name != null) {
-			
+
 			buf.addContentOnTarget("<" + name);
-			
+
 			for (XMLAttr attr : listAttr) {
 				buf.addContentOnTarget(" ");
 				attr.toXML(buf);
 			}
-			
+
 			// recherche un handle de type XMLAttr
 			for (Object inner : listInner) {
 				if (inner != null) {
 					if (inner instanceof XMLHandle) { // un handle
 						XMLHandle h = (XMLHandle) inner;
 						Object handledObject = zzGetProperties(h);
-						if (handledObject instanceof XMLAttr)
-						{
+						if (handledObject instanceof XMLAttr) {
 							buf.addContentOnTarget(" ");
-							((XMLAttr)handledObject).toXML(buf);
+							((XMLAttr) handledObject).toXML(buf);
 						}
 					}
 				}
 			}
-			
+
 			buf.addContentOnTarget(">");
 		}
 
@@ -228,15 +243,13 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			buf.addContentOnTarget("</" + name + ">");
 		}
 
-		if (comment != null && !buf.isModeString() && XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCommentFctJS()) {
+		if (comment != null && !buf.isModeString()
+				&& XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCommentFctJS()) {
 			newLine(buf);
 			newTabInternal(buf);
-			if (isCommentText)
-			{
+			if (isCommentText) {
 				buf.addContentOnTarget("/* end of " + comment + "*/");
-			}
-			else
-			{
+			} else {
 				buf.addContentOnTarget("<!--end of " + comment + "-->");
 			}
 		}
@@ -263,17 +276,16 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			part.toXML(buf);
 
 		} else if (inner instanceof List) { // une liste
-			if (inner instanceof ArrayMethod)
-			{				
+			if (inner instanceof ArrayMethod) {
 				JSDomFunction v = new JSDomFunction()._setValue(inner);
 				nbChild = doChild(buf, nbChild, v);
-			}
-			else
-			{
+			} else {
 				List<?> listChild = (List<?>) inner;
 				for (Object object : listChild) {
-					if (buf.isTemplate && nbChild>0) { buf.getJSContent().getListElem().add(",");}
-					
+					if (buf.isTemplate && nbChild > 0) {
+						buf.getJSContent().getListElem().add(",");
+					}
+
 					nbChild = doChild(buf, nbChild, object);
 				}
 			}
@@ -302,7 +314,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 
 		} else if (inner instanceof CSSStyleRow) { // un css
 			CSSStyleRow part = ((CSSStyleRow) inner);
-			part.nbTabInternal = this.nbTabInternal + part.nbTabInternal+ 1;
+			part.nbTabInternal = this.nbTabInternal + part.nbTabInternal + 1;
 			part.nbTabForNewLine = this.nbTabForNewLine;
 			part.toXML(buf);
 			nbChild++;
@@ -311,28 +323,34 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			XMLAttr attr = ((XMLAttr) inner);
 			if (buf.isTemplate) {
 				Object v = attr.getValue();
-				if (v instanceof VProperty)
-				{
-					v = XMLElement.zzGetProperties(new XMLHandle(((VProperty)v).getName()));
+				if (v instanceof VProperty) {
+					v = XMLElement.zzGetProperties(new XMLHandle(((VProperty) v).getName()));
 				}
-				buf.getJSContent().getListElem().add(JSNodeTemplate.MTH_ADD_ATTR+"([");
+
+				if (v instanceof String) {
+					String vs = ((String) v);
+					if (!vs.endsWith("'") && !vs.endsWith("\"") && !vs.startsWith("'") && !vs.startsWith("\""))
+						v = "\"" + vs + "\"";
+				}
+
+				buf.getJSContent().getListElem().add(JSNodeTemplate.MTH_ADD_ATTR + "([");
 				buf.getJSContent().getListElem().add("\"" + attr.getName() + "\"," + v + "");
-				buf.getJSContent().getListElem().add("])"+ (nbChild>=0?",":""));
+				buf.getJSContent().getListElem().add("])" + (nbChild >= 0 ? "," : ""));
 			}
-			//else
-			//	attr.toXML(buf);   // pas en children
-			
+			// else
+			// attr.toXML(buf); // pas en children
+
 		} else {
 			if (buf.isTemplate) {
 				if (inner instanceof CharSequence) {
-					buf.addContentOnTarget("\""+inner+"\"");
+					buf.addContentOnTarget("\"" + inner + "\"");
 				} else if (inner instanceof JSDomFunction) {
 					buf.addContentOnTarget(inner);
 				} else if (inner instanceof JSNodeElement) {
 					buf.addContentOnTarget(inner);
 				} else {
-					buf.addContentOnTarget(JSNodeTemplate.MTH_ADD_TEXT+"(");
-					buf.addContentOnTarget(inner);  
+					buf.addContentOnTarget(JSNodeTemplate.MTH_ADD_TEXT + "(");
+					buf.addContentOnTarget(inner);
 					buf.addContentOnTarget(")");
 				}
 				nbChild++;
@@ -351,13 +369,12 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 
 	private int doProperties(XMLBuilder buf, int nbChild, XMLHandle h) {
 		Object handledObject = zzGetProperties(h);
-		
+
 		if (handledObject != null) {
 			nbChild = doChild(buf, nbChild, handledObject);
 		}
 		return nbChild;
 	}
-	
 
 	public static Object zzGetProperties(XMLHandle h) {
 		String nameHandle = h.getName();
@@ -366,7 +383,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 		Object handledObject = null;
 		String firstPrefix = null;
 		XMLPart firstPart = null;
-		
+
 		for (Iterator<Object> it = listParent.descendingIterator(); it.hasNext();) {
 			Object elm = it.next();
 			if (elm instanceof XMLElement) {
@@ -374,35 +391,32 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			} else if (elm instanceof XMLPartElement) {
 				XMLPart part = ((XMLPartElement) elm).part;
 				// gestion du prefix
-				if (firstPrefix==null)
-				{
+				if (firstPrefix == null) {
 					firstPart = part;
-					firstPrefix = part.getPropertiesPrefix()==null?"":part.getPropertiesPrefix();
+					firstPrefix = part.getPropertiesPrefix() == null ? "" : part.getPropertiesPrefix();
 				}
-				Object elem = part.vProperty(nameHandle+firstPrefix);
+				Object elem = part.vProperty(nameHandle + firstPrefix);
 				if (elem != null) {
 					handledObject = elem;
-					break;   // element trouve sur un parent
+					break; // element trouve sur un parent
 				}
 			}
 		}
-		
-		if (handledObject==null)
-		{   // recherche sur la scene
-			if (firstPrefix==null)
-				firstPrefix="";
-			handledObject = XUIFactoryXHtml.getXMLFile().getMainXMLPart().vProperty(nameHandle+firstPrefix);
+
+		if (handledObject == null) { // recherche sur la scene
+			if (firstPrefix == null)
+				firstPrefix = "";
+			handledObject = XUIFactoryXHtml.getXMLFile().getMainXMLPart().vProperty(nameHandle + firstPrefix);
 		}
-		
-		if (firstPart!=null && handledObject==null)
-		{   // recherche sans le prefix sur le premier part
+
+		if (firstPart != null && handledObject == null) { // recherche sans le prefix sur le premier part
 			handledObject = firstPart.vProperty(nameHandle);
 		}
-		
+
 		// gestion du add if exist
-		if (h.getIfExistAdd()!=null && handledObject!=null)
+		if (h.getIfExistAdd() != null && handledObject != null)
 			handledObject = h.getIfExistAdd();
-		
+
 		return handledObject;
 	}
 

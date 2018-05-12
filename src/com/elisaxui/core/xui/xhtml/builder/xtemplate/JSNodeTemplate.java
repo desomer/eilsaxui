@@ -18,7 +18,7 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  */
 public class JSNodeTemplate extends JSNodeElement implements IXHTMLBuilder
 {
-	public static final String MTH_ADD_PART = "e";
+	public static final String MTH_ADD_PART = "p";
 	public static final String MTH_ADD_ELEM = "e";
 	public static final String MTH_ADD_ATTR = "a";
 	public static final String MTH_ADD_TEXT = "t";
@@ -63,5 +63,11 @@ public class JSNodeTemplate extends JSNodeElement implements IXHTMLBuilder
 		super();
 		this.xml = xml;
 	}
+	
+	public JSNodeTemplate()
+	{
+		super();
+	}
+			
 		
 }

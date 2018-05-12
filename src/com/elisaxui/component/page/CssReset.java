@@ -31,8 +31,6 @@ public class CssReset extends XHTMLPart implements ICSSBuilder {
 			sOn(sSel("html"), () -> { 
 				css("line-height: 1.15"); 
 			});
-			
-			
 		});
 	}
 	

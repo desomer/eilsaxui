@@ -16,11 +16,10 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSObject;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
-import com.elisaxui.core.xui.xml.annotation.xResource;
+import com.elisaxui.core.xui.xml.annotation.xFactory;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -35,12 +34,12 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
  */
 @xResource(id = "ScnTemplatePageDyn")
 public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
-
-	static Section aSection;
-	static Phrase aPhrase;
 	
+	/********************************************************/
+	// les includes
+	/********************************************************/
 	@xTarget(HEADER.class)
-	@xResource  
+	@xResource
 	public XMLElement xImport() {
 		return xListNode(
 				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"),
@@ -50,87 +49,63 @@ public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
 						JSDataSet.class));
 	}
 
-	@xTarget(CONTENT.class) // la vue App Shell
+	/********************************************************/
+	// la vue App Shell
+	/********************************************************/
+	@xTarget(CONTENT.class) 
 	public XMLElement xAppShell() {
+		/******** INIT PROPERTY ************************/
 		vProp(CmpPage.pContentMain, vPart(new CmpSection()
-				.vProperty(CmpSection.pSectionH1, "section static")
-				.vProperty(CmpSection.pArticleH1, "article static")
-				.vProperty(CmpSection.pContentArticle, "un texte article static")));
+				.vProp(CmpSection.pSectionH1, "section static")
+				.vProp(CmpSection.pArticleH1, "article static")
+				.vProp(CmpSection.pContentArticle, "un texte article static")));
 
 		CmpNavVertical nav = new CmpNavVertical();
+		vProp(CmpPage.pContentNav, vPart(nav,
+				nav.xItem("a1"),
+				nav.xItem("a2"),
+				nav.xItem("a3")));
 
-		vProp(CmpPage.pContentNav, vPart(nav, nav.xItem("a1"), 
-													nav.xItem("a2"), 
-													nav.xItem("a3")));
-
+		/******** INIT PAGE ************************/
 		return vPart(new CmpPage());
-	}
-
-	public XMLElement xSessionDyn(JSArray<Section> arr) {
-		return xListNode(
-				vFor(arr, aSection,
-						vPart(new CmpSection()
-								.vProperty(CmpSection.pSectionH1, aSection.titre())
-								.vProperty(CmpSection.pArticleH1, aSection.article())
-								.vProperty(CmpSection.pContentArticle,
-								 vFor(aSection.phrases(), aPhrase,
-										xDiv(aPhrase.text()))))));
 	}
 
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
 	public XMLElement xLoad() {
-		return xInclude(JSTest.class);
+		return xInclude(JSController.class);
 	}
 
 	/********************************************************/
-	// une class js avec template et datadriven
+	// une class js CONTROLEUR avec template et datadriven
 	/********************************************************/
-	public interface JSTest extends JSClass, IJSNodeTemplate {
+	public interface JSController extends JSClass, IJSNodeTemplate {
 
 		@xStatic(autoCall = true) // appel automatique de la methode static
 		default void main() {
-
+			/******************* LES CONTENEURS ********************/
+			
 			JSArray<Section> arrSection = let("arrSection", new JSArray<Section>().asLitteral());
 			JSArray<Menu> arrNav = let("arrNav", new JSArray<Menu>().asLitteral());
 
-			document().querySelector(CmpPage.cPageMain)
-					.appendChild(createNodeTemplate(new ScnTemplatePageDyn().xSessionDyn(arrSection)));
+			/******************* LES FACTORY **********************/
 			
-			document().querySelector(CmpNavVertical.cNavContainer)
-					.appendChild(createNodeTemplate(new CmpNavVertical().xNavDyn(arrNav)));
-			
-			/***************************************************/
-			setTimeout(() -> {
-				Menu obj = newJS(Menu.class);
-				obj.titre().set("page A");
-				arrNav.push(obj);
-				
-				obj = newJS(Menu.class);
-				obj.titre().set("page B");
-				arrNav.push(obj);
-			}, 3000);
+			document().querySelector(CmpPage.cPageMain).appendChild(new ScnTemplatePageDyn().xSessionDyn(arrSection));
+			document().querySelector(CmpNavVertical.cNavContainer).appendChild(new CmpNavVertical().xNavDyn(arrNav));
 
-			setTimeout(() -> {
-				arrNav.pop();
-				arrSection.pop();
-			}, 4000);
-			
-			/***************************************************/
-			
-			Section obj = newJS(Section.class);
-			obj.titre().set("section A");
-			obj.article().set("un article a ajouter");
-			obj.phrases().set(new JSArray<JSObject>().asLitteral());
-			arrSection.push(obj);
+			/*******************  LES DATAS ************************/
+			Section section = newJS(Section.class);
+			section.titre().set("section A");
+			section.article().set("un article a ajouter");
+			section.phrases().set(new JSArray<JSObject>().asLitteral());
+			arrSection.push(section);
 
-			obj = newJS(Section.class);
-			obj.titre().set("section B");
-			obj.article().set("un article 2 a ajouter");
-			obj.phrases().set(new JSArray<JSObject>().asLitteral());
-			arrSection.push(obj);
-						
-			/***************************************************/
+			section = newJS(Section.class);
+			section.titre().set("section B");
+			section.article().set("un article 2 a ajouter");
+			section.phrases().set(new JSArray<JSObject>().asLitteral());
+			arrSection.push(section);
 
+			/***************************************************/
 			setTimeout(() -> {
 				Phrase phrase = newJS(Phrase.class);
 				phrase.text().set("une phrase 1 ajouter");
@@ -151,7 +126,25 @@ public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
 				phrase.text().set("une phrase 23 ajouter");
 				arrSection.at(1).phrases().push(phrase);
 			}, 2000);
+			
+			setTimeout(() -> {
+				Menu menu = newJS(Menu.class);
+				menu.titre().set("page A");
+				arrNav.push(menu);
 
+				menu = newJS(Menu.class);
+				menu.titre().set("page B");
+				arrNav.push(menu);
+			}, 3000);
+
+			/***************************************************/
+			
+			setTimeout(() -> {
+				arrNav.pop();
+				arrSection.pop();
+			}, 4000);
+			
+			/***************************************************/
 		}
 	}
 
@@ -161,29 +154,51 @@ public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
 	public interface Menu extends JSType {
 		JSString titre();
 	}
-	
+
 	public interface Section extends JSType {
 		JSString titre();
+
 		JSString article();
+
 		JSArray<Phrase> phrases();
 	}
-	
+
 	public interface Phrase extends JSType {
 		JSString text();
 	}
-	
+
 	/********************************************************/
 	// les components
+	/********************************************************/
+	// les variables de composant section
+	static Section aSection;
+	static Phrase aPhrase;
+	// les variables de composant navbar
+	static Menu aMenu;
+
+	/********************************************************/
+	/** session = titre + article + Phrases */
+	@xFactory("xSessionDyn")
+	public XMLElement xSessionDyn(JSArray<Section> arr) {
+		return xListNode(
+				vFor(arr, aSection, vPart(new CmpSection()
+						.vProp(CmpSection.pSectionH1, aSection.titre())
+						.vProp(CmpSection.pArticleH1, aSection.article())
+						.vProp(CmpSection.pContentArticle,
+								vFor(aSection.phrases(), aPhrase, xDiv(aPhrase.text()))))));
+	}
+	
 	/********************************************************/
 	static class CmpPage extends XHTMLPart {
 		static VProperty pContentMain;
 		static VProperty pContentNav;
+		
 		static CSSClass cPageContainer;
 		static CSSClass cPageMain;
 
 		@xTarget(HEADER.class)
 		@xResource
-		public XMLElement style() {
+		public XMLElement doStyle() {
 			return cStyle()
 					.path(cPageContainer).set("display:flex")
 					.andDirectChild(cStyle().path("*").set("flex:1 1 auto"));
@@ -200,7 +215,7 @@ public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
 		}
 
 	}
-	
+
 	/********************************************************/
 	static class CmpSection extends XHTMLPart {
 		static VProperty pSectionH1;
@@ -210,41 +225,38 @@ public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
 
 		@xTarget(HEADER.class)
 		@xResource
-		public XMLElement style() {
+		public XMLElement doStyle() {
 			return cStyle().path(cSection).set("border:1px solid black");
 		}
 
 		@xTarget(CONTENT.class)
 		public XMLElement xBloc() {
 			return xSection(cSection,
-						vIfExist(pSectionH1, xH1(pSectionH1)),
-						xArticle(vIfExist(pArticleH1, xH1(pArticleH1)),
-								pContentArticle),
-						xAside()
-					);
+					vIfExist(pSectionH1, xH1(pSectionH1)),
+					xArticle(vIfExist(pArticleH1, xH1(pArticleH1)),
+							pContentArticle),
+					xAside());
 		}
 
 	}
-	
+
 	/********************************************************/
 	static class CmpNavVertical extends XHTMLPart implements IJSDataDriven {
 		static CSSClass cNavContainer;
 		static VProperty pContent;
-		static Menu aRow;
 
 		@xTarget(CONTENT.class)
 		public XMLElement xBloc() {
 			return xUl(cNavContainer, getChildren(), pContent);
 		}
 
-		public XMLElement xItem(Object content) {
-			return xLi(content);
+		@xFactory("xNavDyn")
+		public XMLElement xNavDyn(JSArray<Menu> arr) {
+			return xListNode(vFor(arr, aMenu, xItem(aMenu.titre())));
 		}
 
-		public XMLElement xNavDyn(JSArray<Menu> arr) {			
-			return xListNode(
-					   vFor(arr, aRow, xItem(aRow.titre()) 
-					));
+		public XMLElement xItem(Object content) {
+			return xLi(content);
 		}
 	}
 }

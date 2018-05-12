@@ -3,108 +3,105 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom;
 
-import com.elisaxui.core.xui.xhtml.IXHTMLBuilder;
 import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.IJSClassInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSNodeTemplate;
-import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 
 /**
  * @author gauth
  *
  */
-public class JSNodeElement extends JSAny  implements IJSClassInterface, IXHTMLBuilder {
-	
+public class JSNodeElement extends JSAny implements IJSClassInterface {
+
 	public JSNodeElement appendChild(Object... element) {
-		Object e = null;
-		
-		if (element.length==1 && ! (element[0] instanceof JSFunction))
-			e = element[0];
-		else
-			e = xListNode(element);
-		
-	//	return  callMth("appendChild", new JSNodeTemplate(e).setModeJS(true));
-		return  callMth("appendChild", e);
+
+		if (element.length == 1 && element[0] instanceof XMLElement) {
+			XMLElement e = (XMLElement) element[0];
+
+			if (e.getName() == null) {  // un elem xml sans nom de noeud
+				// ajoute un tableau d'element xElem(vFor(....
+				Object f = new JSFunction()._return(JSNodeTemplate.MTH_ADD_PART + "([", e.getListInner(), "], this)");
+				Object self = JSContent.cast(JSAny.class, this.toString());
+				return callMth("appendChild", JSContent.cast(JSAny.class, f + ".bind(" + self + ")()"));
+			}
+		}
+		return callMth("appendChild", element);
 	}
-	
+
 	/**************************************************/
-//	public JSNodeElement appendChild(Object element) {
-//		return  callMth("appendChild", element);
-//	}
-	
+	// public JSNodeElement appendChild(Object element) {
+	// return callMth("appendChild", element);
+	// }
+
 	public JSNodeElement remove() {
-		return  callMth("remove");
+		return callMth("remove");
 	}
-	
+
 	public JSString textContent() {
 		return castAttr(new JSString(), "textContent");
 	}
-	
+
 	public JSDomTokenList classList() {
 		return castAttr(new JSDomTokenList(), "classList");
 	}
-	
+
 	public JSString nodeName() {
 		return castAttr(new JSString(), "nodeName");
 	}
-	
+
 	public JSon dataset() {
 		return castAttr(new JSon(), "dataset");
 	}
-	
+
 	public void addEventListener(Object event, JSFunction fct) {
 		callMth("addEventListener", event, fct);
 	}
-	
+
 	public JSArray<JSNodeElement> childNodes() {
 		return castAttr(new JSArray<JSNodeElement>().setArrayType(JSNodeElement.class), "childNodes");
 	}
-	
-	public JSNodeElement querySelector(CSSSelector selector)
-	{
-		return callTyped(new JSNodeElement(), "querySelector", ""+selector);
+
+	public JSNodeElement querySelector(CSSSelector selector) {
+		return callTyped(new JSNodeElement(), "querySelector", "" + selector);
 	}
-	
-	public JSNodeElement querySelector(JSAny variable)
-	{
+
+	public JSNodeElement querySelector(JSAny variable) {
 		return callTyped(new JSNodeElement(), "querySelector", variable);
 	}
-	
-	public JSNodeElement querySelector(Object... selector)
-	{
-		if (selector.length==1 && selector[0] instanceof JSAny)
-			return querySelector((JSAny)selector[0]);	
+
+	public JSNodeElement querySelector(Object... selector) {
+		if (selector.length == 1 && selector[0] instanceof JSAny)
+			return querySelector((JSAny) selector[0]);
 		else
 			return querySelector(CSSSelector.onPath(selector));
 	}
-	
-	public JSArray<JSNodeElement> querySelectorAll(CSSSelector selector)
-	{
-		return callTyped(new JSArray<JSNodeElement>().setArrayType(JSNodeElement.class), "querySelectorAll", ""+selector);
+
+	public JSArray<JSNodeElement> querySelectorAll(CSSSelector selector) {
+		return callTyped(new JSArray<JSNodeElement>().setArrayType(JSNodeElement.class), "querySelectorAll",
+				"" + selector);
 	}
-	
-	public JSArray<JSNodeElement> querySelectorAll(JSAny variable)
-	{
+
+	public JSArray<JSNodeElement> querySelectorAll(JSAny variable) {
 		return callTyped(new JSArray<JSNodeElement>().setArrayType(JSNodeElement.class), "querySelectorAll", variable);
 	}
-	
-	public JSArray<JSNodeElement> querySelectorAll(Object... selector)
-	{
-		if (selector.length==1 && selector[0] instanceof JSAny)
-			return querySelectorAll((JSAny)selector[0]);	
+
+	public JSArray<JSNodeElement> querySelectorAll(Object... selector) {
+		if (selector.length == 1 && selector[0] instanceof JSAny)
+			return querySelectorAll((JSAny) selector[0]);
 		else
 			return querySelectorAll(CSSSelector.onPath(selector));
 	}
-	
-	public <E extends JSAny> E firstNodeValue()
-	{
-			return this.childNodes().at(0).attr("nodeValue");
+
+	public <E extends JSAny> E firstNodeValue() {
+		return this.childNodes().at(0).attr("nodeValue");
 	}
-	
+
 }

@@ -16,7 +16,10 @@ public class CSSSelector {
 	
 	public static final CSSSelector onPath(Object... sel)
 	{
-		return sel.length==0 ? null : new CSSSelector(sel);
+		if (sel==null)
+			return null;
+		else
+			return sel.length==0 ? null : new CSSSelector(sel);
 	}
 	
 	private CSSSelector(Object... sel)

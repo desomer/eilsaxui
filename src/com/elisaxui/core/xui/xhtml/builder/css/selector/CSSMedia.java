@@ -6,8 +6,6 @@ package com.elisaxui.core.xui.xhtml.builder.css.selector;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSElement;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSStyleRow;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
-import com.elisaxui.core.xui.xml.builder.XMLElement;
-import com.elisaxui.core.xui.xml.target.CONTENT;
 
 /**
  * @author gauth
@@ -15,28 +13,30 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
  */
 public class CSSMedia extends CSSElement {
 
-	Object mediaQuery;
+	Object mediaQuery;  // a null si all
 
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
 		CSSStyleRow media = this.getListStyle().removeFirst();
 		mediaQuery = media.getPath();
-		
-		for (CSSStyleRow elem : this.getListStyle()) {
-			elem.setNbTabInternal(1);
-		}
+		if (mediaQuery!=null)
+			for (CSSStyleRow elem : this.getListStyle()) {
+				elem.setNbTabInternal(1);  // ajoute une tabulation sur les sous lignes du css
+			}
 		
 		return super.toXML(buf);
 	}
 
 	@Override
 	protected void before() {
-		listInner.add(new CSSStyleRowMedia( mediaQuery + " {", null));
+		if (mediaQuery!=null)
+			listInner.add(new CSSStyleRowMedia( mediaQuery + " {", null));
 	}
 
 	@Override
 	protected void after() {
-		listInner.add(new CSSStyleRowMedia("}", null));
+		if (mediaQuery!=null)
+			listInner.add(new CSSStyleRowMedia("}", null));
 	}
 
 	
@@ -50,9 +50,9 @@ public class CSSMedia extends CSSElement {
 		@Override
 		public XMLBuilder toXML(XMLBuilder buf)
 		{
-			String style = getPath().toString();
-			if (style!=null)
+			if (getPath()!=null)
 			{
+				String style = getPath().toString();
 				newLine(buf);
 				newTabInternal(buf);
 				buf.addContentOnTarget(style);

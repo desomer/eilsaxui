@@ -70,7 +70,7 @@ public class ScnAdmin extends XHTMLPart {
 			JSArray<JSAppConfiguration> data = let("data", new JSArray<JSAppConfiguration>());
 
 			JSNodeElement dom = let("dom", document().querySelector(cMain));
-			dom.appendChild( vFor(data, item, xListNode(
+			dom.appendChild(xElem(vFor(data, item, xDiv(
 					vPart(new ViewCheckRadio()
 							.vProp(ViewCheckRadio.pLabel, "Single File")
 							.vProp(ViewCheckRadio.pValue,
@@ -115,7 +115,7 @@ public class ScnAdmin extends XHTMLPart {
 					xNode("HR"),
 					xButton(cBtnOk, "SAVE")
 
-			)));
+			))));
 
 			callStatic(TKCom.class).requestUrl(JSString.value(SrvAdmin.URL_CONFIG)).then(fct(item, () -> {
 				data.push(item);

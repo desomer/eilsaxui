@@ -55,7 +55,6 @@ public class CSSElement  extends XMLElement {
 	 */
 	protected void before()
 	{
-		
 	}
 	
 	/**
@@ -73,6 +72,7 @@ public class CSSElement  extends XMLElement {
 		return this;
 	}
 	
+	@Deprecated
 	public CSSElement path(Object... path)
 	{
 		getListStyle().add(new CSSStyleRow(CSSSelector.onPath(path), null));
@@ -80,7 +80,7 @@ public class CSSElement  extends XMLElement {
 		return this;
 	}
 	
-	
+	@Deprecated
 	public CSSElement andChild(CSSElement content)
 	{
 		LinkedList<CSSStyleRow> path = content.getListStyle();
@@ -92,6 +92,7 @@ public class CSSElement  extends XMLElement {
 		return this;
 	}
 	
+	@Deprecated
 	public CSSElement andDirectChild(CSSElement content)
 	{
 		LinkedList<CSSStyleRow> path = content.getListStyle();
@@ -103,6 +104,7 @@ public class CSSElement  extends XMLElement {
 		return this;
 	}
 	
+	@Deprecated
 	public CSSElement or(CSSElement content)
 	{
 		LinkedList<CSSStyleRow> path = content.getListStyle();
@@ -114,6 +116,7 @@ public class CSSElement  extends XMLElement {
 		return this;
 	}
 	
+	@Deprecated
 	public CSSElement and(CSSElement content)
 	{
 		LinkedList<CSSStyleRow> path = content.getListStyle();
@@ -125,22 +128,11 @@ public class CSSElement  extends XMLElement {
 		return this;
 	}
 	
+	@Deprecated
 	public CSSElement set(String content)
 	{
-		content=content.trim();
-		
+		content=content.trim();		
 		getListStyle().getLast().content.add(content);
-		
-//		if (getListStyle().getLast().content.size()==0)
-//			getListStyle().getLast().content.add(content);
-//		else
-//		{
-//			String cssContent = (String) getListStyle().getLast().content.getFirst();
-//			boolean endWithSep = cssContent.length()==0?false:(cssContent.charAt(cssContent.length()-1)==';');
-//			boolean startWithSep = cssContent.length()==0?true:(content.charAt(0)==';');
-//			
-//			getListStyle().getLast().content.set(0, cssContent+( (!endWithSep && !startWithSep)?";":"")+content);
-//		}
 		return this;	
 	}
 

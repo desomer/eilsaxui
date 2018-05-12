@@ -6,7 +6,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 
-public interface JSContentInterface  {
+public interface JSContentInterface extends JSElement  {
 	
 	JSContentInterface __(Object... content);
 	

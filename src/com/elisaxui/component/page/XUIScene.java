@@ -163,6 +163,7 @@ public abstract class XUIScene extends XHTMLPart {
 				xInclude(JSDataCtx.class),
 				xInclude(JSOverlay.class),
 				xInclude(JSContainer.class),
+				xInclude(JSNavBar.class),
 				xInclude(JSPageLayout.class),
 				xInclude(TKRouterEvent.class),
 				vPart(new CssReset()), 
@@ -179,12 +180,6 @@ public abstract class XUIScene extends XHTMLPart {
 	public XMLElement xStyleXUIScene() {
 
 		return cStyle()
-//				.path("*, *:before, *:after").set(
-//						"-webkit-tap-highlight-color: rgba(0,0,0,0); " // pas de coulour au click => ripple a la place
-//								+ "box-sizing: border-box;   "
-//								+ "margin: 0;" +
-//								"  padding: 0;")
-
 				.path("html").set("font-size: 16px;")
 
 				// //+"overflow-y: scroll;"
@@ -194,16 +189,11 @@ public abstract class XUIScene extends XHTMLPart {
 				// + "font-family: 'Roboto', sans-serif;font-weight: normal;")
 
 				.path("body").set("background-color: " + getConfigScene().getBgColorScene() + ";"
-//						+ "line-height: 1.5;"
 						+ "font-family: 'Roboto', sans-serif;"
 						+ "font-weight: normal;")
 
 				// ----------------------------------------------------------------
-				.path(scene).set("overflow-x: hidden; background-color: " + getConfigScene().getBgColorScene() + ";" // overflow:
-																														// auto;
-																														// -webkit-overflow-scrolling:
-																														// auto
-				// + "min-width: 100vw; "
+				.path(scene).set("overflow-x: hidden; background-color: " + getConfigScene().getBgColorScene() + ";" 
 						+ "min-height: 100vh; ")
 				.andChild(cStyle(cShell).set("background-color: " + getConfigScene().getBgColorContent() + ";"
 						+ "width: " + widthScene + ";"

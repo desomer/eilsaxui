@@ -20,9 +20,9 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 public class XMLPartElement implements IXMLBuilder {
 	XMLPart part;
 
-	public XMLPartElement(XMLPart part, Object... inner) {
+	public XMLPartElement(XMLPart part, Object... child) {
 		this.part = part;
-		this.part.getChildren().addAll(Arrays.asList(inner));
+		this.part.getChildren().addAll(Arrays.asList(child));
 	}
 
 	@Override

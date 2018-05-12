@@ -80,7 +80,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 		return type;
 	}
 	
-	public static final <E> JSArray<E> declareArray(Class<E> type, String name) {
+	public static final <E> JSArray<E> declareArray(Class<E> type, Object name) {
 		JSArray<?> jc = declareType(JSArray.class, name);
 		jc.setArrayType(type);
 		return (JSArray<E>) jc;

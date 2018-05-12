@@ -51,12 +51,6 @@ public class CSSStyleRow extends XUIFormatManager implements IXMLBuilder {
 		else
 			buf.addContentOnTarget(path + " {");
 
-		// String cssContent = (String) getListStyle().getLast().content.getFirst();
-		// boolean endWithSep =
-		// cssContent.length()==0?false:(cssContent.charAt(cssContent.length()-1)==';');
-		// boolean startWithSep = cssContent.length()==0?true:(content.charAt(0)==';');
-		// cssContent+( (!endWithSep && !startWithSep)?";":"")+content);
-
 		int i = 0;
 		String last = null;
 

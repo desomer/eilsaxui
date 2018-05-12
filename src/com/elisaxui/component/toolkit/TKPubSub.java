@@ -6,11 +6,13 @@ package com.elisaxui.component.toolkit;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
+import com.elisaxui.core.xui.xml.annotation.xComment;
 
 /**
  * @author gauth
  *
  */
+@xComment("TKPubSub")
 public interface TKPubSub extends JSClass {
 
 	JSArray<Object> observers();

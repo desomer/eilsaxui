@@ -13,7 +13,7 @@ import com.elisaxui.core.xui.xml.builder.VProperty;
 
 /**
  * @author gauth
- *
+ *   nouvelle gestion des css par lambda
  */
 public interface ICSSBuilder {
 
@@ -25,6 +25,10 @@ public interface ICSSBuilder {
 	
 	default CSSElement sOn(CSSClass classCss, CssBlock css) {
 		return xStyle(sSel(classCss), css);
+	}
+	
+	default CSSElement xStyle(CssBlock css) {
+		return xStyle(sMedia("all"), css);
 	}
 	
 	default CSSElement xStyle(CSSElement parent, CssBlock css) {
@@ -120,16 +124,15 @@ public interface ICSSBuilder {
 			else
 				list.getLast().set(object.toString());
 		}
-		
-	//	String content = selector[0].toString();
-
-
 	}
 
 	default CSSElement sMedia(Object... selector) {
 		CSSMedia dom = new CSSMedia();
 		list.add(dom);
-		return dom.path("@media "+ selector[0]);
+		if (selector[0].toString().equalsIgnoreCase("all"))
+			return dom.path(null);
+		else
+			return dom.path("@media "+ selector[0]);
 	}
 
 	default CSSElement sKeyFrame(Object... selector) {

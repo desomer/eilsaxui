@@ -8,7 +8,6 @@ import static com.elisaxui.component.widget.button.ViewRippleEffect.cRippleEffec
 
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.component.transition.ConstTransition;
-import com.elisaxui.component.widget.layout.ViewPageLayout;
 import com.elisaxui.component.widget.navbar.ViewNavBar;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
@@ -32,6 +31,7 @@ public class ViewTabBar extends XHTMLPart implements ICSSBuilder {
 
 	
 	public static VProperty pStyleViewTabBar;
+	public static VProperty pChildrenTabBar;
 	
 	public static final String PROPERTY_NAME = "PROPERTY_NAME";
 	
@@ -53,17 +53,17 @@ public class ViewTabBar extends XHTMLPart implements ICSSBuilder {
 			
 		final String bgColorBar = bg;
 		
-		return xStyle(sMedia("all"), ()-> {
+		return xStyle(()-> {
 			sOn(cTabbar, ()-> {
 				css("z-index: "+XUIScene.ZINDEX_NAV_BAR);
 				css(bgColorBar==null?"":("background:"+bgColorBar));
-				css(pStyleViewTabBar);
 				css("height: "+XUIScene.heightTabBar);
 				css("width: "+XUIScene.widthScene);
 				css("color:white");
 				css(XUIScene.PERFORM_3D);
 				css("transition: transform "+ConstTransition.SPEED_ANIM_SCROLL+"ms ease-in-out");
 				css("box-shadow: 16px -14px 20px 0 rgba(0, 0, 0, 0.21), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);");
+				css(pStyleViewTabBar);
 			});
 			
 			sOn(cFixedBottom, ()-> css("position:fixed; bottom:0px; "+XUIScene.PERFORM_3D));
@@ -74,38 +74,24 @@ public class ViewTabBar extends XHTMLPart implements ICSSBuilder {
 
 		});
 		
-		
-//		return cStyle()   
-//				.path(cTabbar).set("z-index: "+XUIScene.ZINDEX_NAV_BAR+";"
-//						+ (bgColorBar==null?";":("background:"+bgColorBar+"; "))
-//						+ "height: "+XUIScene.heightTabBar+";"
-//						+ "width: "+XUIScene.widthScene+"; "
-//						+ "color:white; "
-//						+ XUIScene.PREFORM_3D
-//						+ "transition: transform "+ConstTransition.SPEED_ANIM_SCROLL+"ms ease-in-out;" 
-//						+ "box-shadow: 16px -14px 20px 0 rgba(0, 0, 0, 0.21), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);")
-//				
-//				.path(cFixedBottom).set("position:fixed; bottom:0px; "+XUIScene.PREFORM_3D)
-//				.path(cListReset).set("list-style: none;margin: 0; padding: 0;")
-//				.path(cFlex).set("display:flex;")
-//				.path(cFlex_1).set("flex:1;")
-//				.path(cTextAlignCenter).set("text-align: center;")
-//				;
 	}
 	
 	@xTarget(CONTENT.class)
 	public XMLElement xContenu() {  
 		return xFooter( xId(this.vProperty(PROPERTY_NAME)), cTabbar, cFixedBottom, cFixedElement,
-				xUl(cListReset, cFlex, this.getChildren()));
+				xUl(cListReset, cFlex, this.getChildren(), pChildrenTabBar));
 	}
 	
+	
+	
+	@Deprecated
 	public static XMLElement getTemplateAction(Object name, Object action) {
 		
 		IJSDomTemplate template = new IJSDomTemplate() {
 			@Override
 			public XMLElement getTemplate()
 			{		
-				return xNode("button", xAttr("data-x-action", txt(xVar(action))), ViewNavBar.actionBtnContainer, cRippleEffect , xAttr("type", "\"button\""),  "<i class=\"actionBtn material-icons\">",xVar(name),"</i>");
+				return xNode("button", xAttr("data-x-action", xTxt(xVar(action))), ViewNavBar.cActionBtnContainer, cRippleEffect , xAttr("type", "\"button\""),  "<i class=\"actionBtn material-icons\">",xVar(name),"</i>");
 			}
 		};
 		

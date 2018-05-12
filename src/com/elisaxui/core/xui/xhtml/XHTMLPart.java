@@ -125,10 +125,12 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 				xAttr("href", xTxt(url)));
 	}
 
+	@Deprecated
 	public static final CSSElement cStyle() {
 		return new CSSElement();
 	}
 
+	@Deprecated
 	public static final CSSElement cStyle(Object... path) {
 		return new CSSElement().path(path);
 	}

@@ -353,6 +353,11 @@ public final class ProxyHandler implements InvocationHandler {
 			return JSContent.declareType((Class<?>) mthInvoke.args[0], mthInvoke.args[1]);
 		}
 
+		if (mthInvoke.method.getName().equals("declareArray")) {
+			return JSContent.declareArray((Class<?>) mthInvoke.args[0], mthInvoke.args[1]);
+		}
+		
+		
 		if (mthInvoke.method.getName().equals("asLitteral")) {
 			this.jsonBuilder = Json.createObjectBuilder();
 			return mthInvoke.proxy;

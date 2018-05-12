@@ -26,25 +26,25 @@ public class ScnTemplatePage extends XHTMLPart {
 	@xTarget(CONTENT.class) // la vue App Shell
 	public XMLElement xAppShell() {
 		
-		vProperty(CmpSection.pArticleH1, "article defaut");
-		vProperty(CmpSection.pSectionH1, "section defaut");
-		vProperty(CmpSection.pSectionH1+"SEC1", "section sec1");
-		vProperty(CmpSection.pSectionH1+"SEC3", "section sec3");
-		vProperty(CmpSection.pContentArticle+"SEC3", "un article surcharge 3");
+		vProp(CmpSection.pArticleH1, "article defaut");
+		vProp(CmpSection.pSectionH1, "section defaut");
+		vProp(CmpSection.pSectionH1+"SEC1", "section sec1");
+		vProp(CmpSection.pSectionH1+"SEC3", "section sec3");
+		vProp(CmpSection.pContentArticle+"SEC3", "un article surcharge 3");
 		
 		/*************************************************/
 		/* liste static */
 		List<XMLElement> listSection = new ArrayList<>();
 		listSection.add(vPart(new CmpSection()
-									.vProperty(XMLPart.PROP_ID, "SEC1")));
+									.vProp(XMLPart.PROP_ID, "SEC1")));
 		listSection.add(vPart(new CmpSection()
-									.vProperty(XMLPart.PROP_ID, "SEC2")
-									.vProperty(CmpSection.pSectionH1, "section test 2")
-									.vProperty(CmpSection.pArticleH1, "article test 2")));
+									.vProp(XMLPart.PROP_ID, "SEC2")
+									.vProp(CmpSection.pSectionH1, "section test 2")
+									.vProp(CmpSection.pArticleH1, "article test 2")));
 		listSection.add(vPart(new CmpSection()
-									.vProperty(XMLPart.PROP_ID, "SEC3")
-									.vProperty(CmpSection.pArticleH1, "article test 3")
-									.vProperty(CmpSection.pContentArticle, "un article 3")
+									.vProp(XMLPart.PROP_ID, "SEC3")
+									.vProp(CmpSection.pArticleH1, "article test 3")
+									.vProp(CmpSection.pContentArticle, "un article 3")
 									));
 		/***********************************************/
 		vProp(CmpPage.pContentHeader, "HEADER");
@@ -52,14 +52,14 @@ public class ScnTemplatePage extends XHTMLPart {
 		vProp(CmpPage.pContentFooter, "FOOTER");
 		
 		vProp(CmpPage.pContentMain, vPart(new CmpSection()
-				.vProperty(CmpSection.pArticleH1, "article test 4")
-				.vProperty(CmpSection.pContentArticle, "un article 4")
+				.vProp(CmpSection.pArticleH1, "article test 4")
+				.vProp(CmpSection.pContentArticle, "un article 4")
 		));
 		
 		vProp(CmpPage.pContentMain, vPart(new CmpSection()
-				.vProperty(CmpSection.pSectionH1, "section 5")
-				.vProperty(CmpSection.pArticleH1, "article test 5")
-				.vProperty(CmpSection.pContentArticle, "un article 5 bis")
+				.vProp(CmpSection.pSectionH1, "section 5")
+				.vProp(CmpSection.pArticleH1, "article test 5")
+				.vProp(CmpSection.pContentArticle, "un article 5 bis")
 		));
 		
 		vProp(CmpPage.pContentNav, xUl(xLi("a"), xLi("b"), xLi("c")));

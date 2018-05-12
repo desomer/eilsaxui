@@ -40,11 +40,18 @@ public class XMLAttr implements IXMLBuilder {
 			buf.addContentOnTarget("=");
 			if (value instanceof VProperty)
 			{
-				Object v = XMLElement.zzGetProperties(new XMLHandle(((VProperty)value).getName()));
-				buf.addContentOnTarget(v);
+				value = XMLElement.zzGetProperties(new XMLHandle(((VProperty)value).getName()));
 			}
-			else
-				buf.addContentOnTarget(value);
+			
+			/** ajoute les cote si text */
+			if (value instanceof String)
+			{
+				String v = ((String)value);
+				if (!v.endsWith("'") && !v.endsWith("\""))
+					value = "\""+ v +"\"";
+			}
+			
+			buf.addContentOnTarget(value);
 		}
 		return buf;
 	}

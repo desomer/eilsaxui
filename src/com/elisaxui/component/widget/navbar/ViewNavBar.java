@@ -31,7 +31,7 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 @xComment("ViewNavBar")
 public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 
-	public static CSSClass actionBtnContainer;
+	public static CSSClass cActionBtnContainer;
 	static CSSClass animatedBg;
 	public static CSSClass isOpenMenu;
 	public static CSSClass navbar;
@@ -59,7 +59,7 @@ public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 					.getBgColorNavBar();
 
 		return xListNode(
-				xStyle(sMedia("all"), () -> {
+				xStyle(() -> {
 					sOn(descBar, () -> {
 						css(pStyleViewNavBar);
 					});
@@ -100,7 +100,7 @@ public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 						// "
 						)
 
-						.path(actionBtnContainer)
+						.path(cActionBtnContainer)
 						.set("cursor: pointer; position: relative; background-color: Transparent; color:white;"
 								+ "padding: 0;  overflow: hidden; outline: 0 !important; " // pas de bordure au focus
 								+ "border:none")
@@ -126,12 +126,6 @@ public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 				));
 	}
 
-	@xTarget(AFTER_BODY.class)
-	@xResource
-	public XMLElement xImportAllClass() {
-		return xInclude(JSNavBar.class);
-	}
-
 	@xTarget(CONTENT.class)
 	public XMLElement xContenu() {
 		return xHeader(xId(this.vProperty(PROPERTY_NAME)), navbar, fixedTop, cFixedElement,
@@ -139,6 +133,9 @@ public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 				xDiv(topBar));
 	}
 
+	
+	/***********************************************************************/
+	
 	public static XMLElement getTemplateBtnBurger() {
 		return vPart(new ViewBtnBurger());
 	}
@@ -171,7 +168,7 @@ public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 		IJSDomTemplate template = new IJSDomTemplate() {
 			@Override
 			public XMLElement getTemplate() {
-				return xNode("button", actionBtnContainer, cRippleEffect,
+				return xNode("button", cActionBtnContainer, cRippleEffect,
 						xAttr("data-x-action",
 								txt(xVar(action))),
 						xAttr("type", "\"button\""),

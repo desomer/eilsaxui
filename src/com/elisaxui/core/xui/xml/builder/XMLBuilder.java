@@ -96,8 +96,8 @@ public class XMLBuilder {
 		return new XMLAttr(name, value);
 	}
 
-	public static XMLPartElement createPart(XMLPart part, Object... inner) {
-		XMLPartElement t = new XMLPartElement(part, inner);
+	public static XMLPartElement createPart(XMLPart part, Object... child) {
+		XMLPartElement t = new XMLPartElement(part, child);
 		part.doContent();
 		return t;
 	}

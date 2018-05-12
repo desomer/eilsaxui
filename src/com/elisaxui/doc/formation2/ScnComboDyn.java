@@ -23,7 +23,6 @@ import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
@@ -116,7 +115,7 @@ public class ScnComboDyn implements IJSONBuilder {
 
 				document().querySelector(cMain).appendChild(new CmpComboTelephone().xListItem(data));
 
-				JSArray<Telephone> result = JSContent.declareArray(Telephone.class, "result");
+				JSArray<Telephone> result = declareArray(Telephone.class, "result");
 				callStatic(TKCom.class)
 						.requestUrl(JSString.value(REST_JSON_TEST + "unID"))
 						.then(fct(result, () -> data.pushAll(result)));

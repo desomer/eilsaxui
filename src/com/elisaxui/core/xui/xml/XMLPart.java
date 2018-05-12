@@ -2,9 +2,7 @@ package com.elisaxui.core.xui.xml;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,13 +14,9 @@ import com.elisaxui.core.xui.config.XHTMLAppScanner;
 import com.elisaxui.core.xui.xhtml.XHTMLFile;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLTemplateResource;
-import com.elisaxui.core.xui.xhtml.builder.module.ImportDesc;
 import com.elisaxui.core.xui.xhtml.builder.module.ModuleDesc;
-import com.elisaxui.core.xui.xhtml.target.BODY;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
-import com.elisaxui.core.xui.xml.target.MODULE;
 import com.elisaxui.core.xui.xml.annotation.xComment;
-import com.elisaxui.core.xui.xml.annotation.xImport;
 import com.elisaxui.core.xui.xml.annotation.xImportList;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xResource;
@@ -34,6 +28,7 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLHandle;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.target.CONTENT;
+import com.elisaxui.core.xui.xml.target.MODULE;
 import com.elisaxui.core.xui.xml.target.XMLTarget;
 import com.elisaxui.core.xui.xml.target.XMLTarget.ITargetRoot;
 
@@ -63,6 +58,13 @@ public class XMLPart  {
 		return vProperty(PROP_ID);
 	}
 
+	@Deprecated
+	/**
+	 * use vProp
+	 * @param key
+	 * @param value
+	 * @return
+	 */
 	public XMLPart vProperty(Object key, Object value)
 	{
 		listProperties.put(key.toString(), value);
@@ -70,6 +72,12 @@ public class XMLPart  {
 	}
 	
 	@SuppressWarnings("unchecked")
+	/**
+	 *  permet d'ajouter plusieur Properties indentique
+	 * @param key
+	 * @param value
+	 * @return
+	 */
 	public XMLPart vProp(Object key, Object value)
 	{
 		Object obj = listProperties.get(key.toString());
@@ -91,6 +99,7 @@ public class XMLPart  {
 		return this;
 	}
 	
+	/********************* GET ********************************/
 	@SuppressWarnings("unchecked")
 	public <E extends Object> E  vProperty(Object key)
 	{
@@ -321,29 +330,26 @@ public class XMLPart  {
 	 * @param inner
 	 * @return
 	 */
-	public final static XMLElement vPart(XMLPart part, Object... inner) {
-		return xNode(null, XMLBuilder.createPart(part, inner));
+	public static final XMLElement vPart(XMLPart part, Object... child) {
+		return xNode(NONAME, XMLBuilder.createPart(part, child));
 	}
 	
-	public final static XMLElement xNode(String name, Object... inner) {
-		XMLElement tag = XMLBuilder.createElement(name, inner);
-		return tag;
+	public static final XMLElement xNode(String name, Object... inner) {
+		return XMLBuilder.createElement(name, inner);
 	}
 
 	@Deprecated 
 	//xListNode
-	public final static XMLElement xListNodeStatic(Object... array) {
+	public static final XMLElement xListNodeStatic(Object... array) {
 		return xNode(NONAME, array);
 	}
 
-	public final static XMLAttr xAttr(String name, Object value) {
-		XMLAttr attr = XMLBuilder.createAttr(name, value);
-		return attr;
+	public static final XMLAttr xAttr(String name, Object value) {
+		return XMLBuilder.createAttr(name, value);
 	}
 	
-	public final static XMLAttr xAttr(String name) {
-		XMLAttr attr = XMLBuilder.createAttr(name, null);
-		return attr;
+	public static final XMLAttr xAttr(String name) {
+		return XMLBuilder.createAttr(name, null);
 	}
 	
 	/**
@@ -364,6 +370,7 @@ public class XMLPart  {
 		return attr;
 	}
 
+	@Deprecated  	/*utiliser directement vProperty*/
 	public static final XMLHandle vSearch(VProperty name) {
 		XMLHandle attr = XMLBuilder.createHandle(name.getName());
 		return attr;
@@ -375,7 +382,7 @@ public class XMLPart  {
 		return attr;
 	}
 	
-	public final static Object xTxt(Object text) {
+	public static final Object xTxt(Object text) {
 		return "\"" + text + "\"";
 	}
 }

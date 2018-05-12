@@ -3,6 +3,7 @@ package com.elisaxui.core.xui.xhtml.builder.javascript.jsclass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSLambda;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 
 /**
  * interface proxy de class JS
@@ -19,6 +20,7 @@ public interface JSClass extends JSContentInterface, JSElement, ILitteral  {
 	<E> E set(Object... value);
 	<E> E asLitteral(); 
 	<E> E declareType(Class<E> type, Object name);
+	<E> JSArray<E> declareArray(Class<E> type, String name);
 	/**
 	 * execute en mode java => pas de js
 	 * @param c

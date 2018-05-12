@@ -23,16 +23,23 @@ public interface IJSDataDriven {
 	{
 		JSon domparent =  JSContent.declareType(JSon.class, "domparent");
 		
-		JSElement change = (JSFunction) new JSFunction().zzSetComment("onChange").setParam(new Object[] {"ctx"})
+		JSElement change = (JSFunction) new JSFunction().zzSetComment("onChange "+data).setParam(new Object[] {"ctx"})
 		.__("JSDataBinding.initChangeHandler(ctx, ctx.row['"+JSDataSet.ATTR_DOM_LINK+"'])")
 		;
 		
 		JSFunction enter = onEnter(aRow, elem);
 		
-		return (JSFunction) new JSFunction().zzSetComment("xDataDriven").setParam(new Object[] {domparent})
+		return (JSFunction) new JSFunction().zzSetComment("vFor "+data).setParam(new Object[] {domparent})
 				.__("JSDataDriven.doTemplateDataDriven(",domparent,",",data,","+enter+",null, "+change+")")
 				;
 	}
+	
+	/******************************************************************************/
+	default JSFunction vMount(JSElement aRow,  JSElement elem)
+	{
+		return  (JSFunction)  new JSFunction().zzSetComment("vMount "+aRow)._return(elem,"(",aRow,")");
+	}
+	
 	
 	/******************************************************************************/
 	
@@ -66,7 +73,7 @@ public interface IJSDataDriven {
 	
 	public default JSFunction onEnter(Object row, XMLElement elem)
 	{
-		return (JSFunction) new JSFunction().setParam(new Object[] {row, "ctx"})
+		return (JSFunction) new JSFunction().zzSetComment("onEnter").setParam(new Object[] {row, "ctx"})
 				._return( new JSNodeTemplate(elem).setModeJS(true) );
 
 	}

@@ -3,11 +3,11 @@
  */
 package com.elisaxui.component.widget.button;
 
-import static com.elisaxui.component.transition.ConstTransition.*;
-import static com.elisaxui.component.transition.CssTransition.*;
+import static com.elisaxui.component.transition.ConstTransition.SPEED_BURGER_EFFECT;
 
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
@@ -26,29 +26,31 @@ public class ViewBtnBurger extends XHTMLPart {
 	CSSClass cLeftBtn;
 
 	@xComment("hamburger")
-	public static CSSClass hamburger;
+	public static CSSClass cHamburger;
 	@xComment("hamburger-box")
-	CSSClass hamburger_box;
+	static CSSClass cHamburgerBox;
 	@xComment("hamburger-inner")
-	CSSClass hamburger_inner;
-
+	CSSClass cHamburgerInner;
+	/*******************************************************/
 	@xComment("hamburger--elastic")
-	CSSClass hamburger_elastic;
+	CSSClass cHamburgerElastic;
 	
 	@xComment("hamburger--arrow")
-	CSSClass hamburger_arrow;
+	CSSClass cHamburgerArrow;
 
 	@xTarget(HEADER.class)
 	@xResource
 	public XMLElement xStylePart() {
 
 		return cStyle()
-				.path(hamburger).set("will-change:transform")
-				.path(	hamburger.descendant(hamburger_inner)
-						.or(hamburger.descendant(hamburger_inner).pseudoClass("after"))
-						.or(hamburger.descendant(hamburger_inner).pseudoClass("before"))
+				.path(cHamburger).set("will-change:transform")
+				.path(CSSSelector.onPath(cHamburger).pseudoClass("hover")).set("opacity:1 !important")
+				
+				.path(	cHamburger.descendant(cHamburgerInner)
+						.or(cHamburger.descendant(cHamburgerInner).pseudoClass("after"))
+						.or(cHamburger.descendant(cHamburgerInner).pseudoClass("before"))
 						)
-						.set("background-color: #fFf; "
+						.set("background-color: #fff; "
 								+ "transition-property:all !important; "
 								+ "transition-duration:"+SPEED_BURGER_EFFECT+"ms !important;")
 
@@ -65,9 +67,11 @@ public class ViewBtnBurger extends XHTMLPart {
 
 	@xTarget(CONTENT.class)
 	public XMLElement xBurgerBtn() {
-		boolean modeXCross = true;
-		return xNode( "button", /*ViewRippleEffect.cRippleEffect(),*/ xIdAction(txt("burger")), xAttr("aria-label", txt("burger")), xAttr("type", "\"button\""), cLeftBtn,  hamburger, modeXCross? hamburger_elastic:hamburger_arrow,
-				xSpan(hamburger_box, xSpan(hamburger_inner)));
+		return xNode( "button", xIdAction("burger"), 
+				xAttr("aria-label", "burger"), 
+				xAttr("type", "button"), cLeftBtn,  cHamburger, 
+				cHamburgerElastic,
+				xSpan(cHamburgerBox, xSpan(cHamburgerInner)));
 	}
 
 }

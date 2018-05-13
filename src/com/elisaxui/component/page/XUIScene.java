@@ -6,8 +6,8 @@ import static com.elisaxui.component.transition.ConstTransition.NEXT_FRAME;
 import static com.elisaxui.component.transition.ConstTransition.SPEED_RIPPLE_EFFECT;
 import static com.elisaxui.component.transition.ConstTransition.SPEED_SHOW_MENU;
 import static com.elisaxui.component.transition.CssTransition.activity;
-import static com.elisaxui.component.widget.button.ViewRippleEffect.cRippleEffect;
-import static com.elisaxui.component.widget.button.ViewRippleEffect.cRippleEffectShow;
+import static com.elisaxui.component.widget.button.CssRippleEffect.cRippleEffect;
+import static com.elisaxui.component.widget.button.CssRippleEffect.cRippleEffectShow;
 
 import com.elisaxui.app.elisys.xui.asset.AssetHandler;
 import com.elisaxui.component.config.TKCoreConfig;
@@ -34,10 +34,13 @@ import com.elisaxui.component.widget.menu.ViewMenu;
 import com.elisaxui.component.widget.navbar.JSNavBar;
 import com.elisaxui.component.widget.navbar.ViewNavBar;
 import com.elisaxui.component.widget.overlay.JSOverlay;
+import com.elisaxui.component.widget.tabbar.ViewTabBar;
+import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
+import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
@@ -150,10 +153,40 @@ public abstract class XUIScene extends XHTMLPart {
 		);
 	}
 
+	
+	@Deprecated
+	public static XMLElement getTemplateAction(Object name, Object action) {
+		
+		IJSDomTemplate template = new IJSDomTemplate() {
+			@Override
+			public XMLElement getTemplate()
+			{		
+				return xNode("button", xAttr("data-x-action", xTxt(xVar(action))), ViewNavBar.cActionBtnContainer, cRippleEffect , xAttr("type", "\"button\""),  "<i class=\"actionBtn material-icons\">",xVar(name),"</i>");
+			}
+		};
+		
+		return template.getTemplate();
+	}
+	
 	@xTarget(AFTER_CONTENT.class)
 	@xResource
 	public XMLElement xImportAfterXUIScene() {
+		
+		/******************* AJOUT BTN DU TABBAR *******************/
+		XMLElement cont = xListNode(
+					xLi(ViewTabBar.cFlex_1, ViewTabBar.cTextAlignCenter,
+							getTemplateAction("'schedule'", "''")),
+					xLi(ViewTabBar.cFlex_1, ViewTabBar.cTextAlignCenter, getTemplateAction("'today'", "''")),
+					xLi(ViewTabBar.cFlex_1, ViewTabBar.cTextAlignCenter, getTemplateAction("'mic'", "''")),
+					xLi(ViewTabBar.cFlex_1, ViewTabBar.cTextAlignCenter, getTemplateAction("'apps'", "''")));
+		
+		vProp(ViewTabBar.pChildrenTabBar, cont);	
+		vProp(ViewTabBar.pHeightTabBar, "height: "+heightTabBar);
+		vProp(ViewTabBar.pStyleViewTabBar, "background:"+((XUIScene)XUIFactoryXHtml.getXMLFile().getMainXMLPart()).getConfigScene().getBgColorNavBar());
+		vProp(ViewNavBar.pStyleViewNavBar, "background:"+((XUIScene)XUIFactoryXHtml.getXMLFile().getMainXMLPart()).getConfigScene().getBgColorNavBar());
 
+		
+		/************************************************************/
 		return xListNode(
 				vPart(new TKQueue()), // TODO Remplacer par une class js
 				xInclude(JSXHTMLPart.class),

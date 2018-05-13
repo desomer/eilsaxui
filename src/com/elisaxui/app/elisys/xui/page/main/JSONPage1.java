@@ -9,7 +9,7 @@ import static com.elisaxui.component.toolkit.TKActivity.ON_ACTIVITY_RESUME;
 import com.elisaxui.app.elisys.xui.page.main.widget.ViewSyllabisation;
 import com.elisaxui.component.widget.activity.JActivity;
 import com.elisaxui.component.widget.activity.JSONActivity;
-import com.elisaxui.component.widget.button.ViewRippleEffect;
+import com.elisaxui.component.widget.button.CssRippleEffect;
 import com.elisaxui.component.widget.log.ViewLog;
 import com.elisaxui.core.xui.xhtml.IXHTMLBuilder;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
@@ -29,7 +29,7 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
 		
 		public JActivity getJSON()
 		{
-			XMLElement cnt1 = xDiv(   ViewRippleEffect.cRippleEffect,                             //6
+			XMLElement cnt1 = xDiv(   CssRippleEffect.cRippleEffect,                             //6
 							XHTMLPart.xAttr("style", "\"width: 100%; height: 30vh; background:url(" +ScnRoot.listPhotos[9] +") center / cover\""),
 							xId("test1"), 
 							XHTMLPart.xAttr("data-x-action", "\""+EVT_DO_PHRASE+"\"")

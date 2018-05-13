@@ -4,7 +4,6 @@
 package com.elisaxui.component.widget.navbar;
 
 import static com.elisaxui.component.toolkit.jquery.JQuery.$;
-import static com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass.*;
 
 import com.elisaxui.component.toolkit.JSFactory;
 import com.elisaxui.component.toolkit.datadriven.JSChangeCtx;

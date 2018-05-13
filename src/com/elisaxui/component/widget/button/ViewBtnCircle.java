@@ -4,7 +4,7 @@
 package com.elisaxui.component.widget.button;
 
 import static com.elisaxui.component.transition.ConstTransition.SPEED_SHOW_ACTIVITY;
-import static com.elisaxui.component.widget.button.ViewRippleEffect.cRippleEffect;
+import static com.elisaxui.component.widget.button.CssRippleEffect.cRippleEffect;
 
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
@@ -68,7 +68,7 @@ public class ViewBtnCircle extends XHTMLPart {
 
 	@xTarget(CONTENT.class)
 	public XMLElement xBurgerBtn() {
-		return  xListNode( vPart(new ViewRippleEffect()),   ////////////////// IMPORT //////////////////
+		return  xListNode( vPart(new CssRippleEffect()),   ////////////////// IMPORT //////////////////
 				xNode("button", cRippleEffect, cBtnCircle, xAttr("type", "\"button\""),
 				"<i class=\"material-icons\">", this.vProperty(PROPERTY_ICON), "</i>")
 		       );

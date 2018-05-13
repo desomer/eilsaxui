@@ -37,7 +37,7 @@ public interface IJSDataDriven {
 	/******************************************************************************/
 	default JSFunction vMount(JSElement aRow,  JSElement elem)
 	{
-		return  (JSFunction)  new JSFunction().zzSetComment("vMount "+aRow)._return(elem,"(",aRow,")");
+		return  (JSFunction)  new JSFunction().zzSetComment("vMount "+aRow)._return("window[",elem,"](",aRow,")");
 	}
 	
 	

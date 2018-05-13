@@ -12,7 +12,7 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 
 /**
  * 
- * permet d ajouter un xPart exemple xPart(new ViewRippleEffect())
+ * permet d ajouter un xPart exemple xPart(new CssRippleEffect())
  * 
  * @author gauth
  *

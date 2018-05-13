@@ -3,7 +3,7 @@
  */
 package com.elisaxui.component.widget.menu;
 
-import static com.elisaxui.component.widget.button.ViewRippleEffect.*;
+import static com.elisaxui.component.widget.button.CssRippleEffect.*;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xml.annotation.xTarget;

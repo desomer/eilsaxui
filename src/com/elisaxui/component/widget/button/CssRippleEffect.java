@@ -16,7 +16,7 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  * @author Bureau
  *
  */
-public class ViewRippleEffect extends XHTMLPart {
+public class CssRippleEffect extends XHTMLPart {
 
 	
 	public static CSSClass cRippleEffect;

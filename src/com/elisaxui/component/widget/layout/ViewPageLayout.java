@@ -45,17 +45,13 @@ public class ViewPageLayout extends XHTMLPart implements ICSSBuilder {
 		return cArticle;
 	}
 
-	private boolean addDefault = true;
-
-	public ViewPageLayout(Object id, boolean defaut) {
+	public ViewPageLayout(Object id) {
 		super();
 		this.vProp(pIdPage, id);
-		this.addDefault = defaut;
 	}
 	
 	public ViewPageLayout() {
 		super();
-		this.addDefault = false;
 	}
 
 	@xTarget(HEADER.class)
@@ -67,23 +63,11 @@ public class ViewPageLayout extends XHTMLPart implements ICSSBuilder {
 	@xTarget(CONTENT.class)
 	public XMLElement xViewPanel() {
 
-		XMLElement cont = null;
-		/***********************************************************************************/
-		if (addDefault)
-			cont = xListNode(
-					xLi(ViewTabBar.cFlex_1, ViewTabBar.cTextAlignCenter,
-							ViewTabBar.getTemplateAction("'schedule'", "''")),
-					xLi(ViewTabBar.cFlex_1, ViewTabBar.cTextAlignCenter, ViewTabBar.getTemplateAction("'today'", "''")),
-					xLi(ViewTabBar.cFlex_1, ViewTabBar.cTextAlignCenter, ViewTabBar.getTemplateAction("'mic'", "''")),
-					xLi(ViewTabBar.cFlex_1, ViewTabBar.cTextAlignCenter, ViewTabBar.getTemplateAction("'apps'", "''")));
-		else
-			cont = xListNode();
-
 		/**********************************************************************************/
 		return xDiv(xId(vProperty(pIdPage)), CssTransition.activity, CssTransition.inactive, CssTransition.cStateNoDisplay,
 				vPart(new ViewNavBar().vProp(ViewNavBar.PROPERTY_NAME, vCalc("NavBar", vProperty(pIdPage)))),
 				xDiv(cContent, xDiv(cArticle, vProperty(vCalc("children", vProperty(pIdPage)))), vPart(new ViewOverlay())),
-				vPart(new ViewTabBar().vProp(ViewTabBar.PROPERTY_NAME, vCalc("TabBar", vProperty(pIdPage))), cont));
+				vPart(new ViewTabBar().vProp(ViewTabBar.PROPERTY_NAME, vCalc("TabBar", vProperty(pIdPage)))));
 	}
 
 }

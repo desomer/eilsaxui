@@ -7,7 +7,7 @@ import com.elisaxui.component.toolkit.JSFactory;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.component.toolkit.jquery.JQuery;
-import com.elisaxui.component.widget.button.ViewRippleEffect;
+import com.elisaxui.component.widget.button.CssRippleEffect;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 
@@ -52,7 +52,7 @@ public interface JSViewCard extends JSFactory {
 				});
 				_elseif("ctx.row.type==" + txt(TYPE_CARD_ACTION)).then(() -> {
 					__("$(selector).attr('data-x-action', ctx.row.idAction )");
-					__(JQuery.$(var("selector")).addClass(ViewRippleEffect.cRippleEffect));
+					__(JQuery.$(var("selector")).addClass(CssRippleEffect.cRippleEffect));
 				});
 			});
 		}));

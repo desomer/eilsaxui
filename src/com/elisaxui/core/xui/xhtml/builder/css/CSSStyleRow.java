@@ -55,7 +55,7 @@ public class CSSStyleRow extends XUIFormatManager implements IXMLBuilder {
 		String last = null;
 
 		for (Object object : content) {
-			boolean endWithSep = i == 0 ? false : (last.length()>0 && last.charAt(last.length() - 1) == ';');
+			boolean endWithSep = last==null ? false : (last.length()>0 && last.charAt(last.length() - 1) == ';');
 
 			if (object instanceof XMLHandle) {
 				Object handledObject = XMLElement.zzGetProperties((XMLHandle) object);

@@ -103,7 +103,7 @@ public interface JSTransition extends JSClass {
 			/*************************************************/
 			jqNavBar.removeClass(isOpenMenu);
 		
-			JQuery jqHamburgerDetach = let( JQuery.class, "jqHamburgerDetach", $(scene.descendant(ViewBtnBurger.hamburger.and(detach))) );
+			JQuery jqHamburgerDetach = let( JQuery.class, "jqHamburgerDetach", $(scene.descendant(ViewBtnBurger.cHamburger.and(detach))) );
 			__(TKQueue.startAnimQueued(	 fct(()->{  
 							overlay.doHideOverlay(1);
 							// -------------------------- repositionne l'activity --------------------
@@ -124,7 +124,7 @@ public interface JSTransition extends JSClass {
 							self.doFixedElemToFixe(jqActivityActive);
 							
 							// anime le burger et le passe de la scene vers l'activity
-							JQuery hamburger = let(JQuery.class, "hamburger", jqHamburgerDetach.detach() ) ;
+							JQuery hamburger = let(JQuery.class, "cHamburger", jqHamburgerDetach.detach() ) ;
 							hamburger.removeClass(detach);
 							jqNavBar.append(hamburger);
 							hamburger.css(TRANSITION, "");
@@ -143,7 +143,7 @@ public interface JSTransition extends JSClass {
 			._else();
 				jqNavBar.addClass(isOpenMenu);
 				
-				JQuery jqHamburger = let( JQuery.class, "jqHamburger", jqNavBar.find(ViewBtnBurger.hamburger) );
+				JQuery jqHamburger = let( JQuery.class, "jqHamburger", jqNavBar.find(ViewBtnBurger.cHamburger) );
 				/*************************************************/
 				// ouvre le menu
 				/*************************************************/
@@ -174,7 +174,7 @@ public interface JSTransition extends JSClass {
 								jqMenu.css(TRANSFORM, txt("translate3d(0px,",/*sct*/0,"px,0px"));
 								// -------------------------------------------------
 								overlay.doShowOverlay(jqActivityActive, 2);
-								// ------------ deplace le hamburger---------
+								// ------------ deplace le cHamburger---------
 								jqHamburger.css(TRANSFORM, txt("translate3d(-15px,",calc(/*sct*/0,"-3"),"px,0px) scale(0.6)"));
 								// ------------- anim des item de menu---------
 								_for("var i in window.jsonMainMenu");

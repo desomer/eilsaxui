@@ -4,16 +4,13 @@
 package com.elisaxui.component.widget.tabbar;
 
 import static com.elisaxui.component.transition.CssTransition.cFixedElement;
-import static com.elisaxui.component.widget.button.ViewRippleEffect.cRippleEffect;
 
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.component.transition.ConstTransition;
-import com.elisaxui.component.widget.navbar.ViewNavBar;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.ICSSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -32,6 +29,7 @@ public class ViewTabBar extends XHTMLPart implements ICSSBuilder {
 	
 	public static VProperty pStyleViewTabBar;
 	public static VProperty pChildrenTabBar;
+	public static VProperty pHeightTabBar;
 	
 	public static final String PROPERTY_NAME = "PROPERTY_NAME";
 	
@@ -46,18 +44,11 @@ public class ViewTabBar extends XHTMLPart implements ICSSBuilder {
 	@xTarget(AFTER_BODY.class)
 	@xResource
 	public XMLElement xStylePart() {
-		
-		String bg = null;		
-		if (XUIFactoryXHtml.getXMLFile().getMainXMLPart() instanceof XUIScene)
-			bg = ((XUIScene)XUIFactoryXHtml.getXMLFile().getMainXMLPart()).getConfigScene().getBgColorNavBar();
-			
-		final String bgColorBar = bg;
-		
+
 		return xStyle(()-> {
 			sOn(cTabbar, ()-> {
 				css("z-index: "+XUIScene.ZINDEX_NAV_BAR);
-				css(bgColorBar==null?"":("background:"+bgColorBar));
-				css("height: "+XUIScene.heightTabBar);
+				css(pHeightTabBar); 
 				css("width: "+XUIScene.widthScene);
 				css("color:white");
 				css(XUIScene.PERFORM_3D);
@@ -82,19 +73,4 @@ public class ViewTabBar extends XHTMLPart implements ICSSBuilder {
 				xUl(cListReset, cFlex, this.getChildren(), pChildrenTabBar));
 	}
 	
-	
-	
-	@Deprecated
-	public static XMLElement getTemplateAction(Object name, Object action) {
-		
-		IJSDomTemplate template = new IJSDomTemplate() {
-			@Override
-			public XMLElement getTemplate()
-			{		
-				return xNode("button", xAttr("data-x-action", xTxt(xVar(action))), ViewNavBar.cActionBtnContainer, cRippleEffect , xAttr("type", "\"button\""),  "<i class=\"actionBtn material-icons\">",xVar(name),"</i>");
-			}
-		};
-		
-		return template.getTemplate();
-	}
 }

@@ -3,7 +3,7 @@
  */
 package com.elisaxui.component.widget.layout;
 
-import com.elisaxui.component.transition.CssTransition;
+import com.elisaxui.component.toolkit.transition.CssTransition;
 import com.elisaxui.component.widget.navbar.ViewNavBar;
 import com.elisaxui.component.widget.overlay.ViewOverlay;
 import com.elisaxui.component.widget.tabbar.ViewTabBar;
@@ -32,6 +32,8 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 public class ViewPageLayout extends XHTMLPart implements ICSSBuilder {
 
 	public static VProperty pIdPage;
+	public static VProperty pArticle;
+	public static VProperty pStyleContent;
 
 	private static CSSClass cArticle;
 	@xComment("content")
@@ -49,7 +51,7 @@ public class ViewPageLayout extends XHTMLPart implements ICSSBuilder {
 		super();
 		this.vProp(pIdPage, id);
 	}
-	
+
 	public ViewPageLayout() {
 		super();
 	}
@@ -57,17 +59,26 @@ public class ViewPageLayout extends XHTMLPart implements ICSSBuilder {
 	@xTarget(HEADER.class)
 	@xResource
 	public XMLElement xStylePart() {
-		return xStyle(() -> sOn(cArticle, () -> css("overflow:hidden;")));
+		return xStyle(() -> sOn(CssTransition.activity, () -> {
+			sOn(cContent, () -> {
+				css(pStyleContent);
+				sOn(cArticle, () -> {
+					css("overflow:hidden;");
+				});
+			});
+		}));
 	}
 
 	@xTarget(CONTENT.class)
 	public XMLElement xViewPanel() {
 
 		/**********************************************************************************/
-		return xDiv(xId(vProperty(pIdPage)), CssTransition.activity, CssTransition.inactive, CssTransition.cStateNoDisplay,
-				vPart(new ViewNavBar().vProp(ViewNavBar.PROPERTY_NAME, vCalc("NavBar", vProperty(pIdPage)))),
-				xDiv(cContent, xDiv(cArticle, vProperty(vCalc("children", vProperty(pIdPage)))), vPart(new ViewOverlay())),
-				vPart(new ViewTabBar().vProp(ViewTabBar.PROPERTY_NAME, vCalc("TabBar", vProperty(pIdPage)))));
+		return xDiv(xId(vProperty(pIdPage)), CssTransition.activity, CssTransition.inactive,
+				CssTransition.cStateNoDisplay,
+				vPart(new ViewNavBar().vProp(ViewNavBar.pId, vCalc("NavBar", vProperty(pIdPage)))),
+				xDiv(cContent, xDiv(cArticle, pArticle, vProperty(vCalc("children", vProperty(pIdPage)))),
+						vPart(new ViewOverlay())),
+				vPart(new ViewTabBar().vProp(ViewTabBar.pId, vCalc("TabBar", vProperty(pIdPage)))));
 	}
 
 }

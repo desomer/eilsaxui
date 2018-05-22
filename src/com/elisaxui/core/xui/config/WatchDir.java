@@ -10,7 +10,7 @@ import java.nio.file.attribute.*;
 import java.io.*;
 import java.util.*;
 
-import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.XUIFactory;
 
 /**
  * Example to watch a directory (or tree) for changes to files.
@@ -118,7 +118,7 @@ public class WatchDir {
 
                 // print out event
                 System.out.format("%s: %s\n", event.kind().name(), child);
-                XUIFactoryXHtml.changeMgr.mapClass.clear();
+                XUIFactory.changeMgr.mapClass.clear();
 
                 // if directory is created, and watching recursively, then
                 // register it and its sub-directories

@@ -3,8 +3,8 @@
  */
 package com.elisaxui.component.widget.menu;
 
-import static com.elisaxui.component.transition.ConstTransition.DELAY_SURETE_END_ANIMATION;
-import static com.elisaxui.component.transition.ConstTransition.SPEED_SHOW_MENU_ITEMS;
+import static com.elisaxui.component.toolkit.transition.ConstTransition.DELAY_SURETE_END_ANIMATION;
+import static com.elisaxui.component.toolkit.transition.ConstTransition.SPEED_SHOW_MENU_ITEMS;
 
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;

@@ -10,9 +10,10 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.IJSClassInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSNodeTemplate;
+import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSDomBuilder;
+import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSNodeTemplate;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 
 /**
@@ -59,6 +60,15 @@ public class JSNodeElement extends JSAny implements IJSClassInterface {
 
 	public JSon dataset() {
 		return castAttr(new JSon(), "dataset");
+	}
+	
+	public JSon style() {
+		return castAttr(new JSon(), "style");
+	}
+	
+	public JSInt scrollTop()
+	{
+		return castAttr(new JSInt(), "scrollTop");
 	}
 
 	public void addEventListener(Object event, JSFunction fct) {

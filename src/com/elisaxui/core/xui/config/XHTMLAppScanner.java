@@ -277,7 +277,7 @@ public class XHTMLAppScanner {
 		if (debug)
 			System.out.println("[XMLPart] init var VProperty on " + cl + " name "+ field.getName() );
 
-		String name = field.getName();
+		String name = cl.getSimpleName()+"."+field.getName();
 		xComment comment = field.getAnnotation(xComment.class);
 		if (comment != null) {
 			name = comment.value();

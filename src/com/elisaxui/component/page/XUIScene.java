@@ -2,10 +2,10 @@ package com.elisaxui.component.page;
 
 import static com.elisaxui.component.toolkit.jquery.JQuery.$;
 import static com.elisaxui.component.toolkit.json.JXui.$xui;
-import static com.elisaxui.component.transition.ConstTransition.NEXT_FRAME;
-import static com.elisaxui.component.transition.ConstTransition.SPEED_RIPPLE_EFFECT;
-import static com.elisaxui.component.transition.ConstTransition.SPEED_SHOW_MENU;
-import static com.elisaxui.component.transition.CssTransition.activity;
+import static com.elisaxui.component.toolkit.transition.ConstTransition.NEXT_FRAME;
+import static com.elisaxui.component.toolkit.transition.ConstTransition.SPEED_RIPPLE_EFFECT;
+import static com.elisaxui.component.toolkit.transition.ConstTransition.SPEED_SHOW_MENU;
+import static com.elisaxui.component.toolkit.transition.CssTransition.activity;
 import static com.elisaxui.component.widget.button.CssRippleEffect.cRippleEffect;
 import static com.elisaxui.component.widget.button.CssRippleEffect.cRippleEffectShow;
 
@@ -19,9 +19,9 @@ import com.elisaxui.component.toolkit.datadriven.JSDataCtx;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.component.toolkit.jquery.JQuery;
-import com.elisaxui.component.transition.ConstTransition;
-import com.elisaxui.component.transition.CssTransition;
-import com.elisaxui.component.transition.JSTransition;
+import com.elisaxui.component.toolkit.transition.ConstTransition;
+import com.elisaxui.component.toolkit.transition.CssTransition;
+import com.elisaxui.component.toolkit.transition.JSTransition;
 import com.elisaxui.component.widget.button.ViewBtnCircle;
 import com.elisaxui.component.widget.container.JSContainer;
 import com.elisaxui.component.widget.container.JSViewCard;
@@ -39,8 +39,8 @@ import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.template.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
@@ -180,11 +180,14 @@ public abstract class XUIScene extends XHTMLPart {
 					xLi(ViewTabBar.cFlex_1, ViewTabBar.cTextAlignCenter, getTemplateAction("'mic'", "''")),
 					xLi(ViewTabBar.cFlex_1, ViewTabBar.cTextAlignCenter, getTemplateAction("'apps'", "''")));
 		
-		vProp(ViewTabBar.pChildrenTabBar, cont);	
-		vProp(ViewTabBar.pHeightTabBar, "height: "+heightTabBar);
-		vProp(ViewTabBar.pStyleViewTabBar, "background:"+((XUIScene)XUIFactoryXHtml.getXMLFile().getMainXMLPart()).getConfigScene().getBgColorNavBar());
-		vProp(ViewNavBar.pStyleViewNavBar, "background:"+((XUIScene)XUIFactoryXHtml.getXMLFile().getMainXMLPart()).getConfigScene().getBgColorNavBar());
+		vProp(ViewTabBar.pChildren, cont);	
+		vProp(ViewTabBar.pHeight, "height: "+heightTabBar);
+		vProp(ViewTabBar.pStyle, "background:"+((XUIScene)XUIFactoryXHtml.getXMLFile().getMainXMLPart()).getConfigScene().getBgColorNavBar());
+		
+		vProp(ViewNavBar.pHeight, "height:" + XUIScene.heightNavBar);
+		vProp(ViewNavBar.pStyle, "background:"+((XUIScene)XUIFactoryXHtml.getXMLFile().getMainXMLPart()).getConfigScene().getBgColorNavBar());
 
+		
 		
 		/************************************************************/
 		return xListNode(
@@ -242,15 +245,8 @@ public abstract class XUIScene extends XHTMLPart {
 				.andChild(cStyle(ViewPageLayout.getcContent())
 						.set(" min-height: 100vh; "
 								+ "min-width: " + widthScene + "; "
-								+ "background-color:" + getConfigScene().getBgColorContent() + ";will-change:contents") // changement
-																														// durant
-																														// le
-																														// freeze
-																														// du
-																														// contenu
-																														// de
-																														// l'activity
-				)
+								+ "background-color:" + getConfigScene().getBgColorContent() + ";will-change:contents") 
+						)
 
 				// ----------------------------------------------------------------
 				.path(ViewPageLayout.getcContent()).set( // ne pas ajouter a cActivity
@@ -265,7 +261,7 @@ public abstract class XUIScene extends XHTMLPart {
 		return xListNode(
 				vPart(new ViewMenu()),
 				xDiv(scene, xDiv(cShell,
-						vPart(new ViewNavBar().vProperty(ViewNavBar.PROPERTY_NAME, "NavBarShell"), xH1("Loading...")),
+						vPart(new ViewNavBar().vProp(ViewNavBar.pId, "NavBarShell"), xH1("Loading...")),
 						vPart(new ViewLoader()))));
 	}
 

@@ -10,7 +10,7 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 
-import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.XUIFactory;
 import com.elisaxui.core.xui.config.ConfigFormat;
 
 import difflib.DiffRow;
@@ -34,7 +34,7 @@ public class FileComparator {
 		if (ConfigFormat.getData().isFileChanged())
 		{
 			listLineDiff.append("\n");
-			for (File file : XUIFactoryXHtml.changeMgr.listFileChanged) {
+			for (File file : XUIFactory.changeMgr.listFileChanged) {
 				listLineDiff.append(sep+"\t"+file);
 				Calendar cal = Calendar.getInstance();
 				cal.setTimeInMillis(file.lastModified());

@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -23,7 +22,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
@@ -31,44 +29,19 @@ import javax.ws.rs.core.UriInfo;
 import com.elisaxui.component.page.JSServiceWorker;
 import com.elisaxui.core.helper.JSExecutorHelper;
 import com.elisaxui.core.helper.log.CoreLogger;
-import com.elisaxui.core.notification.ErrorNotificafionMgr;
-import com.elisaxui.core.xui.config.ConfigFormat;
-import com.elisaxui.core.xui.config.XHTMLAppScanner;
-import com.elisaxui.core.xui.config.XHTMLChangeManager;
 import com.elisaxui.core.xui.xhtml.XHTMLFile;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
-import com.elisaxui.core.xui.xhtml.XHTMLTemplateRoot;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xml.XMLFile;
-import com.elisaxui.core.xui.xml.XMLPart;
-import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
-import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.target.CONTENT;
 
 @Path("/")
-public class XUIFactoryXHtml {
+public class XUIFactoryXHtml extends XUIFactory {
 
 	private static final String POINT = ".";
 	private static final String IF_NONE_MATCH = "if-none-match";
-	private static final String CACHE_CONTROL = "cache-control";
-	
-	public static final ThreadLocal<XHTMLFile> ThreadLocalXUIFactoryPage = new ThreadLocal<>();
-	public static final XHTMLChangeManager changeMgr = new XHTMLChangeManager();
 	boolean enableCache = true;
-	
-	public static final XMLPart getXHTMLTemplateRoot() {
-		return ThreadLocalXUIFactoryPage.get().getXHTMLTemplate();
-	}
-
-	public static final XMLFile getXMLFile() {
-		return ThreadLocalXUIFactoryPage.get();
-	}
-	
-	public static final XHTMLFile getXHTMLFile() {
-		return (XHTMLFile)ThreadLocalXUIFactoryPage.get();
-	}
 	
 	@GET
 	@Path("/page/{pays}/{lang}/id/{id}")
@@ -86,16 +59,16 @@ public class XUIFactoryXHtml {
 		
 		initResquestConfig(requestConfig);
 		
-		JSExecutorHelper.setThreadPreprocessor(requestConfig.es5);
+		JSExecutorHelper.setThreadPreprocessor(requestConfig.isEs5());
 				
 		// cherche les changements
 		initChangeManager();
 		
 		// cherche dans les caches
-		CacheManager cache = new CacheManager(id, ""+requestConfig.es5, "html");
+		CacheManager cache = new CacheManager(id, ""+requestConfig.isEs5(), "html", true);
 		cache.initVersion(requestConfig.noCache, requestConfig.version);
 				
-		if (cache.result == null) {   // si pas en cache
+		if (cache.getResult() == null) {   // si pas en cache
 			// recupere la classe de page
 			Class<? extends XHTMLPart> xHTMLPartClass = changeMgr.mapClass.get(id);
 			if (xHTMLPartClass != null) {
@@ -106,7 +79,7 @@ public class XUIFactoryXHtml {
 			CoreLogger.getLogger(1).info(() -> "****** get cache " + cache.idCacheDB);
 		}
 		
-		if (cache.result==null)
+		if (cache.getResult()==null)
 			return Response.status(Status.NOT_FOUND).entity("no found " + id).header("a", "b").build();
 				
 		StringBuilder dif = new StringBuilder();
@@ -117,7 +90,7 @@ public class XUIFactoryXHtml {
 			dif.append("\n</script>");
 		}
 				
-		String response = cache.result+dif;
+		String response = cache.getResult()+dif;
 		
 		List<String> etag = headers.getRequestHeader(IF_NONE_MATCH);
 		String eTagRequest = etag==null?"":etag.get(0);
@@ -137,106 +110,11 @@ public class XUIFactoryXHtml {
 	}
 
 	/**
-	 * @param requestConfig
-	 * @param param
-	 * @param cache
-	 * @param xHTMLPartClass
-	 */
-	private Response createVersion(RequestConfig requestConfig, CacheManager cache, Class<? extends XHTMLPart> xHTMLPartClass) {
-		JSExecutorHelper.initThread();
-		
-		XHTMLFile fileXML = createXHTMLFile();
-		fileXML.setXHTMLTemplate(new XHTMLTemplateRoot());
-		
-		List<Locale> languages = requestConfig.headers.getAcceptableLanguages();
-		Locale loc = languages.get(0);
-
-		CoreLogger.getLogger(1).info(()->"****** GENERATE PHASE 1 : "+xHTMLPartClass.getSimpleName()+" ********");
-		// premier passe (execute les annotation)
-		initXMLFile(xHTMLPartClass, fileXML, requestConfig.param);
-
-		if (ErrorNotificafionMgr.hasErrorMessage()) {
-			// affiche la page d'erreur
-			return Response.status(Status.INTERNAL_SERVER_ERROR) // .type(MediaType.TEXT_HTML)
-					.entity(ErrorNotificafionMgr.getBufferErrorMessage().toString()).build();
-		}
-
-		// generation page
-		CoreLogger.getLogger(1).info(() -> "******"+ " GENERATE PHASE 2 : "	+ xHTMLPartClass.getSimpleName() + " ********");
-		
-		// deuxieme passe (execute les toXML)
-		String html = toXML(fileXML, loc, null);
-		cache.result = html;
-		
-		doSubFile(requestConfig, fileXML);
-		
-		cache.storeResultInDb();
-		cache.getVersionDB(0);   // calcul la difference
-		
-		JSExecutorHelper.stopThread();
-		return null;
-	}
-
-	/**
-	 * @param headers
-	 * @param uri
-	 * @param headerConfig
-	 * @return
-	 */
-	private void initResquestConfig(RequestConfig requestConfig) {
-		List<String> cacheControl = requestConfig.headers.getRequestHeader(CACHE_CONTROL);
-		requestConfig.noCache = cacheControl!=null && cacheControl.get(0).equals("no-cache");
-		
-		CoreLogger.getLogger(1).info(() -> "cacheControl="+cacheControl);
-		
-		MultivaluedMap<String, String> param = requestConfig.uri.getQueryParameters();
-				
-		List<String> p = param.get("compatibility");
-		requestConfig.es5 = p!=null && p.get(0).equals("es5");
-		if (ConfigFormat.getData().isEs5())
-			requestConfig.es5=true;
-			
-		p = param.get("version");
-		requestConfig.version = p==null?ConfigFormat.getData().getVersionTimeline():Integer.parseInt(p.get(0));
-		
-		if (ConfigFormat.getData().isReload())
-		{
-			if (requestConfig.version==0)
-				requestConfig.noCache=true;
-			ConfigFormat.getData().setReload(false);
-		}
-		
-		requestConfig.param = param;
-	}
-
-	
-	private class RequestConfig
-	{
-		HttpHeaders headers;
-		UriInfo uri;
-		
-		/**
-		 * @param headers
-		 * @param uri
-		 */
-		public RequestConfig(HttpHeaders headers, UriInfo uri) {
-			super();
-			this.headers = headers;
-			this.uri = uri;
-		}
-		
-		boolean es5;
-		int version;
-		boolean noCache;
-		
-		MultivaluedMap<String, String> param;
-	}
-	
-	/**
 	 * @param es5
 	 * @param fileXML
 	 */
-	private void doSubFile(RequestConfig requestConfig, XHTMLFile fileXML) {
+	@Override
+	protected void doSubFile(RequestConfig requestConfig, XHTMLFile fileXML) {
 		HashMap<String, XMLFile> subFile = fileXML.listSubFile;
 		for (Map.Entry<String,XMLFile> entry : subFile.entrySet()) {
 			    String name = entry.getKey();
@@ -246,7 +124,7 @@ public class XUIFactoryXHtml {
 			    
 			    String ext = name.substring(name.indexOf(POINT)+1);
 			    
-			    if (requestConfig.es5 && ext.equals("js"))
+			    if (requestConfig.isEs5() && ext.equals("js"))
 					try {
 						contentFile = JSExecutorHelper.doBabel(contentFile);
 					} catch (NoSuchMethodException | ScriptException e) {
@@ -256,10 +134,10 @@ public class XUIFactoryXHtml {
 			    name=name.substring(0, name.lastIndexOf('.'));  // nom sans extension
 			    
 			    
-				CacheManager cache = new CacheManager(xmlFile.getID(), ""+requestConfig.es5, xmlFile.getExtension());
+				CacheManager cache = new CacheManager(xmlFile.getID(), ""+requestConfig.isEs5(), xmlFile.getExtension(), true);
 				cache.initVersion(requestConfig.noCache, requestConfig.version);
 			    
-				cache.result = contentFile;
+				cache.setResult(contentFile);
 				cache.storeResultInDb();
 				cache.getVersionDB(0);   // calcul la difference
 				
@@ -312,76 +190,7 @@ public class XUIFactoryXHtml {
 		return encoded;
 	}
 	
-	/**
-	 * @param fileXML
-	 * @param loc
-	 * @return
-	 */
-	private static final String toXML(XHTMLFile fileXML, Locale loc, XMLBuilder xmlBuf) {
-		
-		if (xmlBuf==null)
-		{
-			StringBuilder buf = new StringBuilder(1000);
-			buf.append("<!doctype html>");
-			((XHTMLTemplateRoot) fileXML.getXHTMLTemplate()).setLang(loc.toLanguageTag());
-			xmlBuf = new XMLBuilder("page", buf, null);
-		}
-		
-		fileXML.getXHTMLTemplate().doContent();
-		List<XMLElement> rootContent = fileXML.getXHTMLTemplate().getListElementFromTarget(CONTENT.class);
-
-		for (XMLElement elem : rootContent) {
-			elem.toXML(xmlBuf);
-		}
-
-		return  xmlBuf.getContent().toString();
-	}
-
-	/**
-	 * 
-	 */
-	private synchronized void  initChangeManager() {
-		if (changeMgr.mapClass.isEmpty())
-		{
-			XHTMLAppScanner.getMapXHTMLPart(changeMgr);
-		}
-	}
-
-	private void initXMLFile(Class<? extends XHTMLPart> pageClass, XMLFile file, MultivaluedMap<String, String> requestParam) {
-		try {
-						
-			((XHTMLFile)file).setParam(requestParam);
-			
-			XHTMLPart page = pageClass.newInstance();
-			file.setMainXMLPart( page);
-			
-			xCoreVersion coreVersion = pageClass.getAnnotation(xCoreVersion.class);
-			((XHTMLFile)file).setCoreVersion(coreVersion==null?"1":coreVersion.value());
-			
-			page.doContent();
-			for (XMLElement elem : page.getListElementFromTarget(CONTENT.class)) {
-				page.vBody(elem);
-			}
-			for (XMLElement elem : page.getListElementFromTarget(AFTER_CONTENT.class)) {
-				page.vAfterBody(elem);
-			}
-			
-		} catch (InstantiationException | IllegalAccessException e) {
-			ErrorNotificafionMgr.doError("Pb instanciation " + pageClass.getName(), e);
-		}
-	}
-
-	/**
-	 * creer un XHTMLFile vide
-	 * @return
-	 */
-	private XHTMLFile createXHTMLFile() {
-		XHTMLFile file = new XHTMLFile();
-		ProxyHandler.ThreadLocalMethodDesc.set(null); 
-		ThreadLocalXUIFactoryPage.set(file);
-		return file;
-	}
-/*************************************************************************************************/
+	/*************************************************************************************************/
 	
 	@GET
 	@Path("/js/{name}.js")

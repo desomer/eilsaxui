@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.elisaxui.core.xui.XUIFactory;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.target.BODY;
@@ -53,7 +54,7 @@ public class XHTMLTemplateRoot extends XHTMLTemplate {
 		LocalDateTime now = LocalDateTime.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-		LocalDateTime dateBuild = XUIFactoryXHtml.changeMgr.dateBuild;
+		LocalDateTime dateBuild = XUIFactory.changeMgr.dateBuild;
 		
 		String formatDateTimeBuild =   dateBuild.format(formatter);
 		String formatDateTimeNow = now.format(formatter);
@@ -77,7 +78,7 @@ public class XHTMLTemplateRoot extends XHTMLTemplate {
 		
 		XMLElement timeGenerated = null;
 		if (XUIFactoryXHtml.getXMLFile().getConfigMgr().getData().isTimeGenerated())
-			timeGenerated = xListNode("\n" ,xComment("version 1.0.0" + XUIFactoryXHtml.changeMgr.nbChangement , "generated at " + formatDateTimeNow  , "build at " + formatDateTimeBuild));
+			timeGenerated = xListNode("\n" ,xComment("version 1.0.0" + XUIFactory.changeMgr.nbChangement , "generated at " + formatDateTimeNow  , "build at " + formatDateTimeBuild));
 			
 		return xNode("html", xAttr("lang", xTxt(lang)),
 				timeGenerated, 

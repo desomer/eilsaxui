@@ -44,6 +44,11 @@ public interface JSDataDriven extends JSClass {
 		aDataDriven.onEnter(funct(ctx).zzSetComment("onEnter").__(()->{
 			ctx.parent().set(parent);
 			JSNodeElement dom =let(JSNodeElement.class, "dom", fctEnter.callMth("call", _this(), ctx.row(), ctx)); 
+			
+			_if("dom instanceof Function").then(() -> {
+				__("dom = dom.call(parent, parent)");
+			});
+			
 			ctx.row().attrByString(JSDataSet.ATTR_DOM_LINK).set(dom);
 
 			_for("var ", key ," in ", ctx.row())._do(()->{

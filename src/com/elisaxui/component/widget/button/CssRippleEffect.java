@@ -3,7 +3,7 @@
  */
 package com.elisaxui.component.widget.button;
 
-import static com.elisaxui.component.transition.ConstTransition.SPEED_RIPPLE_EFFECT;
+import static com.elisaxui.component.toolkit.transition.ConstTransition.SPEED_RIPPLE_EFFECT;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.component.transition;
+package com.elisaxui.component.toolkit.transition;
 
 /**
  * @author Bureau

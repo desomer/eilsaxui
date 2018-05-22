@@ -9,7 +9,7 @@ import com.elisaxui.component.toolkit.TKRouterEvent;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.component.toolkit.jquery.JQuery;
-import com.elisaxui.component.transition.JSTransition;
+import com.elisaxui.component.toolkit.transition.JSTransition;
 import com.elisaxui.component.widget.button.ViewFloatAction;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
 import com.elisaxui.core.xui.xhtml.IXHTMLBuilder;

@@ -18,6 +18,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSBool;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSValue;
 import com.elisaxui.core.xui.xhtml.builder.json.JsonNumberImpl;
+import com.elisaxui.core.xui.xml.factory.MountFactory;
 
 /**
  * @author Bureau
@@ -108,6 +109,11 @@ public class JSAny implements JSElement {
 		
 		JSAny ret = declareTypeAny();
 		boolean isLitteral = false;
+		
+		if (objs!=null && objs.length==1 && objs[0] instanceof Class && MountFactory.class.isAssignableFrom((Class)objs[0]))
+		{
+			objs[0] = ((Class)objs[0]).getSimpleName();
+		}
 		
 		if (this.parentLitteral instanceof ProxyHandler)
 		{

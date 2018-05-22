@@ -78,23 +78,33 @@ public class CacheManager {
 	String id = null;
 	String cachetype = null;   // es5
 	String extension = null;
+	boolean store=true;
 	
+	
+	/**
+	 * @return the store
+	 */
+	public final boolean isStore() {
+		return store;
+	}
+
 	/**
 	 * @param id
 	 * @param cachetype
 	 */
-	public CacheManager(String id, String cachetype, String extension) {
+	public CacheManager(String id, String cachetype, String extension, boolean store) {
 		super();
 		this.id = id;
 		this.cachetype = cachetype;
 		this.extension = extension;
+		this.store=store;
 	}
 
 	/**********************************************/
 	private String idCache = null;   // id + date fichier+ type
 	private String idCacheDicoVersionning = null;  // id + type
 	String idCacheDB; 
-	String result = null;
+	private String result = null;
 	/************************************************/
 	
 	public void initVersion(boolean noCache, int version)
@@ -103,11 +113,11 @@ public class CacheManager {
 		if (enableCache)
 		{
 			idCacheDicoVersionning = id+cachetype;
-			idCache = id+XUIFactoryXHtml.changeMgr.lastOlderFile+cachetype;
+			idCache = id+XUIFactory.changeMgr.lastOlderFile+cachetype;
 				
 			if (!noCache)
 			{
-				result = getVersionDB(version);
+				setResult(getVersionDB(version));
 			}	
 		}
 	}
@@ -125,11 +135,11 @@ public class CacheManager {
 		String htmlInCacheMoreRecent = null;
 		if (version==0)
 		{
-			if (result==null)
+			if (getResult()==null)
 				// recherche en base
-				result = resourceCacheMem.computeIfAbsent(idCache, k-> resourceDB.get(k));
+				setResult(resourceCacheMem.computeIfAbsent(idCache, k-> resourceDB.get(k)));
 			
-			htmlInCacheMoreRecent = result;
+			htmlInCacheMoreRecent = getResult();
 			verDB = -1;  // compare par rapport au dernier
 		}
 		else
@@ -152,7 +162,7 @@ public class CacheManager {
 		if (version==0)
 		{
 			idCacheDB = idCache;    // affecte la version a tracer dans le log
-			return result;
+			return getResult();
 		}
 		else
 		{
@@ -174,10 +184,24 @@ public class CacheManager {
 		}
 		version1.add(idCache);
 		
-		resourceDB.put(idCache, result);
+		resourceDB.put(idCache, getResult());
 		listeDico.set(listeVersionId);
 		db.commit();
 		
-		resourceCacheMem.put(idCache, result);
+		resourceCacheMem.put(idCache, getResult());
+	}
+
+	/**
+	 * @return the result
+	 */
+	public String getResult() {
+		return result;
+	}
+
+	/**
+	 * @param result the result to set
+	 */
+	public void setResult(String result) {
+		this.result = result;
 	}
 }

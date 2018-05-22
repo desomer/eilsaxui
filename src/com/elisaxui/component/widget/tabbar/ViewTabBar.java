@@ -3,11 +3,10 @@
  */
 package com.elisaxui.component.widget.tabbar;
 
-import static com.elisaxui.component.transition.CssTransition.cFixedElement;
+import static com.elisaxui.component.toolkit.transition.CssTransition.cFixedElement;
 
 import com.elisaxui.component.page.XUIScene;
-import com.elisaxui.component.transition.ConstTransition;
-import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.component.toolkit.transition.ConstTransition;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.ICSSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
@@ -26,21 +25,19 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
  */
 public class ViewTabBar extends XHTMLPart implements ICSSBuilder {
 
-	
-	public static VProperty pStyleViewTabBar;
-	public static VProperty pChildrenTabBar;
-	public static VProperty pHeightTabBar;
-	
-	public static final String PROPERTY_NAME = "PROPERTY_NAME";
+	public static VProperty pStyle;
+	public static VProperty pChildren;
+	public static VProperty pHeight;
+	public static VProperty pId;
 	
 	public static CSSClass cTabbar;
 	public static CSSClass cFixedBottom;
-	private static CSSClass cListReset;
-	private static CSSClass cFlex;
 	public static CSSClass cFlex_1;
 	public static CSSClass cTextAlignCenter;
 	
-
+	private static CSSClass cListReset;
+	private static CSSClass cFlex;
+	
 	@xTarget(AFTER_BODY.class)
 	@xResource
 	public XMLElement xStylePart() {
@@ -48,13 +45,13 @@ public class ViewTabBar extends XHTMLPart implements ICSSBuilder {
 		return xStyle(()-> {
 			sOn(cTabbar, ()-> {
 				css("z-index: "+XUIScene.ZINDEX_NAV_BAR);
-				css(pHeightTabBar); 
+				css(pHeight); 
 				css("width: "+XUIScene.widthScene);
 				css("color:white");
 				css(XUIScene.PERFORM_3D);
 				css("transition: transform "+ConstTransition.SPEED_ANIM_SCROLL+"ms ease-in-out");
 				css("box-shadow: 16px -14px 20px 0 rgba(0, 0, 0, 0.21), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);");
-				css(pStyleViewTabBar);
+				css(pStyle);
 			});
 			
 			sOn(cFixedBottom, ()-> css("position:fixed; bottom:0px; "+XUIScene.PERFORM_3D));
@@ -69,8 +66,8 @@ public class ViewTabBar extends XHTMLPart implements ICSSBuilder {
 	
 	@xTarget(CONTENT.class)
 	public XMLElement xContenu() {  
-		return xFooter( xId(this.vProperty(PROPERTY_NAME)), cTabbar, cFixedBottom, cFixedElement,
-				xUl(cListReset, cFlex, this.getChildren(), pChildrenTabBar));
+		return xFooter( xId(this.vProperty(pId)), cTabbar, cFixedBottom, cFixedElement,
+				xUl(cListReset, cFlex, this.getChildren(), pChildren));
 	}
 	
 }

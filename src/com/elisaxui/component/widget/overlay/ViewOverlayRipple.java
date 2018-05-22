@@ -3,7 +3,7 @@
  */
 package com.elisaxui.component.widget.overlay;
 
-import static com.elisaxui.component.transition.ConstTransition.SPEED_ACTIVITY_TRANSITION_EFFECT;
+import static com.elisaxui.component.toolkit.transition.ConstTransition.SPEED_ACTIVITY_TRANSITION_EFFECT;
 
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.core.xui.XUIFactoryXHtml;

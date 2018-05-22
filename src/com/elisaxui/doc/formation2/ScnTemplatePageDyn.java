@@ -15,9 +15,9 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSObject;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.template.IJSNodeTemplate;
+import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSNodeTemplate;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xFactory;
 import com.elisaxui.core.xui.xml.annotation.xResource;
@@ -178,7 +178,6 @@ public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
 
 	/********************************************************/
 	/** session = titre + article + Phrases */
-	@xFactory("xSessionDyn")
 	public XMLElement xSessionDyn(JSArray<Section> arr) {
 		return xListNode(
 				vFor(arr, aSection, vPart(new CmpSection()
@@ -250,7 +249,6 @@ public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
 			return xUl(cNavContainer, getChildren(), pContent);
 		}
 
-		@xFactory("xNavDyn")
 		public XMLElement xNavDyn(JSArray<Menu> arr) {
 			return xListNode(vFor(arr, aMenu, xItem(aMenu.titre())));
 		}

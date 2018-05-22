@@ -48,4 +48,21 @@ public class XHTMLTemplateResource extends XHTMLTemplate {
 		return xListNode( header, body, afterBody );
 	}
 
+	/*****************************************************************/
+	private boolean isModuleES6File = false;
+	/**
+	 * @return the isModuleES6File
+	 */
+	public final boolean isModuleES6File() {
+		return isModuleES6File;
+	}
+
+	/**
+	 * @param isModuleES6File the isModuleES6File to set
+	 */
+	public final XHTMLTemplateResource setModuleES6File(boolean hasExportableClass) {
+		if (hasExportableClass)
+			this.isModuleES6File = hasExportableClass;
+		return this;
+	}
 }

@@ -745,7 +745,7 @@ public final class ProxyHandler implements InvocationHandler {
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	private static final Object getObjectJS(Class<?> type, String prefix, Object name)
+	public static final Object getObjectJS(Class<?> type, String prefix, Object name)
 			throws InstantiationException, IllegalAccessException {
 
 		boolean retJSVariable = JSAny.class.isAssignableFrom(type);

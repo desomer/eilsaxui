@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.XUIFactory;
 import com.elisaxui.core.xui.xml.annotation.xImport;
 import com.elisaxui.core.xui.xml.annotation.xImportList;
 import com.elisaxui.core.xui.xml.target.XMLTarget;
@@ -41,7 +41,7 @@ public class ModuleDesc {
 	
 	public String getURI()
 	{
-		long date = XUIFactoryXHtml.changeMgr.lastOlderFile;
+		long date = XUIFactory.changeMgr.lastOlderFile;
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-hhmmss");
 		String textdate = formatter.format(new Date(date));
 		return textdate+"_"+resourceID;

@@ -4,7 +4,7 @@
 package com.elisaxui.component.widget.overlay;
 
 import static com.elisaxui.component.toolkit.jquery.JQuery.*;
-import static com.elisaxui.component.transition.CssTransition.*;
+import static com.elisaxui.component.toolkit.transition.CssTransition.*;
 import static com.elisaxui.component.widget.overlay.ViewOverlay.*;
 
 import com.elisaxui.component.toolkit.jquery.JQuery;

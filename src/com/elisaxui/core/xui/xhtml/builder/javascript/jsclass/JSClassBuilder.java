@@ -141,7 +141,10 @@ public final class JSClassBuilder extends JSContent {
 		
 		/** export uniquement si fichier de module */ 
 		if (XUIFactoryXHtml.getXHTMLTemplateRoot() instanceof XHTMLTemplateResource)
-			buf.addContentOnTarget(isExportable?"export class ":"class ");	
+		{
+			XHTMLTemplateResource fileResource = (XHTMLTemplateResource)XUIFactoryXHtml.getXHTMLTemplateRoot();
+			buf.addContentOnTarget(fileResource.isModuleES6File() &&  isExportable?"export class ":"class ");	
+		}
 		else
 			buf.addContentOnTarget("class ");	
 

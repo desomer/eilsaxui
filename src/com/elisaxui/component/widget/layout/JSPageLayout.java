@@ -14,7 +14,7 @@ import static com.elisaxui.component.toolkit.json.JXui.$xui;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSWindow.*;
 
 import com.elisaxui.component.toolkit.jquery.JQuery;
-import com.elisaxui.component.transition.CssTransition;
+import com.elisaxui.component.toolkit.transition.CssTransition;
 import com.elisaxui.component.widget.navbar.ViewNavBar;
 /**
  * @author Bureau

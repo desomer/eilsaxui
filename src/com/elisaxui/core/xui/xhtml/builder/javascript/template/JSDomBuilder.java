@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.core.xui.xhtml.builder.xtemplate;
+package com.elisaxui.core.xui.xhtml.builder.javascript.template;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
@@ -45,22 +45,6 @@ public interface JSDomBuilder extends JSClass {
 				_forIdx(i, el)._do(() -> {
 					JSAny attr = let(JSAny.class, "attr", el.at(i));
 					__("doElem(eldom, attr)");
-					
-//					_if("attr instanceof Element || attr instanceof Text || attr instanceof Function").then(() -> {
-//						__("doElem(eldom, attr)");   // cas des child des xmlpart passer en tableau par p(...)
-//					})._else(() -> {
-//
-//						// _if(attr.attrByString("_fct_"), " instanceof Function").then(() -> { //TODO
-//						// faire marcher
-//						_if("attr['_fct_'] instanceof Function").then(() -> {
-//							let("r", "attr['_fct_'].call(attr, eldom)");
-//							_if("r!=null").then(() -> {
-//								__("attr.value=r");
-//							});
-//						});
-//						
-//						__("eldom.setAttributeNode(attr)");
-//					});
 				});
 			});
 		}));

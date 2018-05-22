@@ -47,9 +47,9 @@ import org.glassfish.jersey.servlet.ServletContainer;
 
 import com.elisaxui.AppConfig;
 import com.elisaxui.core.helper.JSExecutorHelper;
+import com.elisaxui.core.rest.XUIRestApp;
 import com.elisaxui.core.xui.config.WatchDir;
 import com.elisaxui.core.xui.config.XHTMLAppScanner;
-import com.elisaxui.core.xui.rest.XUIRestApp;
 
 
 public class XUILaucher {
@@ -176,7 +176,7 @@ public class XUILaucher {
 
 		/*******************************************************************/
 		
-		XHTMLAppScanner.getMapXHTMLPart(XUIFactoryXHtml.changeMgr);
+		XHTMLAppScanner.getMapXHTMLPart(XUIFactory.changeMgr);
 		
 	    CodeSource src = XUILaucher.class.getProtectionDomain().getCodeSource();
 	    URL classpathEntry = src.getLocation();

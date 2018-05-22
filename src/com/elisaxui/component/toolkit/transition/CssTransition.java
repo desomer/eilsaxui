@@ -1,6 +1,6 @@
-package com.elisaxui.component.transition;
+package com.elisaxui.component.toolkit.transition;
 
-import static com.elisaxui.component.transition.ConstTransition.*;
+import static com.elisaxui.component.toolkit.transition.ConstTransition.*;
 
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.component.widget.overlay.ViewOverlayRipple;
@@ -22,7 +22,7 @@ public class CssTransition extends XHTMLPart {
 	
 	static CSSClass animated;
 	
-	static CSSClass cStateFixedForFreeze;
+	public static CSSClass cStateFixedForFreeze;
 	public static CSSClass cFixedElement;
 	
 	public static CSSClass active;

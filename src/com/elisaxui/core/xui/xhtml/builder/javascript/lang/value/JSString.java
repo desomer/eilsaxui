@@ -2,6 +2,7 @@ package com.elisaxui.core.xui.xhtml.builder.javascript.lang.value;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
+import com.elisaxui.core.xui.xml.factory.MountFactory;
 
 public class JSString extends JSValue {
 	
@@ -11,6 +12,13 @@ public class JSString extends JSValue {
 		return "String";
 	}
 	
+	
+	public static final JSString value(Class<? extends MountFactory> v)
+	{		
+		JSString ret =   new JSString()._setValue(v.getSimpleName());
+		ret.isLitteral = true;
+		return ret;
+	}
 	
 	public static final JSString value(String v)
 	{		

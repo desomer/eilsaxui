@@ -151,8 +151,11 @@ public class XMLPart  {
 				else	
 					addElementOnTarget(target, (XMLElement)(XHTMLPart.xScriptSrc("/rest/js/"+name).setPriority(priority)));
 			}
+			
+			boolean isModule = MODULE.class.isAssignableFrom(target) ;
+			
 			XHTMLFile f = new XHTMLFile();
-			f.setXHTMLTemplate(new XHTMLTemplateResource());
+			f.setXHTMLTemplate(new XHTMLTemplateResource().setModuleES6File(isModule));
 			f.setID(moduleDesc.getResourceID());
 			f.setExtension(moduleDesc.getExtension());
 			return f;

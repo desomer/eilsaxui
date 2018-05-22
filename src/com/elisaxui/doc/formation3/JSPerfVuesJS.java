@@ -15,12 +15,12 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.template.IJSDomTemplate;
+import com.elisaxui.core.xui.xhtml.builder.javascript.template.IJSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSNodeTemplate;
 
 import static com.elisaxui.component.toolkit.jquery.JQuery.$;
-import static com.elisaxui.core.xui.xhtml.builder.xtemplate.JSNodeTemplate.*;
+import static com.elisaxui.core.xui.xhtml.builder.javascript.template.JSNodeTemplate.*;
 
 /**
  * @author gauth

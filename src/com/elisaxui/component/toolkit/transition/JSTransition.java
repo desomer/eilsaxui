@@ -1,12 +1,12 @@
 /**
  * 
  */
-package com.elisaxui.component.transition;
+package com.elisaxui.component.toolkit.transition;
 
 import static com.elisaxui.component.page.XUIScene.*;
 import static com.elisaxui.component.toolkit.jquery.JQuery.$;
-import static com.elisaxui.component.transition.ConstTransition.*;
-import static com.elisaxui.component.transition.CssTransition.*;
+import static com.elisaxui.component.toolkit.transition.ConstTransition.*;
+import static com.elisaxui.component.toolkit.transition.CssTransition.*;
 import static com.elisaxui.component.widget.navbar.ViewNavBar.isOpenMenu;
 import static com.elisaxui.component.widget.navbar.ViewNavBar.navbar;
 import static com.elisaxui.component.widget.tabbar.ViewTabBar.cTabbar;
@@ -46,7 +46,7 @@ public interface JSTransition extends JSClass {
 	public static final String NULL = "null";
 	
 	public static final String HIDDEN = "hidden";
-	
+
 	public static final String VISIBILITY = "visibility";
 	public static final String HEIGHT = "height";
 	public static final String ABSOLUTE = "absolute";

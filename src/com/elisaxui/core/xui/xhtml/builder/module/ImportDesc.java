@@ -6,7 +6,7 @@ package com.elisaxui.core.xui.xhtml.builder.module;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.XUIFactory;
 
 /**
  * @author gauth
@@ -56,7 +56,7 @@ public class ImportDesc {
 	
 	public String getURI()
 	{
-		long date = XUIFactoryXHtml.changeMgr.lastOlderFile;
+		long date = XUIFactory.changeMgr.lastOlderFile;
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-hhmmss");
 		String textdate = formatter.format(new Date(date));
 		return textdate+"_"+module;

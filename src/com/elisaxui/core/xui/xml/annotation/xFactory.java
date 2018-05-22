@@ -1,8 +1,16 @@
 package com.elisaxui.core.xui.xml.annotation;
 
-// TODO a terminer
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import com.elisaxui.core.xui.xml.factory.MountFactory;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target( {ElementType.METHOD})
 public @interface xFactory {
 
-	String value();
+	Class<? extends MountFactory> value();
 
 }

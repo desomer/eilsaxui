@@ -13,7 +13,7 @@ import javax.json.JsonValue;
 import org.apache.commons.text.StringEscapeUtils;
 
 import com.elisaxui.core.helper.log.CoreLogger;
-import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.XUIFactory;
 import com.elisaxui.core.xui.xhtml.XHTMLFile;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
@@ -31,10 +31,10 @@ public interface IJSONBuilder {
 	
 	default <E extends JSClass> E newJava(Class<? extends JSClass> type)
 	{
-		if (XUIFactoryXHtml.ThreadLocalXUIFactoryPage.get()==null)
+		if (XUIFactory.ThreadLocalXUIFactoryPage.get()==null)
 		{
 			XHTMLFile file = new XHTMLFile();
-			XUIFactoryXHtml.ThreadLocalXUIFactoryPage.set(file);
+			XUIFactory.ThreadLocalXUIFactoryPage.set(file);
 		}
 		
 		return (E)  JSContent.declareType(type, null).asLitteral();

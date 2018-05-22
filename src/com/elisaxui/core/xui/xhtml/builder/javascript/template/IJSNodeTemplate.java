@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.core.xui.xhtml.builder.xtemplate;
+package com.elisaxui.core.xui.xhtml.builder.javascript.template;
 
 import com.elisaxui.core.xui.xhtml.IXHTMLBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;

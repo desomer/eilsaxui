@@ -3,18 +3,18 @@
  */
 package com.elisaxui.component.widget.navbar;
 
-import static com.elisaxui.component.transition.CssTransition.*;
+import static com.elisaxui.component.toolkit.transition.CssTransition.*;
 import static com.elisaxui.component.widget.button.CssRippleEffect.cRippleEffect;
 
 import com.elisaxui.component.page.XUIScene;
-import com.elisaxui.component.transition.ConstTransition;
+import com.elisaxui.component.toolkit.transition.ConstTransition;
 import com.elisaxui.component.widget.button.ViewBtnBurger;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.ICSSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
-import com.elisaxui.core.xui.xhtml.builder.xtemplate.IJSDomTemplate;
+import com.elisaxui.core.xui.xhtml.builder.javascript.template.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xResource;
@@ -45,10 +45,11 @@ public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 	public static CSSClass descBar;
 	public static CSSClass topBar;
 
-	public static final String PROPERTY_NAME = "PROPERTY_NAME";
+	public static VProperty pId;
 
-	public static VProperty pStyleViewNavBar;
-	public static VProperty pChildrenNavBar;
+	public static VProperty pStyle;
+	public static VProperty pChildren;
+	public static VProperty pHeight;
 
 	@xTarget(AFTER_BODY.class)
 	@xResource
@@ -57,9 +58,9 @@ public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 		return xListNode(
 				xStyle(() -> {
 					sOn(descBar, () -> {
-						css(pStyleViewNavBar);
+						css(pStyle);
 						css("top: 0px; width: 100%; position: absolute");
-						css("height:" + XUIScene.heightNavBar);
+						css(pHeight);
 						css("box-shadow: 20px 6px 12px 9px rgba(0, 0, 0, 0.22), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2)");
 						css("transition: all " + ConstTransition.SPEED_ANIM_SCROLL + "ms linear"); // ease-in-out 
 					});
@@ -119,8 +120,8 @@ public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 
 	@xTarget(CONTENT.class)
 	public XMLElement xContenu() {
-		return xHeader(xId(this.vProperty(PROPERTY_NAME)), navbar, fixedTop, cFixedElement,
-				xDiv(descBar, this.getChildren(), pChildrenNavBar),
+		return xHeader(xId(this.vProperty(pId)), navbar, fixedTop, cFixedElement,
+				xDiv(descBar, this.getChildren(), pChildren),
 				xDiv(topBar));
 	}
 

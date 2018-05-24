@@ -14,7 +14,9 @@ public interface JSContentInterface extends JSElement  {
 	JSContentInterface _set(Object name, Object... content);
 	JSContentInterface _var(Object name, Object... content);
 	
+	@Deprecated
 	<E> E let(Class<E> type, Object name, Object... content);
+	@Deprecated
 	<E> E let(String name, E content);
 	void let(JSContentInterface name, Object... content);
 	void let(JSAny name, Object... content);

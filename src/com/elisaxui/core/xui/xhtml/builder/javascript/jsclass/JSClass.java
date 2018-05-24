@@ -26,4 +26,14 @@ public interface JSClass extends JSContentInterface, JSElement, ILitteral  {
 	 * @param c
 	 */
 	void callJava(JSLambda c);
+	
+	static <E> E defVar()
+	{
+		return null;
+	}
+	
+	static <E> JSArray<E> defArray(Class<? extends E> cl)
+	{
+		return new JSArray<E>().setArrayType(cl);
+	}
 }

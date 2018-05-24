@@ -3,6 +3,7 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom;
 
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 
@@ -13,4 +14,5 @@ import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 public interface JSEvent extends JSType {
     JSNodeElement target();
     JSString type();
+    JSInt timeStamp();
 }

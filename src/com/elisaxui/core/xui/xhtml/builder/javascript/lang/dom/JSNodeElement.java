@@ -38,10 +38,6 @@ public class JSNodeElement extends JSAny implements IJSClassInterface {
 	}
 
 	/**************************************************/
-	// public JSNodeElement appendChild(Object element) {
-	// return callMth("appendChild", element);
-	// }
-
 	public JSNodeElement remove() {
 		return callMth("remove");
 	}
@@ -66,6 +62,10 @@ public class JSNodeElement extends JSAny implements IJSClassInterface {
 		return castAttr(new JSon(), "style");
 	}
 	
+	public JSon getBoundingClientRect() {
+		return callMth("getBoundingClientRect");
+	}
+	
 	public JSInt scrollTop()
 	{
 		return castAttr(new JSInt(), "scrollTop");
@@ -78,7 +78,7 @@ public class JSNodeElement extends JSAny implements IJSClassInterface {
 	public JSArray<JSNodeElement> childNodes() {
 		return castAttr(new JSArray<JSNodeElement>().setArrayType(JSNodeElement.class), "childNodes");
 	}
-
+	/*************************************************************/
 	public JSNodeElement querySelector(CSSSelector selector) {
 		return callTyped(new JSNodeElement(), "querySelector", "" + selector);
 	}
@@ -93,7 +93,7 @@ public class JSNodeElement extends JSAny implements IJSClassInterface {
 		else
 			return querySelector(CSSSelector.onPath(selector));
 	}
-
+	/*************************************************************/
 	public JSArray<JSNodeElement> querySelectorAll(CSSSelector selector) {
 		return callTyped(new JSArray<JSNodeElement>().setArrayType(JSNodeElement.class), "querySelectorAll",
 				"" + selector);
@@ -109,7 +109,24 @@ public class JSNodeElement extends JSAny implements IJSClassInterface {
 		else
 			return querySelectorAll(CSSSelector.onPath(selector));
 	}
+	/*************************************************************/
+	public JSNodeElement closest(CSSSelector selector) {
+		return callTyped(new JSNodeElement(), "closest", "" + selector);
+	}
 
+	public JSNodeElement closest(JSAny variable) {
+		return callTyped(new JSNodeElement(), "closest", variable);
+	}
+
+	public JSNodeElement closest(Object... selector) {
+		if (selector.length == 1 && selector[0] instanceof JSAny)
+			return closest((JSAny) selector[0]);
+		else
+			return closest(CSSSelector.onPath(selector));
+	}
+	
+	/***********************************************************/
+	
 	public <E extends JSAny> E firstNodeValue() {
 		return this.childNodes().at(0).attr("nodeValue");
 	}

@@ -5,6 +5,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSObject;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSBool;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 
 public interface JSDataSet extends JSClass {
@@ -72,7 +73,9 @@ public interface JSDataSet extends JSClass {
 				}));
 		changeHandler.attr("set").set(fct(target, property, value, receiver,
 				() -> {
-					_if("property!='" + ATTR_DOM_LINK + "' && target[property]!==value").then(() -> {
+					JSBool isArray = let(JSBool.class, "isArray", target, " instanceof Array");
+					// NE FAIT RIEN SUR array[1]=newRow;    voir splice
+					_if("!", isArray, " && property!='" + ATTR_DOM_LINK + "' && target[property]!==value").then(() -> {
 						JSChangeCtx obj = newJS(JSChangeCtx.class).asLitteral();
 						obj.ope().set("change");
 						obj.row().set(target);
@@ -94,8 +97,11 @@ public interface JSDataSet extends JSClass {
 		_var("that", _this());
 		
 		_forIdx(idx, d)._do(() -> {
-			__(d.at(idx), "=new Proxy(",d.at(idx),", changeHandler)");
-			__(_that.addProxy(d.at(idx)));
+			_if("!",_that.isProxy(d.at(idx))).then(() -> {
+				__(d.at(idx), "=new Proxy(",d.at(idx),", changeHandler)");
+				__(_that.addProxy(d.at(idx)));
+			});
+
 			_var("row", "{ ope:'enter', row:",d.at(idx),", idx:",idx," }");
 			__("fastdom.mutate(function() {that.callBackChange.publish(row); })");
 		});

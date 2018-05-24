@@ -23,12 +23,18 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
  */
 public class JSArray<E> extends JSAny implements ILitteral, IJSClassInterface {
 
+	@Deprecated
 	public JSArray() {
 		super();
 		if (ProxyHandler.isModeJava())
 			this.asLitteral();
 	}
 
+	public static <E> JSArray<E> newLitteral()
+	{
+		return new JSArray<E>().asLitteral();
+	}
+	
 	private Class<?> _type;
 
 	/**

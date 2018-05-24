@@ -169,7 +169,7 @@ public interface IXHTMLBuilder {
 		return "'+" + var + "+'";
 	}
 
-	default String vCalc(Object... var) {
+	default String vPropCalc(Object... var) {
 		List<Object> l = Arrays.asList(var);
 		boolean hasVar = false;
 		for (int i = 0; i < l.size(); i++) {

@@ -1,19 +1,22 @@
 /**
  * 
  */
-package com.elisaxui.component.widget.layout;
+package com.elisaxui.app.core.admin;
 
 import static com.elisaxui.component.toolkit.transition.CssTransition.active;
 import static com.elisaxui.component.toolkit.transition.CssTransition.cFixedElement;
 import static com.elisaxui.component.toolkit.transition.CssTransition.cStateFixedForFreeze;
 import static com.elisaxui.component.toolkit.transition.CssTransition.cStateNoDisplay;
 import static com.elisaxui.component.toolkit.transition.CssTransition.inactive;
+import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSWindow.window;
 
+import com.elisaxui.component.widget.layout.ViewPageLayout;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDomTokenList;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
+import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
 
 /**
  * @author gauth
@@ -28,6 +31,8 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
  *         https://css-tricks.com/controlling-css-animations-transitions-javascript/
  *
  */
+
+@xCoreVersion("1")
 public interface JSPageAnimation extends JSClass {
 
 	public static final String DATA_SCROLLTOP = "scrolltop";
@@ -45,17 +50,32 @@ public interface JSPageAnimation extends JSClass {
 
 	public static final JSInt MEM_SCROLL = JSInt.value(-1);
 	public static final JSInt ZERO = JSInt.value(0);
+	
+	JSDomTokenList classes = JSClass.defVar();
+	JSInt idx = JSClass.defVar();
+	JSNodeElement actContent = JSClass.defVar();
+	JSArray<JSNodeElement> listfixedElem = JSClass.defArray(JSNodeElement.class);
+	JSInt scrposition = JSClass.defVar();
+	JSInt posTop = JSClass.defVar();
 
 	default void doActivityActive(JSNodeElement activity) {
-		JSDomTokenList classes = let("classes", activity.classList());
+		let(classes, activity.classList());
 		classes.remove(cStateNoDisplay);
 		classes.add(active);
 		classes.remove(inactive);
 	}
 
+	/***************************************************************************/
+	
+	default void doInitScrollTo(JSNodeElement activity) {
+		let(scrposition, activity.dataset().attr(DATA_SCROLLTOP));
+		window().scrollTo("0px", calc(scrposition,"==null?0:",scrposition));
+	}
+	
+	/***************************************************************************/
+	
 	default void doActivityFreeze(JSNodeElement activity, JSInt sct) {
-
-		JSDomTokenList classes = let("classes", activity.classList());
+		let(classes, activity.classList());
 		classes.add(cStateFixedForFreeze);
 
 		_if(sct.equalsJS(MEM_SCROLL)).then(() -> {
@@ -65,26 +85,43 @@ public interface JSPageAnimation extends JSClass {
 
 		activity.dataset().attr(DATA_SCROLLTOP).set(sct); // sauvegarde scroll position
 
-		JSNodeElement actContent = let("actContent", activity.querySelector(ViewPageLayout.getcContent()));
+		let(actContent, activity.querySelector(ViewPageLayout.getcContent()));
 		// freeze
 		actContent.style().attr(OVERFLOW).set(txt(HIDDEN)); // fait clignoter en ios
 		actContent.style().attr(HEIGHT).set(txt("100vh"));
 		actContent.scrollTop().set(sct);
 	}
 
-	default void doFixedElemToAbsolute(JSNodeElement act, JSInt sct) {
-		JSInt idx = declareType(JSInt.class, "idx");
-
-		JSArray<JSNodeElement> listfixedElem = let("listfixedElem", act.querySelectorAll(cFixedElement));
-		listfixedElem.setArrayType(JSNodeElement.class);
+	default void doActivityDeFreeze(JSNodeElement activity) {
+		let(actContent, activity.querySelector(ViewPageLayout.getcContent()));
+		
+		actContent.style().attr(OVERFLOW).set(txt()); 
+		actContent.style().attr(HEIGHT).set(txt());
+		
+		let(classes, activity.classList());
+		classes.remove(cStateFixedForFreeze);
+	}
+	
+	/******************************************************************/
+	default void doFixedElemToAbsolute(JSNodeElement act) {
+		let(listfixedElem, act.querySelectorAll(cFixedElement));
 
 		_forIdx(idx, listfixedElem)._do(() -> {
-			JSInt posTop = let(JSInt.class, "posTop", sct);
-			posTop.set(posTop.add(listfixedElem.at(idx), ".getBoundingClientRect().y"));
+			let(posTop, listfixedElem.at(idx).getBoundingClientRect().attr("y"));
 			_if(posTop, ">0")
 					.then(() -> listfixedElem.at(idx).style().attr(TOP).set(txt(posTop, "px")));
 			listfixedElem.at(idx).style().attr(POSITION).set(txt(ABSOLUTE));
 		});
 	}
-
+	
+	default void doFixedElemToFixe(JSNodeElement act) {
+		let(listfixedElem, act.querySelectorAll(cFixedElement));
+		
+		_forIdx(idx, listfixedElem)._do(() -> {
+			listfixedElem.at(idx).style().attr(TOP).set(txt());
+			listfixedElem.at(idx).style().attr(POSITION).set(txt());
+		});
+	}
+	
+	/********************************************************************/
 }

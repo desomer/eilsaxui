@@ -1,5 +1,6 @@
 package com.elisaxui.core.xui.xhtml;
 
+import com.elisaxui.app.core.admin.JSActionManager;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
@@ -17,6 +18,9 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
 
 public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 
+	/**
+	 * 
+	 */
 	private static final String ASYNC = "async";
 	private static final String ONLOAD = "onload";
 	private static final String STYLESHEET = "stylesheet";
@@ -168,7 +172,7 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 	/**************************************************************************/
 
 	public static final XMLAttr xIdAction(Object id) {
-		return xAttr("data-x-action", id);
+		return xAttr(JSActionManager.DATA_X_ACTION, id);
 	}
 
 	/****************************************************************************/

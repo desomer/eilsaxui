@@ -442,7 +442,8 @@ public abstract class XUIScene extends XHTMLPart {
 						._else()
 						// animation ripple
 						.__(TKQueue.startProcessQueued(fct(), NEXT_FRAME, fct() // attente ripple effect
-								.__(ripple.addClass(cRippleEffectShow)), SPEED_RIPPLE_EFFECT,
+								.__(ripple.addClass(cRippleEffectShow)), 
+								SPEED_RIPPLE_EFFECT,
 								fct() // attente ripple effect
 										.__(ripple.removeClass(cRippleEffectShow))
 

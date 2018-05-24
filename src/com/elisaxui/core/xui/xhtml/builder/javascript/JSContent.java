@@ -51,7 +51,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	 * @param args
 	 * @return
 	 */
-	public static final Object cast(Class<?> cl, Object args) {
+	public static final <E> E cast(Class<E> cl, Object args) {
 		Object jc = declareType(cl, null);
 		if (jc instanceof JSAny)
 		{
@@ -60,7 +60,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 		}
 		else
 			((JSClass) jc)._setContent(args);
-		return jc;
+		return (E)jc;
 	}
 	
 	public static final <E> E callStatic(Class<E> cl) {

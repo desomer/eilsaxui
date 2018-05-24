@@ -161,8 +161,7 @@ public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 			@Override
 			public XMLElement getTemplate() {
 				return xNode("button", cActionBtnContainer, cRippleEffect,
-						xAttr("data-x-action",
-								txt(xVar(action))),
+						xIdAction(xTxt(xVar(action))),
 						xAttr("type", "\"button\""),
 						xI(actionBtn, material_icons, xVar(name)));
 			}

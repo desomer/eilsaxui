@@ -23,8 +23,10 @@ import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.annotation.xComment;
+import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.builder.VProperty;
 
@@ -314,13 +316,16 @@ public class XHTMLAppScanner {
 			System.out.print("[XHTMLAppBuilder]init JSClass/JSClassMethod var " + field.getName() + " de type "
 					+ field.getType());
 
+		xCoreVersion coreVersion = cl.getAnnotation(xCoreVersion.class);
+		String version = coreVersion==null?"0":coreVersion.value();
+		
 		if (JSClass.class.isAssignableFrom(field.getType())) {
 			// gestion particuliere d'un proxy pour affecter le nom
 			// au proxy
 			@SuppressWarnings("unchecked")
 
 			JSClass prox = ProxyHandler.getProxy((Class<? extends JSClass>) field.getType());
-			setProxyName(field, prox);
+			setProxyName(field, prox, version);
 
 			try {
 				ReflectionHelper.setFinalStatic(field, prox);
@@ -334,10 +339,16 @@ public class XHTMLAppScanner {
 
 				if (v == null) {
 					JSAny var = (JSAny) field.getType().newInstance();
-					setVarName(field, var);
+					setVarName(field, var, version);
 
 					ReflectionHelper.setFinalStatic(field, var);
 				}
+				else if (v instanceof JSArray && !version.equals("0"))
+				{	// gestion du type des tableau
+					setVarName(field, (JSAny)v, version);   
+					ReflectionHelper.setFinalStatic(field, v);
+				}
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -359,26 +370,26 @@ public class XHTMLAppScanner {
 			System.out.println("");
 	}
 
-	private static void setProxyName(Field field, JSClass prox) {
+	private static void setProxyName(Field field, JSClass prox, String version) {
 		String name = field.getName();
 		xComment comment = field.getAnnotation(xComment.class);
 		if (comment != null) {
 			name = comment.value();
 		}
-		if (name.startsWith("_")) {
-			ProxyHandler.setNameOfProxy("", prox, name.substring(1));
+		if (name.startsWith("_") || !version.equals("0")) {
+			ProxyHandler.setNameOfProxy("", prox, name.substring(!version.equals("0")?0:1));
 		} else
 			ProxyHandler.setNameOfProxy("this.", prox, name);
 	}
 
-	private static void setVarName(Field field, JSAny var) {
+	private static void setVarName(Field field, JSAny var, String version) {
 		String name = field.getName();
 		xComment comment = field.getAnnotation(xComment.class);
 		if (comment != null) {
 			name = comment.value();
 		}
-		if (name.startsWith("_"))
-			var._setName(name.substring(1));
+		if (name.startsWith("_")|| !version.equals("0"))
+			var._setName(name.substring(!version.equals("0")?0:1));
 		else
 			var._setName("this." + name);
 	}

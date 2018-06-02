@@ -22,7 +22,7 @@ import com.elisaxui.core.xui.xml.factory.MountFactory;
  * @author gauth
  *
  */
-public class ViewPageFactory extends XHTMLPart implements IJSDataDriven {
+public class MntPage extends XHTMLPart implements IJSDataDriven {
 
 	static JSArray<TPage> listPage;
 	static TPage aPage;

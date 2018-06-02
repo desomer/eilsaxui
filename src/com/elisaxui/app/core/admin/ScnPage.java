@@ -5,20 +5,22 @@ package com.elisaxui.app.core.admin;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
-import com.elisaxui.app.core.admin.ViewPageFactory.MountArticle;
-import com.elisaxui.app.core.admin.ViewPageFactory.MountArticle2;
-import com.elisaxui.app.core.admin.ViewPageFactory.MountBtn;
-import com.elisaxui.app.core.admin.ViewPageFactory.MountNavBar;
-import com.elisaxui.app.core.admin.ViewPageFactory.MountPage;
-import com.elisaxui.app.core.admin.ViewPageFactory.MountTabBar;
-import com.elisaxui.app.core.admin.ViewPageFactory.TBtn;
-import com.elisaxui.app.core.admin.ViewPageFactory.TPage;
+import com.elisaxui.app.core.admin.MntPage.MountArticle;
+import com.elisaxui.app.core.admin.MntPage.MountArticle2;
+import com.elisaxui.app.core.admin.MntPage.MountBtn;
+import com.elisaxui.app.core.admin.MntPage.MountNavBar;
+import com.elisaxui.app.core.admin.MntPage.MountPage;
+import com.elisaxui.app.core.admin.MntPage.MountTabBar;
+import com.elisaxui.app.core.admin.MntPage.TBtn;
+import com.elisaxui.app.core.admin.MntPage.TPage;
 import com.elisaxui.component.page.CssReset;
 import com.elisaxui.component.toolkit.TKPubSub;
+import com.elisaxui.component.toolkit.TKQueue;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.component.toolkit.transition.CssTransition;
+import com.elisaxui.component.widget.button.CssRippleEffect;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
 import com.elisaxui.component.widget.navbar.ViewNavBar;
 import com.elisaxui.component.widget.tabbar.ViewTabBar;
@@ -49,7 +51,7 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 @xResource(id = "ScnPage")
 @xComment("Scene Page")
 public class ScnPage extends XHTMLPart implements ICSSBuilder {
-	
+
 	static CSSClass main;
 
 	@xTarget(HEADER.class)
@@ -72,7 +74,10 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 				JSDataSet.class,
 				JSPageAnimation.class,
 				JSTouchManager.class,
-				JSActionManager.class);
+				JSActionManager.class,
+				new TKQueue()
+				)
+				;
 	}
 
 	@xTarget(AFTER_CONTENT.class)
@@ -92,7 +97,9 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 	@xTarget(HEADER.class) // la vue App Shell
 	@xResource(id = "main.css")
 	public XMLElement sStyle() {
-		return xElem(new CssReset(),
+		return xElem(
+				new CssReset(),
+				new CssRippleEffect(),
 				xStyle(() -> {
 					sOn(sSel("html"), () -> css("font-size: 16px;"));
 					sOn(sSel("body"), () -> css("font-family: 'Roboto', sans-serif; font-weight: normal;"));
@@ -116,13 +123,14 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 	}
 
 	/********************************************************/
+	// register des mount factory  
+	/********************************************************/
 	public interface JSFactory extends JSClass {
 		@xStatic(autoCall = true)
 		default void doFactory() {
-			__(MountFactory.register(new ViewPageFactory()));
+			__(MountFactory.register(new MntPage()));
 		}
 	}
-
 
 	/********************************************************/
 	// une class js CONTROLEUR avec template et datadriven
@@ -132,7 +140,7 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 	static JSArray<TPage> arrPage;
 	static JSPageAnimation animMgr;
 	static JSNodeElement activity;
-	
+
 	public interface JSController extends JSClass, IJSNodeTemplate, IJSDataDriven {
 
 		@xStatic(autoCall = true) // appel automatique de la methode static
@@ -202,20 +210,20 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 				animMgr.doActivityActive(activity);
 			}), ")");
 
-			setTimeout(() -> {
-				arrPage.at(0).contentArticle().pop();  // suppresion de l'article
-				arrPage.at(0).mountArticle().set(MountArticle2.class);  // change le template
-				arrPage.at(0).contentArticle().push(JSArray.newLitteral());  // ajout d'un article
-
-				let(list, arrPage.at(0).contentArticle().at(0));
-				
-				_forIdxBetween(idx, 0, 10)._do(() -> {
-					TBtn ligne1 = newJS(TBtn.class);
-					ligne1.titre().set("Ligne");
-					list.push(ligne1);
-				});
-
-			}, 5000);
+//			setTimeout(() -> {
+//				arrPage.at(0).contentArticle().pop(); // suppresion de l'article
+//				arrPage.at(0).mountArticle().set(MountArticle2.class); // change le template
+//				arrPage.at(0).contentArticle().push(JSArray.newLitteral()); // ajout d'un article
+//
+//				let(list, arrPage.at(0).contentArticle().at(0));
+//
+//				_forIdx(idx, 0, 10)._do(() -> {
+//					TBtn ligne1 = newJS(TBtn.class);
+//					ligne1.titre().set(calc(txt("Ligne"), "+", idx));
+//					list.push(ligne1);
+//				});
+//
+//			}, 5000);
 
 		}
 	}

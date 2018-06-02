@@ -21,18 +21,19 @@ import com.elisaxui.core.xui.xml.annotation.xStatic;
 @xCoreVersion("1")
 public interface JSTouchManager extends JSClass {
 	
-	JSInt idx = JSClass.defVar();
-	JSEventTouch aEvent = JSClass.defVar();
-	JSArray<JSString> listEvent = JSClass.defVar();
+	JSInt idx = JSClass.declareType();
+	JSEventTouch aEvent = JSClass.declareType();
+	JSArray<JSString> listEvent = JSClass.declareType();
+	TTouchInfo aTouchInfo = JSClass.declareType();
 	
 	TTouchInfo touchInfo();  // variable de class (ici static)
 		
 	@xStatic(autoCall = true) // appel automatique de la methode static
 	default void main() {
 		
-		TTouchInfo touchInfo = let("touchInfo", newJS(TTouchInfo.class));
+		let(aTouchInfo, newJS(TTouchInfo.class));
 		
-		touchInfo().set(touchInfo);
+		touchInfo().set(aTouchInfo);
 		
 		JSArray<JSString> listEventLitteral = JSArray.newLitteral();
 		listEventLitteral.push(JSString.value("touchstart"));
@@ -46,37 +47,37 @@ public interface JSTouchManager extends JSClass {
 		_forIdx(idx, listEvent)._do(() -> {
 			document().addEventListener(listEvent.at(idx), fct(aEvent, () -> {
 				_if(aEvent.type().equalsJS("touchstart")).then(() -> {
-					touchInfo.startTime().set(aEvent.timeStamp());
-					touchInfo.stopTime().set(0);
-					touchInfo.deltaTime().set(0);
-					touchInfo.startX().set(aEvent.touches().at(0).pageX());
-					touchInfo.startY().set(aEvent.touches().at(0).pageY());
-					touchInfo.startClientX().set(aEvent.touches().at(0).clientX());
-					touchInfo.startClientY().set(aEvent.touches().at(0).clientY());
+					aTouchInfo.startTime().set(aEvent.timeStamp());
+					aTouchInfo.stopTime().set(0);
+					aTouchInfo.deltaTime().set(0);
+					aTouchInfo.startX().set(aEvent.touches().at(0).pageX());
+					aTouchInfo.startY().set(aEvent.touches().at(0).pageY());
+					aTouchInfo.startClientX().set(aEvent.touches().at(0).clientX());
+					aTouchInfo.startClientY().set(aEvent.touches().at(0).clientY());
 					
-					callStatic(JSActionManager.class).searchStart(touchInfo, aEvent);
+					callStatic(JSActionManager.class).searchStart(aTouchInfo, aEvent);
 					
 				})._elseif(aEvent.type().equalsJS("touchmove")).then(() -> {
-					touchInfo.deltaTime().set(aEvent.timeStamp().substact(touchInfo.startTime()));
+					aTouchInfo.deltaTime().set(aEvent.timeStamp().substact(aTouchInfo.startTime()));
 					
-					touchInfo.deltaX().set(aEvent.touches().at(0).clientX().substact(touchInfo.startClientX()));
-					touchInfo.deltaY().set(aEvent.touches().at(0).clientY().substact(touchInfo.startClientY()));
+					aTouchInfo.deltaX().set(aEvent.touches().at(0).clientX().substact(aTouchInfo.startClientX()));
+					aTouchInfo.deltaY().set(aEvent.touches().at(0).clientY().substact(aTouchInfo.startClientY()));
 					
-					callStatic(JSActionManager.class).searchMove(touchInfo, aEvent);
+					callStatic(JSActionManager.class).searchMove(aTouchInfo, aEvent);
 					
 				})._else(()->{
-					touchInfo.stopTime().set(aEvent.timeStamp());
-					touchInfo.deltaTime().set(touchInfo.stopTime().substact(touchInfo.startTime()));
-					touchInfo.stopX().set(aEvent.changedTouches().at(0).pageX());
-					touchInfo.stopY().set(aEvent.changedTouches().at(0).pageY());
+					aTouchInfo.stopTime().set(aEvent.timeStamp());
+					aTouchInfo.deltaTime().set(aTouchInfo.stopTime().substact(aTouchInfo.startTime()));
+					aTouchInfo.stopX().set(aEvent.changedTouches().at(0).pageX());
+					aTouchInfo.stopY().set(aEvent.changedTouches().at(0).pageY());
 					
-					touchInfo.deltaX().set(touchInfo.stopX().substact(touchInfo.startX()));
-					touchInfo.deltaY().set(touchInfo.stopY().substact(touchInfo.startY()));
+					aTouchInfo.deltaX().set(aTouchInfo.stopX().substact(aTouchInfo.startX()));
+					aTouchInfo.deltaY().set(aTouchInfo.stopY().substact(aTouchInfo.startY()));
 					
-					touchInfo.distanceX().set("Math.abs(",touchInfo.stopX().substact(touchInfo.startX()), ")");
-					touchInfo.distanceY().set("Math.abs(",touchInfo.stopY().substact(touchInfo.startY()), ")");
+					aTouchInfo.distanceX().set("Math.abs(",aTouchInfo.stopX().substact(aTouchInfo.startX()), ")");
+					aTouchInfo.distanceY().set("Math.abs(",aTouchInfo.stopY().substact(aTouchInfo.startY()), ")");
 					
-					callStatic(JSActionManager.class).searchStop(touchInfo, aEvent);
+					callStatic(JSActionManager.class).searchStop(aTouchInfo, aEvent);
 				});
 				
 			}));

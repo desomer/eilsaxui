@@ -552,7 +552,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	}
 
 	@Override
-	public JSContentInterface _forIdxBetween(JSInt idx, int start, int end) {
+	public JSContentInterface _forIdx(JSInt idx, int start, int end) {
 		return _for("var " + idx + " = " + start + ";" + idx + " < " + end + "; " + idx + "++");
 	}
 

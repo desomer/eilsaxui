@@ -25,7 +25,7 @@ public interface JSContentInterface extends JSElement  {
 	JSContentInterface systemDebugIf(Object cond, Object... content);
 	/**********************************************************************/
 	JSContentInterface _for(Object... content);
-	JSContentInterface _forIdxBetween(JSInt idx, int start, int end);
+	JSContentInterface _forIdx(JSInt idx, int start, int end);
 	JSContentInterface _forIdx(Object idx, JSArray<?> array);
 	JSContentInterface _do(JSLambda c);
 	@Deprecated

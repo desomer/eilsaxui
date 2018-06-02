@@ -305,7 +305,7 @@ public class XUIFactoryXHtml extends XUIFactory {
 	public Response getChallenge(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("token") String token) {
 		CoreLogger.getLogger(1).info(()->"token = "+token);
 		return Response.status(Status.OK)
-				.entity("S82b-qkkEFYbLjsTOOoDny1_6ZOJeRTZCrZHrRZBf9Y._kDi-Kd_nFPpc1VeAbWRbNnNofTvn-iQ8CsSM0GceYE").build();
+				.entity("pGKwbQh7uOItAnjq11QNo_-M0itb94zIObB2bpkndgQ.KKB5n0NNvVroXQ1v-TMye1CnAFNSJY4NQsY_o5qSFJg").build();
 	}
 	
 }

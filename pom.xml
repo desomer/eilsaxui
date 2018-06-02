@@ -5,7 +5,7 @@
   <version>0.0.1-SNAPSHOT</version>
   
   <properties>
-      <jettyVersion>9.4.9.v20180320</jettyVersion>
+      <jettyVersion>9.4.10.v20180503</jettyVersion>
       <jerseyVersion>2.27</jerseyVersion>
       <JAVA_1_8_HOME>C:\Program Files\Java\jre1.8.0_51</JAVA_1_8_HOME>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

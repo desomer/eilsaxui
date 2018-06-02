@@ -80,7 +80,7 @@ public class ScnDataDriven extends XHTMLPart {
 			/*************************** CHARGEMENT DES JSON *************************/
 
 			// ajout les ligne
-			_forIdxBetween(i, 0, 100)._do(() -> {
+			_forIdx(i, 0, 100)._do(() -> {
 				TestDataRow datarow = newJS(TestDataRow.class).asLitteral();
 				datarow.name2().set(txt("one", i));
 				
@@ -94,7 +94,7 @@ public class ScnDataDriven extends XHTMLPart {
 			});
 
 			// change les text en asynchrone tout les i*50ms
-			_forIdxBetween(i, 0, 100)._do(
+			_forIdx(i, 0, 100)._do(
 					() -> setTimeout(fct(j, () -> {
 						listData.at(j).name().set(txt("wor ", j));
 						listData.at(j).oneToOne().name2().set(txt("changeone ", j));

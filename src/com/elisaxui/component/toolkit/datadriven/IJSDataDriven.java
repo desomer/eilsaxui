@@ -8,6 +8,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSNodeTemplate;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 
@@ -35,9 +36,9 @@ public interface IJSDataDriven {
 	}
 	
 	/******************************************************************************/
-	default JSFunction vMount(JSElement aRow,  JSElement elem)
+	default JSFunction vMount(JSElement aRow,  JSString mountId)
 	{
-		return  (JSFunction)  new JSFunction().zzSetComment("vMount "+aRow)._return("window[",elem,"](",aRow,")");
+		return  (JSFunction)  new JSFunction().zzSetComment("vMount "+mountId)._return("window[",mountId,"](",aRow,")");
 	}
 	
 	

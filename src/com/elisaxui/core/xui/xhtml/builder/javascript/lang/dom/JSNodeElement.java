@@ -63,7 +63,7 @@ public class JSNodeElement extends JSAny implements IJSClassInterface {
 	}
 	
 	public JSon getBoundingClientRect() {
-		return callMth("getBoundingClientRect");
+		return callTyped(new JSon(), "getBoundingClientRect");
 	}
 	
 	public JSInt scrollTop()

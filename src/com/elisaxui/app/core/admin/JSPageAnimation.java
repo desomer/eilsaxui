@@ -51,12 +51,12 @@ public interface JSPageAnimation extends JSClass {
 	public static final JSInt MEM_SCROLL = JSInt.value(-1);
 	public static final JSInt ZERO = JSInt.value(0);
 	
-	JSDomTokenList classes = JSClass.defVar();
-	JSInt idx = JSClass.defVar();
-	JSNodeElement actContent = JSClass.defVar();
-	JSArray<JSNodeElement> listfixedElem = JSClass.defArray(JSNodeElement.class);
-	JSInt scrposition = JSClass.defVar();
-	JSInt posTop = JSClass.defVar();
+	JSDomTokenList classes = JSClass.declareType();
+	JSInt idx = JSClass.declareType();
+	JSNodeElement actContent = JSClass.declareType();
+	JSArray<JSNodeElement> listfixedElem = JSClass.declareArray(JSNodeElement.class);
+	JSInt scrposition = JSClass.declareType();
+	JSInt posTop = JSClass.declareType();
 
 	default void doActivityActive(JSNodeElement activity) {
 		let(classes, activity.classList());

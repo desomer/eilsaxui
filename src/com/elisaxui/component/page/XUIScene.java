@@ -438,7 +438,7 @@ public abstract class XUIScene extends XHTMLPart {
 						// TODO A Changer par action sur description
 						._if(ripple.hasClass(ViewBtnCircle.cBtnCircle))
 						// pas animation ripple
-						.__("$xui.intent.nextActivityAnim= '" + ConstTransition.ANIM_FROM_RIPPLE + "'")
+							.__("$xui.intent.nextActivityAnim= '" + ConstTransition.ANIM_FROM_RIPPLE + "'")
 						._else()
 						// animation ripple
 						.__(TKQueue.startProcessQueued(fct(), NEXT_FRAME, fct() // attente ripple effect
@@ -479,7 +479,9 @@ public abstract class XUIScene extends XHTMLPart {
 
 						// TODO passer un context d'event au doEvent (ripple, btn, e, event)
 						.__(TKQueue.startProcessQueued(fct()
+								
 								._var("retEvent", $xui().tkrouter().doEvent("event"))
+								
 								._if("retEvent.cancelRipple")
 								._if("ripple.length>0")
 								.__("ripple.removeClass('", cRippleEffectShow.getId(), "')")

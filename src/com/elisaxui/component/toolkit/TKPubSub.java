@@ -19,7 +19,7 @@ public interface TKPubSub extends JSClass {
 	
 	default void constructor()
 	{
-		observers().set(new JSArray<Object>().asLitteral() );
+		observers().set(JSArray.newLitteral() );
 	}
 	
 	default void subscribe(Object observer)

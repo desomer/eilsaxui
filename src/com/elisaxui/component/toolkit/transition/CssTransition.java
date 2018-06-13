@@ -51,7 +51,7 @@ public class CssTransition extends XHTMLPart {
 	public static CSSClass cStateNoDisplay;
 	
 	@xTarget(HEADER.class)
-	@xResource
+	@xResource(id = "anim.css")
 	@xPriority(5)
 	public XMLElement xStylePart() {
 

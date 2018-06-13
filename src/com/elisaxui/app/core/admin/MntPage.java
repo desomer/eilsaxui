@@ -14,7 +14,10 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
+import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xFactory;
+import com.elisaxui.core.xui.xml.annotation.xResource;
+import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.factory.MountFactory;
 
@@ -29,6 +32,14 @@ public class MntPage extends XHTMLPart implements IJSDataDriven {
 	static TBtn aBtn;
 	static JSArray<JSAny> listArticle;
 
+	@xTarget(HEADER.class)
+	@xResource
+	public XMLElement xImport() {
+		return xElem(
+				xLinkCss("https://fonts.googleapis.com/icon?family=Material+Icons"),
+				xLinkCss("https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css"));
+	}
+	
 	public static class MountPage extends MountFactory {
 	}
 

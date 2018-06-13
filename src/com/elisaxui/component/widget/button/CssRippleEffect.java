@@ -3,15 +3,25 @@
  */
 package com.elisaxui.component.widget.button;
 
+import static com.elisaxui.component.toolkit.transition.ConstTransition.NEXT_FRAME;
 import static com.elisaxui.component.toolkit.transition.ConstTransition.SPEED_RIPPLE_EFFECT;
 
+import com.elisaxui.app.core.admin.JSActionManager;
+import com.elisaxui.app.core.admin.JSActionManager.TActionEvent;
+import com.elisaxui.component.toolkit.TKQueue;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
+import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
+import com.elisaxui.core.xui.xml.annotation.xImport;
 import com.elisaxui.core.xui.xml.annotation.xResource;
+import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
+import com.elisaxui.core.xui.xml.target.MODULE;
 /**
  * @author Bureau
  *
@@ -24,11 +34,11 @@ public class CssRippleEffect extends XHTMLPart {
 	public static CSSClass cRippleEffectColorBack;
 
 	@xTarget(AFTER_BODY.class)
-	@xResource
+	@xResource(id = "anim_after.css")
 	public XMLElement xStylePart() {
 
 		return cStyle()
-				.on(cRippleEffect, "overflow: hidden; ")  /*position: relative;*/
+				.on(cRippleEffect, "overflow: hidden; ") 
 				.on(CSSSelector.onPath(cRippleEffect, ":after"), " content: ''; "
 						+ "  position: absolute; top: 50%;  left: 50%;  width: 5px;  height: 5px;"
 						+ "  background: rgba(255, 255, 255, .7);  opacity: 0;  border-radius: 100%;"
@@ -45,6 +55,49 @@ public class CssRippleEffect extends XHTMLPart {
 				
 				;
 	}	
+	
+	@xTarget(MODULE.class)
+	@xResource(id="component.js")
+	public XMLElement xLoad() {
+		return xElem(JSRippleEffect.class);
+	}
+	
+	@xCoreVersion("1")
+	@xImport(export="JSActionManager", module="standard.js")
+	public interface JSRippleEffect extends JSClass
+	{
+		JSNodeElement ripple = JSClass.declareType();
+		TActionEvent actionEvent = JSClass.declareType();
+		
+		@xStatic(autoCall = true)
+		default void init() {
+			callStatic(JSActionManager.class).onStart(var(fct(actionEvent, ()->{
+				/****************************************************/
+				let(ripple, searchRipple(actionEvent.target()));
+				_if(ripple.notEqualsJS(null)).then(() -> {
+					__(TKQueue.startProcessQueued(
+							NEXT_FRAME,
+							fct(() -> ripple.classList().add(cRippleEffectShow)),
+							SPEED_RIPPLE_EFFECT,
+							fct(() -> ripple.classList().remove(cRippleEffectShow))));
+				});
+			}),".bind(this)"));
+		}
+		
+		@xStatic()
+		default JSNodeElement searchRipple(JSNodeElement target) {
+			// recherche le ripple btn
+			let(ripple, target);
+
+			_if("!", ripple.classList().contains(cRippleEffect))
+					.then(() -> ripple.set(target.closest(cRippleEffect)));
+
+			_if(ripple.equalsJS(null))
+					.then(() -> ripple.set(target.querySelector(cRippleEffect)));
+
+			return ripple;
+		}
+	}
 	
 	/* 
 button {

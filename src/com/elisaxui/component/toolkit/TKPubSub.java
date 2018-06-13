@@ -7,12 +7,14 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xml.annotation.xComment;
+import com.elisaxui.core.xui.xml.annotation.xExport;
 
 /**
  * @author gauth
  *
  */
 @xComment("TKPubSub")
+@xExport
 public interface TKPubSub extends JSClass {
 
 	JSArray<Object> observers();

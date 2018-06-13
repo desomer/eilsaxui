@@ -3,7 +3,11 @@
  */
 package com.elisaxui.app.core.module;
 
+import com.elisaxui.app.core.admin.JSActionManager;
+import com.elisaxui.app.core.admin.JSPageAnimation;
+import com.elisaxui.app.core.admin.JSTouchManager;
 import com.elisaxui.component.toolkit.TKPubSub;
+import com.elisaxui.component.toolkit.TKQueue;
 import com.elisaxui.component.toolkit.com.TKCom;
 import com.elisaxui.component.toolkit.datadriven.JSDataBinding;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
@@ -11,6 +15,7 @@ import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
+import com.elisaxui.core.xui.xml.annotation.xImport;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -31,9 +36,32 @@ public class CmpModuleBinding extends XHTMLPart {
 				);
 	}
 
+	@xTarget(MODULE.class)
+	@xResource(id = "xStandard.js")
+	@xImport(export = "TKPubSub", module = "xCore.js")
+	public XMLElement xStandard() {
+		return xElem(
+				JSPageAnimation.class,
+				JSTouchManager.class,
+				JSActionManager.class,
+				new TKQueue()
+				)
+				;
+	}
+	
+	@xTarget(MODULE.class)
+	@xResource(id = "xCore.js")
+	public XMLElement xCore() {
+		return xElem(
+				TKPubSub.class,
+				JSDomBuilder.class
+				)
+				;
+	}
+	
 	/**************************************************************/
 	@xTarget(MODULE.class)
-	@xResource(id = "xComPoly.js")
+	@xResource(id = "xCom.js")
 	@xPriority(50)
 	public XMLElement xImportCom() {
 		return xListNode( 
@@ -44,10 +72,10 @@ public class CmpModuleBinding extends XHTMLPart {
 	
 	/**************************************************************/
 	@xTarget(MODULE.class)
-	@xResource(id = "xdatadriven.js")
+	@xResource(id = "xDatadriven.js")
+	@xImport(export = "TKPubSub", module = "xCore.js")
 	public XMLElement xImportDataDriven() {
 		return xListNode( xInclude(
-				TKPubSub.class,
 				JSDataDriven.class,
 				JSDataSet.class)
 				);
@@ -58,7 +86,6 @@ public class CmpModuleBinding extends XHTMLPart {
 	@xResource(id = "xBinding.js")
 	public XMLElement xImportBinding() {
 		return xListNode(  xInclude(
-				JSDomBuilder.class,
 				JSDataBinding.class)
 				);
 	}

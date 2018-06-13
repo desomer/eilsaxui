@@ -17,6 +17,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDomTokenList;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
+import com.elisaxui.core.xui.xml.annotation.xExport;
 
 /**
  * @author gauth
@@ -33,6 +34,7 @@ import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
  */
 
 @xCoreVersion("1")
+@xExport
 public interface JSPageAnimation extends JSClass {
 
 	public static final String DATA_SCROLLTOP = "scrolltop";

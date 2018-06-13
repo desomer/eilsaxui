@@ -6,19 +6,16 @@ package com.elisaxui.app.core.admin;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
 import com.elisaxui.app.core.admin.MntPage.MountArticle;
-import com.elisaxui.app.core.admin.MntPage.MountArticle2;
 import com.elisaxui.app.core.admin.MntPage.MountBtn;
 import com.elisaxui.app.core.admin.MntPage.MountNavBar;
 import com.elisaxui.app.core.admin.MntPage.MountPage;
 import com.elisaxui.app.core.admin.MntPage.MountTabBar;
 import com.elisaxui.app.core.admin.MntPage.TBtn;
 import com.elisaxui.app.core.admin.MntPage.TPage;
+import com.elisaxui.app.core.module.CmpModuleBinding;
+import com.elisaxui.app.core.module.CmpModuleComponent;
 import com.elisaxui.component.page.CssReset;
-import com.elisaxui.component.toolkit.TKPubSub;
-import com.elisaxui.component.toolkit.TKQueue;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
-import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
-import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.component.toolkit.transition.CssTransition;
 import com.elisaxui.component.widget.button.CssRippleEffect;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
@@ -33,15 +30,15 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.IJSNodeTemplate;
-import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSDomBuilder;
+import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
+import com.elisaxui.core.xui.xml.annotation.xExport;
+import com.elisaxui.core.xui.xml.annotation.xImport;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
-import com.elisaxui.core.xui.xml.factory.MountFactory;
-import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.target.CONTENT;
 
 /**
@@ -57,38 +54,14 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 	@xTarget(HEADER.class)
 	@xResource
 	public XMLElement xImport() {
-		return xElem(
-				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"),
-				xLinkCss("https://fonts.googleapis.com/icon?family=Material+Icons"),
-				xLinkCss("https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css"),
-				new CssTransition());
+		return xElem( new CmpModuleBinding(), new CmpModuleComponent() );
 	}
 
-	@xTarget(HEADER.class)
-	@xResource(id = "standard.js")
-	public XMLElement xStandard() {
-		return xElem(
-				JSDomBuilder.class,
-				TKPubSub.class,
-				JSDataDriven.class,
-				JSDataSet.class,
-				JSPageAnimation.class,
-				JSTouchManager.class,
-				JSActionManager.class,
-				new TKQueue()
-				)
-				;
-	}
-
-	@xTarget(AFTER_CONTENT.class)
-	@xResource(id = "factory.js")
-	public XMLElement xFactory() {
-		return xElem(JSFactory.class);
-	}
-
-	@xTarget(AFTER_CONTENT.class)
-	@xResource
-	public XMLElement xLoad() {
+	@xTarget(AFTER_BODY.class)
+	@xResource(id = "xControlerPage.js")
+	@xImport(export = "JSMount", module = "xMount.js")
+	@xImport(export = "JSPageAnimation", module = "xStandard.js")  
+	public XMLElement xControlerPage() {
 		return xElem(JSController.class);
 	}
 
@@ -100,6 +73,7 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 		return xElem(
 				new CssReset(),
 				new CssRippleEffect(),
+				new CssTransition(),
 				xStyle(() -> {
 					sOn(sSel("html"), () -> css("font-size: 16px;"));
 					sOn(sSel("body"), () -> css("font-family: 'Roboto', sans-serif; font-weight: normal;"));
@@ -122,15 +96,6 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 		return xDiv(main);
 	}
 
-	/********************************************************/
-	// register des mount factory  
-	/********************************************************/
-	public interface JSFactory extends JSClass {
-		@xStatic(autoCall = true)
-		default void doFactory() {
-			__(MountFactory.register(new MntPage()));
-		}
-	}
 
 	/********************************************************/
 	// une class js CONTROLEUR avec template et datadriven
@@ -141,6 +106,7 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 	static JSPageAnimation animMgr;
 	static JSNodeElement activity;
 
+	@xExport
 	public interface JSController extends JSClass, IJSNodeTemplate, IJSDataDriven {
 
 		@xStatic(autoCall = true) // appel automatique de la methode static

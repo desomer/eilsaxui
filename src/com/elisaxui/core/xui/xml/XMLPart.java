@@ -17,6 +17,7 @@ import com.elisaxui.core.xui.xhtml.XHTMLTemplateResource;
 import com.elisaxui.core.xui.xhtml.builder.module.ModuleDesc;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
+import com.elisaxui.core.xui.xml.annotation.xImport;
 import com.elisaxui.core.xui.xml.annotation.xImportList;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xResource;
@@ -196,7 +197,7 @@ public class XMLPart  {
 			{
 				ModuleDesc moduleDesc = new ModuleDesc();
 				moduleDesc.setResourceID(idResource);
-				moduleDesc.initES6mport(method.getAnnotation(xImportList.class));
+				moduleDesc.initES6mport(method.getAnnotation(xImport.class), method.getAnnotation(xImportList.class));
 				
 				addXMLOnTarget(method, moduleDesc);
 			}

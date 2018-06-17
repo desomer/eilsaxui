@@ -22,7 +22,7 @@ import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
 @xComment("TKQueue")
 public class TKQueue extends XHTMLPart {
 
-	String queuejs = "var TKQueue = function() {"+
+	String queuejs = "window.TKQueue = function() {"+
 			"var api = null, self = this;\n"+
 			"var queueElements = [], queueElementsSource = [];\n"+
 			"var isNumber = function(n) { return !isNaN(parseFloat(n)) && isFinite(n); };\n"+

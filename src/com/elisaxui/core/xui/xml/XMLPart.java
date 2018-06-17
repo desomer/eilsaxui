@@ -29,7 +29,7 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLHandle;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.target.CONTENT;
-import com.elisaxui.core.xui.xml.target.MODULE;
+import com.elisaxui.core.xui.xml.target.FILE_MODULE;
 import com.elisaxui.core.xui.xml.target.XMLTarget;
 import com.elisaxui.core.xui.xml.target.XMLTarget.ITargetRoot;
 
@@ -153,7 +153,7 @@ public class XMLPart  {
 					addElementOnTarget(target, (XMLElement)(XHTMLPart.xScriptSrc("/rest/js/"+name).setPriority(priority)));
 			}
 			
-			boolean isModule = MODULE.class.isAssignableFrom(target) ;
+			boolean isModule = FILE_MODULE.class.isAssignableFrom(target) ;
 			
 			XHTMLFile f = new XHTMLFile();
 			f.setXHTMLTemplate(new XHTMLTemplateResource().setModuleES6File(isModule));
@@ -247,7 +247,7 @@ public class XMLPart  {
 				Class<? extends XMLTarget> targetClass = target.value();
 				if (targetClass!=null ) {
 					
-					if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isSinglefile() && targetClass==MODULE.class)
+					if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isSinglefile() && targetClass==FILE_MODULE.class)
 					{	// force en single file
 						targetClass= HEADER.class;
 					}

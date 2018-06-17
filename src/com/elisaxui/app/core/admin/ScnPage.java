@@ -61,6 +61,7 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 	@xResource(id = "xControlerPage.js")
 	@xImport(export = "JSMount", module = "xMount.js")
 	@xImport(export = "JSPageAnimation", module = "xStandard.js")  
+	@xImport(export = "JSRippleEffect", module ="xComponent.js")
 	public XMLElement xControlerPage() {
 		return xElem(JSController.class);
 	}

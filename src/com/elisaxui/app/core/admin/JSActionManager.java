@@ -72,9 +72,9 @@ public interface JSActionManager extends JSClass {
 		let(actionEvent, newJS(TActionEvent.class));
 		let(target, event.target().closest("[" + DATA_X_ACTION + "]"));
 		let(scrollY, window().pageYOffset());
-		let(activity, target.closest(CssTransition.activity));
-
+		let(activity, null);
 		_if(target.notEqualsJS(null)).then(() -> {
+			activity.set(target.closest(CssTransition.activity));
 			let(actionId, target.dataset().attrByString(ATTR_X_ACTION));
 			actionEvent.actionId().set(actionId);
 		});

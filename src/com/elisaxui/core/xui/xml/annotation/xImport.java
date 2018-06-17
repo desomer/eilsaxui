@@ -15,6 +15,8 @@ import java.lang.annotation.Target;
 @Target( {ElementType.METHOD, ElementType.TYPE})
 @Repeatable(xImportList.class)
 public @interface xImport {
-	 public String export();
-	 public String module();
+	 public String export() default "";
+	 public String module() default "";
+	 public Class<?> idClass() default Object.class;
 }
+

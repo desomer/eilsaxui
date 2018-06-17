@@ -16,12 +16,13 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
+import com.elisaxui.core.xui.xml.annotation.xExport;
 import com.elisaxui.core.xui.xml.annotation.xImport;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
-import com.elisaxui.core.xui.xml.target.MODULE;
+import com.elisaxui.core.xui.xml.target.FILE_MODULE;
 /**
  * @author Bureau
  *
@@ -55,15 +56,9 @@ public class CssRippleEffect extends XHTMLPart {
 				
 				;
 	}	
-	
-	@xTarget(MODULE.class)
-	@xResource(id="component.js")
-	public XMLElement xLoad() {
-		return xElem(JSRippleEffect.class);
-	}
-	
+		
 	@xCoreVersion("1")
-	@xImport(export="JSActionManager", module="standard.js")
+	@xExport
 	public interface JSRippleEffect extends JSClass
 	{
 		JSNodeElement ripple = JSClass.declareType();

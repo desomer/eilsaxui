@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.elisaxui.core.xui.XUIFactory;
+import com.elisaxui.core.xui.xhtml.builder.module.JSModule.IDJSClass;
 import com.elisaxui.core.xui.xml.annotation.xImport;
 import com.elisaxui.core.xui.xml.annotation.xImportList;
 import com.elisaxui.core.xui.xml.target.XMLTarget;
@@ -104,15 +105,32 @@ public class ModuleDesc {
 	public void initES6mport(xImport anImport, xImportList listImport) {
 		if (anImport != null) {
 			ArrayList<ImportDesc> listImportStr = new ArrayList<>();
-			listImportStr.add(new ImportDesc(anImport.export(), anImport.module()));
+			addES6Import(anImport, listImportStr);
 			this.setListImport(listImportStr);
 		} else if (listImport != null) {
 
 			ArrayList<ImportDesc> listImportStr = new ArrayList<>();
 			for (xImport aImport : listImport.value()) {
-				listImportStr.add(new ImportDesc(aImport.export(), aImport.module()));
+				addES6Import(aImport, listImportStr);
 			}
 			this.setListImport(listImportStr);
 		}
+	}
+
+	/**
+	 * @param anImport
+	 * @param listImportStr
+	 */
+	private void addES6Import(xImport anImport, ArrayList<ImportDesc> listImportStr) {
+		String e = anImport.export();
+		String m = anImport.module();
+		Class<?> idc = anImport.idClass();
+		
+		if (idc!=Object.class)
+		{
+			return;
+		}
+		
+		listImportStr.add(new ImportDesc(e, m));
 	}
 }

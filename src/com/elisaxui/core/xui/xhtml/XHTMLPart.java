@@ -78,12 +78,15 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 	 */
 	@Deprecated
 	public static JSAny jsvar(Object... param) {
+		JSAny var = new JSAny();
 		StringBuilder str = new StringBuilder();
 		for (int i = 0; i < param.length; i++) {
 			str.append(param[i]);
 		}
-		JSAny var = new JSAny();
 		var._setName(str.toString());
+		
+//		var.addContent(param);
+		
 		return var;
 	}
 
@@ -139,17 +142,17 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 		return new CSSElement().path(path);
 	}
 	
-	public static final XMLElement xInclude(Class<?>...cl) {
-		Object[] r = new Object[cl.length];
-		
-		for (int i = 0; i < r.length; i++) {
-			r[i] = doInclude((Class<? extends JSClass>) cl[i]);
-		}
-		
-		return xListNodeStatic(r);
-	}
+//	public static final XMLElement xInclude(Class<? extends JSClass>...cl) {
+//		Object[] r = new Object[cl.length];
+//		
+//		for (int i = 0; i < r.length; i++) {
+//			r[i] = doInclude(cl[i]);
+//		}
+//		
+//		return xListNodeStatic(r);
+//	}
 
-	public static final XMLElement xInclude(Class<? extends JSClass> cl) {
+	public static final XMLElement xIncludeJS(Class<? extends JSClass> cl) {
 		return doInclude(cl);
 	}
 
@@ -158,7 +161,7 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 	 * @return
 	 */
 	private static XMLElement doInclude(Class<? extends JSClass> cl) {
-		JSClassBuilder script = XUIFactoryXHtml.getXHTMLFile().getClassImpl(cl);
+		JSClassBuilder script = XUIFactoryXHtml.getXHTMLFile().getClassImpl(cl, true);
 
 		Object autocall = null;
 		if (script.getAutoCallMeth() != null) {

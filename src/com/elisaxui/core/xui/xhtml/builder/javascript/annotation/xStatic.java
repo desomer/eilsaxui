@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.core.xui.xml.annotation;
+package com.elisaxui.core.xui.xhtml.builder.javascript.annotation;
 
 
 import java.lang.annotation.ElementType;

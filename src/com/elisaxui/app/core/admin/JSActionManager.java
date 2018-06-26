@@ -8,15 +8,15 @@ import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSWindow.w
 import com.elisaxui.app.core.admin.JSTouchManager.TTouchInfo;
 import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.component.toolkit.transition.CssTransition;
+import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSEventTouch;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
+import com.elisaxui.core.xui.xhtml.builder.module.annotation.xExport;
 import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
-import com.elisaxui.core.xui.xml.annotation.xExport;
-import com.elisaxui.core.xui.xml.annotation.xStatic;
 
 /**
  * @author gauth
@@ -29,7 +29,7 @@ public interface JSActionManager extends JSClass {
 	public static final String DATA_X_ACTION = "data-x-action";
 	public static final String ATTR_X_ACTION = "xAction";
 
-	JSNodeElement target = JSClass.declareType();
+	JSNodeElement targetAction = JSClass.declareType();
 	JSNodeElement activity = JSClass.declareType();
 	JSInt scrollY = JSClass.declareType();
 	JSPageAnimation animMgr = JSClass.declareType();
@@ -70,18 +70,18 @@ public interface JSActionManager extends JSClass {
 	@xStatic()
 	default void searchStart(TTouchInfo info, JSEventTouch event) {
 		let(actionEvent, newJS(TActionEvent.class));
-		let(target, event.target().closest("[" + DATA_X_ACTION + "]"));
+		let(targetAction, event.target().closest("[" + DATA_X_ACTION + "]"));
 		let(scrollY, window().pageYOffset());
 		let(activity, null);
-		_if(target.notEqualsJS(null)).then(() -> {
-			activity.set(target.closest(CssTransition.activity));
-			let(actionId, target.dataset().attrByString(ATTR_X_ACTION));
+		_if(targetAction.notEqualsJS(null)).then(() -> {
+			activity.set(targetAction.closest(CssTransition.activity));
+			let(actionId, targetAction.dataset().attrByString(ATTR_X_ACTION));
 			actionEvent.actionId().set(actionId);
 		});
 
 		actionEvent.scrollY().set(scrollY);
 		actionEvent.activity().set(activity);
-		actionEvent.target().set(target);
+		actionEvent.actionTarget().set(targetAction);
 		actionEvent.infoEvent().set(info);
 		actionEvent.event().set(event);
 
@@ -90,7 +90,7 @@ public interface JSActionManager extends JSClass {
 
 		callBackStart().publish(actionEvent);
 
-		_if(currentActionEvent().target().notEqualsJS(null)).then(() -> {
+		_if(currentActionEvent().actionTarget().notEqualsJS(null)).then(() -> {
 			/***************************************************/
 			let(animMgr, newJS(JSPageAnimation.class));
 			animMgr.doActivityFreeze(activity, scrollY);
@@ -101,7 +101,10 @@ public interface JSActionManager extends JSClass {
 
 	@xStatic()
 	default void searchMove(TTouchInfo info, JSEventTouch event) {
-		_if(currentActionEvent().target().notEqualsJS(null)).then(() -> {
+		
+		callBackMove().publish(currentActionEvent());
+		
+		_if(currentActionEvent().actionTarget().notEqualsJS(null)).then(() -> {
 			currentActionEvent().activity().style().attr("transform")
 					.set(txt("translate3d(", info.deltaX(), "px,", info.deltaY(), "px,0px)"));
 		});
@@ -109,7 +112,9 @@ public interface JSActionManager extends JSClass {
 
 	@xStatic()
 	default void searchStop(TTouchInfo info, JSEventTouch event) {
-		_if(currentActionEvent().target().notEqualsJS(null)).then(() -> {
+		callBackStop().publish(currentActionEvent());
+		
+		_if(currentActionEvent().actionTarget().notEqualsJS(null)).then(() -> {
 			let(animMgr, newJS(JSPageAnimation.class));
 			let(activity, currentActionEvent().activity());
 
@@ -124,7 +129,7 @@ public interface JSActionManager extends JSClass {
 	/*********************************************************/
 
 	interface TActionEvent extends JSType {
-		JSNodeElement target();
+		JSNodeElement actionTarget();
 
 		JSNodeElement activity();
 

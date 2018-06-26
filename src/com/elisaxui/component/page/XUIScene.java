@@ -50,6 +50,7 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.target.CONTENT;
 
+@Deprecated
 public abstract class XUIScene extends XHTMLPart {
 
 	public static final String heightTabBar = 3.5 + "rem";
@@ -192,22 +193,22 @@ public abstract class XUIScene extends XHTMLPart {
 		/************************************************************/
 		return xListNode(
 				vPart(new TKQueue()), // TODO Remplacer par une class js
-				xInclude(JSXHTMLPart.class),
-				xInclude(TKPubSub.class),
-				xInclude(JSDataDriven.class),
-				xInclude(JSDataSet.class),
-				xInclude(JSDataCtx.class),
-				xInclude(JSOverlay.class),
-				xInclude(JSContainer.class),
-				xInclude(JSNavBar.class),
-				xInclude(JSPageLayout.class),
-				xInclude(TKRouterEvent.class),
+				xIncludeJS(JSXHTMLPart.class),
+				xIncludeJS(TKPubSub.class),
+				xIncludeJS(JSDataDriven.class),
+				xIncludeJS(JSDataSet.class),
+				xIncludeJS(JSDataCtx.class),
+				xIncludeJS(JSOverlay.class),
+				xIncludeJS(JSContainer.class),
+				xIncludeJS(JSNavBar.class),
+				xIncludeJS(JSPageLayout.class),
+				xIncludeJS(TKRouterEvent.class),
 				vPart(new CssReset()), 
 				vPart(new CssTransition()), // TODO Remplacer
-				xInclude(JSTransition.class),
-				xInclude(JSMenu.class),
-				xInclude(TKActivity.class),
-				xInclude(JSViewCard.class));
+				xIncludeJS(JSTransition.class),
+				xIncludeJS(JSMenu.class),
+				xIncludeJS(TKActivity.class),
+				xIncludeJS(JSViewCard.class));
 	}
 
 	@xTarget(HEADER.class)

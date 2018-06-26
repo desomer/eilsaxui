@@ -6,6 +6,7 @@ package com.elisaxui.component.toolkit.datadriven;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
+import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
@@ -18,8 +19,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
-import com.elisaxui.core.xui.xml.annotation.xExport;
-import com.elisaxui.core.xui.xml.annotation.xStatic;
+import com.elisaxui.core.xui.xhtml.builder.module.annotation.xExport;
 
 /**
  * @author gauth

@@ -7,12 +7,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.elisaxui.core.xui.XUIFactory;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
+import com.elisaxui.core.xui.xml.builder.IXMLBuilder;
+import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
 /**
  * @author gauth
  *
  */
-public class ImportDesc {
+public class ImportDesc implements IXMLBuilder {
 	String export;	
 	String module;	
 	
@@ -60,6 +63,17 @@ public class ImportDesc {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-hhmmss");
 		String textdate = formatter.format(new Date(date));
 		return textdate+"_"+module;
+	}
+
+	@Override
+	public XMLBuilder toXML(XMLBuilder buf) {
+		ModuleDesc module = XUIFactory.getXHTMLFile().getListClassModule().get(getExport());
+		System.out.println(getExport()+" --- "+module.getResourceID());
+		
+		ProxyHandler.getFormatManager().newLine(buf);
+		buf.addContentOnTarget("import {"+getExport()+"} from '/rest/js/"+module.getURI()+"';");
+		
+		return buf;
 	}
 	
 

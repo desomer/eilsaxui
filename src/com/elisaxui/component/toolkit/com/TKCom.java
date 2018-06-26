@@ -5,14 +5,14 @@ package com.elisaxui.component.toolkit.com;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
+import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSObject;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.es6.JSPromise;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
-import com.elisaxui.core.xui.xml.annotation.xExport;
-import com.elisaxui.core.xui.xml.annotation.xStatic;
+import com.elisaxui.core.xui.xhtml.builder.module.annotation.xExport;
 
 /**
  * @author gauth
@@ -20,7 +20,7 @@ import com.elisaxui.core.xui.xml.annotation.xStatic;
  */
 @xExport
 public interface TKCom extends JSClass {
-
+	
 	@xStatic
 	default JSPromise requestUrl(JSString url)
 	{
@@ -42,7 +42,7 @@ public interface TKCom extends JSClass {
 			
 		});
 		
-		return cast(JSPromise.class, "new Promise("+fct+")");
+		return cast(JSPromise.class, var("new Promise(",fct,")"));
 	}
 	
 	@xStatic

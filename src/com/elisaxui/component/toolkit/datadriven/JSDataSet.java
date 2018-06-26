@@ -42,7 +42,7 @@ public interface JSDataSet extends JSClass {
 
 	default void setData(JSArray<?> d) {
 
-		JSObject target = declareType(JSObject.class, "target");
+		JSObject target = declareType(JSObject.class, "targetAction");
 		JSObject property = declareType(JSObject.class, "property");
 		JSObject thisArg = declareType(JSObject.class, "thisArg");
 		JSObject argumentsList = declareType(JSObject.class, "argumentsList");
@@ -75,7 +75,7 @@ public interface JSDataSet extends JSClass {
 				() -> {
 					JSBool isArray = let(JSBool.class, "isArray", target, " instanceof Array");
 					// NE FAIT RIEN SUR array[1]=newRow;    voir splice
-					_if("!", isArray, " && property!='" + ATTR_DOM_LINK + "' && target[property]!==value").then(() -> {
+					_if("!", isArray, " && property!='" + ATTR_DOM_LINK + "' && targetAction[property]!==value").then(() -> {
 						JSChangeCtx obj = newJS(JSChangeCtx.class).asLitteral();
 						obj.ope().set("change");
 						obj.row().set(target);

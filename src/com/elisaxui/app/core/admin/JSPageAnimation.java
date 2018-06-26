@@ -16,8 +16,8 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDomTokenList;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
+import com.elisaxui.core.xui.xhtml.builder.module.annotation.xExport;
 import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
-import com.elisaxui.core.xui.xml.annotation.xExport;
 
 /**
  * @author gauth
@@ -56,7 +56,7 @@ public interface JSPageAnimation extends JSClass {
 	JSDomTokenList classes = JSClass.declareType();
 	JSInt idx = JSClass.declareType();
 	JSNodeElement actContent = JSClass.declareType();
-	JSArray<JSNodeElement> listfixedElem = JSClass.declareArray(JSNodeElement.class);
+	JSArray<JSNodeElement> listfixedElem = JSClass.declareTypeArray(JSNodeElement.class);
 	JSInt scrposition = JSClass.declareType();
 	JSInt posTop = JSClass.declareType();
 

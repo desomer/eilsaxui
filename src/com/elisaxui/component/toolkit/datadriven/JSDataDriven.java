@@ -2,14 +2,14 @@ package com.elisaxui.component.toolkit.datadriven;
 
 import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
+import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
-import com.elisaxui.core.xui.xml.annotation.xExport;
-import com.elisaxui.core.xui.xml.annotation.xStatic;
+import com.elisaxui.core.xui.xhtml.builder.module.annotation.xExport;
 /**
  * 
  * - gestion par proxy sur json 

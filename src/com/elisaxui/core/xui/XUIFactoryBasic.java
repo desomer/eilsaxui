@@ -20,9 +20,9 @@ import javax.ws.rs.core.HttpHeaders;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
+import com.elisaxui.core.helper.JSMinifier;
 import com.elisaxui.core.helper.URLLoader;
 import com.elisaxui.core.helper.log.CoreLogger;
-import com.elisaxui.core.xui.xhtml.builder.javascript.utility.JSMinifier;
 
 public class XUIFactoryBasic extends AbstractHandler {
 

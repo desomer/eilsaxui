@@ -21,13 +21,15 @@ public class XHTMLTemplateResource extends XHTMLTemplate {
 	{
 		if (moduleDesc.isES6Module())
 		{
-			int i=0;
+//			int i=0;
 			for (ImportDesc aImport : moduleDesc.getListImport()) {
-				String newLine = "";
-				if (i>=0 && XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCrXML())
-					newLine = "\n";
-				i++;
-				addElementOnTarget(HEADER.class, xNode(null, newLine+"import {"+aImport.getExport()+"} from '/rest/js/"+aImport.getURI()+"';") ); 
+//				String newLine = "";
+//				if (i>=0 && XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCrXML())
+//					newLine = "\n";
+//				i++;
+//				addElementOnTarget(HEADER.class, xNode(null, newLine+"import {"+aImport.getExport()+"} from '/rest/js/"+aImport.getURI()+"';") ); 
+				addElementOnTarget(HEADER.class, xNode(null, aImport));
+			
 			}
 		}
 		addElementOnTarget(BODY.class, elem);

@@ -7,7 +7,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.elisaxui.core.xui.XUIFactory;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassBuilder;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.builder.XMLAttr;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
@@ -19,11 +22,36 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  */
 public interface IXHTMLBuilder {
 
+	default XMLElement xModule(Object... array) {
+		if (array != null)
+			for (int i = 0; i < array.length; i++) {
+				if (array[i] instanceof Class) {
+					
+					@SuppressWarnings("unchecked")
+					Class<? extends JSClass> jsClass = (Class<? extends JSClass>) array[i];
+					array[i] = XHTMLPart.xIncludeJS(jsClass);
+					/**************************************************/
+					/** ajoute le class parmi les exportable dans un module */
+					XHTMLFile mainFile = XUIFactory.getXHTMLFile();
+					JSClassBuilder impl = mainFile.getClassImpl(jsClass, false);
+					if (impl!=null && impl.isExportable())
+					{
+						mainFile.getListClassModule().put(jsClass.getSimpleName(), null);
+					}
+					/**************************************************/
+				}
+				if (array[i] instanceof XMLPart)
+					array[i] = XHTMLPart.vPart((XMLPart) array[i]);
+			}
+
+		return xListNode(array);
+	}
+	
 	default XMLElement xElem(Object... array) {
 		if (array != null)
 			for (int i = 0; i < array.length; i++) {
 				if (array[i] instanceof Class)
-					array[i] = XHTMLPart.xInclude((Class) array[i]);
+					array[i] = XHTMLPart.xIncludeJS((Class) array[i]);
 				if (array[i] instanceof XMLPart)
 					array[i] = XHTMLPart.vPart((XMLPart) array[i]);
 			}

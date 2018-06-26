@@ -7,6 +7,7 @@ import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
@@ -16,7 +17,6 @@ import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xResource;
-import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
@@ -34,7 +34,7 @@ public class ScnTemplate extends XHTMLPart {
 	@xResource // une seule fois par vue
 	public XMLElement xImportVue() {
 		return xListNode(
-				xInclude(JSDomBuilder.class)
+				xIncludeJS(JSDomBuilder.class)
 				);
 	}
 
@@ -45,7 +45,7 @@ public class ScnTemplate extends XHTMLPart {
 
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
 	public XMLElement xLoad() {
-		return xInclude(JSTestTemplate.class);
+		return xIncludeJS(JSTestTemplate.class);
 	}
 
 	// une class JS

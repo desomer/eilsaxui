@@ -17,8 +17,8 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyMethodDesc;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSBool;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSValue;
+import com.elisaxui.core.xui.xhtml.builder.javascript.mount.MountFactory;
 import com.elisaxui.core.xui.xhtml.builder.json.JsonNumberImpl;
-import com.elisaxui.core.xui.xml.factory.MountFactory;
 
 /**
  * @author Bureau
@@ -207,7 +207,7 @@ public class JSAny implements JSElement {
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected final <E extends JSAny> E addContent(Object content) {		
+	public final <E extends JSAny> E addContent(Object content) {		
 		addContent(listContent, content);
 		return (E) this;
 	}

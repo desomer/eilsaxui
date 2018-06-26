@@ -7,6 +7,7 @@ package com.elisaxui.component.page;
  * @author gauth
  *
  */
+@Deprecated
 public class ConfigScene {
 
 

@@ -5,7 +5,7 @@ package com.elisaxui.app.core.admin;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
-import com.elisaxui.app.core.module.CmpModuleBinding;
+import com.elisaxui.app.core.module.CmpModuleCore;
 import com.elisaxui.component.toolkit.com.TKCom;
 import com.elisaxui.component.toolkit.datadriven.IJSDataBinding;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
@@ -14,6 +14,7 @@ import com.elisaxui.component.widget.input.ViewCheckRadio;
 import com.elisaxui.component.widget.input.ViewInputText;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
@@ -23,10 +24,10 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.IJSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
+import com.elisaxui.core.xui.xhtml.builder.module.annotation.xImport;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
-import com.elisaxui.core.xui.xml.annotation.xImport;
+import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
 import com.elisaxui.core.xui.xml.annotation.xResource;
-import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
@@ -36,6 +37,7 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
  * @author gauth
  *
  */
+
 @xResource(id = "ScnAdmin")
 public class ScnAdmin extends XHTMLPart {
 
@@ -45,7 +47,7 @@ public class ScnAdmin extends XHTMLPart {
 	@xTarget(HEADER.class)
 	@xResource // une seule fois par vue
 	public XMLElement xImportLib() {
-		return xListNode(vPart(new CmpModuleBinding())); // configure et genere les modules
+		return xElem(new CmpModuleCore()); // configure et genere les modules
 	}
 
 	@xTarget(CONTENT.class) // la vue App Shell
@@ -55,21 +57,29 @@ public class ScnAdmin extends XHTMLPart {
 
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
 	@xResource(id = "xLoad.js")
-	@xImport(export = "TKCom", module = "xComPoly.js")
-	@xImport(export = "JSDataDriven", module = "xdatadriven.js")
+	@xImport(export = "TKCom", module = "xCom.js")
+	@xImport(export = "JSDataDriven", module = "xDatadriven.js")
 	@xImport(export = "JSDataBinding", module = "xBinding.js")
 	public XMLElement xLoad() {
-		return xInclude(JSTest.class);
+		return xElem(JSTest.class);
 	}
 
+	@xCoreVersion("1")
 	public interface JSTest extends JSClass, IJSNodeTemplate, IJSDataBinding, IJSDataDriven {
-
+		
+		JSNodeElement dom = JSClass.declareType();
+		JSNodeElement rowDom= JSClass.declareType();
+		TAppConfiguration item= JSClass.declareType();
+		JSArray<TAppConfiguration> data = JSClass.declareTypeArray(TAppConfiguration.class);
+		
 		@xStatic(autoCall = true)
 		default void main() {
-			JSAppConfiguration item = declareType(JSAppConfiguration.class, "item");
-			JSArray<JSAppConfiguration> data = let("data", new JSArray<JSAppConfiguration>());
 
-			JSNodeElement dom = let("dom", document().querySelector(cMain));
+			TKCom tkCom = JSClass.declareTypeClass(TKCom.class);
+			
+			let(data, JSArray.newLitteral());
+			let(dom, document().querySelector(cMain));
+
 			dom.appendChild(xElem(vFor(data, item, xDiv(
 					vPart(new ViewCheckRadio()
 							.vProp(ViewCheckRadio.pLabel, "Single File")
@@ -117,30 +127,26 @@ public class ScnAdmin extends XHTMLPart {
 
 			))));
 
-			callStatic(TKCom.class).requestUrl(JSString.value(SrvAdmin.URL_CONFIG)).then(fct(item, () -> {
+			tkCom.requestUrl(JSString.value(SrvAdmin.URL_CONFIG)).then(fct(item, () -> {
 				data.push(item);
 
 				JSon attrDomLink = cast(JSon.class, item).attrByString(JSDataSet.ATTR_DOM_LINK); // inline
 
-				setTimeout(fct(() -> {
-					document().querySelector(cBtnOk).addEventListener("click", fct(() -> {
+				setTimeout(fct(() -> document().querySelector(cBtnOk).addEventListener("click", fct(() -> {
+					let(rowDom, attrDomLink);
+					delete(attrDomLink);
 
-						JSNodeElement rowDom = let(JSNodeElement.class, "rowDom", attrDomLink);
-						delete(attrDomLink);
+					tkCom.postUrl(JSString.value(SrvAdmin.URL_CONFIG), item)
+							.then(fct(() -> __("location.reload(true)")));
+					attrDomLink.set(rowDom);
 
-						callStatic(TKCom.class).postUrl(JSString.value(SrvAdmin.URL_CONFIG), item).then(fct(() -> {
-							__("location.reload(true)");
-						}));
-						attrDomLink.set(rowDom);
-
-					}));
-				}), 1000);
+				}))), 1000);
 			}));
 
 		}
 	}
 
-	public interface JSAppConfiguration extends JSType {
+	public interface TAppConfiguration extends JSType {
 		JSBool minify();
 
 		JSBool es5();

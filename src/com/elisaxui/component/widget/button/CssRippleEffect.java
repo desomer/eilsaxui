@@ -12,17 +12,17 @@ import com.elisaxui.component.toolkit.TKQueue;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
+import com.elisaxui.core.xui.xhtml.builder.module.annotation.xExport;
+import com.elisaxui.core.xui.xhtml.builder.module.annotation.xImport;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
-import com.elisaxui.core.xui.xml.annotation.xExport;
-import com.elisaxui.core.xui.xml.annotation.xImport;
 import com.elisaxui.core.xui.xml.annotation.xResource;
-import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
-import com.elisaxui.core.xui.xml.target.FILE_MODULE;
+import com.elisaxui.core.xui.xml.target.FILE;
 /**
  * @author Bureau
  *
@@ -68,7 +68,7 @@ public class CssRippleEffect extends XHTMLPart {
 		default void init() {
 			callStatic(JSActionManager.class).onStart(var(fct(actionEvent, ()->{
 				/****************************************************/
-				let(ripple, searchRipple(actionEvent.target()));
+				let(ripple, searchRipple(actionEvent.actionTarget()));
 				_if(ripple.notEqualsJS(null)).then(() -> {
 					__(TKQueue.startProcessQueued(
 							NEXT_FRAME,

@@ -59,9 +59,9 @@ public class ScnRoot extends XUIScene {
 	@xResource
 	public XMLElement xImportAfter() {
 		return xListNode(
-				xInclude(JSSyllabisation.class), 
-				xInclude(JSHistoireManager.class),
-				xInclude(JSRoot.class)  
+				xIncludeJS(JSSyllabisation.class), 
+				xIncludeJS(JSHistoireManager.class),
+				xIncludeJS(JSRoot.class)  
 				);
 	}
 	

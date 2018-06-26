@@ -1,16 +1,17 @@
-package com.elisaxui.core.xui.xml.annotation;
+/**
+ * 
+ */
+package com.elisaxui.core.xui.xhtml.builder.javascript.annotation;
+/*
+ * a mettre sur une method d'un  JSClass pour en faire une interface et des methodes inline
+ */
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.elisaxui.core.xui.xml.factory.MountFactory;
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target( {ElementType.METHOD})
-public @interface xFactory {
-
-	Class<? extends MountFactory> value();
-
+public @interface xInLine {
 }

@@ -8,9 +8,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.elisaxui.core.xui.XUIFactory;
-import com.elisaxui.core.xui.xhtml.builder.module.JSModule.IDJSClass;
-import com.elisaxui.core.xui.xml.annotation.xImport;
-import com.elisaxui.core.xui.xml.annotation.xImportList;
+import com.elisaxui.core.xui.xhtml.builder.module.annotation.xImport;
+import com.elisaxui.core.xui.xhtml.builder.module.annotation.xImportList;
 import com.elisaxui.core.xui.xml.target.XMLTarget;
 
 /**
@@ -88,15 +87,15 @@ public class ModuleDesc {
 	}
 
 	/**
-	 * @return the target
+	 * @return the targetAction
 	 */
 	public final XMLTarget getTarget() {
 		return target;
 	}
 
 	/**
-	 * @param target
-	 *            the target to set
+	 * @param targetAction
+	 *            the targetAction to set
 	 */
 	public final void setTarget(XMLTarget target) {
 		this.target = target;
@@ -128,7 +127,7 @@ public class ModuleDesc {
 		
 		if (idc!=Object.class)
 		{
-			return;
+			e = idc.getSimpleName();
 		}
 		
 		listImportStr.add(new ImportDesc(e, m));

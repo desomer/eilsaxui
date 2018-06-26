@@ -3,18 +3,21 @@
  */
 package com.elisaxui.app.core.module;
 
+import com.elisaxui.app.core.admin.JSActionManager;
 import com.elisaxui.app.core.admin.MntPage;
+import com.elisaxui.component.toolkit.datadriven.JSDataBinding;
+import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.widget.button.CssRippleEffect.JSRippleEffect;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xml.annotation.xExport;
-import com.elisaxui.core.xui.xml.annotation.xImport;
+import com.elisaxui.core.xui.xhtml.builder.javascript.mount.MountFactory;
+import com.elisaxui.core.xui.xhtml.builder.module.annotation.xExport;
+import com.elisaxui.core.xui.xhtml.builder.module.annotation.xImport;
 import com.elisaxui.core.xui.xml.annotation.xResource;
-import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
-import com.elisaxui.core.xui.xml.factory.MountFactory;
-import com.elisaxui.core.xui.xml.target.FILE_MODULE;
+import com.elisaxui.core.xui.xml.target.FILE;
 
 /**
  * @author gauth
@@ -22,20 +25,20 @@ import com.elisaxui.core.xui.xml.target.FILE_MODULE;
  */
 public class CmpModuleComponent extends XHTMLPart {
 
-	@xTarget(FILE_MODULE.class)
+	@xTarget(FILE.class)
 	@xResource(id="xComponent.js")
-	@xImport(export="JSActionManager", module="xStandard.js")
+	@xImport(idClass=JSActionManager.class)
 	public XMLElement xLoad() {
-		return xElem(JSRippleEffect.class);
+		return xModule(JSRippleEffect.class);
 	}
 	
 	
-	@xTarget(FILE_MODULE.class)
+	@xTarget(FILE.class)
 	@xResource(id = "xMount.js")
-	@xImport(export = "JSDataDriven", module = "xDatadriven.js")
-	@xImport(export = "JSDataBinding", module = "xBinding.js")
+	@xImport(idClass=JSDataDriven.class)
+	@xImport(idClass=JSDataBinding.class)
 	public XMLElement xFactory() {
-		return xElem(JSMount.class, new MntPage());
+		return xModule(JSMount.class, new MntPage());
 	}
 	
 	/********************************************************/

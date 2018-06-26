@@ -7,6 +7,7 @@ package com.elisaxui.component.page;
  * @author Bureau
  *
  */
+@Deprecated
 public class XUICstRessource {
 
 	public static final String ID_RES_JQUERY = "'JQUERY'";

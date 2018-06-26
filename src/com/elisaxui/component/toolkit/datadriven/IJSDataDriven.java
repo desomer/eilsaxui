@@ -6,6 +6,7 @@ package com.elisaxui.component.toolkit.datadriven;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
@@ -24,21 +25,23 @@ public interface IJSDataDriven {
 	{
 		JSon domparent =  JSContent.declareType(JSon.class, "domparent");
 		
-		JSElement change = (JSFunction) new JSFunction().zzSetComment("onChange "+data).setParam(new Object[] {"ctx"})
+		JSFunction change = (JSFunction) new JSFunction().zzSetComment("onChange vFor "+data).setParam(new Object[] {"ctx"})
 		.__("JSDataBinding.initChangeHandler(ctx, ctx.row['"+JSDataSet.ATTR_DOM_LINK+"'])")
 		;
 		
+		ProxyHandler.getFormatManager().setTabForNewLine(2);
 		JSFunction enter = onEnter(aRow, elem);
 		
-		return (JSFunction) new JSFunction().zzSetComment("vFor "+data).setParam(new Object[] {domparent})
-				.__("JSDataDriven.doTemplateDataDriven(",domparent,",",data,","+enter+",null, "+change+")")
+		JSFunction ret = (JSFunction) new JSFunction().zzSetComment("vFor "+data).setParam(new Object[] {domparent})
+				.__("JSDataDriven.doTemplateDataDriven(", domparent ,",", data, ","+enter,   " ,null,",     change+")")
 				;
+		return ret;
 	}
 	
 	/******************************************************************************/
 	default JSFunction vMount(JSElement aRow,  JSString mountId)
 	{
-		return  (JSFunction)  new JSFunction().zzSetComment("vMount "+mountId)._return("window[",mountId,"](",aRow,")");
+		return  (JSFunction)  new JSFunction().zzSetComment("vMount "+mountId)._return("window.xMount[",mountId,"](",aRow,")");
 	}
 	
 	

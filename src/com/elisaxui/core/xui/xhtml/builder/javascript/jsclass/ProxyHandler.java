@@ -24,10 +24,10 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSLambda;
+import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xInLine;
+import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
-import com.elisaxui.core.xui.xml.annotation.xInLine;
-import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.builder.XUIFormatManager;
 
 public final class ProxyHandler implements InvocationHandler {
@@ -73,7 +73,7 @@ public final class ProxyHandler implements InvocationHandler {
 			return ret == NOT_USED ? null : ret;
 
 		String idMeth = JSClassBuilder.getMethodId(method, args);
-		JSClassBuilder implcl = XUIFactoryXHtml.getXHTMLFile().getClassImpl(getImplementClass());
+		JSClassBuilder implcl = XUIFactoryXHtml.getXHTMLFile().getClassImpl(getImplementClass(), true);
 
 		mthInvoke.idMeth = idMeth;
 		mthInvoke.implcl = implcl;
@@ -793,11 +793,11 @@ public final class ProxyHandler implements InvocationHandler {
 	}
 
 	/**
-	 * @param implementClass
+	 * @param jsClass
 	 *            the implementClass to set
 	 */
-	public final void setImplementClass(Class<? extends JSClass> implementClass) {
-		this.implementClass = implementClass;
+	public final void setImplementClass(Class<? extends JSClass> jsClass) {
+		this.implementClass = jsClass;
 	}
 
 	public static final void setNameOfProxy(String prefix, Object inst, Object name) {
@@ -806,10 +806,10 @@ public final class ProxyHandler implements InvocationHandler {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static final <E extends JSClass> E getProxy(final Class<? extends JSClass> cl) {
+	public static final <E extends JSClass> E getProxy(final Class<? extends JSClass> jsClass) {
 
-		Object proxy = Proxy.newProxyInstance(ProxyHandler.class.getClassLoader(), new Class[] { cl },
-				new ProxyHandler(cl));
+		Object proxy = Proxy.newProxyInstance(ProxyHandler.class.getClassLoader(), new Class[] { jsClass },
+				new ProxyHandler(jsClass));
 		return (E) proxy;
 	}
 
@@ -837,8 +837,8 @@ public final class ProxyHandler implements InvocationHandler {
 		return jsb;
 	}
 
-	public ProxyHandler(Class<? extends JSClass> impl) {
-		this.setImplementClass(impl);
+	public ProxyHandler(Class<? extends JSClass> jsClass) {
+		this.setImplementClass(jsClass);
 	}
 
 	public static final boolean isModeJava() {

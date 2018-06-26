@@ -4,8 +4,8 @@
 package com.elisaxui.core.xui.xhtml.builder.javascript.template;
 
 import com.elisaxui.core.xui.xhtml.IXHTMLBuilder;
+import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xInLine;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xml.annotation.xInLine;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 
 /**

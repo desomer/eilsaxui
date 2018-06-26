@@ -10,16 +10,16 @@ import com.elisaxui.component.widget.layout.ViewPageLayout;
 import com.elisaxui.component.widget.navbar.ViewNavBar;
 import com.elisaxui.component.widget.tabbar.ViewTabBar;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xMount;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.mount.MountFactory;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
-import com.elisaxui.core.xui.xml.annotation.xFactory;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
-import com.elisaxui.core.xui.xml.factory.MountFactory;
 
 /**
  * @author gauth
@@ -43,7 +43,7 @@ public class MntPage extends XHTMLPart implements IJSDataDriven {
 	public static class MountPage extends MountFactory {
 	}
 
-	@xFactory(MountPage.class)
+	@xMount(MountPage.class)
 	public XMLElement createPage(JSArray<TPage> arrPage) {
 		return xElem(
 				vFor(arrPage, aPage, xElem(new ViewPageLayout()
@@ -58,7 +58,7 @@ public class MntPage extends XHTMLPart implements IJSDataDriven {
 	public static class MountTabBar extends MountFactory {
 	}
 
-	@xFactory(MountTabBar.class)
+	@xMount(MountTabBar.class)
 	public XMLElement createTabBar(JSArray<TBtn> arrBtn) {
 		return xElem(
 				vFor(arrBtn, aBtn,
@@ -68,7 +68,7 @@ public class MntPage extends XHTMLPart implements IJSDataDriven {
 	public static class MountNavBar extends MountFactory {
 	}
 
-	@xFactory(MountNavBar.class)
+	@xMount(MountNavBar.class)
 	public XMLElement createNavBar(TPage aPage) {
 		return xElem(new ViewBtnBurger(), xDiv(ViewNavBar.rightAction,
 				xElem(vFor(aPage.dataNavBar(), aBtn, xElem(vMount(aBtn, aBtn.mountBtn()))))));
@@ -77,7 +77,7 @@ public class MntPage extends XHTMLPart implements IJSDataDriven {
 	public static class MountBtn extends MountFactory {
 	}
 
-	@xFactory(MountBtn.class)
+	@xMount(MountBtn.class)
 	public XMLElement createBtn(TBtn btn) {
 		return xButton(xIdAction(btn.action()),
 				ViewNavBar.cActionBtnContainer, CssRippleEffect.cRippleEffect, xAttr("type", "button"),
@@ -87,7 +87,7 @@ public class MntPage extends XHTMLPart implements IJSDataDriven {
 	public static class MountBtn2 extends MountBtn {
 	}
 
-	@xFactory(MountBtn2.class)
+	@xMount(MountBtn2.class)
 	public XMLElement createBtn2(TBtn btn) {
 		return xSpan(btn.titre());
 	}
@@ -95,7 +95,7 @@ public class MntPage extends XHTMLPart implements IJSDataDriven {
 	public static class MountArticle extends MountFactory {
 	}
 
-	@xFactory(MountArticle.class)
+	@xMount(MountArticle.class)
 	public XMLElement createArticle(TPage aPage) {
 		return xElem(
 				vFor(aPage.contentArticle().at(0), aBtn,
@@ -105,7 +105,7 @@ public class MntPage extends XHTMLPart implements IJSDataDriven {
 	public static class MountArticle2 extends MountArticle {
 	}
 
-	@xFactory(MountArticle2.class)
+	@xMount(MountArticle2.class)
 	public XMLElement createArticle2(TPage aPage) {
 		return xElem(
 				vFor(aPage.contentArticle().at(0), aBtn,

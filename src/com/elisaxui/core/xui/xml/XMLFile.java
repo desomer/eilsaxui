@@ -7,7 +7,7 @@ import com.elisaxui.core.xui.config.ConfigFormat;
 
 public class XMLFile {
 
-	private HashMap<Class<?>, Class<?>> mapSingletonResource = new HashMap<Class<?>, Class<?>>();   
+	private HashMap<Class<?>, Class<?>> mapSingletonResource = new HashMap<>();   
 	private ConfigFormat configMgr = new ConfigFormat();
 	
 	/**   la XMLPart principale  (la scene) **/

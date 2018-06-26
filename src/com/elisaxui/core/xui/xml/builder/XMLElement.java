@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.elisaxui.core.xui.XUIFactory;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSStyleRow;
@@ -20,6 +21,8 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSDomFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSNodeTemplate;
+import com.elisaxui.core.xui.xhtml.builder.module.ImportDesc;
+import com.elisaxui.core.xui.xhtml.builder.module.ModuleDesc;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLHandle;
 import com.elisaxui.core.xui.xml.target.CONTENT;
@@ -268,7 +271,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 		} else if (inner instanceof XMLPartElement) { // un XMLPart
 			XMLPartElement part = ((XMLPartElement) inner);
 			nbChild++;
-			// postionne les tabulation
+			// postionne les tabulation des sous element
 			for (XMLElement elem : part.part.getListElementFromTarget(CONTENT.class)) {
 				elem.nbTabInternal = this.nbTabInternal + 1;
 				elem.nbTabForNewLine = this.nbTabForNewLine;
@@ -318,9 +321,16 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			part.nbTabForNewLine = this.nbTabForNewLine;
 			part.toXML(buf);
 			nbChild++;
-
+			
+		} else if (inner instanceof ImportDesc) { // un import
+			ImportDesc aImportDesc = (ImportDesc)inner;
+			ProxyHandler.getFormatManager().nbTabInternal = 0;
+			ProxyHandler.getFormatManager().nbTabForNewLine = 0;
+			aImportDesc.toXML(buf);
+			
 		} else if (inner instanceof XMLAttr) { // un attribut
 			XMLAttr attr = ((XMLAttr) inner);
+			/**TODO a mettre dans le toXML du XMLAttr */
 			if (buf.isTemplate) {
 				Object v = attr.getValue();
 				if (v instanceof VProperty) {

@@ -11,8 +11,9 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassBuilder;
+import com.elisaxui.core.xui.xhtml.builder.module.ModuleDesc;
+import com.elisaxui.core.xui.xhtml.builder.module.annotation.xExport;
 import com.elisaxui.core.xui.xml.XMLFile;
-import com.elisaxui.core.xui.xml.annotation.xExport;
 
 /**
  * @author Bureau
@@ -25,6 +26,15 @@ public class XHTMLFile extends XMLFile {
 	private static final boolean DEBUG = false;
 	/** liste des classes du fichier */
 	private Map<String, JSClassBuilder> listClass = new HashMap<String, JSClassBuilder>();
+	private Map<String, ModuleDesc> listClassModule = new HashMap<>();
+	/**
+	 * @return the listClassModule
+	 */
+	public final Map<String, ModuleDesc> getListClassModule() {
+		return listClassModule;
+	}
+
+
 	/**   les parametres des la request */
 	MultivaluedMap<String, String> param;
 	private XHTMLTemplate root;
@@ -50,20 +60,20 @@ public class XHTMLFile extends XMLFile {
 		return p==null?def:p.get(0);
 	}
 	
-	public final JSClassBuilder getClassImpl(Class<? extends JSClass> cl) {
-		String name = cl.getSimpleName();
+	public final JSClassBuilder getClassImpl(Class<?  extends JSClass> jsClass, boolean build) {
+		String name = jsClass.getSimpleName();
 		JSClassBuilder impl = listClass.get(name);
-		if (impl == null) {
+		if (build && impl == null) {
 			if (DEBUG)
 				System.out.println("[XHTMLFile] import JSClass " + name);
 			impl = new JSClassBuilder();
-			impl.setName(cl.getSimpleName());
-			impl.setExportable(cl.getAnnotation(xExport.class)!=null);
+			impl.setName(jsClass.getSimpleName());
+			impl.setExportable(jsClass.getAnnotation(xExport.class)!=null);
 			
 			listClass.put(name, impl);
 
 			// initialise le constructor
-			Object auto = JSClassBuilder.initJSConstructor(cl);
+			Object auto = JSClassBuilder.initJSConstructor(jsClass);
 			impl.setAutoCallMeth(auto);
 		}
 		return impl;

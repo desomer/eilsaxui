@@ -6,12 +6,12 @@ package com.elisaxui.doc.formation3;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xResource;
-import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.annotation.xVersion;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -30,10 +30,10 @@ public class ScnPerf extends XHTMLPart {
 	@xResource // une seule fois par vue
 	public XMLElement xImportVue() {
 		return xListNode(
-				xInclude(JSPerfVuesJS.class), 
-				xInclude(JSDataSet.class),
-				xInclude(JSDataDriven.class),
-				xInclude(JSDomBuilder.class),
+				xIncludeJS(JSPerfVuesJS.class), 
+				xIncludeJS(JSDataSet.class),
+				xIncludeJS(JSDataDriven.class),
+				xIncludeJS(JSDomBuilder.class),
 				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js"),
 				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js")
 				);
@@ -66,7 +66,7 @@ public class ScnPerf extends XHTMLPart {
 	@xVersion("appli")  // a terminer
 	public XMLElement xDo() {		
 		return xListNode(
-					xInclude(A.class)
+					xIncludeJS(A.class)
 				);
 	}
 

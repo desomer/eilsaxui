@@ -74,7 +74,7 @@ public class WatchDir {
         if (recursive) {
             System.out.format("Scanning %s ...\n", dir);
             registerAll(dir);
-            System.out.println("Done.");
+            System.out.println("Scanning Done.");
         } else {
             register(dir);
         }

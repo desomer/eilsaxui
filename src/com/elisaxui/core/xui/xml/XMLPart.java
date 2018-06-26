@@ -5,20 +5,23 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.elisaxui.AppConfig;
 import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
+import com.elisaxui.core.xui.XUIFactory;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.config.XHTMLAppScanner;
 import com.elisaxui.core.xui.xhtml.XHTMLFile;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLTemplateResource;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.module.ModuleDesc;
+import com.elisaxui.core.xui.xhtml.builder.module.annotation.xImport;
+import com.elisaxui.core.xui.xhtml.builder.module.annotation.xImportList;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
-import com.elisaxui.core.xui.xml.annotation.xImport;
-import com.elisaxui.core.xui.xml.annotation.xImportList;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -29,7 +32,7 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLHandle;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
 import com.elisaxui.core.xui.xml.target.CONTENT;
-import com.elisaxui.core.xui.xml.target.FILE_MODULE;
+import com.elisaxui.core.xui.xml.target.FILE;
 import com.elisaxui.core.xui.xml.target.XMLTarget;
 import com.elisaxui.core.xui.xml.target.XMLTarget.ITargetRoot;
 
@@ -131,6 +134,9 @@ public class XMLPart  {
 	public final void addImportOnTarget(ModuleDesc moduleDesc, Class<? extends XMLTarget> target, XMLElement elem) {		
 		XMLFile subfile =   addSubFileOnTarget(moduleDesc, target, elem.getPriority());
 
+		if (debug)
+			CoreLogger.getLogger(1).fine(elem.getComment()+" add on sub file ====>"+ subfile.getID());
+		
 		XHTMLTemplateResource rootSubFile= ((XHTMLTemplateResource)((XHTMLFile)subfile).getXHTMLTemplate());
 		rootSubFile.addElementOnModule(moduleDesc, elem);
 	}
@@ -139,9 +145,7 @@ public class XMLPart  {
 	private XMLFile addSubFileOnTarget(ModuleDesc moduleDesc, Class<? extends XMLTarget> target, double priority) {
 		final String name = moduleDesc.getURI();
 		XMLFile file = XUIFactoryXHtml.getXMLFile();
-		
-		CoreLogger.getLogger(1).fine("Generate sub file ====>"+ name);
-		
+				
 		return file.listSubFile.computeIfAbsent(name, keyResource -> {
 			if (moduleDesc.isResourceCss())
 				addElementOnTarget(target, (XMLElement)(XHTMLPart.xLinkCss("/rest/css/"+name).setPriority(priority)));
@@ -153,7 +157,7 @@ public class XMLPart  {
 					addElementOnTarget(target, (XMLElement)(XHTMLPart.xScriptSrc("/rest/js/"+name).setPriority(priority)));
 			}
 			
-			boolean isModule = FILE_MODULE.class.isAssignableFrom(target) ;
+			boolean isModule = FILE.class.isAssignableFrom(target) ;
 			
 			XHTMLFile f = new XHTMLFile();
 			f.setXHTMLTemplate(new XHTMLTemplateResource().setModuleES6File(isModule));
@@ -192,7 +196,7 @@ public class XMLPart  {
 			if (idResource!=null && idResource.equals(""))
 				idResource=null;
 			
-			// execute les methode target non ressource
+			// execute les methode targetAction non ressource
 			if (isfirstInit || !isResource)
 			{
 				ModuleDesc moduleDesc = new ModuleDesc();
@@ -247,7 +251,7 @@ public class XMLPart  {
 				Class<? extends XMLTarget> targetClass = target.value();
 				if (targetClass!=null ) {
 					
-					if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isSinglefile() && targetClass==FILE_MODULE.class)
+					if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isSinglefile() && targetClass==FILE.class)
 					{	// force en single file
 						targetClass= HEADER.class;
 					}
@@ -256,6 +260,19 @@ public class XMLPart  {
 
 					if (moduleDesc.getResourceID()!=null)
 						moduleDesc.setResourceID(AppConfig.getModuleJSConfig(moduleDesc.getResourceID()));
+					
+					
+					if (targetClass==FILE.class)
+					{
+						Map<String, ModuleDesc> listeClass = XUIFactory.getXHTMLFile().getListClassModule();
+						listeClass.forEach((k,v) -> { 
+							if (v==null)
+							{
+								listeClass.put(k, moduleDesc);
+								System.out.println(k + ":" + moduleDesc.getResourceID()); 
+							}
+						});
+					}
 					
 					boolean isInner = (moduleDesc.getResourceID()==null || XUIFactoryXHtml.getXMLFile().getConfigMgr().isSinglefile());
 					XMLPart targetPart = this;   //	ajoute dans un block enfant : CONTENT, AFTER_CONTENT

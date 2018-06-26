@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.core.xui.xhtml.builder.javascript.utility;
+package com.elisaxui.core.helper;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

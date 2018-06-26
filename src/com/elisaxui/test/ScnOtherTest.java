@@ -24,8 +24,8 @@ public class ScnOtherTest {
 	// }
 	
 	
-//	.__( "// select the target node\n"+
-//	"var target = document.getElementById(\'test\');\n"+
+//	.__( "// select the targetAction node\n"+
+//	"var targetAction = document.getElementById(\'test\');\n"+
 //	" \n"+
 //	"// create an observer instance\n"+
 //	"var observer = new MutationObserver(function(mutations) {\n"+
@@ -37,8 +37,8 @@ public class ScnOtherTest {
 //	"// configuration of the observer:\n"+
 //	"var config = { attributes: true, childList: true, characterData: true };\n"+
 //	" \n"+
-//	"// pass in the target node, as well as the observer options\n"+
-//	"observer.observe(target, config);\n"+
+//	"// pass in the targetAction node, as well as the observer options\n"+
+//	"observer.observe(targetAction, config);\n"+
 //	" \n"+
 //	"// later, you can stop observing\n"
 //	//+"observer.disconnect()"

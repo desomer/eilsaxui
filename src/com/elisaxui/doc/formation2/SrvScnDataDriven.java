@@ -19,6 +19,7 @@ import javax.ws.rs.core.UriInfo;
 import com.elisaxui.component.toolkit.com.TKCom;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
@@ -29,7 +30,6 @@ import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xResource;
-import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
@@ -52,8 +52,9 @@ public class SrvScnDataDriven implements IJSONBuilder {
 
 		@xTarget(HEADER.class)
 		@xResource // une seule fois par vue
+		/**TODO a gerer en automatique if script ou style */
 		public XMLElement xImportVue() {
-			return xInclude(JSDomBuilder.class, TKCom.class);
+			return xElem(JSDomBuilder.class, TKCom.class);
 		}
 
 		@xTarget(HEADER.class)
@@ -69,7 +70,7 @@ public class SrvScnDataDriven implements IJSONBuilder {
 
 		@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
 		public XMLElement xLoad() {
-			return xInclude(JSTestTemplate.class);
+			return xIncludeJS(JSTestTemplate.class);
 		}
 
 		// une class JS

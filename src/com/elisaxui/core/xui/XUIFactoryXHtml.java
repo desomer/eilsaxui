@@ -120,6 +120,7 @@ public class XUIFactoryXHtml extends XUIFactory {
 			    String name = entry.getKey();
 			    XHTMLFile xmlFile = (XHTMLFile)entry.getValue();
 				ThreadLocalXUIFactoryPage.set(xmlFile);
+				xmlFile.getListClassModule().putAll(fileXML.getListClassModule());
 			    String contentFile = toXML(xmlFile, null, new XMLBuilder(name, new StringBuilder(1000), null).setModeResource(true));
 			    
 			    String ext = name.substring(name.indexOf(POINT)+1);
@@ -217,9 +218,10 @@ public class XUIFactoryXHtml extends XUIFactory {
 			}
 			else
 			{
-				XMLElement elem = XHTMLPart.xListNodeStatic(XHTMLPart.js().consoleDebug("'PB GET JS "+ name +"'"));
-				rootContent= new ArrayList<>();		
-				rootContent.add(elem);
+//				XMLElement elem = XHTMLPart.xListNodeStatic(XHTMLPart.js().consoleDebug("'PB GET JS "+ name +"'"));
+//				rootContent= new ArrayList<>();		
+//				rootContent.add(elem);
+				System.err.println("PB GET JS "+ name);
 			}
 			
 			for (XMLElement elem : rootContent) {

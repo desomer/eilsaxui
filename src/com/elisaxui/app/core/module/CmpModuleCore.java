@@ -14,30 +14,26 @@ import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSDomBuilder;
-import com.elisaxui.core.xui.xhtml.builder.module.JSModule;
+import com.elisaxui.core.xui.xhtml.builder.module.annotation.xImport;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
-import com.elisaxui.core.xui.xml.annotation.xExport;
-import com.elisaxui.core.xui.xml.annotation.xImport;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
-import com.elisaxui.core.xui.xml.target.FILE_MODULE;
+import com.elisaxui.core.xui.xml.target.FILE;
 
 /**
  * @author gauth
  *
  */
-public class CmpModuleBinding extends XHTMLPart {
+public class CmpModuleCore extends XHTMLPart {
 
-	@xExport(idClass = TKPubSub.class)
-	class MCore extends JSModule {}
-	
-	@xImport(idClass = TKPubSub.class)
-	@xExport(idClass = JSDataDriven.class)
-	class MDatadriven extends JSModule {}
-	
-	
+	public static final String X_STANDARD_JS = "xStandard.js";
+	public static final String X_BINDING_JS = "xBinding.js";
+	public static final String X_DATADRIVEN_JS = "xDatadriven.js";
+	public static final String X_COM_JS = "xCom.js";
+	public static final String X_CORE_JS = "xCore.js";
+
 	/**********************************************************************/
 	
 	@xTarget(HEADER.class)
@@ -49,51 +45,51 @@ public class CmpModuleBinding extends XHTMLPart {
 	
 	/**********************************************************************/
 	
-	@xTarget(FILE_MODULE.class)
-	@xResource(id = "xStandard.js")
-	@xImport(export = "TKPubSub", module = "xCore.js")
+	@xTarget(FILE.class)
+	@xResource(id = X_STANDARD_JS)
+	@xImport(idClass = TKPubSub.class)
 	public XMLElement xStandard() {
-		return xElem(
+		return xModule(
 				JSPageAnimation.class,
 				JSTouchManager.class,
 				JSActionManager.class,
 				new TKQueue());
 	}
 
-	@xTarget(FILE_MODULE.class)
-	@xResource(id = "xCore.js")
+	@xTarget(FILE.class)
+	@xResource(id = X_CORE_JS)
 	public XMLElement xCore() {
-		return xElem(
+		return xModule(
 				TKPubSub.class,
 				JSDomBuilder.class);
 	}
 
 	/**************************************************************/
-	@xTarget(FILE_MODULE.class)
-	@xResource(id = "xCom.js")
+	@xTarget(FILE.class)
+	@xResource(id = X_COM_JS)
 	@xPriority(50)
 	public XMLElement xImportCom() {
-		return xElem(
+		return xModule(
 				xScriptSrc("https://cdn.polyfill.io/v2/polyfill.js?features=default,fetch"),
 				TKCom.class);
 	}
 
 	/**************************************************************/
 	
-	@xTarget(FILE_MODULE.class)
-	@xResource(id = "xDatadriven.js")
-	@xImport(export = "TKPubSub", module = "xCore.js")
+	@xTarget(FILE.class)
+	@xResource(id = X_DATADRIVEN_JS)
+	@xImport(idClass = TKPubSub.class)
 	public XMLElement xImportDataDriven() {
-		return xElem(
+		return xModule(
 				JSDataDriven.class,
 				JSDataSet.class);
 	}
 
 	/**************************************************************/
-	@xTarget(FILE_MODULE.class)
-	@xResource(id = "xBinding.js")
+	@xTarget(FILE.class)
+	@xResource(id = X_BINDING_JS)
 	public XMLElement xImportBinding() {
-		return xElem(JSDataBinding.class);
+		return xModule(JSDataBinding.class);
 	}
 
 }

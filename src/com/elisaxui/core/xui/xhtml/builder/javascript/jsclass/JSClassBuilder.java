@@ -14,9 +14,9 @@ import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLTemplateResource;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
+import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xForceInclude;
+import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
-import com.elisaxui.core.xui.xml.annotation.xForceInclude;
-import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
 /**
@@ -67,14 +67,14 @@ public final class JSClassBuilder extends JSContent {
 	}
 
 	
-	public static Object initJSConstructor(Class<? extends JSClass> cl) {
+	public static Object initJSConstructor(Class<? extends JSClass> jsClass) {
 		Object autoCall = null;
 		
 		// init constructor
-		JSClass inst = ProxyHandler.getProxy(cl);
-		Method[] lism = cl.getDeclaredMethods();
+		JSClass inst = ProxyHandler.getProxy(jsClass);
+		Method[] lism = jsClass.getDeclaredMethods();
 		
-		xForceInclude annInclude = cl.getAnnotation(xForceInclude.class);
+		xForceInclude annInclude = jsClass.getAnnotation(xForceInclude.class);
 		boolean includeAllMth = annInclude != null;
 		
 		if (lism != null) {
@@ -96,7 +96,7 @@ public final class JSClassBuilder extends JSContent {
 						method.invoke(inst, new Object[method.getParameterCount()]);
 						ProxyHandler.doLastSourceLineInsered(false);
 					} catch (Throwable e) {
-						ErrorNotificafionMgr.doError("pb constructor sur " + cl.getSimpleName(), e);
+						ErrorNotificafionMgr.doError("pb constructor sur " + jsClass.getSimpleName(), e);
 					}
 
 				}

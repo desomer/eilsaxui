@@ -6,37 +6,40 @@ package com.elisaxui.app.core.admin;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
 import com.elisaxui.app.core.admin.MntPage.MountArticle;
+import com.elisaxui.app.core.admin.MntPage.MountArticle2;
 import com.elisaxui.app.core.admin.MntPage.MountBtn;
 import com.elisaxui.app.core.admin.MntPage.MountNavBar;
 import com.elisaxui.app.core.admin.MntPage.MountPage;
 import com.elisaxui.app.core.admin.MntPage.MountTabBar;
 import com.elisaxui.app.core.admin.MntPage.TBtn;
 import com.elisaxui.app.core.admin.MntPage.TPage;
-import com.elisaxui.app.core.module.CmpModuleBinding;
+import com.elisaxui.app.core.module.CmpModuleCore;
+import com.elisaxui.app.core.module.CmpModuleComponent.JSMount;
 import com.elisaxui.app.core.module.CmpModuleComponent;
 import com.elisaxui.component.page.CssReset;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
 import com.elisaxui.component.toolkit.transition.CssTransition;
 import com.elisaxui.component.widget.button.CssRippleEffect;
+import com.elisaxui.component.widget.button.CssRippleEffect.JSRippleEffect;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
 import com.elisaxui.component.widget.navbar.ViewNavBar;
 import com.elisaxui.component.widget.tabbar.ViewTabBar;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.ICSSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.IJSNodeTemplate;
+import com.elisaxui.core.xui.xhtml.builder.module.annotation.xExport;
+import com.elisaxui.core.xui.xhtml.builder.module.annotation.xImport;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
-import com.elisaxui.core.xui.xml.annotation.xExport;
-import com.elisaxui.core.xui.xml.annotation.xImport;
 import com.elisaxui.core.xui.xml.annotation.xResource;
-import com.elisaxui.core.xui.xml.annotation.xStatic;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.CONTENT;
@@ -54,14 +57,13 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 	@xTarget(HEADER.class)
 	@xResource
 	public XMLElement xImport() {
-		return xElem( new CmpModuleBinding(), new CmpModuleComponent() );
+		return xElem( new CmpModuleCore(), new CmpModuleComponent() );
 	}
 
 	@xTarget(AFTER_BODY.class)
-	@xResource(id = "xControlerPage.js")
-	@xImport(export = "JSMount", module = "xMount.js")
-	@xImport(export = "JSPageAnimation", module = "xStandard.js")  
-	@xImport(export = "JSRippleEffect", module ="xComponent.js")
+	@xResource(id = "xControlerPage.js")   // insert un <Script type module> dans le body
+	@xImport(idClass=JSMount.class)
+	@xImport(idClass=JSPageAnimation.class)  
 	public XMLElement xControlerPage() {
 		return xElem(JSController.class);
 	}
@@ -115,9 +117,7 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 			__("window.datadrivensync=true");
 
 			let(arrPage, JSArray.newLitteral());
-
 			document().querySelector(main).appendChild(xElem(vMount(arrPage, JSString.value(MountPage.class))));
-
 			/******************************************************************/
 			TPage page = newJS(TPage.class);
 			page.titre().set("Page1");
@@ -168,29 +168,32 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 			btn.action().set("E");
 			btn.mountBtn().set(MountBtn.class);
 			arrPage.at(0).dataNavBar().push(btn);
-			let(animMgr, newJS(JSPageAnimation.class));
+			
+			consoleDebug(txt("jsonpage="), arrPage);
 
 			/**************************************************************************************/
-
+			let(animMgr, newJS(JSPageAnimation.class));
+			
+			
 			__("fastdom.mutate(", fct(() -> {
 				let(activity, document().querySelector("#Page1"));
 				animMgr.doActivityActive(activity);
 			}), ")");
 
-//			setTimeout(() -> {
-//				arrPage.at(0).contentArticle().pop(); // suppresion de l'article
-//				arrPage.at(0).mountArticle().set(MountArticle2.class); // change le template
-//				arrPage.at(0).contentArticle().push(JSArray.newLitteral()); // ajout d'un article
-//
-//				let(list, arrPage.at(0).contentArticle().at(0));
-//
-//				_forIdx(idx, 0, 10)._do(() -> {
-//					TBtn ligne1 = newJS(TBtn.class);
-//					ligne1.titre().set(calc(txt("Ligne"), "+", idx));
-//					list.push(ligne1);
-//				});
-//
-//			}, 5000);
+			setTimeout(() -> {
+				arrPage.at(0).contentArticle().pop(); // suppresion de l'article
+				arrPage.at(0).mountArticle().set(MountArticle2.class); // change le template
+				arrPage.at(0).contentArticle().push(JSArray.newLitteral()); // ajout d'un article
+
+				let(list, arrPage.at(0).contentArticle().at(0));
+
+				_forIdx(idx, 0, 10)._do(() -> {
+					TBtn ligne1 = newJS(TBtn.class);
+					ligne1.titre().set(calc(txt("Ligne"), "+", idx));
+					list.push(ligne1);
+				});
+
+			}, 5000);
 
 		}
 	}

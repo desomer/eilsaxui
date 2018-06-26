@@ -76,6 +76,10 @@ public class XUIFormatManager {
 		}
 	}
 
+	/**
+	 * ajout des tabulation apres un newLine
+	 * @param buf
+	 */
 	public void newTabInternal(XMLBuilder buf) {
 		if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableTabXML())
 			for (int i = 0; i < nbTabInternal; i++) {

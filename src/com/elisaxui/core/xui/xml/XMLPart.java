@@ -12,6 +12,7 @@ import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.XUIFactory;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
+import com.elisaxui.core.xui.XUILaucher;
 import com.elisaxui.core.xui.config.XHTMLAppScanner;
 import com.elisaxui.core.xui.xhtml.XHTMLFile;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
@@ -148,13 +149,13 @@ public class XMLPart  {
 				
 		return file.listSubFile.computeIfAbsent(name, keyResource -> {
 			if (moduleDesc.isResourceCss())
-				addElementOnTarget(target, (XMLElement)(XHTMLPart.xLinkCss("/rest/css/"+name).setPriority(priority)));
+				addElementOnTarget(target, (XMLElement)(XHTMLPart.xLinkCss(XUILaucher.PATH_ASSET+"/css/"+name).setPriority(priority)));
 			else  
 			{   //CHANGE TO assert ET non rest
 				if (moduleDesc.isES6Module())
-					addElementOnTarget(target, (XMLElement)(XHTMLPart.xScriptModule("/rest/js/"+name).setPriority(priority)));
+					addElementOnTarget(target, (XMLElement)(XHTMLPart.xScriptModule(XUILaucher.PATH_ASSET+"/mjs/"+name).setPriority(priority)));
 				else	
-					addElementOnTarget(target, (XMLElement)(XHTMLPart.xScriptSrc("/rest/js/"+name).setPriority(priority)));
+					addElementOnTarget(target, (XMLElement)(XHTMLPart.xScriptSrc(XUILaucher.PATH_ASSET+"/js/"+name).setPriority(priority)));
 			}
 			
 			boolean isModule = FILE.class.isAssignableFrom(target) ;
@@ -269,7 +270,7 @@ public class XMLPart  {
 							if (v==null)
 							{
 								listeClass.put(k, moduleDesc);
-								System.out.println(k + ":" + moduleDesc.getResourceID()); 
+								//System.out.println(k + ":" + moduleDesc.getResourceID()); 
 							}
 						});
 					}

@@ -192,17 +192,24 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 			boolean forceModeText =  XUIFactoryXHtml.getXMLFile().getCoreVersion().equals("0");
 			if (!forceModeText && !buf.isTemplate())
 			{
+				// gestion d'un xDiv en mode template JS  (e(p(...))) par defaut si coreVersion >0 
 				buf.setModeTemplate(true);
-				((XMLElement) object).toXML(buf);
+				XMLElement elem = ((XMLElement) object);
+				elem.setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine());
+				elem.toXML(buf);
 				JSContent js = buf.getJSContent();
+//				elem.setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine());
 				buf.setModeTemplate(false);
 				js.toXML(buf);
 			}
 			else
 			{
 				if (buf.isTemplate())
-				{
-					((XMLElement) object).toXML(buf);
+				{  // si div dans template JS
+					XMLElement elem = ((XMLElement) object);
+					elem.setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine());
+					elem.toXML(buf);
+//					elem.setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine());
 				}
 				else
 					doXMLElementToJSXHTMLPart(buf, ((XMLElement) object));
@@ -225,10 +232,10 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 		} else if (object instanceof JSFunction) {
 			JSFunction fct = (JSFunction) object;
 			
-			if (buf.isTemplate())
-			{
-				buf.setModeTemplate(true);
-			}
+//			if (buf.isTemplate() && buf.getJSContent()==null)
+//			{
+//				buf.setModeTemplate(true);
+//			}
 			
 			if (fct.isFragment()) {
 				fct.toXML(buf);
@@ -289,7 +296,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 		StringBuilder txtXMLAfter = new StringBuilder(1000);
 
 		XMLBuilder elemJS = new XMLBuilder("js", txtXML, txtXMLAfter);
-		elem.setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine() + 2);
+		elem.setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine() + 1);
 
 		elem.toXML(elemJS.setModeString(true)); // charge les string
 

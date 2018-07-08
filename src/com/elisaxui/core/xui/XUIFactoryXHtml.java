@@ -6,7 +6,6 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -197,7 +196,22 @@ public class XUIFactoryXHtml extends XUIFactory {
 	@Path("/js/{name}.js")
 	@Produces("application/javascript")
 	public Response getJS(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("name") String name) {
-		
+		return doJS(headers, name);
+	}
+	
+	@GET
+	@Path("/mjs/{name}.mjs")
+	@Produces("application/javascript")
+	public Response getMJS(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("name") String name) {
+		return doJS(headers, name);
+	}
+
+	/**
+	 * @param headers
+	 * @param name
+	 * @return
+	 */
+	private Response doJS(HttpHeaders headers, String name) {
 		String reponseInCache=null;
 		if (enableCache)
 			reponseInCache = CacheManager.resourceDB.get(name);

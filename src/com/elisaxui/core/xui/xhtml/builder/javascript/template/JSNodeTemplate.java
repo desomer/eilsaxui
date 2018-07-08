@@ -49,7 +49,8 @@ public class JSNodeTemplate extends JSNodeElement implements IXHTMLBuilder
 		StringBuilder txtXMLAfter = new StringBuilder(1000);
 		
 		XMLBuilder elemJS =  new XMLBuilder("js", txtXML, txtXMLAfter);
-		xml.setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine()+3);
+		xml.setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine());
+		xml.setNbTabInternal(ProxyHandler.getFormatManager().getNbTabInternal());
 		
 		xml.toXML(elemJS.setModeString(!modeJs).setModeTemplate(modeJs));  // mode template et pas les vieux string
 		

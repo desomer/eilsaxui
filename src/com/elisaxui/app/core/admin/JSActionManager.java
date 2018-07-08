@@ -24,6 +24,7 @@ import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
  */
 @xCoreVersion("1")
 @xExport
+
 public interface JSActionManager extends JSClass {
 
 	public static final String DATA_X_ACTION = "data-x-action";

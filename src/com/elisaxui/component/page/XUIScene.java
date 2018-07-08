@@ -137,7 +137,7 @@ public abstract class XUIScene extends XHTMLPart {
 
 				xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js",
 						"resLoaded(this, " + XUICstRessource.ID_RES_FASTDOM + ");"),
-				xScriptSrcAsync("/asset/?url=http://work.krasimirtsonev.com/git/navigo/navigo.js",
+				xScriptSrcAsync("/cdn/?url=http://work.krasimirtsonev.com/git/navigo/navigo.js",
 						"resLoaded(this, " + XUICstRessource.ID_RES_NAVIGO + ");"),
 				xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js",
 						"resLoaded(this, " + XUICstRessource.ID_RES_HAMMER + ");"),
@@ -149,7 +149,7 @@ public abstract class XUIScene extends XHTMLPart {
 		// xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/json-editor/0.7.28/jsoneditor.min.js"),
 		// xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/granim/1.0.6/granim.min.js"),
 		// xScriptSrcAsync("https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js")
-		// + "<link rel='alternate stylesheet' title='main'
+		// + "<link rel='alternate stylesheet' title='cMain'
 		// href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>"
 		);
 	}

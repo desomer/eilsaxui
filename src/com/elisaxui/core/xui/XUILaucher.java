@@ -44,6 +44,9 @@ public class XUILaucher {
 
 	static boolean http2 = true;
 	
+	public static String PATH_ASSET = "/asset";
+	public static String PATH_REST = "/rest";
+	
 	public static void main(String[] args) throws Exception {
 
 		JSExecutorHelper.initGlobal();
@@ -73,10 +76,14 @@ public class XUILaucher {
 		ServletContextHandler restHandler = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
 		restHandler.setContextPath("/rest");
 		initJersey(restHandler);
+		
+		ServletContextHandler restHandler2 = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
+		restHandler2.setContextPath(PATH_ASSET);
+		initJersey(restHandler2);
 
 		/*********************************************************************/
 		ContextHandler basicHandler = new ContextHandler();
-		basicHandler.setContextPath("/asset");
+		basicHandler.setContextPath("/cdn");
 		initXUIFactoryBasic(basicHandler);
 
 		/*********************************************************************/
@@ -86,6 +93,7 @@ public class XUILaucher {
 
 		HandlerCollection myhandlers = new HandlerCollection(true);
 		myhandlers.addHandler(restHandler);
+		myhandlers.addHandler(restHandler2);
 		myhandlers.addHandler(basicHandler);
 		gzipHolder.setHandler(myhandlers);
 		rewrite.setHandler(gzipHolder);
@@ -196,11 +204,6 @@ public class XUILaucher {
 		ServletHolder jerseyServlet = new ServletHolder(new ServletContainer(resourceConfig()));
 		restHandler.addServlet(jerseyServlet, "/*");
 		jerseyServlet.setInitOrder(0);
-		// jerseyServlet.setInitParameter("jersey.config.server.provider.classnames",
-		// XUIFactoryXHtml.class.getCanonicalName());
-		// jerseyServlet.setInitParameter("jersey.config.server.provider.packages",
-		// AppConfig.getRestPackage());
-
 	}
 
 	private static ResourceConfig resourceConfig() {
@@ -230,7 +233,7 @@ public class XUILaucher {
 		rewrite.setRewritePathInfo(false);
 		rewrite.setOriginalPathAttribute("requestedPath");
 
-		String[] redirectArray = { "", "/main", "/manager" };
+		String[] redirectArray = { "", "/cMain", "/manager" };
 		for (String redirect : redirectArray) {
 			RedirectPatternRule rule = new RedirectPatternRule();
 			rule.setTerminating(true);
@@ -248,7 +251,7 @@ public class XUILaucher {
 
 		oldToNew = new RewritePatternRule();
 		oldToNew.setPattern("/index.html");
-		oldToNew.setReplacement("/rest/page/fr/fra/id/main"); // redirection interne
+		oldToNew.setReplacement("/rest/page/fr/fra/id/cMain"); // redirection interne
 		oldToNew.setTerminating(true);
 		oldToNew.setHandling(false);
 		rewrite.addRule(oldToNew);

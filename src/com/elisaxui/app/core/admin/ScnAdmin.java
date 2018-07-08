@@ -9,6 +9,8 @@ import com.elisaxui.app.core.module.CmpModuleCore;
 import com.elisaxui.component.toolkit.com.TKCom;
 import com.elisaxui.component.toolkit.datadriven.IJSDataBinding;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
+import com.elisaxui.component.toolkit.datadriven.JSDataBinding;
+import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.component.widget.input.ViewCheckRadio;
 import com.elisaxui.component.widget.input.ViewInputText;
@@ -56,10 +58,10 @@ public class ScnAdmin extends XHTMLPart {
 	}
 
 	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
-	@xResource(id = "xLoad.js")
-	@xImport(export = "TKCom", module = "xCom.js")
-	@xImport(export = "JSDataDriven", module = "xDatadriven.js")
-	@xImport(export = "JSDataBinding", module = "xBinding.js")
+	@xResource(id = "xLoad.mjs")
+	@xImport(idClass=TKCom.class)
+	@xImport(idClass=JSDataDriven.class)
+	@xImport(idClass=JSDataBinding.class)
 	public XMLElement xLoad() {
 		return xElem(JSTest.class);
 	}

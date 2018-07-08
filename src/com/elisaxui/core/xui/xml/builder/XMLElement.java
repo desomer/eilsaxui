@@ -303,16 +303,22 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 
 		} else if (inner instanceof JSClassBuilder) { // cas d'une class js
 			JSClassBuilder part = ((JSClassBuilder) inner);
-			ProxyHandler.getFormatManager().nbTabInternal = this.nbTabInternal + 1;
-			ProxyHandler.getFormatManager().nbTabForNewLine = this.nbTabForNewLine;
+			if (!buf.isTemplate())
+				ProxyHandler.getFormatManager().setNbTabInternal( this.nbTabInternal + 1);
+			ProxyHandler.getFormatManager().setTabForNewLine(this.nbTabForNewLine);
 			part.toXML(buf);
+			if (!buf.isTemplate())
+				ProxyHandler.getFormatManager().setNbTabInternal(this.nbTabInternal);
 			nbChild++;
 
 		} else if (inner instanceof JSContent) { // cas d'un js
 			JSContent part = ((JSContent) inner);
-			ProxyHandler.getFormatManager().nbTabInternal = this.nbTabInternal + 1;
-			ProxyHandler.getFormatManager().nbTabForNewLine = this.nbTabForNewLine;
+			if (!buf.isTemplate())
+				ProxyHandler.getFormatManager().setNbTabInternal( this.nbTabInternal + 1);
+			ProxyHandler.getFormatManager().setTabForNewLine(this.nbTabForNewLine);
 			part.toXML(buf);
+			if (!buf.isTemplate())
+				ProxyHandler.getFormatManager().setNbTabInternal(this.nbTabInternal);
 			nbChild++;
 
 		} else if (inner instanceof CSSStyleRow) { // un css
@@ -324,8 +330,8 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			
 		} else if (inner instanceof ImportDesc) { // un import
 			ImportDesc aImportDesc = (ImportDesc)inner;
-			ProxyHandler.getFormatManager().nbTabInternal = 0;
-			ProxyHandler.getFormatManager().nbTabForNewLine = 0;
+			ProxyHandler.getFormatManager().setNbTabInternal(0);
+			ProxyHandler.getFormatManager().setTabForNewLine(0);
 			aImportDesc.toXML(buf);
 			
 		} else if (inner instanceof XMLAttr) { // un attribut

@@ -25,8 +25,11 @@ import com.elisaxui.core.xui.xml.target.FILE;
  */
 public class CmpModuleComponent extends XHTMLPart {
 
+	public static final String X_COMPONENT_JS = "xComponent.mjs";
+	public static final String X_MOUNT_JS = "xMount.mjs";
+	
 	@xTarget(FILE.class)
-	@xResource(id="xComponent.js")
+	@xResource(id=X_COMPONENT_JS)
 	@xImport(idClass=JSActionManager.class)
 	public XMLElement xLoad() {
 		return xModule(JSRippleEffect.class);
@@ -34,7 +37,7 @@ public class CmpModuleComponent extends XHTMLPart {
 	
 	
 	@xTarget(FILE.class)
-	@xResource(id = "xMount.js")
+	@xResource(id = X_MOUNT_JS)
 	@xImport(idClass=JSDataDriven.class)
 	@xImport(idClass=JSDataBinding.class)
 	public XMLElement xFactory() {

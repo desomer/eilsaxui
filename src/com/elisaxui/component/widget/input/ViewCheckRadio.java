@@ -131,8 +131,8 @@ public class ViewCheckRadio extends XHTMLPart implements ICSSBuilder {
 		  
 		  &:checked{
 		    &:after {
-		      background-color: $main-color;
-		      border-color: $main-color;
+		      background-color: $cMain-color;
+		      border-color: $cMain-color;
 		    }
 		    &:before {
 		      content: "";
@@ -156,7 +156,7 @@ public class ViewCheckRadio extends XHTMLPart implements ICSSBuilder {
 		     position: absolute;
 		     left: 0;
 		     top: 0;
-		     background-color: $main-color;
+		     background-color: $cMain-color;
 		     width: $base-size;
 		     height: $base-size;
 
@@ -176,7 +176,7 @@ public class ViewCheckRadio extends XHTMLPart implements ICSSBuilder {
 		        transform: scale(.5);   
 		    }
 		    &:after {
-		      border-color: $main-color;
+		      border-color: $cMain-color;
 		    }
 		    
 		    &:disabled{

@@ -33,7 +33,7 @@ import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
  *
  */
 
-@xResource(id = "main")
+@xResource(id = "cMain")
 @xComment("activite standard")
 @xCoreVersion("0")
 public class ScnRoot extends XUIScene {

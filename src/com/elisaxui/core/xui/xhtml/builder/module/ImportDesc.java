@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.elisaxui.core.xui.XUIFactory;
+import com.elisaxui.core.xui.XUILaucher;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xml.builder.IXMLBuilder;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
@@ -68,10 +69,10 @@ public class ImportDesc implements IXMLBuilder {
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
 		ModuleDesc module = XUIFactory.getXHTMLFile().getListClassModule().get(getExport());
-		System.out.println(getExport()+" --- "+module.getResourceID());
+//		System.out.println(getExport()+" --- "+module.getResourceID());
 		
 		ProxyHandler.getFormatManager().newLine(buf);
-		buf.addContentOnTarget("import {"+getExport()+"} from '/rest/js/"+module.getURI()+"';");
+		buf.addContentOnTarget("import {"+getExport()+"} from '"+XUILaucher.PATH_ASSET+"/mjs/"+module.getURI()+"';");
 		
 		return buf;
 	}

@@ -6,6 +6,8 @@ package com.elisaxui.core.xui.xhtml.builder.javascript.mount;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
@@ -49,14 +51,18 @@ public abstract class MountFactory {
 	 * @param src
 	 * @return
 	 */
-	public static ArrayList register(XHTMLPart src)
+	public static ArrayList<Object> register(XHTMLPart src)
 	{		
-		ArrayList code = new ArrayList<>();
+		ArrayList<Object> code = new ArrayList<>();
 		code.add("if (window.xMount==null) window.xMount={};");
 		code.add(JSNewLine.class);
-		code.add(JSNewLine.class);
 		Method[] listMth = src.getClass().getDeclaredMethods();
-		for (Method method : listMth) {
+		
+		List<Method> lm = Arrays.asList(listMth);
+		
+		lm.sort(Comparator.comparing(Method::getName));
+		
+		for (Method method : lm) {
 			xMount aFactory = method.getAnnotation(xMount.class);
 			if (aFactory!=null)
 				{
@@ -69,9 +75,9 @@ public abstract class MountFactory {
 								p[i] = ProxyHandler.getObjectJS(method.getParameterTypes()[i], "", "p"+i);
 
 							}
-				    	
 						Object ret = method.invoke(src, p);
 						JSFunction fct = (JSFunction) new JSFunction().zzSetComment("MountFactory "+aFactory.value().getSimpleName()).setParam(new Object[] {"p0"})._return(ret);
+						code.add(JSNewLine.class);
 						code.add("window.xMount."+aFactory.value().getSimpleName()+"=");
 						code.add(fct);
 						code.add(";");
@@ -87,7 +93,7 @@ public abstract class MountFactory {
 	
 	
 	/*
-	 * xui().mount("createPage") .container("listePage") .on("append", main)
+	 * xui().mount("createPage") .container("listePage") .on("append", cMain)
 	 */ // "replace"
 
 	/*

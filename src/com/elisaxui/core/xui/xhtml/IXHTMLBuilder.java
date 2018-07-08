@@ -81,7 +81,7 @@ public interface IXHTMLBuilder {
 	}
 
 	default XMLElement xMain(Object... inner) {
-		return xNode("main", inner);
+		return xNode("cMain", inner);
 	}
 
 	default XMLElement xSection(Object... inner) {

@@ -6,7 +6,8 @@ package com.elisaxui.core.xui.xml.builder;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 
 /**
- * @author Bureau pour le css et le html (JS grace a un ThreadLocal)
+ * @author Bureau 
+ * pour le css et le html (JS grace a un ThreadLocal)
  */
 public class XUIFormatManager {
 
@@ -36,6 +37,9 @@ public class XUIFormatManager {
 	 */
 	public final void setNbTabInternal(int nbTabInternal) {
 		this.nbTabInternal = nbTabInternal;
+//		System.out.println("nbTabInternal "+nbTabInternal);
+//		if (nbTabInternal==-1)
+//			nbTabInternal=0;
 	}
 
 	protected int nbTabForNewLine = 0;
@@ -53,6 +57,7 @@ public class XUIFormatManager {
 
 	public void setTabForNewLine(int nbInitialTab) {
 		this.nbTabForNewLine = nbInitialTab;
+//		System.out.println("nbTabForNewLine "+nbTabForNewLine);
 	}
 
 	public void newLine(XMLBuilder buf) {

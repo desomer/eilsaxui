@@ -177,6 +177,7 @@ public abstract class XUIFactory {
 		String html = toXML(fileXML, loc, null);
 		cache.setResult(html);
 		
+		// execute les sub fichier
 		doSubFile(requestConfig, fileXML);
 		
 		if (cache.isStore())

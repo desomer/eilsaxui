@@ -52,7 +52,7 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 @xComment("Scene Page")
 public class ScnPage extends XHTMLPart implements ICSSBuilder {
 
-	static CSSClass main;
+	static CSSClass cMain;
 
 	@xTarget(HEADER.class)
 	@xResource
@@ -61,9 +61,10 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 	}
 
 	@xTarget(AFTER_BODY.class)
-	@xResource(id = "xControlerPage.js")   // insert un <Script type module> dans le body
+	@xResource(id = "xControlerPage.mjs")   // insert un <Script type module> dans le body
 	@xImport(idClass=JSMount.class)
 	@xImport(idClass=JSPageAnimation.class)  
+	@xImport(idClass=JSRippleEffect.class)
 	public XMLElement xControlerPage() {
 		return xElem(JSController.class);
 	}
@@ -71,7 +72,7 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 	/************************************************************************/
 
 	@xTarget(HEADER.class) // la vue App Shell
-	@xResource(id = "main.css")
+	@xResource(id = "cMain.css")
 	public XMLElement sStyle() {
 		return xElem(
 				new CssReset(),
@@ -96,7 +97,7 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 		vProp(ViewTabBar.pStyle,
 				"background:linear-gradient(to bottom, rgb(255, 191, 97) 0%, rgb(255, 152, 0) 64%, rgb(241, 197, 133) 100%)");
 
-		return xDiv(main);
+		return xDiv(cMain);
 	}
 
 
@@ -117,7 +118,7 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 			__("window.datadrivensync=true");
 
 			let(arrPage, JSArray.newLitteral());
-			document().querySelector(main).appendChild(xElem(vMount(arrPage, JSString.value(MountPage.class))));
+			document().querySelector(cMain).appendChild(xElem(vMount(arrPage, JSString.value(MountPage.class))));
 			/******************************************************************/
 			TPage page = newJS(TPage.class);
 			page.titre().set("Page1");
@@ -181,6 +182,7 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 			}), ")");
 
 			setTimeout(() -> {
+				consoleDebug(txt("change article"));
 				arrPage.at(0).contentArticle().pop(); // suppresion de l'article
 				arrPage.at(0).mountArticle().set(MountArticle2.class); // change le template
 				arrPage.at(0).contentArticle().push(JSArray.newLitteral()); // ajout d'un article

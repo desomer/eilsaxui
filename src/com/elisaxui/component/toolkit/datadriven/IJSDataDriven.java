@@ -25,16 +25,19 @@ public interface IJSDataDriven {
 	{
 		JSon domparent =  JSContent.declareType(JSon.class, "domparent");
 		
-		JSFunction change = (JSFunction) new JSFunction().zzSetComment("onChange vFor "+data).setParam(new Object[] {"ctx"})
-		.__("JSDataBinding.initChangeHandler(ctx, ctx.row['"+JSDataSet.ATTR_DOM_LINK+"'])")
-		;
+		JSFunction change = (JSFunction) new JSFunction().zzSetComment("").setParam(new Object[] {"ctx"})
+		.__("JSDataBinding.initChangeHandler(ctx, ctx.row['"+JSDataSet.ATTR_DOM_LINK+"'])");
 		
-		ProxyHandler.getFormatManager().setTabForNewLine(2);
+	//	change.setDebug(true);
+		
+	//	ProxyHandler.getFormatManager().setTabForNewLine(2);
 		JSFunction enter = onEnter(aRow, elem);
+	//	enter.setDebug(true);
 		
 		JSFunction ret = (JSFunction) new JSFunction().zzSetComment("vFor "+data).setParam(new Object[] {domparent})
-				.__("JSDataDriven.doTemplateDataDriven(", domparent ,",", data, ","+enter,   " ,null,",     change+")")
+				.__("JSDataDriven.doTemplateDataDriven(", domparent ,",", data, ",", enter,   " ,null,",  change, ")")
 				;
+		ret.setDebug(true);
 		return ret;
 	}
 	

@@ -4,7 +4,6 @@ import java.util.logging.Level;
 
 import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyMethodDesc;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
@@ -21,6 +20,9 @@ public class JSFunction extends JSContent implements JSElement {
 	public String toString() {
 		StringBuilder strBuf = new StringBuilder();
 		XMLBuilder buf = new XMLBuilder("????", strBuf, null);
+		if (isDebug())
+			debug=true;
+		
 		this.toXML(buf);
 		return strBuf.toString();
 	}
@@ -31,7 +33,24 @@ public class JSFunction extends JSContent implements JSElement {
 	boolean isFragment = false;
 	boolean isStatic = false;
 	Object comment = null;
+	boolean debug = false;
 	
+	
+	
+	/**
+	 * @return the debug
+	 */
+	public final boolean isDebug() {
+		return debug;
+	}
+
+	/**
+	 * @param debug the debug to set
+	 */
+	public final void setDebug(boolean debug) {
+		this.debug = debug;
+	}
+
 	/**
 	 * @return the comment
 	 */
@@ -126,6 +145,9 @@ public class JSFunction extends JSContent implements JSElement {
 	@Override
 	public XMLBuilder toXML(XMLBuilder buf) {
 
+		if (isDebug())
+			debug=true;
+		
 		Object comment = null;
 		if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCommentFctJS())
 		{

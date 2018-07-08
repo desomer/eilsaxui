@@ -6,16 +6,19 @@ package com.elisaxui.core.xui.config;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 
 import com.elisaxui.core.helper.ClassLoaderHelper;
 import com.elisaxui.core.helper.ClassLoaderHelper.FileEntry;
 import com.elisaxui.core.helper.ReflectionHelper;
+import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.xui.CacheManager;
 import com.elisaxui.core.xui.XUILaucher;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
@@ -320,18 +323,20 @@ public class XHTMLAppScanner {
 		String version = coreVersion==null?"0":coreVersion.value();
 		
 		if (JSClass.class.isAssignableFrom(field.getType())) {
-			// gestion particuliere d'un proxy pour affecter le nom
-			// au proxy
-			@SuppressWarnings("unchecked")
-
-			JSClass prox = ProxyHandler.getProxy((Class<? extends JSClass>) field.getType());
-			setProxyName(field, prox, version);
-
 			try {
-				ReflectionHelper.setFinalStatic(field, prox);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+				Object v = ReflectionHelper.getFinalStatic(field, cl);
+				if (v == null) {
+					// gestion particuliere d'un proxy pour affecter le nom au proxy
+					@SuppressWarnings("unchecked")
+					JSClass prox = ProxyHandler.getProxy((Class<? extends JSClass>) field.getType());
+					setProxyName(field, prox, version);
+				    ReflectionHelper.setFinalStatic(field, prox);
+				}
+			} catch (Exception e1) {
+				CoreLogger.getLogger(0).log(Level.SEVERE, "PB on "+cl, e1);
+				
+			} 
+			
 		} else if (JSAny.class.isAssignableFrom(field.getType())) {
 			try {
 

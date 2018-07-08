@@ -28,11 +28,11 @@ import com.elisaxui.core.xui.xml.target.FILE;
  */
 public class CmpModuleCore extends XHTMLPart {
 
-	public static final String X_STANDARD_JS = "xStandard.js";
-	public static final String X_BINDING_JS = "xBinding.js";
-	public static final String X_DATADRIVEN_JS = "xDatadriven.js";
-	public static final String X_COM_JS = "xCom.js";
-	public static final String X_CORE_JS = "xCore.js";
+	public static final String X_STANDARD_JS = "xStandard.mjs";
+	public static final String X_BINDING_JS = "xBinding.mjs";
+	public static final String X_DATADRIVEN_JS = "xDatadriven.mjs";
+	public static final String X_COM_JS = "xCom.mjs";
+	public static final String X_CORE_JS = "xCore.mjs";
 
 	/**********************************************************************/
 	
@@ -44,8 +44,17 @@ public class CmpModuleCore extends XHTMLPart {
 	}
 	
 	/**********************************************************************/
+	@xTarget(FILE.class)
+	@xPriority(10)
+	@xResource(id = X_CORE_JS)
+	public XMLElement xCore() {
+		return xModule(
+				TKPubSub.class,
+				JSDomBuilder.class);
+	}
 	
 	@xTarget(FILE.class)
+	@xPriority(50)
 	@xResource(id = X_STANDARD_JS)
 	@xImport(idClass = TKPubSub.class)
 	public XMLElement xStandard() {
@@ -54,14 +63,6 @@ public class CmpModuleCore extends XHTMLPart {
 				JSTouchManager.class,
 				JSActionManager.class,
 				new TKQueue());
-	}
-
-	@xTarget(FILE.class)
-	@xResource(id = X_CORE_JS)
-	public XMLElement xCore() {
-		return xModule(
-				TKPubSub.class,
-				JSDomBuilder.class);
 	}
 
 	/**************************************************************/

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.core.xui.config;
+package com.elisaxui.core.xui.app;
 
 public class ConfigFormatData {
 	private boolean minifyOnStart =false;
@@ -23,7 +23,22 @@ public class ConfigFormatData {
 	
 	private int versionTimeline = 0;
 	
+	private boolean dateFileName = false; 
 	
+	/**
+	 * @return the dateFileName
+	 */
+	public final boolean isDateFileName() {
+		return dateFileName;
+	}
+
+	/**
+	 * @param dateFileName the dateFileName to set
+	 */
+	public final void setDateFileName(boolean dateFileName) {
+		this.dateFileName = dateFileName;
+	}
+
 	/**
 	 * @return the versionTimeline
 	 */

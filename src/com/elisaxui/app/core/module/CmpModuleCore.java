@@ -5,6 +5,7 @@ package com.elisaxui.app.core.module;
 
 import com.elisaxui.app.core.admin.JSActionManager;
 import com.elisaxui.app.core.admin.JSPageAnimation;
+import com.elisaxui.app.core.admin.JSRequestAnimationFrame;
 import com.elisaxui.app.core.admin.JSTouchManager;
 import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.component.toolkit.TKQueue;
@@ -62,6 +63,7 @@ public class CmpModuleCore extends XHTMLPart {
 				JSPageAnimation.class,
 				JSTouchManager.class,
 				JSActionManager.class,
+				JSRequestAnimationFrame.class,
 				new TKQueue());
 	}
 

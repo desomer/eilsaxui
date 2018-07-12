@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.core.xui.config;
+package com.elisaxui.core.xui.app;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +19,6 @@ import com.elisaxui.core.helper.ClassLoaderHelper;
 import com.elisaxui.core.helper.ClassLoaderHelper.FileEntry;
 import com.elisaxui.core.helper.ReflectionHelper;
 import com.elisaxui.core.helper.log.CoreLogger;
-import com.elisaxui.core.xui.CacheManager;
 import com.elisaxui.core.xui.XUILaucher;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;

@@ -3,7 +3,7 @@ package com.elisaxui.core.xui.xml;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import com.elisaxui.core.xui.config.ConfigFormat;
+import com.elisaxui.core.xui.app.ConfigFormat;
 
 public class XMLFile {
 

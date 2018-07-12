@@ -35,10 +35,10 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 
-import com.elisaxui.AppConfig;
 import com.elisaxui.core.helper.JSExecutorHelper;
-import com.elisaxui.core.xui.config.WatchDir;
-import com.elisaxui.core.xui.config.XHTMLAppScanner;
+import com.elisaxui.core.xui.app.AppConfig;
+import com.elisaxui.core.xui.app.WatchDir;
+import com.elisaxui.core.xui.app.XHTMLAppScanner;
 
 public class XUILaucher {
 

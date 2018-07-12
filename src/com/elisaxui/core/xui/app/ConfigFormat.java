@@ -1,4 +1,4 @@
-package com.elisaxui.core.xui.config;
+package com.elisaxui.core.xui.app;
 
 public class ConfigFormat {
 	private static ConfigFormatData data = new ConfigFormatData();

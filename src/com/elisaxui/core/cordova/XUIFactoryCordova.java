@@ -19,9 +19,9 @@ import javax.ws.rs.core.Response;
 
 import com.elisaxui.core.helper.JSExecutorHelper;
 import com.elisaxui.core.helper.log.CoreLogger;
-import com.elisaxui.core.xui.CacheManager;
 import com.elisaxui.core.xui.XUIFactory;
-import com.elisaxui.core.xui.config.ConfigFormat;
+import com.elisaxui.core.xui.app.CacheManager;
+import com.elisaxui.core.xui.app.ConfigFormat;
 import com.elisaxui.core.xui.xhtml.XHTMLFile;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 
@@ -29,14 +29,14 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
  * @author gauth
  *
  */
-public class XHIFactoryCordova extends XUIFactory {
+public class XUIFactoryCordova extends XUIFactory {
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 
-		XHIFactoryCordova builder = new XHIFactoryCordova();
+		XUIFactoryCordova builder = new XUIFactoryCordova();
 
 		builder.createHtml("ScnPage");
 

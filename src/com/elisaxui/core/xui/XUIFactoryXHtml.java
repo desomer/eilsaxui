@@ -28,6 +28,7 @@ import javax.ws.rs.core.UriInfo;
 import com.elisaxui.component.page.JSServiceWorker;
 import com.elisaxui.core.helper.JSExecutorHelper;
 import com.elisaxui.core.helper.log.CoreLogger;
+import com.elisaxui.core.xui.app.CacheManager;
 import com.elisaxui.core.xui.xhtml.XHTMLFile;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xml.XMLFile;
@@ -75,17 +76,17 @@ public class XUIFactoryXHtml extends XUIFactory {
 				if (err!=null)	return err;
 			}
 		} else {
-			CoreLogger.getLogger(1).info(() -> "****** get cache " + cache.idCacheDB);
+			CoreLogger.getLogger(1).info(() -> "****** get cache " + cache.getIdCacheDB());
 		}
 		
 		if (cache.getResult()==null)
 			return Response.status(Status.NOT_FOUND).entity("no found " + id).header("a", "b").build();
 				
 		StringBuilder dif = new StringBuilder();
-		if (cache.fileComparator.listLineDiff.length()>0)
+		if (cache.getFileComparator().listLineDiff.length()>0)
 		{
 			dif.append("\n\n<script id='srcdiff' type='application/json'>");
-			dif.append(cache.fileComparator.listLineDiff);
+			dif.append(cache.getFileComparator().listLineDiff);
 			dif.append("\n</script>");
 		}
 				
@@ -124,7 +125,7 @@ public class XUIFactoryXHtml extends XUIFactory {
 			    
 			    String ext = name.substring(name.indexOf(POINT)+1);
 			    
-			    if (requestConfig.isEs5() && ext.equals("js"))
+			    if (requestConfig.isEs5() && (ext.equals("js") || ext.equals("mjs")) )
 					try {
 						contentFile = JSExecutorHelper.doBabel(contentFile);
 					} catch (NoSuchMethodException | ScriptException e) {
@@ -143,10 +144,10 @@ public class XUIFactoryXHtml extends XUIFactory {
 				
 				/*********************************************************************/
 				StringBuilder dif = new StringBuilder();
-				if (cache.fileComparator.listLineDiff.length()>0)
+				if (cache.getFileComparator().listLineDiff.length()>0)
 				{
 					dif.append("\n\n");
-					dif.append(cache.fileComparator.listLineDiff);
+					dif.append(cache.getFileComparator().listLineDiff);
 					dif.append("\n");
 				}
 				/*********************************************************************/

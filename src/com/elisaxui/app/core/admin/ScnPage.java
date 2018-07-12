@@ -181,21 +181,21 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 				animMgr.doActivityActive(activity);
 			}), ")");
 
-			setTimeout(() -> {
-				consoleDebug(txt("change article"));
-				arrPage.at(0).contentArticle().pop(); // suppresion de l'article
-				arrPage.at(0).mountArticle().set(MountArticle2.class); // change le template
-				arrPage.at(0).contentArticle().push(JSArray.newLitteral()); // ajout d'un article
-
-				let(list, arrPage.at(0).contentArticle().at(0));
-
-				_forIdx(idx, 0, 10)._do(() -> {
-					TBtn ligne1 = newJS(TBtn.class);
-					ligne1.titre().set(calc(txt("Ligne"), "+", idx));
-					list.push(ligne1);
-				});
-
-			}, 5000);
+//			setTimeout(() -> {
+//				consoleDebug(txt("change article"));
+//				arrPage.at(0).contentArticle().pop(); // suppresion de l'article
+//				arrPage.at(0).mountArticle().set(MountArticle2.class); // change le template
+//				arrPage.at(0).contentArticle().push(JSArray.newLitteral()); // ajout d'un article
+//
+//				let(list, arrPage.at(0).contentArticle().at(0));
+//
+//				_forIdx(idx, 0, 10)._do(() -> {
+//					TBtn ligne1 = newJS(TBtn.class);
+//					ligne1.titre().set(calc(txt("Ligne"), "+", idx));
+//					list.push(ligne1);
+//				});
+//
+//			}, 5000);
 
 		}
 	}

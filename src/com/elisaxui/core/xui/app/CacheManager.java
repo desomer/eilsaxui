@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.core.xui;
+package com.elisaxui.core.xui.app;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -16,6 +16,7 @@ import org.mapdb.Atomic.Var;
 
 import com.elisaxui.core.helper.FileComparator;
 import com.elisaxui.core.helper.log.CoreLogger;
+import com.elisaxui.core.xui.XUIFactory;
 
 /**
  * @author gauth
@@ -33,7 +34,7 @@ public class CacheManager {
 	private static  Var<Object> listeDico= null;
 	private static  Var<Object> lastDateFile= null;
 	/**************************************************************************/
-	FileComparator fileComparator = new FileComparator();
+	private FileComparator fileComparator = new FileComparator();
 	
 	/*************************************************************************/
 	public static final long getLastDate() {
@@ -106,6 +107,13 @@ public class CacheManager {
 	String idCacheDB; 
 	private String result = null;
 	/************************************************/
+	/**
+	 * @return the idCache
+	 */
+	public final String getIdCacheDB() {
+		return idCacheDB;
+	}
+	
 	
 	public void initVersion(boolean noCache, int version)
 	{
@@ -156,7 +164,7 @@ public class CacheManager {
 		
 		// initialize 
 		if (htmlInCacheDB!=null && htmlInCacheMoreRecent!=null) {
-			fileComparator.initLineDiff(htmlInCacheDB ,  htmlInCacheMoreRecent, extension.equals("html"));
+			getFileComparator().initLineDiff(htmlInCacheDB ,  htmlInCacheMoreRecent, extension.equals("html"));
 		}
 		
 		if (version==0)
@@ -203,5 +211,19 @@ public class CacheManager {
 	 */
 	public void setResult(String result) {
 		this.result = result;
+	}
+
+	/**
+	 * @return the fileComparator
+	 */
+	public FileComparator getFileComparator() {
+		return fileComparator;
+	}
+
+	/**
+	 * @param fileComparator the fileComparator to set
+	 */
+	public void setFileComparator(FileComparator fileComparator) {
+		this.fileComparator = fileComparator;
 	}
 }

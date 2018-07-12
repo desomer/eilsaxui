@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui;
+package com.elisaxui.core.xui.app;
 
 /**
  * @author gauth

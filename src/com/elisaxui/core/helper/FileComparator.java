@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Locale;
 
 import com.elisaxui.core.xui.XUIFactory;
-import com.elisaxui.core.xui.config.ConfigFormat;
+import com.elisaxui.core.xui.app.ConfigFormat;
 
 import difflib.DiffRow;
 import difflib.DiffRowGenerator;

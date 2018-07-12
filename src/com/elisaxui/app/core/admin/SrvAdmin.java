@@ -22,7 +22,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import com.elisaxui.app.core.admin.ScnAdmin.TAppConfiguration;
-import com.elisaxui.core.xui.config.ConfigFormat;
+import com.elisaxui.core.xui.app.ConfigFormat;
 import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 
 /**

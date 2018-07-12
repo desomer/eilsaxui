@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.core.xui.config;
+package com.elisaxui.core.xui.app;
 
 import java.io.File;
 import java.time.LocalDateTime;

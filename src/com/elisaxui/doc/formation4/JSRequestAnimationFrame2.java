@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.core.admin;
+package com.elisaxui.doc.formation4;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;

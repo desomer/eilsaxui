@@ -31,22 +31,12 @@ public interface JSRequestAnimationFrame extends JSClass {
 		let(tick, fct(now, () -> {
 			_if(now.substact(next), ">1000").then(() -> {
 				next.set(now);
-				consoleDebug("'qf'", now);
+			//	consoleDebug("'qf'", now);
 			});
 			JSWindow.window().requestAnimationFrame(tick);
 		}));
 
 		JSWindow.window().requestAnimationFrame(tick);
-
-		
-		let(next2, "Date.now()");
-		let(tick2, fct(now, () -> {
-			consoleDebug("'st'", "Date.now()-next2");
-			setTimeout(tick2, 1000);
-		}));
-
-		setTimeout(tick2, 1000);
-
 	}
 
 }

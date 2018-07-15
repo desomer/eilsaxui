@@ -63,18 +63,21 @@ public class CssRippleEffect extends XHTMLPart {
 	{
 		JSNodeElement ripple = JSClass.declareType();
 		TActionEvent actionEvent = JSClass.declareType();
+		JSActionManager actionManager = JSClass.declareTypeClass(JSActionManager.class);
 		
 		@xStatic(autoCall = true)
 		default void init() {
-			callStatic(JSActionManager.class).onStart(var(fct(actionEvent, ()->{
+			actionManager.onStart(var(fct(actionEvent, ()->{
 				/****************************************************/
-				let(ripple, searchRipple(actionEvent.actionTarget()));
-				_if(ripple.notEqualsJS(null)).then(() -> {
-					__(TKQueue.startProcessQueued(
-							NEXT_FRAME,
-							fct(() -> ripple.classList().add(cRippleEffectShow)),
-							SPEED_RIPPLE_EFFECT,
-							fct(() -> ripple.classList().remove(cRippleEffectShow))));
+				_if(actionEvent.actionTarget().notEqualsJS(null)).then(() -> {
+					let(ripple, searchRipple(actionEvent.actionTarget()));
+					_if(ripple.notEqualsJS(null)).then(() -> {
+						__(TKQueue.startProcessQueued(
+								NEXT_FRAME,
+								fct(() -> ripple.classList().add(cRippleEffectShow)),
+								SPEED_RIPPLE_EFFECT,
+								fct(() -> ripple.classList().remove(cRippleEffectShow))));
+					});
 				});
 			}),".bind(this)"));
 		}

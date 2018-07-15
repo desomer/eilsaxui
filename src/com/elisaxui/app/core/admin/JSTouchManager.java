@@ -54,7 +54,7 @@ public interface JSTouchManager extends JSClass {
 					aTouchInfo.startY().set(aEvent.touches().at(0).pageY());
 					aTouchInfo.startClientX().set(aEvent.touches().at(0).clientX());
 					aTouchInfo.startClientY().set(aEvent.touches().at(0).clientY());
-
+					aTouchInfo.distance().set(0);
 					jsActionManager.searchStart(aTouchInfo, aEvent);
 
 				})._elseif(aEvent.type().equalsJS("touchmove")).then(() -> {
@@ -63,6 +63,10 @@ public interface JSTouchManager extends JSClass {
 					aTouchInfo.deltaX().set(aEvent.touches().at(0).clientX().substact(aTouchInfo.startClientX()));
 					aTouchInfo.deltaY().set(aEvent.touches().at(0).clientY().substact(aTouchInfo.startClientY()));
 
+					aTouchInfo.distanceX().set("Math.abs(", aEvent.touches().at(0).clientX().substact(aTouchInfo.startClientX()), ")");
+					aTouchInfo.distanceY().set("Math.abs(", aEvent.touches().at(0).clientY().substact(aTouchInfo.startClientY()), ")");
+					aTouchInfo.distance().set("Math.sqrt(", aTouchInfo.deltaX().multiply(aTouchInfo.deltaX()),"+", aTouchInfo.deltaY().multiply(aTouchInfo.deltaY()),  ")");
+					
 					jsActionManager.searchMove(aTouchInfo, aEvent);
 
 				})._else(() -> {
@@ -76,7 +80,9 @@ public interface JSTouchManager extends JSClass {
 
 					aTouchInfo.distanceX().set("Math.abs(", aTouchInfo.stopX().substact(aTouchInfo.startX()), ")");
 					aTouchInfo.distanceY().set("Math.abs(", aTouchInfo.stopY().substact(aTouchInfo.startY()), ")");
+					aTouchInfo.distance().set("Math.sqrt(", aTouchInfo.deltaX().multiply(aTouchInfo.deltaX()),"+", aTouchInfo.deltaY().multiply(aTouchInfo.deltaY()),  ")");
 
+					
 					jsActionManager.searchStop(aTouchInfo, aEvent);
 				});
 
@@ -119,8 +125,7 @@ public interface JSTouchManager extends JSClass {
 
 		JSInt velocityY();
 
-		// float distance = Math.sqrt((newX-oldX) * (newX-oldX) + (newY-oldY) *
-		// (newY-oldY));
+		// float distance = Math.sqrt((newX-oldX) * (newX-oldX) + (newY-oldY) *(newY-oldY));
 		// float speed = distance / timerTime;
 	}
 }

@@ -216,7 +216,7 @@ public final class ProxyHandler implements InvocationHandler {
 				mthInvoke.implcl.getListHandleFuntionPrivate().add(mthInvoke);
 
 				// creer le js du call de la fct
-				ret = JSClassBuilder.toJSCall("/*ww1*/this", mthInvoke.method, mthInvoke.args);
+				ret = JSClassBuilder.toJSCall("this", mthInvoke.method, mthInvoke.args);
 
 				// registerMethod
 				registerCallMethodJS(ret, ThreadLocalMethodDesc.get());

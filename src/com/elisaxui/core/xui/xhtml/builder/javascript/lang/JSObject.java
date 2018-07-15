@@ -20,6 +20,11 @@ public class JSObject extends JSAny  implements ILitteral, IJSClassInterface{
 		return "Object";
 	}
 	
+	public static JSObject newLitteral()
+	{
+		return new JSObject().asLitteral();
+	}
+	
 	public <E> E asLitteral()
 	{
 		jsonBuilder = Json.createObjectBuilder();

@@ -11,6 +11,7 @@ import static com.elisaxui.component.toolkit.transition.CssTransition.inactive;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSWindow.window;
 
 import com.elisaxui.component.widget.layout.ViewPageLayout;
+import com.elisaxui.component.widget.tabbar.ViewTabBar;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDomTokenList;
@@ -46,19 +47,21 @@ public interface JSPageAnimation extends JSClass {
 	public static final String ABSOLUTE = "absolute";
 	public static final String POSITION = "position";
 	public static final String TOP = "top";
+	public static final String BOTTOM = "bottom";
 	public static final String OVERFLOW = "overflow";
 	public static final String TRANSITION = "transition";
 	public static final String TRANSFORM = "transform";
 
 	public static final JSInt MEM_SCROLL = JSInt.value(-1);
 	public static final JSInt ZERO = JSInt.value(0);
-	
+
 	JSDomTokenList classes = JSClass.declareType();
 	JSInt idx = JSClass.declareType();
 	JSNodeElement actContent = JSClass.declareType();
 	JSArray<JSNodeElement> listfixedElem = JSClass.declareTypeArray(JSNodeElement.class);
 	JSInt scrposition = JSClass.declareType();
 	JSInt posTop = JSClass.declareType();
+	JSNodeElement aElemNode = JSClass.declareType();
 
 	default void doActivityActive(JSNodeElement activity) {
 		let(classes, activity.classList());
@@ -68,14 +71,14 @@ public interface JSPageAnimation extends JSClass {
 	}
 
 	/***************************************************************************/
-	
+
 	default void doInitScrollTo(JSNodeElement activity) {
 		let(scrposition, activity.dataset().attr(DATA_SCROLLTOP));
-		window().scrollTo("0px", calc(scrposition,"==null?0:",scrposition));
+		window().scrollTo("0px", calc(scrposition, "==null?0:", scrposition));
 	}
-	
+
 	/***************************************************************************/
-	
+
 	default void doActivityFreeze(JSNodeElement activity, JSInt sct) {
 		let(classes, activity.classList());
 		classes.add(cStateFixedForFreeze);
@@ -96,34 +99,47 @@ public interface JSPageAnimation extends JSClass {
 
 	default void doActivityDeFreeze(JSNodeElement activity) {
 		let(actContent, activity.querySelector(ViewPageLayout.getcContent()));
-		
-		actContent.style().attr(OVERFLOW).set(txt()); 
+
+		actContent.style().attr(OVERFLOW).set(txt());
 		actContent.style().attr(HEIGHT).set(txt());
-		
+
 		let(classes, activity.classList());
 		classes.remove(cStateFixedForFreeze);
 	}
-	
+
 	/******************************************************************/
 	default void doFixedElemToAbsolute(JSNodeElement act) {
 		let(listfixedElem, act.querySelectorAll(cFixedElement));
 
 		_forIdx(idx, listfixedElem)._do(() -> {
-			let(posTop, listfixedElem.at(idx).getBoundingClientRect().attr("y"));
-			_if(posTop, ">0")
-					.then(() -> listfixedElem.at(idx).style().attr(TOP).set(txt(posTop, "px")));
-			listfixedElem.at(idx).style().attr(POSITION).set(txt(ABSOLUTE));
+
+			let(aElemNode, listfixedElem.at(idx));
+			let(classes, aElemNode.classList());
+
+			_if(classes.contains(ViewTabBar.cFixedBottom)).then(() -> {
+				// cas des node en bas de page
+				aElemNode.style().attr(BOTTOM).set(txt("0px"));
+			})._else(() -> {
+				// cas des autres node fixed (ex floatingAction)			
+				let(posTop, aElemNode.getBoundingClientRect().attr("y"));
+
+				_if(posTop, ">0")
+						.then(() -> aElemNode.style().attr(TOP).set(txt(posTop, "px")));
+			});
+
+			aElemNode.style().attr(POSITION).set(txt(ABSOLUTE));
 		});
 	}
-	
+
 	default void doFixedElemToFixe(JSNodeElement act) {
 		let(listfixedElem, act.querySelectorAll(cFixedElement));
-		
+
 		_forIdx(idx, listfixedElem)._do(() -> {
 			listfixedElem.at(idx).style().attr(TOP).set(txt());
 			listfixedElem.at(idx).style().attr(POSITION).set(txt());
+			listfixedElem.at(idx).style().attr(BOTTOM).set(txt());
 		});
 	}
-	
+
 	/********************************************************************/
 }

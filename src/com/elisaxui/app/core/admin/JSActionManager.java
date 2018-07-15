@@ -10,6 +10,9 @@ import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.component.toolkit.transition.CssTransition;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSCallBack;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSObject;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSEventTouch;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
@@ -36,7 +39,9 @@ public interface JSActionManager extends JSClass {
 	JSPageAnimation animMgr = JSClass.declareType();
 	JSString actionId = JSClass.declareType();
 	TActionEvent actionEvent = JSClass.declareType();
-
+	JSActionManager that = JSClass.declareTypeClass(JSActionManager.class);
+	TActionInfo actionInfo = JSClass.declareType();
+	
 	/*****************************************************/
 	TKPubSub callBackStart();
 
@@ -45,14 +50,32 @@ public interface JSActionManager extends JSClass {
 	TKPubSub callBackStop();
 
 	TActionEvent currentActionEvent();
+	
+	JSon listAction();
+	
+	JSCallBack actionFct = JSClass.declareType();
 
 	@xStatic(autoCall = true)
 	default void init() {
 		callBackStart().set(newJS(TKPubSub.class));
 		callBackMove().set(newJS(TKPubSub.class));
 		callBackStop().set(newJS(TKPubSub.class));
+		listAction().set(JSObject.newLitteral());
+		
+		onStart(fct(actionEvent, () -> {
+			_if(actionEvent.actionId().notEqualsJS(null)).then(() -> {
+				/***************************************************/
+				let(actionInfo, that.listAction().attrByString(actionEvent.actionId()));
+				_if(actionInfo,"!=null").then(() -> {
+					actionInfo.callback().call(actionInfo.that(), actionEvent);
+				});
+				/***************************************************/
+			});
+		}));
 	}
 
+	
+	/************************************************************************/
 	@xStatic()
 	default void onStart(Object callback) {
 		callBackStart().subscribe(callback);
@@ -67,7 +90,20 @@ public interface JSActionManager extends JSClass {
 	default void onStop(Object callback) {
 		callBackStop().subscribe(callback);
 	}
+	
+	@xStatic()
+	default void addAction(JSString actionId,  Object that,  Object callback) {
+		let(actionInfo, newJS(TActionInfo.class));
+		
+		actionInfo.that().set(that);
+		actionInfo.actionId().set(actionId);
+		actionInfo.callback().set(callback);
+		
+		listAction().attrByString(actionId).set(actionInfo);
+	}
+	
 
+	/************************************************************************/
 	@xStatic()
 	default void searchStart(TTouchInfo info, JSEventTouch event) {
 		let(actionEvent, newJS(TActionEvent.class));
@@ -90,40 +126,18 @@ public interface JSActionManager extends JSClass {
 		consoleDebug(txt(DATA_X_ACTION), actionEvent);
 
 		callBackStart().publish(actionEvent);
-
-		_if(currentActionEvent().actionTarget().notEqualsJS(null)).then(() -> {
-			/***************************************************/
-			let(animMgr, newJS(JSPageAnimation.class));
-			animMgr.doActivityFreeze(activity, scrollY);
-			animMgr.doFixedElemToAbsolute(activity);
-			/***************************************************/
-		});
 	}
 
 	@xStatic()
 	default void searchMove(TTouchInfo info, JSEventTouch event) {
-		
 		callBackMove().publish(currentActionEvent());
-		
-		_if(currentActionEvent().actionTarget().notEqualsJS(null)).then(() -> {
-			currentActionEvent().activity().style().attr("transform")
-					.set(txt("translate3d(", info.deltaX(), "px,", info.deltaY(), "px,0px)"));
-		});
 	}
 
 	@xStatic()
 	default void searchStop(TTouchInfo info, JSEventTouch event) {
-		callBackStop().publish(currentActionEvent());
+		let(actionEvent, currentActionEvent());
+		callBackStop().publish(actionEvent);
 		
-		_if(currentActionEvent().actionTarget().notEqualsJS(null)).then(() -> {
-			let(animMgr, newJS(JSPageAnimation.class));
-			let(activity, currentActionEvent().activity());
-
-			animMgr.doActivityDeFreeze(activity);
-			animMgr.doInitScrollTo(activity);
-			animMgr.doFixedElemToFixe(activity);
-			activity.style().attr("transform").set(txt());
-		});
 		currentActionEvent().set(null);
 	}
 
@@ -141,6 +155,12 @@ public interface JSActionManager extends JSClass {
 		TTouchInfo infoEvent();
 
 		JSEventTouch event();
+	}
+	
+	interface TActionInfo extends JSType {
+		JSString actionId();
+		JSon that();  // le this du bind
+		JSCallBack callback();
 	}
 
 }

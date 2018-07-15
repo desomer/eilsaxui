@@ -33,6 +33,13 @@ public class JSValue extends JSAny {
 		return ret;
 	}
 	
+	public JSValue multiply(Object... objs)
+	{
+		JSValue ret = (JSValue) declareTypeAny();
+		doOperator(ret, "*", objs);
+		return ret;
+	}
+	
 	
 	public JSInt modulo(Object obj)
 	{

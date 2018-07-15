@@ -5,6 +5,7 @@ package com.elisaxui.app.core.admin;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
+import com.elisaxui.app.core.admin.JSActionManager.TActionEvent;
 import com.elisaxui.app.core.admin.MntPage.MountArticle;
 import com.elisaxui.app.core.admin.MntPage.MountArticle2;
 import com.elisaxui.app.core.admin.MntPage.MountBtn;
@@ -39,6 +40,7 @@ import com.elisaxui.core.xui.xhtml.builder.module.annotation.xImport;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
+import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -57,14 +59,15 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 	@xTarget(HEADER.class)
 	@xResource
 	public XMLElement xImport() {
-		return xElem( new CmpModuleCore(), new CmpModuleComponent() );
+		return xElem(new CmpModuleCore(), new CmpModuleComponent());
 	}
 
 	@xTarget(AFTER_BODY.class)
-	@xResource(id = "xControlerPage.mjs")   // insert un <Script type module> dans le body
-	@xImport(idClass=JSMount.class)
-	@xImport(idClass=JSPageAnimation.class)  
-	@xImport(idClass=JSRippleEffect.class)
+	@xResource(id = "xControlerPage.mjs") // insert un <Script type module> dans le body
+	@xImport(idClass = JSMount.class)
+	@xImport(idClass = JSPageAnimation.class)
+	@xImport(idClass = JSRippleEffect.class)
+	@xImport(idClass = JSActionManager.class)
 	public XMLElement xControlerPage() {
 		return xElem(JSController.class);
 	}
@@ -91,7 +94,7 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 
 		vProp(ViewNavBar.pStyle,
 				"background:linear-gradient(to bottom, rgb(255, 191, 97) 0%, rgb(255, 152, 0) 64%, rgb(241, 197, 133) 100%)");
-		vProp(ViewNavBar.pHeight, "height: 4rem");
+		vProp(ViewNavBar.pHeight, "height: 3.5rem");
 
 		vProp(ViewTabBar.pHeight, "height: 3.5rem");
 		vProp(ViewTabBar.pStyle,
@@ -99,7 +102,6 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 
 		return xDiv(cMain);
 	}
-
 
 	/********************************************************/
 	// une class js CONTROLEUR avec template et datadriven
@@ -111,7 +113,10 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 	static JSNodeElement activity;
 
 	@xExport
+	@xCoreVersion("1")
 	public interface JSController extends JSClass, IJSNodeTemplate, IJSDataDriven {
+		JSActionManager actionManager = JSClass.declareTypeClass(JSActionManager.class);
+		TActionEvent actionEvent = JSClass.declareType();
 
 		@xStatic(autoCall = true) // appel automatique de la methode static
 		default void main() {
@@ -120,6 +125,7 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 			let(arrPage, JSArray.newLitteral());
 			document().querySelector(cMain).appendChild(xElem(vMount(arrPage, JSString.value(MountPage.class))));
 			/******************************************************************/
+
 			TPage page = newJS(TPage.class);
 			page.titre().set("Page1");
 			page.mountNavNar().set(MountNavBar.class);
@@ -169,34 +175,81 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 			btn.action().set("E");
 			btn.mountBtn().set(MountBtn.class);
 			arrPage.at(0).dataNavBar().push(btn);
-			
+
 			consoleDebug(txt("jsonpage="), arrPage);
 
 			/**************************************************************************************/
 			let(animMgr, newJS(JSPageAnimation.class));
-			
-			
+
 			__("fastdom.mutate(", fct(() -> {
 				let(activity, document().querySelector("#Page1"));
 				animMgr.doActivityActive(activity);
 			}), ")");
 
-//			setTimeout(() -> {
-//				consoleDebug(txt("change article"));
-//				arrPage.at(0).contentArticle().pop(); // suppresion de l'article
-//				arrPage.at(0).mountArticle().set(MountArticle2.class); // change le template
-//				arrPage.at(0).contentArticle().push(JSArray.newLitteral()); // ajout d'un article
-//
-//				let(list, arrPage.at(0).contentArticle().at(0));
-//
-//				_forIdx(idx, 0, 10)._do(() -> {
-//					TBtn ligne1 = newJS(TBtn.class);
-//					ligne1.titre().set(calc(txt("Ligne"), "+", idx));
-//					list.push(ligne1);
-//				});
-//
-//			}, 5000);
+//			doChangeContent(arrPage);
+			doMoveOnAction();
 
+			actionManager.addAction(JSString.value("A"), _this(), fct(()->{
+				consoleDebug(txt("cvcbc"));
+			}));
+			
+		}
+
+		@xStatic() // appel automatique de la methode static
+		default void doChangeContent(JSArray<TPage> arrPage) {
+			arrPage.setArrayType(TPage.class);
+			setTimeout(() -> {
+				consoleDebug(txt("change article"));
+				arrPage.at(0).contentArticle().pop(); // suppresion de l'article
+				arrPage.at(0).mountArticle().set(MountArticle2.class); // change le template
+				arrPage.at(0).contentArticle().push(JSArray.newLitteral()); // ajout d'un
+
+				let(list, arrPage.at(0).contentArticle().at(0));
+
+				_forIdx(idx, 0, 10)._do(() -> {
+					TBtn ligne1 = newJS(TBtn.class);
+					ligne1.titre().set(calc(txt("Ligne"), "+", idx));
+					list.push(ligne1);
+				});
+
+			}, 5000);
+		}
+
+		@xStatic() // appel automatique de la methode static
+		default void doMoveOnAction() {
+			actionManager.onStart(fct(actionEvent, () -> {
+				_if(actionEvent.actionTarget().notEqualsJS(null)).then(() -> {
+					/***************************************************/
+					let(animMgr, newJS(JSPageAnimation.class));
+					animMgr.doActivityFreeze(actionEvent.activity(), actionEvent.scrollY());
+					animMgr.doFixedElemToAbsolute(actionEvent.activity());
+					/***************************************************/
+				});
+			}));
+			actionManager.onMove(fct(actionEvent, () -> {
+				_if(actionEvent.actionTarget().notEqualsJS(null)).then(() -> {
+					/***************************************************/
+					consoleDebug(actionEvent.infoEvent().distance());
+
+					actionEvent.activity().style().attr("transform")
+							.set(txt("translate3d(", actionEvent.infoEvent().deltaX(), "px,",
+									actionEvent.infoEvent().deltaY(), "px,0px)"));
+					/***************************************************/
+				});
+			}));
+			actionManager.onStop(fct(actionEvent, () -> {
+				_if(actionEvent.actionTarget().notEqualsJS(null)).then(() -> {
+					/***************************************************/
+					let(animMgr, newJS(JSPageAnimation.class));
+					let(activity, actionEvent.activity());
+
+					animMgr.doActivityDeFreeze(activity);
+					animMgr.doInitScrollTo(activity);
+					animMgr.doFixedElemToFixe(activity);
+					activity.style().attr("transform").set(txt());
+					/***************************************************/
+				});
+			}));
 		}
 	}
 

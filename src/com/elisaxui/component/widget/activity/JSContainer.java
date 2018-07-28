@@ -1,16 +1,15 @@
 /**
  * 
  */
-package com.elisaxui.component.widget.container;
+package com.elisaxui.component.widget.activity;
 
 import com.elisaxui.component.toolkit.JSFactory;
-import com.elisaxui.component.toolkit.TKActivity;
-import com.elisaxui.component.toolkit.TKRouterEvent;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.component.toolkit.jquery.JQuery;
-import com.elisaxui.component.toolkit.transition.JSTransition;
 import com.elisaxui.component.widget.button.ViewFloatAction;
+import com.elisaxui.component.widget.container.JSViewCard;
+import com.elisaxui.component.widget.container.ViewCard;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
 import com.elisaxui.core.xui.xhtml.IXHTMLBuilder;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
@@ -68,7 +67,7 @@ public interface JSContainer extends JSFactory, IXHTMLBuilder {
 				_if("ctx.row['_dom_']==null");
 				
 				 	_if("ctx.row.type=='page'");
-						_set(template, XHTMLPart.vPart(new ViewPageLayout(xVar("ctx.row.id"))));
+						_set(template, XHTMLPart.vPart( new ViewPageLayout(xVar("ctx.row.id")).vProp(ViewPageLayout.pIsNoVisible, true)));
 						_var("jqdom", template.appendInto("$(selector)"));
 						__("ctx.row['_dom_']=jqdom[0]");
 						

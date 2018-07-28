@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.component.toolkit.transition;
+package com.elisaxui.component.widget.activity;
 
 import static com.elisaxui.component.page.XUIScene.*;
 import static com.elisaxui.component.toolkit.jquery.JQuery.$;
@@ -40,6 +40,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
  *
  */
 
+@Deprecated
 public interface JSTransition extends JSClass {
 
 
@@ -133,7 +134,8 @@ public interface JSTransition extends JSClass {
 							// -------------------------- fin du repositionnement l'activity
 							jqActivityActive.removeClass(activityMoveForHideMenu);
 							})
-					, NEXT_FRAME,  fct(()->{
+					//, NEXT_FRAME,  fct(()->{    //marche plus  chrome v67
+					, BUG_NEXT_FRAME_CHROME_V67, fct(()->{	
 							jqHamburgerDetach.removeClass("is-active"); 
 							__("window.disableScrollEvent=null");
 					})
@@ -165,7 +167,8 @@ public interface JSTransition extends JSClass {
 							jqHamburger.css(TRANSITION, "transform " + SPEED_SHOW_MENU + "ms linear");   // prepare transition
 							jqScene.append(jqHamburger);
 						})
-						, NEXT_FRAME, fct(()->{
+						//, NEXT_FRAME, fct(()->{     marche plus  chrome v67
+						, BUG_NEXT_FRAME_CHROME_V67, fct(()->{	
 							
 								// ------------ deplace l'activity a l ouverture du menu-------------
 								jqActivityActive.addClass(activityMoveForShowMenu);
@@ -439,12 +442,14 @@ public interface JSTransition extends JSClass {
 					jqAct2.addClass(cTransitionSpeed);
 					jqAct2.addClass(cStateZoom12); // lance le zoome
 				})
-				, NEXT_FRAME, fct(()->{ // puis lance la circle
-					jqAct2.addClass(circleAnim0prt);
+				//, NEXT_FRAME, fct(()->{ // puis lance la circle          marche plus  chrome v67
+				, BUG_NEXT_FRAME_CHROME_V67, fct(()->{ // puis lance la circle     				marche chrome v67
 					jqAct2.addClass(cTransitionSpeedEffect);
 					jqAct2.removeClass(circleAnim100prt);
+					jqAct2.addClass(circleAnim0prt);
 				})
 				, SPEED_ACTIVITY_TRANSITION_EFFECT / 2, fct(()->{ // lance animation activity 1
+				//, 1000, fct(()->{ // lance animation activity 1
 					jqAct1.removeClass(cStateZoom09);
 					jqAct1.addClass(cTransitionSpeed);
 					overlay.doHideOverlay(1);

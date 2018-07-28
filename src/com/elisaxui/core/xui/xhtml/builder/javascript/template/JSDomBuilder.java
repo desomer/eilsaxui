@@ -12,13 +12,22 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
+import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
 
 /**
  * @author gauth
  *
  */
+@xCoreVersion("1")
 public interface JSDomBuilder extends JSClass {
 
+	JSAny doElem = JSClass.declareType();
+	JSAny e = JSClass.declareType();
+	JSAny p = JSClass.declareType();
+	JSAny a = JSClass.declareType();
+	JSAny t = JSClass.declareType();
+	JSAny dbb = JSClass.declareType();
+	
 	@xStatic(autoCall = true)
 	default void initMethod() {
 		JSInt i = declareType(JSInt.class, "i");
@@ -27,7 +36,7 @@ public interface JSDomBuilder extends JSClass {
 		JSon elem = declareType(JSon.class, "elem");
 		JSon eldom = declareType(JSon.class, "eldom");
 
-		let("doElem", fct(eldom, elem, () -> {
+		let(doElem, fct(eldom, elem, () -> {
 			_if("elem instanceof Element || elem instanceof Text").then(() -> { // nodeType = Node.TextNode
 				__("eldom.appendChild(elem)");
 			})._elseif("typeof(elem) === 'string' || elem instanceof String").then(() -> {
@@ -49,7 +58,7 @@ public interface JSDomBuilder extends JSClass {
 			});
 		}));
 
-		let("e", funct("id", child).__(() -> {
+		let(e, funct("id", child).__(() -> {
 			JSAny newdom = let(JSAny.class, "newdom", "document.createElement(id)");
 			_if(child.notEqualsJS(null)).then(() -> {
 				_forIdx(j, child)._do(() -> {
@@ -61,7 +70,7 @@ public interface JSDomBuilder extends JSClass {
 		}));
 		__("window." + JSNodeTemplate.MTH_ADD_ELEM + "=e");
 
-		let("p", funct(child, "domParent").__(() -> {
+		let(p, funct(child, "domParent").__(() -> {
 			_if(child, ".length==1").then(() -> {
 				let("r", "child[0]");
 				_if("r instanceof Function && domParent!=null").then(() -> {
@@ -78,7 +87,7 @@ public interface JSDomBuilder extends JSClass {
 		}));
 		__("window." + JSNodeTemplate.MTH_ADD_PART + "=p");
 
-		let("a", fct(child, () -> {
+		let(a, fct(child, () -> {
 			JSon attr = let(JSon.class, "attr", null);
 			JSArray<Object> ret = let("ret", new JSArray<>().asLitteral());
 			_forIdx(j, child)._do(() -> {
@@ -100,7 +109,7 @@ public interface JSDomBuilder extends JSClass {
 		}));
 		__("window." + JSNodeTemplate.MTH_ADD_ATTR + "=a");
 
-		let("t", fct(child, () -> {
+		let(t, fct(child, () -> {
 			JSon text = let(JSon.class, "text", null);
 			text.set("document.createTextNode(", child, ")");
 			_return(text);
@@ -112,7 +121,7 @@ public interface JSDomBuilder extends JSClass {
 		JSAny value = JSContent.declareType(JSAny.class, "value");
 		JSString attr = JSContent.declareType(JSString.class, "attr");
 
-		let("dbb", fct(domItem, row, attr, value, () -> {
+		let(dbb, fct(domItem, row, attr, value, () -> {
 			domItem.attr(JSNodeTemplate.ATTR_BIND_INFO).set("{row:", row, ", attr:" + attr + "}");
 			_return(value);
 		}));

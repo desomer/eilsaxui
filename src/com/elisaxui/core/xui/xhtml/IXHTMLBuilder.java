@@ -56,9 +56,15 @@ public interface IXHTMLBuilder {
 					array[i] = XHTMLPart.vPart((XMLPart) array[i]);
 			}
 
-		return xListNode(array);
+		return XMLPart.xListNodeStatic(array);
 	}
 
+	@Deprecated 
+	/**
+	 *  use xElem
+	 * @param array
+	 * @return
+	 */
 	default XMLElement xListNode(Object... array) {
 		return XMLPart.xListNodeStatic(array);
 	}

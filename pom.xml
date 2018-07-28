@@ -52,10 +52,6 @@
 		    <version>${jettyVersion}</version>
 		</dependency>
 
-
-
-
-
 		<dependency>
 		  <groupId>org.conscrypt</groupId>
 		  <artifactId>conscrypt-openjdk-uber</artifactId>
@@ -145,7 +141,7 @@
 		<dependency>
 		    <groupId>org.mapdb</groupId>
 		    <artifactId>mapdb</artifactId>
-		    <version>3.0.5</version>
+		    <version>3.0.7</version>
 		</dependency>
 
 		<dependency> 
@@ -154,6 +150,12 @@
 			<version>1.2.1</version> 
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/com.google.javascript/closure-compiler -->
+		<dependency>
+   			<groupId>com.google.javascript</groupId>
+    		<artifactId>closure-compiler</artifactId>
+    		<version>v20180610</version>
+		</dependency>
   </dependencies>
   
   <build>

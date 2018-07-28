@@ -155,7 +155,9 @@ public final class JSClassBuilder extends JSContent {
 		ProxyHandler.getFormatManager().newLine(buf);
 		int i=0;
 		
-		listFunction.sort((JSFunction o1, JSFunction o2)-> o1.getName().toString().compareTo(o2.getName().toString()));
+//		listFunction.sort((JSFunction o1, JSFunction o2)-> o1.getName().toString().compareTo(o2.getName().toString()));
+		listFunction.sort((JSFunction o1, JSFunction o2)-> o1.getNumLine()-(o2.getNumLine()));
+
 		
 		for (JSFunction jsFunction : listFunction) {
 			i++;

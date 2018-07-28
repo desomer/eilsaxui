@@ -5,7 +5,7 @@ package com.elisaxui.app.elisys.xui.page.main;
 
 import com.elisaxui.app.elisys.xui.page.main.widget.JSSyllabisation;
 import com.elisaxui.component.toolkit.TKQueue;
-import com.elisaxui.component.widget.layout.JSPageLayout;
+import com.elisaxui.component.widget.activity.JSPageLayout;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;

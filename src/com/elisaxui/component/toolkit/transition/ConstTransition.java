@@ -18,6 +18,7 @@ public class ConstTransition {
 	public static final int DELAY_SURETE_END_ANIMATION = 50;
 	
 	public static final String NEXT_FRAME = "'nextFrame'";
+	public static final int BUG_NEXT_FRAME_CHROME_V67 = 100;
 	
 	public static final int SPEED_ANIMATED = (int)(1000*coef);
 	

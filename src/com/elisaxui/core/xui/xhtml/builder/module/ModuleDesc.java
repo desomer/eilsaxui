@@ -22,6 +22,21 @@ public class ModuleDesc {
 	String type;
 	XMLTarget target;
 	ArrayList<ImportDesc> listImport;
+	boolean async = false;
+
+	/**
+	 * @return the async
+	 */
+	public final boolean isAsync() {
+		return async;
+	}
+
+	/**
+	 * @param async the async to set
+	 */
+	public final void setAsync(boolean async) {
+		this.async = async;
+	}
 
 	/**
 	 * @return the resourceID
@@ -38,6 +53,12 @@ public class ModuleDesc {
 		return getExtension().equals("css");
 	}
 
+	public boolean isES6Module() {
+		return getListImport() != null;
+	}
+	
+	
+	/******************************************************************************/
 	public String getURI() {
 		if (XUIFactoryXHtml.getXMLFile().getConfigMgr().getData().isDateFileName())
 		{
@@ -80,10 +101,6 @@ public class ModuleDesc {
 		return listImport;
 	}
 
-	public boolean isES6Module() {
-		return getListImport() != null;
-	}
-
 	/**
 	 * @param listImport
 	 *            the listImport to set
@@ -107,6 +124,8 @@ public class ModuleDesc {
 		this.target = target;
 	}
 
+	
+	/*************************************************************************/
 	public void initES6mport(xImport anImport, xImportList listImport) {
 		if (anImport != null) {
 			ArrayList<ImportDesc> listImportStr = new ArrayList<>();

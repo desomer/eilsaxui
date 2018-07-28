@@ -15,7 +15,6 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.ICSSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.IJSDomTemplate;
-import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -23,6 +22,8 @@ import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLHandle;
 import com.elisaxui.core.xui.xml.builder.VProperty;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.CONTENT;
+import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
+import com.elisaxui.core.xui.xhtml.target.HEADER;
 
 /**
  * @author Bureau
@@ -51,11 +52,12 @@ public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 	public static VProperty pChildren;
 	public static VProperty pHeight;
 
-	@xTarget(AFTER_BODY.class)
-	@xResource
+	
+	@xTarget(HEADER.class)
+	@xResource()
 	public XMLElement xStylePart() {
 
-		return xListNode(
+		return xElem(
 				xStyle(() -> {
 					sOn(descBar, () -> {
 						css(pStyle);
@@ -80,7 +82,7 @@ public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 						.path(rightAction)
 						.set("position: absolute; right: 0px;  top: 0px;  height: 100%;  width: auto;")
 
-						.path(actionBtn).set("margin: 0; padding: 8px;  font-size: 2.5rem;  cursor: pointer;")
+						.path(actionBtn).set("margin: 0; padding: 8px;  font-size: 2.5rem !important;  cursor: pointer;")
 
 						.path(center).set(""
 								+ ";height:100%; "
@@ -127,11 +129,11 @@ public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 
 	
 	/***********************************************************************/
-	
+	@Deprecated
 	public static XMLElement getTemplateBtnBurger() {
 		return vPart(new ViewBtnBurger());
 	}
-
+	@Deprecated
 	public static XMLElement getTemplateActionBar() {
 		IJSDomTemplate template = new IJSDomTemplate() {
 			@Override
@@ -142,7 +144,7 @@ public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 
 		return template.getTemplate();
 	}
-
+	@Deprecated
 	public static XMLElement getTemplateName(Object name) {
 		IJSDomTemplate template = new IJSDomTemplate() {
 			@Override
@@ -154,7 +156,7 @@ public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 		return template.getTemplate();
 
 	}
-
+	@Deprecated
 	public static XMLElement getTemplateAction(Object name, Object action) {
 
 		IJSDomTemplate template = new IJSDomTemplate() {
@@ -169,11 +171,11 @@ public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 
 		return template.getTemplate();
 	}
-
+	@Deprecated
 	public static XMLElement getTemplateBgCanvas() {
 		return xNode("canvas", animatedBg); // pour granim
 	}
-
+	@Deprecated
 	public static XMLElement getTemplateBgDiv() {
 		return xNode("div", animatedBg);
 	}

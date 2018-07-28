@@ -29,13 +29,12 @@ import com.elisaxui.core.xui.xml.target.FILE;
  */
 public class CssRippleEffect extends XHTMLPart {
 
-	
 	public static CSSClass cRippleEffect;
 	public static CSSClass cRippleEffectShow;
 	public static CSSClass cRippleEffectColorBack;
 
 	@xTarget(AFTER_BODY.class)
-	@xResource(id = "anim_after.css")
+	@xResource(id = "anim_after.css", async=true)
 	public XMLElement xStylePart() {
 
 		return cStyle()
@@ -67,7 +66,7 @@ public class CssRippleEffect extends XHTMLPart {
 		
 		@xStatic(autoCall = true)
 		default void init() {
-			actionManager.onStart(var(fct(actionEvent, ()->{
+			actionManager.onStart(fct(actionEvent, ()->{
 				/****************************************************/
 				_if(actionEvent.actionTarget().notEqualsJS(null)).then(() -> {
 					let(ripple, searchRipple(actionEvent.actionTarget()));
@@ -79,7 +78,7 @@ public class CssRippleEffect extends XHTMLPart {
 								fct(() -> ripple.classList().remove(cRippleEffectShow))));
 					});
 				});
-			}),".bind(this)"));
+			}).bind(_this()));
 		}
 		
 		@xStatic()
@@ -96,6 +95,8 @@ public class CssRippleEffect extends XHTMLPart {
 			return ripple;
 		}
 	}
+	
+	
 	
 	/* 
 button {

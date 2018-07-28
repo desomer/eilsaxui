@@ -87,6 +87,8 @@ public class JSExecutorHelper {
 		String script = "";
 		for (String line; (line = in.readLine()) != null; script += line);
 		
+		in.close();
+		
 		if (VERSION_V8)
 			script += "function doBabel(input) { return Babel.transform(input, { presets: ['es2015'], minified: false, comments: false}).code; }";
 		else

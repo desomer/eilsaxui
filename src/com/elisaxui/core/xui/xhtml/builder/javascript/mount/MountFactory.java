@@ -31,7 +31,7 @@ public abstract class MountFactory {
 			xMount aFactory = method.getAnnotation(xMount.class);
 			if (aFactory!=null && mount.isAssignableFrom(aFactory.value()))
 				{
-				   ArrayList code = new ArrayList<>();
+				   ArrayList<Object> code = new ArrayList<>();
 				    try {
 						Object ret = method.invoke(src, new Object[] {param});
 						JSFunction fct = (JSFunction) new JSFunction().setParam(new Object[] {in})._return(ret);
@@ -76,7 +76,11 @@ public abstract class MountFactory {
 
 							}
 						Object ret = method.invoke(src, p);
-						JSFunction fct = (JSFunction) new JSFunction().zzSetComment("MountFactory "+aFactory.value().getSimpleName()).setParam(new Object[] {"p0"})._return(ret);
+						
+						String namec = aFactory.value().getName(); 
+						namec = namec.substring(namec.lastIndexOf('.')+1);
+						
+						JSFunction fct = (JSFunction) new JSFunction().zzSetComment("MountFactory "+method.getName()+ " ("+namec +".java)").setParam(new Object[] {"p0"})._return(ret);
 						code.add(JSNewLine.class);
 						code.add("window.xMount."+aFactory.value().getSimpleName()+"=");
 						code.add(fct);

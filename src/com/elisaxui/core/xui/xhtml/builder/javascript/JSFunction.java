@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyMethodDesc;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
 /**
@@ -35,8 +36,24 @@ public class JSFunction extends JSContent implements JSElement {
 	Object comment = null;
 	boolean debug = false;
 	
+	Object bind = null;
+	int numLine = 0;
 	
-	
+	/**
+	 * @return the numLine
+	 */
+	public final int getNumLine() {
+		return numLine;
+	}
+
+	/**
+	 * @param numLine the numLine to set
+	 */
+	public final JSFunction setNumLine(int numLine) {
+		this.numLine = numLine;
+		return this;
+	}
+
 	/**
 	 * @return the debug
 	 */
@@ -136,7 +153,38 @@ public class JSFunction extends JSContent implements JSElement {
 		this.param = param;
 		return this;
 	}
+	
+	
+	public JSFunction bind(Object obj)
+	{
+		bind = obj;
+		return this;
+	}
+	
 
+	public JSFunction()
+	{
+		try {
+			ProxyMethodDesc m = ProxyHandler.getMethodDescFromStacktrace();
+			
+			if (m.lastMthNoInserted!=null)
+			{
+				String classMeth = m.lastMthNoInserted.toString();
+				zzSetComment("anonym " + classMeth.substring(classMeth.lastIndexOf('.')+1)+".java:"+m.lastLineNoInsered);
+			}		
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public JSFunction(String classe, String name)
+	{		
+		setName(name);
+		zzSetComment(classe);
+	}
+	
+	
 	public JSFunction __(JSLambda c) {
 		doFctAnonym(c);
 		return this;
@@ -164,7 +212,7 @@ public class JSFunction extends JSContent implements JSElement {
 			} else {
 				ProxyHandler.getFormatManager().newTabInternal(buf);
 				if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableCommentFctJS())
-					buf.addContentOnTarget("/******** start " + name + " *******/");
+					buf.addContentOnTarget("/******** " + name +" (" + comment+") *******/");
 				ProxyHandler.getFormatManager().newLine(buf);
 				ProxyHandler.getFormatManager().newTabInternal(buf);
 				if (this.isStatic)
@@ -203,13 +251,19 @@ public class JSFunction extends JSContent implements JSElement {
 			ProxyHandler.getFormatManager().newLine(buf);
 			ProxyHandler.getFormatManager().newTabInternal(buf);
 			buf.addContentOnTarget("}");
+			if (bind!=null)
+			{
+				buf.addContentOnTarget(".bind(");
+				buf.addContentOnTarget(bind);
+				buf.addContentOnTarget(")");
+			}
 			// fin anomyn
 			if (name == null) {
 				if (comment!=null)
 					buf.addContentOnTarget("/*** end " +comment+ " ***/");
 			}
 		}
-
+		
 		return buf;
 	}
 

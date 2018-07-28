@@ -3,8 +3,8 @@
  */
 package com.elisaxui.component.toolkit.json;
 
-import com.elisaxui.component.toolkit.TKRouterEvent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
+import com.elisaxui.component.widget.activity.TKRouterEvent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.IJSClassInterface;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 

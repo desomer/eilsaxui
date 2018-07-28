@@ -11,6 +11,7 @@ import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.ICSSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
+import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.VProperty;
@@ -38,8 +39,9 @@ public class ViewTabBar extends XHTMLPart implements ICSSBuilder {
 	private static CSSClass cListReset;
 	private static CSSClass cFlex;
 	
-	@xTarget(AFTER_BODY.class)
-	@xResource
+
+	@xTarget(HEADER.class)
+	@xResource()
 	public XMLElement xStylePart() {
 
 		return xStyle(()-> {

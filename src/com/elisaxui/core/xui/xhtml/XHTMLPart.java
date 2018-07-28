@@ -44,7 +44,6 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 	 *  
 	 * @return
 	 */
-	@Deprecated
 	public static final JSContentInterface js() {
 		return new JSContent();
 	}
@@ -114,6 +113,10 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 		return xNode("link", xAttr("rel", xTxt(STYLESHEET)), xAttr("href", xTxt(url)));
 	}
 
+	public static final XMLElement xLinkModulePreload(String url) {
+		return xNode("link", xAttr("rel", xTxt("modulepreload")), xAttr("href", xTxt(url)));
+	}
+	
 	public static final XMLElement xLinkManifest(String url) {
 		return xNode("link", xAttr("rel", xTxt("manifest")), xAttr("href", xTxt(url)));
 	}
@@ -122,14 +125,20 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 		return xNode("link", xAttr("rel", xTxt("icon")), xAttr("href", xTxt(url)));
 	}
 
+	@Deprecated
 	public static final XMLElement xLinkCssAsync(String url) {
 		return xNode("link", xAttr("rel", xTxt(STYLESHEET)), xAttr("media", xTxt(ASYNC)), xAttr("href", xTxt(url)),
-				xAttr(ONLOAD, txt("resLoadedCss(this, 'all');")));
+				xAttr(ONLOAD, xTxt("resLoadedCss(this, 'all');")));
 	}
 
 	public static final XMLElement xLinkCssAsync(String url, Object fctTxt) {
-		return xNode("link", xAttr("rel", xTxt(STYLESHEET)), xAttr("media", xTxt(ASYNC)), xAttr(ONLOAD, txt(fctTxt)),
+		return xNode("link", xAttr("rel", xTxt(STYLESHEET)), xAttr("media", xTxt(ASYNC)), xAttr(ONLOAD, xTxt(fctTxt)),
 				xAttr("href", xTxt(url)));
+	}
+	
+	public static final XMLElement xLinkCssPreload(String url) {
+		return xNode("link", xAttr("rel", xTxt("preload")), xAttr(ONLOAD, xTxt("this.rel='stylesheet'")),
+				xAttr("href", xTxt(url)), xAttr("as", xTxt("style")));
 	}
 
 	@Deprecated

@@ -16,7 +16,9 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.mount.MountFactory;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
+import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
+import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -33,11 +35,18 @@ public class MntPage extends XHTMLPart implements IJSDataDriven {
 	static JSArray<JSAny> listArticle;
 
 	@xTarget(HEADER.class)
-	@xResource
+	@xResource() 
+	@xPriority(4)
 	public XMLElement xImport() {
 		return xElem(
-				xLinkCss("https://fonts.googleapis.com/icon?family=Material+Icons"),
-				xLinkCss("https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css"));
+				xLinkCssPreload("https://fonts.googleapis.com/icon?family=Material+Icons"));
+	}
+	
+	@xTarget(AFTER_BODY.class)
+	@xResource() 
+	public XMLElement xImport2() {
+		return xElem(
+				xLinkCssPreload("https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css"));
 	}
 	
 	public static class MountPage extends MountFactory {
@@ -47,6 +56,7 @@ public class MntPage extends XHTMLPart implements IJSDataDriven {
 	public XMLElement createPage(JSArray<TPage> arrPage) {
 		return xElem(
 				vFor(arrPage, aPage, xElem(new ViewPageLayout()
+						.vProp(ViewPageLayout.pIsNoVisible, true)
 						.vProp(ViewPageLayout.pIdPage, aPage.titre())
 						.vProp(ViewPageLayout.pArticle, xDiv(
 								vFor(aPage.contentArticle(), listArticle, xDiv(

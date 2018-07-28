@@ -17,7 +17,8 @@ import com.elisaxui.core.xui.xml.builder.VProperty;
  */
 public interface ICSSBuilder {
 
-	LinkedList<CSSElement> list = new LinkedList<>();  //TODO a changer  ThreadLocal
+	LinkedList<CSSElement> list = new LinkedList<>();  
+	//TODO a changer  ThreadLocal
 	
 	default CSSElement sOn(CSSElement parent, CssBlock css) {
 		return xStyle(parent, css);
@@ -102,7 +103,6 @@ public interface ICSSBuilder {
 					}
 
 					listStyleToAdd.add(new CSSStyleRow(CSSSelector.onPath(strb.toString()), rowChild.content));
-
 				}
 			}
 		}

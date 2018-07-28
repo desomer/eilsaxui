@@ -17,7 +17,6 @@ import com.elisaxui.core.xui.app.XHTMLAppScanner;
 import com.elisaxui.core.xui.xhtml.XHTMLFile;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.XHTMLTemplateResource;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.module.ModuleDesc;
 import com.elisaxui.core.xui.xhtml.builder.module.annotation.xImport;
 import com.elisaxui.core.xui.xhtml.builder.module.annotation.xImportList;
@@ -149,7 +148,10 @@ public class XMLPart  {
 				
 		return file.listSubFile.computeIfAbsent(name, keyResource -> {
 			if (moduleDesc.isResourceCss())
-				addElementOnTarget(target, (XMLElement)(XHTMLPart.xLinkCss(XUILaucher.PATH_ASSET+"/css/"+name).setPriority(priority)));
+				if (moduleDesc.isAsync())
+					addElementOnTarget(target, (XMLElement)(XHTMLPart.xLinkCssPreload(XUILaucher.PATH_ASSET+"/css/"+name).setPriority(priority)));
+				else
+					addElementOnTarget(target, (XMLElement)(XHTMLPart.xLinkCss(XUILaucher.PATH_ASSET+"/css/"+name).setPriority(priority)));
 			else  
 			{   //CHANGE TO assert ET non rest
 				if (moduleDesc.isES6Module())
@@ -178,7 +180,7 @@ public class XMLPart  {
 			return none;
 	}
 
-	/**************************************************************/
+	/******************** EXECUTE LES METHODES DE LA XMLPART ***********************/
 	public final void doContent() {
 		
 		if (debug)
@@ -201,6 +203,7 @@ public class XMLPart  {
 			if (isfirstInit || !isResource)
 			{
 				ModuleDesc moduleDesc = new ModuleDesc();
+				moduleDesc.setAsync(idResource!=null && resource.async());
 				moduleDesc.setResourceID(idResource);
 				moduleDesc.initES6mport(method.getAnnotation(xImport.class), method.getAnnotation(xImportList.class));
 				
@@ -244,7 +247,10 @@ public class XMLPart  {
 				initBlockPriority(method, elem);
 
 				String comment = getComment(method);
-				elem.setComment(comment!=null?comment+ " priority "+((int)(elem.getPriority())) : "["+this.getClass().getSimpleName() + "." + method.getName()+ "] priority "+((int)(elem.getPriority())) );
+				
+				String namec = this.getClass().getName(); 
+				namec = namec.substring(namec.lastIndexOf('.')+1);
+				elem.setComment(comment!=null?comment+ " priority "+((int)(elem.getPriority())) :  " " + method.getName()+" (" +namec+  ".java) priority "+((int)(elem.getPriority())) );
 				
 				if (debug)
 					CoreLogger.getLogger(1).fine(()->"[XMLPart] add Target mth "+ this.getClass().getSimpleName() + " # " + method.getName() + " priority " + elem.getPriority());
@@ -319,7 +325,9 @@ public class XMLPart  {
 		xComment comment = this.getClass().getAnnotation(xComment.class);
 		if (comment != null) {
 			String v = comment.value();
-			return (v == null ? "" : v) + " [" + this.getClass().getSimpleName()+"."+ mth.getName() +"]";
+			String namec = this.getClass().getName(); 
+			namec = namec.substring(namec.lastIndexOf('.')+1);
+			return (v == null ? " " : " <# "+v+" #> ") + mth.getName()+" (" +namec+  ".java)";
 		}
 		return null;
 	}
@@ -356,6 +364,12 @@ public class XMLPart  {
 		return xNode(NONAME, XMLBuilder.createPart(part, child));
 	}
 	
+	/**
+	 * ex : xNode("button", xAttr("a", 12))
+	 * @param name   nom de node xml
+	 * @param inner  le contenu
+	 * @return  le XMLElement du node xml
+	 */
 	public static final XMLElement xNode(String name, Object... inner) {
 		return XMLBuilder.createElement(name, inner);
 	}

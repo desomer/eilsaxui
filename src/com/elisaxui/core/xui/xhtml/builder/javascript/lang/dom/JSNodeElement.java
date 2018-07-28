@@ -78,6 +78,10 @@ public class JSNodeElement extends JSAny implements IJSClassInterface {
 	public JSArray<JSNodeElement> childNodes() {
 		return castAttr(new JSArray<JSNodeElement>().setArrayType(JSNodeElement.class), "childNodes");
 	}
+	
+	public JSArray<JSNodeElement> children() {
+		return castAttr(new JSArray<JSNodeElement>().setArrayType(JSNodeElement.class), "children");
+	}
 	/*************************************************************/
 	public JSNodeElement querySelector(CSSSelector selector) {
 		return callTyped(new JSNodeElement(), "querySelector", "" + selector);

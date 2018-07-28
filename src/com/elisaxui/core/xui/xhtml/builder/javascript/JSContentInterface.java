@@ -98,7 +98,7 @@ public interface JSContentInterface extends JSElement  {
 	/**********************************************************************/
 	JSContentInterface _return(Object... content);
 	JSContentInterface _continue();
-	Object _this();
+	JSAny _this();
 	
 	@Deprecated
 	JSVoid _void();

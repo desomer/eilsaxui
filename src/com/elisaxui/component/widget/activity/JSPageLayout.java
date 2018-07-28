@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.component.widget.layout;
+package com.elisaxui.component.widget.activity;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
@@ -20,6 +20,7 @@ import com.elisaxui.component.widget.navbar.ViewNavBar;
  * @author Bureau
  *
  */
+@Deprecated
 public interface JSPageLayout extends JSClass {
 	
 	/**

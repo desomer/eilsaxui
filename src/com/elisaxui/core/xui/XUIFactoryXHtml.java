@@ -120,6 +120,9 @@ public class XUIFactoryXHtml extends XUIFactory {
 			    String name = entry.getKey();
 			    XHTMLFile xmlFile = (XHTMLFile)entry.getValue();
 				ThreadLocalXUIFactoryPage.set(xmlFile);
+				
+				xmlFile.setMainXMLPart( fileXML.getMainXMLPart());
+				
 				xmlFile.getListClassModule().putAll(fileXML.getListClassModule());
 			    String contentFile = toXML(xmlFile, null, new XMLBuilder(name, new StringBuilder(1000), null).setModeResource(true));
 			    

@@ -3,7 +3,7 @@
  */
 package com.elisaxui.app.elisys.xui.page.main;
 
-import static com.elisaxui.component.toolkit.TKActivity.ON_ACTIVITY_CREATE;
+import static com.elisaxui.component.widget.activity.TKActivity.ON_ACTIVITY_CREATE;
 
 import com.elisaxui.component.widget.activity.JActivity;
 import com.elisaxui.component.widget.activity.JSONActivity;

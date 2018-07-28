@@ -27,7 +27,6 @@ import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
  */
 @xCoreVersion("1")
 @xExport
-
 public interface JSActionManager extends JSClass {
 
 	public static final String DATA_X_ACTION = "data-x-action";
@@ -41,7 +40,7 @@ public interface JSActionManager extends JSClass {
 	TActionEvent actionEvent = JSClass.declareType();
 	JSActionManager that = JSClass.declareTypeClass(JSActionManager.class);
 	TActionInfo actionInfo = JSClass.declareType();
-	
+
 	/*****************************************************/
 	TKPubSub callBackStart();
 
@@ -50,9 +49,9 @@ public interface JSActionManager extends JSClass {
 	TKPubSub callBackStop();
 
 	TActionEvent currentActionEvent();
-	
+
 	JSon listAction();
-	
+
 	JSCallBack actionFct = JSClass.declareType();
 
 	@xStatic(autoCall = true)
@@ -61,12 +60,12 @@ public interface JSActionManager extends JSClass {
 		callBackMove().set(newJS(TKPubSub.class));
 		callBackStop().set(newJS(TKPubSub.class));
 		listAction().set(JSObject.newLitteral());
-		
+
 		onStart(fct(actionEvent, () -> {
 			_if(actionEvent.actionId().notEqualsJS(null)).then(() -> {
 				/***************************************************/
 				let(actionInfo, that.listAction().attrByString(actionEvent.actionId()));
-				_if(actionInfo,"!=null").then(() -> {
+				_if(actionInfo, "!=null").then(() -> {
 					actionInfo.callback().call(actionInfo.that(), actionEvent);
 				});
 				/***************************************************/
@@ -74,7 +73,6 @@ public interface JSActionManager extends JSClass {
 		}));
 	}
 
-	
 	/************************************************************************/
 	@xStatic()
 	default void onStart(Object callback) {
@@ -90,18 +88,17 @@ public interface JSActionManager extends JSClass {
 	default void onStop(Object callback) {
 		callBackStop().subscribe(callback);
 	}
-	
+
 	@xStatic()
-	default void addAction(JSString actionId,  Object that,  Object callback) {
+	default void addAction(JSString actionId, Object that, Object callback) {
 		let(actionInfo, newJS(TActionInfo.class));
-		
+
 		actionInfo.that().set(that);
 		actionInfo.actionId().set(actionId);
 		actionInfo.callback().set(callback);
-		
+
 		listAction().attrByString(actionId).set(actionInfo);
 	}
-	
 
 	/************************************************************************/
 	@xStatic()
@@ -137,7 +134,7 @@ public interface JSActionManager extends JSClass {
 	default void searchStop(TTouchInfo info, JSEventTouch event) {
 		let(actionEvent, currentActionEvent());
 		callBackStop().publish(actionEvent);
-		
+
 		currentActionEvent().set(null);
 	}
 
@@ -156,10 +153,12 @@ public interface JSActionManager extends JSClass {
 
 		JSEventTouch event();
 	}
-	
+
 	interface TActionInfo extends JSType {
 		JSString actionId();
-		JSon that();  // le this du bind
+
+		JSon that(); // le this du bind
+
 		JSCallBack callback();
 	}
 

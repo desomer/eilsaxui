@@ -16,10 +16,10 @@ import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.builder.module.annotation.xImport;
-import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
+import com.elisaxui.core.xui.xml.builder.IResourceLoader;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.FILE;
 
@@ -27,7 +27,7 @@ import com.elisaxui.core.xui.xml.target.FILE;
  * @author gauth
  *
  */
-public class CmpModuleCore extends XHTMLPart {
+public class CmpModuleCore extends XHTMLPart implements IResourceLoader {
 
 	public static final String X_STANDARD_JS = "xStandard.mjs";
 	public static final String X_BINDING_JS = "xBinding.mjs";
@@ -35,15 +35,6 @@ public class CmpModuleCore extends XHTMLPart {
 	public static final String X_COM_JS = "xCom.mjs";
 	public static final String X_CORE_JS = "xCore.mjs";
 
-	/**********************************************************************/
-	
-	@xTarget(HEADER.class)
-	@xResource // une seule fois par vue
-	public XMLElement xImportLib() {
-		return xListNode(
-				xScriptSrc("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"));
-	}
-	
 	/**********************************************************************/
 	@xTarget(FILE.class)
 	@xPriority(10)
@@ -53,7 +44,7 @@ public class CmpModuleCore extends XHTMLPart {
 				TKPubSub.class,
 				JSDomBuilder.class);
 	}
-	
+
 	@xTarget(FILE.class)
 	@xPriority(50)
 	@xResource(id = X_STANDARD_JS)
@@ -78,12 +69,13 @@ public class CmpModuleCore extends XHTMLPart {
 	}
 
 	/**************************************************************/
-	
+
 	@xTarget(FILE.class)
 	@xResource(id = X_DATADRIVEN_JS)
 	@xImport(idClass = TKPubSub.class)
 	public XMLElement xImportDataDriven() {
 		return xModule(
+				xScriptJS(loadResourceFromURL("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js")),
 				JSDataDriven.class,
 				JSDataSet.class);
 	}

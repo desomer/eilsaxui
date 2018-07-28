@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.component.toolkit;
+package com.elisaxui.component.widget.activity;
 
 import static com.elisaxui.component.toolkit.json.JXui.$xui;
 
@@ -11,7 +11,6 @@ import com.elisaxui.component.toolkit.json.JIntent;
 import com.elisaxui.component.toolkit.json.JRoute;
 import com.elisaxui.component.toolkit.transition.ConstTransition;
 import com.elisaxui.component.toolkit.transition.CssTransition;
-import com.elisaxui.component.toolkit.transition.JSTransition;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSCallBack;

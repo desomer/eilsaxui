@@ -39,6 +39,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 	private static final Object IS_XPART = null;
 
 	private Object name;
+
 	/**
 	 * @return the name
 	 */
@@ -65,6 +66,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 
 	protected List<XMLAttr> listAttr = new ArrayList<>();
 	protected List<Object> listInner = new ArrayList<>();
+	protected List<Object> listClass = new ArrayList<>();
 
 	/**
 	 * @return the listInner
@@ -78,17 +80,12 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 		this.name = name;
 
 		if (inner != null) {
-			List<String> listClass = null;
 
 			for (Object object : inner) {
 				if (object instanceof XMLAttr) {
 					listAttr.add((XMLAttr) object);
 
 				} else if (object instanceof CSSClass) {
-					if (listClass == null)
-						listClass = new ArrayList<>();
-					else
-						listClass.add(" ");
 					listClass.add(((CSSClass) object).getId());
 				} else {
 
@@ -96,10 +93,6 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 				}
 			}
 
-			if (listClass != null) {
-				String[] arr = new String[listClass.size()];
-				listAttr.add(XMLBuilder.createAttr("class", "\"" + String.join("", listClass.toArray(arr)) + "\""));
-			}
 		}
 
 	}
@@ -132,6 +125,25 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			buf.getJSContent().getListElem().add(JSNodeTemplate.MTH_ADD_ELEM + "('" + name + "',");
 
 			buf.getJSContent().getListElem().add("[");
+
+			// recherche un handle de type XMLAttr
+			for (Object inner : listInner) {
+						
+				if (inner instanceof XMLHandle) { // un handle
+					XMLHandle h = (XMLHandle) inner;
+					Object handledObject = zzGetProperties(h);
+					if (handledObject instanceof CSSClass) {
+						listClass.add(((CSSClass)handledObject).getId());
+						h.setName(null);
+					}
+				}
+			}
+
+			if (! listClass.isEmpty()) {
+				String[] arr = new String[listClass.size()];
+				listAttr.add(XMLBuilder.createAttr("class", "\"" + String.join(" ", listClass.toArray(arr)) + "\""));
+			}
+
 			for (XMLAttr attr : listAttr) {
 				if (nbAttr == 0)
 					buf.getJSContent().getListElem().add(JSNodeTemplate.MTH_ADD_ATTR + "([");
@@ -139,6 +151,10 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 					buf.getJSContent().getListElem().add(",");
 
 				Object v = attr.getValue();
+
+				if (v instanceof VProperty) {
+					v = XMLElement.zzGetProperties(new XMLHandle(((VProperty) v).getName()));
+				}
 
 				if (v instanceof String) {
 					String vs = ((String) v);
@@ -167,11 +183,9 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 				nbChild = doChild(buf, nbChild, inner);
 			}
 		}
-		
-	//	if (name != IS_XPART) {
-			buf.getJSContent().getListElem().add("]");
-			buf.getJSContent().getListElem().add(")");
-	//	}
+
+		buf.getJSContent().getListElem().add("]");
+		buf.getJSContent().getListElem().add(")");
 	}
 
 	/**
@@ -207,23 +221,41 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 
 			buf.addContentOnTarget("<" + name);
 
+			// recherche un handle de type XMLAttr
+			for (Object inner : listInner) {
+				if (inner instanceof VProperty) { // un handle
+					VProperty p  = (VProperty) inner;
+					inner = new XMLHandle(((VProperty) p).getName());		
+				}
+				
+				if (inner instanceof XMLHandle) { // un handle
+					XMLHandle h = (XMLHandle) inner;
+					Object handledObject = zzGetProperties(h);
+					if (handledObject instanceof XMLAttr) {
+
+						XMLAttr attr = (XMLAttr) handledObject;
+						Object v = attr.getValue();
+						if (v instanceof VProperty) {
+							v = XMLElement.zzGetProperties(new XMLHandle(((VProperty) v).getName()));
+							listAttr.add(XMLBuilder.createAttr(attr.getName(), v));
+						} else
+							listAttr.add(attr);
+					}
+					if (handledObject instanceof CSSClass) {
+						h.setName(null);
+						listClass.add(((CSSClass)handledObject).getId());
+					}
+				}
+			}
+
+			if (listClass.size() > 0) {
+				String[] arr = new String[listClass.size()];
+				listAttr.add(XMLBuilder.createAttr("class", "\"" + String.join(" ", listClass.toArray(arr)) + "\""));
+			}
+
 			for (XMLAttr attr : listAttr) {
 				buf.addContentOnTarget(" ");
 				attr.toXML(buf);
-			}
-
-			// recherche un handle de type XMLAttr
-			for (Object inner : listInner) {
-				if (inner != null) {
-					if (inner instanceof XMLHandle) { // un handle
-						XMLHandle h = (XMLHandle) inner;
-						Object handledObject = zzGetProperties(h);
-						if (handledObject instanceof XMLAttr) {
-							buf.addContentOnTarget(" ");
-							((XMLAttr) handledObject).toXML(buf);
-						}
-					}
-				}
 			}
 
 			buf.addContentOnTarget(">");
@@ -304,7 +336,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 		} else if (inner instanceof JSClassBuilder) { // cas d'une class js
 			JSClassBuilder part = ((JSClassBuilder) inner);
 			if (!buf.isTemplate())
-				ProxyHandler.getFormatManager().setNbTabInternal( this.nbTabInternal + 1);
+				ProxyHandler.getFormatManager().setNbTabInternal(this.nbTabInternal + 1);
 			ProxyHandler.getFormatManager().setTabForNewLine(this.nbTabForNewLine);
 			part.toXML(buf);
 			if (!buf.isTemplate())
@@ -314,7 +346,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 		} else if (inner instanceof JSContent) { // cas d'un js
 			JSContent part = ((JSContent) inner);
 			if (!buf.isTemplate())
-				ProxyHandler.getFormatManager().setNbTabInternal( this.nbTabInternal + 1);
+				ProxyHandler.getFormatManager().setNbTabInternal(this.nbTabInternal + 1);
 			ProxyHandler.getFormatManager().setTabForNewLine(this.nbTabForNewLine);
 			part.toXML(buf);
 			if (!buf.isTemplate())
@@ -327,16 +359,16 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			part.nbTabForNewLine = this.nbTabForNewLine;
 			part.toXML(buf);
 			nbChild++;
-			
+
 		} else if (inner instanceof ImportDesc) { // un import
-			ImportDesc aImportDesc = (ImportDesc)inner;
+			ImportDesc aImportDesc = (ImportDesc) inner;
 			ProxyHandler.getFormatManager().setNbTabInternal(0);
 			ProxyHandler.getFormatManager().setTabForNewLine(0);
 			aImportDesc.toXML(buf);
-			
+
 		} else if (inner instanceof XMLAttr) { // un attribut
 			XMLAttr attr = ((XMLAttr) inner);
-			/**TODO a mettre dans le toXML du XMLAttr */
+			/** TODO a mettre dans le toXML du XMLAttr */
 			if (buf.isTemplate) {
 				Object v = attr.getValue();
 				if (v instanceof VProperty) {
@@ -345,7 +377,8 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 
 				if (v instanceof String) {
 					String vs = ((String) v);
-					if (!vs.endsWith("'") && !vs.endsWith("\"") && !vs.startsWith("'") && !vs.startsWith("\""))
+					if (!vs.endsWith("'") && !vs.endsWith("\"") && !vs.startsWith("'") &&
+							!vs.startsWith("\""))
 						v = "\"" + vs + "\"";
 				}
 
@@ -353,9 +386,8 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 				buf.getJSContent().getListElem().add("\"" + attr.getName() + "\"," + v + "");
 				buf.getJSContent().getListElem().add("])" + (nbChild >= 0 ? "," : ""));
 			}
-			// else
-			// attr.toXML(buf); // pas en children
-
+		} else if (inner instanceof CSSClass) { // une class en inner
+			// ne fait rien
 		} else {
 			if (buf.isTemplate) {
 				if (inner instanceof CharSequence) {
@@ -394,6 +426,8 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 
 	public static Object zzGetProperties(XMLHandle h) {
 		String nameHandle = h.getName();
+		if (nameHandle==null)
+			return null;
 		// recherche dans les parents
 		LinkedList<Object> listParent = XUIFactoryXHtml.getXMLFile().listTreeXMLParent;
 		Object handledObject = null;

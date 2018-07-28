@@ -18,10 +18,8 @@ import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
 public interface JSRequestAnimationFrame extends JSClass {
 
 	JSCallBack tick = JSClass.declareType();
-	JSCallBack tick2 = JSClass.declareType();
 	JSInt now = JSClass.declareType();
 	JSInt next = JSClass.declareType();
-	JSInt next2 = JSClass.declareType();
 
 	@xStatic(autoCall = true) // appel automatique de la methode static
 	default void main() {

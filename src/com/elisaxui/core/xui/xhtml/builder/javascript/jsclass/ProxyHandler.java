@@ -49,6 +49,7 @@ public final class ProxyHandler implements InvocationHandler {
 	public static final ThreadLocal<ProxyMethodDesc> ThreadLocalMethodDesc = new ThreadLocal<>(); // regrouper le 2
 																									// ThreadLocal
 
+	public static final ThreadLocal<ProxyMethodDesc> ThreadLocalCurrentFct = new ThreadLocal<>();
 	/***************************************************************************/
 	private Object varname; // nom de la variable du proxy
 	private Object varContent; // contenu code du proxy
@@ -64,6 +65,7 @@ public final class ProxyHandler implements InvocationHandler {
 	 * n'existe pas - creer les fct javascript
 	 */
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+
 
 		ProxyMethodDesc mthInvoke = new ProxyMethodDesc(null, null, proxy, method, args);
 
@@ -89,6 +91,7 @@ public final class ProxyHandler implements InvocationHandler {
 				registerCallMethodJS(ret, ThreadLocalMethodDesc.get());
 			}
 		} else {
+			
 			/********************************************************************/
 			/* CREATION DU CODE DANS LA FCT */
 			/********************************************************************/
@@ -107,6 +110,15 @@ public final class ProxyHandler implements InvocationHandler {
 				/******************************************************************************/
 				ret = doCallAttribut(method); // Object attr() sans default
 
+			}
+			
+			ProxyMethodDesc m = ThreadLocalCurrentFct.get();
+			if (m!=null && m.lastLineNoInsered==-1)
+			{
+				ProxyMethodDesc currentMethodDesc = getMethodDescFromStacktrace();
+				
+				if (currentMethodDesc!=null && currentMethodDesc.lastLineNoInsered!=-1)
+					m.lastLineNoInsered=currentMethodDesc.lastLineNoInsered;
 			}
 		}
 
@@ -567,7 +579,7 @@ public final class ProxyHandler implements InvocationHandler {
 	 * @return
 	 * @throws ClassNotFoundException
 	 */
-	private static final ProxyMethodDesc getMethodDescFromStacktrace() throws ClassNotFoundException {
+	public static final ProxyMethodDesc getMethodDescFromStacktrace() throws ClassNotFoundException {
 		ProxyMethodDesc methodDesc = new ProxyMethodDesc(null);
 
 		StackTraceElement[] stack = Thread.currentThread().getStackTrace();
@@ -629,6 +641,10 @@ public final class ProxyHandler implements InvocationHandler {
 			prevCode = codeAnonym.$$subContent();
 		}
 
+		
+		ProxyMethodDesc firstLineOfMeth = new ProxyMethodDesc(null);
+		ThreadLocalCurrentFct.set(firstLineOfMeth);
+		
 		// appel la fct default de la proxy classJS ==> entrainte les appel invoke de
 		// cette classe
 		Object retProxyMth = constructor.newInstance(declaringClass, MethodHandles.Lookup.PRIVATE)
@@ -661,10 +677,14 @@ public final class ProxyHandler implements InvocationHandler {
 
 			xStatic annStaticMth = handle.method.getAnnotation(xStatic.class);
 
-			fct = new JSFunction()
+			int idxLine = firstLineOfMeth.lastLineNoInsered;
+			String namec = declaringClass.getName(); 
+			namec = namec.substring(namec.lastIndexOf('.')+1);
+			
+			fct = new JSFunction(namec+".java:"+(idxLine-1),  handle.method.getName())
 					.setStatic(annStaticMth != null)
-					.setName(handle.method.getName())
 					.setParam(p)
+					.setNumLine(idxLine-1)
 					.setCode(code);
 
 			// function en cours terminé

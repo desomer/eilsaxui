@@ -41,6 +41,7 @@ import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
+import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -62,6 +63,17 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 		return xElem(new CmpModuleCore(), new CmpModuleComponent());
 	}
 
+	@xTarget(HEADER.class)
+	@xResource
+	public XMLElement preLoad() {
+		return xElem(xLinkModulePreload("/asset/mjs/xMount.mjs"),
+				xLinkModulePreload("/asset/mjs/xStandard.mjs"),
+				xLinkModulePreload("/asset/mjs/xComponent.mjs"),
+				xLinkModulePreload("/asset/mjs/xDatadriven.mjs"),
+				xLinkModulePreload("/asset/mjs/xBinding.mjs"),
+				xLinkModulePreload("/asset/mjs/xCore.mjs"));
+	}
+
 	@xTarget(AFTER_BODY.class)
 	@xResource(id = "xControlerPage.mjs") // insert un <Script type module> dans le body
 	@xImport(idClass = JSMount.class)
@@ -75,7 +87,8 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 	/************************************************************************/
 
 	@xTarget(HEADER.class) // la vue App Shell
-	@xResource(id = "cMain.css")
+	@xResource()
+	@xPriority(10)
 	public XMLElement sStyle() {
 		return xElem(
 				new CssReset(),
@@ -100,7 +113,15 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 		vProp(ViewTabBar.pStyle,
 				"background:linear-gradient(to bottom, rgb(255, 191, 97) 0%, rgb(255, 152, 0) 64%, rgb(241, 197, 133) 100%)");
 
-		return xDiv(cMain);
+		return xDiv(cMain, getAppShell());
+	}
+
+	/**
+	 * @return
+	 */
+	private XMLElement getAppShell() {
+		return xElem(new ViewPageLayout()
+				.vProp(ViewPageLayout.pIdPage, "Appshell"));
 	}
 
 	/********************************************************/
@@ -123,6 +144,7 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 			__("window.datadrivensync=true");
 
 			let(arrPage, JSArray.newLitteral());
+			
 			document().querySelector(cMain).appendChild(xElem(vMount(arrPage, JSString.value(MountPage.class))));
 			/******************************************************************/
 
@@ -183,19 +205,20 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 
 			__("fastdom.mutate(", fct(() -> {
 				let(activity, document().querySelector("#Page1"));
+				document().querySelector(cMain).children().at(0).remove();
 				animMgr.doActivityActive(activity);
 			}), ")");
 
-//			doChangeContent(arrPage);
+			// doChangeContent(arrPage);
 			doMoveOnAction();
 
-			actionManager.addAction(JSString.value("A"), _this(), fct(()->{
+			actionManager.addAction(JSString.value("A"), _this(), fct(() -> {
 				consoleDebug(txt("cvcbc"));
 			}));
-			
+
 		}
 
-		@xStatic() // appel automatique de la methode static
+		@xStatic()
 		default void doChangeContent(JSArray<TPage> arrPage) {
 			arrPage.setArrayType(TPage.class);
 			setTimeout(() -> {
@@ -215,7 +238,7 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 			}, 5000);
 		}
 
-		@xStatic() // appel automatique de la methode static
+		@xStatic()
 		default void doMoveOnAction() {
 			actionManager.onStart(fct(actionEvent, () -> {
 				_if(actionEvent.actionTarget().notEqualsJS(null)).then(() -> {
@@ -233,7 +256,7 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 
 					actionEvent.activity().style().attr("transform")
 							.set(txt("translate3d(", actionEvent.infoEvent().deltaX(), "px,",
-									actionEvent.infoEvent().deltaY(), "px,0px)"));
+									actionEvent.infoEvent().deltaY(), "px, 0px)"));
 					/***************************************************/
 				});
 			}));

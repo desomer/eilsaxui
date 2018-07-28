@@ -859,7 +859,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSMethodInterface#_this()
 	 */
 	@Override
-	public Object _this() {
+	public JSAny _this() {
 		return var("this");   // TODO ajouter le cast de type
 	}
 	

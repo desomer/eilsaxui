@@ -23,7 +23,7 @@ public class ViewOverlay extends XHTMLPart {
 	public static CSSClass cBlackOverlay;
 	
 	@xTarget(AFTER_BODY.class)
-	@xResource
+	@xResource()
 	public XMLElement xStylePart() {
 		return cStyle()
 				.path(cBlackOverlay).set("display: none;"

@@ -20,7 +20,6 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
  *
  */
 
-@xComment("ViewBtnBurger")
 public class ViewBtnBurger extends XHTMLPart {
 
 	CSSClass cLeftBtn;
@@ -39,7 +38,7 @@ public class ViewBtnBurger extends XHTMLPart {
 	CSSClass cHamburgerArrow;
 
 	@xTarget(HEADER.class)
-	@xResource
+	@xResource(id="component.css", async=true)
 	public XMLElement xStylePart() {
 
 		return cStyle()

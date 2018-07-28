@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.component.widget.navbar;
+package com.elisaxui.component.widget.navbar.old;
 
 import static com.elisaxui.component.toolkit.jquery.JQuery.$;
 
@@ -10,10 +10,11 @@ import com.elisaxui.component.toolkit.datadriven.JSChangeCtx;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.component.toolkit.jquery.JQuery;
-import com.elisaxui.component.widget.navbar.JSonNavBar.JSonNavBarBackground;
-import com.elisaxui.component.widget.navbar.JSonNavBar.JSonNavBarBtnAction;
-import com.elisaxui.component.widget.navbar.JSonNavBar.JSonNavBarRow;
-import com.elisaxui.component.widget.navbar.JSonNavBar.JSonNavBarTitle;
+import com.elisaxui.component.widget.navbar.ViewNavBar;
+import com.elisaxui.component.widget.navbar.old.JSonNavBar.JSonNavBarBackground;
+import com.elisaxui.component.widget.navbar.old.JSonNavBar.JSonNavBarBtnAction;
+import com.elisaxui.component.widget.navbar.old.JSonNavBar.JSonNavBarRow;
+import com.elisaxui.component.widget.navbar.old.JSonNavBar.JSonNavBarTitle;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xForceInclude;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
@@ -25,6 +26,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
  */
 
 @xForceInclude
+@Deprecated
 public interface JSNavBar extends JSFactory {
 	
 	static final String TYPE_BURGER = "burger";

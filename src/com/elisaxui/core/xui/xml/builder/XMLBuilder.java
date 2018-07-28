@@ -128,6 +128,11 @@ public class XMLBuilder {
 		private String name;
 		private Object ifExistAdd;
 
+		public void setName(String n)
+		{
+			this.name=n;			
+		}
+		
 		/**
 		 * @return the ifExistAdd
 		 */

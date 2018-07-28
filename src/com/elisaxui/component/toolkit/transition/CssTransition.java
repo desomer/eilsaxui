@@ -6,6 +6,7 @@ import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.component.widget.overlay.ViewOverlayRipple;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
+import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
@@ -50,8 +51,8 @@ public class CssTransition extends XHTMLPart {
 	public static CSSClass cStateMoveToFront;
 	public static CSSClass cStateNoDisplay;
 	
-	@xTarget(HEADER.class)
-	@xResource(id = "anim.css")
+	@xTarget(AFTER_BODY.class)
+	@xResource(id = "anim.css", async=true)
 	@xPriority(5)
 	public XMLElement xStylePart() {
 
@@ -79,7 +80,7 @@ public class CssTransition extends XHTMLPart {
 				.path(activityMoveForShowMenu).set(
 						"transition:transform "+SPEED_SHOW_MENU+"ms ease-out;"
 						+ " transform: translate3d("+(widthMenu-100)+"px,0px,0px) "
-						+ "scale3d(0.95,0.95,1);")
+						+ "scale3d(0.90,0.90,1);")
 				.path(activityMoveForHideMenu).set(
 						"transition:transform "+SPEED_SHOW_MENU+"ms ease-out;"
 						+ " transform: translate3d(0px,0px,0px);")

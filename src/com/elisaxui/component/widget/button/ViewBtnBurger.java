@@ -3,9 +3,9 @@
  */
 package com.elisaxui.component.widget.button;
 
-import static com.elisaxui.component.toolkit.transition.ConstTransition.SPEED_BURGER_EFFECT;
+import static com.elisaxui.component.toolkit.transition.ConstTransition.*;
 
-import com.elisaxui.component.page.XUIScene;
+import com.elisaxui.component.toolkit.transition.CssTransition;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
@@ -59,7 +59,7 @@ public class ViewBtnBurger extends XHTMLPart {
 //						"background-color: #fff; transition-property:all !important; transition-duration:500ms !important;")
 
 				.path(cLeftBtn).set("position: absolute;top: 0px; left: 0px; "
-						+ "z-index: "+XUIScene.ZINDEX_MENU+"; outline:0 !important") 
+						+ "z-index: "+ZINDEX_MENU+"; outline:0 !important") 
 								// pas de bord bleu au click
 		;
 	}

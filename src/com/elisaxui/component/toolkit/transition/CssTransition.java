@@ -2,22 +2,19 @@ package com.elisaxui.component.toolkit.transition;
 
 import static com.elisaxui.component.toolkit.transition.ConstTransition.*;
 
-import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.component.widget.overlay.ViewOverlayRipple;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
-import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
+import static com.elisaxui.component.page.CssPage.*;
 
 @xComment("CssTransition")
 public class CssTransition extends XHTMLPart {
-
-	public static final int widthMenu = 250;
 
 	public static CSSClass activity;
 	
@@ -61,8 +58,8 @@ public class CssTransition extends XHTMLPart {
 				
 				.path(activity)
 						.and(cStyle(cStateFixedForFreeze).set("top:0px; position: fixed; overflow:hidden "))
-						.and(cStyle(cStateFrontActivity).set("z-index:"+XUIScene.ZINDEX_ANIM_FRONT+";"))	
-						.and(cStyle(cStateBackActivity).set("z-index:"+XUIScene.ZINDEX_ANIM_BACK+";"))		
+						.and(cStyle(cStateFrontActivity).set("z-index:"+ZINDEX_ANIM_FRONT+";"))	
+						.and(cStyle(cStateBackActivity).set("z-index:"+ZINDEX_ANIM_BACK+";"))		
 	
 				.path(activity.and(cStateMoveToBottom)).set(
 						"transform: translate3d(0px,100%,0px);"
@@ -81,6 +78,7 @@ public class CssTransition extends XHTMLPart {
 						"transition:transform "+SPEED_SHOW_MENU+"ms ease-out;"
 						+ " transform: translate3d("+(widthMenu-100)+"px,0px,0px) "
 						+ "scale3d(0.90,0.90,1);")
+				
 				.path(activityMoveForHideMenu).set(
 						"transition:transform "+SPEED_SHOW_MENU+"ms ease-out;"
 						+ " transform: translate3d(0px,0px,0px);")

@@ -7,6 +7,8 @@ import static com.elisaxui.component.page.XUIScene.*;
 import static com.elisaxui.component.toolkit.jquery.JQuery.$;
 import static com.elisaxui.component.toolkit.transition.ConstTransition.*;
 import static com.elisaxui.component.toolkit.transition.CssTransition.*;
+import static com.elisaxui.component.page.CssPage.*;
+
 import static com.elisaxui.component.widget.navbar.ViewNavBar.isOpenMenu;
 import static com.elisaxui.component.widget.navbar.ViewNavBar.navbar;
 import static com.elisaxui.component.widget.tabbar.ViewTabBar.cTabbar;
@@ -84,7 +86,7 @@ public interface JSTransition extends JSClass {
 
 	default JSVoid doToggleBurgerMenu() {
 		
-		JSOverlay overlay = let("overlay", newJS(JSOverlay.class, SPEED_SHOW_MENU, XUIScene.OVERLAY_OPACITY_MENU) ); 
+		JSOverlay overlay = let("overlay", newJS(JSOverlay.class, SPEED_SHOW_MENU, OVERLAY_OPACITY_MENU) ); 
 		
 		JQuery jqMenu = let( JQuery.class, "jqMenu", $(ViewMenu.menu) );
 		JQuery jqScene = let( JQuery.class, "jqScene", $(scene) );
@@ -111,7 +113,7 @@ public interface JSTransition extends JSClass {
 							jqActivityActive.removeClass(activityMoveForShowMenu);
 							jqActivityActive.addClass(activityMoveForHideMenu);
 							// ----------------------------- cache le menu ------------------------
-							jqMenu.css(TRANSFORM, txt("translate3d(-" + (XUIScene.widthMenu + 5)	+ "px," , sct ,  "px, 0px)"));
+							jqMenu.css(TRANSFORM, txt("translate3d(-" + (widthMenu + 5)	+ "px," , sct ,  "px, 0px)"));
 							// ----------------------------- repasse en croix ----------------------
 							jqHamburgerDetach.css(TRANSITION, "transform " + SPEED_SHOW_MENU	+ "ms linear");
 							jqHamburgerDetach.css(TRANSFORM, txt("translate3d(0px,", sct, "px,0px) scale(1)" ));
@@ -159,7 +161,7 @@ public interface JSTransition extends JSClass {
 	
 							// ---------------------------------------	
 							jqMenu.css(TRANSITION, ""); // fige le menu en haut sans animation
-							jqMenu.css(TRANSFORM, txt("translate3d(-" + XUIScene.widthMenu + "px," ,/*sct*/0, "px,0px)" ));
+							jqMenu.css(TRANSFORM, txt("translate3d(-" + widthMenu + "px," ,/*sct*/0, "px,0px)" ));
 							// ---------- anime le burger et le passe sur la scene---------------
 							jqHamburger.detach();
 							jqHamburger.addClass(detach);
@@ -260,7 +262,7 @@ public interface JSTransition extends JSClass {
 
 	default JSVoid doOpenActivityFromBottom() {
 		JSOverlay overlay = let(JSOverlay.class, "overlay", NULL);
-		_set(overlay, _new(SPEED_SHOW_ACTIVITY, XUIScene.OVERLAY_OPACITY_BACK));
+		_set(overlay, _new(SPEED_SHOW_ACTIVITY, OVERLAY_OPACITY_BACK));
 		JSAny document = declareType(JSAny.class, "document");
 		JSInt sct = let(JSInt.class, "sct", $(document).scrollTop());
 		JSString act1 = let(JSString.class, "act1", "'#'+$xui.intent.prevActivity");

@@ -4,26 +4,20 @@
 package com.elisaxui.component.widget.menu;
 
 import static com.elisaxui.component.toolkit.transition.ConstTransition.*;
+import static com.elisaxui.component.page.CssPage.*;
 
 import com.elisaxui.component.page.XUIScene;
-import com.elisaxui.component.toolkit.datadriven.JSDataCtx;
-import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
-import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.component.toolkit.transition.CssTransition;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.IJSDomTemplate;
-import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.CONTENT;
-import com.elisaxui.test.JSTest2Class;
-import com.elisaxui.test.JSTestClass;
-import com.elisaxui.test.JSTestDataDriven;
 
 /**
  * @author Bureau
@@ -44,13 +38,13 @@ public class ViewMenu extends XHTMLPart {
 	public XMLElement xStylePart() {
 
 		return cStyle()
-				.on(menu, "z-index: "+XUIScene.ZINDEX_MENU+";background-color: #ffffff;height: 100vh;width: " + XUIScene.widthMenu
+				.on(menu, "z-index: "+ZINDEX_MENU+";background-color: #ffffff;height: 100vh;width: " + widthMenu
 						+ "px; color:black;"
-						+ XUIScene.PERFORM_3D
+						+ PERFORM_3D
 						//+ "box-shadow: 4px 4px 2px 0 rgba(0,0,0,0.14);"
 						)
 				.on(cFixedLeft,
-						"position:absolute; top:0px; transform:translate3d(-" + (XUIScene.widthMenu+5) + "px,0px,0px)")
+						"position:absolute; top:0px; transform:translate3d(-" + (widthMenu+5) + "px,0px,0px)")
 				.on(cHeaderMenu, "height:53px; background:" + ((XUIScene)XUIFactoryXHtml.getXMLFile().getMainXMLPart()).getConfigScene().getBgColorMenu()
 						+ "box-shadow: 0px 5px 13px 0px #969696;")
 
@@ -59,7 +53,7 @@ public class ViewMenu extends XHTMLPart {
 				.on(".menu li", "list-style-type: none;clear: both;  color: rgba(0,0,0,0.87);   "
 						+ "cursor: pointer;   min-height: 50px; line-height: 21px; "
 						+ "width: 100%;   text-align: left;   text-transform: none;"
-						+ XUIScene.PERFORM_3D
+						+ PERFORM_3D
 						+ "animation-duration:" + SPEED_SHOW_MENU_ITEMS + "ms;"
 						)
 

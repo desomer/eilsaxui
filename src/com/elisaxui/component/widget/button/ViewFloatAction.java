@@ -4,6 +4,7 @@
 package com.elisaxui.component.widget.button;
 
 import static com.elisaxui.component.toolkit.transition.CssTransition.*;
+import static com.elisaxui.component.page.CssPage.*;
 
 import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
@@ -47,8 +48,8 @@ public class ViewFloatAction extends XHTMLPart {
 						.set(""
 							//+ "z-index:"+XUIScene.ZINDEX_FLOAT+";"
 							+ " position: fixed; "
-							+ "left: calc("+XUIScene.widthScene+" - "+ViewBtnCircle.SIZE_CIRCLE+" - 1rem); "
-							+ "top: calc(100vh - "+ViewBtnCircle.SIZE_CIRCLE+" - "+XUIScene.heightTabBar+" - 1rem); "
+							+ "left: calc("+widthScene+" - "+ViewBtnCircle.SIZE_CIRCLE+" - 1rem); "
+							+ "top: calc(100vh - "+ViewBtnCircle.SIZE_CIRCLE+" - "+heightTabBar+" - 1rem); "
 								)
 		;
 	}

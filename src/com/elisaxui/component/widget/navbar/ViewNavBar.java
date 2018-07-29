@@ -3,27 +3,25 @@
  */
 package com.elisaxui.component.widget.navbar;
 
-import static com.elisaxui.component.toolkit.transition.CssTransition.*;
+import static com.elisaxui.component.page.CssPage.heightNavBar;
+import static com.elisaxui.component.page.CssPage.widthScene;
+import static com.elisaxui.component.toolkit.transition.ConstTransition.ZINDEX_NAV_BAR;
+import static com.elisaxui.component.toolkit.transition.CssTransition.cFixedElement;
 import static com.elisaxui.component.widget.button.CssRippleEffect.cRippleEffect;
 
-import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.component.toolkit.transition.ConstTransition;
 import com.elisaxui.component.widget.button.ViewBtnBurger;
-import com.elisaxui.component.widget.layout.ViewPageLayout;
-import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.ICSSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.IJSDomTemplate;
+import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
-import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLHandle;
 import com.elisaxui.core.xui.xml.builder.VProperty;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.CONTENT;
-import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
-import com.elisaxui.core.xui.xhtml.target.HEADER;
 
 /**
  * @author Bureau
@@ -69,9 +67,9 @@ public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 
 				}),
 				cStyle()
-						.path(navbar).set("z-index: " + XUIScene.ZINDEX_NAV_BAR + ";"
+						.path(navbar).set("z-index: " + ZINDEX_NAV_BAR + ";"
 								+ "height: 3rem;"
-								+ "width: " + XUIScene.widthScene + "; "
+								+ "width: " + widthScene + "; "
 								+ "color:white; "
 								+ "transition: transform " + ConstTransition.SPEED_ANIM_SCROLL + "ms ease-in-out;")
 
@@ -88,8 +86,8 @@ public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 								+ ";height:100%; "
 								+ "display: flex; align-items: center;justify-content: center")
 						.path(logo).set(""
-								+ "z-index: " + (XUIScene.ZINDEX_NAV_BAR + 1) + ";" // pour opacity
-								+ " margin-top:calc(" + XUIScene.heightNavBar + " /2); "
+								+ "z-index: " + (ZINDEX_NAV_BAR + 1) + ";" // pour opacity
+								+ " margin-top:calc(" + heightNavBar + " /2); "
 								+ "color: inherit; "
 								+ "font-size: 2.1rem; "
 								+ "transition: all " + ConstTransition.SPEED_ANIM_SCROLL + "ms linear;" // ease-in-out

@@ -3,7 +3,9 @@
  */
 package com.elisaxui.component.widget.overlay;
 
-import com.elisaxui.component.page.XUIScene;
+import static com.elisaxui.component.toolkit.transition.ConstTransition.PERFORM_CHANGE_OPACITY;
+import static com.elisaxui.component.toolkit.transition.ConstTransition.ZINDEX_OVERLAY;
+
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
@@ -31,8 +33,8 @@ public class ViewOverlay extends XHTMLPart {
 						+ "top: 0px; left: 0px;"
 						+ " width:100vw ; height:101vh;" 
 						+ "background-color: black;"
-						+ XUIScene.PERFORM_CHANGE_OPACITY
-						+ "opacity:0; z-index:"+XUIScene.ZINDEX_OVERLAY+";")
+						+ PERFORM_CHANGE_OPACITY
+						+ "opacity:0; z-index:"+ZINDEX_OVERLAY+";")
 				;
 	}
 	

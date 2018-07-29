@@ -19,7 +19,7 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
 public class CssReset extends XHTMLPart implements ICSSBuilder {
 
 	@xTarget(HEADER.class)
-//	@xResource(id="reset.css", async=true)
+	@xResource()
 	@xPriority(5)
 	public XMLElement xStylePart() {
 		return xStyle(sMedia("all"), () -> {

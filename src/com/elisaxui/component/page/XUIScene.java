@@ -8,6 +8,7 @@ import static com.elisaxui.component.toolkit.transition.ConstTransition.SPEED_SH
 import static com.elisaxui.component.toolkit.transition.CssTransition.activity;
 import static com.elisaxui.component.widget.button.CssRippleEffect.cRippleEffect;
 import static com.elisaxui.component.widget.button.CssRippleEffect.cRippleEffectShow;
+import static com.elisaxui.component.page.CssPage.*;
 
 import com.elisaxui.app.elisys.xui.asset.AssetHandler;
 import com.elisaxui.component.config.TKCoreConfig;
@@ -53,30 +54,6 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 @Deprecated
 public abstract class XUIScene extends XHTMLPart {
 
-	public static final String heightTabBar = 3.5 + "rem";
-	public static final String heightNavBar = 12 + "rem"; // 7
-	public static final int widthMenu = 250;
-	public static final String widthScene = "100vw";
-
-	public static final double OVERLAY_OPACITY_MENU = 0.5;
-	public static final double OVERLAY_OPACITY_BACK = 0.7;
-
-	public static final int ZINDEX_ANIM_FRONT = 1;
-	public static final int ZINDEX_ANIM_BACK = 0;
-
-	public static final int ZINDEX_NAV_BAR = 1;
-	public static final int ZINDEX_MENU = 2;
-	public static final int ZINDEX_FLOAT = 3;
-	public static final int ZINDEX_OVERLAY = 4;
-
-	// public static final String PREF_3D= ""; //"backface-visibility: hidden;"
-	// + " transform-style:preserve-3d;"
-	// transform: translate3d(0px,0px,0px); =bug : les header et footer ne se fixe
-	// plus au body
-
-	public static final String PERFORM_3D = "backface-visibility: hidden; transform: translate3d(0px,0px,0px); will-change:transform;";
-
-	public static final String PERFORM_CHANGE_OPACITY = "will-change:opacity, display;";
 
 	public static CSSClass scene;
 	public static CSSClass cShell;
@@ -185,7 +162,7 @@ public abstract class XUIScene extends XHTMLPart {
 		vProp(ViewTabBar.pHeight, "height: "+heightTabBar);
 		vProp(ViewTabBar.pStyle, "background:"+((XUIScene)XUIFactoryXHtml.getXMLFile().getMainXMLPart()).getConfigScene().getBgColorNavBar());
 		
-		vProp(ViewNavBar.pHeight, "height:" + XUIScene.heightNavBar);
+		vProp(ViewNavBar.pHeight, "height:" + heightNavBar);
 		vProp(ViewNavBar.pStyle, "background:"+((XUIScene)XUIFactoryXHtml.getXMLFile().getMainXMLPart()).getConfigScene().getBgColorNavBar());
 
 		

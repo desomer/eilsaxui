@@ -3,9 +3,10 @@
  */
 package com.elisaxui.component.widget.overlay;
 
-import static com.elisaxui.component.toolkit.transition.ConstTransition.SPEED_ACTIVITY_TRANSITION_EFFECT;
+import static com.elisaxui.component.toolkit.transition.ConstTransition.*;
 
 import com.elisaxui.component.page.XUIScene;
+import com.elisaxui.component.toolkit.transition.CssTransition;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
@@ -37,10 +38,10 @@ public class ViewOverlayRipple extends XHTMLPart {
 					+ "position: absolute;"
 					+ "top: 0px; left: 0px; "
 					+ "width: 100vw;  height: 100vh; "
-					+ "z-index:"+XUIScene.ZINDEX_OVERLAY+ ";"
+					+ "z-index:"+ZINDEX_OVERLAY+ ";"
 					+ "background: "+ ((XUIScene)XUIFactoryXHtml.getXMLFile().getMainXMLPart()).getConfigScene().getBgColorTheme() +"; "
 					+ "transition: all "+SPEED_ACTIVITY_TRANSITION_EFFECT+"ms linear;"
-					+ XUIScene.PERFORM_CHANGE_OPACITY
+					+ PERFORM_CHANGE_OPACITY
 					)
 
 				.path(ripple_overlay.and(transitionOpacity))

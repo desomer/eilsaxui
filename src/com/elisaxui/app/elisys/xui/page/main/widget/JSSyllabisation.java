@@ -3,11 +3,11 @@
  */
 package com.elisaxui.app.elisys.xui.page.main.widget;
 
-import static com.elisaxui.component.toolkit.jquery.JQuery.$;
+import static com.elisaxui.component.toolkit.old.JQuery.$;
 
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
-import com.elisaxui.component.toolkit.jquery.JQuery;
+import com.elisaxui.component.toolkit.old.JQuery;
 import com.elisaxui.core.xui.xhtml.IXHTMLBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSLambda;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xInLine;

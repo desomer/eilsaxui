@@ -3,8 +3,8 @@
  */
 package com.elisaxui.app.elisys.xui.page.shop;
 
-import com.elisaxui.component.page.ConfigScene;
-import com.elisaxui.component.page.XUIScene;
+import com.elisaxui.component.page.old.ConfigScene;
+import com.elisaxui.component.page.old.XUIScene;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xCoreVersion;

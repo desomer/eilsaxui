@@ -5,10 +5,10 @@ package com.elisaxui.app.elisys.xui.page.main;
 
 import com.elisaxui.app.elisys.xui.js.JSHistoireManager;
 import com.elisaxui.app.elisys.xui.page.main.widget.JSSyllabisation;
-import com.elisaxui.component.page.ConfigScene;
-import com.elisaxui.component.page.XUIScene;
+import com.elisaxui.component.page.old.ConfigScene;
+import com.elisaxui.component.page.old.XUIScene;
 import com.elisaxui.component.toolkit.TKQueue;
-import com.elisaxui.component.toolkit.jquery.JQuery;
+import com.elisaxui.component.toolkit.old.JQuery;
 import com.elisaxui.component.widget.activity.JSPageLayout;
 import com.elisaxui.component.widget.activity.TKActivity;
 import com.elisaxui.component.widget.log.ViewLog;

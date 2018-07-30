@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.component.toolkit.json;
+package com.elisaxui.component.toolkit.old;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;

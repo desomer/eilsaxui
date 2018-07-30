@@ -69,7 +69,7 @@ public abstract class XUIFactory {
 			xmlBuf = new XMLBuilder("page", buf, null);
 		}
 		
-		fileXML.getXHTMLTemplate().doContent();
+		fileXML.getXHTMLTemplate().zzDoContent();
 		List<XMLElement> rootContent = fileXML.getXHTMLTemplate().getListElementFromTarget(CONTENT.class);
 	
 		for (XMLElement elem : rootContent) {
@@ -202,7 +202,7 @@ public abstract class XUIFactory {
 			xCoreVersion coreVersion = pageClass.getAnnotation(xCoreVersion.class);
 			((XHTMLFile)file).setCoreVersion(coreVersion==null?"1":coreVersion.value());
 			
-			page.doContent();
+			page.zzDoContent();
 			for (XMLElement elem : page.getListElementFromTarget(CONTENT.class)) {
 				page.vBody(elem);
 			}

@@ -18,15 +18,14 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
 
 public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 
-	/**
-	 * 
-	 */
 	private static final String ASYNC = "async";
 	private static final String ONLOAD = "onload";
 	private static final String STYLESHEET = "stylesheet";
 	
 	public static final String SCRIPT = "script";
 	public static final String STYLE = "style";
+	
+	/****************************************************************/
 	
 	public final XMLPart vBody(XMLElement body) {
 		XUIFactoryXHtml.getXHTMLTemplateRoot().addElementOnTarget(BODY.class, body);
@@ -82,13 +81,18 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 		for (int i = 0; i < param.length; i++) {
 			str.append(param[i]);
 		}
-		var._setName(str.toString());
-		
-//		var.addContent(param);
-		
+		var._setName(str.toString());	
 		return var;
 	}
 
+	/**
+	 * 
+	 * xScriptJS(loadResourceFromURL("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js"))
+	 * xScriptJS(js().__("var a=1"))
+	 * 
+	 * @param js
+	 * @return
+	 */
 	public static final XMLElement xScriptJS(Object js) {
 		return xNode(SCRIPT, xAttr("type", "\"text/javascript\""), js);
 	}
@@ -131,14 +135,15 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 				xAttr(ONLOAD, xTxt("resLoadedCss(this, 'all');")));
 	}
 
-	public static final XMLElement xLinkCssAsync(String url, Object fctTxt) {
-		return xNode("link", xAttr("rel", xTxt(STYLESHEET)), xAttr("media", xTxt(ASYNC)), xAttr(ONLOAD, xTxt(fctTxt)),
-				xAttr("href", xTxt(url)));
-	}
+	
+//	public static final XMLElement xLinkCssAsync(String url, Object fctTxt) {
+//		return xNode("link", xAttr("rel", xTxt(STYLESHEET)), xAttr("media", xTxt(ASYNC)), xAttr(ONLOAD, xTxt(fctTxt)),
+//				xAttr("href", xTxt(url)));
+//	}
 	
 	public static final XMLElement xLinkCssPreload(String url) {
 		return xNode("link", xAttr("rel", xTxt("preload")), xAttr(ONLOAD, xTxt("this.rel='stylesheet'")),
-				xAttr("href", xTxt(url)), xAttr("as", xTxt("style")));
+				xAttr("href", xTxt(url)), xAttr("as", xTxt(STYLE)));
 	}
 
 	@Deprecated
@@ -151,16 +156,12 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 		return new CSSElement().path(path);
 	}
 	
-//	public static final XMLElement xInclude(Class<? extends JSClass>...cl) {
-//		Object[] r = new Object[cl.length];
-//		
-//		for (int i = 0; i < r.length; i++) {
-//			r[i] = doInclude(cl[i]);
-//		}
-//		
-//		return xListNodeStatic(r);
-//	}
-
+	/**
+	 *  use xElem(aJSClass.class, ...)
+	 * @param cl
+	 * @return
+	 */
+	@Deprecated
 	public static final XMLElement xIncludeJS(Class<? extends JSClass> cl) {
 		return doInclude(cl);
 	}
@@ -182,7 +183,7 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 	}
 
 	/**************************************************************************/
-
+	/** TODO a metter dans une interface IJSAction  */
 	public static final XMLAttr xIdAction(Object id) {
 		return xAttr(JSActionManager.DATA_X_ACTION, id);
 	}

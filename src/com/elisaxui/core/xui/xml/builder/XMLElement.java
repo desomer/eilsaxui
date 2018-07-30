@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.elisaxui.component.widget.layout.ViewPageLayout;
 import com.elisaxui.core.xui.XUIFactory;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
@@ -19,6 +20,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ArrayMethod;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
+import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSDomFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.builder.module.ImportDesc;
@@ -119,10 +121,10 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 		int nbAttr = 0;
 
 		if (name == IS_XPART) {
-			buf.getJSContent().getListElem().add(JSNodeTemplate.MTH_ADD_PART + "(");
+			buf.getJSContent().getListElem().add(JSDomBuilder.MTH_ADD_PART + "(");
 			buf.getJSContent().getListElem().add("[");
 		} else {
-			buf.getJSContent().getListElem().add(JSNodeTemplate.MTH_ADD_ELEM + "('" + name + "',");
+			buf.getJSContent().getListElem().add(JSDomBuilder.MTH_ADD_ELEM + "('" + name + "',");
 
 			buf.getJSContent().getListElem().add("[");
 
@@ -130,7 +132,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			for (Object inner : listInner) {
 						
 				if (inner instanceof XMLHandle) { // un handle
-					XMLHandle h = (XMLHandle) inner;
+					XMLHandle h = (XMLHandle) inner;				
 					Object handledObject = zzGetProperties(h);
 					if (handledObject instanceof CSSClass) {
 						listClass.add(((CSSClass)handledObject).getId());
@@ -146,7 +148,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 
 			for (XMLAttr attr : listAttr) {
 				if (nbAttr == 0)
-					buf.getJSContent().getListElem().add(JSNodeTemplate.MTH_ADD_ATTR + "([");
+					buf.getJSContent().getListElem().add(JSDomBuilder.MTH_ADD_ATTR + "([");
 				else
 					buf.getJSContent().getListElem().add(",");
 
@@ -382,7 +384,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 						v = "\"" + vs + "\"";
 				}
 
-				buf.getJSContent().getListElem().add(JSNodeTemplate.MTH_ADD_ATTR + "([");
+				buf.getJSContent().getListElem().add(JSDomBuilder.MTH_ADD_ATTR + "([");
 				buf.getJSContent().getListElem().add("\"" + attr.getName() + "\"," + v + "");
 				buf.getJSContent().getListElem().add("])" + (nbChild >= 0 ? "," : ""));
 			}
@@ -397,7 +399,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 				} else if (inner instanceof JSNodeElement) {
 					buf.addContentOnTarget(inner);
 				} else {
-					buf.addContentOnTarget(JSNodeTemplate.MTH_ADD_TEXT + "(");
+					buf.addContentOnTarget(JSDomBuilder.MTH_ADD_TEXT + "(");
 					buf.addContentOnTarget(inner);
 					buf.addContentOnTarget(")");
 				}
@@ -418,6 +420,11 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 	private int doProperties(XMLBuilder buf, int nbChild, XMLHandle h) {
 		Object handledObject = zzGetProperties(h);
 
+//		if (h!=null && h.getName()!=null && h.getName().equals("ViewPageLayout.pWithTabBar"))
+//		{
+//			h=h;
+//		}
+		
 		if (handledObject != null) {
 			nbChild = doChild(buf, nbChild, handledObject);
 		}

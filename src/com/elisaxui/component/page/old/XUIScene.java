@@ -1,7 +1,7 @@
-package com.elisaxui.component.page;
+package com.elisaxui.component.page.old;
 
-import static com.elisaxui.component.toolkit.jquery.JQuery.$;
-import static com.elisaxui.component.toolkit.json.JXui.$xui;
+import static com.elisaxui.component.toolkit.old.JQuery.$;
+import static com.elisaxui.component.toolkit.old.JXui.$xui;
 import static com.elisaxui.component.toolkit.transition.ConstTransition.NEXT_FRAME;
 import static com.elisaxui.component.toolkit.transition.ConstTransition.SPEED_RIPPLE_EFFECT;
 import static com.elisaxui.component.toolkit.transition.ConstTransition.SPEED_SHOW_MENU;
@@ -12,12 +12,13 @@ import static com.elisaxui.component.page.CssPage.*;
 
 import com.elisaxui.app.elisys.xui.asset.AssetHandler;
 import com.elisaxui.component.config.TKCoreConfig;
+import com.elisaxui.component.page.CssReset;
 import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.component.toolkit.TKQueue;
 import com.elisaxui.component.toolkit.datadriven.JSDataCtx;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
-import com.elisaxui.component.toolkit.jquery.JQuery;
+import com.elisaxui.component.toolkit.old.JQuery;
 import com.elisaxui.component.toolkit.transition.ConstTransition;
 import com.elisaxui.component.toolkit.transition.CssTransition;
 import com.elisaxui.component.widget.activity.JSContainer;

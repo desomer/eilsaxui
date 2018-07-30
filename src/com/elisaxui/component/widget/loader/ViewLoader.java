@@ -5,7 +5,7 @@ package com.elisaxui.component.widget.loader;
 
 import static com.elisaxui.component.widget.button.CssRippleEffect.cRippleEffect;
 
-import com.elisaxui.component.page.XUIScene;
+import com.elisaxui.component.page.old.XUIScene;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;

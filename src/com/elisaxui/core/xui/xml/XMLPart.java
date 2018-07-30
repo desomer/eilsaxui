@@ -57,7 +57,14 @@ public class XMLPart  {
 	public static final String PROP_CHILDREN = "PROP_CHILDREN";
 
 	
-	/**************************************************************************/
+	/************************************* VProperty *************************************/
+	public static final XMLHandle vIfExist(VProperty iff, Object then) {
+		XMLHandle attr = XMLBuilder.createHandle(iff.getName());
+		attr.setIfExistAdd(then);
+		return attr;
+	}
+	
+	
 	public final String getPropertiesPrefix() {
 		return vProperty(PROP_ID);
 	}
@@ -181,7 +188,7 @@ public class XMLPart  {
 	}
 
 	/******************** EXECUTE LES METHODES DE LA XMLPART ***********************/
-	public final void doContent() {
+	public final void zzDoContent() {
 		
 		if (debug)
 			System.out.println("[XMLPart]--------------- add content of ------------- " + this.getClass() );
@@ -356,12 +363,26 @@ public class XMLPart  {
 
 	/**
 	 * xPart( part, children) 
+	 * 
+	 *  use xElem de l'interface IXHTMLBuilder
+	 * 
 	 * @param part
 	 * @param inner
 	 * @return
 	 */
+	@Deprecated
 	public static final XMLElement vPart(XMLPart part, Object... child) {
 		return xNode(NONAME, XMLBuilder.createPart(part, child));
+	}
+	
+	/**
+	 * use xElem de l'interface IXHTMLBuilder
+	 * @param array
+	 * @return
+	 */
+	@Deprecated 
+	public static final XMLElement xListNodeStatic(Object... array) {
+		return xNode(NONAME, array);
 	}
 	
 	/**
@@ -374,12 +395,6 @@ public class XMLPart  {
 		return XMLBuilder.createElement(name, inner);
 	}
 
-	@Deprecated 
-	//xListNode
-	public static final XMLElement xListNodeStatic(Object... array) {
-		return xNode(NONAME, array);
-	}
-
 	public static final XMLAttr xAttr(String name, Object value) {
 		return XMLBuilder.createAttr(name, value);
 	}
@@ -387,13 +402,19 @@ public class XMLPart  {
 	public static final XMLAttr xAttr(String name) {
 		return XMLBuilder.createAttr(name, null);
 	}
+			
+	public static final Object xTxt(Object text) {
+		return "\"" + text + "\"";
+	}
 	
+	
+	/*****************************************************************************/
 	/**
 	 * ajout d'enfant par un .addProperty(name, xxxx) 
 	 * @param name
 	 * @return
 	 */
-	@Deprecated  	/*utiliser les vProperty*/
+	@Deprecated  	/*utiliser directement les vProperty*/
 	public static final XMLHandle vSearchProperty(String name) {
 		XMLHandle attr = XMLBuilder.createHandle(name);
 		return attr;
@@ -410,15 +431,5 @@ public class XMLPart  {
 	public static final XMLHandle vSearch(VProperty name) {
 		XMLHandle attr = XMLBuilder.createHandle(name.getName());
 		return attr;
-	}
-	
-	public static final XMLHandle vIfExist(VProperty iff, Object then) {
-		XMLHandle attr = XMLBuilder.createHandle(iff.getName());
-		attr.setIfExistAdd(then);
-		return attr;
-	}
-	
-	public static final Object xTxt(Object text) {
-		return "\"" + text + "\"";
 	}
 }

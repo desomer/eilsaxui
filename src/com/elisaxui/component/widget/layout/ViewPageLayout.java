@@ -35,6 +35,7 @@ public class ViewPageLayout extends XHTMLPart implements ICSSBuilder {
 	public static VProperty pArticle;
 	public static VProperty pStyleContent;
 	public static VProperty pIsNoVisible;
+	public static VProperty pWithTabBar;
 
 	private static CSSClass cArticle;
 	@xComment("content")
@@ -76,13 +77,14 @@ public class ViewPageLayout extends XHTMLPart implements ICSSBuilder {
 		/**********************************************************************************/
 		return xDiv(xId(vProperty(pIdPage)), CssTransition.activity, CssTransition.inactive,
 				vIfExist(pIsNoVisible, CssTransition.cStateNoDisplay),
-				
+
 				vPart(new ViewNavBar().vProp(ViewNavBar.pId, vPropCalc("NavBar", vProperty(pIdPage)))),
-				
+
 				xDiv(cContent, xDiv(cArticle, pArticle, vProperty(vPropCalc("children", vProperty(pIdPage)))),
 						vPart(new ViewOverlay())),
-				
-				vPart(new ViewTabBar().vProp(ViewTabBar.pId, vPropCalc("TabBar", vProperty(pIdPage)))));
+
+				vIfExist(pWithTabBar,
+						vPart(new ViewTabBar().vProp(ViewTabBar.pId, vPropCalc("TabBar", vProperty(pIdPage))))));
 	}
 
 }

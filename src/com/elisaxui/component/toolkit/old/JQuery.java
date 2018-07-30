@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.component.toolkit.jquery;
+package com.elisaxui.component.toolkit.old;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;

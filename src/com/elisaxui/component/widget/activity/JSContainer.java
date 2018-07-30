@@ -3,16 +3,16 @@
  */
 package com.elisaxui.component.widget.activity;
 
-import com.elisaxui.component.toolkit.JSFactory;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
-import com.elisaxui.component.toolkit.jquery.JQuery;
+import com.elisaxui.component.toolkit.old.JQuery;
 import com.elisaxui.component.widget.button.ViewFloatAction;
 import com.elisaxui.component.widget.container.JSViewCard;
 import com.elisaxui.component.widget.container.ViewCard;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
 import com.elisaxui.core.xui.xhtml.IXHTMLBuilder;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
@@ -21,7 +21,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
  * @author Bureau
  *
  */
-public interface JSContainer extends JSFactory, IXHTMLBuilder {
+public interface JSContainer extends JSClass, IXHTMLBuilder {
 
 	JSDataDriven aDataDriven();
 	JSDataSet aDataSet();

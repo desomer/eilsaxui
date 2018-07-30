@@ -13,7 +13,6 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSDomBuilder;
-import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSNodeTemplate;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 
 /**
@@ -27,9 +26,9 @@ public class JSNodeElement extends JSAny implements IJSClassInterface {
 		if (element.length == 1 && element[0] instanceof XMLElement) {
 			XMLElement e = (XMLElement) element[0];
 
-			if (e.getName() == null) {  // un elem xml sans nom de noeud
+			if (e.getName() == null) { // un elem xml sans nom de noeud
 				// ajoute un tableau d'element xElem(vFor(....
-				Object f = new JSFunction()._return(JSNodeTemplate.MTH_ADD_PART + "([", e.getListInner(), "], this)");
+				Object f = new JSFunction()._return(JSDomBuilder.MTH_ADD_PART + "([", e.getListInner(), "], this)");
 				Object self = JSContent.cast(JSAny.class, this.toString());
 				return callMth("appendChild", JSContent.cast(JSAny.class, f + ".bind(" + self + ")()"));
 			}
@@ -57,17 +56,16 @@ public class JSNodeElement extends JSAny implements IJSClassInterface {
 	public JSon dataset() {
 		return castAttr(new JSon(), "dataset");
 	}
-	
+
 	public JSon style() {
 		return castAttr(new JSon(), "style");
 	}
-	
+
 	public JSon getBoundingClientRect() {
 		return callTyped(new JSon(), "getBoundingClientRect");
 	}
-	
-	public JSInt scrollTop()
-	{
+
+	public JSInt scrollTop() {
 		return castAttr(new JSInt(), "scrollTop");
 	}
 
@@ -78,10 +76,11 @@ public class JSNodeElement extends JSAny implements IJSClassInterface {
 	public JSArray<JSNodeElement> childNodes() {
 		return castAttr(new JSArray<JSNodeElement>().setArrayType(JSNodeElement.class), "childNodes");
 	}
-	
+
 	public JSArray<JSNodeElement> children() {
 		return castAttr(new JSArray<JSNodeElement>().setArrayType(JSNodeElement.class), "children");
 	}
+
 	/*************************************************************/
 	public JSNodeElement querySelector(CSSSelector selector) {
 		return callTyped(new JSNodeElement(), "querySelector", "" + selector);
@@ -97,6 +96,7 @@ public class JSNodeElement extends JSAny implements IJSClassInterface {
 		else
 			return querySelector(CSSSelector.onPath(selector));
 	}
+
 	/*************************************************************/
 	public JSArray<JSNodeElement> querySelectorAll(CSSSelector selector) {
 		return callTyped(new JSArray<JSNodeElement>().setArrayType(JSNodeElement.class), "querySelectorAll",
@@ -113,6 +113,7 @@ public class JSNodeElement extends JSAny implements IJSClassInterface {
 		else
 			return querySelectorAll(CSSSelector.onPath(selector));
 	}
+
 	/*************************************************************/
 	public JSNodeElement closest(CSSSelector selector) {
 		return callTyped(new JSNodeElement(), "closest", "" + selector);
@@ -128,9 +129,9 @@ public class JSNodeElement extends JSAny implements IJSClassInterface {
 		else
 			return closest(CSSSelector.onPath(selector));
 	}
-	
+
 	/***********************************************************/
-	
+
 	public <E extends JSAny> E firstNodeValue() {
 		return this.childNodes().at(0).attr("nodeValue");
 	}

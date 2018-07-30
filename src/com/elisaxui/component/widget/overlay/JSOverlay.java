@@ -3,11 +3,11 @@
  */
 package com.elisaxui.component.widget.overlay;
 
-import static com.elisaxui.component.toolkit.jquery.JQuery.*;
+import static com.elisaxui.component.toolkit.old.JQuery.*;
 import static com.elisaxui.component.toolkit.transition.CssTransition.*;
 import static com.elisaxui.component.widget.overlay.ViewOverlay.*;
 
-import com.elisaxui.component.toolkit.jquery.JQuery;
+import com.elisaxui.component.toolkit.old.JQuery;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSFloat;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;

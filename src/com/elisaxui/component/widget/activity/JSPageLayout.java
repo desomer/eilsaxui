@@ -9,11 +9,11 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSFloat;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 
-import static com.elisaxui.component.toolkit.jquery.JQuery.*;
-import static com.elisaxui.component.toolkit.json.JXui.$xui;
+import static com.elisaxui.component.toolkit.old.JQuery.*;
+import static com.elisaxui.component.toolkit.old.JXui.$xui;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSWindow.*;
 
-import com.elisaxui.component.toolkit.jquery.JQuery;
+import com.elisaxui.component.toolkit.old.JQuery;
 import com.elisaxui.component.toolkit.transition.CssTransition;
 import com.elisaxui.component.widget.navbar.ViewNavBar;
 /**

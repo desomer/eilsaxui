@@ -21,13 +21,25 @@ import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
 @xCoreVersion("1")
 public interface JSDomBuilder extends JSClass {
 
+	/**
+	 * 
+	 */
+	public static final String FCT_ATTRIBUT = "_fct_";
+	public static final String MTH_ADD_PART = "p";
+	public static final String MTH_ADD_ELEM = "e";
+	public static final String MTH_ADD_ATTR = "a";
+	public static final String MTH_ADD_TEXT = "t";
+	public static final String MTH_ADD_DATA_BINDING = "dbb";
+
+	public static final String ATTR_BIND_INFO = "XuiBindInfo";
+
 	JSAny doElem = JSClass.declareType();
 	JSAny e = JSClass.declareType();
 	JSAny p = JSClass.declareType();
 	JSAny a = JSClass.declareType();
 	JSAny t = JSClass.declareType();
 	JSAny dbb = JSClass.declareType();
-	
+
 	@xStatic(autoCall = true)
 	default void initMethod() {
 		JSInt i = declareType(JSInt.class, "i");
@@ -46,7 +58,16 @@ public interface JSDomBuilder extends JSClass {
 				_if("r!=null").then(() -> {
 					__("doElem(eldom, r)");
 				});
-			})._elseif("elem instanceof Attr").then(() -> {
+			})._elseif("elem instanceof Attr").then(() -> { 
+				_if("elem['"+FCT_ATTRIBUT+"'] instanceof Function").then(() -> {
+					// gestion d'attribut mappant sur une fct (comme vBindable)
+					let("r", "elem['"+FCT_ATTRIBUT+"'].call(elem, eldom)");
+					__("delete elem['\"+FCT_ATTRIBUT+\"']");
+					_if("r!=null").then(() -> {
+						__("elem.value=r");
+					});
+				});
+				
 				__("eldom.setAttributeNode(elem)");
 			})._else(() -> {
 				JSArray<?> el = cast(JSArray.class, "elem");
@@ -68,24 +89,24 @@ public interface JSDomBuilder extends JSClass {
 			});
 			_return(newdom);
 		}));
-		__("window." + JSNodeTemplate.MTH_ADD_ELEM + "=e");
+		__("window." + MTH_ADD_ELEM + "=e");
 
 		let(p, funct(child, "domParent").__(() -> {
 			_if(child, ".length==1").then(() -> {
 				let("r", "child[0]");
 				_if("r instanceof Function && domParent!=null").then(() -> {
-					let("v", "r.call(r, domParent)");  // ajoutes les element
+					let("v", "r.call(r, domParent)"); // ajoutes les element
 					_if("v!=null").then(() -> {
 						__("doElem(domParent, v)");
 					});
-					
-					__("r=document.createTextNode('')");  // ne retourne rien de d'affichable
+
+					__("r=document.createTextNode('')"); // ne retourne rien de d'affichable
 				});
 				_return("r");
 			});
 			_return(child);
 		}));
-		__("window." + JSNodeTemplate.MTH_ADD_PART + "=p");
+		__("window." + MTH_ADD_PART + "=p");
 
 		let(a, fct(child, () -> {
 			JSon attr = let(JSon.class, "attr", null);
@@ -97,7 +118,7 @@ public interface JSDomBuilder extends JSClass {
 					ret.push(attr);
 				})._else(() -> {
 					_if(elemC, " instanceof Function").then(() -> {
-						attr.attr("_fct_").set(elemC); // attribut de type function comme vBindable qui affecte
+						attr.attr(FCT_ATTRIBUT).set(elemC); // attribut de type function comme vBindable qui affecte
 						// la valeur et affecte le XuiBindInfo du node dom
 					})._else(() -> {
 						attr.attr("value").set(elemC);
@@ -107,14 +128,14 @@ public interface JSDomBuilder extends JSClass {
 			});
 			_return(ret);
 		}));
-		__("window." + JSNodeTemplate.MTH_ADD_ATTR + "=a");
+		__("window." + MTH_ADD_ATTR + "=a");
 
 		let(t, fct(child, () -> {
 			JSon text = let(JSon.class, "text", null);
 			text.set("document.createTextNode(", child, ")");
 			_return(text);
 		}));
-		__("window." + JSNodeTemplate.MTH_ADD_TEXT + "=t");
+		__("window." + MTH_ADD_TEXT + "=t");
 
 		JSNodeElement domItem = JSContent.declareType(JSNodeElement.class, "domItem");
 		JSAny row = JSContent.declareType(JSAny.class, "row");
@@ -122,10 +143,10 @@ public interface JSDomBuilder extends JSClass {
 		JSString attr = JSContent.declareType(JSString.class, "attr");
 
 		let(dbb, fct(domItem, row, attr, value, () -> {
-			domItem.attr(JSNodeTemplate.ATTR_BIND_INFO).set("{row:", row, ", attr:" + attr + "}");
+			domItem.attr(ATTR_BIND_INFO).set("{row:", row, ", attr:" + attr + "}");
 			_return(value);
 		}));
-		__("window." + JSNodeTemplate.MTH_ADD_DATA_BINDING + "=dbb");
+		__("window." + MTH_ADD_DATA_BINDING + "=dbb");
 
 	}
 }

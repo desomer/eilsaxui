@@ -3,11 +3,11 @@
  */
 package com.elisaxui.component.widget.container;
 
-import com.elisaxui.component.toolkit.JSFactory;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
-import com.elisaxui.component.toolkit.jquery.JQuery;
+import com.elisaxui.component.toolkit.old.JQuery;
 import com.elisaxui.component.widget.button.CssRippleEffect;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
 
@@ -15,7 +15,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
  * @author Bureau
  *
  */
-public interface JSViewCard extends JSFactory {
+public interface JSViewCard extends JSClass {
 
 	static final String TYPE_BACKGROUND = "background";
 	static final String TYPE_TEXT = "text";

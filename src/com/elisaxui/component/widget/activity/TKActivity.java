@@ -3,7 +3,7 @@
  */
 package com.elisaxui.component.widget.activity;
 
-import com.elisaxui.component.page.XUIScene;
+import com.elisaxui.component.page.old.XUIScene;
 import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;

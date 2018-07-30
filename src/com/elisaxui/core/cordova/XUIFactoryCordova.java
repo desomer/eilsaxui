@@ -38,7 +38,7 @@ public class XUIFactoryCordova extends XUIFactory {
 
 		XUIFactoryCordova builder = new XUIFactoryCordova();
 
-		builder.createHtml("ScnPage");
+		builder.createHtml("ScnPageA");
 
 	}
 

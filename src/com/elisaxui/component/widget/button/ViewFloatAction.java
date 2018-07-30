@@ -4,9 +4,11 @@
 package com.elisaxui.component.widget.button;
 
 import static com.elisaxui.component.toolkit.transition.CssTransition.*;
+
+import com.elisaxui.component.page.old.XUIScene;
+
 import static com.elisaxui.component.page.CssPage.*;
 
-import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.IJSDomTemplate;

@@ -3,19 +3,18 @@
  */
 package com.elisaxui.component.widget.activity;
 
-import static com.elisaxui.component.page.XUIScene.*;
-import static com.elisaxui.component.toolkit.jquery.JQuery.$;
+import static com.elisaxui.component.toolkit.old.JQuery.$;
 import static com.elisaxui.component.toolkit.transition.ConstTransition.*;
 import static com.elisaxui.component.toolkit.transition.CssTransition.*;
 import static com.elisaxui.component.page.CssPage.*;
-
+import static com.elisaxui.component.page.old.XUIScene.*;
 import static com.elisaxui.component.widget.navbar.ViewNavBar.isOpenMenu;
 import static com.elisaxui.component.widget.navbar.ViewNavBar.navbar;
 import static com.elisaxui.component.widget.tabbar.ViewTabBar.cTabbar;
 
-import com.elisaxui.component.page.XUIScene;
+import com.elisaxui.component.page.old.XUIScene;
 import com.elisaxui.component.toolkit.TKQueue;
-import com.elisaxui.component.toolkit.jquery.JQuery;
+import com.elisaxui.component.toolkit.old.JQuery;
 import com.elisaxui.component.widget.button.ViewBtnBurger;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
 import com.elisaxui.component.widget.menu.ViewMenu;

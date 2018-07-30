@@ -4,9 +4,11 @@
 package com.elisaxui.component.widget.menu;
 
 import static com.elisaxui.component.toolkit.transition.ConstTransition.*;
+
+import com.elisaxui.component.page.old.XUIScene;
+
 import static com.elisaxui.component.page.CssPage.*;
 
-import com.elisaxui.component.page.XUIScene;
 import com.elisaxui.component.toolkit.transition.CssTransition;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;

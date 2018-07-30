@@ -9,6 +9,8 @@ import com.elisaxui.app.core.module.CmpModuleCore;
 import com.elisaxui.component.toolkit.datadriven.IJSDataBinding;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSChangeCtx;
+import com.elisaxui.component.toolkit.datadriven.JSDataBinding;
+import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.widget.input.ViewInputText;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.ICSSBuilder;
@@ -19,10 +21,10 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
-import com.elisaxui.core.xui.xhtml.builder.javascript.template.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.IJSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.module.annotation.xImport;
+import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
 import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xResource;
@@ -43,14 +45,14 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 	@xTarget(HEADER.class)
 	@xResource // une seule fois par vue
 	public XMLElement xImportLib() {
-		return xListNode(vPart(new CmpModuleCore())); // configure et genere les modules
+		return xElem(new CmpModuleCore()); // configure et genere les modules
 	}
 
 	@xTarget(AFTER_CONTENT.class)
 	@xResource(id = "xScnInput.css")
 	@xPriority(10)
 	public XMLElement xStylePart() {
-		return xListNode(
+		return xElem(
 				xStyle(sMedia("all"), () ->
 					sOn(sSel(cSizeOk), () -> 
 						css("color:red;")
@@ -72,13 +74,12 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 	/********************************************************/
 	// une class js avec template et datadriven
 	/********************************************************/
-	@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
-	@xResource(id = "xLoad.js")
-	@xImport(export = "JSDataDriven", module = "xdatadriven.js")
-	@xImport(export = "JSDataBinding", module = "xBinding.js")
-	
+	@xTarget(AFTER_BODY.class) // le controleur apres chargement du body
+	@xResource(id = "xScnInput.mjs")
+	@xImport(idClass = JSDataDriven.class)
+	@xImport(idClass = JSDataBinding.class)
 	public XMLElement xLoad() {
-		return xIncludeJS(JSTest.class);
+		return xElem(JSTest.class);
 	}
 	
 	public interface JSTest extends JSClass, IJSNodeTemplate, IJSDataBinding, IJSDataDriven {
@@ -102,10 +103,9 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 
 			// la vues dynamique
 			JSNodeElement dom = let("dom", document().querySelector(cMain));
-			dom.appendChild(
-					vFor(listItem, item, xListNode(
-							vPart(new ViewInputText() // template static ou dynamic
-									// gestion auto de methode ?
+			dom.appendChild(xElem(
+					vFor(listItem, item, xDiv(
+							xElem(new ViewInputText() // template static ou dynamic
 									.vProp(ViewInputText.pLabel, vChangeable(item.label()))
 									.vProp(ViewInputText.pValue, vBindable(item, item.value()))),
 							/**************************************************************************/
@@ -127,7 +127,7 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 											.then(() -> changeCtx.element().classList().add(cSizeOk))
 											._else(() -> changeCtx.element().classList().remove(cSizeOk))))),
 							xNode("hr")
-							)));
+							))));
 
 			/*******************************************************/
 			// ajout des datas

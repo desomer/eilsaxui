@@ -3,7 +3,7 @@
  */
 package com.elisaxui.doc.formation;
 
-import com.elisaxui.component.page.XUIScene;
+import com.elisaxui.component.page.old.XUIScene;
 import com.elisaxui.component.widget.overlay.ViewOverlay;
 import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;

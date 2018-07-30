@@ -3,12 +3,12 @@
  */
 package com.elisaxui.component.widget.activity;
 
-import static com.elisaxui.component.toolkit.json.JXui.$xui;
+import static com.elisaxui.component.toolkit.old.JXui.$xui;
 
 import com.elisaxui.component.config.TKCoreConfig;
-import com.elisaxui.component.toolkit.jquery.JQuery;
-import com.elisaxui.component.toolkit.json.JIntent;
-import com.elisaxui.component.toolkit.json.JRoute;
+import com.elisaxui.component.toolkit.old.JIntent;
+import com.elisaxui.component.toolkit.old.JQuery;
+import com.elisaxui.component.toolkit.old.JRoute;
 import com.elisaxui.component.toolkit.transition.ConstTransition;
 import com.elisaxui.component.toolkit.transition.CssTransition;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;

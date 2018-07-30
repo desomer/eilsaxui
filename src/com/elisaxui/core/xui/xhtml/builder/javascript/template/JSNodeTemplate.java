@@ -18,13 +18,6 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  */
 public class JSNodeTemplate extends JSNodeElement implements IXHTMLBuilder
 {
-	public static final String MTH_ADD_PART = "p";
-	public static final String MTH_ADD_ELEM = "e";
-	public static final String MTH_ADD_ATTR = "a";
-	public static final String MTH_ADD_TEXT = "t";
-	public static final String MTH_ADD_DATA_BINDING = "dbb";
-	
-	public static final String ATTR_BIND_INFO = "XuiBindInfo";
 	
 	XMLElement xml;
 	boolean modeJs = false;

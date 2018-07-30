@@ -17,22 +17,40 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeInputElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
+import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.module.annotation.xExport;
+import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
 
 /**
  * @author gauth
  *
  */
 @xExport
+@xCoreVersion("1")
 public interface JSDataBinding extends JSClass {
 
+	JSAny elemText = JSClass.declareType();
+	JSCallBack mountFct = JSClass.declareType();
+	
+	@xStatic
+	default Object mount(JSString mountId, JSElement aRow) {
+		let(mountFct, var("window.xMount[",mountId,"]"));
+		
+		_if(mountFct.notEqualsJS(null)).then(() -> {
+			_return(mountFct.call(_this(), aRow));
+		});
+		
+		return null;
+		//return cast(JSAny.class, var("window.xMount[",mountId,"](",aRow,")"));
+	}
+	
 	@xStatic
 	default Object initVChangeableText(JSNodeElement domItem, JSAny value, JSString attr) {
 		domItem.dataset().attrByString(var("'xui'+",attr)).set(true);
-		let("elemText", JSNodeTemplate.MTH_ADD_TEXT+"("+value+")" );
-		return "elemText";
+		let(elemText, JSDomBuilder.MTH_ADD_TEXT+"("+value+")" );
+		return elemText;
 	}
 	
 	@xStatic
@@ -43,15 +61,15 @@ public interface JSDataBinding extends JSClass {
 		bi.row().set(row);
 		bi.attr().set(attr);
 		bi.fct().set(fctOnChange);
-		domItem.attr(JSNodeTemplate.ATTR_BIND_INFO).set(bi);
+		domItem.attr(JSDomBuilder.ATTR_BIND_INFO).set(bi);
 
 		JSChangeCtx ctx = newJS(JSChangeCtx.class);
 		ctx.value().set(value);
 		ctx.row().set(row);
 		JSChangeCtx changeCtx = let(JSChangeCtx.class, "changeCtx", ctx);
-		JSCallBack ret = let(JSCallBack.class, "ret", cast(XuiBindInfo.class, domItem.attr(JSNodeTemplate.ATTR_BIND_INFO)).fct().call(domItem, changeCtx ));
-		let("elemText", JSNodeTemplate.MTH_ADD_TEXT+"("+ret+")" );
-		return "elemText";
+		JSCallBack ret = let(JSCallBack.class, "ret", cast(XuiBindInfo.class, domItem.attr(JSDomBuilder.ATTR_BIND_INFO)).fct().call(domItem, changeCtx ));
+		let(elemText, JSDomBuilder.MTH_ADD_TEXT+"("+ret+")" );
+		return elemText;
 	}
 	
 	@xStatic
@@ -62,17 +80,20 @@ public interface JSDataBinding extends JSClass {
 		bi.row().set(row);
 		bi.attr().set(attr);
 		bi.fct().set(fctOnChange);
-		domItem.attr(JSNodeTemplate.ATTR_BIND_INFO).set(bi);
+		domItem.attr(JSDomBuilder.ATTR_BIND_INFO).set(bi);
 
 		JSChangeCtx ctx = newJS(JSChangeCtx.class);
 		ctx.value().set(value);
 		ctx.row().set(row);
 		ctx.element().set(domItem);
 
+		// appel une premier fois la methode au premier mapping
 		JSChangeCtx changeCtx = let(JSChangeCtx.class, "changeCtx", ctx);
-		cast(XuiBindInfo.class, domItem.attr(JSNodeTemplate.ATTR_BIND_INFO)).fct().call(domItem, changeCtx );
+		cast(XuiBindInfo.class, domItem.attr(JSDomBuilder.ATTR_BIND_INFO)).fct().call(domItem, changeCtx );
 	}
 
+	JSAny rf = JSClass.declareType();
+	
 	@xStatic
 	default void initChangeHandler(JSChangeCtx changeCtx, JSNodeElement aDom) {
 		/*******************************************************/
@@ -86,11 +107,11 @@ public interface JSDataBinding extends JSClass {
 		JSInt i = declareType(JSInt.class, "i");
 		_forIdx(i, listNode)._do(() -> {
 			JSNodeElement elem = let("elem", listNode.at(i));
-			XuiBindInfo ddi = let(XuiBindInfo.class, "ddi", elem.attr(JSNodeTemplate.ATTR_BIND_INFO));
+			XuiBindInfo ddi = let(XuiBindInfo.class, "ddi", elem.attr(JSDomBuilder.ATTR_BIND_INFO));
 			JSAny valueChange = let("valueChange", changeCtx.value());
 			_if(ddi, "!=null &&", ddi.fct().notEqualsJS(null)).then(() -> {
 				changeCtx.element().set(elem);
-				JSAny rf = let("rf", ddi.fct().call(elem, changeCtx)); // appel de la fct vOnChange( fct )
+				let(rf, ddi.fct().call(elem, changeCtx)); // appel de la fct vOnChange( fct )
 				_if(rf.equalsJS(null)).then(() -> 
 					_continue() // ne change pas la value du text du dom
 				);
@@ -104,10 +125,11 @@ public interface JSDataBinding extends JSClass {
 	}
 	
 	/*******************************************************/
-	@xStatic(autoCall = true)   //TODO 2 true dans la meme classe ne marche pas
+	@xStatic(autoCall = true)   
+	//TODO 2 true dans la meme classe ne marche pas
 	default void initChangeEvent() {
 
-		JSArray<JSString> listEventLitteral = new JSArray<JSString>().asLitteral();
+		JSArray<JSString> listEventLitteral = JSArray.newLitteral();
 		listEventLitteral.push(JSString.value("change"));
 		listEventLitteral.push(JSString.value("click"));
 		listEventLitteral.push(JSString.value("keyup"));
@@ -124,7 +146,7 @@ public interface JSDataBinding extends JSClass {
 				_if(event.target().nodeName().equalsJS("INPUT")).then(() -> {
 					JSNodeInputElement inputelem = let(JSNodeInputElement.class, "inputelem",
 							event.target());
-					XuiBindInfo ddi = let(XuiBindInfo.class, "ddi", inputelem.attr(JSNodeTemplate.ATTR_BIND_INFO));
+					XuiBindInfo ddi = let(XuiBindInfo.class, "ddi", inputelem.attr(JSDomBuilder.ATTR_BIND_INFO));
 					_if(ddi, "!=null &&", ddi.row().notEqualsJS(null)).then(() -> {
 						_if(inputelem.type().equalsJS("checkbox"), "||", inputelem.type().equalsJS("radio")).then(() -> {
 							ddi.row().attrByString(ddi.attr()).set(inputelem.checked());

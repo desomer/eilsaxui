@@ -53,7 +53,6 @@ public class ViewTabBar extends XHTMLPart implements ICSSBuilder {
 				css("color:white");
 				css(PERFORM_3D);
 				css("transition: transform "+ConstTransition.SPEED_ANIM_SCROLL+"ms ease-in-out");
-				css("box-shadow: 16px -14px 20px 0 rgba(0, 0, 0, 0.21), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);");
 				css(pStyle);
 			});
 			

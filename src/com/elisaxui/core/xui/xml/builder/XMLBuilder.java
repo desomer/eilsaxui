@@ -98,7 +98,7 @@ public class XMLBuilder {
 
 	public static XMLPartElement createPart(XMLPart part, Object... child) {
 		XMLPartElement t = new XMLPartElement(part, child);
-		part.doContent();
+		part.zzDoContent();
 		return t;
 	}
 

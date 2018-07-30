@@ -4,6 +4,7 @@
 package com.elisaxui.app.core.admin;
 
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
+import com.elisaxui.component.toolkit.datadriven.IJSMountFactory;
 import com.elisaxui.component.widget.button.CssRippleEffect;
 import com.elisaxui.component.widget.button.ViewBtnBurger;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
@@ -57,6 +58,7 @@ public class MntPage extends XHTMLPart implements IJSDataDriven {
 		return xElem(
 				vFor(arrPage, aPage, xElem(new ViewPageLayout()
 						.vProp(ViewPageLayout.pIsNoVisible, true)
+						.vProp(ViewPageLayout.pWithTabBar, aPage.mountTabNar().notEqualsJS(null))
 						.vProp(ViewPageLayout.pIdPage, aPage.titre())
 						.vProp(ViewPageLayout.pArticle, xDiv(
 								vFor(aPage.contentArticle(), listArticle, xDiv(

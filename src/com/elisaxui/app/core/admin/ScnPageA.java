@@ -14,20 +14,16 @@ import com.elisaxui.app.core.admin.MntPage.MountPage;
 import com.elisaxui.app.core.admin.MntPage.MountTabBar;
 import com.elisaxui.app.core.admin.MntPage.TBtn;
 import com.elisaxui.app.core.admin.MntPage.TPage;
-import com.elisaxui.app.core.module.CmpModuleCore;
 import com.elisaxui.app.core.module.CmpModuleComponent.JSMount;
-import com.elisaxui.app.core.module.CmpModuleComponent;
-import com.elisaxui.component.page.CssReset;
+import com.elisaxui.component.page.ScnPage;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
-import com.elisaxui.component.toolkit.transition.CssTransition;
-import com.elisaxui.component.widget.button.CssRippleEffect;
+import com.elisaxui.component.toolkit.datadriven.IJSMountFactory;
+import com.elisaxui.component.toolkit.datadriven.JSDataBinding;
 import com.elisaxui.component.widget.button.CssRippleEffect.JSRippleEffect;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
 import com.elisaxui.component.widget.navbar.ViewNavBar;
 import com.elisaxui.component.widget.tabbar.ViewTabBar;
-import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.ICSSBuilder;
-import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
@@ -38,10 +34,8 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.template.IJSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.builder.module.annotation.xExport;
 import com.elisaxui.core.xui.xhtml.builder.module.annotation.xImport;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
-import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
-import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
@@ -52,76 +46,44 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
  *
  */
 @xResource(id = "ScnPage")
-@xComment("Scene Page")
-public class ScnPage extends XHTMLPart implements ICSSBuilder {
-
-	static CSSClass cMain;
-
-	@xTarget(HEADER.class)
-	@xResource
-	public XMLElement xImport() {
-		return xElem(new CmpModuleCore(), new CmpModuleComponent());
-	}
-
-	@xTarget(HEADER.class)
-	@xResource
-	public XMLElement preLoad() {
-		return xElem(xLinkModulePreload("/asset/mjs/xMount.mjs"),
-				xLinkModulePreload("/asset/mjs/xStandard.mjs"),
-				xLinkModulePreload("/asset/mjs/xComponent.mjs"),
-				xLinkModulePreload("/asset/mjs/xDatadriven.mjs"),
-				xLinkModulePreload("/asset/mjs/xBinding.mjs"),
-				xLinkModulePreload("/asset/mjs/xCore.mjs"));
-	}
+@xComment("Scene Page A")
+public class ScnPageA extends ScnPage implements ICSSBuilder {
 
 	@xTarget(AFTER_BODY.class)
-	@xResource(id = "xControlerPage.mjs") // insert un <Script type module> dans le body
+	@xResource(id = "xControlerPageA.mjs") // insert un <Script type module> dans le body
 	@xImport(idClass = JSMount.class)
 	@xImport(idClass = JSPageAnimation.class)
 	@xImport(idClass = JSRippleEffect.class)
 	@xImport(idClass = JSActionManager.class)
+	@xImport(idClass = JSDataBinding.class)
 	public XMLElement xControlerPage() {
 		return xElem(JSController.class);
 	}
 
 	/************************************************************************/
 
-	@xTarget(HEADER.class) // la vue App Shell
-	@xResource()
-	@xPriority(10)
-	public XMLElement sStyle() {
-		return xElem(
-				new CssReset(),
-				new CssRippleEffect(),
-				new CssTransition(),
-				xStyle(() -> {
-					sOn(sSel("html"), () -> css("font-size: 16px;"));
-					sOn(sSel("body"), () -> css("font-family: 'Roboto', sans-serif; font-weight: normal;"));
-				}));
-	}
-
 	@xTarget(CONTENT.class) // la vue App Shell
 	public XMLElement xAppShell() {
+
+		double HEIGHT_NAV = 3.5;
+		double HEIGHT_TAB = 3.5;
+
 		vProp(ViewPageLayout.pStyleContent,
-				"min-height: 100vh; min-width: 100vw; padding-top: 4rem; padding-bottom: 3.5rem");
+				"min-height: 100vh; min-width: 100vw; padding-top: " + (HEIGHT_NAV + .5) + "rem; padding-bottom: "
+						+ HEIGHT_TAB + "rem");
 
 		vProp(ViewNavBar.pStyle,
-				"background:linear-gradient(to bottom, rgb(255, 191, 97) 0%, rgb(255, 152, 0) 64%, rgb(241, 197, 133) 100%)");
-		vProp(ViewNavBar.pHeight, "height: 3.5rem");
+				"background:linear-gradient(to bottom, rgb(255, 191, 97) 0%, rgb(255, 152, 0) 64%, rgb(241, 197, 133) 100%);"
+				+"box-shadow: 20px 6px 12px 9px rgba(0, 0, 0, 0.22), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2)");
+		vProp(ViewNavBar.pHeight, "height: " + HEIGHT_NAV + "rem");
 
-		vProp(ViewTabBar.pHeight, "height: 3.5rem");
+		vProp(ViewTabBar.pHeight, "height: " + HEIGHT_TAB + "rem");
 		vProp(ViewTabBar.pStyle,
-				"background:linear-gradient(to bottom, rgb(255, 191, 97) 0%, rgb(255, 152, 0) 64%, rgb(241, 197, 133) 100%)");
+				"background:linear-gradient(to bottom, rgb(255, 191, 97) 0%, rgb(255, 152, 0) 64%, rgb(241, 197, 133) 100%);"
+						+ "box-shadow: 16px -14px 20px 0 rgba(0, 0, 0, 0.21), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);");
 
-		return xDiv(cMain, getAppShell());
-	}
-
-	/**
-	 * @return
-	 */
-	private XMLElement getAppShell() {
-		return xElem(new ViewPageLayout()
-				.vProp(ViewPageLayout.pIdPage, "Appshell"));
+		vProp(ViewPageLayout.pWithTabBar, true);
+		return xDiv(ScnPage.getcMain(), getAppShell());
 	}
 
 	/********************************************************/
@@ -135,7 +97,7 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 
 	@xExport
 	@xCoreVersion("1")
-	public interface JSController extends JSClass, IJSNodeTemplate, IJSDataDriven {
+	public interface JSController extends JSClass, IJSNodeTemplate, IJSMountFactory {
 		JSActionManager actionManager = JSClass.declareTypeClass(JSActionManager.class);
 		TActionEvent actionEvent = JSClass.declareType();
 
@@ -144,8 +106,8 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 			__("window.datadrivensync=true");
 
 			let(arrPage, JSArray.newLitteral());
-			
-			document().querySelector(cMain).appendChild(xElem(vMount(arrPage, JSString.value(MountPage.class))));
+
+			document().querySelector(getcMain()).appendChild(xElem(vMount(arrPage, JSString.value(MountPage.class))));
 			/******************************************************************/
 
 			TPage page = newJS(TPage.class);
@@ -205,11 +167,11 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 
 			__("fastdom.mutate(", fct(() -> {
 				let(activity, document().querySelector("#Page1"));
-				document().querySelector(cMain).children().at(0).remove();
+				document().querySelector(getcMain()).children().at(0).remove();
 				animMgr.doActivityActive(activity);
 			}), ")");
 
-			// doChangeContent(arrPage);
+			doChangeContent(arrPage);
 			doMoveOnAction();
 
 			actionManager.addAction(JSString.value("A"), _this(), fct(() -> {

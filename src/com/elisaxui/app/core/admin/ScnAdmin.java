@@ -86,32 +86,32 @@ public class ScnAdmin extends XHTMLPart {
 					vPart(new ViewCheckRadio()
 							.vProp(ViewCheckRadio.pLabel, "Single File")
 							.vProp(ViewCheckRadio.pValue,
-									vIf(vBindable(item, item.singleFile()), xAttr("checked")))),
+									vIfOnce(vBindable(item, item.singleFile()), xAttr("checked")))),
 					/*****************************************************************************/
 					vPart(new ViewCheckRadio()
 							.vProp(ViewCheckRadio.pLabel, "Minify")
 							.vProp(ViewCheckRadio.pValue,
-									vIf(vBindable(item, item.minify()), xAttr("checked")))),
+									vIfOnce(vBindable(item, item.minify()), xAttr("checked")))),
 					vPart(new ViewCheckRadio()
 							.vProp(ViewCheckRadio.pLabel, "ES5 Compatibility")
-							.vProp(ViewCheckRadio.pValue, vIf(vBindable(item, item.es5()), xAttr("checked")))),
+							.vProp(ViewCheckRadio.pValue, vIfOnce(vBindable(item, item.es5()), xAttr("checked")))),
 					vPart(new ViewCheckRadio()
 							.vProp(ViewCheckRadio.pLabel, "Disable comment")
 							.vProp(ViewCheckRadio.pValue,
-									vIf(vBindable(item, item.disableComment()), xAttr("checked")))),
+									vIfOnce(vBindable(item, item.disableComment()), xAttr("checked")))),
 					/*****************************************************************************/
 					vPart(new ViewCheckRadio()
 							.vProp(ViewCheckRadio.pLabel, "Display time generated")
 							.vProp(ViewCheckRadio.pValue,
-									vIf(vBindable(item, item.timeGenerated()), xAttr("checked")))),
+									vIfOnce(vBindable(item, item.timeGenerated()), xAttr("checked")))),
 					vPart(new ViewCheckRadio()
 							.vProp(ViewCheckRadio.pLabel, "Display File Changed")
 							.vProp(ViewCheckRadio.pValue,
-									vIf(vBindable(item, item.fileChanged()), xAttr("checked")))),
+									vIfOnce(vBindable(item, item.fileChanged()), xAttr("checked")))),
 					vPart(new ViewCheckRadio()
 							.vProp(ViewCheckRadio.pLabel, "Display Patch Changes")
 							.vProp(ViewCheckRadio.pValue,
-									vIf(vBindable(item, item.patchChanges()), xAttr("checked")))),
+									vIfOnce(vBindable(item, item.patchChanges()), xAttr("checked")))),
 					/****************************************************************************/
 					vPart(new ViewInputText()
 							.vProp(ViewInputText.pLabel, "Version time line")

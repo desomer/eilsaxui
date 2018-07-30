@@ -4,7 +4,7 @@
 package com.elisaxui.doc.formation3;
 
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
-import com.elisaxui.component.toolkit.jquery.JQuery;
+import com.elisaxui.component.toolkit.old.JQuery;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSLambda;
@@ -19,7 +19,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.template.IJSDomTemplate;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.IJSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 
-import static com.elisaxui.component.toolkit.jquery.JQuery.$;
+import static com.elisaxui.component.toolkit.old.JQuery.$;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.template.JSNodeTemplate.*;
 
 /**

@@ -209,6 +209,13 @@ public class XUIFactoryXHtml extends XUIFactory {
 	public Response getMJS(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("name") String name) {
 		return doJS(headers, name);
 	}
+	
+	@GET
+	@Path("/mjs/{name}.js")
+	@Produces("application/javascript")
+	public Response getJS2(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("name") String name) {
+		return doJS(headers, name);
+	}
 
 	/**
 	 * @param headers
@@ -231,7 +238,7 @@ public class XUIFactoryXHtml extends XUIFactory {
 				JSServiceWorker part = new JSServiceWorker();
 				fileXML.setXHTMLTemplate(part);
 				
-				part.doContent();
+				part.zzDoContent();
 				rootContent = part.getListElementFromTarget(CONTENT.class);
 			}
 			else

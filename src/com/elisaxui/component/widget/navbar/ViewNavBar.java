@@ -61,7 +61,7 @@ public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 						css(pStyle);
 						css("top: 0px; width: 100%; position: absolute");
 						css(pHeight);
-						css("box-shadow: 20px 6px 12px 9px rgba(0, 0, 0, 0.22), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2)");
+		//				css("box-shadow: 20px 6px 12px 9px rgba(0, 0, 0, 0.22), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2)");
 						css("transition: all " + ConstTransition.SPEED_ANIM_SCROLL + "ms linear"); // ease-in-out 
 					});
 

@@ -1,12 +1,12 @@
 /**
  * 
  */
-package com.elisaxui.app.core.admin;
+package com.elisaxui.component.toolkit.core;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSWindow.window;
 
-import com.elisaxui.app.core.admin.JSTouchManager.TTouchInfo;
 import com.elisaxui.component.toolkit.TKPubSub;
+import com.elisaxui.component.toolkit.core.JSTouchManager.TTouchInfo;
 import com.elisaxui.component.toolkit.transition.CssTransition;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
@@ -38,7 +38,6 @@ public interface JSActionManager extends JSClass {
 	JSPageAnimation animMgr = JSClass.declareType();
 	JSString actionId = JSClass.declareType();
 	TActionEvent actionEvent = JSClass.declareType();
-	JSActionManager that = JSClass.declareTypeClass(JSActionManager.class);
 	TActionInfo actionInfo = JSClass.declareType();
 
 	/*****************************************************/
@@ -56,10 +55,12 @@ public interface JSActionManager extends JSClass {
 
 	@xStatic(autoCall = true)
 	default void init() {
+		JSActionManager that = JSClass.declareTypeClass(JSActionManager.class);
+		
 		callBackStart().set(newJS(TKPubSub.class));
 		callBackMove().set(newJS(TKPubSub.class));
 		callBackStop().set(newJS(TKPubSub.class));
-		listAction().set(JSObject.newLitteral());
+		listAction().set(JSObject.newLitteral());   //TODO faire un newLitteral(JSObject.class)
 
 		onStart(fct(actionEvent, () -> {
 			_if(actionEvent.actionId().notEqualsJS(null)).then(() -> {
@@ -107,6 +108,7 @@ public interface JSActionManager extends JSClass {
 		let(targetAction, event.target().closest("[" + DATA_X_ACTION + "]"));
 		let(scrollY, window().pageYOffset());
 		let(activity, null);
+		
 		_if(targetAction.notEqualsJS(null)).then(() -> {
 			activity.set(targetAction.closest(CssTransition.activity));
 			let(actionId, targetAction.dataset().attrByString(ATTR_X_ACTION));

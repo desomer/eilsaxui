@@ -5,16 +5,18 @@ package com.elisaxui.app.core.admin;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
-import com.elisaxui.app.core.admin.JSActionManager.TActionEvent;
-import com.elisaxui.app.core.admin.MntPage.MountArticle;
-import com.elisaxui.app.core.admin.MntPage.MountBtn;
-import com.elisaxui.app.core.admin.MntPage.MountNavBar;
-import com.elisaxui.app.core.admin.MntPage.MountPage;
-import com.elisaxui.app.core.admin.MntPage.MountTabBar;
-import com.elisaxui.app.core.admin.MntPage.TBtn;
-import com.elisaxui.app.core.admin.MntPage.TPage;
 import com.elisaxui.app.core.module.CmpModuleComponent.JSMount;
+import com.elisaxui.app.core.module.MntPage.MountArticle;
+import com.elisaxui.app.core.module.MntPage.MountBtn;
+import com.elisaxui.app.core.module.MntPage.MountNavBar;
+import com.elisaxui.app.core.module.MntPage.MountPage;
+import com.elisaxui.app.core.module.MntPage.MountTabBar;
+import com.elisaxui.app.core.module.MntPage.TBtn;
+import com.elisaxui.app.core.module.MntPage.TPage;
 import com.elisaxui.component.page.ScnPage;
+import com.elisaxui.component.toolkit.core.JSActionManager;
+import com.elisaxui.component.toolkit.core.JSPageAnimation;
+import com.elisaxui.component.toolkit.core.JSActionManager.TActionEvent;
 import com.elisaxui.component.toolkit.datadriven.IJSMountFactory;
 import com.elisaxui.component.toolkit.datadriven.JSDataBinding;
 import com.elisaxui.component.widget.button.CssRippleEffect.JSRippleEffect;

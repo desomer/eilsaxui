@@ -35,6 +35,9 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 
 /**
  * @author gauth
+ * 
+ * https://localhost:9998/rest/page/fr/fra/id/ScnInput
+ *   
  */
 @xResource(id = "ScnInput")
 public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
@@ -42,14 +45,8 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 	static CSSClass cMain;
 	static CSSClass cSizeOk;
 
-	@xTarget(HEADER.class)
-	@xResource // une seule fois par vue
-	public XMLElement xImportLib() {
-		return xElem(new CmpModuleCore()); // configure et genere les modules
-	}
-
 	@xTarget(AFTER_CONTENT.class)
-	@xResource(id = "xScnInput.css")
+	@xResource(id = "xScnInput.css", async=true)
 	@xPriority(10)
 	public XMLElement xStylePart() {
 		return xElem(
@@ -64,13 +61,19 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 	@xTarget(CONTENT.class) // la vue App Shell
 	public XMLElement xAppShell() {
 		return xDiv(xH1("ScnInput"), xArticle(cMain,
-				vPart(new ViewInputText() // template static
+				xElem(new ViewInputText() // template static
 						.vProp(ViewInputText.pLabel, "Color")
 						.vProp(ViewInputText.pValue, "FF00FF")),
-				vPart(new ViewInputText()
+				xElem(new ViewInputText()
 						.vProp(ViewInputText.pLabel, "Font size"))));
 	}
 
+	@xTarget(HEADER.class)
+	@xResource // une seule fois par vue
+	public XMLElement xImportLib() {
+		return xElem(new CmpModuleCore()); // configure et genere les modules
+	}
+	
 	/********************************************************/
 	// une class js avec template et datadriven
 	/********************************************************/
@@ -86,14 +89,16 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 
 		@xStatic(autoCall = true)
 		default void main() {
+			
+			__("window.datadrivensync=true");
 
 			// declaration des types
 			JSChangeCtx changeCtx = declareType(JSChangeCtx.class, "changeCtx");
 			ItemInput item = declareType(ItemInput.class, "item");
 
 			// fct reverse des caracteres
-			JSFunction fctReverse = fct(changeCtx,
-					() -> _return(cast(JSString.class, changeCtx.value()).split(txt()).reverse().join(txt())));
+			JSFunction fctReverse = fct(changeCtx, () -> 
+					_return(cast(JSString.class, changeCtx.value()).split(txt()).reverse().join(txt())));
 
 			// fct calcul le nb de caracteres
 			JSFunction fctNbChar = fct(() -> _return(calc("'nb car '+", item.value().length())));

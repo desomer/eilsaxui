@@ -17,6 +17,7 @@ import java.util.Iterator;
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 
+import com.elisaxui.core.helper.JSONBeautifier;
 import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
@@ -69,7 +70,7 @@ public final class ProxyHandler implements InvocationHandler {
 
 		ProxyMethodDesc mthInvoke = new ProxyMethodDesc(null, null, proxy, method, args);
 
-		Object ret = invokeDirectMethod(mthInvoke);
+		Object ret = doCallDirectMethod(mthInvoke);
 
 		if (ret != null)
 			return ret == NOT_USED ? null : ret;
@@ -96,7 +97,7 @@ public final class ProxyHandler implements InvocationHandler {
 			/* CREATION DU CODE DANS LA FCT */
 			/********************************************************************/
 			if (method.isDefault()) {
-				ret = doCallImplement(mthInvoke);
+				ret = doCallImplementJSClass(mthInvoke);
 
 			} else if (checkMethodIsInJSContent(method)) {
 				/******************************************************************************/
@@ -125,7 +126,7 @@ public final class ProxyHandler implements InvocationHandler {
 		return ret;
 	}
 
-	private Object doCallImplement(ProxyMethodDesc mthInvoke) throws Throwable {
+	private Object doCallImplementJSClass(ProxyMethodDesc mthInvoke) throws Throwable {
 		Object ret = null;
 		if (testInLineInProgress) {
 			ret = JSClassBuilder.toJSCall("this", mthInvoke.method, mthInvoke.args); // ne creer pas la fct en
@@ -135,20 +136,20 @@ public final class ProxyHandler implements InvocationHandler {
 				/*******************************************/
 				/***** APPEL DES FUNCTION DE LA CLASSE *****/
 				/*******************************************/
-				ret = doCallMethod(mthInvoke);
+				ret = doCallImplementJSClassMethod(mthInvoke);
 
 			} else {
 				/*****************************************************
 				 * APPEL A UNE AUTRE FCT INTERNE A LA FCT EN COURS DU PROXY => AJOUTE DANS
 				 * getListHandleFuntionPrivate
 				 *****************************************************/
-				ret = doCallMethodInternal(mthInvoke);
+				ret = doCallImplementJSClassMethodInternal(mthInvoke);
 			}
 		}
 		return ret;
 	}
 
-	private Object doCallMethod(ProxyMethodDesc mthInvoke) throws Throwable {
+	private Object doCallImplementJSClassMethod(ProxyMethodDesc mthInvoke) throws Throwable {
 		mthInvoke.implcl.getListDistinctFct().put(mthInvoke.idMeth, mthInvoke.idMeth);
 		currentFctBuildByProxy = mthInvoke.idMeth;
 
@@ -179,7 +180,7 @@ public final class ProxyHandler implements InvocationHandler {
 		return ret;
 	}
 
-	private Object doCallMethodInternal(ProxyMethodDesc mthInvoke) throws Throwable {
+	private Object doCallImplementJSClassMethodInternal(ProxyMethodDesc mthInvoke) throws Throwable {
 		Object ret = null;
 
 		boolean isJSClass = JSClass.class.isAssignableFrom(mthInvoke.method.getDeclaringClass());
@@ -319,12 +320,14 @@ public final class ProxyHandler implements InvocationHandler {
 	 * @param proxy
 	 * @param method
 	 * @param args
+	 * @throws ClassNotFoundException 
 	 */
-	private Object invokeDirectMethod(ProxyMethodDesc mthInvoke) {
+	private Object doCallDirectMethod(ProxyMethodDesc mthInvoke) throws ClassNotFoundException {
 		if (mthInvoke.method.getName().equals("toString")) {
 			return getStringProxyContent();
 		}
 
+		/* gestion ILitteral */
 		if (mthInvoke.method.getName().equals("getStringJSON")) {
 			JsonObjectBuilder objLitteral = getJsonBuilder();
 			if (objLitteral!=null)
@@ -333,9 +336,10 @@ public final class ProxyHandler implements InvocationHandler {
 				return "{}";
 		}
 		
+		/* gestion TType sous class de JSClass */
 		if (mthInvoke.method.getName().equals("_getContent")) {
 			if (jsonBuilder != null)
-				return jsonBuilder.build().toString();
+				return JSONBeautifier.prettyPrintJSON(jsonBuilder.build().toString());
 
 			if (varContent == null)
 				return NOT_USED;
@@ -349,7 +353,9 @@ public final class ProxyHandler implements InvocationHandler {
 
 		if (mthInvoke.method.getName().equals("set")) {
 			Object[] param = (Object[]) mthInvoke.args[0];
-			/***** FAUT LE METTRE DIRECTEMENT dans le content ************/
+			/***** FAUT LE METTRE DIRECTEMENT dans le JSContent ************/
+			if (!testInLineInProgress)
+				doLastSourceLineInsered(false);
 			return ThreadLocalMethodDesc.get().content._set(mthInvoke.proxy, param);
 		}
 

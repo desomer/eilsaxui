@@ -6,9 +6,9 @@ package com.elisaxui.component.widget.button;
 import static com.elisaxui.component.toolkit.transition.ConstTransition.NEXT_FRAME;
 import static com.elisaxui.component.toolkit.transition.ConstTransition.SPEED_RIPPLE_EFFECT;
 
-import com.elisaxui.app.core.admin.JSActionManager;
-import com.elisaxui.app.core.admin.JSActionManager.TActionEvent;
 import com.elisaxui.component.toolkit.TKQueue;
+import com.elisaxui.component.toolkit.core.JSActionManager;
+import com.elisaxui.component.toolkit.core.JSActionManager.TActionEvent;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;

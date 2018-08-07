@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.core.admin;
+package com.elisaxui.component.toolkit.core;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 

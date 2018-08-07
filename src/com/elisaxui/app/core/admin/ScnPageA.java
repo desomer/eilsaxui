@@ -5,18 +5,17 @@ package com.elisaxui.app.core.admin;
 
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
-import com.elisaxui.app.core.admin.JSActionManager.TActionEvent;
-import com.elisaxui.app.core.admin.MntPage.MountArticle;
-import com.elisaxui.app.core.admin.MntPage.MountArticle2;
-import com.elisaxui.app.core.admin.MntPage.MountBtn;
-import com.elisaxui.app.core.admin.MntPage.MountNavBar;
-import com.elisaxui.app.core.admin.MntPage.MountPage;
-import com.elisaxui.app.core.admin.MntPage.MountTabBar;
-import com.elisaxui.app.core.admin.MntPage.TBtn;
-import com.elisaxui.app.core.admin.MntPage.TPage;
 import com.elisaxui.app.core.module.CmpModuleComponent.JSMount;
+import com.elisaxui.app.core.module.MntPage.MountArticle2;
+import com.elisaxui.app.core.module.MntPage.MountMain;
+import com.elisaxui.app.core.module.MntPage.MountPage;
+import com.elisaxui.app.core.module.MntPage.TBtn;
+import com.elisaxui.app.core.module.MntPage.TMain;
+import com.elisaxui.app.core.module.MntPage.TPage;
 import com.elisaxui.component.page.ScnPage;
-import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
+import com.elisaxui.component.toolkit.core.JSActionManager;
+import com.elisaxui.component.toolkit.core.JSActionManager.TActionEvent;
+import com.elisaxui.component.toolkit.core.JSPageAnimation;
 import com.elisaxui.component.toolkit.datadriven.IJSMountFactory;
 import com.elisaxui.component.toolkit.datadriven.JSDataBinding;
 import com.elisaxui.component.widget.button.CssRippleEffect.JSRippleEffect;
@@ -28,18 +27,22 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSWindow;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.IJSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.builder.module.annotation.xExport;
 import com.elisaxui.core.xui.xhtml.builder.module.annotation.xImport;
 import com.elisaxui.core.xui.xhtml.target.AFTER_BODY;
+import com.elisaxui.core.xui.xhtml.target.HEADER;
 import com.elisaxui.core.xui.xml.annotation.xComment;
 import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
+import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import com.elisaxui.core.xui.xml.target.CONTENT;
+import com.elisaxui.core.xui.xml.target.FILE;
 
 /**
  * @author gauth
@@ -49,40 +52,56 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
 @xComment("Scene Page A")
 public class ScnPageA extends ScnPage implements ICSSBuilder {
 
+	@xTarget(FILE.class)
+	@xResource(id = "xListPage.mjs") // insert un <Script type module> dans le body
+	public XMLElement xListPage() {
+		return xModule(ActPageA1.class, ActPageA2.class);
+	}
+
 	@xTarget(AFTER_BODY.class)
-	@xResource(id = "xControlerPageA.mjs") // insert un <Script type module> dans le body
+	@xResource(id = "xControlerPageA.mjs", async = false) // insert un <Script type module> dans le body
 	@xImport(idClass = JSMount.class)
 	@xImport(idClass = JSPageAnimation.class)
 	@xImport(idClass = JSRippleEffect.class)
 	@xImport(idClass = JSActionManager.class)
 	@xImport(idClass = JSDataBinding.class)
+	@xImport(idClass = ActPageA1.class)
+	@xImport(idClass = ActPageA2.class)
 	public XMLElement xControlerPage() {
 		return xElem(JSController.class);
 	}
 
+	
+	@xTarget(HEADER.class)
+	@xResource
+	@xPriority(1)
+	public XMLElement preLoadPageB() {
+		return xElem(xLinkPrerender("/rest/page/fr/fra/id/ScnPageB"));
+	}
 	/************************************************************************/
 
 	@xTarget(CONTENT.class) // la vue App Shell
 	public XMLElement xAppShell() {
 
-		double HEIGHT_NAV = 3.5;
-		double HEIGHT_TAB = 3.5;
+		double heightnav = 3.5;
+		double heighttab = 3.5;
 
 		vProp(ViewPageLayout.pStyleContent,
-				"min-height: 100vh; min-width: 100vw; padding-top: " + (HEIGHT_NAV + .5) + "rem; padding-bottom: "
-						+ HEIGHT_TAB + "rem");
+				"min-height: 100vh; min-width: 100vw; padding-top: " + (heightnav + .5) + "rem; padding-bottom: "
+						+ heighttab + "rem");
 
 		vProp(ViewNavBar.pStyle,
 				"background:linear-gradient(to bottom, rgb(255, 191, 97) 0%, rgb(255, 152, 0) 64%, rgb(241, 197, 133) 100%);"
-				+"box-shadow: 20px 6px 12px 9px rgba(0, 0, 0, 0.22), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2)");
-		vProp(ViewNavBar.pHeight, "height: " + HEIGHT_NAV + "rem");
+						+ "box-shadow: 20px 6px 12px 9px rgba(0, 0, 0, 0.22), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2)");
+		vProp(ViewNavBar.pHeight, "height: " + heightnav + "rem");
 
-		vProp(ViewTabBar.pHeight, "height: " + HEIGHT_TAB + "rem");
+		vProp(ViewTabBar.pHeight, "height: " + heighttab + "rem");
 		vProp(ViewTabBar.pStyle,
 				"background:linear-gradient(to bottom, rgb(255, 191, 97) 0%, rgb(255, 152, 0) 64%, rgb(241, 197, 133) 100%);"
 						+ "box-shadow: 16px -14px 20px 0 rgba(0, 0, 0, 0.21), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);");
 
 		vProp(ViewPageLayout.pWithTabBar, true);
+		
 		return xDiv(ScnPage.getcMain(), getAppShell());
 	}
 
@@ -94,6 +113,11 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 	static JSArray<TPage> arrPage;
 	static JSPageAnimation animMgr;
 	static JSNodeElement activity;
+	static JSNodeElement activityDest;
+	static TPage aPage;
+
+	static JSArray<TMain> arrMount;
+	static TMain aMount;
 
 	@xExport
 	@xCoreVersion("1")
@@ -107,75 +131,59 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 
 			let(arrPage, JSArray.newLitteral());
 
-			document().querySelector(getcMain()).appendChild(xElem(vMount(arrPage, JSString.value(MountPage.class))));
-			/******************************************************************/
+			let(aMount, newJS(TMain.class));
+			aMount.data().set(arrPage);
+			aMount.mount().set(MountPage.class);
+			let(arrMount, JSArray.newLitteral());
+			arrMount.push(aMount);
 
-			TPage page = newJS(TPage.class);
-			page.titre().set("Page1");
-			page.mountNavNar().set(MountNavBar.class);
-			page.mountTabNar().set(MountTabBar.class);
-			page.dataTabBar().set(JSArray.newLitteral());
-			page.dataNavBar().set(JSArray.newLitteral());
-			page.mountArticle().set(MountArticle.class);
-			page.contentArticle().set(JSArray.newLitteral());
+			JSNodeElement querySelector = document().querySelector(getcMain());
+			querySelector.appendChild(xElem(vMount(arrMount, JSString.value(MountMain.class))));
 
-			JSArray<TBtn> listeArticle = JSArray.newLitteral();
+			let(aPage, JSWindow.window().attr("ActPageA"));
+			arrPage.push(aPage);
+			aPage.set(JSWindow.window().attr("ActPageB"));
+			arrPage.push(aPage);
 
-			for (int i = 0; i < 100; i++) {
-				TBtn ligne1 = newJS(TBtn.class);
-				ligne1.titre().set("Ligne" + i);
-				listeArticle.push(ligne1);
-			}
-
-			arrPage.push(page);
-			arrPage.at(0).contentArticle().push(listeArticle);
-
-			TBtn btn = newJS(TBtn.class);
-			btn.titre().set("schedule");
-			btn.action().set("A");
-			btn.mountBtn().set(MountBtn.class);
-			arrPage.at(0).dataTabBar().push(btn);
-
-			btn = newJS(TBtn.class);
-			btn.titre().set("today");
-			btn.action().set("B");
-			btn.mountBtn().set(MountBtn.class);
-			arrPage.at(0).dataTabBar().push(btn);
-
-			btn = newJS(TBtn.class);
-			btn.titre().set("apps");
-			btn.action().set("C");
-			btn.mountBtn().set(MountBtn.class);
-			arrPage.at(0).dataTabBar().push(btn);
-
-			btn = newJS(TBtn.class);
-			btn.titre().set("add_circle_outline");
-			btn.action().set("D");
-			btn.mountBtn().set(MountBtn.class);
-			arrPage.at(0).dataNavBar().push(btn);
-
-			btn = newJS(TBtn.class);
-			btn.titre().set("more_vert");
-			btn.action().set("E");
-			btn.mountBtn().set(MountBtn.class);
-			arrPage.at(0).dataNavBar().push(btn);
-
-			consoleDebug(txt("jsonpage="), arrPage);
+			consoleDebug(txt("arrMount ="), arrMount);
 
 			/**************************************************************************************/
 			let(animMgr, newJS(JSPageAnimation.class));
 
 			__("fastdom.mutate(", fct(() -> {
-				let(activity, document().querySelector("#Page1"));
-				document().querySelector(getcMain()).children().at(0).remove();
-				animMgr.doActivityActive(activity);
+				__("fastdom.mutate(", fct(() -> {
+					let(activity, document().querySelector("#Page1"));
+					// TODO a faire marcher querySelector.children().at(0).remove();
+					document().querySelector(getcMain()).children().at(0).remove();
+					animMgr.doActivityActive(activity);
+					__("window.datadrivensync=false");
+				}), ")");
 			}), ")");
 
-			doChangeContent(arrPage);
 			doMoveOnAction();
 
 			actionManager.addAction(JSString.value("A"), _this(), fct(() -> {
-				consoleDebug(txt("cvcbc"));
+				doChangeContent(arrPage);
+			}));
+			
+			actionManager.addAction(JSString.value("B"), _this(), fct(() -> {
+				__("location.assign('/rest/page/fr/fra/id/ScnPageB')");
+			}));
+			
+			actionManager.addAction(JSString.value("C"), _this(), fct(() -> {
+				let(activity, document().querySelector("#Page1"));
+				let(activityDest, document().querySelector("#Page2"));
+				animMgr.doActivityNoDisplay(activity);
+				animMgr.doActivityActive(activityDest);
+				animMgr.doActivityInactive(activity);
+			}));
+			
+			actionManager.addAction(JSString.value("D"), _this(), fct(() -> {
+				let(activity, document().querySelector("#Page2"));
+				let(activityDest, document().querySelector("#Page1"));
+				animMgr.doActivityNoDisplay(activity);
+				animMgr.doActivityActive(activityDest);
+				animMgr.doActivityInactive(activity);
 			}));
 
 		}
@@ -183,21 +191,18 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 		@xStatic()
 		default void doChangeContent(JSArray<TPage> arrPage) {
 			arrPage.setArrayType(TPage.class);
-			setTimeout(() -> {
-				consoleDebug(txt("change article"));
-				arrPage.at(0).contentArticle().pop(); // suppresion de l'article
-				arrPage.at(0).mountArticle().set(MountArticle2.class); // change le template
-				arrPage.at(0).contentArticle().push(JSArray.newLitteral()); // ajout d'un
+			consoleDebug(txt("change article"));
+			arrPage.at(0).contentArticle().pop(); // suppresion de l'article
+			arrPage.at(0).mountArticle().set(MountArticle2.class); // change le template
+			arrPage.at(0).contentArticle().push(JSArray.newLitteral()); // nouvelle article
 
-				let(list, arrPage.at(0).contentArticle().at(0));
+			let(list, arrPage.at(0).contentArticle().at(0));
 
-				_forIdx(idx, 0, 10)._do(() -> {
-					TBtn ligne1 = newJS(TBtn.class);
-					ligne1.titre().set(calc(txt("Ligne"), "+", idx));
-					list.push(ligne1);
-				});
-
-			}, 5000);
+			_forIdx(idx, 0, 10)._do(() -> {
+				TBtn ligne1 = newJS(TBtn.class);
+				ligne1.titre().set(calc(txt("Ligne"), "+", "Math.floor(Math.random() * 11)"));
+				list.push(ligne1);
+			});
 		}
 
 		@xStatic()

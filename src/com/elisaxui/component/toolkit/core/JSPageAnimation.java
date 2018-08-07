@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.core.admin;
+package com.elisaxui.component.toolkit.core;
 
 import static com.elisaxui.component.toolkit.transition.CssTransition.active;
 import static com.elisaxui.component.toolkit.transition.CssTransition.cFixedElement;
@@ -70,6 +70,18 @@ public interface JSPageAnimation extends JSClass {
 		classes.remove(inactive);
 	}
 
+	default void doActivityInactive(JSNodeElement activity) {
+		let(classes, activity.classList());
+		classes.add(inactive);
+		classes.remove(active);
+	}
+
+	/* peux etre inactif mais encore visible durant la transistion */
+	default void doActivityNoDisplay(JSNodeElement activity) {
+		let(classes, activity.classList());
+		classes.add(cStateNoDisplay);
+	}
+
 	/***************************************************************************/
 
 	default void doInitScrollTo(JSNodeElement activity) {
@@ -120,7 +132,7 @@ public interface JSPageAnimation extends JSClass {
 				// cas des node en bas de page
 				aElemNode.style().attr(BOTTOM).set(txt("0px"));
 			})._else(() -> {
-				// cas des autres node fixed (ex floatingAction)			
+				// cas des autres node fixed (ex floatingAction)
 				let(posTop, aElemNode.getBoundingClientRect().attr("y"));
 
 				_if(posTop, ">0")

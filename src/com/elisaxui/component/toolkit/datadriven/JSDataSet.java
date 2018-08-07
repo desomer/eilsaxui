@@ -4,6 +4,7 @@ import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSCallBack;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSObject;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSBool;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
@@ -65,7 +66,7 @@ public interface JSDataSet extends JSClass {
 							});
 				}));
 		changeHandler.attr("apply").set(fct(target, thisArg, argumentsList,
-				() -> _return(thisArg.attrByString(target).apply(_this(), argumentsList))));
+				() -> _return(cast(JSCallBack.class, thisArg.attrByString(target)).apply(_this(), argumentsList))));
 		changeHandler.attr("deleteProperty").set(fct(target, property,
 				() -> {
 					consoleDebug(txt("Deleted %s"), property);

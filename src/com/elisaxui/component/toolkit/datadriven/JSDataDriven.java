@@ -49,6 +49,10 @@ public interface JSDataDriven extends JSClass {
 				__("dom = dom.call(parent, parent)");
 			});
 			
+			_if("! dom instanceof Node").then(() -> {
+				consoleDebug(txt("PB JSDataDriven.doTemplateDataDriven"));
+			});
+			
 			ctx.row().attrByString(JSDataSet.ATTR_DOM_LINK).set(dom);
 
 			_for("var ", key ," in ", ctx.row())._do(()->{

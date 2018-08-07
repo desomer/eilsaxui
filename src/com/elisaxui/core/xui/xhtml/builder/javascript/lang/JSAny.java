@@ -178,7 +178,7 @@ public class JSAny implements JSElement {
 			else
 				arr.add(content);
 
-			arr.add("." + mth + "(");
+			arr.add((mth.length()==0?"":("."+ mth))  + "(");
 			addContent(arr, objs);
 			arr.add(")");
 
@@ -189,9 +189,13 @@ public class JSAny implements JSElement {
 		}
 	}
 			
-	
-	public final <E extends JSAny> E apply(Object... classes) {
-		return callMth("apply", classes);
+	/**
+	 * fct(param)     mode parens syntax 
+	 * @param param
+	 * @return
+	 */
+	public final <E extends JSAny> E invoke(Object... param) {
+		return callMth("", param);
 	}
 	
 	/***************************************************************************************/

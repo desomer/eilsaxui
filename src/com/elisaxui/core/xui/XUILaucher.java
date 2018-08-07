@@ -43,10 +43,10 @@ import com.elisaxui.core.xui.app.XHTMLAppScanner;
 public class XUILaucher {
 
 	static boolean http2 = true;
-	
+
 	public static String PATH_ASSET = "/asset";
 	public static String PATH_REST = "/rest";
-	
+
 	public static void main(String[] args) throws Exception {
 
 		JSExecutorHelper.initGlobal();
@@ -76,7 +76,7 @@ public class XUILaucher {
 		ServletContextHandler restHandler = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
 		restHandler.setContextPath("/rest");
 		initJersey(restHandler);
-		
+
 		ServletContextHandler restHandler2 = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
 		restHandler2.setContextPath(PATH_ASSET);
 		initJersey(restHandler2);
@@ -107,13 +107,15 @@ public class XUILaucher {
 		movedHandlerToHttps.setVirtualHosts(new String[] { "@unsecured" }); // uniquement en http
 
 		HandlerCollection myhandlers2 = new HandlerCollection(true);
-	    myhandlers2.addHandler(movedHandlerToHttps); // redirection to https
+		myhandlers2.addHandler(movedHandlerToHttps); // redirection to https
 		myhandlers2.addHandler(rewrite);
 
 		/******************************** DEBUG **************************************/
-		Log.getLogger(SslContextFactory.class).setDebugEnabled(true);
-		Log.getLogger(SslConnectionFactory.class).setDebugEnabled(true);
-		
+		if (false) {
+			Log.getLogger(SslContextFactory.class).setDebugEnabled(true);
+			Log.getLogger(SslConnectionFactory.class).setDebugEnabled(true);
+		}
+
 		/******************************** HTTPS **************************************/
 		HttpConfiguration configHttps = getHttpsConfiguration();
 
@@ -122,8 +124,8 @@ public class XUILaucher {
 		sslContextFactory.setKeyStorePassword("123456");
 		sslContextFactory.setKeyManagerPassword("123456");
 
-//		Security.addProvider(new OpenSSLProvider());
-//		sslContextFactory.setProvider("Conscrypt");
+		// Security.addProvider(new OpenSSLProvider());
+		// sslContextFactory.setProvider("Conscrypt");
 
 		if (http2) {
 			sslContextFactory.setCipherComparator(HTTP2Cipher.COMPARATOR); // HTTP2
@@ -131,9 +133,9 @@ public class XUILaucher {
 		}
 
 		HttpConnectionFactory https1 = new HttpConnectionFactory(configHttps);
-		SslConnectionFactory ssl =  null;
+		SslConnectionFactory ssl = null;
 		ServerConnector httpsConnector = null;
-		
+
 		if (http2) {
 			HTTP2ServerConnectionFactory https2 = new HTTP2ServerConnectionFactory(configHttps);
 			ALPNServerConnectionFactory alpn = new ALPNServerConnectionFactory();
@@ -141,18 +143,15 @@ public class XUILaucher {
 			ssl = new SslConnectionFactory(sslContextFactory, alpn.getProtocol());
 			httpsConnector = new ServerConnector(server,
 					ssl,
-					 alpn,
-					 https2,
+					alpn,
+					https2,
 					https1);
-		}
-		else
-		{
+		} else {
 			ssl = new SslConnectionFactory(sslContextFactory, https1.getProtocol());
 			httpsConnector = new ServerConnector(server,
 					ssl,
 					https1);
 		}
-
 
 		httpsConnector.setName("secured"); // named connector
 		httpsConnector.setPort(9998);
@@ -173,7 +172,7 @@ public class XUILaucher {
 
 		server.setConnectors(new Connector[] { httpconnector, httpsConnector }); // les connectors
 		server.setHandler(myhandlers2); // les handlers
-		
+
 		/*******************************************************************/
 
 		XHTMLAppScanner.getMapXHTMLPart(XUIFactory.changeMgr);
@@ -294,12 +293,12 @@ public class XUILaucher {
 		config.setRequestHeaderSize(8192);
 		config.setResponseHeaderSize(8192);
 		config.setSendXPoweredBy(false);
-	    config.setSendServerVersion(false);
-        SecureRequestCustomizer src = new SecureRequestCustomizer();
-        src.setStsMaxAge(2000);
-        src.setStsIncludeSubDomains(true);
-        config.addCustomizer(src);
-        
+		config.setSendServerVersion(false);
+		SecureRequestCustomizer src = new SecureRequestCustomizer();
+		src.setStsMaxAge(2000);
+		src.setStsIncludeSubDomains(true);
+		config.addCustomizer(src);
+
 		if (http2)
 			config.addCustomizer(new ForwardedRequestCustomizer());
 		return config;

@@ -40,7 +40,7 @@ public class ViewInputText extends XHTMLPart implements ICSSBuilder {
 	@xResource(id="input.css")
 	public XMLElement xStylePart() {
 
-		return xListNode(
+		return xElem(
 				xStyle(sMedia("all"), () -> {
 					sOn(sSel("*"), () -> css("box-sizing:border-box;"));
 					sOn(sSel(group), () -> {

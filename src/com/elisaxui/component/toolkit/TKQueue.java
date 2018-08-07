@@ -19,6 +19,8 @@ import com.elisaxui.core.xui.xml.target.AFTER_CONTENT;
  * @author Bureau
  *   https://github.com/krasimir/queue
  *   
+ *   
+ *   TODO a supprimer : changer par des promises de fin d'animation
  */
 @xComment("TKQueue")
 public class TKQueue extends XHTMLPart implements IResourceLoader {

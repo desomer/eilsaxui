@@ -9,6 +9,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
  * @author Bureau
  *
  */
+@Deprecated
 public interface TKCoreConfig extends JSClass {
 
 	public static final boolean debugDoEvent = true;

@@ -3,8 +3,7 @@
  */
 package com.elisaxui.app.core.module;
 
-import com.elisaxui.app.core.admin.JSActionManager;
-import com.elisaxui.app.core.admin.MntPage;
+import com.elisaxui.component.toolkit.core.JSActionManager;
 import com.elisaxui.component.toolkit.datadriven.JSDataBinding;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.widget.button.CssRippleEffect.JSRippleEffect;

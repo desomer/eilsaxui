@@ -36,7 +36,7 @@ public class ViewCheckRadio extends XHTMLPart implements ICSSBuilder {
 	@xResource(id="input.css")
 	public XMLElement xStylePart() {
 
-		return xListNode(
+		return xElem(
 				xStyle(sMedia("all"), () -> {
 					sOn(sSel(checkgroup), () -> {
 						css("margin-top: 15px;");

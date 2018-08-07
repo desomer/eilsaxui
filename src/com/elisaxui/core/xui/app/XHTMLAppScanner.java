@@ -45,6 +45,8 @@ public class XHTMLAppScanner {
 	// TODO mettre en cache
 	public static synchronized XHTMLChangeManager getMapXHTMLPart(XHTMLChangeManager changeInfo) {
 
+		CoreLogger.getLogger(1).info("************ INJECTION DEPENDANCE JS");
+		
 		List<Class<? extends XHTMLPart>> listXHTMLPart = new ArrayList<>(100);
 		List<Class<? extends JSClass>> listJSClass = new ArrayList<>(100);
 		List<Class<? extends JSAny>> listJSClassMethod = new ArrayList<>(100); /**TODO a retirer */
@@ -151,6 +153,8 @@ public class XHTMLAppScanner {
 			System.out.println(
 					"[XHTMLAppBuilder]********************************************* END SCAN JSClass ****************************************");
 
+		
+		CoreLogger.getLogger(1).info("************** FIN INJECTION DEPENDANCE JS ");
 		return changeInfo;
 	}
 

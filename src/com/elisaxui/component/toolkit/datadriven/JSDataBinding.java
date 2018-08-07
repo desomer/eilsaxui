@@ -18,7 +18,6 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeInputElemen
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSDomBuilder;
-import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.module.annotation.xExport;
 import com.elisaxui.core.xui.xml.annotation.xCoreVersion;

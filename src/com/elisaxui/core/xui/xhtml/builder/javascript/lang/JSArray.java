@@ -87,6 +87,7 @@ public class JSArray<E> extends JSAny implements ILitteral, IJSClassInterface {
 		JsonObjectBuilder objLitteral = null;
 
 		if (value instanceof Proxy) {
+			// recupere le type avec le premier push
 			ProxyHandler inv = (ProxyHandler) Proxy.getInvocationHandler(value);
 			if (inv.getJsonBuilder() != null)
 				objLitteral = inv.getJsonBuilder();

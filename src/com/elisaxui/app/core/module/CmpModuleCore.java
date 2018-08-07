@@ -3,13 +3,13 @@
  */
 package com.elisaxui.app.core.module;
 
-import com.elisaxui.app.core.admin.JSActionManager;
-import com.elisaxui.app.core.admin.JSPageAnimation;
-import com.elisaxui.app.core.admin.JSRequestAnimationFrame;
-import com.elisaxui.app.core.admin.JSTouchManager;
 import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.component.toolkit.TKQueue;
 import com.elisaxui.component.toolkit.com.TKCom;
+import com.elisaxui.component.toolkit.core.JSActionManager;
+import com.elisaxui.component.toolkit.core.JSPageAnimation;
+import com.elisaxui.component.toolkit.core.JSRequestAnimationFrame;
+import com.elisaxui.component.toolkit.core.JSTouchManager;
 import com.elisaxui.component.toolkit.datadriven.JSDataBinding;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;

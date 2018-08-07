@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.app.core.admin;
+package com.elisaxui.component.toolkit.core;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
@@ -27,13 +27,14 @@ public interface JSRequestAnimationFrame extends JSClass {
 		let(next, 0);
 
 		let(tick, fct(now, () -> {
-			_if(now.substact(next), ">1000").then(() -> {
+			_if(now.substact(next), ">5000").then(() -> {
 				next.set(now);
-			//	consoleDebug("'qf'", now);
+				consoleDebug("'qf'", now);
 			});
 			JSWindow.window().requestAnimationFrame(tick);
 		}));
 
+		// lance le deamon
 		JSWindow.window().requestAnimationFrame(tick);
 	}
 

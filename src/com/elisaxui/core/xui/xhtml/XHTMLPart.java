@@ -1,6 +1,6 @@
 package com.elisaxui.core.xui.xhtml;
 
-import com.elisaxui.app.core.admin.JSActionManager;
+import com.elisaxui.component.toolkit.core.JSActionManager;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
@@ -119,6 +119,10 @@ public abstract class XHTMLPart extends XMLPart implements IXHTMLBuilder {
 
 	public static final XMLElement xLinkModulePreload(String url) {
 		return xNode("link", xAttr("rel", xTxt("modulepreload")), xAttr("href", xTxt(url)));
+	}
+	
+	public static final XMLElement xLinkPrerender(String url) {
+		return xNode("link", xAttr("rel", xTxt("prerender")), xAttr("href", xTxt(url)));
 	}
 	
 	public static final XMLElement xLinkManifest(String url) {

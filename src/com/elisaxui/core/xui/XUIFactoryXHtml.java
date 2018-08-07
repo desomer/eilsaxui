@@ -135,7 +135,7 @@ public class XUIFactoryXHtml extends XUIFactory {
 						CoreLogger.getLogger(2).log(Level.SEVERE, "PB BABEL",  e );
 					}
 			    
-			    name=name.substring(0, name.lastIndexOf('.'));  // nom sans extension
+//			    name=name.substring(0, name.lastIndexOf('.'));  // nom sans extension
 			    
 			    
 				CacheManager cache = new CacheManager(xmlFile.getID(), ""+requestConfig.isEs5(), xmlFile.getExtension(), true);
@@ -200,21 +200,21 @@ public class XUIFactoryXHtml extends XUIFactory {
 	@Path("/js/{name}.js")
 	@Produces("application/javascript")
 	public Response getJS(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("name") String name) {
-		return doJS(headers, name);
+		return doJS(headers, name+".js");
 	}
 	
 	@GET
 	@Path("/mjs/{name}.mjs")
 	@Produces("application/javascript")
 	public Response getMJS(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("name") String name) {
-		return doJS(headers, name);
+		return doJS(headers, name+".mjs");
 	}
 	
 	@GET
 	@Path("/mjs/{name}.js")
 	@Produces("application/javascript")
 	public Response getJS2(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("name") String name) {
-		return doJS(headers, name);
+		return doJS(headers, name+".js");
 	}
 
 	/**
@@ -240,6 +240,10 @@ public class XUIFactoryXHtml extends XUIFactory {
 				
 				part.zzDoContent();
 				rootContent = part.getListElementFromTarget(CONTENT.class);
+				
+				for (XMLElement elem : rootContent) {
+					elem.toXML(new XMLBuilder("page", buf, null));
+				}
 			}
 			else
 			{
@@ -248,13 +252,13 @@ public class XUIFactoryXHtml extends XUIFactory {
 //				rootContent.add(elem);
 				System.err.println("PB GET JS "+ name);
 			}
-			
-			for (XMLElement elem : rootContent) {
-				elem.toXML(new XMLBuilder("page", buf, null));
-			}
-			
+						
 			reponseInCache = buf.toString();
 			 CacheManager.resourceDB.put(name, reponseInCache);
+		}
+		else
+		{
+			CoreLogger.getLogger(1).info(() -> "****** get cache " + name);
 		}
 		
 		List<String> etag = headers.getRequestHeader(IF_NONE_MATCH);
@@ -283,6 +287,8 @@ public class XUIFactoryXHtml extends XUIFactory {
 	@Produces("text/css")
 	public Response getCSS(@Context HttpHeaders headers, @Context UriInfo uri, @PathParam("name") String name) {
 		
+		name=name+".css";
+		
 		String reponseInCache=null;
 		if (enableCache)
 			reponseInCache = CacheManager.resourceDB.get(name);
@@ -290,8 +296,14 @@ public class XUIFactoryXHtml extends XUIFactory {
 		if (reponseInCache==null) {
 			StringBuilder buf = new StringBuilder(1000);
 			
+			System.err.println("PB GET CSS "+ name);
+			
 			reponseInCache = buf.toString();
 			CacheManager.resourceDB.put(name, reponseInCache);
+		}
+		else {
+			String n = name;
+			CoreLogger.getLogger(1).info(() -> "****** get cache " + n);
 		}
 		
 		List<String> etag = headers.getRequestHeader(IF_NONE_MATCH);

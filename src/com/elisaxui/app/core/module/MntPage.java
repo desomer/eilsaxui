@@ -1,16 +1,16 @@
 /**
  * 
  */
-package com.elisaxui.app.core.admin;
+package com.elisaxui.app.core.module;
 
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
-import com.elisaxui.component.toolkit.datadriven.IJSMountFactory;
 import com.elisaxui.component.widget.button.CssRippleEffect;
 import com.elisaxui.component.widget.button.ViewBtnBurger;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
 import com.elisaxui.component.widget.navbar.ViewNavBar;
 import com.elisaxui.component.widget.tabbar.ViewTabBar;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
+import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xMount;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
@@ -30,26 +30,36 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  */
 public class MntPage extends XHTMLPart implements IJSDataDriven {
 
+	static TMain aMainMount;
 	static JSArray<TPage> listPage;
 	static TPage aPage;
 	static TBtn aBtn;
 	static JSArray<JSAny> listArticle;
 
 	@xTarget(HEADER.class)
-	@xResource() 
+	@xResource()
 	@xPriority(4)
 	public XMLElement xImport() {
 		return xElem(
 				xLinkCssPreload("https://fonts.googleapis.com/icon?family=Material+Icons"));
 	}
-	
+
 	@xTarget(AFTER_BODY.class)
-	@xResource() 
-	public XMLElement xImport2() {
+	@xResource()
+	public XMLElement xImportAfter() {
 		return xElem(
 				xLinkCssPreload("https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.8.1/hamburgers.min.css"));
 	}
-	
+
+	public static class MountMain extends MountFactory {
+	}
+
+	@xMount(MountMain.class)
+	public XMLElement createMain(JSArray<TMain> arrMount) {
+		return xElem(
+				vFor(arrMount, aMainMount, xDiv(vMount(aMainMount.data(), aMainMount.mount()))));
+	}
+
 	public static class MountPage extends MountFactory {
 	}
 
@@ -58,7 +68,7 @@ public class MntPage extends XHTMLPart implements IJSDataDriven {
 		return xElem(
 				vFor(arrPage, aPage, xElem(new ViewPageLayout()
 						.vProp(ViewPageLayout.pIsNoVisible, true)
-						.vProp(ViewPageLayout.pWithTabBar, aPage.mountTabNar().notEqualsJS(null))
+						.vProp(ViewPageLayout.pWithTabBar, true)
 						.vProp(ViewPageLayout.pIdPage, aPage.titre())
 						.vProp(ViewPageLayout.pArticle, xDiv(
 								vFor(aPage.contentArticle(), listArticle, xDiv(
@@ -123,11 +133,33 @@ public class MntPage extends XHTMLPart implements IJSDataDriven {
 				vFor(aPage.contentArticle().at(0), aBtn,
 						xH1(aBtn.titre())));
 	}
-	
-	
+
 	/********************************************************/
 	// les dto
 	/********************************************************/
+	public interface TMain extends JSType {
+		JSString mount();
+
+		JSAny data();
+	}
+
+	public interface TPage extends JSType {
+
+		JSString titre();
+
+		JSString mountTabNar();
+
+		JSArray<TBtn> dataTabBar();
+
+		JSString mountNavNar();
+
+		JSArray<TBtn> dataNavBar();
+
+		JSString mountArticle();
+
+		JSArray<JSElement> contentArticle();
+	}
+
 	public interface TBtn extends JSType {
 		JSString titre();
 
@@ -136,16 +168,4 @@ public class MntPage extends XHTMLPart implements IJSDataDriven {
 		JSString mountBtn();
 	}
 
-	public interface TPage extends JSType {
-		JSString titre();
-
-		JSString mountTabNar();
-		JSArray<TBtn> dataTabBar();
-
-		JSString mountNavNar();
-		JSArray<TBtn> dataNavBar();
-
-		JSString mountArticle();
-		JSArray<JSAny> contentArticle();
-	}
 }

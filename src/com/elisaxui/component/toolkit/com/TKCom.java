@@ -12,24 +12,29 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSObject;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.es6.JSPromise;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
+import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.module.annotation.xExport;
+import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
 
 /**
  * @author gauth
  *
  */
 @xExport
+@xCoreVersion("1")
 public interface TKCom extends JSClass {
+	
+	JSon jsonUrl = JSClass.declareType();
+	JSObject xhr = JSClass.declareType();
 	
 	@xStatic
 	default JSPromise requestUrl(JSString url)
 	{
-		JSObject obj = let(JSObject.class,  "obj",  var("{'url': ",url,"}") );
+		let(jsonUrl,  var("{'url': ",url,"}") );
 
 		JSFunction fct = fct(var("resolve"), var("reject"), ()->{
-			
-			JSObject xhr = let(JSObject.class, "xhr", "new XMLHttpRequest()");
-			xhr.callMth("open", var(obj,".method || 'GET',",obj,".url"));
+			let(xhr, "new XMLHttpRequest()");
+			xhr.callMth("open", var(jsonUrl,".method || 'GET',", jsonUrl ,".url"));
 			xhr.attr("onload").set(fct(()->{
 				_if(xhr.attr("status"), ">=200 &&", xhr.attr("status") ,"<300").then(() -> {
 					__("resolve(JSON.parse(", xhr.attr("response"), "))");
@@ -38,11 +43,11 @@ public interface TKCom extends JSClass {
 				});
 			}));
 			
-			xhr.callMth("send", obj.attr("body"));
+			xhr.callMth("send", jsonUrl.attr("body"));
 			
 		});
 		
-		return cast(JSPromise.class, var("new Promise(",fct,")"));
+		return cast(JSPromise.class, var("new Promise(", fct ,")"));
 	}
 	
 	@xStatic
@@ -60,6 +65,16 @@ public interface TKCom extends JSClass {
 		return cast(JSPromise.class, var("fetch(",request,")") );
 	}
 	
+	
+	interface TCallURIInfo extends JSType
+	{
+		JSString url();
+		JSString method();
+		JSString body();
+		JSString mode();
+		JSString redirect();
+		JSon header();
+	}
 
 	/*
 	 

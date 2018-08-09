@@ -26,7 +26,7 @@ public class JSNodeElement extends JSAny implements IJSClassInterface {
 		if (element.length == 1 && element[0] instanceof XMLElement) {
 			XMLElement e = (XMLElement) element[0];
 
-			if (e.getName() == null) { // un elem xml sans nom de noeud
+			if (e.getName() == null) { // un elem xml sans nom de noeud  xElem
 				// ajoute un tableau d'element xElem(vFor(....
 				Object f = new JSFunction()._return(JSDomBuilder.MTH_ADD_PART + "([", e.getListInner(), "], this)");
 				Object self = JSContent.cast(JSAny.class, this.toString());

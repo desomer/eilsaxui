@@ -12,6 +12,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 public interface JSDataSet extends JSClass {
 
 	public static final String ATTR_DOM_LINK = "_dom_";
+	public static final String ATTR_MOUNT_ACTION = "mountAction";
 
 	JSArray<Object> data();
 
@@ -104,7 +105,11 @@ public interface JSDataSet extends JSClass {
 			});
 
 			_var("row", "{ ope:'enter', row:",d.at(idx),", idx:",idx," }");
-			__("fastdom.mutate(function() {that.callBackChange.publish(row); })");
+		//	_if("window.datadrivensync").then(() -> {
+		//		__("that.callBackChange.publish(row)");
+		//	})._else(()->{
+				__("fastdom.mutate(function() {that.callBackChange.publish(row); })");
+		//	});
 		});
 		
 		// observe le push du tableau

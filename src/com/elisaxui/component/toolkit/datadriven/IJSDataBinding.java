@@ -26,7 +26,7 @@ public interface IJSDataBinding extends JSClass {
 
 	/**
 	 *   xDiv(vChangeable(item.value()))
-	 * 
+	 *      different de :  xDiv(item.value())    
 	 * @param value
 	 * @return
 	 */
@@ -85,7 +85,9 @@ public interface IJSDataBinding extends JSClass {
 	/**
 	 * donne au dom l'attribut json a changer
 	 * 
-	 *   vIfOnce(vBindable(item, item.singleFile()), xAttr("checked"))
+	 *   xInput(xAttr("value", vBindable(item, item.value()))))
+	 * 
+	 *   xInput(vIfOnce(vBindable(item, item.singleFile()), xAttr("checked")))
 	 *   
 	 * @param row
 	 * @param value

@@ -55,6 +55,7 @@ public interface JSDataDriven extends JSClass {
 			
 			ctx.row().attrByString(JSDataSet.ATTR_DOM_LINK).set(dom);
 
+			// affecte le domLink sur les sous object (one to one)
 			_for("var ", key ," in ", ctx.row())._do(()->{
 				_if(ctx.row().hasOwnProperty(key)).then(() -> {
 					JSon attr = let("attr", ctx.row().attrByString(key));
@@ -64,7 +65,12 @@ public interface JSDataDriven extends JSClass {
 
 				});
 			});
+			
 			parent.appendChild( dom );
+			
+			_if(ctx.row().attrByString(JSDataSet.ATTR_MOUNT_ACTION).notEqualsJS(null)).then(() -> {
+				consoleDebug(txt("JSDataSet.ATTR_MOUNT_ACTION"), ctx.row().attrByString(JSDataSet.ATTR_MOUNT_ACTION));
+			});
 		}));
 		
 		aDataDriven.onExit(funct(ctx).zzSetComment("onExit").__(()->{

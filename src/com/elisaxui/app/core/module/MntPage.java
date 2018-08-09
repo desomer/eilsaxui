@@ -146,6 +146,7 @@ public class MntPage extends XHTMLPart implements IJSDataDriven {
 	public interface TPage extends JSType {
 
 		JSString titre();
+		JSString mountAction();
 
 		JSString mountTabNar();
 

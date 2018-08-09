@@ -151,13 +151,13 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 			let(animMgr, newJS(JSPageAnimation.class));
 
 			__("fastdom.mutate(", fct(() -> {
-				__("fastdom.mutate(", fct(() -> {
+			//	__("fastdom.mutate(", fct(() -> {
 					let(activity, document().querySelector("#Page1"));
 					// TODO a faire marcher querySelector.children().at(0).remove();
 					document().querySelector(getcMain()).children().at(0).remove();
-					animMgr.doActivityActive(activity);
+				//	animMgr.doActivityActive(activity);
 					__("window.datadrivensync=false");
-				}), ")");
+			//	}), ")");
 			}), ")");
 
 			doMoveOnAction();

@@ -42,7 +42,6 @@ public interface JSDataBinding extends JSClass {
 		});
 		
 		return null;
-		//return cast(JSAny.class, var("window.xMount[",mountId,"](",aRow,")"));
 	}
 	
 	@xStatic

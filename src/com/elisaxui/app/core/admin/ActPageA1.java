@@ -10,9 +10,11 @@ import com.elisaxui.app.core.module.MntPage.MountTabBar;
 import com.elisaxui.app.core.module.MntPage.TBtn;
 import com.elisaxui.app.core.module.MntPage.TPage;
 import com.elisaxui.component.toolkit.datadriven.IJSMountFactory;
+import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSWindow;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.IJSNodeTemplate;
@@ -37,6 +39,7 @@ public interface ActPageA1 extends JSClass , IJSNodeTemplate, IJSMountFactory {
 		page.mountNavNar().set(MountNavBar.class);
 		page.mountTabNar().set(MountTabBar.class);
 		page.mountArticle().set(MountArticle.class);
+		page.mountAction().set("ACTMOUNT");
 		
 		TBtn btn = null;
 		

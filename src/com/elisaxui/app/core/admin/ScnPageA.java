@@ -55,7 +55,7 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 	@xTarget(FILE.class)
 	@xResource(id = "xListPage.mjs") // insert un <Script type module> dans le body
 	public XMLElement xListPage() {
-		return xModule(ActPageA1.class, ActPageA2.class);
+		return xModule(ActPageA1.class, ActPageA2.class, ActPageA3.class);
 	}
 
 	@xTarget(AFTER_BODY.class)
@@ -144,21 +144,13 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 			arrPage.push(aPage);
 			aPage.set(JSWindow.window().attr("ActPageB"));
 			arrPage.push(aPage);
+			aPage.set(JSWindow.window().attr("ActPageC"));
+			arrPage.push(aPage);
 
 			consoleDebug(txt("arrMount ="), arrMount);
 
 			/**************************************************************************************/
 			let(animMgr, newJS(JSPageAnimation.class));
-
-			__("fastdom.mutate(", fct(() -> {
-			//	__("fastdom.mutate(", fct(() -> {
-					let(activity, document().querySelector("#Page1"));
-					// TODO a faire marcher querySelector.children().at(0).remove();
-					document().querySelector(getcMain()).children().at(0).remove();
-				//	animMgr.doActivityActive(activity);
-					__("window.datadrivensync=false");
-			//	}), ")");
-			}), ")");
 
 			doMoveOnAction();
 
@@ -178,6 +170,14 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 				animMgr.doActivityInactive(activity);
 			}));
 			
+			actionManager.addAction(JSString.value("C2"), _this(), fct(() -> {
+				let(activity, document().querySelector("#Page2"));
+				let(activityDest, document().querySelector("#Page3"));
+				animMgr.doActivityNoDisplay(activity);
+				animMgr.doActivityActive(activityDest);
+				animMgr.doActivityInactive(activity);
+			}));
+			
 			actionManager.addAction(JSString.value("D"), _this(), fct(() -> {
 				let(activity, document().querySelector("#Page2"));
 				let(activityDest, document().querySelector("#Page1"));
@@ -185,7 +185,16 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 				animMgr.doActivityActive(activityDest);
 				animMgr.doActivityInactive(activity);
 			}));
-
+			
+			actionManager.addAction(JSString.value("ACTMOUNT"), _this(), fct(() -> {
+				let(activity, document().querySelector("#Page1"));
+				// TODO a faire marcher querySelector.children().at(0).remove();
+				document().querySelector(getcMain()).children().at(0).remove();
+				animMgr.doActivityActive(activity);
+				__("window.datadrivensync=false");
+			}));
+			
+			
 		}
 
 		@xStatic()

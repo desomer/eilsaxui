@@ -3,6 +3,7 @@
  */
 package com.elisaxui.app.core.module;
 
+import com.elisaxui.app.core.module.MntInput.TInput;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
 import com.elisaxui.component.widget.button.CssRippleEffect;
 import com.elisaxui.component.widget.button.ViewBtnBurger;
@@ -35,7 +36,8 @@ public class MntPage extends XHTMLPart implements IJSDataDriven {
 	static TPage aPage;
 	static TBtn aBtn;
 	static JSArray<JSAny> listArticle;
-
+	static TInput aInput;
+	
 	@xTarget(HEADER.class)
 	@xResource()
 	@xPriority(4)
@@ -114,6 +116,16 @@ public class MntPage extends XHTMLPart implements IJSDataDriven {
 		return xSpan(btn.titre());
 	}
 
+	
+	public static class MountCard extends MountFactory {
+	}
+
+	@xMount(MountCard.class)
+	public XMLElement createCard(TPage aPage) {
+		return xElem(
+				vFor(aPage.contentArticle().at(0), aInput, xDiv(vMount(aInput, aInput.implement()))));
+	}
+	
 	public static class MountArticle extends MountFactory {
 	}
 
@@ -146,6 +158,7 @@ public class MntPage extends XHTMLPart implements IJSDataDriven {
 	public interface TPage extends JSType {
 
 		JSString titre();
+		
 		JSString mountAction();
 
 		JSString mountTabNar();

@@ -1,6 +1,7 @@
 package com.elisaxui.component.toolkit.datadriven;
 
 import com.elisaxui.component.toolkit.TKPubSub;
+import com.elisaxui.component.toolkit.core.JSActionManager;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
@@ -9,6 +10,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.module.annotation.xExport;
 /**
  * 
@@ -69,7 +71,9 @@ public interface JSDataDriven extends JSClass {
 			parent.appendChild( dom );
 			
 			_if(ctx.row().attrByString(JSDataSet.ATTR_MOUNT_ACTION).notEqualsJS(null)).then(() -> {
-				consoleDebug(txt("JSDataSet.ATTR_MOUNT_ACTION"), ctx.row().attrByString(JSDataSet.ATTR_MOUNT_ACTION));
+				JSActionManager action = JSClass.declareTypeClass(JSActionManager.class);
+				action.doAction(cast(JSString.class, ctx.row().attrByString(JSDataSet.ATTR_MOUNT_ACTION)), null);
+//				consoleDebug(txt("action mount = "), ctx.row().attrByString(JSDataSet.ATTR_MOUNT_ACTION));			
 			});
 		}));
 		

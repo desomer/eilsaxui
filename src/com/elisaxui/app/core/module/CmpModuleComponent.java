@@ -40,7 +40,7 @@ public class CmpModuleComponent extends XHTMLPart {
 	@xImport(idClass=JSDataDriven.class)
 	@xImport(idClass=JSDataBinding.class)
 	public XMLElement xFactory() {
-		return xModule(JSMount.class, new MntPage());
+		return xModule(JSMount.class, new MntPage(), new MntInput());
 	}
 	
 	/********************************************************/
@@ -51,6 +51,7 @@ public class CmpModuleComponent extends XHTMLPart {
 		@xStatic(autoCall = true)
 		default void doFactory() {
 			__(MountFactory.register(new MntPage()));
+			__(MountFactory.register(new MntInput()));
 		}
 	}
 	

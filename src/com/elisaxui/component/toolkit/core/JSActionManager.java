@@ -55,8 +55,6 @@ public interface JSActionManager extends JSClass {
 
 	@xStatic(autoCall = true)
 	default void init() {
-		JSActionManager that = JSClass.declareTypeClass(JSActionManager.class);
-		
 		callBackStart().set(newJS(TKPubSub.class));
 		callBackMove().set(newJS(TKPubSub.class));
 		callBackStop().set(newJS(TKPubSub.class));
@@ -64,16 +62,23 @@ public interface JSActionManager extends JSClass {
 
 		onStart(fct(actionEvent, () -> {
 			_if(actionEvent.actionId().notEqualsJS(null)).then(() -> {
+				JSActionManager that = JSClass.declareTypeClass(JSActionManager.class);
 				/***************************************************/
-				let(actionInfo, that.listAction().attrByString(actionEvent.actionId()));
-				_if(actionInfo, "!=null").then(() -> {
-					actionInfo.callback().call(actionInfo.that(), actionEvent);
-				});
+				that.doAction(actionEvent.actionId(), actionEvent);
 				/***************************************************/
 			});
 		}));
 	}
 
+	@xStatic()
+	default void doAction(JSString idAction, TActionEvent aActionEvent) {
+		JSActionManager that = JSClass.declareTypeClass(JSActionManager.class);
+		let(actionInfo, that.listAction().attrByString(idAction));
+		_if(actionInfo, "!=null").then(() -> {
+			actionInfo.callback().call(actionInfo.that(), aActionEvent);
+		});
+	}
+	
 	/************************************************************************/
 	@xStatic()
 	default void onStart(Object callback) {

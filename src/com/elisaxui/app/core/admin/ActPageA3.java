@@ -3,8 +3,10 @@
  */
 package com.elisaxui.app.core.admin;
 
-import com.elisaxui.app.core.module.MntPage.MountArticle;
+import com.elisaxui.app.core.module.MntInput.MountInputText;
+import com.elisaxui.app.core.module.MntInput.TInput;
 import com.elisaxui.app.core.module.MntPage.MountBtn;
+import com.elisaxui.app.core.module.MntPage.MountCard;
 import com.elisaxui.app.core.module.MntPage.MountNavBar;
 import com.elisaxui.app.core.module.MntPage.MountTabBar;
 import com.elisaxui.app.core.module.MntPage.TBtn;
@@ -15,6 +17,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSWindow;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.IJSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.builder.module.annotation.xExport;
 import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
@@ -26,21 +29,22 @@ import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
 
 @xExport
 @xCoreVersion("1")
-public interface ActPageA2 extends JSClass, IJSNodeTemplate, IJSMountFactory {
-
+public interface ActPageA3 extends JSClass , IJSNodeTemplate, IJSMountFactory {
+	
 	TPage aPage = JSClass.declareType();
-
-	@xStatic(autoCall = true)
+//	TInput aInput = JSClass.declareType();
+	
+	@xStatic(autoCall=true)
 	default void initPage() {
 		TPage page = newJS(TPage.class);
-		page.titre().set("Page2");
+		page.titre().set("Page3");
 		page.mountNavNar().set(MountNavBar.class);
 		page.mountTabNar().set(MountTabBar.class);
-		page.mountArticle().set(MountArticle.class);
-
+		page.mountArticle().set(MountCard.class);
+		
 		TBtn btn = null;
-
-		JSArray<TBtn> dataNabBar = JSArray.newLitteral();
+		
+		JSArray<TBtn> dataNabBar = JSArray.newLitteral() ;
 		btn = newJS(TBtn.class);
 		btn.titre().set("arrow_back");
 		btn.action().set("D");
@@ -52,10 +56,10 @@ public interface ActPageA2 extends JSClass, IJSNodeTemplate, IJSMountFactory {
 		btn.action().set("E");
 		btn.mountBtn().set(MountBtn.class);
 		dataNabBar.push(btn);
-
+		
 		page.dataNavBar().set(dataNabBar);
-
-		JSArray<TBtn> dataTabBar = JSArray.newLitteral();
+		
+		JSArray<TBtn> dataTabBar = JSArray.newLitteral() ;
 
 		btn.titre().set("schedule");
 		btn.action().set("A");
@@ -70,26 +74,32 @@ public interface ActPageA2 extends JSClass, IJSNodeTemplate, IJSMountFactory {
 
 		btn = newJS(TBtn.class);
 		btn.titre().set("apps");
-		btn.action().set("C2");
+		btn.action().set("C");
 		btn.mountBtn().set(MountBtn.class);
 		dataTabBar.push(btn);
-
+		
 		page.dataTabBar().set(dataTabBar);
+		
+		JSArray<JSElement> listeArticle = JSArray.newLitteral();
 
-		JSArray<TBtn> listeArticle = JSArray.newLitteral();
-
-		for (int i = 0; i < 10; i++) {
-			TBtn ligne1 = newJS(TBtn.class);
-			ligne1.titre().set("Ligne C" + i);
-			listeArticle.push(ligne1);
+		for (int i = 0; i < 3; i++) {
+			TInput testInput = newJS(TInput.class);
+			testInput.label().set("test input"+i);
+			testInput.value().set(JSString.value("AAA"+i));
+			testInput.implement().set(MountInputText.class);
+			listeArticle.push(testInput);
 		}
 
 		JSArray<JSElement> listeContent = JSArray.newLitteral();
 		listeContent.push(listeArticle);
 		page.contentArticle().set(listeContent);
-
+		
+	
+//		page.contentArticle().set(aInput);
+		
+		
 		let(aPage, page);
-		JSWindow.window().attr("ActPageB").set(aPage);
+		JSWindow.window().attr("ActPageC").set(aPage);
 	}
 
 }

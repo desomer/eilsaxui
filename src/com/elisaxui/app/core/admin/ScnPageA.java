@@ -153,6 +153,14 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 			let(animMgr, newJS(JSPageAnimation.class));
 
 			doMoveOnAction();
+			
+			
+			actionManager.addAction(JSString.value("ACTMOUNT1"), _this(), fct(() -> {
+				let(activity, document().querySelector("#Page1"));
+				document().querySelector(getcMain()).children().at(0).remove();
+				animMgr.doActivityActive(activity);
+				__("window.datadrivensync=false");
+			}));
 
 			actionManager.addAction(JSString.value("A"), _this(), fct(() -> {
 				doChangeContent(arrPage);
@@ -185,27 +193,18 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 				animMgr.doActivityActive(activityDest);
 				animMgr.doActivityInactive(activity);
 			}));
-			
-			actionManager.addAction(JSString.value("ACTMOUNT"), _this(), fct(() -> {
-				let(activity, document().querySelector("#Page1"));
-				// TODO a faire marcher querySelector.children().at(0).remove();
-				document().querySelector(getcMain()).children().at(0).remove();
-				animMgr.doActivityActive(activity);
-				__("window.datadrivensync=false");
-			}));
-			
-			
+					
 		}
 
 		@xStatic()
 		default void doChangeContent(JSArray<TPage> arrPage) {
 			arrPage.setArrayType(TPage.class);
 			consoleDebug(txt("change article"));
-			arrPage.at(0).contentArticle().pop(); // suppresion de l'article
-			arrPage.at(0).mountArticle().set(MountArticle2.class); // change le template
-			arrPage.at(0).contentArticle().push(JSArray.newLitteral()); // nouvelle article
+			arrPage.at(0).contentArticles().pop(); // suppresion de l'article
+			arrPage.at(0).mountArticles().set(MountArticle2.class); // change le template
+			arrPage.at(0).contentArticles().push(JSArray.newLitteral()); // nouvelle article
 
-			let(list, arrPage.at(0).contentArticle().at(0));
+			let(list, arrPage.at(0).contentArticles().at(0));
 
 			_forIdx(idx, 0, 10)._do(() -> {
 				TBtn ligne1 = newJS(TBtn.class);

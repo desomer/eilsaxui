@@ -73,7 +73,7 @@ public interface JSActionManager extends JSClass {
 	@xStatic()
 	default void doAction(JSString idAction, TActionEvent aActionEvent) {
 		JSActionManager that = JSClass.declareTypeClass(JSActionManager.class);
-		let(actionInfo, that.listAction().attrByString(idAction));
+		let(actionInfo, that.listAction().attrByStr(idAction));
 		_if(actionInfo, "!=null").then(() -> {
 			actionInfo.callback().call(actionInfo.that(), aActionEvent);
 		});
@@ -103,7 +103,7 @@ public interface JSActionManager extends JSClass {
 		actionInfo.actionId().set(actionId);
 		actionInfo.callback().set(callback);
 
-		listAction().attrByString(actionId).set(actionInfo);
+		listAction().attrByStr(actionId).set(actionInfo);
 	}
 
 	/************************************************************************/
@@ -116,7 +116,7 @@ public interface JSActionManager extends JSClass {
 		
 		_if(targetAction.notEqualsJS(null)).then(() -> {
 			activity.set(targetAction.closest(CssTransition.activity));
-			let(actionId, targetAction.dataset().attrByString(ATTR_X_ACTION));
+			let(actionId, targetAction.dataset().attrByStr(ATTR_X_ACTION));
 			actionEvent.actionId().set(actionId);
 		});
 

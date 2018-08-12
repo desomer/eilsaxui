@@ -35,7 +35,7 @@ public interface TKActivity extends JSClass {
 	
 	default JActivity getCurrentActivity()
 	{
-		return cast(JActivity.class,  listRegisterActivity.attrByString(idCurrentActivity));
+		return cast(JActivity.class,  listRegisterActivity.attrByStr(idCurrentActivity));
 	}
 	
 	default JSString getCurrentIDActivity()
@@ -46,7 +46,7 @@ public interface TKActivity extends JSClass {
 	default JActivity setCurrentActivity(JSString id)
 	{
 	    _set(idCurrentActivity, id);
-	    return cast(JActivity.class,  listRegisterActivity.attrByString(idCurrentActivity)); 
+	    return cast(JActivity.class,  listRegisterActivity.attrByStr(idCurrentActivity)); 
 	}
 	
 	default JSVoid createActivity(JActivity activity)
@@ -55,7 +55,7 @@ public interface TKActivity extends JSClass {
 		JSArray jsonContainer = let(JSArray.class, "jsonContainer", jsContainer.getData(txt(CSSSelector.onPath(XUIScene.scene))));
 		activity.active().set(true);
 		jsonContainer.push(activity);
-		listRegisterActivity.attrByString(activity.id()).set(activity);
+		listRegisterActivity.attrByStr(activity.id()).set(activity);
 		idCurrentActivity.set(activity.id());	
 		return _void();
 	}
@@ -66,7 +66,7 @@ public interface TKActivity extends JSClass {
 		JSArray jsonContainer = let(JSArray.class, "jsonContainer", jsContainer.getData(txt(CSSSelector.onPath(XUIScene.scene))));
 		activity.active().set(true);
 		jsonContainer.push(activity);
-		listRegisterActivity.attrByString(activity.id()).set(activity);
+		listRegisterActivity.attrByStr(activity.id()).set(activity);
 		idCurrentActivity.set(activity.id());	
 	}
 	
@@ -78,7 +78,7 @@ public interface TKActivity extends JSClass {
 		_set(json.active(), false);
 		__(jsonContainer.push(json));
 		
-		_set(listRegisterActivity.attrByString(json.id()), json);
+		_set(listRegisterActivity.attrByStr(json.id()), json);
 		
 		return _void();
 	}

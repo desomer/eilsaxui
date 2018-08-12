@@ -42,7 +42,7 @@ public class ViewInputText extends XHTMLPart implements ICSSBuilder {
 
 		return xElem(
 				xStyle(sMedia("all"), () -> {
-					sOn(sSel("*"), () -> css("box-sizing:border-box;"));
+				//	sOn(sSel("*"), () -> css("box-sizing:border-box;"));
 					sOn(sSel(group), () -> {
 						css("position:relative;  margin-top:15px");
 						// input

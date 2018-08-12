@@ -46,14 +46,14 @@ public interface JSDataBinding extends JSClass {
 	
 	@xStatic
 	default Object initVChangeableText(JSNodeElement domItem, JSAny value, JSString attr) {
-		domItem.dataset().attrByString(var("'xui'+",attr)).set(true);
+		domItem.dataset().attrByStr(var("'xui'+",attr)).set(true);
 		let(elemText, JSDomBuilder.MTH_ADD_TEXT+"("+value+")" );
 		return elemText;
 	}
 	
 	@xStatic
 	default Object initVChangeableFct(JSNodeElement domItem, JSElement row, JSAny value, JSString attr, JSCallBack fctOnChange) {
-		domItem.dataset().attrByString(var("'xui'+",attr)).set(true);
+		domItem.dataset().attrByStr(var("'xui'+",attr)).set(true);
 		
 		XuiBindInfo bi = newJS(XuiBindInfo.class);
 		bi.row().set(row);
@@ -72,7 +72,7 @@ public interface JSDataBinding extends JSClass {
 	
 	@xStatic
 	default void initOnDataChange(JSNodeElement domItem, JSElement row, JSAny value, JSString attr,	JSCallBack fctOnChange) {
-		domItem.dataset().attrByString(var("'xui'+",attr)).set(true);
+		domItem.dataset().attrByStr(var("'xui'+",attr)).set(true);
 		
 		XuiBindInfo bi = newJS(XuiBindInfo.class);
 		bi.row().set(row);
@@ -147,9 +147,9 @@ public interface JSDataBinding extends JSClass {
 					XuiBindInfo ddi = let(XuiBindInfo.class, "ddi", inputelem.attr(JSDomBuilder.ATTR_BIND_INFO));
 					_if(ddi, "!=null &&", ddi.row().notEqualsJS(null)).then(() -> {
 						_if(inputelem.type().equalsJS("checkbox"), "||", inputelem.type().equalsJS("radio")).then(() -> {
-							ddi.row().attrByString(ddi.attr()).set(inputelem.checked());
+							ddi.row().attrByStr(ddi.attr()).set(inputelem.checked());
 						})._else(()->{
-							ddi.row().attrByString(ddi.attr()).set(inputelem.value());
+							ddi.row().attrByStr(ddi.attr()).set(inputelem.value());
 						});
 					});
 				});

@@ -46,10 +46,15 @@ public class ViewCheckRadio extends XHTMLPart implements ICSSBuilder {
 						sOn(sSel("input[type='checkbox']"), () -> {
 							css("width:18px;appearance: none;-webkit-appearance: none; outline: none; position: relative;border: none;");
 							css("cursor: pointer; vertical-align: -6px;outline-width: 0;border-radius: 50%;");
+							css("margin: 3px 3px 3px 5px");
 							sOn(sSel("&:focus,&:after"), () -> {
 								css("content: ''");
 							});
+							sOn(sSel("&:before"), () -> {
+								css("box-sizing: content-box");
+							});
 							sOn(sSel("&:after"), () -> {
+								css("box-sizing: content-box");
 								css("display: block;width: 14px;height: 14px;margin-top: -2px;margin-right: 5px");
 								css("border: 2px solid #666;border-radius: 2px;background-color: #fff;z-index: 999;");   //transition: 240ms
 							});

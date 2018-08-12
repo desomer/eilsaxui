@@ -1,6 +1,7 @@
 package com.elisaxui.component.toolkit.datadriven;
 
 import com.elisaxui.component.toolkit.TKPubSub;
+import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
@@ -20,30 +21,37 @@ public interface JSDataSet extends JSClass {
 
 	JSInt delayEvent = null;
 	JSAny myProxySet = null; // ajouter le type WeakSet
-
 	JSDataSet _that = null;
+
+	@xStatic(autoCall = true)
+	default void init() {
+		_set(myProxySet, "new WeakSet()");
+	}
 
 	default void constructor(Object d) {
 		data().set(d);
 		callBackChange().set(newJS(TKPubSub.class));
 		_set(delayEvent, 0);
-		_set(myProxySet, "new WeakSet()");
+		// _set(myProxySet, "new WeakSet()");
 	}
 
 	default void onChange(Object callback) {
 		callBackChange().subscribe(callback);
 	}
 
+	@xStatic
 	default Object isProxy(Object myObj) {
 		return __("return ", myProxySet, ".has(", myObj, ")");
 	}
 
+	@xStatic
 	default Object addProxy(Object myObj) {
 		return __(myProxySet, ".add(", myObj, ")");
 	}
 
 	default void setData(JSArray<?> d) {
 
+		JSDataSet dataSet = JSClass.declareTypeClass(JSDataSet.class);
 		JSObject target = declareType(JSObject.class, "targetAction");
 		JSObject property = declareType(JSObject.class, "property");
 		JSObject thisArg = declareType(JSObject.class, "thisArg");
@@ -51,71 +59,81 @@ public interface JSDataSet extends JSClass {
 		JSObject value = declareType(JSObject.class, "value");
 		JSObject receiver = declareType(JSObject.class, "receiver");
 		JSInt idx = declareType(JSInt.class, "idx");
-		
 
 		// changeHandler sur attribut d'objet JS
 		JSObject changeHandler = let("changeHandler", new JSObject().asLitteral());
 
 		changeHandler.attr("get").set(fct(target, property,
 				() -> {
-					JSObject obj = let("obj", target.attrByString(property));
+					JSObject obj = let("obj", target.attrByStr(property));
 					_if("typeof ", obj, "=== 'object' && !(", obj, " instanceof Array) && ", obj, "!==null && ",
 							property, "!='", JSDataSet.ATTR_DOM_LINK, "'").then(() -> {
-								_return("new Proxy(", obj, ",", changeHandler, ")");
+
+								_if("!", dataSet.isProxy(obj)).then(() -> {
+									let("attp", var("new Proxy(", obj, ",", changeHandler, ")"));
+									__(dataSet.addProxy("attp"));
+									_return("attp");
+								});
+
 							})._else(() -> {
 								_return(obj);
 							});
 				}));
 		changeHandler.attr("apply").set(fct(target, thisArg, argumentsList,
-				() -> _return(cast(JSCallBack.class, thisArg.attrByString(target)).apply(_this(), argumentsList))));
+				() -> _return(cast(JSCallBack.class, thisArg.attrByStr(target)).apply(_this(), argumentsList))));
+
 		changeHandler.attr("deleteProperty").set(fct(target, property,
 				() -> {
 					consoleDebug(txt("Deleted %s"), property);
 					_return(true);
 				}));
+
 		changeHandler.attr("set").set(fct(target, property, value, receiver,
 				() -> {
 					JSBool isArray = let(JSBool.class, "isArray", target, " instanceof Array");
-					// NE FAIT RIEN SUR array[1]=newRow;    voir splice
-					_if("!", isArray, " && property!='" + ATTR_DOM_LINK + "' && targetAction[property]!==value").then(() -> {
-						JSChangeCtx obj = newJS(JSChangeCtx.class).asLitteral();
-						obj.ope().set("change");
-						obj.row().set(target);
-						obj.idx().set(target.attr("idx"));
-						obj.property().set(property);
-						obj.value().set(value);
-						obj.old().set(target.attrByString(property));
+					// NE FAIT RIEN SUR array[1]=newRow; voir splice
+					_if("!", isArray, " && property!='" + ATTR_DOM_LINK + "' && targetAction[property]!==value")
+							.then(() -> {
+								JSChangeCtx obj = newJS(JSChangeCtx.class).asLitteral();
+								obj.ope().set("change");
+								obj.row().set(target);
+								obj.idx().set(target.attr("idx"));
+								obj.property().set(property);
+								obj.value().set(value);
+								obj.old().set(target.attrByStr(property));
 
-						JSChangeCtx row = let("row", obj);
-						setTimeout(fct(() -> __("fastdom.mutate(",
-								fct(() -> cast(JSDataSet.class, "that").callBackChange().publish(row)), ")")),
-								1);
-					});
+								JSChangeCtx row = let("row", obj);
+								setTimeout(fct(() -> __("fastdom.mutate(",
+										fct(() -> cast(JSDataSet.class, "that").callBackChange().publish(row)), ")")),
+										1);
+							});
 
-					target.attrByString(property).set(value);
+					target.attrByStr(property).set(value);
 					_return(true);
 				}));
 
 		_var("that", _this());
-		
+
 		_forIdx(idx, d)._do(() -> {
-			_if("!",_that.isProxy(d.at(idx))).then(() -> {
-				__(d.at(idx), "=new Proxy(",d.at(idx),", changeHandler)");
-				__(_that.addProxy(d.at(idx)));
+			_if("!", dataSet.isProxy(d.at(idx))).then(() -> {
+				__(d.at(idx), "=new Proxy(", d.at(idx), ", changeHandler)");
+				__(dataSet.addProxy(d.at(idx)));
 			});
 
-			_var("row", "{ ope:'enter', row:",d.at(idx),", idx:",idx," }");
-		//	_if("window.datadrivensync").then(() -> {
-		//		__("that.callBackChange.publish(row)");
-		//	})._else(()->{
-				__("fastdom.mutate(function() {that.callBackChange.publish(row); })");
-		//	});
+			_var("row", "{ ope:'enter', row:", d.at(idx), ", idx:", idx, " }");
+			// _if("window.datadrivensync").then(() -> {
+			// __("that.callBackChange.publish(row)");
+			// })._else(()->{
+			__("fastdom.mutate(function() {that.callBackChange.publish(row); })");
+			// });
 		});
-		
+
 		// observe le push du tableau
 		_set("d.push", fct(() -> {
-			__("arguments[0]=new Proxy(arguments[0], changeHandler)");
-			__(_that.addProxy("arguments[0]"));
+			_if("!", dataSet.isProxy("arguments[0]")).then(() -> {
+				__("arguments[0]=new Proxy(arguments[0], changeHandler)");
+				__(dataSet.addProxy("arguments[0]"));
+			});
 			__("Array.prototype.push.apply(this, arguments)");
 			_var("row", "{ ope:'enter', row:arguments[0], idx:this.length-1 }");
 
@@ -142,7 +160,7 @@ public interface JSDataSet extends JSClass {
 				._var("fct", " function() {fastdom.mutate(function() {that.callBackChange.publish(row); })}")
 				._var("t", "that.delayEvent")
 				._if("t==0")
-				.__("setTimeout(", funct()._set("that.delayEvent", 0), ", 0)") // remise a zero apres la boucle
+					.__("setTimeout(", funct()._set("that.delayEvent", 0), ", 0)") // remise a zero apres la boucle
 				.endif()
 				._set("that.delayEvent", "that.delayEvent+2")
 				.__("setTimeout(fct, t)")
@@ -150,9 +168,9 @@ public interface JSDataSet extends JSClass {
 
 		_set("d.splice", funct().__(() -> {
 
-			_if("arguments.length>2 && !", _that.isProxy("arguments[2]"));
+			_if("arguments.length>2 && !", dataSet.isProxy("arguments[2]"));
 			__("arguments[2]=new Proxy(arguments[2], changeHandler)");
-			__(_that.addProxy("arguments[2]"));
+			__(dataSet.addProxy("arguments[2]"));
 			endif();
 
 			_var("ret", "Array.prototype.splice.apply(this, arguments)");

@@ -132,7 +132,7 @@ public class ScnAdmin extends XHTMLPart {
 			tkCom.requestUrl(JSString.value(SrvAdmin.URL_CONFIG)).then(fct(item, () -> {
 				data.push(item);
 
-				JSon attrDomLink = cast(JSon.class, item).attrByString(JSDataSet.ATTR_DOM_LINK); // inline
+				JSon attrDomLink = cast(JSon.class, item).attrByStr(JSDataSet.ATTR_DOM_LINK); // inline
 
 				setTimeout(fct(() -> document().querySelector(cBtnOk).addEventListener("click", fct(() -> {
 					let(rowDom, attrDomLink);

@@ -49,7 +49,7 @@ public class JSAny implements JSElement {
 		return callTyped(new JSString(), "toString");
 	}
 	/***************************************************************/
-	public final <E extends JSAny> E attrByString(Object attr) {
+	public final <E extends JSAny> E attrByStr(Object attr) {
 		E ret = getReturnType();
 
 		ret.addContent("[");

@@ -6,6 +6,7 @@ import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyMethodDesc;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSCallBack;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder;
 
 /**
@@ -45,6 +46,11 @@ public class JSFunction extends JSContent implements JSElement {
 	public final int getNumLine() {
 		return numLine;
 	}
+	
+	public JSCallBack toCallBack()
+	{
+		return cast(JSCallBack.class, this);
+	}
 
 	/**
 	 * @param numLine the numLine to set
@@ -78,7 +84,7 @@ public class JSFunction extends JSContent implements JSElement {
 	/**
 	 * @param comment the comment to set
 	 */
-	public final JSFunction zzSetComment(Object comment) {
+	public final JSFunction setComment(Object comment) {
 		this.comment = comment;
 		return this;
 	}
@@ -170,7 +176,7 @@ public class JSFunction extends JSContent implements JSElement {
 			if (m.lastMthNoInserted!=null)
 			{
 				String classMeth = m.lastMthNoInserted.toString();
-				zzSetComment("anonym " + classMeth.substring(classMeth.lastIndexOf('.')+1)+".java:"+m.lastLineNoInsered);
+				setComment("anonym " + classMeth.substring(classMeth.lastIndexOf('.')+1)+".java:"+m.lastLineNoInsered);
 			}		
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -181,7 +187,7 @@ public class JSFunction extends JSContent implements JSElement {
 	public JSFunction(String classe, String name)
 	{		
 		setName(name);
-		zzSetComment(classe);
+		setComment(classe);
 	}
 	
 	

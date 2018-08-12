@@ -3,10 +3,12 @@
  */
 package com.elisaxui.app.core.admin;
 
+import com.elisaxui.app.core.module.MntInput.MountInputCheckBox;
 import com.elisaxui.app.core.module.MntInput.MountInputText;
 import com.elisaxui.app.core.module.MntInput.TInput;
 import com.elisaxui.app.core.module.MntPage.MountBtn;
 import com.elisaxui.app.core.module.MntPage.MountCard;
+import com.elisaxui.app.core.module.MntPage.MountMain;
 import com.elisaxui.app.core.module.MntPage.MountNavBar;
 import com.elisaxui.app.core.module.MntPage.MountTabBar;
 import com.elisaxui.app.core.module.MntPage.TBtn;
@@ -17,6 +19,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSWindow;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSBool;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.IJSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.builder.module.annotation.xExport;
@@ -32,7 +35,6 @@ import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
 public interface ActPageA3 extends JSClass , IJSNodeTemplate, IJSMountFactory {
 	
 	TPage aPage = JSClass.declareType();
-//	TInput aInput = JSClass.declareType();
 	
 	@xStatic(autoCall=true)
 	default void initPage() {
@@ -40,7 +42,8 @@ public interface ActPageA3 extends JSClass , IJSNodeTemplate, IJSMountFactory {
 		page.titre().set("Page3");
 		page.mountNavNar().set(MountNavBar.class);
 		page.mountTabNar().set(MountTabBar.class);
-		page.mountArticle().set(MountCard.class);
+		page.mountArticles().set(MountCard.class);
+		page.mountAction().set("ACTMOUNT3");
 		
 		TBtn btn = null;
 		
@@ -90,12 +93,20 @@ public interface ActPageA3 extends JSClass , IJSNodeTemplate, IJSMountFactory {
 			listeArticle.push(testInput);
 		}
 
+		JSArray<JSElement> listeArticle2 = JSArray.newLitteral();
+
+		for (int i = 0; i < 1; i++) {
+			TInput testInput = newJS(TInput.class);
+			testInput.label().set("test input B"+i);
+			testInput.value().set(true);
+			testInput.implement().set(MountInputCheckBox.class);
+			listeArticle2.push(testInput);
+		}
+		
 		JSArray<JSElement> listeContent = JSArray.newLitteral();
 		listeContent.push(listeArticle);
-		page.contentArticle().set(listeContent);
-		
-	
-//		page.contentArticle().set(aInput);
+		listeContent.push(listeArticle2);
+		page.contentArticles().set(listeContent);
 		
 		
 		let(aPage, page);

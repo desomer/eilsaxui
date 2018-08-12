@@ -183,7 +183,7 @@ public interface JSTransition extends JSClass {
 								// ------------- anim des item de menu---------
 								_for("var i in window.jsonMainMenu");
 									JSon jsonMenu = let(JSon.class, "jsonMenu", "window.jsonMainMenu[i]");
-									$( jsonMenu.attrByString("_dom_") ).css(VISIBILITY, HIDDEN);
+									$( jsonMenu.attrByStr("_dom_") ).css(VISIBILITY, HIDDEN);
 									
 									setTimeout( funct("itemMenu").__(()->{
 													__("itemMenu.anim='fadeInLeft'");

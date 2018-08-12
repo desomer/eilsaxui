@@ -80,7 +80,7 @@ public abstract class MountFactory {
 						String namec = aFactory.value().getName(); 
 						namec = namec.substring(namec.lastIndexOf('.')+1);
 						
-						JSFunction fct = (JSFunction) new JSFunction().zzSetComment("MountFactory "+method.getName()+ " ("+namec +".java)").setParam(new Object[] {"p0"})._return(ret);
+						JSFunction fct = (JSFunction) new JSFunction().setComment("MountFactory "+method.getName()+ " ("+namec +".java)").setParam(new Object[] {"p0"})._return(ret);
 						code.add(JSNewLine.class);
 						code.add("window.xMount."+aFactory.value().getSimpleName()+"=");
 						code.add(fct);

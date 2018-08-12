@@ -3,6 +3,8 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.javascript.jsclass;
 
+import org.junit.jupiter.params.shadow.com.univocity.parsers.common.beans.PropertyWrapper;
+
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
@@ -27,9 +29,8 @@ public class XHTMLPartMount extends XHTMLPart implements JSClass {
 	public XHTMLPartMount()
 	{
 		try {
-			proxy = (JSClass) ProxyHandler.getObjectJS(JSClass.class, "a", "b");
+			proxy = (JSClass) ProxyHandler.getObjectJS(JSClass.class, "", "");
 		} catch (InstantiationException | IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -39,7 +40,6 @@ public class XHTMLPartMount extends XHTMLPart implements JSClass {
 	 */
 	@Override
 	public Object _setContent(Object value) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -49,40 +49,23 @@ public class XHTMLPartMount extends XHTMLPart implements JSClass {
 	 */
 	@Override
 	public Object _getContent() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass#cast(java.lang.Class, java.lang.Object)
-	 */
 	@Override
 	public <E> E cast(Class<E> cl, Object obj) {
-		// TODO Auto-generated method stub
-		return null;
+		return proxy.cast(cl, obj);
 	}
 
-
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass#set(java.lang.Object[])
-	 */
 	@Override
 	public <E> E set(Object... value) {
-		// TODO Auto-generated method stub
-		return null;
+		return proxy.set(value);
 	}
 
-
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass#asLitteral()
-	 */
 	@Override
 	public <E> E asLitteral() {
-		// TODO Auto-generated method stub
-		return null;
+		return proxy.asLitteral();
 	}
-
 
 	/* (non-Javadoc)
 	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass#callStatic(java.lang.Class)
@@ -123,84 +106,46 @@ public class XHTMLPartMount extends XHTMLPart implements JSClass {
 		
 	}
 
-
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface#__(java.lang.Object[])
-	 */
 	@Override
 	public JSContentInterface __(Object... content) {
-		// TODO Auto-generated method stub
-		return null;
+		return proxy.__(content);
 	}
 
-
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface#_set(java.lang.Object, java.lang.Object[])
-	 */
 	@Override
 	public JSContentInterface _set(Object name, Object... content) {
-		// TODO Auto-generated method stub
-		return null;
+		return proxy._set(name, content);
 	}
 
-
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface#_var(java.lang.Object, java.lang.Object[])
-	 */
 	@Override
 	public JSContentInterface _var(Object name, Object... content) {
-		// TODO Auto-generated method stub
-		return null;
+		return proxy._var(name, content);
 	}
 
-
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface#let(java.lang.Class, java.lang.Object, java.lang.Object[])
-	 */
 	@Override
 	public <E> E let(Class<E> type, Object name, Object... content) {
-		// TODO Auto-generated method stub
-		return null;
+		return proxy.let(type, name, content);
 	}
 
 
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface#let(java.lang.String, java.lang.Object)
-	 */
 	@Override
 	public <E> E let(String name, E content) {
-		// TODO Auto-generated method stub
-		return null;
+		return proxy.let(name, content);
 	}
 
 
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface#let(com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface, java.lang.Object[])
-	 */
 	@Override
 	public void let(JSContentInterface name, Object... content) {
-		// TODO Auto-generated method stub
-		
+		proxy.let(name, content);
 	}
 
-
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface#let(com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny, java.lang.Object[])
-	 */
 	@Override
 	public void let(JSAny name, Object... content) {
-		// TODO Auto-generated method stub
-		
+		proxy.let(name, content);
 	}
 
-
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface#consoleDebug(java.lang.Object[])
-	 */
 	@Override
 	public JSContentInterface consoleDebug(Object... content) {
-		// TODO Auto-generated method stub
-		return null;
+		return proxy.consoleDebug(content);
 	}
 
 
@@ -274,33 +219,19 @@ public class XHTMLPartMount extends XHTMLPart implements JSClass {
 	}
 
 
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface#txt(java.lang.Object[])
-	 */
 	@Override
 	public JSString txt(Object... param) {
-		// TODO Auto-generated method stub
-		return null;
+		return proxy.txt(param);
 	}
 
-
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface#var(java.lang.Object[])
-	 */
 	@Override
 	public JSAny var(Object... param) {
-		// TODO Auto-generated method stub
-		return null;
+		return proxy.var(param);
 	}
 
-
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface#calc(java.lang.Object[])
-	 */
 	@Override
 	public Object calc(Object... param) {
-		// TODO Auto-generated method stub
-		return null;
+		return proxy.calc(param);
 	}
 
 
@@ -349,24 +280,15 @@ public class XHTMLPartMount extends XHTMLPart implements JSClass {
 		return null;
 	}
 
-
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface#_if(java.lang.Object[])
-	 */
 	@Override
 	public JSContentInterface _if(Object... content) {
-		// TODO Auto-generated method stub
-		return null;
+		return proxy._if(content);
 	}
 
 
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface#then(com.elisaxui.core.xui.xhtml.builder.javascript.JSLambda)
-	 */
 	@Override
 	public JSContentInterface then(JSLambda content) {
-		// TODO Auto-generated method stub
-		return null;
+		return proxy.then(content);
 	}
 
 
@@ -380,23 +302,14 @@ public class XHTMLPartMount extends XHTMLPart implements JSClass {
 	}
 
 
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface#_else(com.elisaxui.core.xui.xhtml.builder.javascript.JSLambda)
-	 */
 	@Override
 	public JSContentInterface _else(JSLambda content) {
-		// TODO Auto-generated method stub
-		return null;
+		return proxy._else(content);
 	}
 
-
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface#_elseif(java.lang.Object[])
-	 */
 	@Override
 	public JSContentInterface _elseif(Object... content) {
-		// TODO Auto-generated method stub
-		return null;
+		return proxy._elseif(content);
 	}
 
 
@@ -420,63 +333,37 @@ public class XHTMLPartMount extends XHTMLPart implements JSClass {
 	}
 
 
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface#delete(java.lang.Object[])
-	 */
 	@Override
 	public JSContentInterface delete(Object... content) {
-		// TODO Auto-generated method stub
-		return null;
+		return proxy.delete(content);
 	}
 
-
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface#setTimeout(java.lang.Object[])
-	 */
 	@Override
 	public JSContentInterface setTimeout(Object... content) {
-		// TODO Auto-generated method stub
-		return null;
+		return proxy.setTimeout(content);
 	}
 
-
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface#setTimeout(com.elisaxui.core.xui.xhtml.builder.javascript.JSLambda, java.lang.Object[])
-	 */
 	@Override
 	public JSContentInterface setTimeout(JSLambda a, Object... content) {
-		// TODO Auto-generated method stub
-		return null;
+		return proxy.setTimeout(a, content);
 	}
 
 
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface#_return(java.lang.Object[])
-	 */
 	@Override
 	public JSContentInterface _return(Object... content) {
-		// TODO Auto-generated method stub
 		return proxy._return(content);
 	}
 
 
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface#_continue()
-	 */
 	@Override
 	public JSContentInterface _continue() {
-		// TODO Auto-generated method stub
-		return null;
+		return proxy._continue();
 	}
 
 
-	/* (non-Javadoc)
-	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface#_this()
-	 */
 	@Override
 	public JSAny _this() {
-		// TODO Auto-generated method stub
-		return null;
+		return proxy._this();
 	}
 
 

@@ -7,6 +7,7 @@ import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument
 
 import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
+import com.elisaxui.component.toolkit.datadriven.IJSMountFactory;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
@@ -14,6 +15,7 @@ import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xMount;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.XHTMLPartMount;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSObject;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
@@ -33,7 +35,7 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
  *
  */
 @xResource(id = "ScnTemplatePageDyn")
-public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
+public class ScnTemplatePageDyn extends XHTMLPartMount implements IJSDataDriven, IJSMountFactory {
 	
 	/********************************************************/
 	// les includes
@@ -241,7 +243,7 @@ public class ScnTemplatePageDyn extends XHTMLPart implements IJSDataDriven {
 	}
 
 	/********************************************************/
-	static class CmpNavVertical extends XHTMLPart implements IJSDataDriven {
+	static class CmpNavVertical extends XHTMLPartMount implements IJSDataDriven, IJSMountFactory {
 		static CSSClass cNavContainer;
 		static VProperty pContent;
 

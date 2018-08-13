@@ -9,6 +9,7 @@ import com.elisaxui.app.core.module.CmpModuleCore;
 import com.elisaxui.component.toolkit.com.TKCom;
 import com.elisaxui.component.toolkit.datadriven.IJSDataBinding;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
+import com.elisaxui.component.toolkit.datadriven.IJSMountFactory;
 import com.elisaxui.component.toolkit.datadriven.JSDataBinding;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
@@ -67,7 +68,7 @@ public class ScnAdmin extends XHTMLPart {
 	}
 
 	@xCoreVersion("1")
-	public interface JSTest extends JSClass, IJSNodeTemplate, IJSDataBinding, IJSDataDriven {
+	public interface JSTest extends JSClass, IJSNodeTemplate, IJSDataBinding, IJSDataDriven, IJSMountFactory {
 		
 		JSNodeElement dom = JSClass.declareType();
 		JSNodeElement rowDom= JSClass.declareType();

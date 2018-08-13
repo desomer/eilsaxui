@@ -19,6 +19,7 @@ import javax.ws.rs.core.UriInfo;
 import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.component.toolkit.com.TKCom;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
+import com.elisaxui.component.toolkit.datadriven.IJSMountFactory;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
@@ -26,6 +27,7 @@ import com.elisaxui.core.xui.xhtml.builder.css.ICSSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.XHTMLPartMount;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
@@ -54,7 +56,7 @@ public class ScnComboDyn implements IJSONBuilder {
 	 * VIEW
 	 ***********************************************/
 	@xResource(id = "ScnComboDyn")
-	public static class CmpComboTelephone extends XHTMLPart implements IJSDataDriven, ICSSBuilder, IResourceLoader {
+	public static class CmpComboTelephone extends XHTMLPartMount implements IJSDataDriven, ICSSBuilder, IResourceLoader, IJSMountFactory {
 		static CSSClass cULMain;
 		static Telephone aRow;
 

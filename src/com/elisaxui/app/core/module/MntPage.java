@@ -38,7 +38,7 @@ public class MntPage extends XHTMLPartMount implements IJSDataDriven, IJSMountFa
 	static TBtn aBtn;
 	static JSArray<JSAny> listArticle;
 	static TInput aInput;
-	static JSAny aArticle;
+	static JSArray<JSElement> aArticle;
 
 	@xTarget(HEADER.class)
 	@xResource()
@@ -84,7 +84,7 @@ public class MntPage extends XHTMLPartMount implements IJSDataDriven, IJSMountFa
 
 	@xMount(MountTabBar.class)
 	public XMLElement createTabBar(JSArray<TBtn> arrBtn) {
-		return xElem(vForEach(arrBtn, aBtn,
+		return xElem(vFor(arrBtn, aBtn,
 				xLi(ViewTabBar.cFlex_1, ViewTabBar.cTextAlignCenter, vMount(aBtn, aBtn.mountBtn()))));
 	}
 
@@ -94,7 +94,7 @@ public class MntPage extends XHTMLPartMount implements IJSDataDriven, IJSMountFa
 	@xMount(MountNavBar.class)
 	public XMLElement createNavBar(TPage aPage) {
 		return xElem(new ViewBtnBurger(), xDiv(ViewNavBar.rightAction,
-				xElem(vForEach(aPage.dataNavBar(), aBtn, xElem(vMount(aBtn, aBtn.mountBtn()))))));
+				xElem(vFor(aPage.dataNavBar(), aBtn, xElem(vMount(aBtn, aBtn.mountBtn()))))));
 	}
 
 	public static class MountBtn extends MountFactory {

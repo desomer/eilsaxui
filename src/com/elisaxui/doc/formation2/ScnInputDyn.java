@@ -8,6 +8,7 @@ import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument
 import com.elisaxui.app.core.module.CmpModuleCore;
 import com.elisaxui.component.toolkit.datadriven.IJSDataBinding;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
+import com.elisaxui.component.toolkit.datadriven.IJSMountFactory;
 import com.elisaxui.component.toolkit.datadriven.JSChangeCtx;
 import com.elisaxui.component.toolkit.datadriven.JSDataBinding;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
@@ -85,7 +86,7 @@ public class ScnInputDyn extends XHTMLPart implements ICSSBuilder {
 		return xElem(JSTest.class);
 	}
 	
-	public interface JSTest extends JSClass, IJSNodeTemplate, IJSDataBinding, IJSDataDriven {
+	public interface JSTest extends JSClass, IJSNodeTemplate, IJSDataBinding, IJSDataDriven, IJSMountFactory {
 
 		@xStatic(autoCall = true)
 		default void main() {

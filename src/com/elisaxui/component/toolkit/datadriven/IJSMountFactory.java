@@ -29,25 +29,30 @@ public interface IJSMountFactory extends JSClass {
 	default JSFunction vMount(JSElement aRow, JSString mountId) {
 		return fct(() -> _return(dataBinding.mount(mountId, aRow))).setComment("vMount " + mountId);
 	}
-
+	
+	/**TODO vFor( control type , ()->{})*/
 	@xInLine
 	default JSFunction vFor(JSArray<? extends JSElement> data, JSElement aRow, XMLElement elem) {
 
-		JSCallBack c = fct(ctx, () -> {
-			dataBinding.initChangeHandler(ctx, cast(JSNodeElement.class, ctx.row().attrByStr(JSDataSet.ATTR_DOM_LINK)));
-		}).setComment("").toCallBack();
-
+		JSCallBack change = onChange(aRow, elem);
 		JSCallBack enter = onEnter(aRow, elem);
 
 		return fct(domparent,
-				() -> dataDriven.doTemplateDataDriven(domparent, data, enter, null, c ))
+				() -> dataDriven.doTemplateDataDriven(domparent, data, enter, null, change))
 						.setComment("vFor " + data);
 
 	}
 
 	@xInLine
-	public default JSCallBack onEnter(JSElement row, Object elem) {
-		return fct(row, ctx, () -> _return(elem)).setComment("onEnter " + row).toCallBack();
+	public default JSCallBack onEnter(JSElement aRow, Object elem) {
+		return fct(aRow, ctx, () -> _return(elem)).setComment("onEnter " + aRow).toCallBack();
+	}
+
+	@xInLine
+	public default JSCallBack onChange(JSElement aRow, Object elem) {
+		return fct(ctx, () -> {
+			dataBinding.initChangeHandler(ctx, cast(JSNodeElement.class, ctx.row().attrByStr(JSDataSet.ATTR_DOM_LINK)));
+		}).setComment("onChange " + aRow).toCallBack();
 	}
 
 }

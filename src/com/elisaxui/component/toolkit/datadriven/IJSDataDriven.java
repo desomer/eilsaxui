@@ -8,7 +8,6 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSNodeTemplate;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 
@@ -18,24 +17,6 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  */
 public interface IJSDataDriven  {
 	
-	/**TODO vFor( control type , ()->{})*/
-	
-//	default JSFunction vFor(JSElement data, JSElement aRow,  XMLElement elem)
-//	{
-//		JSon domparent =  JSContent.declareType(JSon.class, "domparent");
-//		
-//		JSFunction change = (JSFunction) new JSFunction().setComment("").setParam(new Object[] {"ctx"})
-//		.__("JSDataBinding.initChangeHandler(ctx, ctx.row['"+JSDataSet.ATTR_DOM_LINK+"'])");
-//		
-//		JSFunction enter = onEnter(aRow, elem);
-//		
-//		JSFunction ret = (JSFunction) new JSFunction().setComment("vFor "+data).setParam(new Object[] {domparent})
-//				.__("JSDataDriven.doTemplateDataDriven(", domparent ,",", data, ",", enter,   " ,null,",  change, ")")
-//				;
-//		ret.setDebug(true);
-//		return ret;
-//	}
-	
 	default JSFunction vMountChangeable(JSElement data, JSFunction fct)
 	{
 		JSon domparent =  JSContent.declareType(JSon.class, "domparent");
@@ -44,12 +25,6 @@ public interface IJSDataDriven  {
 				.__("return ", fct)
 				;
 	}
-	
-	/******************************************************************************/
-//	default JSFunction vMount(JSElement aRow,  JSString mountId)
-//	{
-//		return  (JSFunction)  new JSFunction().setComment("vMount "+mountId)._return("JSDataBinding.mount(",mountId,","+aRow+")");
-//	}
 	
 	/******************************************************************************/
 	

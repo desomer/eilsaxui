@@ -9,7 +9,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
  * @author gauth
  *
  */
-/** TODO par defaut litteral*/
+/** par defaut litteral*/
 public interface JSType extends JSClass {
 
 }

@@ -4,10 +4,20 @@
 package com.elisaxui.component.toolkit;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+
+import com.elisaxui.core.helper.TemplateHelper;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent.JSNewLine;
+import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xExtend;
+import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xml.annotation.xComment;
+import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
 import com.elisaxui.core.xui.xml.annotation.xPriority;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.annotation.xTarget;
@@ -29,17 +39,50 @@ public class TKQueue extends XHTMLPart implements IResourceLoader {
 	@xResource
 	@xPriority(200)	
 	public XMLElement xAddJS() {	
-		return xScriptJS( js()
-				.__(loadResource("TKQueue.js"))
-				.__("window.animInProgess=false")    // init a false
-				);
+		
+		Context ctx = new Context();
+		ctx.setVariable("date", "555");
+		ctx.setVariable("admin", true);
+		ctx.setVariable("align", "right");
+		
+		final Set<String> fragmentsjs = new HashSet<>();
+		fragmentsjs.add("js");
+		String javascript = TemplateHelper.getTemplateFragment(loadResource("TKQueue.html", false), fragmentsjs, ctx);
+		String tagstartjs="<script>";
+		String tagendjs="</script>";
+		javascript = javascript.substring(tagstartjs.length(), javascript.lastIndexOf(tagendjs));
+		javascript = minifyJS(javascript, true);
+		
+		final Set<String> fragmentscss = new HashSet<>();
+		fragmentscss.add("css");
+		String css = TemplateHelper.getTemplateFragment(loadResource("TKQueue.html", false), fragmentscss, ctx);
+		String tagstartcss="<style>";
+		String tagendcss="</style>";
+		css = javascript.substring(tagstartcss.length(), css.lastIndexOf(tagendcss));
+		
+		
+//		String pattern = "(?m)^\\s*\\r?\\n|\\r?\\n\\s*(?!.*\\r?\\n)";
+//		String replacement = "";
+//		
+//		javascript=javascript.replaceAll(pattern, replacement);
+		
+		return xElem(JSQueue.class, js().__(javascript));
 	}
 		
-	/**
-	 * indique 
-	 * @param param
-	 * @return
-	 */
+	@xCoreVersion("1")
+	@xTarget     //TODO a faire marcher
+	@xExtend(file="TKQueue.js")
+	public interface JSQueue extends JSClass, IResourceLoader {
+		
+		@xStatic(autoCall = true)
+		default void init() {
+			__(loadResource("TKQueue.js", true));
+			__("window.animInProgess=false");
+		}
+		
+	}
+	
+	
 	public static final Object[] startAnimQueued(Object... param)
 	{
 		ArrayList<Object> ret = new ArrayList<>();
@@ -68,5 +111,6 @@ public class TKQueue extends XHTMLPart implements IResourceLoader {
 		ret.add("()");
 		return ret.toArray();
 	}
+	
 	
 }

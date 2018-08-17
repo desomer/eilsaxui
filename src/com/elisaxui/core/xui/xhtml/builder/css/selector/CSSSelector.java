@@ -32,9 +32,9 @@ public class CSSSelector {
 			}
 			else if (obj instanceof JSAny)
 			{
-				selector.append("'+");
+				selector.append("\"+");
 				selector.append(obj);
-				selector.append("+'");
+				selector.append("+\"");
 			}
 			else
 				selector.append(obj.toString()); 		

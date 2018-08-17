@@ -15,6 +15,7 @@ import com.elisaxui.app.core.module.MntPage.TPage;
 import com.elisaxui.component.page.ScnPage;
 import com.elisaxui.component.toolkit.core.JSActionManager;
 import com.elisaxui.component.toolkit.core.JSActionManager.TActionEvent;
+import com.elisaxui.component.toolkit.core.JSActivityManager;
 import com.elisaxui.component.toolkit.core.JSPageAnimation;
 import com.elisaxui.component.toolkit.datadriven.IJSMountFactory;
 import com.elisaxui.component.toolkit.datadriven.JSDataBinding;
@@ -64,6 +65,7 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 	@xImport(idClass = JSPageAnimation.class)
 	@xImport(idClass = JSRippleEffect.class)
 	@xImport(idClass = JSActionManager.class)
+	@xImport(idClass = JSActivityManager.class)
 	@xImport(idClass = JSDataBinding.class)
 	@xImport(idClass = ActPageA1.class)
 	@xImport(idClass = ActPageA2.class)
@@ -123,6 +125,8 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 	@xCoreVersion("1")
 	public interface JSController extends JSClass, IJSNodeTemplate, IJSMountFactory {
 		JSActionManager actionManager = JSClass.declareTypeClass(JSActionManager.class);
+		JSActivityManager activityManager = JSClass.declareTypeClass(JSActivityManager.class);
+		
 		TActionEvent actionEvent = JSClass.declareType();
 
 		@xStatic(autoCall = true) // appel automatique de la methode static
@@ -160,6 +164,9 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 				document().querySelector(getcMain()).children().at(0).remove();
 				animMgr.doActivityActive(activity);
 				__("window.datadrivensync=false");
+				
+//				__("var stateObj = { foo: \"bar\" };\r\n" + 
+//						"history.pushState(stateObj, \"page 2\", \"/bar.html\")");
 			}));
 
 			actionManager.addAction(JSString.value("A"), _this(), fct(() -> {
@@ -170,28 +177,16 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 				__("location.assign('/rest/page/fr/fra/id/ScnPageB')");
 			}));
 			
-			actionManager.addAction(JSString.value("C"), _this(), fct(() -> {
-				let(activity, document().querySelector("#Page1"));
-				let(activityDest, document().querySelector("#Page2"));
-				animMgr.doActivityNoDisplay(activity);
-				animMgr.doActivityActive(activityDest);
-				animMgr.doActivityInactive(activity);
+			actionManager.addAction(JSString.value("TO_NEXT"), _this(), fct(() -> {
+				activityManager.doRouteToActivity(JSString.value("Page2"));
 			}));
 			
 			actionManager.addAction(JSString.value("C2"), _this(), fct(() -> {
-				let(activity, document().querySelector("#Page2"));
-				let(activityDest, document().querySelector("#Page3"));
-				animMgr.doActivityNoDisplay(activity);
-				animMgr.doActivityActive(activityDest);
-				animMgr.doActivityInactive(activity);
+				activityManager.doRouteToActivity(JSString.value("Page3"));
 			}));
 			
 			actionManager.addAction(JSString.value("D"), _this(), fct(() -> {
-				let(activity, document().querySelector("#Page2"));
-				let(activityDest, document().querySelector("#Page1"));
-				animMgr.doActivityNoDisplay(activity);
-				animMgr.doActivityActive(activityDest);
-				animMgr.doActivityInactive(activity);
+				activityManager.doRouteToActivity(JSString.value("Page1"));
 			}));
 					
 		}

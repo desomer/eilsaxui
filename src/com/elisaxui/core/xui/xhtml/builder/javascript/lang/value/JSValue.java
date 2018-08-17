@@ -44,7 +44,7 @@ public class JSValue extends JSAny {
 	public JSInt modulo(Object obj)
 	{
 		JSInt ret = new JSInt();
-		ArrayMethod arr = new ArrayMethod();
+		ArrayMethod<Object> arr = new ArrayMethod<>();
 		Object content = _getValueOrName();
 		if (content instanceof ArrayMethod )
 			arr.addAll((ArrayMethod<?>)content);

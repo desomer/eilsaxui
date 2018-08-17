@@ -46,13 +46,13 @@ public interface ActPageA1 extends JSClass , IJSNodeTemplate, IJSMountFactory {
 		JSArray<TBtn> dataNabBar = JSArray.newLitteral() ;
 		btn = newJS(TBtn.class);
 		btn.titre().set("add_circle_outline");
-		btn.action().set("D");
+		btn.action().set("AJOUT");
 		btn.mountBtn().set(MountBtn.class);
 		dataNabBar.push(btn);
 
 		btn = newJS(TBtn.class);
 		btn.titre().set("more_vert");
-		btn.action().set("E");
+		btn.action().set("MORE_INFO");
 		btn.mountBtn().set(MountBtn.class);
 		dataNabBar.push(btn);
 		
@@ -73,7 +73,7 @@ public interface ActPageA1 extends JSClass , IJSNodeTemplate, IJSMountFactory {
 
 		btn = newJS(TBtn.class);
 		btn.titre().set("apps");
-		btn.action().set("C");
+		btn.action().set("TO_NEXT");
 		btn.mountBtn().set(MountBtn.class);
 		dataTabBar.push(btn);
 		

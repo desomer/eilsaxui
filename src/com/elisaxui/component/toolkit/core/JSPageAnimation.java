@@ -12,6 +12,7 @@ import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSWindow.w
 
 import com.elisaxui.component.widget.layout.ViewPageLayout;
 import com.elisaxui.component.widget.tabbar.ViewTabBar;
+import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xForceInclude;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDomTokenList;
@@ -70,27 +71,29 @@ public interface JSPageAnimation extends JSClass {
 		classes.remove(inactive);
 	}
 
+	@xForceInclude  // evite le cherry picking
 	default void doActivityInactive(JSNodeElement activity) {
 		let(classes, activity.classList());
 		classes.add(inactive);
 		classes.remove(active);
 	}
 
-	/* peux etre inactif mais encore visible durant la transistion */
+	@xForceInclude  // evite le cherry picking
+	/* peux etre inactif mais encore visible durant la transition */
 	default void doActivityNoDisplay(JSNodeElement activity) {
 		let(classes, activity.classList());
 		classes.add(cStateNoDisplay);
 	}
 
 	/***************************************************************************/
-
+	@xForceInclude  // evite le cherry picking
 	default void doInitScrollTo(JSNodeElement activity) {
 		let(scrposition, activity.dataset().attr(DATA_SCROLLTOP));
 		window().scrollTo("0px", calc(scrposition, "==null?0:", scrposition));
 	}
 
 	/***************************************************************************/
-
+	@xForceInclude  // evite le cherry picking
 	default void doActivityFreeze(JSNodeElement activity, JSInt sct) {
 		let(classes, activity.classList());
 		classes.add(cStateFixedForFreeze);
@@ -109,6 +112,7 @@ public interface JSPageAnimation extends JSClass {
 		actContent.scrollTop().set(sct);
 	}
 
+	@xForceInclude  // evite le cherry picking
 	default void doActivityDeFreeze(JSNodeElement activity) {
 		let(actContent, activity.querySelector(ViewPageLayout.getcContent()));
 
@@ -143,6 +147,7 @@ public interface JSPageAnimation extends JSClass {
 		});
 	}
 
+	@xForceInclude  // evite le cherry picking
 	default void doFixedElemToFixe(JSNodeElement act) {
 		let(listfixedElem, act.querySelectorAll(cFixedElement));
 

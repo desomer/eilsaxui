@@ -13,6 +13,13 @@ import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
 /**
  * @author gauth
  *
+ *	gerer une queue de promise
+ *
+ *		animation1 = aDiv.animate([{ opacity: 1 }, { opacity: 0 }], 1000)
+ *
+ *		queue.add( animation1.promiseFinish)
+ *      queue.wait(100) 
+ *      queue.add( animation2.promiseFinish)
  */
 @xCoreVersion("1")
 public interface JSRequestAnimationFrame extends JSClass {

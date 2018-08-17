@@ -105,7 +105,7 @@ public class ScnComboDyn implements IJSONBuilder {
 		 * TEMPLATE
 		 ********************************************/
 		public XMLElement xItem(JSAny code, JSAny libelle) {
-			return xLi(code, "- ", libelle);
+			return xLi(code, " - ", libelle);
 		}
 
 		public XMLElement xListItem(JSArray<Telephone> listTelephone) {
@@ -118,11 +118,12 @@ public class ScnComboDyn implements IJSONBuilder {
 		 ********************************************/
 		@xTarget(AFTER_CONTENT.class) // le controleur apres chargement du body
 		public XMLElement xLoad() {
-			return xElem(JSTestTemplate.class);
+			return xElem(JSTestTemplate.class);  //TODO a retirer par 
 		}
 
 		// une class JS
 		@xCoreVersion("1")
+		@xTarget     //TODO a faire marcher
 		public interface JSTestTemplate extends JSClass {
 			JSArray<Telephone> data = JSClass.declareType();
 			JSArray<Telephone> result = JSClass.declareType();

@@ -73,7 +73,7 @@ public class ScnDataDriven extends XHTMLPart {
 			/*************************************************************************/
 
 			JSTestDataDriven template = let("template", newJS(JSTestDataDriven.class));
-			JSArray<TestData> listData = let("listData", new JSArray<TestData>().asLitteral());
+			JSArray<TestData> listData = let("listData", JSArray.newLitteral());
 
 			document().querySelector(cMain).appendChild(template.xArray(listData));
 
@@ -88,7 +88,7 @@ public class ScnDataDriven extends XHTMLPart {
 				row.name().set(txt("row ", i));
 				row.id().set(i);			
 				row.oneToOne().set(datarow);
-				row.oneToMany().set(new JSArray<>().asLitteral());
+				row.oneToMany().set(JSArray.newLitteral());
 				
 				listData.push(row);
 			});

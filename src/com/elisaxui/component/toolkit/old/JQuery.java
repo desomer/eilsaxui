@@ -17,9 +17,9 @@ public class JQuery extends JSAny  implements IJSClassInterface {
 	public static final JQuery $(CSSSelector selector)
 	{
 		JQuery ret = new JQuery();
-		ret.addContent("$('");
+		ret.addContent("$(\"");
 		ret.addContent(selector);
-		ret.addContent("')");
+		ret.addContent("\")");
 		return ret;
 	}
 	

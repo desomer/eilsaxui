@@ -15,11 +15,16 @@ public class ResourceLoader {
 
 	String uri;
 	
-	public ResourceLoader(Class ResourceHandler, String id)
+	public ResourceLoader(Class<?> ResourceHandler, String id)
 	{
+		
 		uri = ResourceHandler.getCanonicalName();
+		if (ResourceHandler.getName().indexOf('$')>0)
+			uri = uri.substring(0, uri.lastIndexOf('.'));
 		uri = uri.substring(0, uri.lastIndexOf('.'));
 		uri = uri.replace('.', '/')+'/'+id;
+	
+		
 	}
 	
 	

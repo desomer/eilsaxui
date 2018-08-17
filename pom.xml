@@ -156,6 +156,14 @@
     		<artifactId>closure-compiler</artifactId>
     		<version>v20180610</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf -->
+		<dependency>
+		    <groupId>org.thymeleaf</groupId>
+		    <artifactId>thymeleaf</artifactId>
+		    <version>3.0.9.RELEASE</version>
+		</dependency>
+
   </dependencies>
   
   <build>

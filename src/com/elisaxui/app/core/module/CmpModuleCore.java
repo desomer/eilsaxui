@@ -78,7 +78,7 @@ public class CmpModuleCore extends XHTMLPart implements IResourceLoader {
 	@xImport(idClass = JSActionManager.class)
 	public XMLElement xImportDataDriven() {
 		return xModule(
-				xScriptJS(loadResourceFromURL("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js")),
+				xScriptJS(loadResourceFromURL("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js", false)),
 				JSDataDriven.class,
 				JSDataSet.class);
 	}

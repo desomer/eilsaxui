@@ -10,6 +10,7 @@ import java.nio.file.attribute.*;
 import java.io.*;
 import java.util.*;
 
+import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.xui.XUIFactory;
 
 /**
@@ -72,9 +73,9 @@ public class WatchDir {
         this.recursive = recursive;
 
         if (recursive) {
-            System.out.format("Scanning %s ...\n", dir);
+        	CoreLogger.getLogger(1).fine("Prepare Scanning "+ dir);
             registerAll(dir);
-            System.out.println("Scanning Done.");
+            CoreLogger.getLogger(1).fine("Scanning change done.");
         } else {
             register(dir);
         }
@@ -115,10 +116,20 @@ public class WatchDir {
                 WatchEvent<Path> ev = cast(event);
                 Path name = ev.context();
                 Path child = dir.resolve(name);
-
+                
                 // print out event
-                System.out.format("%s: %s\n", event.kind().name(), child);
-                XUIFactory.changeMgr.mapClass.clear();
+
+                String n = child.toFile().getName();
+                if (n.endsWith(".class"))
+                {
+                    System.out.format("class %s: %s\n", event.kind().name(), child);
+                	XUIFactory.changeMgr.mapClass.clear();
+                }
+                else if (! Files.isDirectory(child))
+                {
+                	System.out.format("file %s: %s\n", event.kind().name(), child);
+                	XUIFactory.changeMgr.dateInjection=null;
+                }
 
                 // if directory is created, and watching recursively, then
                 // register it and its sub-directories

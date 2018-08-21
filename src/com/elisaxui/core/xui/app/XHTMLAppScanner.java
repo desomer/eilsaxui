@@ -6,7 +6,6 @@ package com.elisaxui.core.xui.app;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -32,25 +31,34 @@ import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
 import com.elisaxui.core.xui.xml.annotation.xResource;
 import com.elisaxui.core.xui.xml.builder.VProperty;
 
-import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
-
 /**
  * @author Bureau
- *
+ * 
+ *   a optimiser avec le wathdir
+ *   	ajouter les fichier scanner dans le XHTMLChangeManager changeInfo
+ *      faire des map avec listXHTMLPart, listJSClass ,  listJSClassMethod pour ajouter le nouveau provenant du watchdir
  */
+
 public class XHTMLAppScanner {
 
 	private static final boolean debug = false;
 
-	// TODO mettre en cache
 	public static synchronized XHTMLChangeManager getMapXHTMLPart(XHTMLChangeManager changeInfo) {
 
+		boolean isInject = changeInfo.mapClass.isEmpty();
+		
 		CoreLogger.getLogger(1).info("************ INJECTION DEPENDANCE JS");
+		
 		
 		List<Class<? extends XHTMLPart>> listXHTMLPart = new ArrayList<>(100);
 		List<Class<? extends JSClass>> listJSClass = new ArrayList<>(100);
-		List<Class<? extends JSAny>> listJSClassMethod = new ArrayList<>(100); /**TODO a retirer */
+		List<Class<? extends JSAny>> listJSClassMethod = new ArrayList<>(100); 
 
+		Date now = new Date();
+		Instant instant = now.toInstant();
+		ZonedDateTime zdt = instant.atZone(ZoneId.systemDefault());
+		changeInfo.dateInjection = zdt.toLocalDateTime();
+		
 		changeInfo.listFileChanged.clear();
 
 		long olderFile = 0;
@@ -70,7 +78,7 @@ public class XHTMLAppScanner {
 
 				String path = fileEntry.file.getPath();
 				
-				if (!fileEntry.file.isDirectory() && path.endsWith(".class")) {
+				if (isInject && !fileEntry.file.isDirectory() && path.endsWith(".class")) {
 					try {
 						int idxs = path.indexOf("com");
 						int idxf = path.lastIndexOf(".");
@@ -80,8 +88,14 @@ public class XHTMLAppScanner {
 						Class c = Thread.currentThread().getContextClassLoader().loadClass(classname);
 						if (XHTMLPart.class.isAssignableFrom(c))
 							listXHTMLPart.add(c);
+						
+						else if (c.isInterface() && JSClass.class.isAssignableFrom(c))
+							listJSClass.add(c);
+						
+						else if (JSAny.class.isAssignableFrom(c))
+							listJSClassMethod.add(c);
+						
 					} catch (Throwable e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -89,6 +103,9 @@ public class XHTMLAppScanner {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		CoreLogger.getLogger(1).info("************ INJECTION DEPENDANCE JS SCAN OK");
+		
 		if (changeInfo.lastOlderFile != olderFile) {
 			changeInfo.lastOlderFile = olderFile;
 			changeInfo.nbChangement++;
@@ -96,21 +113,35 @@ public class XHTMLAppScanner {
 		CacheManager.setLastDate(changeInfo.lastOlderFile);
 
 		Date input = new Date(olderFile);
-		Instant instant = input.toInstant();
-		ZonedDateTime zdt = instant.atZone(ZoneId.systemDefault());
+		instant = input.toInstant();
+		zdt = instant.atZone(ZoneId.systemDefault());
 		changeInfo.dateBuild = zdt.toLocalDateTime();
 
 		if (debug)
 			System.out.println(
 					"[XHTMLAppBuilder]********************************************* END SCAN FILE ****************************************");
 
-		/** TODO a changer car scan deja au dessus pour calcul dateBuild **/
 		// new FastClasspathScanner("com.elisaxui").matchSubclassesOf(XHTMLPart.class,
 		// listXHTMLPart::add).scan();
-		new FastClasspathScanner("com.elisaxui").matchSubinterfacesOf(JSClass.class, listJSClass::add).scan();
-		new FastClasspathScanner("com.elisaxui").matchSubclassesOf(JSAny.class, listJSClassMethod::add)
-				.scan();
+//		new FastClasspathScanner("com.elisaxui").matchSubinterfacesOf(JSClass.class, listJSClass::add).scan();
+//		new FastClasspathScanner("com.elisaxui").matchSubclassesOf(JSAny.class, listJSClassMethod::add)
+//				.scan();
 
+		doInjectVariable(changeInfo, listXHTMLPart, listJSClass, listJSClassMethod);
+
+		
+		CoreLogger.getLogger(1).info("************** FIN INJECTION DEPENDANCE JS ");
+		return changeInfo;
+	}
+
+	/**
+	 * @param changeInfo
+	 * @param listXHTMLPart
+	 * @param listJSClass
+	 * @param listJSClassMethod
+	 */
+	private static void doInjectVariable(XHTMLChangeManager changeInfo, List<Class<? extends XHTMLPart>> listXHTMLPart,
+			List<Class<? extends JSClass>> listJSClass, List<Class<? extends JSAny>> listJSClassMethod) {
 		if (debug)
 			System.out.println(
 					"[XHTMLAppBuilder]********************************************* START SCAN XHTMLPart ************************************");
@@ -125,6 +156,7 @@ public class XHTMLAppScanner {
 							+ "   ###################################" + annPage.id());
 				}
 				changeInfo.mapClass.put(annPage.id(), pageClass);
+				CoreLogger.getLogger(1).info("Register "+annPage.id());
 			}
 			initXMLPartVarStatic(pageClass);
 		}
@@ -152,10 +184,6 @@ public class XHTMLAppScanner {
 		if (debug)
 			System.out.println(
 					"[XHTMLAppBuilder]********************************************* END SCAN JSClass ****************************************");
-
-		
-		CoreLogger.getLogger(1).info("************** FIN INJECTION DEPENDANCE JS ");
-		return changeInfo;
 	}
 
 	private static void initXMLPartVarStatic(Class<? extends XMLPart> cl) {

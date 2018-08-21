@@ -122,7 +122,7 @@ public abstract class XUIFactory {
 	 * 
 	 */
 	protected synchronized void initChangeManager() {
-		if (changeMgr.mapClass.isEmpty())
+		if (changeMgr.mapClass.isEmpty() ||  changeMgr.dateInjection==null)
 		{
 			XHTMLAppScanner.getMapXHTMLPart(changeMgr);
 		}

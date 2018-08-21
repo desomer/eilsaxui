@@ -20,7 +20,7 @@ import javax.ws.rs.core.HttpHeaders;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
-import com.elisaxui.core.helper.JSMinifier;
+import com.elisaxui.core.extern.JSMinifier;
 import com.elisaxui.core.helper.URLLoader;
 import com.elisaxui.core.helper.log.CoreLogger;
 
@@ -51,7 +51,7 @@ public class XUIFactoryBasic extends AbstractHandler {
 			
 			if (js.length()>0)
 			{
-				content = JSMinifier.doMinifyJS(js.toString()).toString();	
+				content = JSMinifier.optimizeJS(js.toString(), false);	
 				cache.put(url, content);
 			}
 		}

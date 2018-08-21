@@ -48,7 +48,7 @@ public class JSExecutorHelper {
 		ThreadConfigPreprocessor.set(conf);
 	}
 	
-	public static void initGlobal() throws ScriptException, IOException, NoSuchMethodException
+	public static void initGlobal() throws ScriptException, IOException
 	{
 		if (!VERSION_V8) {
 			System.out.println("----------- START BABEL NASHORN ------------------");

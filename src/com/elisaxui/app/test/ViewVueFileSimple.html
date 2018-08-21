@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<style th:fragment="css" th:inline="css">
+#test {
+	text-align: /*[[${align}]]*/ left;
+	position: fixed;
+    top: 100px;
+    right: 0px;
+    height: 100px;
+    width: 100px;
+    z-index: 10;
+}
+</style>
+
+<template th:fragment="template">
+<div id="test" >
+	<p th:text="${date}">The date</p>
+	<h1>ok</h1>
+</div>
+</template>
+
+<script th:fragment="js" th:inline="javascript">
+	/******** START PSX PROMOD SYNTAX EXTENSION *******/
+	
+	var date = /*[[${date}]]*/ "01/01/1900";
+	var renderer = /*[# th:block th:utext="${renderer}"]*/null /*[/]*/;
+	var style = /*[# th:block th:utext="${stylejs}"]*/null /*[/]*/;
+
+	/*[# th:if="${admin}"]*/
+	console.info('Welcome admin');
+	console.debug('admin version');
+	/*[/]*/
+	/*[# th:unless="${admin}"]*/
+	console.debug('user version');
+	/*[/]*/
+	
+	/*[# th:replace="code.ext"]*/ 
+			/*code a inserer*/ 
+	/*[/]*/
+	
+	var component = document.createElement("div");
+	component.innerHTML = renderer;
+	document.body.appendChild(component);
+
+	var sheet = document.createElement('style');
+	sheet.innerHTML = style;
+	document.head.appendChild(sheet);
+
+	if (/*[[${version}]]*/true) {
+		console.debug('version debug');
+	}
+	/******** STOP PSX *******/
+</script>
+</html>
+

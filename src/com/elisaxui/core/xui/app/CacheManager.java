@@ -62,7 +62,7 @@ public class CacheManager {
 	@SuppressWarnings("unchecked")
 	private static void initDB() {
 		String home = System.getProperty("user.home");
-		String pathdb = home+ File.separator+"fileMapdb.db";
+		String pathdb = home+ File.separator+"JTS"+ File.separator+"fileMapdb.db";
 		
 		CoreLogger.getLogger(1).info(()->"start db at "+pathdb);
 		

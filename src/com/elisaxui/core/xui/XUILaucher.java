@@ -36,6 +36,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 import com.elisaxui.core.helper.JSExecutorHelper;
+import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.xui.app.AppConfig;
 import com.elisaxui.core.xui.app.WatchDir;
 import com.elisaxui.core.xui.app.XHTMLAppScanner;
@@ -182,6 +183,8 @@ public class XUILaucher {
 		WatchDir.start(classpathEntry.getFile() + "com");
 
 		/***************************************************/
+		
+		CoreLogger.getLogger(1).fine("************ SERVER READY *************");
 		server.start();
 		server.join();
 

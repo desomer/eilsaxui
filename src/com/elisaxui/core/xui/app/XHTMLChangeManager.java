@@ -25,5 +25,5 @@ public class XHTMLChangeManager {
 	public long lastOlderFile = 0;
 	public LocalDateTime dateBuild = null;
 		
-	
+	public LocalDateTime dateInjection = null;
 }

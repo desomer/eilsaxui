@@ -68,7 +68,7 @@ public class ScnComboDyn implements IJSONBuilder {
 		public XMLElement xImport() {
 			return xElem(
 					xScriptJS(
-							loadResourceFromURL("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js")),
+							loadResourceFromURL("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js", false)),
 					JSDomBuilder.class,
 					TKPubSub.class,
 					JSDataDriven.class,

@@ -3,8 +3,6 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.javascript.jsclass;
 
-import org.junit.jupiter.params.shadow.com.univocity.parsers.common.beans.PropertyWrapper;
-
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
@@ -15,7 +13,6 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
-import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
 
 /**
  * @author gauth

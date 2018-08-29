@@ -12,6 +12,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
+import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.module.annotation.xExport;
 import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
 
@@ -27,21 +28,19 @@ public interface JSActivityManager extends JSClass {
 
 	JSNodeElement activity = JSClass.declareType();
 	JSNodeElement activityDest = JSClass.declareType();
-	JSPageAnimation animMgr = JSClass.declareType();
+	JSActivityStateManager animMgr = JSClass.declareType();
 
-	@xStatic(autoCall = true)
-	default void init() {
-
-	}
 
 	@xStatic()
-	default JSNodeElement doRouteToActivity(JSString idActivity) {
-		let(animMgr, newJS(JSPageAnimation.class));
+	default JSNodeElement doRouteToActivity(TIntent intent) {
+		let(animMgr, newJS(JSActivityStateManager.class));
 		let(activity, getCurrentActivity());
-		let(activityDest, document().querySelector(txt(CSSSelector.onPath("#", idActivity))));
-		animMgr.doActivityNoDisplay(activity);
-		animMgr.doActivityActive(activityDest);
-		animMgr.doActivityInactive(activity);
+		let(activityDest, document().querySelector(txt(CSSSelector.onPath("#", intent.idActivity()))));
+	//	animMgr.doActivityNoDisplay(activity);
+	//	animMgr.doActivityActive(activityDest);
+	//	animMgr.doActivityInactive(activity);
+		animMgr.doOpenActivityFromBottom(activity, activityDest);
+		
 		return activityDest;
 	}
 
@@ -49,6 +48,14 @@ public interface JSActivityManager extends JSClass {
 	default JSNodeElement getCurrentActivity() {
 		currentActivity().set(document().querySelector(ScnPage.getcMain()).querySelector(CssTransition.activity, CssTransition.active));
 		return currentActivity();
+	}
+	
+	public interface TIntent extends JSType {
+		JSString idActivity();
+		JSString url();	
+		JSString action();
+		
+		JSString nextAnim();
 	}
 
 }

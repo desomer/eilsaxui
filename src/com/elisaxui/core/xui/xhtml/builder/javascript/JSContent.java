@@ -20,6 +20,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSNodeTemplate;
+import com.elisaxui.core.xui.xhtml.builder.json.JSJson;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.json.JsonNumberImpl;
 import com.elisaxui.core.xui.xml.builder.IXMLBuilder;
@@ -259,6 +260,9 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 			} else
 				buf.addContentOnTarget(((JSAny) object).toString());
 			
+		} else if (object instanceof JSJson) {
+			JSJson json =(JSJson)object;
+			json.toXML(buf);
 		} else if (object instanceof JSClass) {
 			Object v = ((JSClass) object)._getContent(); // recup de la valeur du proxy
 			if (v instanceof ArrayMethod) {
@@ -267,7 +271,8 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 					addXML(buf, object2);
 				}
 			} else if (v != null)
-				buf.addContentOnTarget(v);
+				//buf.addContentOnTarget(v);
+				addXML(buf, v);
 			else
 				buf.addContentOnTarget(object.toString()); // recup du nom du proxy
 			
@@ -863,7 +868,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 		return var("this");   // TODO ajouter le cast de type
 	}
 	
-	/****************************************************************/
+	/***************************  CREATION DES SOUS CONTENU POUR LES FCT ANONYM *************/
 	@Override
 	public Object $$subContent() {
 		List<Object> ret = getListElem();
@@ -878,6 +883,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 		return ret;
 	}
 
+	/****************************************************************************************/
 	@Override
 	public <E> E let(Class<E> type, Object name, Object... content) {
 		_var(name, content);

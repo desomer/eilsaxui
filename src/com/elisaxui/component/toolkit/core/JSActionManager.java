@@ -35,7 +35,7 @@ public interface JSActionManager extends JSClass {
 	JSNodeElement targetAction = JSClass.declareType();
 	JSNodeElement activity = JSClass.declareType();
 	JSInt scrollY = JSClass.declareType();
-	JSPageAnimation animMgr = JSClass.declareType();
+	JSActivityStateManager animMgr = JSClass.declareType();
 	JSString actionId = JSClass.declareType();
 	TActionEvent actionEvent = JSClass.declareType();
 	TActionInfo actionInfo = JSClass.declareType();

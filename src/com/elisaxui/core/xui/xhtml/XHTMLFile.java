@@ -24,7 +24,7 @@ import com.elisaxui.core.xui.xml.XMLFile;
 public class XHTMLFile extends XMLFile {
 
 	private static final boolean DEBUG = false;
-	/** liste des classes du fichier */
+	/** liste des classesAct1 du fichier */
 	private Map<String, JSClassBuilder> listClass = new HashMap<String, JSClassBuilder>();
 	private Map<String, ModuleDesc> listClassModule = new HashMap<>();
 	/**

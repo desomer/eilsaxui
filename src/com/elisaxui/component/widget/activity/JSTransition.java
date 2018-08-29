@@ -18,7 +18,6 @@ import com.elisaxui.component.toolkit.old.JQuery;
 import com.elisaxui.component.widget.button.ViewBtnBurger;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
 import com.elisaxui.component.widget.menu.ViewMenu;
-import com.elisaxui.component.widget.overlay.JSOverlay;
 import com.elisaxui.component.widget.overlay.ViewOverlayRipple;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
@@ -36,7 +35,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
  * - gerer status de l'intention (route push or route pop meme page ou autre page SEO) 
  * - ne pas reutiliser une activité deja dans l historique (ou remettre dans l'etat animation du status de l'intention) 
  * - gerer le menu burger comme une activity 
- * - gerer sur tous le animation les classes transitionSpeedx1 transitionSpeedx2 - class StateOpen , StateClose, StateXXX   (voir ViewOverlayRipple)
+ * - gerer sur tous le animation les classesAct1 transitionSpeedx1 transitionSpeedx2 - class StateOpen , StateClose, StateXXX   (voir ViewOverlayRipple)
  * - empecher ou differer le button back durant l'animation sinon pb execution fin d'animation
  *
  */
@@ -85,7 +84,7 @@ public interface JSTransition extends JSClass {
 
 	default JSVoid doToggleBurgerMenu() {
 		
-		JSOverlay overlay = let("overlay", newJS(JSOverlay.class, SPEED_SHOW_MENU, OVERLAY_OPACITY_MENU) ); 
+		JSOverlayOld overlay = let("overlay", newJS(JSOverlayOld.class, SPEED_SHOW_MENU, OVERLAY_OPACITY_MENU) ); 
 		
 		JQuery jqMenu = let( JQuery.class, "jqMenu", $(ViewMenu.menu) );
 		JQuery jqScene = let( JQuery.class, "jqScene", $(scene) );
@@ -260,7 +259,7 @@ public interface JSTransition extends JSClass {
 	}
 
 	default JSVoid doOpenActivityFromBottom() {
-		JSOverlay overlay = let(JSOverlay.class, "overlay", NULL);
+		JSOverlayOld overlay = let(JSOverlayOld.class, "overlay", NULL);
 		_set(overlay, _new(SPEED_SHOW_ACTIVITY, OVERLAY_OPACITY_BACK));
 		JSAny document = declareType(JSAny.class, "document");
 		JSInt sct = let(JSInt.class, "sct", $(document).scrollTop());
@@ -354,7 +353,7 @@ public interface JSTransition extends JSClass {
 		JSInt MEM_SCROLL = cast(JSInt.class,"-1");
 		JSInt SCROLL_TOP = cast(JSInt.class,"0");
 		
-		JSOverlay overlay = let(JSOverlay.class, "overlay", NULL);
+		JSOverlayOld overlay = let(JSOverlayOld.class, "overlay", NULL);
 		_set(overlay, _new(SPEED_SHOW_ACTIVITY, 0.6));
 
 		JSTransition self = let(JSTransition.class, "self", "this");

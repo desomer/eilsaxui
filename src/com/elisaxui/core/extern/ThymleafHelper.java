@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import javax.script.ScriptException;
 
@@ -25,6 +26,10 @@ import org.thymeleaf.templateresolver.AbstractConfigurableTemplateResolver;
 import org.thymeleaf.templateresource.ITemplateResource;
 import org.thymeleaf.templateresource.StringTemplateResource;
 
+import com.elisaxui.app.test.ViewThymLeafJS;
+import com.elisaxui.core.helper.URLLoader;
+import com.elisaxui.core.helper.log.CoreLogger;
+
 /**
  * @author gauth
  * 
@@ -35,11 +40,12 @@ import org.thymeleaf.templateresource.StringTemplateResource;
  *         https://blog.zenika.com/2013/01/18/introducing-the-thymeleaf-template-engine/
  *         https://www.thymeleaf.org/doc/articles/standarddialect5minutes.html
  */
-public class TemplateHelper {
+public class ThymleafHelper {
 
 	private TemplateEngine templateEngine;
 	HashMap<String, String> mapTemplate;
 	Context ctx;
+	Object near;
 
 	/**
 	 * @return the ctx
@@ -58,14 +64,15 @@ public class TemplateHelper {
 	/**
 	 * @param mapTemplate
 	 */
-	public TemplateHelper() {
+	public ThymleafHelper(Object near) {
 		super();
 		this.mapTemplate = new HashMap<>();
 		ctx = new Context();
 		ctx.setVariable("templateMgr", this);
+		this.near = near;
 	}
 
-	public TemplateHelper addTemplate(String name, String template) {
+	public ThymleafHelper addTemplate(String name, String template) {
 		mapTemplate.put(name, template);
 		return this;
 	}
@@ -74,8 +81,9 @@ public class TemplateHelper {
 		if (null == templateEngine) {
 			templateEngine = new TemplateEngine();
 
-			MyThymeleafViewResolver mtlvr = new MyThymeleafViewResolver(mapTemplate);
-			mtlvr.setCacheable(false);
+			MyThymeleafViewResolver mtlvr = new MyThymeleafViewResolver(near, mapTemplate);
+			mtlvr.setCacheable(true);
+			mtlvr.setCacheTTLMs(TimeUnit.SECONDS.toMillis(1));
 			mtlvr.setOrder(1);
 			templateEngine.addTemplateResolver(mtlvr);
 			templateEngine.addDialect(new MyExpression());
@@ -124,7 +132,7 @@ public class TemplateHelper {
 
 	public String getFragment(String fragment) {
 		String[] listTag = fragment.trim().split("::");
-		return getFragment(listTag[0],listTag[1],null);
+		return getFragment(listTag[0],listTag[1]);
 		
 	}
 	
@@ -133,15 +141,10 @@ public class TemplateHelper {
 	 * @param ctx
 	 * @return
 	 */
-	public String getFragment(String loadResource, String idFragment, String tagRemove) {
+	public String getFragment(String loadResource, String idFragment) {
 		final Set<String> fragmentsTemplate = new HashSet<>();
 		fragmentsTemplate.add(idFragment);
 		String fragment = getTemplateFragment(loadResource, fragmentsTemplate, ctx);
-		if (tagRemove != null) {
-			String tagstarttmplt = "<" + tagRemove + ">";
-			String tagendtmplt = "</" + tagRemove + ">";
-			fragment = fragment.substring(tagstarttmplt.length(), fragment.lastIndexOf(tagendtmplt));
-		}
 		return fragment;
 	}
 
@@ -159,10 +162,12 @@ public class TemplateHelper {
 
 		IExpressionContext context;
 		
-		public Object compile(String file, String templateId)
+		public Object compile(String templateId)
 		{
-			TemplateHelper mgr = (TemplateHelper) context.getVariable("templateMgr");
-			String template = mgr.getFragment(file, templateId, null);
+			String[] listTag = templateId.trim().split("::");
+			
+			ThymleafHelper mgr = (ThymleafHelper) context.getVariable("templateMgr");
+			String template = mgr.getFragment(listTag[0], listTag[1]);
 			
 			String templateJS = null;
 			try {
@@ -177,6 +182,7 @@ public class TemplateHelper {
 		}
 	}
 	
+	/*****************************************************************************/
 	static class MyExpression implements IExpressionObjectDialect 
 	{
 
@@ -185,9 +191,6 @@ public class TemplateHelper {
 			return "MyExpression";
 		}
 
-		/* (non-Javadoc)
-		 * @see org.thymeleaf.dialect.IExpressionObjectDialect#getExpressionObjectFactory()
-		 */
 		@Override
 		public IExpressionObjectFactory getExpressionObjectFactory() {
 			return new IExpressionObjectFactory() {
@@ -215,20 +218,30 @@ public class TemplateHelper {
 		
 	}
 	
+	/********************************************************************/
 	
 	static class MyThymeleafViewResolver extends AbstractConfigurableTemplateResolver {
 		Map<String, String> mapTemplate;
+		Object nearObject = null;
 
-		public MyThymeleafViewResolver(Map<String, String> mapTemplate) {
+		public MyThymeleafViewResolver(Object nearObject, Map<String, String> mapTemplate) {
 			this.mapTemplate = mapTemplate;
+			this.nearObject = nearObject;
 		}
 
 		@Override
 		protected ITemplateResource computeTemplateResource(IEngineConfiguration configuration, String ownerTemplate,
 				String template, String resourceName, String characterEncoding,
 				Map<String, Object> templateResolutionAttributes) {
+			
+			String templateString = mapTemplate.get(resourceName);
+			
+			CoreLogger.getLogger(1).info(()->"load " + resourceName);
+			
+			if (templateString==null)
+				templateString  = URLLoader.loadResourceNearClass(nearObject, resourceName, false);
 
-			return new StringTemplateResource(mapTemplate.get(resourceName));
+			return new StringTemplateResource(templateString);
 		}
 	}
 

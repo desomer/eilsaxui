@@ -13,7 +13,7 @@ import com.elisaxui.component.widget.navbar.ViewNavBar;
 import com.elisaxui.component.widget.tabbar.ViewTabBar;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xMount;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.XHTMLPartMount;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.XHTMLPartJS;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
@@ -30,7 +30,7 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  * @author gauth
  *
  */
-public class MntPage extends XHTMLPartMount implements IJSDataDriven, IJSMountFactory {
+public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFactory {
 
 	static TMain aMainMount;
 	static JSArray<TPage> listPage;

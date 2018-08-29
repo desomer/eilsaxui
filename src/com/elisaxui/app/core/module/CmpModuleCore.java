@@ -7,13 +7,15 @@ import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.component.toolkit.TKQueue;
 import com.elisaxui.component.toolkit.com.TKCom;
 import com.elisaxui.component.toolkit.core.JSActionManager;
+import com.elisaxui.component.toolkit.core.JSActivityAnimation;
 import com.elisaxui.component.toolkit.core.JSActivityManager;
-import com.elisaxui.component.toolkit.core.JSPageAnimation;
+import com.elisaxui.component.toolkit.core.JSActivityStateManager;
 import com.elisaxui.component.toolkit.core.JSRequestAnimationFrame;
 import com.elisaxui.component.toolkit.core.JSTouchManager;
 import com.elisaxui.component.toolkit.datadriven.JSDataBinding;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
+import com.elisaxui.component.widget.overlay.JSOverlay;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.builder.module.annotation.xImport;
@@ -52,7 +54,9 @@ public class CmpModuleCore extends XHTMLPart implements IResourceLoader {
 	@xImport(idClass = TKPubSub.class)
 	public XMLElement xStandard() {
 		return xModule(
-				JSPageAnimation.class,
+				JSOverlay.class,
+				JSActivityStateManager.class,
+				JSActivityAnimation.class,
 				JSTouchManager.class,
 				JSActionManager.class,
 				JSActivityManager.class,

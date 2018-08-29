@@ -27,7 +27,7 @@ import com.elisaxui.core.xui.xhtml.builder.css.ICSSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.XHTMLPartMount;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.XHTMLPartJS;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
@@ -56,7 +56,7 @@ public class ScnComboDyn implements IJSONBuilder {
 	 * VIEW
 	 ***********************************************/
 	@xResource(id = "ScnComboDyn")
-	public static class CmpComboTelephone extends XHTMLPartMount implements IJSDataDriven, ICSSBuilder, IResourceLoader, IJSMountFactory {
+	public static class CmpComboTelephone extends XHTMLPartJS implements IJSDataDriven, ICSSBuilder, IResourceLoader, IJSMountFactory {
 		static CSSClass cULMain;
 		static Telephone aRow;
 

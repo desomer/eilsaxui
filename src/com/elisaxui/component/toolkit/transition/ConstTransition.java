@@ -19,6 +19,7 @@ public class ConstTransition {
 	
 	public static final String NEXT_FRAME = "'nextFrame'";
 	public static final int BUG_NEXT_FRAME_CHROME_V67 = 100;
+	//public static final String BUG_NEXT_FRAME_CHROME_V67 = "'nextFrame'";
 	
 	public static final int SPEED_ANIMATED = (int)(1000*COEF_ANIM);
 	

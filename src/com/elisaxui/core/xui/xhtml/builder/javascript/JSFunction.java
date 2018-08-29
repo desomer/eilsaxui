@@ -173,10 +173,10 @@ public class JSFunction extends JSContent implements JSElement {
 		try {
 			ProxyMethodDesc m = ProxyHandler.getMethodDescFromStacktrace();
 			
-			if (m.lastMthNoInserted!=null)
+			if (m.mthNoInserted!=null)
 			{
-				String classMeth = m.lastMthNoInserted.toString();
-				setComment("anonym " + classMeth.substring(classMeth.lastIndexOf('.')+1)+".java:"+m.lastLineNoInsered);
+				String classMeth = m.mthNoInserted.toString();
+				setComment("anonym " + classMeth.substring(classMeth.lastIndexOf('.')+1)+".java:"+m.lineNoInsered);
 			}		
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block

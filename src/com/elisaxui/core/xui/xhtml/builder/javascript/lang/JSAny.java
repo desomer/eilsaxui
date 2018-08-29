@@ -411,8 +411,8 @@ public class JSAny implements JSElement {
 						if (JSClass.class.isAssignableFrom(Class.forName(stackTraceElement.getClassName()))  && stackTraceElement.getLineNumber()!=-1 )
 						{
 							numLigne = stackTraceElement.getLineNumber();
-							currentMethodDesc.lastLineNoInsered = numLigne;
-							currentMethodDesc.lastMthNoInserted = obj;
+							currentMethodDesc.lineNoInsered = numLigne;
+							currentMethodDesc.mthNoInserted = obj;
 							break;
 						}
 				} catch (ClassNotFoundException e) {

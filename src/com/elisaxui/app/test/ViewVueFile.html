@@ -3,44 +3,47 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <!--  IMPORT -->
-<head th:fragment="import"  th:remove="tag">
-	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<head th:fragment="import" th:remove="tag">
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
+
 
 <!--  CSS  -->
 <style th:fragment="css" th:inline="css">
-	#app p {
-		color: red;
-	}
+#app p {
+	color: red;
+}
 </style>
 
+
 <!--  APPSHELL  -->
-<div id="app1" th:fragment="appshell"></div>
+<div id="app" th:fragment="appshell"></div>
+
 
 <!--  TEMPLATE VUEJS  -->
 <div id="app" th:fragment="template">
 	<h1 v-once>{{ message }}</h1>
 	<p>{{ message }}</p>
 	<input v-model="message">
+	<p v-once>{{ info }}</p>
 	<h2 v-once>once {{ message }}</h2>
 </div>
 
-<!--  SCRIPT  -->
-<script th:fragment="otherjs" th:remove="tag" th:inline="javascript">
-	var fctAjout = (p)=>{ console.log(p); };
-</script>
-
 
 <!--  SCRIPT VUESJS -->
-<script th:fragment="js" th:inline="javascript">
-	var renderjson = /*[# th:utext="${# vuejs.compile('main','template')}" ]*/ {} /*[/]*/;
+<script th:fragment="js" th:remove="tag" th:inline="javascript">
+	var renderjson = /*[# th:utext= "${# vuejs.compile('ViewVueFile.html::template')}" ]*/ {} /*[/]*/;
 	
-	//var methods = /*[# th:utext="~{main::otherjs}" ]*/ {} /*[/]*/;
-
-	/*[# th:replace="~{main::otherjs}"]*/  /* ajout code dynamique d'ajout */  /*[/]*/
+	/*[# th:if=${modeapp}]*/
+		var methods = /*[# th:utext= ~{ViewVueMethod.js} ]*/ ()=>{} /*[/]*/;
+	/*[/]*/
 	
+	/*[# th:replace="~{ViewVueFile.html::otherjs}"]*/  
+			/* ajout code fctAjout */  
+	/*[/]*/
+		
 	var instVue1 = new Vue({
-		el : '#app1',
+		el : '#app',
 		
 		render : renderjson.render,
 		staticRenderFns : renderjson.staticRender,
@@ -50,9 +53,21 @@
 		},
 		
 		data : {
-			message : 'bonjour PSX!'
+			message : 'bonjour '+ /*[# th:text=${user}]*/  'ici on remplace par user'  /*[/]*/ +' !!!! ',
+			info : /*[[${user}]]*/ 'ok' ,
+			qte : 12
 		}
-	})
+	});
+	
+</script>
+
+
+<!--  SCRIPT INLINE -->
+<script th:fragment="otherjs" th:remove="tag" th:inline="javascript">
+	var fctAjout = (p)=>{ console.log(p); };
+	
+	if (false)
+		console.debug("zzz");
 </script>
 
 

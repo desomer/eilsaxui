@@ -35,6 +35,7 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 
+import com.elisaxui.core.helper.ChromeManager;
 import com.elisaxui.core.helper.JSExecutorHelper;
 import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.xui.app.AppConfig;
@@ -184,10 +185,16 @@ public class XUILaucher {
 
 		/***************************************************/
 		
-		CoreLogger.getLogger(1).fine("************ SERVER READY *************");
+
 		server.start();
+		
+		CoreLogger.getLogger(1).fine("************ SERVER READY *************");
+		ChromeManager.openChrome("https://localhost:9998/rest/page/fr/fra/id/ScnListPage");
+		
 		server.join();
 
+
+		
 	}
 
 	/**
@@ -209,7 +216,7 @@ public class XUILaucher {
 	}
 
 	private static ResourceConfig resourceConfig() {
-		// manually injecting dependencies (clock) to Jersey resource classes
+		// manually injecting dependencies (clock) to Jersey resource classesAct1
 		ResourceConfig config = new ResourceConfig();
 
 		config.register(XUIFactoryXHtml.class);

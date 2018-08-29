@@ -13,6 +13,14 @@ import com.elisaxui.core.xui.xml.annotation.xTarget;
 import com.elisaxui.core.xui.xml.builder.XMLElement;
 import static com.elisaxui.component.page.CssPage.*;
 
+
+/**
+ * 
+ * @author gauth
+ *   TODO pour les perf
+ *    https://developers.google.com/web/updates/2016/06/css-containment
+ */
+
 @xComment("CssTransition")
 public class CssTransition extends XHTMLPart {
 
@@ -45,6 +53,7 @@ public class CssTransition extends XHTMLPart {
 	public static CSSClass cStateBackActivity;
 	
 	public static CSSClass cStateMoveToBottom;
+	public static CSSClass cStateHiddenToBottom;
 	public static CSSClass cStateMoveToFront;
 	public static CSSClass cStateNoDisplay;
 	
@@ -64,9 +73,15 @@ public class CssTransition extends XHTMLPart {
 				.path(activity.and(cStateMoveToBottom)).set(
 						"transform: translate3d(0px,100%,0px);"
 						+ "transition:transform "+SPEED_SHOW_ACTIVITY +"ms ease-in-out;")	
+				
+				.path(activity.and(cStateHiddenToBottom)).set(
+						"transform: translate3d(0px,100%,0px);")
+				
 				.path(activity.and(cStateMoveToFront)).set(
 						"transform: translate3d(0px,0px,0px);"
 						+ "transition:transform "+SPEED_SHOW_ACTIVITY +"ms ease-in-out;")  
+				
+				
 				.path(activity.and(cStateNoDisplay)).set("display:none;")
 				
 				.path(activity)

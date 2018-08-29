@@ -10,8 +10,10 @@ window.TKQueue = function() {
 				if(isNumber(item)) { // delay
 					interval = setTimeout(api, item);
 				} else if(typeof item === 'function') { // functions
-					item();
+					fastdom.mutate(item);
 					api();
+				} else if(typeof item === 'string' && item=='nextFrame' ) {
+					fastdom.mutate( function() { fastdom.measure(api); });
 				}
 			} else {
 				clearTimeout(interval);

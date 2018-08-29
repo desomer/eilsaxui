@@ -16,14 +16,14 @@ import com.elisaxui.component.page.ScnPage;
 import com.elisaxui.component.toolkit.core.JSActionManager;
 import com.elisaxui.component.toolkit.core.JSActionManager.TActionEvent;
 import com.elisaxui.component.toolkit.core.JSActivityManager;
-import com.elisaxui.component.toolkit.core.JSPageAnimation;
+import com.elisaxui.component.toolkit.core.JSActivityManager.TIntent;
+import com.elisaxui.component.toolkit.core.JSActivityStateManager;
 import com.elisaxui.component.toolkit.datadriven.IJSMountFactory;
 import com.elisaxui.component.toolkit.datadriven.JSDataBinding;
 import com.elisaxui.component.widget.button.CssRippleEffect.JSRippleEffect;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
 import com.elisaxui.component.widget.navbar.ViewNavBar;
 import com.elisaxui.component.widget.tabbar.ViewTabBar;
-import com.elisaxui.core.xui.xhtml.builder.css.ICSSBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
@@ -51,7 +51,7 @@ import com.elisaxui.core.xui.xml.target.FILE;
  */
 @xResource(id = "ScnPage")
 @xComment("Scene Page A")
-public class ScnPageA extends ScnPage implements ICSSBuilder {
+public class ScnPageA extends ScnPage {
 
 	@xTarget(FILE.class)
 	@xResource(id = "xListPage.mjs") // insert un <Script type module> dans le body
@@ -62,13 +62,14 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 	@xTarget(AFTER_BODY.class)
 	@xResource(id = "xControlerPageA.mjs", async = false) // insert un <Script type module> dans le body
 	@xImport(idClass = JSMount.class)
-	@xImport(idClass = JSPageAnimation.class)
+	@xImport(idClass = JSActivityStateManager.class)
 	@xImport(idClass = JSRippleEffect.class)
 	@xImport(idClass = JSActionManager.class)
 	@xImport(idClass = JSActivityManager.class)
 	@xImport(idClass = JSDataBinding.class)
-	@xImport(idClass = ActPageA1.class)
+	@xImport(idClass = ActPageA1.class)  
 	@xImport(idClass = ActPageA2.class)
+	@xImport(idClass = ActPageA3.class)
 	public XMLElement xControlerPage() {
 		return xElem(JSController.class);
 	}
@@ -89,8 +90,10 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 		double heighttab = 3.5;
 
 		vProp(ViewPageLayout.pStyleContent,
-				"min-height: 100vh; min-width: 100vw; padding-top: " + (heightnav + .5) + "rem; padding-bottom: "
-						+ heighttab + "rem");
+				"min-height: 100vh; min-width: 100vw; "
+				+ "background-color: rgb(245, 243, 237); "
+				+ "padding-top: " + (heightnav + .5) + "rem; "
+				+ "padding-bottom: "+ heighttab + "rem");
 
 		vProp(ViewNavBar.pStyle,
 				"background:linear-gradient(to bottom, rgb(255, 191, 97) 0%, rgb(255, 152, 0) 64%, rgb(241, 197, 133) 100%);"
@@ -113,13 +116,14 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 	static JSInt idx;
 	static JSArray<TBtn> list;
 	static JSArray<TPage> arrPage;
-	static JSPageAnimation animMgr;
+	static JSActivityStateManager animMgr;
 	static JSNodeElement activity;
 	static JSNodeElement activityDest;
 	static TPage aPage;
 
 	static JSArray<TMain> arrMount;
 	static TMain aMount;
+	static TIntent aIntent;
 
 	@xExport
 	@xCoreVersion("1")
@@ -154,9 +158,9 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 			consoleDebug(txt("arrMount ="), arrMount);
 
 			/**************************************************************************************/
-			let(animMgr, newJS(JSPageAnimation.class));
+			let(animMgr, newJS(JSActivityStateManager.class));
 
-			doMoveOnAction();
+//			doMoveOnAction();
 			
 			
 			actionManager.addAction(JSString.value("ACTMOUNT1"), _this(), fct(() -> {
@@ -169,28 +173,35 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 //						"history.pushState(stateObj, \"page 2\", \"/bar.html\")");
 			}));
 
-			actionManager.addAction(JSString.value("A"), _this(), fct(() -> {
+			actionManager.addAction(JSString.value("CHANGE"), _this(), fct(() -> {
 				doChangeContent(arrPage);
 			}));
 			
-			actionManager.addAction(JSString.value("B"), _this(), fct(() -> {
+			actionManager.addAction(JSString.value("TO_PAGE_B"), _this(), fct(() -> {
 				__("location.assign('/rest/page/fr/fra/id/ScnPageB')");
 			}));
 			
 			actionManager.addAction(JSString.value("TO_NEXT"), _this(), fct(() -> {
-				activityManager.doRouteToActivity(JSString.value("Page2"));
+				let(aIntent, newJS(TIntent.class));
+				aIntent.idActivity().set("Page2");
+				activityManager.doRouteToActivity(aIntent);
 			}));
 			
-			actionManager.addAction(JSString.value("C2"), _this(), fct(() -> {
-				activityManager.doRouteToActivity(JSString.value("Page3"));
+			actionManager.addAction(JSString.value("TO_PAGE3"), _this(), fct(() -> {
+				let(aIntent, newJS(TIntent.class));
+				aIntent.idActivity().set("Page3");
+				activityManager.doRouteToActivity(aIntent);
 			}));
 			
-			actionManager.addAction(JSString.value("D"), _this(), fct(() -> {
-				activityManager.doRouteToActivity(JSString.value("Page1"));
+			actionManager.addAction(JSString.value("TO_PAGE1"), _this(), fct(() -> {
+				let(aIntent, newJS(TIntent.class));
+				aIntent.idActivity().set("Page1");
+				activityManager.doRouteToActivity(aIntent);
 			}));
 					
 		}
 
+		/*****************************************************************************************/
 		@xStatic()
 		default void doChangeContent(JSArray<TPage> arrPage) {
 			arrPage.setArrayType(TPage.class);
@@ -208,12 +219,14 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 			});
 		}
 
+		
+		/****************************************************************************************/
 		@xStatic()
 		default void doMoveOnAction() {
 			actionManager.onStart(fct(actionEvent, () -> {
 				_if(actionEvent.actionTarget().notEqualsJS(null)).then(() -> {
 					/***************************************************/
-					let(animMgr, newJS(JSPageAnimation.class));
+					let(animMgr, newJS(JSActivityStateManager.class));
 					animMgr.doActivityFreeze(actionEvent.activity(), actionEvent.scrollY());
 					animMgr.doFixedElemToAbsolute(actionEvent.activity());
 					/***************************************************/
@@ -233,7 +246,7 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 			actionManager.onStop(fct(actionEvent, () -> {
 				_if(actionEvent.actionTarget().notEqualsJS(null)).then(() -> {
 					/***************************************************/
-					let(animMgr, newJS(JSPageAnimation.class));
+					let(animMgr, newJS(JSActivityStateManager.class));
 					let(activity, actionEvent.activity());
 
 					animMgr.doActivityDeFreeze(activity);

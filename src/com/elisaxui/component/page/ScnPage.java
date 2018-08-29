@@ -58,6 +58,7 @@ public class ScnPage extends XHTMLPart implements ICSSBuilder {
 				xStyle(() -> {
 					sOn(sSel("html"), () -> css("font-size: 16px;"));
 					sOn(sSel("body"), () -> css("font-family: 'Roboto', sans-serif; font-weight: normal;"));
+					sOn(sSel(cMain), () -> css("background-color: #333333; min-height: 100vh;"));
 				}));
 	}
 

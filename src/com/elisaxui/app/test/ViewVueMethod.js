@@ -1,0 +1,2 @@
+function() { a = 'ok1';}
+

@@ -43,7 +43,7 @@ public interface ActPageA2 extends JSClass, IJSNodeTemplate, IJSMountFactory {
 		JSArray<TBtn> dataNabBar = JSArray.newLitteral();
 		btn = newJS(TBtn.class);
 		btn.titre().set("arrow_back");
-		btn.action().set("D");
+		btn.action().set("TO_PAGE1");
 		btn.mountBtn().set(MountBtn.class);
 		dataNabBar.push(btn);
 
@@ -70,7 +70,7 @@ public interface ActPageA2 extends JSClass, IJSNodeTemplate, IJSMountFactory {
 
 		btn = newJS(TBtn.class);
 		btn.titre().set("apps");
-		btn.action().set("C2");
+		btn.action().set("TO_PAGE3");
 		btn.mountBtn().set(MountBtn.class);
 		dataTabBar.push(btn);
 

@@ -42,6 +42,14 @@ import com.elisaxui.core.xui.xml.builder.VProperty;
 public class XHTMLAppScanner {
 
 	private static final boolean debug = false;
+	private static final ArrayList<String> listURL = new ArrayList<>();
+
+	/**
+	 * @return the listurl
+	 */
+	public static final ArrayList<String> getListurl() {
+		return listURL;
+	}
 
 	public static synchronized XHTMLChangeManager getMapXHTMLPart(XHTMLChangeManager changeInfo) {
 
@@ -127,6 +135,7 @@ public class XHTMLAppScanner {
 //		new FastClasspathScanner("com.elisaxui").matchSubclassesOf(JSAny.class, listJSClassMethod::add)
 //				.scan();
 
+		listURL.clear();
 		doInjectVariable(changeInfo, listXHTMLPart, listJSClass, listJSClassMethod);
 
 		
@@ -157,6 +166,7 @@ public class XHTMLAppScanner {
 				}
 				changeInfo.mapClass.put(annPage.id(), pageClass);
 				CoreLogger.getLogger(1).info("Register "+annPage.id());
+				listURL.add("https://localhost:9998/rest/page/fr/fra/id/"+annPage.id());
 			}
 			initXMLPartVarStatic(pageClass);
 		}

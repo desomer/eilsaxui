@@ -10,11 +10,9 @@ import com.elisaxui.app.core.module.MntPage.MountTabBar;
 import com.elisaxui.app.core.module.MntPage.TBtn;
 import com.elisaxui.app.core.module.MntPage.TPage;
 import com.elisaxui.component.toolkit.datadriven.IJSMountFactory;
-import com.elisaxui.component.toolkit.datadriven.JSDataSet;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSWindow;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.IJSNodeTemplate;
@@ -61,13 +59,13 @@ public interface ActPageA1 extends JSClass , IJSNodeTemplate, IJSMountFactory {
 		JSArray<TBtn> dataTabBar = JSArray.newLitteral() ;
 
 		btn.titre().set("schedule");
-		btn.action().set("A");
+		btn.action().set("CHANGE");
 		btn.mountBtn().set(MountBtn.class);
 		dataTabBar.push(btn);
 
 		btn = newJS(TBtn.class);
 		btn.titre().set("today");
-		btn.action().set("B");
+		btn.action().set("TO_PAGE_B");
 		btn.mountBtn().set(MountBtn.class);
 		dataTabBar.push(btn);
 

@@ -31,6 +31,11 @@ public class JSWindow extends JSAny  implements IJSClassInterface {
 		return castAttr(new JSInt(), "pageYOffset");
 	}
 	
+	public JSInt innerHeight()
+	{
+		return castAttr(new JSInt(), "innerHeight");
+	}
+	
 	public JSWindow scrollTo(Object... value)
 	{
 		return callMth("scrollTo", value);

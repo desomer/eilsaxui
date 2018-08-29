@@ -2,7 +2,7 @@
 
 <html xmlns:th="http://www.thymeleaf.org">
 
-<style th:fragment="css" th:inline="css">
+<style th:fragment="css" th:inline="css"  th:remove="tag">
 #test {
 	text-align: /*[[${align}]]*/ left;
 	position: fixed;
@@ -14,14 +14,14 @@
 }
 </style>
 
-<template th:fragment="template">
+<template th:fragment="template"  th:remove="tag">
 <div id="test" >
 	<p th:text="${date}">The date</p>
 	<h1>ok</h1>
 </div>
 </template>
 
-<script th:fragment="js" th:inline="javascript">
+<script th:fragment="js" th:inline="javascript" th:remove="tag">
 	/******** START PSX PROMOD SYNTAX EXTENSION *******/
 	
 	var date = /*[[${date}]]*/ "01/01/1900";
@@ -36,7 +36,7 @@
 	console.debug('user version');
 	/*[/]*/
 	
-	/*[# th:replace="code.ext"]*/ 
+	/*[# th:replace="code"]*/ 
 			/*code a inserer*/ 
 	/*[/]*/
 	

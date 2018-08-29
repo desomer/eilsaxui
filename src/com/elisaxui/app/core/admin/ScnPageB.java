@@ -15,7 +15,7 @@ import com.elisaxui.app.core.module.MntPage.TBtn;
 import com.elisaxui.app.core.module.MntPage.TPage;
 import com.elisaxui.component.page.ScnPage;
 import com.elisaxui.component.toolkit.core.JSActionManager;
-import com.elisaxui.component.toolkit.core.JSPageAnimation;
+import com.elisaxui.component.toolkit.core.JSActivityStateManager;
 import com.elisaxui.component.toolkit.core.JSActionManager.TActionEvent;
 import com.elisaxui.component.toolkit.datadriven.IJSMountFactory;
 import com.elisaxui.component.toolkit.datadriven.JSDataBinding;
@@ -52,7 +52,7 @@ public class ScnPageB extends ScnPage implements ICSSBuilder {
 	@xTarget(AFTER_BODY.class)
 	@xResource(id = "xControlerPageB.mjs") // insert un <Script type module> dans le body
 	@xImport(idClass = JSMount.class)
-	@xImport(idClass = JSPageAnimation.class)
+	@xImport(idClass = JSActivityStateManager.class)
 	@xImport(idClass = JSRippleEffect.class)
 	@xImport(idClass = JSActionManager.class)
 	@xImport(idClass = JSDataBinding.class)
@@ -90,7 +90,7 @@ public class ScnPageB extends ScnPage implements ICSSBuilder {
 	static JSInt idx;
 	static JSArray<TBtn> list;
 	static JSArray<TPage> arrPage;
-	static JSPageAnimation animMgr;
+	static JSActivityStateManager animMgr;
 	static JSNodeElement activity;
 
 	@xExport
@@ -156,7 +156,7 @@ public class ScnPageB extends ScnPage implements ICSSBuilder {
 			consoleDebug(txt("jsonpage="), arrPage);
 			/*****************************************************************/
 
-			let(animMgr, newJS(JSPageAnimation.class));
+			let(animMgr, newJS(JSActivityStateManager.class));
 
 			__("fastdom.mutate(", fct(() -> {
 				let(activity, document().querySelector("#Page1"));

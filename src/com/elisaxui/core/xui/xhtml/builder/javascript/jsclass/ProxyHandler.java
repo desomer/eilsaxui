@@ -17,7 +17,6 @@ import java.util.Iterator;
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 
-import com.elisaxui.core.helper.JSONBeautifier;
 import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
@@ -29,13 +28,13 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xInLine;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
+import com.elisaxui.core.xui.xhtml.builder.json.JSJson;
 import com.elisaxui.core.xui.xml.builder.XUIFormatManager;
 
 public final class ProxyHandler implements InvocationHandler {
 
 	private static final String DU_JS_CONTENT = "  du JSContent ";
 	private static final String OF_CLASS = " of class ";
-	private static final boolean TEST_ANONYM = true;
 	private static final Object NOT_USED = "NOT_USED";
 	private static final JSContent NOT_USED_CONTENT = new JSContent();
 
@@ -59,7 +58,6 @@ public final class ProxyHandler implements InvocationHandler {
 	private Object parentLitteral;
 
 	private String currentFctBuildByProxy = null; //
-	private boolean testInLineInProgress = false; // test si la methode doit retourner une fonction anonym
 
 	/**
 	 * interception des appel de methode de interface - creer une JSClassImpl si
@@ -87,9 +85,7 @@ public final class ProxyHandler implements InvocationHandler {
 			// creer le js du call de la fct
 			/********************************************************************/
 			ret = JSClassBuilder.toJSCall(getStringProxyContent(), method, args); // utilise le nom du proxy
-			if (!testInLineInProgress) {
-				registerCallMethodJS(ret, ThreadLocalMethodDesc.get());
-			}
+			registerCallMethodJS(ret, ThreadLocalMethodDesc.get());
 		} else {
 
 			/********************************************************************/
@@ -113,11 +109,11 @@ public final class ProxyHandler implements InvocationHandler {
 			}
 
 			ProxyMethodDesc m = ThreadLocalCurrentFct.get();
-			if (m != null && m.lastLineNoInsered == -1) {
+			if (m != null && m.lineNoInsered == -1) {
 				ProxyMethodDesc currentMethodDesc = getMethodDescFromStacktrace();
 
-				if (currentMethodDesc != null && currentMethodDesc.lastLineNoInsered != -1)
-					m.lastLineNoInsered = currentMethodDesc.lastLineNoInsered;
+				if (currentMethodDesc != null && currentMethodDesc.lineNoInsered != -1)
+					m.lineNoInsered = currentMethodDesc.lineNoInsered;
 			}
 		}
 
@@ -126,27 +122,30 @@ public final class ProxyHandler implements InvocationHandler {
 
 	private Object doCallImplementJSClass(ProxyMethodDesc mthInvoke) throws Throwable {
 		Object ret = null;
-		if (testInLineInProgress) {
-			ret = JSClassBuilder.toJSCall("this", mthInvoke.method, mthInvoke.args); // ne creer pas la fct en
+
+		if (currentFctBuildByProxy == null) { // test si meth en cours de build
+			/*******************************************/
+			/***** APPEL DES FUNCTION DE LA CLASSE *****/
+			/*******************************************/
+			ret = doCallImplementJSClassMethod(mthInvoke);
+
 		} else {
-
-			if (currentFctBuildByProxy == null) { // test si meth en cours de build
-				/*******************************************/
-				/***** APPEL DES FUNCTION DE LA CLASSE *****/
-				/*******************************************/
-				ret = doCallImplementJSClassMethod(mthInvoke);
-
-			} else {
-				/*****************************************************
-				 * APPEL A UNE AUTRE FCT INTERNE A LA FCT EN COURS DU PROXY => AJOUTE DANS
-				 * getListHandleFuntionPrivate
-				 *****************************************************/
-				ret = doCallImplementJSClassMethodInternal(mthInvoke);
-			}
+			/*****************************************************
+			 * APPEL A UNE AUTRE FCT INTERNE A LA FCT EN COURS DU PROXY => AJOUTE DANS
+			 * getListHandleFuntionPrivate
+			 *****************************************************/
+			ret = doCallImplementJSClassMethodInternal(mthInvoke);
 		}
 		return ret;
 	}
 
+	/**
+	 * appel une fonction d'une autre classe puis les cherry picking interne
+	 * 
+	 * @param mthInvoke
+	 * @return
+	 * @throws Throwable
+	 */
 	private Object doCallImplementJSClassMethod(ProxyMethodDesc mthInvoke) throws Throwable {
 		mthInvoke.implcl.getListDistinctFct().put(mthInvoke.idMeth, mthInvoke.idMeth);
 		currentFctBuildByProxy = mthInvoke.idMeth;
@@ -164,7 +163,7 @@ public final class ProxyHandler implements InvocationHandler {
 		traceDebug("begin create mth", mthInvoke.idMeth, mthInvoke.implcl, currentMethodDesc.content, NOT_USED);
 
 		// creer le code en appelant la fct
-		JSFunction fct = createJSFunctionImpl(mthInvoke, !TEST_ANONYM);
+		JSFunction fct = createJSFunctionImpl(mthInvoke);
 		mthInvoke.implcl.addFunction(fct);
 		ThreadLocalMethodDesc.set(lastMethodDesc);
 
@@ -178,12 +177,17 @@ public final class ProxyHandler implements InvocationHandler {
 		return ret;
 	}
 
+	/**
+	 * appel une fonction interne (ajouter par cherry picking) gestion des inline
+	 * 
+	 * @param mthInvoke
+	 * @return
+	 * @throws Throwable
+	 */
 	private Object doCallImplementJSClassMethodInternal(ProxyMethodDesc mthInvoke) throws Throwable {
 		Object ret = null;
 
 		boolean isJSClass = JSClass.class.isAssignableFrom(mthInvoke.method.getDeclaringClass());
-		// boolean isInline =
-		// IInlineJS.class.isAssignableFrom(mthInvoke.method.getDeclaringClass());
 
 		xInLine isInLine = mthInvoke.method.getAnnotation(xInLine.class);
 
@@ -212,27 +216,27 @@ public final class ProxyHandler implements InvocationHandler {
 					break;
 				}
 			}
-			int lastNumLine = ThreadLocalMethodDesc.get().lastLineNoInsered;
+			int lastNumLine = ThreadLocalMethodDesc.get().lineNoInsered;
 			if (lastNumLine >= numLigne)
-				ThreadLocalMethodDesc.get().lastMthNoInserted = null;
+				ThreadLocalMethodDesc.get().mthNoInserted = null;
 			/******************************************************************************/
 		} else {
-			JSFunction anon = isInLineMethod(mthInvoke);
-			if (anon != null)
-				ret = anon;
-			else {
-				/*******************************************************************************/
-				traceDebug("call other mth same class", mthInvoke.idMeth, mthInvoke.implcl, NOT_USED_CONTENT, NOT_USED);
+			// JSFunction anon = isInLineMethod(mthInvoke);
+			// if (anon != null)
+			// ret = anon;
+			// else {
+			/*******************************************************************************/
+			traceDebug("call other mth same class", mthInvoke.idMeth, mthInvoke.implcl, NOT_USED_CONTENT, NOT_USED);
 
-				// ajoute une methode de la meme class à creer par la suite
-				mthInvoke.implcl.getListHandleFuntionPrivate().add(mthInvoke);
+			// ajoute une methode de la meme class à creer par la suite
+			mthInvoke.implcl.getListHandleFuntionPrivate().add(mthInvoke);
 
-				// creer le js du call de la fct
-				ret = JSClassBuilder.toJSCall("this", mthInvoke.method, mthInvoke.args);
+			// creer le js du call de la fct
+			ret = JSClassBuilder.toJSCall("this", mthInvoke.method, mthInvoke.args);
 
-				// registerMethod
-				registerCallMethodJS(ret, ThreadLocalMethodDesc.get());
-			}
+			// registerMethod
+			registerCallMethodJS(ret, ThreadLocalMethodDesc.get());
+			// }
 		}
 
 		return ret;
@@ -242,6 +246,7 @@ public final class ProxyHandler implements InvocationHandler {
 	 * @param mthInvoke
 	 * @throws Throwable
 	 */
+	@Deprecated
 	private JSFunction isInLineMethod(ProxyMethodDesc mthInvoke) throws Throwable {
 
 		if (mthInvoke != NOT_USED)
@@ -256,7 +261,7 @@ public final class ProxyHandler implements InvocationHandler {
 		/*******************************************************************************/
 		// test si utilisation class Anonym
 		/*******************************************************************************/
-		JSFunction fctAnomyn = createJSFunctionImpl(mthInvoke, TEST_ANONYM);
+		JSFunction fctAnomyn = createJSFunctionImpl(mthInvoke);
 		this.varname = nameProxy;
 
 		return fctAnomyn != null ? fctAnomyn : null;
@@ -296,12 +301,11 @@ public final class ProxyHandler implements InvocationHandler {
 		ProxyMethodDesc currentMethodDesc = ThreadLocalMethodDesc.get();
 		JSContent currentJSContent = currentMethodDesc.content;
 
-		if (!testInLineInProgress)
-			doLastSourceLineInsered(false);
+		doLastSourceLineInsered(false);
 
 		traceDebug("begin call jscontent", mthInvoke.idMeth, mthInvoke.implcl, currentJSContent, NOT_USED);
 
-		// appel l'implementation le methode JSInterface (JSContent)
+		// appel l'implementation de methode JSInterface (JSContent)
 		Object ret = mthInvoke.method.invoke(currentJSContent, mthInvoke.args);
 
 		if (ret instanceof JSFunction) // gestion appel fct anonyme par fct() ou fragment()
@@ -338,7 +342,8 @@ public final class ProxyHandler implements InvocationHandler {
 		/* gestion TType sous class de JSClass */
 		if (mthInvoke.method.getName().equals("_getContent")) {
 			if (jsonBuilder != null)
-				return JSONBeautifier.prettyPrintJSON(jsonBuilder.build().toString());
+				// return JSONBeautifier.prettyPrintJSON(jsonBuilder.build().toString());
+				return new JSJson(jsonBuilder.build().toString());
 
 			if (varContent == null)
 				return NOT_USED;
@@ -353,8 +358,7 @@ public final class ProxyHandler implements InvocationHandler {
 		if (mthInvoke.method.getName().equals("set")) {
 			Object[] param = (Object[]) mthInvoke.args[0];
 			/***** FAUT LE METTRE DIRECTEMENT dans le JSContent ************/
-			if (!testInLineInProgress)
-				doLastSourceLineInsered(false);
+			doLastSourceLineInsered(false);
 			return ThreadLocalMethodDesc.get().content._set(mthInvoke.proxy, param);
 		}
 
@@ -501,6 +505,9 @@ public final class ProxyHandler implements InvocationHandler {
 	}
 
 	/**
+	 * Enregistre la methode appelé (son num de ligne et la chaine de la methode).
+	 * Sera ajouter si la derniere de la ligne par doLastSourceLineInsered
+	 * 
 	 * @param method
 	 * @throws ClassNotFoundException
 	 */
@@ -520,8 +527,8 @@ public final class ProxyHandler implements InvocationHandler {
 			if (stackTraceElement.getLineNumber() != -1
 					&& JSClass.class.isAssignableFrom(Class.forName(stackTraceElement.getClassName()))) {
 				numLigne = stackTraceElement.getLineNumber();
-				currentMethodDesc.lastLineNoInsered = numLigne;
-				currentMethodDesc.lastMthNoInserted = method;
+				currentMethodDesc.lineNoInsered = numLigne;
+				currentMethodDesc.mthNoInserted = method;
 				break;
 			}
 		}
@@ -529,53 +536,57 @@ public final class ProxyHandler implements InvocationHandler {
 
 	/**
 	 * @throws ClassNotFoundException
+	 * 
+	 *             isInFct : souvant a false . uniquement a true si fct anonym ( do,
+	 *             if, else)
 	 */
 	public static final void doLastSourceLineInsered(boolean isInFct)
 			throws ClassNotFoundException {
 
 		ProxyMethodDesc lastMethodDesc = ProxyHandler.ThreadLocalMethodDesc.get();
 
-		if (lastMethodDesc != null && lastMethodDesc.lastLineNoInsered > 0) {
+		if (lastMethodDesc != null && lastMethodDesc.lineNoInsered > 0) {
 
-			ProxyMethodDesc methodDesc = getMethodDescFromStacktrace();
+			ProxyMethodDesc currentMethodDesc = getMethodDescFromStacktrace();
 
-			if (isInFct && methodDesc.lastLineNoInsered <= lastMethodDesc.lastLineNoInsered) {
-				methodDesc.lastLineNoInsered = lastMethodDesc.lastLineNoInsered + 1;
-				// permet d'inserer la derniere ligne d'une fct anonym
+			if (isInFct && currentMethodDesc.lineNoInsered <= lastMethodDesc.lineNoInsered) {
+				currentMethodDesc.lineNoInsered = lastMethodDesc.lineNoInsered + 1;
+				// permet de forcer d'inserer la derniere ligne d'une fct anonym
 			}
 
-			if (methodDesc.lastLineNoInsered <= lastMethodDesc.lastLineNoInsered) {
-				lastMethodDesc.lastMthNoInserted = null; // plus
-				ThreadLocalMethodDesc.get().lastMthNoInserted = null;
+			if (currentMethodDesc.lineNoInsered <= lastMethodDesc.lineNoInsered) {
+				lastMethodDesc.mthNoInserted = null; // encore sur la même ligne ou sur plusieur ligne
+				ThreadLocalMethodDesc.get().mthNoInserted = null;
 			} else {
 
-				if (lastMethodDesc.lastMthNoInserted != null) {
+				if (lastMethodDesc.mthNoInserted != null) {
 					boolean add = true;
-					if (isInFct && methodDesc.lastMthNoInserted == null) {
+
+					if (isInFct && currentMethodDesc.mthNoInserted == null) {
 						// test si la ligne est deja ajouter
 						if (lastMethodDesc.content.getListElem().size() > 2) {
 							Object lastInsert = lastMethodDesc.content.getListElem()
 									.get(lastMethodDesc.content.getListElem().size() - 2);
-							if (lastInsert == lastMethodDesc.lastMthNoInserted)
+							if (lastInsert == lastMethodDesc.mthNoInserted)
 								add = false; // deja ajouter
 						}
 					}
 
 					if (add) {
 						// INSERE LA LIGNE
-						lastMethodDesc.content.lastNumLigne = lastMethodDesc.lastLineNoInsered;
-						lastMethodDesc.content.__(lastMethodDesc.lastMthNoInserted);
+						lastMethodDesc.content.lastNumLigne = lastMethodDesc.lineNoInsered;
+						lastMethodDesc.content.__(lastMethodDesc.mthNoInserted);
 						if (debug4)
-							println("--------- add source line " + methodDesc.lastMthNoInserted + ":"
-									+ lastMethodDesc.lastLineNoInsered + " > " + lastMethodDesc.lastMthNoInserted);
+							println("--------- add source line " + currentMethodDesc.mthNoInserted + ":"
+									+ lastMethodDesc.lineNoInsered + " > " + lastMethodDesc.mthNoInserted);
 					}
 
-					lastMethodDesc.lastMthNoInserted = null;
+					lastMethodDesc.mthNoInserted = null;
 				}
 			}
 
-			lastMethodDesc.lastLineNoInsered = -1;
-			ThreadLocalMethodDesc.get().lastLineNoInsered = -1;
+			lastMethodDesc.lineNoInsered = -1;
+			ThreadLocalMethodDesc.get().lineNoInsered = -1;
 		}
 	}
 
@@ -592,12 +603,12 @@ public final class ProxyHandler implements InvocationHandler {
 		for (StackTraceElement stackTraceElement : stack) {
 
 			if (stackTraceElement.getLineNumber() != -1) {
-				boolean xmljs = XHTMLPartMount.class.isAssignableFrom(Class.forName(stackTraceElement.getClassName()));
+				boolean xmljs = XHTMLPartJS.class.isAssignableFrom(Class.forName(stackTraceElement.getClassName()));
 				boolean js = JSClass.class.isAssignableFrom(Class.forName(stackTraceElement.getClassName()));
 
 				if (!xmljs && js) {
-					methodDesc.lastMthNoInserted = stackTraceElement.getClassName();
-					methodDesc.lastLineNoInsered = stackTraceElement.getLineNumber();
+					methodDesc.mthNoInserted = stackTraceElement.getClassName();
+					methodDesc.lineNoInsered = stackTraceElement.getLineNumber();
 					break;
 				}
 			}
@@ -632,7 +643,7 @@ public final class ProxyHandler implements InvocationHandler {
 		}
 	}
 
-	private JSFunction createJSFunctionImpl(ProxyMethodDesc handle, boolean testInline) throws Throwable {
+	private JSFunction createJSFunctionImpl(ProxyMethodDesc handle) throws Throwable {
 
 		final Class<?> declaringClass = handle.method.getDeclaringClass();
 		Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class.getDeclaredConstructor(Class.class,
@@ -641,15 +652,6 @@ public final class ProxyHandler implements InvocationHandler {
 
 		Parameter[] param = handle.method.getParameters();
 		Object[] p = getTypedParam(handle, param);
-
-		Object prevCode = null;
-		JSContent codeAnonym = null;
-
-		if (testInline) {
-			testInLineInProgress = true;
-			codeAnonym = handle.implcl.mapContentMthBuildByProxy.get(currentFctBuildByProxy).content;
-			prevCode = codeAnonym.$$subContent();
-		}
 
 		ProxyMethodDesc firstLineOfMeth = new ProxyMethodDesc(null);
 		ThreadLocalCurrentFct.set(firstLineOfMeth);
@@ -664,50 +666,32 @@ public final class ProxyHandler implements InvocationHandler {
 
 		JSFunction fct = null;
 
-		if (testInline && retProxyMth instanceof JSLambda) {
-			testInLineInProgress = false;
-			((Runnable) retProxyMth).run(); // execute la function qui retourne l'anonym
+		String id = JSClassBuilder.getMethodId(handle.method, handle.args);
 
-			Object aCode = codeAnonym.$$gosubContent(prevCode);
-			prevCode = null;
-			JSContent cont = new JSContent();
-			cont.$$gosubContent(aCode);
-			fct = new JSFunction().setParam(p).setCode(cont);
+		ProxyMethodDesc methDesc = handle.implcl.mapContentMthBuildByProxy.get(id);
 
-		} else if (!testInline) {
-			String id = JSClassBuilder.getMethodId(handle.method, handle.args);
+		JSContent code = addReturnInCode(retProxyMth, methDesc);
 
-			ProxyMethodDesc methDesc = handle.implcl.mapContentMthBuildByProxy.get(id);
+		if (debug2)
+			println(System.identityHashCode(code) + " - return JSFunction " + id);
 
-			JSContent code = addReturnInCode(retProxyMth, methDesc);
+		xStatic annStaticMth = handle.method.getAnnotation(xStatic.class);
 
-			if (debug2)
-				println(System.identityHashCode(code) + " - return JSFunction " + id);
+		int idxLine = firstLineOfMeth.lineNoInsered;
+		String namec = declaringClass.getName();
+		namec = namec.substring(namec.lastIndexOf('.') + 1);
 
-			xStatic annStaticMth = handle.method.getAnnotation(xStatic.class);
+		fct = new JSFunction(namec + ".java:" + (idxLine - 1), handle.method.getName())
+				.setStatic(annStaticMth != null)
+				.setParam(p)
+				.setNumLine(idxLine - 1)
+				.setCode(code);
 
-			int idxLine = firstLineOfMeth.lastLineNoInsered;
-			String namec = declaringClass.getName();
-			namec = namec.substring(namec.lastIndexOf('.') + 1);
+		// function en cours terminé
+		currentFctBuildByProxy = null;
 
-			fct = new JSFunction(namec + ".java:" + (idxLine - 1), handle.method.getName())
-					.setStatic(annStaticMth != null)
-					.setParam(p)
-					.setNumLine(idxLine - 1)
-					.setCode(code);
-
-			// function en cours terminé
-			currentFctBuildByProxy = null;
-
-			// invoke les methodes interne private a la fin de la creation de la methode
-			invokeInternalClassOtherMethodAfterBuild(handle);
-		}
-
-		boolean putLastCode = testInline && prevCode != null;
-		if (putLastCode) {
-			codeAnonym.$$gosubContent(prevCode);
-			testInLineInProgress = false;
-		}
+		// invoke les methodes interne private a la fin de la creation de la methode
+		invokeInternalClassOtherMethodAfterBuild(handle);
 
 		return fct;
 	}

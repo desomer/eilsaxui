@@ -13,6 +13,12 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
  */
 public class JSPromise extends JSAny  implements IJSClassInterface {
 
+	@Override
+	public String zzGetJSClassType() {
+		return "Promise";
+	}
+	
+	
 	public JSPromise then(JSFunction lamba)
 	{
 		return callMth("then", lamba);

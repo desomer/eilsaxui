@@ -48,7 +48,7 @@ public interface ActPageA3 extends JSClass , IJSNodeTemplate, IJSMountFactory {
 		JSArray<TBtn> dataNabBar = JSArray.newLitteral() ;
 		btn = newJS(TBtn.class);
 		btn.titre().set("arrow_back");
-		btn.action().set("D");
+		btn.action().set("TO_PAGE1");
 		btn.mountBtn().set(MountBtn.class);
 		dataNabBar.push(btn);
 

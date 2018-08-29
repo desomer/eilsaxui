@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.component.toolkit.com;
+package com.elisaxui.component.widget.log;
 
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 

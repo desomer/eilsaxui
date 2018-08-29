@@ -12,7 +12,7 @@ public class JSCallBack extends JSAny {
 	}
 	
 	/**
-	 * @param classes
+	 * @param classesAct1
 	 * @return
 	 */
 	public final <E extends JSAny> E apply(Object... classes) {

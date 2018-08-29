@@ -121,7 +121,7 @@ public class JQuery extends JSAny  implements IJSClassInterface {
 	}
 
 	/**
-	 * @param classes
+	 * @param classesAct1
 	 * @return
 	 */
 	public Object hasClass(Object...classes) {

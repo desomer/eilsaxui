@@ -18,12 +18,12 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
  * @author gauth
  *
  */
-public class XHTMLPartMount extends XHTMLPart implements JSClass {
+public class XHTMLPartJS extends XHTMLPart implements JSClass {
 
 	
 	JSClass proxy = null;
 	
-	public XHTMLPartMount()
+	public XHTMLPartJS()
 	{
 		try {
 			proxy = (JSClass) ProxyHandler.getObjectJS(JSClass.class, "", "");

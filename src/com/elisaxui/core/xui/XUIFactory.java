@@ -176,6 +176,9 @@ public abstract class XUIFactory {
 		
 		// deuxieme passe (execute les toXML)
 		String html = toXML(fileXML, loc, null);
+		
+		CoreLogger.getLogger(1).info(() -> "******"+ " GENERATE PHASE 3 : "	+ xHTMLPartClass.getSimpleName() + " ********");
+		
 		cache.setResult(html);
 		
 		// execute les sub fichier
@@ -188,6 +191,7 @@ public abstract class XUIFactory {
 		}
 		
 		JSExecutorHelper.stopThread();
+		CoreLogger.getLogger(1).info(() -> "******"+ " GENERATE PHASE TERNINATED : "	+ xHTMLPartClass.getSimpleName() + " ********");
 		return null;
 	}
 

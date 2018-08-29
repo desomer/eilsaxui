@@ -31,8 +31,8 @@ public final class ProxyMethodDesc
 	Object[] args;
 	
 	JSContent content;
-	public int lastLineNoInsered = -1;
-	public Object lastMthNoInserted = null;
+	public int lineNoInsered = -1;
+	public Object mthNoInserted = null;
 	
 	/**
 	 * @return the proxy

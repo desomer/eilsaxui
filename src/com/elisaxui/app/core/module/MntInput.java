@@ -8,7 +8,7 @@ import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
 import com.elisaxui.component.widget.input.ViewCheckRadio;
 import com.elisaxui.component.widget.input.ViewInputText;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xMount;
-import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.XHTMLPartMount;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.XHTMLPartJS;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.mount.MountFactory;
@@ -19,7 +19,7 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  * @author gauth
  *
  */
-public class MntInput extends XHTMLPartMount implements IJSDataDriven, IJSDataBinding {
+public class MntInput extends XHTMLPartJS implements IJSDataDriven, IJSDataBinding {
 
 	public static class MountInputText extends MountFactory {
 	}

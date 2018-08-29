@@ -22,6 +22,7 @@ import com.elisaxui.component.toolkit.old.JQuery;
 import com.elisaxui.component.toolkit.transition.ConstTransition;
 import com.elisaxui.component.toolkit.transition.CssTransition;
 import com.elisaxui.component.widget.activity.JSContainer;
+import com.elisaxui.component.widget.activity.JSOverlayOld;
 import com.elisaxui.component.widget.activity.JSPageLayout;
 import com.elisaxui.component.widget.activity.JSTransition;
 import com.elisaxui.component.widget.activity.TKActivity;
@@ -35,7 +36,6 @@ import com.elisaxui.component.widget.menu.JSMenu;
 import com.elisaxui.component.widget.menu.ViewMenu;
 import com.elisaxui.component.widget.navbar.ViewNavBar;
 import com.elisaxui.component.widget.navbar.old.JSNavBar;
-import com.elisaxui.component.widget.overlay.JSOverlay;
 import com.elisaxui.component.widget.tabbar.ViewTabBar;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
@@ -176,7 +176,7 @@ public abstract class XUIScene extends XHTMLPart {
 				xIncludeJS(JSDataDriven.class),
 				xIncludeJS(JSDataSet.class),
 				xIncludeJS(JSDataCtx.class),
-				xIncludeJS(JSOverlay.class),
+				xIncludeJS(JSOverlayOld.class),
 				xIncludeJS(JSContainer.class),
 				xIncludeJS(JSNavBar.class),
 				xIncludeJS(JSPageLayout.class),

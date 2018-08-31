@@ -15,7 +15,6 @@ import javax.ws.rs.core.UriInfo;
 import com.elisaxui.core.helper.JSExecutorHelper;
 import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
-import com.elisaxui.core.xui.XUIFactory.RequestConfig;
 import com.elisaxui.core.xui.app.CacheManager;
 import com.elisaxui.core.xui.app.ConfigFormat;
 import com.elisaxui.core.xui.app.XHTMLAppScanner;
@@ -51,7 +50,7 @@ public abstract class XUIFactory {
 	}
 
 	public static final XHTMLFile getXHTMLFile() {
-		return (XHTMLFile)ThreadLocalXUIFactoryPage.get();
+		return ThreadLocalXUIFactoryPage.get();
 	}
 
 	/**
@@ -151,19 +150,22 @@ public abstract class XUIFactory {
 	 */
 	protected Response createVersion(RequestConfig requestConfig, CacheManager cache, Class<? extends XHTMLPart> xHTMLPartClass) {
 		JSExecutorHelper.initThread();
-		
-		XHTMLFile fileXML = createXHTMLFile();
-		fileXML.setXHTMLTemplate(new XHTMLTemplateRoot());
-		
+				
 		Locale loc = Locale.FRENCH;
 		if (requestConfig.headers!=null) {
 			List<Locale> languages = requestConfig.headers.getAcceptableLanguages();
 			loc = languages.get(0);
 		}
-	
-		CoreLogger.getLogger(1).info(()->"****** GENERATE PHASE 1 : "+xHTMLPartClass.getSimpleName()+" ********");
-		// premier passe (execute les annotation)
-		initXMLFile(xHTMLPartClass, fileXML, requestConfig.param);
+		
+		XHTMLFile fileXML = null;
+	//	for (int i = 0; i < 1000; i++) {
+			fileXML = createXHTMLFile();
+			fileXML.setXHTMLTemplate(new XHTMLTemplateRoot());
+			CoreLogger.getLogger(1).info(()->"****** GENERATE PHASE 1 : "+xHTMLPartClass.getSimpleName()+" ********");
+			// premier passe (execute les annotation)
+			initXMLFile(xHTMLPartClass, fileXML, requestConfig.param);	
+	//	}
+
 	
 		if (ErrorNotificafionMgr.hasErrorMessage()) {
 			// affiche la page d'erreur
@@ -177,7 +179,7 @@ public abstract class XUIFactory {
 		// deuxieme passe (execute les toXML)
 		String html = toXML(fileXML, loc, null);
 		
-		CoreLogger.getLogger(1).info(() -> "******"+ " GENERATE PHASE 3 : "	+ xHTMLPartClass.getSimpleName() + " ********");
+		CoreLogger.getLogger(1).info(() -> "******"+ " GENERATE PHASE SUBFILE : "	+ xHTMLPartClass.getSimpleName() + " ********");
 		
 		cache.setResult(html);
 		
@@ -186,9 +188,13 @@ public abstract class XUIFactory {
 		
 		if (cache.isStore())
 		{
-			cache.storeResultInDb();
+			cache.storeResultInDb(false);
 			cache.getVersionDB(0);   // calcul la difference
 		}
+		
+		CoreLogger.getLogger(1).info(() -> "******"+ " GENERATE PHASE COMMIT : "	+ xHTMLPartClass.getSimpleName() + " ********");
+		cache.commit();
+		CoreLogger.getLogger(1).info(() -> "******"+ " GENERATE PHASE END COMMIT : "	+ xHTMLPartClass.getSimpleName() + " ********");
 		
 		JSExecutorHelper.stopThread();
 		CoreLogger.getLogger(1).info(() -> "******"+ " GENERATE PHASE TERNINATED : "	+ xHTMLPartClass.getSimpleName() + " ********");

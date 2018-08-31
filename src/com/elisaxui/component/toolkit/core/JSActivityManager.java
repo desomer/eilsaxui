@@ -10,6 +10,7 @@ import com.elisaxui.component.toolkit.transition.CssTransition;
 import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
@@ -29,16 +30,38 @@ public interface JSActivityManager extends JSClass {
 	JSNodeElement activity = JSClass.declareType();
 	JSNodeElement activityDest = JSClass.declareType();
 	JSActivityStateManager animMgr = JSClass.declareType();
+	TIntent lastIntent = JSClass.declareType();
 
-
+	JSArray<TIntent> historyIntent();    //   gestion des historique d'intention
+	
+	
+	@xStatic(autoCall=true)
+	default void init()
+	{
+		historyIntent().set(JSArray.newLitteral());
+	}
+	
+	
 	@xStatic()
 	default JSNodeElement doRouteToActivity(TIntent intent) {
 		let(animMgr, newJS(JSActivityStateManager.class));
 		let(activity, getCurrentActivity());
-		let(activityDest, document().querySelector(txt(CSSSelector.onPath("#", intent.idActivity()))));
-	//	animMgr.doActivityNoDisplay(activity);
-	//	animMgr.doActivityActive(activityDest);
-	//	animMgr.doActivityInactive(activity);
+		let(activityDest, document().querySelector(txt(CSSSelector.onPath("#", intent.activityDest()))));
+		intent.activitySrc().set(activity.attr("id"));
+		historyIntent().push(intent);
+		
+		animMgr.doOpenActivityFromBottom(activity, activityDest);
+		
+		return activityDest;
+	}
+	
+	@xStatic()
+	default JSNodeElement doRouteToBackActivity() {
+		let(animMgr, newJS(JSActivityStateManager.class));
+		let(activity, getCurrentActivity());
+		let(lastIntent, historyIntent().pop());
+		let(activityDest, document().querySelector(txt(CSSSelector.onPath("#", lastIntent.activitySrc()))));
+
 		animMgr.doOpenActivityFromBottom(activity, activityDest);
 		
 		return activityDest;
@@ -51,11 +74,12 @@ public interface JSActivityManager extends JSClass {
 	}
 	
 	public interface TIntent extends JSType {
-		JSString idActivity();
+		JSString activityDest();
 		JSString url();	
 		JSString action();
 		
 		JSString nextAnim();
+		JSString activitySrc();
 	}
 
 }

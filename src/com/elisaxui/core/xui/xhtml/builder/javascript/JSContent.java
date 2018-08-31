@@ -17,6 +17,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSVoid;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.es6.JSPromise;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSNodeTemplate;
@@ -36,7 +37,7 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  */
 public class JSContent implements IXMLBuilder, JSContentInterface {
 
-	public int lastNumLigne = -1;
+	public int lastNumLigneInserted = -1;
 	protected JSContentInterface proxy;
 
 	public final JSContentInterface getProxy() {
@@ -367,6 +368,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	 */
 	@Override
 	public JSContentInterface __(Object... content) {
+			
 		if (content != null) {
 			if (content.length == 1 && content[0] instanceof JSFunction) {
 				JSFunction fct = ((JSFunction) content[0]);
@@ -377,7 +379,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 			} else
 				getListElem().add(JSNewLine.class);
 
-			for (Object object : content) {
+			for (Object object : content) {			
 				addElem(object);
 			}
 			getListElem().add(";");

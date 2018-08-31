@@ -31,6 +31,14 @@ public interface TKPubSub extends JSClass {
 	default void subscribe(Object observer) {
 		observers().push(cast(JSCallBack.class, observer));
 	}
+	
+	default JSInt unsubscribe(Object observer) {
+		let(i, observers().indexOf(cast(JSCallBack.class, observer)));
+		_if(i, ">-1").then(() -> {
+			observers().splice( i, 1 );
+		});
+		return i;
+	}
 
 	default void publish(Object message) {
 		_forIdx(i, observers())._do(() -> observers().at(i).invoke(var(message)));

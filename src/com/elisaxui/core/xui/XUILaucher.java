@@ -184,17 +184,32 @@ public class XUILaucher {
 		WatchDir.start(classpathEntry.getFile() + "com");
 
 		/***************************************************/
-		
 
 		server.start();
-		
+
 		CoreLogger.getLogger(1).fine("************ SERVER READY *************");
 		ChromeManager.openChrome("https://localhost:9998/rest/page/fr/fra/id/ScnListPage");
-		
+
+		// create thread object
+		ShutDownTask shutDownTask = new ShutDownTask();
+		// add shutdown hook
+		Runtime.getRuntime().addShutdownHook(shutDownTask);
+		CoreLogger.getLogger(1).fine("************ ShutDownTask READY *************");
 		server.join();
 
+	}
 
-		
+	/**
+	 * Class having shutdown steps
+	 *
+	 */
+	private static class ShutDownTask extends Thread {
+
+		@Override
+		public void run() {
+			System.out.println("Performing shutdown");
+		}
+
 	}
 
 	/**

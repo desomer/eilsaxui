@@ -142,7 +142,7 @@ public class XUIFactoryXHtml extends XUIFactory {
 				cache.initVersion(requestConfig.noCache, requestConfig.version);
 			    
 				cache.setResult(contentFile);
-				cache.storeResultInDb();
+				cache.storeResultInDb(false);
 				cache.getVersionDB(0);   // calcul la difference
 				
 				/*********************************************************************/

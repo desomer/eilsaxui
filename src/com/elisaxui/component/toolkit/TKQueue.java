@@ -41,7 +41,7 @@ public class TKQueue extends XHTMLPart {
 
 		@xStatic(autoCall = true)
 		default void init() {
-			__(loadResource("TKQueue.js", true));
+			__(loadResource("TKQueue.js", false));
 			__("window.animInProgess=false");
 		}
 

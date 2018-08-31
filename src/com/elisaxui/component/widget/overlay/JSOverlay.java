@@ -22,6 +22,7 @@ public interface JSOverlay extends JSClass {
 
 	JSInt speed();
 	JSFloat opacity();
+	JSNodeElement anOverlay = JSClass.declareType();
 
 	default void constructor(JSInt speed, JSFloat opacity) {
 		speed().set(speed);
@@ -30,6 +31,10 @@ public interface JSOverlay extends JSClass {
 
 	default void doShowOverlay(JSNodeElement act1, JSInt phase) {
 
+		let(anOverlay, act1.querySelector(cBlackOverlay));
+		anOverlay.style().attr("display").set(txt("block"));
+		anOverlay.style().attr("opacity").set(opacity());
+		
 //		JQuery overlay = let(JQuery.class, "overlay", act.find(cBlackOverlay));
 //		_if(phase.equalsJS(1)).then(() -> {
 //			overlay.css("display", "block");

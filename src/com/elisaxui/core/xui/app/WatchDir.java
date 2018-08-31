@@ -122,12 +122,12 @@ public class WatchDir {
                 String n = child.toFile().getName();
                 if (n.endsWith(".class"))
                 {
-                    System.out.format("class %s: %s\n", event.kind().name(), child);
-                	XUIFactory.changeMgr.mapClass.clear();
+                	CoreLogger.getLogger(1).info(()->  child+ " "+ event.kind().name());
+                 	XUIFactory.changeMgr.mapClass.clear();
                 }
                 else if (! Files.isDirectory(child))
                 {
-                	System.out.format("file %s: %s\n", event.kind().name(), child);
+                	CoreLogger.getLogger(-1).info(()->  child+ " "+ event.kind().name());
                 	XUIFactory.changeMgr.dateInjection=null;
                 }
 

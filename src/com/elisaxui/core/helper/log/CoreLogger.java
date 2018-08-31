@@ -26,10 +26,10 @@ public class CoreLogger {
 		super();
 	}
 	
+	static long lastTime = 0;
 	static ConcurrentHashMap<String, Logger> mapLogger = new ConcurrentHashMap<>();
 
-	public static Logger getLogger(int nb) {
-		
+	public static Logger getLogger(int nb) {		
 		String name = Thread.currentThread().getStackTrace()[nb].getClassName();
 		
 		return mapLogger.computeIfAbsent(name, key-> createLogger(name) );
@@ -68,6 +68,15 @@ public class CoreLogger {
 		   * @return a formatted log record
 		   */
 		  public synchronized String format(LogRecord record) {
+			  
+			long t = System.currentTimeMillis();
+			if (lastTime==0)
+				lastTime=t;
+			
+			long d = t-lastTime;
+			d=d%10000;
+			
+			lastTime = t;
 
 		    StringBuilder sb = new StringBuilder();
 
@@ -85,6 +94,9 @@ public class CoreLogger {
 		    sb.append(text);
 		    
 		    // Level
+		    sb.append(" ");
+		    String paddedString = d < 100 ? d < 10 ? "  " + d : " " + d : "" + d;
+		    sb.append(paddedString);
 		    sb.append(" [");
 		    sb.append(record.getLevel().getLocalizedName());
 		    sb.append("] ");

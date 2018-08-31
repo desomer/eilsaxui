@@ -52,7 +52,7 @@ public class SrvScnDataDriven implements IJSONBuilder {
 
 		@xTarget(HEADER.class)
 		@xResource // une seule fois par vue
-		/**TODO a gerer en automatique if script ou style */
+		/** TODO a gerer en automatique if script ou style */
 		public XMLElement xImportVue() {
 			return xElem(JSDomBuilder.class, TKCom.class);
 		}
@@ -80,9 +80,9 @@ public class SrvScnDataDriven implements IJSONBuilder {
 			default void main() {
 				ImgType data = declareType(ImgType.class, "data");
 
-				callStatic(TKCom.class).requestUrl(JSString.value(REST_JSON_TEST+"OK"))
-						.then(fct(data, () -> document().querySelector(cMain).appendChild(
-								newJS(JSTestTemplate.class).xImageOK(data.name(), data.urlImage()))));
+				callStatic(TKCom.class).requestUrl(JSString.value(REST_JSON_TEST + "OK"))
+						.then(fct(data, () -> document().querySelector(cMain)
+								.appendChild(newJS(JSTestTemplate.class).xImageOK(data.name(), data.urlImage()))));
 			}
 
 			default JSNodeElement xImageOK(JSAny id, JSString url) {

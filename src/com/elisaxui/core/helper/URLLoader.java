@@ -33,6 +33,7 @@ public class URLLoader {
 
 	public static String loadResourceNearClass(Object obj, String id, boolean optimizeJS) {
 
+		CoreLogger.getLogger(1).info(() -> "read at " + id);
 		Class<?> cl = obj.getClass();
 		if (obj instanceof Class)
 		{
@@ -65,16 +66,19 @@ public class URLLoader {
 		InputStream is = null;
 		BufferedReader br;
 		String line;
-		StringBuilder buf = new StringBuilder();
+		StringBuilder buf = new StringBuilder(10*1024);
 		try {
 
 			String f = u.substring(u.lastIndexOf("/") + 1);
 			File file = new File(pathdb + f);
 			CoreLogger.getLogger(1).info(() -> "read at " + file);
 			if (file.exists())
-				return readFile(file);
-				
+			{
+				StringBuilder s = readFile(file);
+				return s;
+			}
 			url = new URL(u);
+			CoreLogger.getLogger(1).info(() -> "read retry at " + url);	
 			is = url.openStream();
 			br = new BufferedReader(new InputStreamReader(is));
 
@@ -82,6 +86,7 @@ public class URLLoader {
 				buf.append(line);
 				buf.append("\n");
 			}
+			CoreLogger.getLogger(1).info(() -> "read at " + url);
 		} catch (MalformedURLException mue) {
 			mue.printStackTrace();
 		} catch (IOException ioe) {
@@ -98,7 +103,7 @@ public class URLLoader {
 	}
 
 	public static StringBuilder readFile(File file) {
-		StringBuilder buf = new StringBuilder();
+		StringBuilder buf = new StringBuilder(10*1024);
 		try {
 			List<String> lines = Files.readAllLines(file.toPath());
 			for (String string : lines) {

@@ -60,8 +60,14 @@ public interface JSRequestAnimationFrame extends JSClass {
 
 	
 	@xStatic() // appel automatique de la methode static
-	default void addListener(Object callback) {
+	default JSCallBack addListener(Object callback) {
 		callBackTick().subscribe(callback);
+		return cast(JSCallBack.class, callback);
+	}
+	
+	@xStatic() // appel automatique de la methode static
+	default void removeListener(Object callback) {
+		callBackTick().unsubscribe(callback);
 	}
 	
 	public interface TAnimFrameEvent extends JSType {

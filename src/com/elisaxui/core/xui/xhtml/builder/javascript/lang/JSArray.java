@@ -83,6 +83,8 @@ public class JSArray<E> extends JSAny implements ILitteral, IJSClassInterface {
 			return super._getValue();
 	}
 
+	/**************************************************************/
+	
 	public JSArray<E> push(E value) {
 		JsonObjectBuilder objLitteral = null;
 
@@ -131,6 +133,10 @@ public class JSArray<E> extends JSAny implements ILitteral, IJSClassInterface {
 		return r;
 	}
 	
+	public JSInt indexOf(E elem) {
+		return callTyped(new JSInt(), "indexOf", elem);
+	}
+	
 	public E join(Object... p) {
 		Object r = callMth( "join", p);
 		if (_type != null) {
@@ -140,7 +146,6 @@ public class JSArray<E> extends JSAny implements ILitteral, IJSClassInterface {
 	}
 
 	public void pushAll(JSArray<E> arrSrc) {
-		// E
 
 		ArrayMethod<Object> arr = new ArrayMethod<>();
 
@@ -176,6 +181,7 @@ public class JSArray<E> extends JSAny implements ILitteral, IJSClassInterface {
 
 	}
 
+	/***********************************************************************/
 	public E at(Object idx) {
 		JSArray<?> ret = new JSArray<Object>()._setName(_getValueOrName());
 		ret.addContent("[");

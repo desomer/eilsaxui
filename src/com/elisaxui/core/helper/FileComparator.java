@@ -21,7 +21,7 @@ import difflib.DiffRowGenerator;
  *
  */
 public class FileComparator {
-	public StringBuilder listLineDiff = new StringBuilder();
+	public StringBuilder listLineDiff = new StringBuilder(10*1024);
 	
 	
 	public void initLineDiff(String htmlInCache, String htmlInCacheOriginal, boolean modeXml) {

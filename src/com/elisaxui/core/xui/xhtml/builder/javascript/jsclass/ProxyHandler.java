@@ -28,6 +28,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xInLine;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.es6.JSPromise;
 import com.elisaxui.core.xui.xhtml.builder.json.JSJson;
 import com.elisaxui.core.xui.xml.builder.XUIFormatManager;
 
@@ -292,6 +293,7 @@ public final class ProxyHandler implements InvocationHandler {
 			mh.setParentLitteral(this);
 
 		}
+		
 		return ret;
 	}
 
@@ -300,14 +302,33 @@ public final class ProxyHandler implements InvocationHandler {
 
 		ProxyMethodDesc currentMethodDesc = ThreadLocalMethodDesc.get();
 		JSContent currentJSContent = currentMethodDesc.content;
-
-		doLastSourceLineInsered(false);
+		
+//		ProxyMethodDesc lastMethodDesc = null;
+//		int last = 0;
+//		Object lastMth = null;
+//		boolean isFct = mthInvoke.method.getName().equals("fct");
+//		if (isFct)
+//		{
+//			lastMethodDesc = ProxyHandler.ThreadLocalMethodDesc.get();
+//			last = lastMethodDesc.lineNoInsered;
+//			lastMth = lastMethodDesc.mthNoInserted;
+//			lastMethodDesc.lineNoInsered=-1;
+//		}
+//		else
+			doLastSourceLineInsered(false);
 
 		traceDebug("begin call jscontent", mthInvoke.idMeth, mthInvoke.implcl, currentJSContent, NOT_USED);
 
 		// appel l'implementation de methode JSInterface (JSContent)
 		Object ret = mthInvoke.method.invoke(currentJSContent, mthInvoke.args);
 
+//		if (lastMethodDesc!=null)
+//		{
+//			lastMethodDesc.lineNoInsered=last;
+//			lastMethodDesc.mthNoInserted = lastMth;
+//			ProxyHandler.ThreadLocalMethodDesc.set(lastMethodDesc);
+//		}
+		
 		if (ret instanceof JSFunction) // gestion appel fct anonyme par fct() ou fragment()
 		{
 			((JSFunction) ret).setProxy((JSContentInterface) mthInvoke.proxy);
@@ -537,44 +558,57 @@ public final class ProxyHandler implements InvocationHandler {
 	/**
 	 * @throws ClassNotFoundException
 	 * 
-	 *             isInFct : souvant a false . uniquement a true si fct anonym ( do,
+	 *             afterEndOfFunction : souvant a false . uniquement a true si dernier d'une fct anonym ( do,
 	 *             if, else)
 	 */
-	public static final void doLastSourceLineInsered(boolean isInFct)
+	public static final void doLastSourceLineInsered(boolean afterEndOfFunction)
 			throws ClassNotFoundException {
 
 		ProxyMethodDesc lastMethodDesc = ProxyHandler.ThreadLocalMethodDesc.get();
-
+		
 		if (lastMethodDesc != null && lastMethodDesc.lineNoInsered > 0) {
-
+//			if (lastMethodDesc.mthNoInserted instanceof JSPromise)
+//				lastMethodDesc=lastMethodDesc;
+			
+			// controle si la dernier methode appeler est la derniere d'une ligne de code
+			// pour faire ca, on recupere la ligne courante
 			ProxyMethodDesc currentMethodDesc = getMethodDescFromStacktrace();
 
-			if (isInFct && currentMethodDesc.lineNoInsered <= lastMethodDesc.lineNoInsered) {
+			if (afterEndOfFunction && currentMethodDesc.lineNoInsered <= lastMethodDesc.lineNoInsered) {
+				if (currentMethodDesc.lineNoInsered==-1)
+				{
+					// en fin d'une methode nommé de classe (appel par createJSFunctionImpl)
+					//  currentMethodDesc.mthNoInserted doit etre aussi == null
+				}
+					
 				currentMethodDesc.lineNoInsered = lastMethodDesc.lineNoInsered + 1;
-				// permet de forcer d'inserer la derniere ligne d'une fct anonym
+				// pour forcer l'insert de la derniere ligne d'une fct lambda (then, do, etc..)
 			}
 
 			if (currentMethodDesc.lineNoInsered <= lastMethodDesc.lineNoInsered) {
-				lastMethodDesc.mthNoInserted = null; // encore sur la même ligne ou sur plusieur ligne
+				lastMethodDesc.mthNoInserted = null; // si encore sur la même ligne ou sur plusieur ligne => ne pas encore inserer
 				ThreadLocalMethodDesc.get().mthNoInserted = null;
+				
 			} else {
-
+				//sinon on doit inserer la dernier methode appeler car on change de ligne de code
+				
 				if (lastMethodDesc.mthNoInserted != null) {
 					boolean add = true;
 
-					if (isInFct && currentMethodDesc.mthNoInserted == null) {
-						// test si la ligne est deja ajouter
+					if (afterEndOfFunction && currentMethodDesc.mthNoInserted == null) {
+						// test si la ligne est deja ajouter en cas de fin de methode de class (currentMethodDesc.mthNoInserted == null)
 						if (lastMethodDesc.content.getListElem().size() > 2) {
 							Object lastInsert = lastMethodDesc.content.getListElem()
-									.get(lastMethodDesc.content.getListElem().size() - 2);
+									.get(lastMethodDesc.content.getListElem().size() - 2);   // -2 car retire le point virgule
 							if (lastInsert == lastMethodDesc.mthNoInserted)
-								add = false; // deja ajouter
+								add = false; // deja ajouter car la dernere ligne de la fct est un __(xxxx) 
+											// ou sur plusieur ligne avec lambda sur une autre ligne (cest la lamdba qui ajoute la ligne)
 						}
 					}
 
 					if (add) {
 						// INSERE LA LIGNE
-						lastMethodDesc.content.lastNumLigne = lastMethodDesc.lineNoInsered;
+						lastMethodDesc.content.lastNumLigneInserted = lastMethodDesc.lineNoInsered;
 						lastMethodDesc.content.__(lastMethodDesc.mthNoInserted);
 						if (debug4)
 							println("--------- add source line " + currentMethodDesc.mthNoInserted + ":"
@@ -661,8 +695,26 @@ public final class ProxyHandler implements InvocationHandler {
 		Object retProxyMth = constructor.newInstance(declaringClass, MethodHandles.Lookup.PRIVATE)
 				.unreflectSpecial(handle.method, declaringClass).bindTo(handle.proxy).invokeWithArguments(p);
 
-		// permet d'inserer la derniere ligne d'une fct sauf si un retour
-		doLastSourceLineInsered(retProxyMth == null ? true : false);
+		
+		if (handle.method.getName().equals("doRouteToActivity"))
+			retProxyMth=retProxyMth;
+		
+		boolean insertLastLigne = true;
+		if (retProxyMth != null)
+		{
+			ProxyMethodDesc lastMethodDesc = ProxyHandler.ThreadLocalMethodDesc.get();
+			// car de la derniere ligne est un return xxxx
+			if (retProxyMth instanceof JSElement)
+			{
+				if (retProxyMth.toString().contains("("))
+					insertLastLigne = false; // si dernier ligne est un  return a.meth()    alors n'ajoute pas le a.meth()
+				     // car ajouté par le addReturnInCode
+			}
+		}
+		
+		// permet d'inserer la derniere ligne d'une fct
+		if (insertLastLigne)
+			doLastSourceLineInsered(true);
 
 		JSFunction fct = null;
 

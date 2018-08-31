@@ -183,20 +183,18 @@ public class ScnPageA extends ScnPage {
 			
 			actionManager.addAction(JSString.value("TO_NEXT"), _this(), fct(() -> {
 				let(aIntent, newJS(TIntent.class));
-				aIntent.idActivity().set("Page2");
+				aIntent.activityDest().set("Page2");
 				activityManager.doRouteToActivity(aIntent);
 			}));
 			
 			actionManager.addAction(JSString.value("TO_PAGE3"), _this(), fct(() -> {
 				let(aIntent, newJS(TIntent.class));
-				aIntent.idActivity().set("Page3");
+				aIntent.activityDest().set("Page3");
 				activityManager.doRouteToActivity(aIntent);
 			}));
 			
 			actionManager.addAction(JSString.value("TO_PAGE1"), _this(), fct(() -> {
-				let(aIntent, newJS(TIntent.class));
-				aIntent.idActivity().set("Page1");
-				activityManager.doRouteToActivity(aIntent);
+				activityManager.doRouteToBackActivity();
 			}));
 					
 		}

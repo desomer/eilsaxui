@@ -58,6 +58,7 @@ public interface JSActivityAnimation extends JSClass {
 	JSPromise aPromise = JSClass.declareType();
 	JSCallBack resolve = JSClass.declareType();
 	JSCallBack reject = JSClass.declareType();
+	JSCallBack subscriber = JSClass.declareType();
 	
 	JSRequestAnimationFrame aRequestAnimation = JSClass.declareTypeClass(JSRequestAnimationFrame.class);
 	
@@ -83,12 +84,14 @@ public interface JSActivityAnimation extends JSClass {
 	
 	default void start()
 	{
+		__("let easeinout = function(k) { return .5*(Math.sin((k - .5)*Math.PI) + 1)}");
+		
 		let(aPromise, newJS(JSPromise.class, fct(resolve,reject, ()->{
 			
-			aRequestAnimation.addListener(fct(aAnimEvent, () -> {
+			let( subscriber, aRequestAnimation.addListener(fct(aAnimEvent, () -> {
 
 				_if(aQueue().idxPhase(), "==", aQueue().listPhase().length()).then(() -> {
-					resolve.invoke(aQueue().id());
+					resolve.invoke(subscriber);
 					_return();
 				});
 				
@@ -109,8 +112,6 @@ public interface JSActivityAnimation extends JSClass {
 							aAnim.timeEnd().set(aAnimEvent.time());
 						});
 						
-						__("let easeinout = function(k) { return .5*(Math.sin((k - .5)*Math.PI) + 1)}");
-						//consoleDebug(prctAnim, "easeinout(prctAnim)");
 						prctAnim.set(var("easeinout(prctAnim)"));
 
 						let(valAnim,
@@ -119,10 +120,13 @@ public interface JSActivityAnimation extends JSClass {
 						_if(aAnim.type().equalsJS(SCALE_XY)).then(() -> {
 							valAnim.set(valAnim, ".toFixed(5)");
 							__(aAnim.src(), ".style.transform =", txt("scale3d(", valAnim, ",", valAnim, ", 1)"));
+							
 						})._elseif(aAnim.type().equalsJS(BOTTOM_TO_FRONT)).then(() -> {
+							
 							valAnim.set( JSWindow.window().innerHeight(), "- (", JSWindow.window().innerHeight(), "*", valAnim, ")/100" );
 							valAnim.set(valAnim, ".toFixed(5)");
 							__(aAnim.src(), ".style.transform =", txt("translate3d(0px, ", valAnim, "px, 0px)"));
+							
 						});
 						
 					})._else(()->{
@@ -134,14 +138,15 @@ public interface JSActivityAnimation extends JSClass {
 					aQueue().idxPhase().set(aQueue().idxPhase(), "+1");
 				});
 
-			}).bind(_this()));
+			}).bind(_this())));
 			
 		}).bind(_this())) );
 		
 		
 		
-		aPromise.then(fct(()->{
-			consoleDebug(aPromise);
+		aPromise.then(fct(subscriber, ()->{
+			consoleDebug(subscriber);
+			aRequestAnimation.removeListener(subscriber);
 		}));
 		
 

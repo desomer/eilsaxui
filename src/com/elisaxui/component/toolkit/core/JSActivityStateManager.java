@@ -11,8 +11,11 @@ import static com.elisaxui.component.toolkit.transition.CssTransition.cStateBack
 import static com.elisaxui.component.toolkit.transition.CssTransition.cStateFixedForFreeze;
 import static com.elisaxui.component.toolkit.transition.CssTransition.cStateFrontActivity;
 import static com.elisaxui.component.toolkit.transition.CssTransition.cStateHiddenToBottom;
+import static com.elisaxui.component.toolkit.transition.CssTransition.cStateMoveToBottom;
+import static com.elisaxui.component.toolkit.transition.CssTransition.cStateMoveToFront;
 import static com.elisaxui.component.toolkit.transition.CssTransition.cStateNoDisplay;
 import static com.elisaxui.component.toolkit.transition.CssTransition.inactive;
+import static com.elisaxui.component.widget.overlay.ViewOverlay.cBlackOverlay;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSWindow.window;
 
 import com.elisaxui.component.toolkit.core.JSActivityAnimation.TAnimation;
@@ -65,10 +68,11 @@ public interface JSActivityStateManager extends JSClass {
 	JSInt scrposition = JSClass.declareType();
 	JSInt posTop = JSClass.declareType();
 	JSNodeElement aElemNode = JSClass.declareType();
-	JSOverlayOld aOverlay = JSClass.declareType();
+	JSOverlay aOverlay = JSClass.declareType();
 	JSActivityStateManager that = JSClass.declareType();
-	JSActivityAnimation anAnimationQueue = JSClass.declareType();
-
+	JSActivityAnimation anAnimationQueueSrc = JSClass.declareType();
+	JSActivityAnimation anAnimationQueueDest = JSClass.declareType();
+	JSNodeElement anOverlay = JSClass.declareType();
 
 	/*****************************************************************************************/
 
@@ -79,10 +83,11 @@ public interface JSActivityStateManager extends JSClass {
 		let(that, _this());
 		let(classesAct1, act1.classList());
 		let(classesAct2, act2.classList());
+		let(anOverlay, act1.querySelector(cBlackOverlay));
 
 		/*****************************************************************/
-		let(anAnimationQueue, newJS(JSActivityAnimation.class, "act1"));
-		anAnimationQueue.addPhase();
+		let(anAnimationQueueSrc, newJS(JSActivityAnimation.class, "act1"));
+		anAnimationQueueSrc.addPhase();
 
 		TAnimation anAnim = newJS(TAnimation.class);
 		anAnim.src().set(act1);
@@ -92,36 +97,34 @@ public interface JSActivityStateManager extends JSClass {
 		anAnim.stopIdx().set(0.9);
 		anAnim.beforeStart().set(fct(() -> {
 			that.doFixedElemToAbsolute(act1);
-			// overlay.doShowOverlay(jqAct1, 1);
+			anOverlay.style().attr("display").set(txt("block"));
+			anOverlay.style().attr("opacity").set(0.2);
 			that.doActivityInactive(act1);
 			that.doActivityFreeze(act1, posTop);
 			classesAct1.add(cStateBackActivity);
 		}));
 
-		anAnimationQueue.addAnimation(anAnim);
-		anAnimationQueue.start();
-		consoleDebug(anAnimationQueue);
-
+		anAnimationQueueSrc.addAnimation(anAnim);
 		
+		anAnimationQueueSrc.addPhase();
+		anAnim = newJS(TAnimation.class);
+		anAnim.speed().set(0);
+		anAnim.startIdx().set(0);
+		anAnim.stopIdx().set(0);
+		anAnim.beforeStart().set(fct(() -> {
+			// termine l'animation
+			that.doActivityNoDisplay(act1);
+			act1.style().attr("transform").set(null);
+			anOverlay.style().attr("display").set(txt("none"));
+			anOverlay.style().attr("opacity").set(0.0);
+		}));
 
-		/**********************************************************/
-		// __(TKQueue.startAnimQueued(fct(() -> {
-		// // prepare l'animation
-		// that.doFixedElemToAbsolute(act1);
-		// // overlay.doShowOverlay(jqAct1, 1);
-		// that.doActivityInactive(act1);
-		// that.doActivityFreeze(act1, posTop);
-		// classesAct1.add(cStateBackActivity);
-		// }), NEXT_FRAME, fct(() -> {
-		// // lance les anim
-		// // overlay.doShowOverlay(jqAct1, 2);
-		// classesAct1.add(cTransitionSpeed);
-		// classesAct1.add(cStateZoom09);
-		// })));
+		anAnimationQueueSrc.addAnimation(anAnim);
+				
 
 		/*********************************************************/
-		anAnimationQueue.set(newJS(JSActivityAnimation.class, "act2"));
-		anAnimationQueue.addPhase();
+		let(anAnimationQueueDest, newJS(JSActivityAnimation.class, "act2"));
+		anAnimationQueueDest.addPhase();
 
 		anAnim = newJS(TAnimation.class);
 		anAnim.speed().set(0);
@@ -129,14 +132,15 @@ public interface JSActivityStateManager extends JSClass {
 		anAnim.stopIdx().set(0);
 		anAnim.beforeStart().set(fct(() -> {
 			// prepare l'animation
+			classesAct2.remove(cStateBackActivity);
 			classesAct2.add(cStateFrontActivity);
 			classesAct2.add(cStateHiddenToBottom);
 			that.doActivityActive(act2);
 		}));
 
-		anAnimationQueue.addAnimation(anAnim);
+		anAnimationQueueDest.addAnimation(anAnim);
 		
-		anAnimationQueue.addPhase();
+		anAnimationQueueDest.addPhase();
 
 		anAnim = newJS(TAnimation.class);
 		anAnim.src().set(act2);
@@ -147,25 +151,33 @@ public interface JSActivityStateManager extends JSClass {
 		anAnim.beforeStart().set(fct(() -> {
 			// lance les anim
 			that.doActivityFreeze(act2, MEM_SCROLL);
-			//classesAct2.add(cStateMoveToFront);
+			}));
+
+		anAnimationQueueDest.addAnimation(anAnim);
+		
+		anAnimationQueueDest.addPhase();
+
+		anAnim = newJS(TAnimation.class);
+		anAnim.speed().set(0);
+		anAnim.startIdx().set(0);
+		anAnim.stopIdx().set(0);
+		anAnim.beforeStart().set(fct(() -> {
+			// termine l'animation
+			act2.style().attr("transform").set(null);
+			classesAct2.remove(cStateFrontActivity);
+			classesAct2.remove(cStateHiddenToBottom);
+			that.doActivityDeFreeze(act2);
+			that.doFixedElemToFixe(act2);
+			that.doInitScrollTo(act2);
 		}));
 
-		anAnimationQueue.addAnimation(anAnim);
+		anAnimationQueueDest.addAnimation(anAnim);
 		
-		anAnimationQueue.start();
-		consoleDebug(anAnimationQueue);
-		
-		
-//		__(TKQueue.startAnimQueued(fct(() -> {
-//			// prepare l'animation
-//			classesAct2.add(cStateFrontActivity);
-//			classesAct2.add(cStateMoveToBottom);
-//			that.doActivityActive(act2);
-//		}), NEXT_FRAME, fct(() -> {
-//			// lance les anim
-//			that.doActivityFreeze(act2, MEM_SCROLL);
-//			classesAct2.add(cStateMoveToFront);
-//		})));
+		anAnimationQueueSrc.start();
+		anAnimationQueueDest.start();
+		consoleDebug(txt("anim act1"), anAnimationQueueSrc);
+		consoleDebug(txt("anim act2"), anAnimationQueueDest);
+				
 	}
 
 	/***************************************************************************************/

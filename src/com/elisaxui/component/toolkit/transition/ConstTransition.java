@@ -12,7 +12,7 @@ public class ConstTransition {
 	public static final String ANIM_FROM_BOTTOM ="fromBottom";
 	public static final String ANIM_FROM_RIPPLE ="ripple";
 	
-	public static final double COEF_ANIM = 1.5;
+	public static final double COEF_ANIM = 10.5;
 	public static final int SPEED_SHOW_ACTIVITY = (int)(200*COEF_ANIM);
 	public static final int SPEED_ACTIVITY_TRANSITION_EFFECT = (int)(150*COEF_ANIM);
 	public static final int DELAY_SURETE_END_ANIMATION = 50;

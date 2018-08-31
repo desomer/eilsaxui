@@ -178,7 +178,20 @@ public class CacheManager {
 		}
 	}
 	
-	public void storeResultInDb() {
+	public void commit()
+	{
+		
+		Thread r = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				db.commit();
+			}});
+				
+		r.start();
+	}
+	
+	public void storeResultInDb(boolean commit) {
 		if (idCache==null)
 			return;
 
@@ -194,7 +207,8 @@ public class CacheManager {
 		
 		resourceDB.put(idCache, getResult());
 		listeDico.set(listeVersionId);
-		db.commit();
+		if (commit)
+			db.commit();
 		
 		resourceCacheMem.put(idCache, getResult());
 	}

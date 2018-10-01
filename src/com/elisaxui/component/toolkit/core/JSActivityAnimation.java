@@ -177,6 +177,7 @@ public interface JSActivityAnimation extends JSClass {
 							
 							aAnim.timeStart().set(calc(aAnim.timeStart(), "+ (", aAnim.speed() ,"*", prctDeltaTouch ,")"));
 							
+							
 							consoleDebug("'modeTouchActionEnd'", touchActionStopped(), prctDeltaTouch);
 							
 							touchActionStopped().set(null);

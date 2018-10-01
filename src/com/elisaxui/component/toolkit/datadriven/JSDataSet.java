@@ -114,7 +114,7 @@ public interface JSDataSet extends JSClass {
 
 		_var("that", _this());
 
-		_forIdx(idx, d)._do(() -> {
+		forIdx(idx, d)._do(() -> {
 			_if("!", dataSet.isProxy(d.at(idx))).then(() -> {
 				__(d.at(idx), "=new Proxy(", d.at(idx), ", changeHandler)");
 				__(dataSet.addProxy(d.at(idx)));

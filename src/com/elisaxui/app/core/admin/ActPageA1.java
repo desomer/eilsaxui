@@ -8,7 +8,7 @@ import com.elisaxui.app.core.module.MntPage.MountBtn;
 import com.elisaxui.app.core.module.MntPage.MountNavBar;
 import com.elisaxui.app.core.module.MntPage.MountTabBar;
 import com.elisaxui.app.core.module.MntPage.TBtn;
-import com.elisaxui.app.core.module.MntPage.TPage;
+import com.elisaxui.app.core.module.MntPage.TActivity;
 import com.elisaxui.component.toolkit.datadriven.IJSMountFactory;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
@@ -28,11 +28,11 @@ import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
 @xCoreVersion("1")
 public interface ActPageA1 extends JSClass , IJSNodeTemplate, IJSMountFactory {
 	
-	TPage aPage = JSClass.declareType();
+	TActivity aPage = JSClass.declareType();
 	
 	@xStatic(autoCall=true)
 	default void initPage() {
-		TPage page = newJS(TPage.class);
+		TActivity page = newJS(TActivity.class);
 		page.titre().set("Page1");
 		page.mountNavNar().set(MountNavBar.class);
 		page.mountTabNar().set(MountTabBar.class);
@@ -81,7 +81,7 @@ public interface ActPageA1 extends JSClass , IJSNodeTemplate, IJSMountFactory {
 
 		for (int i = 0; i < 100; i++) {
 			TBtn ligne1 = newJS(TBtn.class);
-			ligne1.titre().set("Ligne A" + i);
+			ligne1.titre().set("Ligne AA" + i);
 			listeArticle.push(ligne1);
 		}
 		JSArray<JSElement> listeContent = JSArray.newLitteral();

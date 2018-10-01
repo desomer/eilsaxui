@@ -12,7 +12,7 @@ import com.elisaxui.app.core.module.MntPage.MountNavBar;
 import com.elisaxui.app.core.module.MntPage.MountPage;
 import com.elisaxui.app.core.module.MntPage.MountTabBar;
 import com.elisaxui.app.core.module.MntPage.TBtn;
-import com.elisaxui.app.core.module.MntPage.TPage;
+import com.elisaxui.app.core.module.MntPage.TActivity;
 import com.elisaxui.component.page.ScnPage;
 import com.elisaxui.component.toolkit.core.JSActionManager;
 import com.elisaxui.component.toolkit.core.JSActivityStateManager;
@@ -89,7 +89,7 @@ public class ScnPageB extends ScnPage implements ICSSBuilder {
 	/********************************************************/
 	static JSInt idx;
 	static JSArray<TBtn> list;
-	static JSArray<TPage> arrPage;
+	static JSArray<TActivity> arrPage;
 	static JSActivityStateManager animMgr;
 	static JSNodeElement activity;
 
@@ -99,7 +99,7 @@ public class ScnPageB extends ScnPage implements ICSSBuilder {
 		JSActionManager actionManager = JSClass.declareTypeClass(JSActionManager.class);
 		TActionEvent actionEvent = JSClass.declareType();
 
-		TPage aPage = JSClass.declareType();
+		TActivity aPage = JSClass.declareType();
 
 		@xStatic(autoCall = true) // appel automatique de la methode static
 		default void main() {
@@ -108,7 +108,7 @@ public class ScnPageB extends ScnPage implements ICSSBuilder {
 			document().querySelector(getcMain()).appendChild(xElem(vMount(arrPage, JSString.value(MountPage.class))));
 
 			/******************************************************************/
-			TPage page = newJS(TPage.class);
+			TActivity page = newJS(TActivity.class);
 			page.titre().set("Page1");
 
 			page.mountNavNar().set(MountNavBar.class);
@@ -131,7 +131,7 @@ public class ScnPageB extends ScnPage implements ICSSBuilder {
 
 			arrPage.push(aPage);
 			
-			TPage page2 = newJS(TPage.class);
+			TActivity page2 = newJS(TActivity.class);
 			page2.titre().set("Page2");
 
 			page2.mountNavNar().set(MountNavBar.class);

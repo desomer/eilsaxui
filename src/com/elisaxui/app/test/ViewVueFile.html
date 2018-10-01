@@ -35,7 +35,7 @@
 	var renderjson = /*[# th:utext= "${# vuejs.compile('ViewVueFile.html::template')}" ]*/ {} /*[/]*/;
 	
 	/*[# th:if=${modeapp}]*/
-		var methods = /*[# th:utext= ~{ViewVueMethod.js} ]*/ ()=>{} /*[/]*/;
+	var methods = /*[# th:utext= ~{ViewVueMethod.js} ]*/ ()=>{} /*[/]*/;
 	/*[/]*/
 	
 	/*[# th:replace="~{ViewVueFile.html::otherjs}"]*/  

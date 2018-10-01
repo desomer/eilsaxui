@@ -56,6 +56,7 @@ public class CssTransition extends XHTMLPart {
 	public static CSSClass cStateHiddenToBottom;
 	public static CSSClass cStateMoveToFront;
 	public static CSSClass cStateNoDisplay;
+	public static CSSClass cStateNoPullToRefresh;
 	
 	@xTarget(AFTER_BODY.class)
 	@xResource(id = "anim.css", async=true)
@@ -63,8 +64,11 @@ public class CssTransition extends XHTMLPart {
 	public XMLElement xStylePart() {
 
 		return cStyle()
+				
 				.path(animated).set("animation-duration:"+SPEED_ANIMATED+"ms")
 				
+				.path(cStateNoPullToRefresh).set("overscroll-behavior-y: contain")
+				.path(activity).set("backface-visibility: hidden; will-change:opacity, display;")
 				.path(activity)
 						.and(cStyle(cStateFixedForFreeze).set("top:0px; position: fixed; overflow:hidden "))
 						.and(cStyle(cStateFrontActivity).set("z-index:"+ZINDEX_ANIM_FRONT+";"))	

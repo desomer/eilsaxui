@@ -4,6 +4,7 @@
 package com.elisaxui.app.core.module;
 
 import com.elisaxui.app.core.module.MntInput.TInput;
+import com.elisaxui.component.toolkit.datadriven.IJSDataBinding;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.IJSMountFactory;
 import com.elisaxui.component.widget.button.CssRippleEffect;
@@ -30,11 +31,11 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  * @author gauth
  *
  */
-public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFactory {
+public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFactory, IJSDataBinding {
 
 	static TMain aMainMount;
-	static JSArray<TPage> listPage;
-	static TPage aPage;
+	static JSArray<TActivity> listPage;
+	static TActivity aPage;
 	static TBtn aBtn;
 	static JSArray<JSAny> listArticle;
 	static TInput aInput;
@@ -68,7 +69,7 @@ public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFacto
 	}
 
 	@xMount(MountPage.class)
-	public XMLElement createPage(JSArray<TPage> arrPage) {
+	public XMLElement createPage(JSArray<TActivity> arrPage) {
 		return xElem(vFor(arrPage, aPage, xElem(new ViewPageLayout()
 				.vProp(ViewPageLayout.pIsNoVisible, true)
 				.vProp(ViewPageLayout.pWithTabBar, true)
@@ -92,7 +93,7 @@ public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFacto
 	}
 
 	@xMount(MountNavBar.class)
-	public XMLElement createNavBar(TPage aPage) {
+	public XMLElement createNavBar(TActivity aPage) {
 		return xElem(new ViewBtnBurger(), xDiv(ViewNavBar.rightAction,
 				xElem(vFor(aPage.dataNavBar(), aBtn, xElem(vMount(aBtn, aBtn.mountBtn()))))));
 	}
@@ -104,7 +105,7 @@ public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFacto
 	public XMLElement createBtn(TBtn btn) {
 		return xButton(xIdAction(btn.action()),
 				ViewNavBar.cActionBtnContainer, CssRippleEffect.cRippleEffect, xAttr("type", "button"),
-				xI(ViewNavBar.actionBtn, ViewNavBar.material_icons, btn.titre()));
+				xI(ViewNavBar.actionBtn, ViewNavBar.material_icons, vChangeable(btn.titre())));
 	}
 
 	public static class MountBtn2 extends MountBtn {
@@ -119,7 +120,7 @@ public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFacto
 	}
 
 	@xMount(MountCard.class)
-	public XMLElement createCard(TPage aPage) {
+	public XMLElement createCard(TActivity aPage) {
 		return xElem(vFor(aPage.contentArticles(), aArticle, xDiv(
 				vFor(aArticle, aInput, xDiv(vMount(aInput, aInput.implement()))))));
 	}
@@ -129,7 +130,7 @@ public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFacto
 	}
 
 	@xMount(MountArticle.class)
-	public XMLElement createArticle(TPage aPage) {
+	public XMLElement createArticle(TActivity aPage) {
 		return xElem(vFor(aPage.contentArticles(), aArticle,
 				xDiv(vFor(aArticle, aBtn, xDiv(aBtn.titre())))));
 	}
@@ -138,7 +139,7 @@ public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFacto
 	}
 
 	@xMount(MountArticle2.class)
-	public XMLElement createArticle2(TPage aPage) {
+	public XMLElement createArticle2(TActivity aPage) {
 		return xElem(vFor(aPage.contentArticles(), aArticle,
 				xDiv(vFor(aArticle, aBtn, xH1(aBtn.titre())))));
 	}
@@ -152,7 +153,7 @@ public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFacto
 		JSAny data();
 	}
 
-	public interface TPage extends JSType {
+	public interface TActivity extends JSType {
 
 		JSString titre();
 

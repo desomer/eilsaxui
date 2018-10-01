@@ -50,8 +50,9 @@ public class ViewBtnBurger extends XHTMLPart {
 						.or(cHamburger.descendant(cHamburgerInner).pseudoClass("before"))
 						)
 						.set("background-color: #fff; "
-								+ "transition-property:all !important; "
-								+ "transition-duration:"+SPEED_BURGER_EFFECT+"ms !important;")
+							//	+ "transition-property:all !important; "
+							//	+ "transition-duration:"+SPEED_BURGER_EFFECT+"ms !important;"
+								+ "")
 
 						//				.on(".hamburger.changeColorMenu .hamburger-inner, "  // changement de couleur
 //						+ ".hamburger.changeColorMenu .hamburger-inner:after, "
@@ -66,7 +67,7 @@ public class ViewBtnBurger extends XHTMLPart {
 
 	@xTarget(CONTENT.class)
 	public XMLElement xBurgerBtn() {
-		return xNode( "button", xIdAction("burger"), 
+		return xButton(xIdAction("burger"), 
 				xAttr("aria-label", "burger"), 
 				xAttr("type", "button"), cLeftBtn,  cHamburger, 
 				cHamburgerElastic,

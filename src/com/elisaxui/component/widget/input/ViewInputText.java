@@ -48,7 +48,8 @@ public class ViewInputText extends XHTMLPart implements ICSSBuilder {
 						// input
 						sOn(sSel("input"), () -> {
 							css("font-size:18px; padding:10px 10px 2px 5px; display:block;");
-							css(" width:300px;border:none;border-bottom:1px solid #757575;");
+							css("width:300px;border:none;border-bottom:1px solid #757575;");
+							css("background-color:inherit");
 							sOn(sSel("&:focus"), () -> {
 								css("outline:none;");
 								// label

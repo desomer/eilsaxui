@@ -41,7 +41,7 @@ public interface TKPubSub extends JSClass {
 	}
 
 	default void publish(Object message) {
-		_forIdx(i, observers())._do(() -> observers().at(i).invoke(var(message)));
+		forIdx(i, observers())._do(() -> observers().at(i).invoke(var(message)));
 	}
 
 }

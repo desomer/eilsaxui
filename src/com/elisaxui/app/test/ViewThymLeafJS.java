@@ -40,8 +40,7 @@ public class ViewThymLeafJS extends XHTMLPart {
 		templateManager.getCtx().setVariable("admin", false);
 		templateManager.getCtx().setVariable("version", false);
 		
-		String mainFrag = URLLoader.loadResourceNearClass(ViewThymLeafJS.class, "ViewVueFileSimple.html", false);
-		templateManager.addTemplate("main", mainFrag);
+		templateManager.addTemplate("main", URLLoader.loadResourceNearClass(ViewThymLeafJS.class, "ViewVueFileSimple.html", false));
 		templateManager.addTemplate("code", "console.debug('[[${date}]]')");
 
 		String css = templateManager.getFragment("main::css");

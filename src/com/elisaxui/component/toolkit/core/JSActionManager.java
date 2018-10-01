@@ -94,6 +94,21 @@ public interface JSActionManager extends JSClass {
 	default void onStop(Object callback) {
 		callBackStop().subscribe(callback);
 	}
+	
+	@xStatic()
+	default void addListener(TActionListener listener) {
+		callBackStart().subscribe(listener.onStart());
+		callBackMove().subscribe(listener.onMove());
+		callBackStop().subscribe(listener.onStop());
+	}
+	
+	@xStatic()
+	default void removeListener(TActionListener listener) {
+		callBackStart().unsubscribe(listener.onStart());
+		callBackMove().unsubscribe(listener.onMove());
+		callBackStop().unsubscribe(listener.onStop());
+	}
+	
 
 	@xStatic()
 	default void addAction(JSString actionId, Object that, Object callback) {
@@ -146,7 +161,13 @@ public interface JSActionManager extends JSClass {
 	}
 
 	/*********************************************************/
-
+	interface TActionListener extends JSType {
+		JSCallBack onStart();
+		JSCallBack onMove();
+		JSCallBack onStop();
+	}
+	
+	
 	interface TActionEvent extends JSType {
 		JSNodeElement actionTarget();
 

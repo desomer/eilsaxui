@@ -560,13 +560,13 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	}
 
 	@Override
-	public JSContentInterface _forIdx(Object idx, JSArray<?> array) {
+	public JSContentInterface forIdx(Object idx, JSArray<?> array) {
 		return _for("var " + idx + " = 0, " + idx + "len =", array.length(),
 				"; " + idx + " < " + idx + "len; " + idx + "++");
 	}
 
 	@Override
-	public JSContentInterface _forIdx(JSInt idx, int start, int end) {
+	public JSContentInterface forIdx(JSInt idx, int start, int end) {
 		return _for("var " + idx + " = " + start + ";" + idx + " < " + end + "; " + idx + "++");
 	}
 

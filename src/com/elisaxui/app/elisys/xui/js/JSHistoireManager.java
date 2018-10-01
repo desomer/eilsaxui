@@ -35,7 +35,7 @@ public interface JSHistoireManager extends JSClass {
 			JSInt i = declareType(JSInt.class,"i"); 
 			JSInt num = declareType(JSInt.class,"num");
 			
-			_forIdx(i, aJPhrase.mots())._do(()->{
+			forIdx(i, aJPhrase.mots())._do(()->{
 				setTimeout( 
 						funct(num).__(jsonSyllable.push(aJPhrase.mots().at(num)))
 					,"50+(20*i)", i);	

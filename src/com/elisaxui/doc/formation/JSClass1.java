@@ -93,12 +93,12 @@ public interface JSClass1 extends JSClass {
 		p.substring(1).substring(0, 2);
 		p.set(calc(b, "+", 5, "+", OK)); // calcule complexe js
 
-		_forIdx("idxx", tableau())._do( () -> { 
+		forIdx("idxx", tableau())._do( () -> { 
 			b.set(tableau().at("idxx")); 
 		});
 
 		// boucle for
-		_forIdx(idxc, tableau())._do( () -> {
+		forIdx(idxc, tableau())._do( () -> {
 			b.set(tableau().at(idxc));
 		});
 		

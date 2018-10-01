@@ -71,8 +71,7 @@ public class XUILaucher {
 
 		System.out.println("start jetty server " + server.getVersion());
 		// *******************************************************************/
-		RewriteHandler rewrite = new RewriteHandler();
-		initRewriting(rewrite);
+
 
 		/*********************************************************************/
 		ServletContextHandler restHandler = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
@@ -97,7 +96,11 @@ public class XUILaucher {
 		myhandlers.addHandler(restHandler);
 		myhandlers.addHandler(restHandler2);
 		myhandlers.addHandler(basicHandler);
+		
 		gzipHolder.setHandler(myhandlers);
+		
+		RewriteHandler rewrite = new RewriteHandler();
+		initRewriting(rewrite);
 		rewrite.setHandler(gzipHolder);
 
 		MovedContextHandler movedHandlerToHttps = new MovedContextHandler();
@@ -108,9 +111,9 @@ public class XUILaucher {
 		movedHandlerToHttps.setDiscardQuery(false);
 		movedHandlerToHttps.setVirtualHosts(new String[] { "@unsecured" }); // uniquement en http
 
-		HandlerCollection myhandlers2 = new HandlerCollection(true);
-		myhandlers2.addHandler(movedHandlerToHttps); // redirection to https
-		myhandlers2.addHandler(rewrite);
+		HandlerCollection myhandlersRewrite = new HandlerCollection(true);
+	// 	myhandlers2.addHandler(movedHandlerToHttps); // redirection to https
+		myhandlersRewrite.addHandler(rewrite);
 
 		/******************************** DEBUG **************************************/
 		if (false) {
@@ -173,7 +176,7 @@ public class XUILaucher {
 		/***********************************************************************************/
 
 		server.setConnectors(new Connector[] { httpconnector, httpsConnector }); // les connectors
-		server.setHandler(myhandlers2); // les handlers
+		server.setHandler(myhandlersRewrite); // les handlers
 
 		/*******************************************************************/
 

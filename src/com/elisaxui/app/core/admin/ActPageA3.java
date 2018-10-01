@@ -11,7 +11,7 @@ import com.elisaxui.app.core.module.MntPage.MountCard;
 import com.elisaxui.app.core.module.MntPage.MountNavBar;
 import com.elisaxui.app.core.module.MntPage.MountTabBar;
 import com.elisaxui.app.core.module.MntPage.TBtn;
-import com.elisaxui.app.core.module.MntPage.TPage;
+import com.elisaxui.app.core.module.MntPage.TActivity;
 import com.elisaxui.component.toolkit.datadriven.IJSMountFactory;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
@@ -32,11 +32,11 @@ import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
 @xCoreVersion("1")
 public interface ActPageA3 extends JSClass , IJSNodeTemplate, IJSMountFactory {
 	
-	TPage aPage = JSClass.declareType();
+	TActivity aPage = JSClass.declareType();
 	
 	@xStatic(autoCall=true)
 	default void initPage() {
-		TPage page = newJS(TPage.class);
+		TActivity page = newJS(TActivity.class);
 		page.titre().set("Page3");
 		page.mountNavNar().set(MountNavBar.class);
 		page.mountTabNar().set(MountTabBar.class);

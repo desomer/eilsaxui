@@ -62,7 +62,7 @@ public interface JSActivityManager extends JSClass {
 		let(lastIntent, historyIntent().pop());
 		let(activityDest, document().querySelector(txt(CSSSelector.onPath("#", lastIntent.activitySrc()))));
 
-		animMgr.doOpenActivityFromBottom(activity, activityDest);
+		animMgr.doCloseActivityToBottom(activityDest, activity);
 		
 		return activityDest;
 	}

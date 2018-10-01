@@ -103,7 +103,7 @@ public interface JSDataBinding extends JSClass {
 //		);
 		listNode.setArrayType(JSNodeElement.class);
 		JSInt i = declareType(JSInt.class, "i");
-		_forIdx(i, listNode)._do(() -> {
+		forIdx(i, listNode)._do(() -> {
 			JSNodeElement elem = let("elem", listNode.at(i));
 			XuiBindInfo ddi = let(XuiBindInfo.class, "ddi", elem.attr(JSDomBuilder.ATTR_BIND_INFO));
 			JSAny valueChange = let("valueChange", changeCtx.value());
@@ -139,7 +139,7 @@ public interface JSDataBinding extends JSClass {
 
 		JSEvent event = declareType(JSEvent.class, "event");
 		JSInt idx = declareType(JSInt.class, "idx");
-		_forIdx(idx, listEvent)._do(() -> {
+		forIdx(idx, listEvent)._do(() -> {
 			document().addEventListener(listEvent.at(idx), fct(event, () -> {
 				_if(event.target().nodeName().equalsJS("INPUT")).then(() -> {
 					JSNodeInputElement inputelem = let(JSNodeInputElement.class, "inputelem",

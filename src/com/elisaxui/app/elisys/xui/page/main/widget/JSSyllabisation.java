@@ -89,7 +89,7 @@ public interface JSSyllabisation extends JSClass, IXHTMLBuilder {
 						JSArray lesmots = new JSArray()._setName("lesmots");
 						_var(lesmots, data.attr("mots"));
 						JSInt num = new JSInt()._setName("num");
-						_forIdx(num, lesmots);
+						forIdx(num, lesmots);
 							setTimeout(funct(num).__(jsonSyllable.push(lesmots.at(num))), "50+(20*"+num+")", num);
 						endfor();
 					};
@@ -130,7 +130,7 @@ public interface JSSyllabisation extends JSClass, IXHTMLBuilder {
 				JSArray<JSArray> sylb = new JSArray()._setName("sylb");
 				_var(sylb, "ctx.row.syllabes");
 				
-	            _forIdx("j", sylb);
+	            forIdx("j", sylb);
 	            	_set(template, ViewSyllabisation.getSyl(xVar(sylb.at("j").attr("text"))));
 	            	
 	        		JQuery jqdomSyl = new JQuery()._setName("jqdomSyl");

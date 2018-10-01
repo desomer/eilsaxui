@@ -25,14 +25,14 @@ public class CoreLogger {
 	private CoreLogger() {
 		super();
 	}
-	
+
 	static long lastTime = 0;
 	static ConcurrentHashMap<String, Logger> mapLogger = new ConcurrentHashMap<>();
 
-	public static Logger getLogger(int nb) {		
+	public static Logger getLogger(int nb) {
 		String name = Thread.currentThread().getStackTrace()[nb].getClassName();
-		
-		return mapLogger.computeIfAbsent(name, key-> createLogger(name) );
+
+		return mapLogger.computeIfAbsent(name, key -> createLogger(name));
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class CoreLogger {
 	private static Logger createLogger(String name) {
 		Handler handler = new ConsoleHandler();
 		handler.setLevel(Level.ALL);
-		
+
 		handler.setFormatter(new SingleLineFormatter());
 
 		Logger l = Logger.getLogger(name);
@@ -51,94 +51,99 @@ public class CoreLogger {
 		l.setLevel(Level.FINE);
 		return l;
 	}
-	
+
 	public static class SingleLineFormatter extends Formatter {
 
-		  private static final String FORMAT = "{0,date,short} {0,time}";
-		
-		  Date dat = new Date();
-		  private MessageFormat formatter;
-		  private Object[] args = new Object[1];
+		private static final String FORMAT = "{0,date,short} {0,time}";
 
-		  private String lineSeparator = "\n";
+		Date dat = new Date();
+		private MessageFormat formatter;
+		private Object[] args = new Object[1];
 
-		  /**
-		   * Format the given LogRecord.
-		   * @param record the log record to be formatted.
-		   * @return a formatted log record
-		   */
-		  public synchronized String format(LogRecord record) {
-			  
+		private String lineSeparator = "\n";
+
+		/**
+		 * Format the given LogRecord.
+		 * 
+		 * @param record
+		 *            the log record to be formatted.
+		 * @return a formatted log record
+		 */
+		public synchronized String format(LogRecord record) {
+
 			long t = System.currentTimeMillis();
-			if (lastTime==0)
-				lastTime=t;
-			
-			long d = t-lastTime;
-			d=d%10000;
-			
+			if (lastTime == 0)
+				lastTime = t;
+
+			long d = t - lastTime;
+			d = d % 10000;
+
 			lastTime = t;
 
-		    StringBuilder sb = new StringBuilder();
+			StringBuilder sb = new StringBuilder();
 
-		    // Minimize memory allocations here.
-		    dat.setTime(record.getMillis());    
-		    args[0] = dat;
+			// Minimize memory allocations here.
+			dat.setTime(record.getMillis());
+			args[0] = dat;
 
+			// Date and time
+			StringBuffer text = new StringBuffer();
+			if (formatter == null) {
+				formatter = new MessageFormat(FORMAT, Locale.FRENCH);
+			}
+			formatter.format(args, text, null);
+			sb.append(text);
 
-		    // Date and time 
-		    StringBuffer text = new StringBuffer();
-		    if (formatter == null) {
-		      formatter = new MessageFormat(FORMAT, Locale.FRENCH);
-		    }
-		    formatter.format(args, text, null);
-		    sb.append(text);
-		    
-		    // Level
-		    sb.append(" ");
-		    String paddedString = d < 100 ? d < 10 ? "  " + d : " " + d : "" + d;
-		    sb.append(paddedString);
-		    sb.append(" [");
-		    sb.append(record.getLevel().getLocalizedName());
-		    sb.append("] ");
-		    
-		    // Class name 
-		    sb.append("<");
-		    if (record.getSourceClassName() != null) {
-		      sb.append(record.getSourceClassName());
-		    } else {
-		      sb.append(record.getLoggerName());
-		    }
+			// Level
+			sb.append(" ");
+			String paddedString = d < 1000 ? d < 100 ? d < 10 ? ("   " + d) : ("  " + d) : (" " + d) : ("" + d);
+			sb.append(paddedString);
+			sb.append(" [");
+			sb.append(record.getLevel().getLocalizedName());
+			sb.append("] ");
 
-		    // Method name 
-		    if (record.getSourceMethodName() != null) {
-		      sb.append(":");
-		      sb.append(record.getSourceMethodName());
-		      sb.append(">");
-		    }
+			// Class name
+			sb.append("<");
+			String classname = null;
+			if (record.getSourceClassName() != null) {
+				classname = record.getSourceClassName();
+			} else {
+				classname = record.getLoggerName();
+			}
+			classname = classname.substring(classname.lastIndexOf(".")+1);
+			
+			sb.append(classname);
+			
+			// Method name
+			if (record.getSourceMethodName() != null) {
+				sb.append(":");
+				sb.append(record.getSourceMethodName());
+				sb.append(">");
+			}
 
-		    // Indent - the more serious, the more indented.
-		    int iOffset = (1000 - record.getLevel().intValue()) / 100;
-		    for( int i = 0; i < iOffset;  i++ ){
-		      sb.append(" ");
-		    }
+			// Indent - the more serious, the more indented.
+			int iOffset = (1000 - record.getLevel().intValue()) / 100;
+			for (int i = 0; i < iOffset; i++) {
+				sb.append(" ");
+			}
 
-		    String message = formatMessage(record);
-		    sb.append(message);
-		    
-		    sb.append(lineSeparator);
-		    if (record.getThrown() != null) {
-		      try {
-		        StringWriter sw = new StringWriter();
-		        PrintWriter pw = new PrintWriter(sw);
-		        record.getThrown().printStackTrace(pw);
-		        pw.close();
-		        sb.append(sw.toString());
-		      } catch (Exception ex) {
-		    	 // ne fait rien
-		      }
-		    }
-		    return sb.toString();
-		  }
+			String message = formatMessage(record);
+			sb.append(message);
+
+			sb.append(lineSeparator);
+			if (record.getThrown() != null) {
+				try {
+					StringWriter sw = new StringWriter();
+					PrintWriter pw = new PrintWriter(sw);
+					record.getThrown().printStackTrace(pw);
+					pw.close();
+					sb.append(sw.toString());
+				} catch (Exception ex) {
+					// ne fait rien
+				}
+			}
+			return sb.toString();
 		}
-	
+	}
+
 }

@@ -170,7 +170,7 @@ public class XHTMLPartJS extends XHTMLPart implements JSClass {
 	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface#_forIdx(com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt, int, int)
 	 */
 	@Override
-	public JSContentInterface _forIdx(JSInt idx, int start, int end) {
+	public JSContentInterface forIdx(JSInt idx, int start, int end) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -180,7 +180,7 @@ public class XHTMLPartJS extends XHTMLPart implements JSClass {
 	 * @see com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface#_forIdx(java.lang.Object, com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray)
 	 */
 	@Override
-	public JSContentInterface _forIdx(Object idx, JSArray<?> array) {
+	public JSContentInterface forIdx(Object idx, JSArray<?> array) {
 		// TODO Auto-generated method stub
 		return null;
 	}

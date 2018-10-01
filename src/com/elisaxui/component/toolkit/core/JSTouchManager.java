@@ -44,7 +44,7 @@ public interface JSTouchManager extends JSClass {
 
 		let(listEvent, listEventLitteral);
 
-		_forIdx(idx, listEvent)._do(() -> {
+		forIdx(idx, listEvent)._do(() -> {
 			document().addEventListener(listEvent.at(idx), fct(aEvent, () -> {
 				_if(aEvent.type().equalsJS("touchstart")).then(() -> {
 					aTouchInfo.startTime().set(aEvent.timeStamp());

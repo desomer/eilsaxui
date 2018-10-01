@@ -72,7 +72,7 @@ public interface JSDomBuilder extends JSClass {
 			})._else(() -> {
 				JSArray<?> el = cast(JSArray.class, "elem");
 				// gestion des attribut
-				_forIdx(i, el)._do(() -> {
+				forIdx(i, el)._do(() -> {
 					JSAny attr = let(JSAny.class, "attr", el.at(i));
 					__("doElem(eldom, attr)");
 				});
@@ -82,7 +82,7 @@ public interface JSDomBuilder extends JSClass {
 		let(e, funct("id", child).__(() -> {
 			JSAny newdom = let(JSAny.class, "newdom", "document.createElement(id)");
 			_if(child.notEqualsJS(null)).then(() -> {
-				_forIdx(j, child)._do(() -> {
+				forIdx(j, child)._do(() -> {
 					let("elem", child.at(j));
 					__("doElem(newdom, elem)");
 				});
@@ -111,7 +111,7 @@ public interface JSDomBuilder extends JSClass {
 		let(a, fct(child, () -> {
 			JSon attr = let(JSon.class, "attr", null);
 			JSArray<Object> ret = let("ret", new JSArray<>().asLitteral());
-			_forIdx(j, child)._do(() -> {
+			forIdx(j, child)._do(() -> {
 				JSAny elemC = let(JSAny.class, "elemC", child.at(j));
 				_if(j.modulo(2).equalsJS(0)).then(() -> {
 					attr.set("document.createAttribute(elemC)");

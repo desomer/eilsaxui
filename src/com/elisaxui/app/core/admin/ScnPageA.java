@@ -11,7 +11,7 @@ import com.elisaxui.app.core.module.MntPage.MountMain;
 import com.elisaxui.app.core.module.MntPage.MountPage;
 import com.elisaxui.app.core.module.MntPage.TBtn;
 import com.elisaxui.app.core.module.MntPage.TMain;
-import com.elisaxui.app.core.module.MntPage.TPage;
+import com.elisaxui.app.core.module.MntPage.TActivity;
 import com.elisaxui.component.page.ScnPage;
 import com.elisaxui.component.toolkit.core.JSActionManager;
 import com.elisaxui.component.toolkit.core.JSActionManager.TActionEvent;
@@ -115,11 +115,11 @@ public class ScnPageA extends ScnPage {
 	/********************************************************/
 	static JSInt idx;
 	static JSArray<TBtn> list;
-	static JSArray<TPage> arrPage;
+	static JSArray<TActivity> arrPage;
 	static JSActivityStateManager animMgr;
 	static JSNodeElement activity;
 	static JSNodeElement activityDest;
-	static TPage aPage;
+	static TActivity aPage;
 
 	static JSArray<TMain> arrMount;
 	static TMain aMount;
@@ -169,12 +169,19 @@ public class ScnPageA extends ScnPage {
 				animMgr.doActivityActive(activity);
 				__("window.datadrivensync=false");
 				
+				
 //				__("var stateObj = { foo: \"bar\" };\r\n" + 
 //						"history.pushState(stateObj, \"page 2\", \"/bar.html\")");
 			}));
 
 			actionManager.addAction(JSString.value("CHANGE"), _this(), fct(() -> {
 				doChangeContent(arrPage);
+			}));
+			
+			actionManager.addAction(JSString.value("AJOUT"), _this(), fct(() -> {
+				consoleDebug("'ok'", "window.ActPageA.contentArticles[0][0]");
+				__("window.ActPageA.contentArticles[0][0].titre=window.innerHeight");
+				__("window.ActPageA.contentArticles[0][1].titre=window.outerHeight");
 			}));
 			
 			actionManager.addAction(JSString.value("TO_PAGE_B"), _this(), fct(() -> {
@@ -201,8 +208,8 @@ public class ScnPageA extends ScnPage {
 
 		/*****************************************************************************************/
 		@xStatic()
-		default void doChangeContent(JSArray<TPage> arrPage) {
-			arrPage.setArrayType(TPage.class);
+		default void doChangeContent(JSArray<TActivity> arrPage) {
+			arrPage.setArrayType(TActivity.class);
 			consoleDebug(txt("change article"));
 			arrPage.at(0).contentArticles().pop(); // suppresion de l'article
 			arrPage.at(0).mountArticles().set(MountArticle2.class); // change le template
@@ -210,7 +217,7 @@ public class ScnPageA extends ScnPage {
 
 			let(list, arrPage.at(0).contentArticles().at(0));
 
-			_forIdx(idx, 0, 10)._do(() -> {
+			forIdx(idx, 0, 10)._do(() -> {
 				TBtn ligne1 = newJS(TBtn.class);
 				ligne1.titre().set(calc(txt("Ligne"), "+", "Math.floor(Math.random() * 11)"));
 				list.push(ligne1);

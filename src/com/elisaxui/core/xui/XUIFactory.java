@@ -59,23 +59,22 @@ public abstract class XUIFactory {
 	 * @return
 	 */
 	protected static final String toXML(XHTMLFile fileXML, Locale loc, XMLBuilder xmlBuf) {
-		
-		if (xmlBuf==null)
-		{
+
+		if (xmlBuf == null) {
 			StringBuilder buf = new StringBuilder(1000);
 			buf.append("<!doctype html>");
 			((XHTMLTemplateRoot) fileXML.getXHTMLTemplate()).setLang(loc.toLanguageTag());
 			xmlBuf = new XMLBuilder("page", buf, null);
 		}
-		
+
 		fileXML.getXHTMLTemplate().zzDoContent();
 		List<XMLElement> rootContent = fileXML.getXHTMLTemplate().getListElementFromTarget(CONTENT.class);
-	
+
 		for (XMLElement elem : rootContent) {
 			elem.toXML(xmlBuf);
 		}
-	
-		return  xmlBuf.getContent().toString();
+
+		return xmlBuf.getContent().toString();
 	}
 
 	/**
@@ -93,27 +92,26 @@ public abstract class XUIFactory {
 	 */
 	protected void initResquestConfig(RequestConfig requestConfig) {
 		List<String> cacheControl = requestConfig.headers.getRequestHeader(CACHE_CONTROL);
-		requestConfig.noCache = cacheControl!=null && cacheControl.get(0).equals("no-cache");
-		
-		CoreLogger.getLogger(1).info(() -> "cacheControl="+cacheControl);
-		
+		requestConfig.noCache = cacheControl != null && cacheControl.get(0).equals("no-cache");
+
+		CoreLogger.getLogger(1).info(() -> "cacheControl=" + cacheControl);
+
 		MultivaluedMap<String, String> param = requestConfig.uri.getQueryParameters();
-				
+
 		List<String> p = param.get("compatibility");
-		requestConfig.setEs5(p!=null && p.get(0).equals("es5"));
+		requestConfig.setEs5(p != null && p.get(0).equals("es5"));
 		if (ConfigFormat.getData().isEs5())
 			requestConfig.setEs5(true);
-			
+
 		p = param.get("version");
-		requestConfig.version = p==null?ConfigFormat.getData().getVersionTimeline():Integer.parseInt(p.get(0));
-		
-		if (ConfigFormat.getData().isReload())
-		{
-			if (requestConfig.version==0)
-				requestConfig.noCache=true;
+		requestConfig.version = p == null ? ConfigFormat.getData().getVersionTimeline() : Integer.parseInt(p.get(0));
+
+		if (ConfigFormat.getData().isReload()) {
+			if (requestConfig.version == 0)
+				requestConfig.noCache = true;
 			ConfigFormat.getData().setReload(false);
 		}
-		
+
 		requestConfig.param = param;
 	}
 
@@ -121,97 +119,99 @@ public abstract class XUIFactory {
 	 * 
 	 */
 	protected synchronized void initChangeManager() {
-		if (changeMgr.mapClass.isEmpty() ||  changeMgr.dateInjection==null)
-		{
+		if (changeMgr.mapClass.isEmpty() || changeMgr.dateInjection == null) {
 			XHTMLAppScanner.getMapXHTMLPart(changeMgr);
 		}
 	}
 
 	/**
 	 * creer un XHTMLFile vide
+	 * 
 	 * @return
 	 */
 	protected XHTMLFile createXHTMLFile() {
 		XHTMLFile file = new XHTMLFile();
-		ProxyHandler.ThreadLocalMethodDesc.set(null); 
+		ProxyHandler.ThreadLocalMethodDesc.set(null);
 		ThreadLocalXUIFactoryPage.set(file);
 		return file;
 	}
 
-	
 	protected abstract void doSubFile(RequestConfig requestConfig, XHTMLFile fileXML);
-	
-	
+
 	/**
 	 * @param requestConfig
 	 * @param param
 	 * @param cache
 	 * @param xHTMLPartClass
 	 */
-	protected Response createVersion(RequestConfig requestConfig, CacheManager cache, Class<? extends XHTMLPart> xHTMLPartClass) {
+	protected Response createVersion(RequestConfig requestConfig, CacheManager cache,
+			Class<? extends XHTMLPart> xHTMLPartClass) {
 		JSExecutorHelper.initThread();
-				
+
 		Locale loc = Locale.FRENCH;
-		if (requestConfig.headers!=null) {
+		if (requestConfig.headers != null) {
 			List<Locale> languages = requestConfig.headers.getAcceptableLanguages();
 			loc = languages.get(0);
 		}
-		
-		XHTMLFile fileXML = null;
-	//	for (int i = 0; i < 1000; i++) {
-			fileXML = createXHTMLFile();
-			fileXML.setXHTMLTemplate(new XHTMLTemplateRoot());
-			CoreLogger.getLogger(1).info(()->"****** GENERATE PHASE 1 : "+xHTMLPartClass.getSimpleName()+" ********");
-			// premier passe (execute les annotation)
-			initXMLFile(xHTMLPartClass, fileXML, requestConfig.param);	
-	//	}
 
-	
+		XHTMLFile fileXML = null;
+		fileXML = createXHTMLFile();
+		fileXML.setXHTMLTemplate(new XHTMLTemplateRoot());
+		CoreLogger.getLogger(1).info(() -> "****** GENERATE PHASE 1 : " + xHTMLPartClass.getSimpleName() + " ********");
+		// premier passe (execute les annotation)
+		initXMLFile(xHTMLPartClass, fileXML, requestConfig.param);
+
 		if (ErrorNotificafionMgr.hasErrorMessage()) {
 			// affiche la page d'erreur
 			return Response.status(Status.INTERNAL_SERVER_ERROR) // .type(MediaType.TEXT_HTML)
 					.entity(ErrorNotificafionMgr.getBufferErrorMessage().toString()).build();
 		}
-	
+
 		// generation page
-		CoreLogger.getLogger(1).info(() -> "******"+ " GENERATE PHASE 2 : "	+ xHTMLPartClass.getSimpleName() + " ********");
-		
+		CoreLogger.getLogger(1)
+				.info(() -> "******" + " GENERATE PHASE 2 : " + xHTMLPartClass.getSimpleName() + " ********");
+
 		// deuxieme passe (execute les toXML)
 		String html = toXML(fileXML, loc, null);
-		
-		CoreLogger.getLogger(1).info(() -> "******"+ " GENERATE PHASE SUBFILE : "	+ xHTMLPartClass.getSimpleName() + " ********");
-		
+
+		CoreLogger.getLogger(1)
+				.info(() -> "******" + " GENERATE PHASE SUBFILE : " + xHTMLPartClass.getSimpleName() + " ********");
+
 		cache.setResult(html);
-		
+
 		// execute les sub fichier
 		doSubFile(requestConfig, fileXML);
-		
-		if (cache.isStore())
-		{
+
+		if (cache.isStore()) {
 			cache.storeResultInDb(false);
-			cache.getVersionDB(0);   // calcul la difference
+			cache.getVersionDB(0); // calcul la difference
 		}
-		
-		CoreLogger.getLogger(1).info(() -> "******"+ " GENERATE PHASE COMMIT : "	+ xHTMLPartClass.getSimpleName() + " ********");
+
+		CoreLogger.getLogger(1)
+				.info(() -> "******" + " GENERATE PHASE COMMIT : " + xHTMLPartClass.getSimpleName() + " ********");
 		cache.commit();
-		CoreLogger.getLogger(1).info(() -> "******"+ " GENERATE PHASE END COMMIT : "	+ xHTMLPartClass.getSimpleName() + " ********");
-		
+		CoreLogger.getLogger(1)
+				.info(() -> "******" + " GENERATE PHASE END COMMIT : " + xHTMLPartClass.getSimpleName() + " ********");
+
 		JSExecutorHelper.stopThread();
-		CoreLogger.getLogger(1).info(() -> "******"+ " GENERATE PHASE TERNINATED : "	+ xHTMLPartClass.getSimpleName() + " ********");
+		CoreLogger.getLogger(1)
+				.info(() -> "******" + " GENERATE PHASE TERNINATED : " + xHTMLPartClass.getSimpleName() + " ********");
+
 		return null;
 	}
 
-	protected void initXMLFile(Class<? extends XHTMLPart> pageClass, XMLFile file, MultivaluedMap<String, String> requestParam) {
+	protected void initXMLFile(Class<? extends XHTMLPart> pageClass, XMLFile file,
+			MultivaluedMap<String, String> requestParam) {
 		try {
-						
-			((XHTMLFile)file).setParam(requestParam);
-			
+
+			((XHTMLFile) file).setParam(requestParam);
+
 			XHTMLPart page = pageClass.newInstance();
-			file.setMainXMLPart( page);
-			
+			file.setMainXMLPart(page);
+
 			xCoreVersion coreVersion = pageClass.getAnnotation(xCoreVersion.class);
-			((XHTMLFile)file).setCoreVersion(coreVersion==null?"1":coreVersion.value());
-			
+			((XHTMLFile) file).setCoreVersion(coreVersion == null ? "1" : coreVersion.value());
+
 			page.zzDoContent();
 			for (XMLElement elem : page.getListElementFromTarget(CONTENT.class)) {
 				page.vBody(elem);
@@ -219,18 +219,16 @@ public abstract class XUIFactory {
 			for (XMLElement elem : page.getListElementFromTarget(AFTER_CONTENT.class)) {
 				page.vAfterBody(elem);
 			}
-			
+
 		} catch (InstantiationException | IllegalAccessException e) {
 			ErrorNotificafionMgr.doError("Pb instanciation " + pageClass.getName(), e);
 		}
 	}
 
-
-	public class RequestConfig
-	{
+	public class RequestConfig {
 		HttpHeaders headers;
 		UriInfo uri;
-		
+
 		/**
 		 * @param headers
 		 * @param uri
@@ -240,7 +238,7 @@ public abstract class XUIFactory {
 			this.headers = headers;
 			this.uri = uri;
 		}
-		
+
 		/**
 		 * @return the es5
 		 */
@@ -249,7 +247,8 @@ public abstract class XUIFactory {
 		}
 
 		/**
-		 * @param es5 the es5 to set
+		 * @param es5
+		 *            the es5 to set
 		 */
 		public void setEs5(boolean es5) {
 			this.es5 = es5;
@@ -258,7 +257,7 @@ public abstract class XUIFactory {
 		private boolean es5;
 		int version;
 		boolean noCache;
-		
+
 		MultivaluedMap<String, String> param;
 	}
 }

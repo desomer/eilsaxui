@@ -129,13 +129,13 @@ public interface JSPerfVuesJS extends JSClass, IJSONBuilder, IJSNodeTemplate, IJ
 									xH1(varText2)))));
 			
 
-			_forIdx(i, 0, 50)._do(() -> {
+			forIdx(i, 0, 50)._do(() -> {
 				DtoUser auser = newJS(DtoUser.class).asLitteral();
 				auser.firstName().set(txt("nickel", i));
 				listUser.push(auser);
 			});
 			
-			setTimeout(	() -> _forIdx(i, 0, 50)._do(listUser::pop), 2000);
+			setTimeout(	() -> forIdx(i, 0, 50)._do(listUser::pop), 2000);
 
 			__("document.getElementById('users').appendChild(", a, ")");
 			
@@ -146,18 +146,18 @@ public interface JSPerfVuesJS extends JSClass, IJSONBuilder, IJSNodeTemplate, IJ
 
 			__("new Vue({ el: '" + xid + "', data: ", d, " })");
 
-			_forIdx(i, 0, 20000)._do(() -> {
+			forIdx(i, 0, 20000)._do(() -> {
 				DtoUser user = newJS(DtoUser.class).asLitteral(); // pas de let et pas de declaration de class
 				user.firstName().set(txt("vuejs ", i));
 				d.users().push(user);
 			});
 
 			if (isChange()) {
-				setTimeout(() -> _forIdx(i, 0, 20000)._do(
+				setTimeout(() -> forIdx(i, 0, 20000)._do(
 						() -> {
 							d.users().at(i).firstName().set(txt("vuejs ", calc("20000-", i)));
 							setTimeout(
-									() -> _forIdx(i, 0, 20000)._do(() -> d.users().pop()),
+									() -> forIdx(i, 0, 20000)._do(() -> d.users().pop()),
 									2000);
 						}),
 						100);
@@ -167,7 +167,7 @@ public interface JSPerfVuesJS extends JSClass, IJSONBuilder, IJSNodeTemplate, IJ
 			JQuery jqUsers = let("jqUsers", $("#users"));
 
 			JSString d = let("d", JSString.value("")); // new JSString()
-			_forIdx(i, 0, 20000)._do(
+			forIdx(i, 0, 20000)._do(
 					() -> {
 						d.append(txt("<li id='q", i, "'>que", i, "</li>"));
 					});
@@ -177,7 +177,7 @@ public interface JSPerfVuesJS extends JSClass, IJSONBuilder, IJSNodeTemplate, IJ
 			if (isChange()) {
 				JQuery jqchildren = let("jqchildren", jqUsers.children());
 				setTimeout(
-						() -> _forIdx(i, 0, 20000)._do(
+						() -> forIdx(i, 0, 20000)._do(
 								() -> jqchildren.eq(i).text(txt("que", calc("20000-", i)))),
 						100);
 			}
@@ -185,7 +185,7 @@ public interface JSPerfVuesJS extends JSClass, IJSONBuilder, IJSNodeTemplate, IJ
 		} else {
 			JSAny users = let(JSAny.class, "users", "document.getElementById('users')");
 
-			_forIdx(i, 0, 20000)._do(() -> {
+			forIdx(i, 0, 20000)._do(() -> {
 				_var("node", "document.createElement('li')");
 				_var("textnode", "document.createTextNode('dom'+i)");
 				__("node.appendChild(textnode);");
@@ -195,7 +195,7 @@ public interface JSPerfVuesJS extends JSClass, IJSONBuilder, IJSNodeTemplate, IJ
 			if (isChange()) {
 				JSArray<?> children = let(JSArray.class, "children", "document.getElementById('users').childNodes");
 				setTimeout(
-						() -> _forIdx(i, 3, 20000)._do(
+						() -> forIdx(i, 3, 20000)._do(
 								() -> __(children.at(i), ".innerText='dom'+(20000-i)")),
 						100);
 			}

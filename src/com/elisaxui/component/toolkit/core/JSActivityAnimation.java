@@ -77,6 +77,7 @@ public interface JSActivityAnimation extends JSClass {
 	TActionEvent lastActionEvent();
 	JSInt touchActionSign();
 	TActionEvent touchActionStopped();
+	JSBool withEasing();
 	
 	default void constructor(JSString id) {
 		aQueue().set(newJS(TQueueAnim.class));
@@ -84,7 +85,8 @@ public interface JSActivityAnimation extends JSClass {
 		aQueue().listPhase().set(JSArray.newLitteral());
 		aQueue().idxPhase().set(0);
 		touchActionSign().set(1);
-	}
+		withEasing().set(true);
+		}
 
 	default void addPhase() {
 		lastPhase().set(newJS(TPhase.class));
@@ -156,6 +158,7 @@ public interface JSActivityAnimation extends JSClass {
 						// demarrage de l'animation
 						aAnim.timeStart().set(aAnimEvent.time());
 						aAnim.lastTickTime().set(aAnimEvent.time());
+						aAnim.startIdxInitial().set(aAnim.startIdx());
 						_if(aAnim.beforeStart().notEqualsJS(null)).then(() -> {
 							aAnim.beforeStart().call(aAnim);
 						});
@@ -164,33 +167,25 @@ public interface JSActivityAnimation extends JSClass {
 						
 						let(modeTouchAction, lastActionEvent(), "!=null");
 						let(modeTouchActionEnd, "!", modeTouchAction, "&&", touchActionStopped(), "!=null &&", touchActionStopped().infoEvent().deltaY(), ">0");
-						
+												
 						_if(modeTouchAction).then(() -> {
 							// arret de l'anim si touchaction
+							aAnim.startIdx().set(aAnim.startIdxInitial());
 							aAnim.timeStart().set(calc(aAnim.timeStart(), "+ (", aAnimEvent.time() ,"-", aAnim.lastTickTime() ,")"));					
 						});
 						
 						_if(modeTouchActionEnd).then(() -> {							
-							// calcul de timeStart si touchaction terminer
-							let(prctDeltaTouch, 0);
-							prctDeltaTouch.set(touchActionStopped().infoEvent().deltaY(),  "/", JSWindow.window().innerHeight() );
-							
-							aAnim.timeStart().set(calc(aAnim.timeStart(), "+ (", aAnim.speed() ,"*", prctDeltaTouch ,")"));
-							
-							
-							consoleDebug("'modeTouchActionEnd'", touchActionStopped(), prctDeltaTouch);
-							
-							touchActionStopped().set(null);
+							// calcul de timeStart si touchaction terminer						
+							aAnim.timeStart().set(aAnimEvent.time());
+							aAnim.startIdx().set(aAnim.currentIdx());
 						});
-						
-						
-						let(timeAnim, calc( aAnimEvent.time(), "-", aAnim.timeStart() ));
-															
+												
+						let(timeAnim, calc( aAnimEvent.time(), "-", aAnim.timeStart() ));													
 						let(prctAnim, calc( timeAnim, "/" , aAnim.speed() ));
 												
 						_if(modeTouchAction).then(() -> {
 							let(prctDeltaTouch, 0);
-							prctDeltaTouch.set(lastActionEvent().infoEvent().deltaY(),  "/", JSWindow.window().innerHeight() );
+							prctDeltaTouch.set(lastActionEvent().infoEvent().deltaY(), "/", JSWindow.window().innerHeight() );
 							prctAnim.set(var("easeinout(prctAnim)")); // ease in out
 							prctAnim.set(prctAnim, "-", prctDeltaTouch, "*", touchActionSign());
 						});
@@ -206,17 +201,18 @@ public interface JSActivityAnimation extends JSClass {
 							prctAnim.set(0);
 						});
 						
-						_if("!", modeTouchAction).then(() -> {
+						_if("!", modeTouchAction, "&&", withEasing()).then(() -> {
 							prctAnim.set(var("easeinout(prctAnim)")); // ease in out
 						});
 						
 						let(valAnim, calc("(", aAnim.stopIdx(), "- ", aAnim.startIdx(), ") *", prctAnim, "+",	aAnim.startIdx()));
 
+						aAnim.currentIdx().set(valAnim);
+						
 						/** mode de l'animation */
 						_if(aAnim.type().equalsJS(SCALE_XY)).then(() -> {
 							valAnim.set(valAnim, ".toFixed(5)");
 							aAnim.src().style().attr("transform").set( txt("scale3d(", valAnim, ",", valAnim, ", 1)"));
-
 						})._elseif(aAnim.type().equalsJS(BOTTOM_TO_FRONT)).then(() -> {
 
 							valAnim.set(JSWindow.window().innerHeight(), "- (", JSWindow.window().innerHeight(), "*",
@@ -238,6 +234,7 @@ public interface JSActivityAnimation extends JSClass {
 					aAnim.lastTickTime().set(aAnimEvent.time());
 				});
 
+				touchActionStopped().set(null);
 				_if(nbEnd, "==", aPhase.listAnimation().length()).then(() -> {
 					aQueue().idxPhase().set(aQueue().idxPhase(), "+1");
 				});
@@ -276,15 +273,15 @@ public interface JSActivityAnimation extends JSClass {
 		JSString type();
 
 		JSFloat startIdx();
-
+		JSFloat startIdxInitial();
 		JSFloat stopIdx();
 
 		JSFloat speed();
 		JSFloat lastTickTime();
-
-		// JSFloat currentIdx();
+		
 		JSFloat timeStart();
-
 		JSFloat timeEnd();
+		
+		JSFloat currentIdx();
 	}
 }

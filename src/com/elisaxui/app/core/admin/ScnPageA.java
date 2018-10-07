@@ -9,14 +9,14 @@ import com.elisaxui.app.core.module.CmpModuleComponent.JSMount;
 import com.elisaxui.app.core.module.MntPage.MountArticle2;
 import com.elisaxui.app.core.module.MntPage.MountMain;
 import com.elisaxui.app.core.module.MntPage.MountPage;
+import com.elisaxui.app.core.module.MntPage.TActivity;
 import com.elisaxui.app.core.module.MntPage.TBtn;
 import com.elisaxui.app.core.module.MntPage.TMain;
-import com.elisaxui.app.core.module.MntPage.TActivity;
 import com.elisaxui.component.page.ScnPage;
 import com.elisaxui.component.toolkit.core.JSActionManager;
 import com.elisaxui.component.toolkit.core.JSActionManager.TActionEvent;
-import com.elisaxui.component.toolkit.core.JSActivityManager;
-import com.elisaxui.component.toolkit.core.JSActivityManager.TIntent;
+import com.elisaxui.component.toolkit.core.JSActivityHistoryManager;
+import com.elisaxui.component.toolkit.core.JSActivityHistoryManager.TIntent;
 import com.elisaxui.component.toolkit.core.JSActivityStateManager;
 import com.elisaxui.component.toolkit.datadriven.IJSMountFactory;
 import com.elisaxui.component.toolkit.datadriven.JSDataBinding;
@@ -24,6 +24,8 @@ import com.elisaxui.component.widget.button.CssRippleEffect.JSRippleEffect;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
 import com.elisaxui.component.widget.navbar.ViewNavBar;
 import com.elisaxui.component.widget.tabbar.ViewTabBar;
+import com.elisaxui.core.xui.xhtml.builder.css.ICSSBuilder;
+import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
@@ -51,8 +53,11 @@ import com.elisaxui.core.xui.xml.target.FILE;
  */
 @xResource(id = "ScnPage")
 @xComment("Scene Page A")
-public class ScnPageA extends ScnPage {
+public class ScnPageA extends ScnPage implements ICSSBuilder {
 
+	public static CSSClass cIdlog;
+	
+	
 	@xTarget(FILE.class)
 	@xResource(id = "xListPage.mjs") // insert un <Script type module> dans le body
 	public XMLElement xListPage() {
@@ -65,7 +70,7 @@ public class ScnPageA extends ScnPage {
 	@xImport(idClass = JSActivityStateManager.class)
 	@xImport(idClass = JSRippleEffect.class)
 	@xImport(idClass = JSActionManager.class)
-	@xImport(idClass = JSActivityManager.class)
+	@xImport(idClass = JSActivityHistoryManager.class)
 	@xImport(idClass = JSDataBinding.class)
 	@xImport(idClass = ActPageA1.class)  
 	@xImport(idClass = ActPageA2.class)
@@ -83,6 +88,17 @@ public class ScnPageA extends ScnPage {
 	}
 	/************************************************************************/
 
+	@xTarget(HEADER.class)
+	@xResource()
+	public XMLElement xStylePart() {
+		return xElem(xStyle(() -> {
+			sOn(cIdlog, () -> {
+				css("height: 50px; width: 100%;  border: 1px solid red;  background-color: #ef19233d;  position: fixed;  top: 125px;  z-index: 100;"); 
+			});
+
+		}));
+	}
+		
 	@xTarget(CONTENT.class) // la vue App Shell
 	public XMLElement xAppShell() {
 
@@ -129,7 +145,7 @@ public class ScnPageA extends ScnPage {
 	@xCoreVersion("1")
 	public interface JSController extends JSClass, IJSNodeTemplate, IJSMountFactory {
 		JSActionManager actionManager = JSClass.declareTypeClass(JSActionManager.class);
-		JSActivityManager activityManager = JSClass.declareTypeClass(JSActivityManager.class);
+		JSActivityHistoryManager activityManager = JSClass.declareTypeClass(JSActivityHistoryManager.class);
 		
 		TActionEvent actionEvent = JSClass.declareType();
 
@@ -156,6 +172,8 @@ public class ScnPageA extends ScnPage {
 			arrPage.push(aPage);
 
 			consoleDebug(txt("arrMount ="), arrMount);
+			
+			document().body().appendChild(xElem(xDiv(cIdlog, "xxx")));
 
 			/**************************************************************************************/
 			let(animMgr, newJS(JSActivityStateManager.class));

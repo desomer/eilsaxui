@@ -22,7 +22,7 @@ public class ScnListPage extends XHTMLPart {
 	@xTarget(CONTENT.class) // la vue App Shell
 	public XMLElement xAppShell() {
 		
-		ArrayList list = new ArrayList();
+		ArrayList<XMLElement> list = new ArrayList<>();
 		
 		ArrayList<String> listUrl = XHTMLAppScanner.getListurl();
 		

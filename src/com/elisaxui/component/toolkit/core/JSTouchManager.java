@@ -47,6 +47,7 @@ public interface JSTouchManager extends JSClass {
 		forIdx(idx, listEvent)._do(() -> {
 			document().addEventListener(listEvent.at(idx), fct(aEvent, () -> {
 				_if(aEvent.type().equalsJS("touchstart")).then(() -> {
+					/************ START *******************/
 					aTouchInfo.startTime().set(aEvent.timeStamp());
 					aTouchInfo.stopTime().set(0);
 					aTouchInfo.deltaTime().set(0);
@@ -55,9 +56,18 @@ public interface JSTouchManager extends JSClass {
 					aTouchInfo.startClientX().set(aEvent.touches().at(0).clientX());
 					aTouchInfo.startClientY().set(aEvent.touches().at(0).clientY());
 					aTouchInfo.distance().set(0);
+					
+					aTouchInfo.stopX().set(0);
+					aTouchInfo.stopY().set(0);
+					aTouchInfo.deltaX().set(0);
+					aTouchInfo.deltaY().set(0);
+					aTouchInfo.distanceX().set(0);
+					aTouchInfo.distanceY().set(0);
+
 					jsActionManager.searchStart(aTouchInfo, aEvent);
 
 				})._elseif(aEvent.type().equalsJS("touchmove")).then(() -> {
+					/************ MOVE *******************/
 					aTouchInfo.deltaTime().set(aEvent.timeStamp().substact(aTouchInfo.startTime()));
 
 					aTouchInfo.deltaX().set(aEvent.touches().at(0).clientX().substact(aTouchInfo.startClientX()));
@@ -70,6 +80,7 @@ public interface JSTouchManager extends JSClass {
 					jsActionManager.searchMove(aTouchInfo, aEvent);
 
 				})._else(() -> {
+					/************ STOP, CANCEL *******************/
 					aTouchInfo.stopTime().set(aEvent.timeStamp());
 					aTouchInfo.deltaTime().set(aTouchInfo.stopTime().substact(aTouchInfo.startTime()));
 					aTouchInfo.stopX().set(aEvent.changedTouches().at(0).pageX());

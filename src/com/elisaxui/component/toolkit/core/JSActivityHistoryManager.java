@@ -23,7 +23,7 @@ import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
  */
 @xCoreVersion("1")
 @xExport
-public interface JSActivityManager extends JSClass {
+public interface JSActivityHistoryManager extends JSClass {
 
 	JSNodeElement currentActivity();
 

@@ -161,9 +161,11 @@ public abstract class XUIFactory {
 		// premier passe (execute les annotation)
 		initXMLFile(xHTMLPartClass, fileXML, requestConfig.param);
 
+		Response responseOnError = null;
+		
 		if (ErrorNotificafionMgr.hasErrorMessage()) {
 			// affiche la page d'erreur
-			return Response.status(Status.INTERNAL_SERVER_ERROR) // .type(MediaType.TEXT_HTML)
+			responseOnError =  Response.status(Status.INTERNAL_SERVER_ERROR) // .type(MediaType.TEXT_HTML)
 					.entity(ErrorNotificafionMgr.getBufferErrorMessage().toString()).build();
 		}
 
@@ -197,7 +199,7 @@ public abstract class XUIFactory {
 		CoreLogger.getLogger(1)
 				.info(() -> "******" + " GENERATE PHASE TERNINATED : " + xHTMLPartClass.getSimpleName() + " ********");
 
-		return null;
+		return responseOnError;
 	}
 
 	protected void initXMLFile(Class<? extends XHTMLPart> pageClass, XMLFile file,

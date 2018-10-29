@@ -7,7 +7,7 @@ import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.component.toolkit.TKQueue;
 import com.elisaxui.component.toolkit.com.TKCom;
 import com.elisaxui.component.toolkit.core.JSActionManager;
-import com.elisaxui.component.toolkit.core.JSActivityAnimation;
+import com.elisaxui.component.toolkit.core.JSAnimationManager;
 import com.elisaxui.component.toolkit.core.JSActivityHistoryManager;
 import com.elisaxui.component.toolkit.core.JSActivityStateManager;
 import com.elisaxui.component.toolkit.core.JSRequestAnimationFrame;
@@ -56,7 +56,7 @@ public class CmpModuleCore extends XHTMLPart implements IResourceLoader {
 		return xModule(
 				JSOverlay.class,
 				JSActivityStateManager.class,
-				JSActivityAnimation.class,
+				JSAnimationManager.class,
 				JSTouchManager.class,
 				JSActionManager.class,
 				JSActivityHistoryManager.class,

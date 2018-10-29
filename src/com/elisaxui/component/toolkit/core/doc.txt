@@ -1,2 +1,2 @@
-JSTouchManager      -> 	JSActionManager  	-> 		JSActivityManager     ->   JSPageAnimation
+JSTouchManager      -> 	JSActionManager  	-> 	JSActivityHistoryManager ->  	JSActivityStateManager     ->   JSAnimationManager
 						JSHistoryManager

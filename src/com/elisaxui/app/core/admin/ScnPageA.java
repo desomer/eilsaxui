@@ -173,7 +173,7 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 
 			consoleDebug(txt("arrMount ="), arrMount);
 			
-			document().body().appendChild(xElem(xDiv(cIdlog, "xxx")));
+		//	document().body().appendChild(xElem(xDiv(cIdlog, "xxx")));
 
 			/**************************************************************************************/
 			let(animMgr, newJS(JSActivityStateManager.class));
@@ -220,6 +220,10 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 			
 			actionManager.addAction(JSString.value("TO_PAGE1"), _this(), fct(() -> {
 				activityManager.doRouteToBackActivity();
+			}));
+			
+			actionManager.addAction(JSString.value("SWIPE_DOWN_HEADER"), _this(), fct(() -> {
+				consoleDebug("'Swipe down'");
 			}));
 					
 		}

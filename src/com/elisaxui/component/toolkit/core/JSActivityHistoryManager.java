@@ -73,6 +73,8 @@ public interface JSActivityHistoryManager extends JSClass {
 		return currentActivity();
 	}
 	
+	
+	/***************************************************************************/
 	public interface TIntent extends JSType {
 		JSString activityDest();
 		JSString url();	

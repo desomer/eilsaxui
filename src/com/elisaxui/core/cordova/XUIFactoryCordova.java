@@ -35,10 +35,12 @@ public class XUIFactoryCordova extends XUIFactory {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-
+	
+		CoreLogger.getLogger(1).info("lancer MTPDrive (icone appareil photo) et connecter en USB (avec un bon cable !)");
+		
 		XUIFactoryCordova builder = new XUIFactoryCordova();
 
-		builder.createHtml("ScnPageA");
+		builder.createHtml("ScnPage");
 
 	}
 
@@ -61,12 +63,16 @@ public class XUIFactoryCordova extends XUIFactory {
 
 		Class<? extends XHTMLPart> xHTMLPartClass = changeMgr.mapClass.get(id);
 		Response err = createVersion(requestConfig, cache, xHTMLPartClass);
+		if (err!=null)
+		{
+			CoreLogger.getLogger(1).severe(() -> "ERR createVersion " + err);
+		}
 
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 	    File apkFile = new File("C:\\Users\\gauth\\cordova\\test\\test\\platforms\\android\\app\\build\\outputs\\apk\\debug\\app-debug.apk");
 
 	    long dateApk = apkFile.lastModified();
-	    
+	    Stream<Path> listPath = null;
 		try {
 			Path path = Paths.get("C:\\Users\\gauth\\cordova\\test\\test\\www\\index.html");
 			byte[] strToBytes = cache.getResult().getBytes();
@@ -79,6 +85,8 @@ public class XUIFactoryCordova extends XUIFactory {
 			
 			createApk();
 			
+			CoreLogger.getLogger(1).info(() -> "OK APk " + apkFile);
+			
 			Path pathHuawei = Paths.get("Z:\\elysys");
 			
 			if (dateApk != apkFile.lastModified())
@@ -89,21 +97,23 @@ public class XUIFactoryCordova extends XUIFactory {
 				CoreLogger.getLogger(1).info(() -> "OK COPY " + pathApk);
 			}
 						
-			Stream<Path> listPath = Files.walk(pathHuawei);
-			
+			listPath = Files.walk(pathHuawei);
 		
 			listPath.filter(Files::isRegularFile)
 		        .forEach((p)->{
 		        	CoreLogger.getLogger(1).info(() -> "->"+p.toFile()+ " " +sdf.format(p.toFile().lastModified()));
 		        });
 						
-			listPath.close();
+			
 			
 		} catch (IOException | InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			listPath.close();
 		}
 
+		CoreLogger.getLogger(1).info("Terminé");
+		
 	}
 
 	/**
@@ -111,6 +121,7 @@ public class XUIFactoryCordova extends XUIFactory {
 	 * @throws InterruptedException
 	 */
 	private void createApk() throws IOException, InterruptedException {
+		CoreLogger.getLogger(1).info(() -> "Tapez EXIT à la fin du script cordova");
 		String[] command = { "cmd.exe", "/C", "Start", "/D", "C:\\Users\\gauth\\Desktop\\cordova", "C:\\Users\\gauth\\Desktop\\cordova\\cordova.bat" };
 
 		String line;

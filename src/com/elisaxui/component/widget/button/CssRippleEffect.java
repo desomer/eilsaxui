@@ -89,8 +89,8 @@ public class CssRippleEffect extends XHTMLPart {
 			_if("!", ripple.classList().contains(cRippleEffect))
 					.then(() -> ripple.set(target.closest(cRippleEffect)));
 
-			_if(ripple.equalsJS(null))
-					.then(() -> ripple.set(target.querySelector(cRippleEffect)));
+//			_if(ripple.equalsJS(null))
+//					.then(() -> ripple.set(target.querySelector(cRippleEffect)));
 
 			return ripple;
 		}

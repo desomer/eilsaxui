@@ -3,8 +3,6 @@
  */
 package com.elisaxui.component.toolkit.core;
 
-import javax.swing.text.Document;
-
 import com.elisaxui.app.core.admin.ScnPageA;
 import com.elisaxui.component.toolkit.core.JSActionManager.TActionEvent;
 import com.elisaxui.component.toolkit.core.JSActionManager.TActionListener;
@@ -42,7 +40,7 @@ import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
  *         https://github.com/gre/bezier-easing
  */
 @xCoreVersion("1")
-public interface JSActivityAnimation extends JSClass {
+public interface JSAnimationManager extends JSClass {
 
 	public static final String OPACITY = "OPACITY";
 	public static final String SCALE_XY = "SCALE_XY";
@@ -59,7 +57,7 @@ public interface JSActivityAnimation extends JSClass {
 	JSFloat timeAnim = JSClass.declareType();
 	JSFloat prctAnim = JSClass.declareType();
 	JSFloat valAnim = JSClass.declareType();
-	JSInt nbEnd = JSClass.declareType();
+	JSInt nbEndAnimationInPhase = JSClass.declareType();
 	JSInt idx = JSClass.declareType();
 
 	JSPromise aPromise = JSClass.declareType();
@@ -81,9 +79,10 @@ public interface JSActivityAnimation extends JSClass {
 
 	TPhase lastPhase();
 
-	TActionEvent lastActionEvent();
+	//TActionEvent lastActionEvent();
 
 	JSInt touchActionSign();
+	JSInt touchStartTime();
 
 	TActionEvent touchActionStopped();
 
@@ -96,6 +95,12 @@ public interface JSActivityAnimation extends JSClass {
 		aQueue().idxPhase().set(0);
 		touchActionSign().set(1);
 		withEasing().set(true);
+		touchStartTime().set(1);  // 1 = rien au premier stop click
+		_if(theActionManager.currentActionEvent(), "!=null").then(() -> {
+			_if(theActionManager.currentActionEvent().actionId().equalsJS("SWIPE_DOWN_HEADER")).then(() -> {
+				touchStartTime().set(0);
+			});
+		});
 	}
 
 	default void addPhase() {
@@ -113,6 +118,7 @@ public interface JSActivityAnimation extends JSClass {
 		aAnim.speed().set(0);
 		aAnim.startIdx().set(0);
 		aAnim.stopIdx().set(0);
+		aAnim.currentIdx().set(0);
 		addAnimation(aAnim);
 		return aAnim;
 	}
@@ -124,6 +130,7 @@ public interface JSActivityAnimation extends JSClass {
 		aAnim.speed().set(0);
 		aAnim.startIdx().set(0);
 		aAnim.stopIdx().set(0);
+		aAnim.currentIdx().set(0);
 		addAnimation(aAnim);
 		return aAnim;
 	}
@@ -131,33 +138,39 @@ public interface JSActivityAnimation extends JSClass {
 	default void start() {
 		__("let easeinout = function(k) { return .5*(Math.sin((k - .5)*Math.PI) + 1)}");
 
+		/*********************************************************************************/
 		let(anActionListener, newJS(JSObject.class));
 		anActionListener.onStart().set(fct(actionEvent, () -> {
-			lastActionEvent().set(actionEvent);
 		}).bind(_this()));
 		anActionListener.onMove().set(fct(actionEvent, () -> {
-			lastActionEvent().set(actionEvent);
 		}).bind(_this()));
 		anActionListener.onStop().set(fct(actionEvent, () -> {
-			lastActionEvent().set(null);
+			_if(touchStartTime(), "<", actionEvent.infoEvent().startTime()).then(() -> {
+				consoleDebug("'init 0 stop touch at '", touchStartTime() , aQueue().id());
+				touchStartTime().set(0);  // attente 1° stop
+			});
+			
 			touchActionStopped().set(actionEvent);
 		}).bind(_this()));
 
 		theActionManager.addListener(anActionListener);
 
+		/*********************************************************************************/
 		let(aPromise, newJS(JSPromise.class, fct(resolve, reject, () -> {
-
+			// action en tick animation
 			let(subscriber, aRequestAnimation.addListener(fct(aAnimEvent, () -> {
 
 				_if(aQueue().idxPhase(), "==", aQueue().listPhase().length()).then(() -> {
+					// fin du tick animation
 					resolve.invoke(subscriber);
 					_return();
 				});
-
+				
+				/*****************************************************************/
 				let(aPhase, aQueue().listPhase().at(aQueue().idxPhase()));
-				let(nbEnd, 0);
+				let(nbEndAnimationInPhase, 0);
 				let(nbEndTouchActionStopped, 0);
-
+												
 				/** boucle sur les animations de la phases */
 				forIdx(idx, aPhase.listAnimation())._do(() -> {
 					let(aAnim, aPhase.listAnimation().at(idx));
@@ -174,13 +187,25 @@ public interface JSActivityAnimation extends JSClass {
 							aAnim.beforeStart().call(aAnim);
 						});
 						
-					})._elseif(aAnim.timeEnd().equalsJS(null)).then(() -> {
+					})._elseif(aAnim.timeEnd().equalsJS(null), "&&", aAnim.speed(), ">0").then(() -> {
 						// tick de l'animation
+						
+						let(modeTouchActionInProgress, theActionManager.currentActionEvent(), "!=null && ", touchStartTime(), "!=1");
+								
+						_if(touchStartTime().equalsJS(0), " && ", modeTouchActionInProgress).then(() -> {
+							touchStartTime().set(theActionManager.currentActionEvent().infoEvent().startTime());
+							consoleDebug("'start touch at '", touchStartTime(), aQueue().id());
+						});
+						
+						let(modeTouchActionEnd, "!", modeTouchActionInProgress, " && ", touchActionStopped(), "!=null",
+								" && ", touchActionStopped().infoEvent().deltaY(), "!=0");
 
-						let(modeTouchActionInProgress, lastActionEvent(), "!=null");
-						let(modeTouchActionEnd, "!", modeTouchActionInProgress, "&&", touchActionStopped(), "!=null",
-								"&&", touchActionStopped().infoEvent().deltaY(), "!=0");
-
+						_if(modeTouchActionEnd, " && ", touchStartTime().notEqualsJS(touchActionStopped().infoEvent().startTime())).then(() -> {
+							modeTouchActionEnd.set(false);
+							touchActionStopped().set(null);
+							consoleDebug("'no stoptouch with same time start'", touchStartTime(), aQueue().id());
+						});
+						
 						_if(modeTouchActionInProgress).then(() -> {
 							// arret de l'anim si touchaction
 							aAnim.timeStart().set(
@@ -195,17 +220,18 @@ public interface JSActivityAnimation extends JSClass {
 									aAnim.stopIdx(), "-", aAnim.startIdxInitial(), ")");
 							aAnim.speed().set(aAnim.speedInitial(), "*(1-", prctDeltaTouch, ")");
 														
-							nbEndTouchActionStopped.set(nbEndTouchActionStopped.add(1));							
+							nbEndTouchActionStopped.set(nbEndTouchActionStopped.add(1));	
+							consoleDebug("'stop touch at '", touchActionStopped().infoEvent().startTime(), aQueue().id());
 						});
 
-						/** calcul prct animation par rapport au temps ecoule et la vitesse */
+						/** calcul prct animation par rapport au temps ecoule et la vitesse **/
 						let(timeAnim, calc(aAnimEvent.time(), "-", aAnim.timeStart()));
 						let(prctAnim, calc(timeAnim, "/", aAnim.speed()));
-
+						
 						_if(modeTouchActionInProgress).then(() -> {
 							// calcul du delta de touch a ajouter
 							let(prctDeltaTouch, 0);
-							prctDeltaTouch.set(lastActionEvent().infoEvent().deltaY(), "/",
+							prctDeltaTouch.set(theActionManager.currentActionEvent().infoEvent().deltaY(), "/",
 									JSWindow.window().innerHeight());
 							prctAnim.set(var("easeinout(prctAnim)")); // ease in out
 							prctAnim.set(prctAnim, "-", prctDeltaTouch, "*", touchActionSign());
@@ -235,16 +261,12 @@ public interface JSActivityAnimation extends JSClass {
 						_if(aAnim.type().equalsJS(SCALE_XY)).then(() -> {
 							valAnim.set(valAnim, ".toFixed(5)");
 							aAnim.src().style().attr("transform").set(txt("scale3d(", valAnim, ",", valAnim, ", 1)"));
+							
+//							JSDocument.document().querySelector(ScnPageA.cIdlog).firstNodeValue().set(valAnim, "+' - '+", aAnimEvent.time());
+							
 						})._elseif(aAnim.type().equalsJS(BOTTOM_TO_FRONT)).then(() -> {
-							
-//							_if(valAnim, "<", aAnim.startIdxInitial(), "*", touchActionSign()).then(() -> {
-//								consoleDebug("'eeee'",valAnim, aAnim.startIdxInitial());
-//								valAnim.set(aAnim.startIdxInitial());
-//							});
-							
-//							JSDocument.document().querySelector(ScnPageA.cIdlog).firstNodeValue().set(valAnim);
 
-														
+							
 							valAnim.set(JSWindow.window().innerHeight(), "- (", JSWindow.window().innerHeight(), "*",
 									valAnim, ")/100");
 							
@@ -258,18 +280,21 @@ public interface JSActivityAnimation extends JSClass {
 
 					})._else(() -> {
 						// fin de l'animation
-						nbEnd.set(nbEnd.add(1));
+						nbEndAnimationInPhase.set(nbEndAnimationInPhase.add(1));
+						
 					});
 
 					aAnim.lastTickTime().set(aAnimEvent.time());
 				});
 
 				_if(nbEndTouchActionStopped, "==", aPhase.listAnimation().length()).then(() -> {
-					// fin du stopped sur toute les animation
+					// fin du stopped sur toute les animation  ==> alors remise a zero
 					touchActionStopped().set(null);
+					touchStartTime().set(0);
 				});
 
-				_if(nbEnd, "==", aPhase.listAnimation().length()).then(() -> {
+				// passe à la phase suivante si plus d'animation sur la phase
+				_if(nbEndAnimationInPhase, "==", aPhase.listAnimation().length()).then(() -> {
 					aQueue().idxPhase().set(aQueue().idxPhase(), "+1");
 				});
 
@@ -277,10 +302,12 @@ public interface JSActivityAnimation extends JSClass {
 
 		}).bind(_this())));
 
+		/****************************************************************/
 		aPromise.then(fct(subscriber, () -> {
 			aRequestAnimation.removeListener(subscriber);
 			theActionManager.removeListener(anActionListener);
-		}));
+			touchStartTime().set(0);
+		}).bind(_this()));
 
 	}
 

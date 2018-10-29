@@ -27,7 +27,7 @@ public interface JSTouchManager extends JSClass {
 	TTouchInfo aTouchInfo = JSClass.declareType();
 	JSActionManager jsActionManager = JSClass.declareTypeClass(JSActionManager.class);
 
-	TTouchInfo touchInfo(); // variable de class
+	TTouchInfo touchInfo(); // variable de class static
 
 	@xStatic(autoCall = true) // appel automatique de la methode static
 	default void main() {

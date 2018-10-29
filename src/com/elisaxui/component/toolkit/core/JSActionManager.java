@@ -15,6 +15,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSObject;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSEventTouch;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSBool;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
@@ -39,6 +40,7 @@ public interface JSActionManager extends JSClass {
 	JSString actionId = JSClass.declareType();
 	TActionEvent actionEvent = JSClass.declareType();
 	TActionInfo actionInfo = JSClass.declareType();
+	TActionListener anActionListener = JSClass.declareType();
 
 	/*****************************************************/
 	TKPubSub callBackStart();
@@ -49,17 +51,24 @@ public interface JSActionManager extends JSClass {
 
 	TActionEvent currentActionEvent();
 
-	JSon listAction();
+	TActionEvent lastActionEvent();
+
+	JSon listAction(); /* liste des actions */
 
 	JSCallBack actionFct = JSClass.declareType();
 
 	@xStatic(autoCall = true)
 	default void init() {
+
+		currentActionEvent().set(null);
+		lastActionEvent().set(null);
+
 		callBackStart().set(newJS(TKPubSub.class));
 		callBackMove().set(newJS(TKPubSub.class));
 		callBackStop().set(newJS(TKPubSub.class));
-		listAction().set(JSObject.newLitteral());   //TODO faire un newLitteral(JSObject.class)
+		listAction().set(JSObject.newLitteral()); // TODO faire un newLitteral(JSObject.class)
 
+		// ajoute PAR DEFAUT un listener sur le click d'un element avec DATA_X_ACTION
 		onStart(fct(actionEvent, () -> {
 			_if(actionEvent.actionId().notEqualsJS(null)).then(() -> {
 				JSActionManager that = JSClass.declareTypeClass(JSActionManager.class);
@@ -68,18 +77,68 @@ public interface JSActionManager extends JSClass {
 				/***************************************************/
 			});
 		}));
+
 	}
 
+	JSActivityHistoryManager activityManager = JSClass.declareTypeClass(JSActivityHistoryManager.class);
+	JSBool isSwipeStarted = JSClass.declareType();
+
+	/**
+	 * excution d'une action de type DATA_X_ACTION
+	 * 
+	 * @param idAction
+	 * @param aActionEvent
+	 */
 	@xStatic()
 	default void doAction(JSString idAction, TActionEvent aActionEvent) {
 		JSActionManager that = JSClass.declareTypeClass(JSActionManager.class);
 		let(actionInfo, that.listAction().attrByStr(idAction));
 		_if(actionInfo, "!=null").then(() -> {
-			actionInfo.callback().call(actionInfo.that(), aActionEvent);
+
+			_if(actionInfo.modeTouch().notEqualsJS(null), "||", idAction.substring(0, 5).equalsJS("SWIPE")).then(() -> {
+				doSwipe(aActionEvent);
+			})._else(() -> {
+				actionInfo.callback().call(actionInfo.that(), aActionEvent);
+			});
 		});
 	}
-	
-	/************************************************************************/
+
+	@xStatic()
+	default void doSwipe(TActionEvent aActionEvent) {
+		// gestion du touch swipe down
+		let(anActionListener, newJS(JSObject.class));
+		let(isSwipeStarted, false);
+
+		anActionListener.onStart().set(fct(actionEvent, () -> {
+
+		}).bind(_this()));
+		anActionListener.onMove().set(fct(actionEvent, () -> {
+			_if(aActionEvent.infoEvent().deltaY(), ">10", " && ", isSwipeStarted.equalsJS(false)).then(() -> {
+				isSwipeStarted.set(true);
+				consoleDebug("'swipeeee'", aActionEvent.infoEvent().deltaY());
+
+				activityManager.doRouteToBackActivity();
+
+				// faire un TouchState : isTouchDown() pour gerer diferrement le
+				// lastActionEvent() de JSAnimationManager
+			});
+
+		}).bind(_this()));
+		anActionListener.onStop().set(fct(actionEvent, () -> {
+			consoleDebug("'swipeeee removed'");
+
+			setTimeout(fct(() -> {
+				removeListener(anActionListener);
+			}), 1);
+
+		}).bind(_this()));
+
+		addListener(anActionListener);
+	}
+
+	/******************************
+	 * METHODE REGISTER PUBLIC
+	 *********************************/
 	@xStatic()
 	default void onStart(Object callback) {
 		callBackStart().subscribe(callback);
@@ -94,21 +153,20 @@ public interface JSActionManager extends JSClass {
 	default void onStop(Object callback) {
 		callBackStop().subscribe(callback);
 	}
-	
+
 	@xStatic()
 	default void addListener(TActionListener listener) {
 		callBackStart().subscribe(listener.onStart());
 		callBackMove().subscribe(listener.onMove());
 		callBackStop().subscribe(listener.onStop());
 	}
-	
+
 	@xStatic()
 	default void removeListener(TActionListener listener) {
 		callBackStart().unsubscribe(listener.onStart());
 		callBackMove().unsubscribe(listener.onMove());
 		callBackStop().unsubscribe(listener.onStop());
 	}
-	
 
 	@xStatic()
 	default void addAction(JSString actionId, Object that, Object callback) {
@@ -121,14 +179,17 @@ public interface JSActionManager extends JSClass {
 		listAction().attrByStr(actionId).set(actionInfo);
 	}
 
-	/************************************************************************/
+	/****************************
+	 * APPELER PRIVATE EN STATIC PAR JSTouchManager
+	 *******************************/
+	/* APPELER EN STATIC PAR JSTouchManager */
 	@xStatic()
 	default void searchStart(TTouchInfo info, JSEventTouch event) {
 		let(actionEvent, newJS(TActionEvent.class));
-		let(targetAction, event.target().closest("[" + DATA_X_ACTION + "]"));
 		let(scrollY, window().pageYOffset());
 		let(activity, null);
-		
+		let(targetAction, event.target().closest("[" + DATA_X_ACTION + "]"));
+
 		_if(targetAction.notEqualsJS(null)).then(() -> {
 			activity.set(targetAction.closest(CssTransition.activity));
 			let(actionId, targetAction.dataset().attrByStr(ATTR_X_ACTION));
@@ -141,33 +202,38 @@ public interface JSActionManager extends JSClass {
 		actionEvent.infoEvent().set(info);
 		actionEvent.event().set(event);
 
+		lastActionEvent().set(null);
 		currentActionEvent().set(actionEvent);
+
 		consoleDebug(txt(DATA_X_ACTION), actionEvent);
 
 		callBackStart().publish(actionEvent);
 	}
 
+	/* APPELER EN STATIC PAR JSTouchManager */
 	@xStatic()
 	default void searchMove(TTouchInfo info, JSEventTouch event) {
 		callBackMove().publish(currentActionEvent());
 	}
 
+	/* APPELER EN STATIC PAR JSTouchManager */
 	@xStatic()
 	default void searchStop(TTouchInfo info, JSEventTouch event) {
 		let(actionEvent, currentActionEvent());
 		callBackStop().publish(actionEvent);
-
+		lastActionEvent().set(actionEvent);
 		currentActionEvent().set(null);
 	}
 
 	/*********************************************************/
 	interface TActionListener extends JSType {
 		JSCallBack onStart();
+
 		JSCallBack onMove();
+
 		JSCallBack onStop();
 	}
-	
-	
+
 	interface TActionEvent extends JSType {
 		JSNodeElement actionTarget();
 
@@ -184,6 +250,8 @@ public interface JSActionManager extends JSClass {
 
 	interface TActionInfo extends JSType {
 		JSString actionId();
+
+		JSString modeTouch();
 
 		JSon that(); // le this du bind
 

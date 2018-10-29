@@ -11,7 +11,7 @@ function compileVueJs(t) {
             t = js_beautify(t, {
                 wrap_line_length: 80,
                 break_chained_methods: !0
-            }):
+            });
             
-            return t:
+            return t;
         }

@@ -21,6 +21,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
  * @author Bureau
  *
  */
+@Deprecated
 public interface JSContainer extends JSClass, IXHTMLBuilder {
 
 	JSDataDriven aDataDriven();
@@ -67,7 +68,10 @@ public interface JSContainer extends JSClass, IXHTMLBuilder {
 				_if("ctx.row['_dom_']==null");
 				
 				 	_if("ctx.row.type=='page'");
-						_set(template, XHTMLPart.vPart( new ViewPageLayout(xVar("ctx.row.id")).vProp(ViewPageLayout.pIsNoVisible, true)));
+						_set(template, XHTMLPart.vPart( new ViewPageLayout(xVar("ctx.row.id"))
+								.vProp(ViewPageLayout.pIsNoVisible, true)
+								.vProp(ViewPageLayout.pWithTabBar, true)
+								));
 						_var("jqdom", template.appendInto("$(selector)"));
 						__("ctx.row['_dom_']=jqdom[0]");
 						

@@ -17,7 +17,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
  *
  */
 
-
+@Deprecated
 public interface JSOverlayOld extends JSClass {
 
 	JSInt speed();

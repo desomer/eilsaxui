@@ -78,13 +78,17 @@ public class ViewPageLayout extends XHTMLPart implements ICSSBuilder {
 		return xDiv(xId(vProperty(pIdPage)), CssTransition.activity, CssTransition.inactive,
 				vIfExist(pIsNoVisible, CssTransition.cStateNoDisplay),
 
-				vPart(new ViewNavBar().vProp(ViewNavBar.pId, vPropCalc("NavBar", vProperty(pIdPage)))),
+				xElem(new ViewNavBar().vProp(ViewNavBar.pId, vPropCalc("NavBar", vProperty(pIdPage)))),
 
-				xDiv(cContent, xDiv(cArticle, pArticle, vProperty(vPropCalc("children", vProperty(pIdPage)))),
-						vPart(new ViewOverlay())),
+				xDiv(cContent, xDiv(cArticle, pArticle, vProperty(vPropCalc("children", vProperty(pIdPage))))
+						,xElem(new ViewOverlay())
+						),
 
 				vIfExist(pWithTabBar,
-						vPart(new ViewTabBar().vProp(ViewTabBar.pId, vPropCalc("TabBar", vProperty(pIdPage))))));
+						xElem(new ViewTabBar().vProp(ViewTabBar.pId, vPropCalc("TabBar", vProperty(pIdPage)))))
+				
+//				,xElem(new ViewOverlay())
+				);
 	}
 
 }

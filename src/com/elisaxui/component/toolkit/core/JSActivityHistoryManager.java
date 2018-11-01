@@ -6,6 +6,7 @@ package com.elisaxui.component.toolkit.core;
 import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
 
 import com.elisaxui.component.page.ScnPage;
+import com.elisaxui.component.toolkit.core.JSActivityStateManager.TAnimConfiguration;
 import com.elisaxui.component.toolkit.transition.CssTransition;
 import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
@@ -50,7 +51,9 @@ public interface JSActivityHistoryManager extends JSClass {
 		intent.activitySrc().set(activity.attr("id"));
 		historyIntent().push(intent);
 		
-		animMgr.doOpenActivityFromBottom(activity, activityDest);
+		consoleDebug("'doRouteToActivity'", intent);
+				
+		animMgr.doOpenActivityFrom(activity, activityDest, intent.animConfig());
 		
 		return activityDest;
 	}
@@ -60,9 +63,11 @@ public interface JSActivityHistoryManager extends JSClass {
 		let(animMgr, newJS(JSActivityStateManager.class));
 		let(activity, getCurrentActivity());
 		let(lastIntent, historyIntent().pop());
+		consoleDebug("'doRouteToBackActivity'", lastIntent);
 		let(activityDest, document().querySelector(txt(CSSSelector.onPath("#", lastIntent.activitySrc()))));
 
-		animMgr.doCloseActivityToBottom(activityDest, activity);
+		animMgr.doCloseActivityTo(activityDest, activity, lastIntent.animConfig());
+		
 		
 		return activityDest;
 	}
@@ -80,7 +85,7 @@ public interface JSActivityHistoryManager extends JSClass {
 		JSString url();	
 		JSString action();
 		
-		JSString nextAnim();
+		TAnimConfiguration animConfig();
 		JSString activitySrc();
 	}
 

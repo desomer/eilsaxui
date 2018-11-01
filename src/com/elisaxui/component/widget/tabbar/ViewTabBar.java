@@ -31,15 +31,14 @@ public class ViewTabBar extends XHTMLPart implements ICSSBuilder {
 	public static VProperty pChildren;
 	public static VProperty pHeight;
 	public static VProperty pId;
-	
-	public static CSSClass cTabbar;
+		
 	public static CSSClass cFixedBottom;
 	public static CSSClass cFlex_1;
 	public static CSSClass cTextAlignCenter;
 	
 	private static CSSClass cListReset;
 	private static CSSClass cFlex;
-	
+	private static CSSClass cTabbar;
 
 	@xTarget(HEADER.class)
 	@xResource()

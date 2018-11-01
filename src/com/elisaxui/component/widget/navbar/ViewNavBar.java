@@ -39,7 +39,7 @@ public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 	public static CSSClass center;
 	public static CSSClass logo;
 	public static CSSClass actionBtn;
-	@xComment("material-icons")     //https://material.io/tools/icons/?style=baseline
+	@xComment("material-icons")                //https://material.io/tools/icons/?style=baseline
 	public static CSSClass material_icons;
 	public static CSSClass descBar;
 	public static CSSClass topBar;

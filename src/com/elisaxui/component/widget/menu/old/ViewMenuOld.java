@@ -1,15 +1,16 @@
 /**
  * 
  */
-package com.elisaxui.component.widget.menu;
+package com.elisaxui.component.widget.menu.old;
 
-import static com.elisaxui.component.toolkit.transition.ConstTransition.*;
+import static com.elisaxui.component.page.CssPage.widthMenu;
+import static com.elisaxui.component.toolkit.transition.ConstTransition.PERFORM_3D;
+import static com.elisaxui.component.toolkit.transition.ConstTransition.SPEED_SHOW_MENU_ITEMS;
+import static com.elisaxui.component.toolkit.transition.ConstTransition.ZINDEX_MENU;
 
 import com.elisaxui.component.page.old.XUIScene;
-
-import static com.elisaxui.component.page.CssPage.*;
-
-import com.elisaxui.component.toolkit.transition.CssTransition;
+import com.elisaxui.component.widget.menu.ViewMenuDivider;
+import com.elisaxui.component.widget.menu.ViewMenuItems;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
@@ -25,8 +26,9 @@ import com.elisaxui.core.xui.xml.target.CONTENT;
  * @author Bureau
  *
  */
-@xComment("ViewMenu")
-public class ViewMenu extends XHTMLPart {
+@xComment("ViewMenuOld")
+@Deprecated
+public class ViewMenuOld extends XHTMLPart {
 
 	public static CSSClass menu;
 
@@ -39,6 +41,11 @@ public class ViewMenu extends XHTMLPart {
 	@xResource
 	public XMLElement xStylePart() {
 
+		String style = ""; 
+		if (XUIFactoryXHtml.getXMLFile().getMainXMLPart() instanceof XUIScene )
+			style = "background:" + ((XUIScene)XUIFactoryXHtml.getXMLFile().getMainXMLPart()).getConfigScene().getBgColorMenu();
+					
+		
 		return cStyle()
 				.on(menu, "z-index: "+ZINDEX_MENU+";background-color: #ffffff;height: 100vh;width: " + widthMenu
 						+ "px; color:black;"
@@ -47,7 +54,7 @@ public class ViewMenu extends XHTMLPart {
 						)
 				.on(cFixedLeft,
 						"position:absolute; top:0px; transform:translate3d(-" + (widthMenu+5) + "px,0px,0px)")
-				.on(cHeaderMenu, "height:53px; background:" + ((XUIScene)XUIFactoryXHtml.getXMLFile().getMainXMLPart()).getConfigScene().getBgColorMenu()
+				.on(cHeaderMenu, "height:53px;"+style
 						+ "box-shadow: 0px 5px 13px 0px #969696;")
 
 				.on(".menu ul", "padding-left: 0;  list-style-type: none; margin:0px;")
@@ -73,15 +80,7 @@ public class ViewMenu extends XHTMLPart {
 						xUl(this.getChildren())));
 	}
 
-	@xTarget(HEADER.class)
-	@xResource
-	public XMLElement xImportAllClass() {
-		return xListNode(
-			//	xImport(JSMenu.class)
-				);
-	}
-
-
+	
 	public static XMLElement getTemplateMenu(Object name, Object icon, Object idAction) {
 		
 		IJSDomTemplate template = new IJSDomTemplate() {

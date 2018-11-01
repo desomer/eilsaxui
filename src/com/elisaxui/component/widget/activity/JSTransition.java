@@ -10,14 +10,13 @@ import static com.elisaxui.component.page.CssPage.*;
 import static com.elisaxui.component.page.old.XUIScene.*;
 import static com.elisaxui.component.widget.navbar.ViewNavBar.isOpenMenu;
 import static com.elisaxui.component.widget.navbar.ViewNavBar.navbar;
-import static com.elisaxui.component.widget.tabbar.ViewTabBar.cTabbar;
 
 import com.elisaxui.component.page.old.XUIScene;
 import com.elisaxui.component.toolkit.TKQueue;
 import com.elisaxui.component.toolkit.old.JQuery;
 import com.elisaxui.component.widget.button.ViewBtnBurger;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
-import com.elisaxui.component.widget.menu.ViewMenu;
+import com.elisaxui.component.widget.menu.old.ViewMenuOld;
 import com.elisaxui.component.widget.overlay.ViewOverlayRipple;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
@@ -86,7 +85,7 @@ public interface JSTransition extends JSClass {
 		
 		JSOverlayOld overlay = let("overlay", newJS(JSOverlayOld.class, SPEED_SHOW_MENU, OVERLAY_OPACITY_MENU) ); 
 		
-		JQuery jqMenu = let( JQuery.class, "jqMenu", $(ViewMenu.menu) );
+		JQuery jqMenu = let( JQuery.class, "jqMenu", $(ViewMenuOld.menu) );
 		JQuery jqScene = let( JQuery.class, "jqScene", $(scene) );
 	
 		JQuery jqActivityActive = let( JQuery.class, "jqActivityActive", $(activity.and(active)) );

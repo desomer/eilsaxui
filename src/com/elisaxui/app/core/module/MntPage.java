@@ -3,6 +3,7 @@
  */
 package com.elisaxui.app.core.module;
 
+import com.elisaxui.app.core.admin.ScnPageA;
 import com.elisaxui.app.core.module.MntInput.TInput;
 import com.elisaxui.component.toolkit.datadriven.IJSDataBinding;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
@@ -10,6 +11,7 @@ import com.elisaxui.component.toolkit.datadriven.IJSMountFactory;
 import com.elisaxui.component.widget.button.CssRippleEffect;
 import com.elisaxui.component.widget.button.ViewBtnBurger;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
+import com.elisaxui.component.widget.menu.ViewMenuContainer;
 import com.elisaxui.component.widget.navbar.ViewNavBar;
 import com.elisaxui.component.widget.tabbar.ViewTabBar;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
@@ -65,6 +67,7 @@ public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFacto
 				vFor(arrMount, aMainMount, xDiv(vMount(aMainMount.data(), aMainMount.mount()))));
 	}
 
+	/***************************************************************************/
 	public static class MountPage extends MountFactory {
 	}
 
@@ -98,6 +101,36 @@ public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFacto
 				xElem(vFor(aPage.dataNavBar(), aBtn, xElem(vMount(aBtn, aBtn.mountBtn()))))));
 	}
 
+	/***************************************************************************/
+	
+	public static class MountMenu extends MountFactory {
+	}
+
+	@xMount(MountMenu.class)
+	public XMLElement createPageMenu(TActivity aPage) {
+		
+		return xElem(new ViewPageLayout()
+				.vProp(ViewPageLayout.pIsNoVisible, true)
+				.vProp(ViewPageLayout.pWithTabBar, false)
+			//	.vProp(ViewNavBar.pStyle, "b:r")
+				.vProp(ViewPageLayout.pIdPage, aPage.titre())
+				
+				.vProp(ViewPageLayout.pArticle,	xElem(new ViewMenuContainer().vProp(ViewMenuContainer.pId, "MenuPage")))
+				
+				.vProp(ViewNavBar.pChildren, vMount(aPage, aPage.mountNavNar()))
+				);
+	}
+	
+	/******************************************************************/
+	public static class MountInfoBox extends MountFactory {
+	}
+
+	@xMount(MountInfoBox.class)
+	public XMLElement createInfoBox(JSString aInfo) {
+		return xDiv(ScnPageA.cIdlog, aInfo);
+	}
+	
+	/************************************************************************/
 	public static class MountBtn extends MountFactory {
 	}
 
@@ -116,6 +149,7 @@ public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFacto
 		return xSpan(btn.titre());
 	}
 
+	/************************************************************************/
 	public static class MountCard extends MountFactory {
 	}
 
@@ -132,7 +166,7 @@ public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFacto
 	@xMount(MountArticle.class)
 	public XMLElement createArticle(TActivity aPage) {
 		return xElem(vFor(aPage.contentArticles(), aArticle,
-				xDiv(vFor(aArticle, aBtn, xDiv(aBtn.titre())))));
+				xDiv(vFor(aArticle, aBtn, xDiv(xSpan(vChangeable(aBtn.titre())))))));
 	}
 
 	public static class MountArticle2 extends MountArticle {

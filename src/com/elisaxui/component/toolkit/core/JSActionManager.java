@@ -13,6 +13,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSCallBack;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSObject;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSEventTouch;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSBool;
@@ -108,22 +109,23 @@ public interface JSActionManager extends JSClass {
 		// gestion du touch swipe down
 		let(anActionListener, newJS(JSObject.class));
 		let(isSwipeStarted, false);
+		JSDocument.document().querySelector("body").classList().add(CssTransition.cStateNoPullToRefresh);
 
 		anActionListener.onStart().set(fct(actionEvent, () -> {
-
+				// ne fait rien
 		}).bind(_this()));
+		
 		anActionListener.onMove().set(fct(actionEvent, () -> {
+			// attends un delta de 10 px avant lancement du swipe
 			_if(aActionEvent.infoEvent().deltaY(), ">10", " && ", isSwipeStarted.equalsJS(false)).then(() -> {
 				isSwipeStarted.set(true);
 				consoleDebug("'swipeeee'", aActionEvent.infoEvent().deltaY());
 
 				activityManager.doRouteToBackActivity();
-
-				// faire un TouchState : isTouchDown() pour gerer diferrement le
-				// lastActionEvent() de JSAnimationManager
 			});
 
 		}).bind(_this()));
+		
 		anActionListener.onStop().set(fct(actionEvent, () -> {
 			consoleDebug("'swipeeee removed'");
 

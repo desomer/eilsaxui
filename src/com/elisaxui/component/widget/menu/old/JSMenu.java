@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.elisaxui.component.widget.menu;
+package com.elisaxui.component.widget.menu.old;
 
 import static com.elisaxui.component.toolkit.transition.ConstTransition.DELAY_SURETE_END_ANIMATION;
 import static com.elisaxui.component.toolkit.transition.ConstTransition.SPEED_SHOW_MENU_ITEMS;
@@ -16,6 +16,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSXHTMLPart;
  * @author Bureau
  *
  */
+@Deprecated
 public interface JSMenu extends JSClass {
 
 	JSDataDriven aDataDriven = null; 
@@ -33,11 +34,11 @@ public interface JSMenu extends JSClass {
 		aDataDriven.onEnter(funct("ctx").__(()->{
 				_if("ctx.row['_dom_']==null");
 					_if("ctx.row.type=='divider'");
-						_set(template, ViewMenu.getTemplateMenuDivider());
+						_set(template, ViewMenuOld.getTemplateMenuDivider());
 			            _var("jqdom", template.appendInto("$('.menu ul')"));
 			            __("ctx.row['_dom_']=jqdom[0]");
 					_else();
-			            _set(template, ViewMenu.getTemplateMenu("ctx.row.name", "ctx.row.icon", "ctx.row.idAction"));
+			            _set(template, ViewMenuOld.getTemplateMenu("ctx.row.name", "ctx.row.icon", "ctx.row.idAction"));
 			            _var("jqdom", template.appendInto("$('.menu ul')"));
 			            __("jqdom.css('visibility','hidden')");  // invisible par defaut avant animation
 			            __("ctx.row['_dom_']=jqdom[0]");

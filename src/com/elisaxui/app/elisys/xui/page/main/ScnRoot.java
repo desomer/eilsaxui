@@ -12,7 +12,7 @@ import com.elisaxui.component.toolkit.old.JQuery;
 import com.elisaxui.component.widget.activity.JSPageLayout;
 import com.elisaxui.component.widget.activity.TKActivity;
 import com.elisaxui.component.widget.log.ViewLog;
-import com.elisaxui.component.widget.menu.JSMenu;
+import com.elisaxui.component.widget.menu.old.JSMenu;
 import com.elisaxui.component.widget.navbar.old.JSNavBar;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContentInterface;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;

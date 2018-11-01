@@ -32,8 +32,8 @@ import com.elisaxui.component.widget.container.JSViewCard;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
 import com.elisaxui.component.widget.loader.ViewLoader;
 import com.elisaxui.component.widget.log.ViewLog;
-import com.elisaxui.component.widget.menu.JSMenu;
-import com.elisaxui.component.widget.menu.ViewMenu;
+import com.elisaxui.component.widget.menu.old.JSMenu;
+import com.elisaxui.component.widget.menu.old.ViewMenuOld;
 import com.elisaxui.component.widget.navbar.ViewNavBar;
 import com.elisaxui.component.widget.navbar.old.JSNavBar;
 import com.elisaxui.component.widget.tabbar.ViewTabBar;
@@ -238,7 +238,7 @@ public abstract class XUIScene extends XHTMLPart {
 	@xTarget(CONTENT.class)
 	public XMLElement xContenuXUIScene() {
 		return xListNode(
-				vPart(new ViewMenu()),
+				vPart(new ViewMenuOld()),
 				xDiv(scene, xDiv(cShell,
 						vPart(new ViewNavBar().vProp(ViewNavBar.pId, "NavBarShell"), xH1("Loading...")),
 						vPart(new ViewLoader()))));

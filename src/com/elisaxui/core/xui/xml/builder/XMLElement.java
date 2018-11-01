@@ -9,22 +9,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.elisaxui.component.widget.layout.ViewPageLayout;
-import com.elisaxui.core.xui.XUIFactory;
+import com.elisaxui.core.helper.log.CoreLogger;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.css.CSSStyleRow;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
-import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ArrayMethod;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClassBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSDomFunction;
-import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.builder.module.ImportDesc;
-import com.elisaxui.core.xui.xhtml.builder.module.ModuleDesc;
 import com.elisaxui.core.xui.xml.XMLPart;
 import com.elisaxui.core.xui.xml.builder.XMLBuilder.XMLHandle;
 import com.elisaxui.core.xui.xml.target.CONTENT;
@@ -435,6 +432,9 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 		String nameHandle = h.getName();
 		if (nameHandle==null)
 			return null;
+		
+		CoreLogger.getLogger(1).info(()->"zzGetProperties "+nameHandle);
+		
 		// recherche dans les parents
 		LinkedList<Object> listParent = XUIFactoryXHtml.getXMLFile().listTreeXMLParent;
 		Object handledObject = null;
@@ -460,6 +460,11 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			}
 		}
 
+		if (nameHandle.equals("ViewPageLayout.pWithTabBar"))
+		{
+			CoreLogger.getLogger(1).info("**** zzGetProperties "+nameHandle+" =>"+ handledObject);
+		}
+		
 		if (handledObject == null) { // recherche sur la scene
 			if (firstPrefix == null)
 				firstPrefix = "";
@@ -472,7 +477,15 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 
 		// gestion du add if exist
 		if (h.getIfExistAdd() != null && handledObject != null)
+		{
+			if (handledObject instanceof Boolean)
+			{
+				Boolean addIf = (Boolean)handledObject;
+				if (!addIf.booleanValue())
+					return null; // retourne null si false
+			}
 			handledObject = h.getIfExistAdd();
+		}
 
 		return handledObject;
 	}

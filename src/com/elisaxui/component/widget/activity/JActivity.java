@@ -12,6 +12,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
  * @author gauth
  *
  */
+@Deprecated
 public interface JActivity extends JSClass {
 
 	JSString id();

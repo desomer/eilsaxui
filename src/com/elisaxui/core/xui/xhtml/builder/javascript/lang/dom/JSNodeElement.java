@@ -3,6 +3,9 @@
  */
 package com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom;
 
+import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument.document;
+
+import com.elisaxui.component.toolkit.transition.CssTransition;
 import com.elisaxui.core.xui.xhtml.builder.css.selector.CSSSelector;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSContent;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
@@ -82,14 +85,29 @@ public class JSNodeElement extends JSAny implements IJSClassInterface {
 	}
 
 	/*************************************************************/
+	/**
+	 *   document().querySelector(txt(CSSSelector.onPath("#", lastIntent.activitySrc())))
+	 * @param selector
+	 * @return
+	 */
 	public JSNodeElement querySelector(CSSSelector selector) {
 		return callTyped(new JSNodeElement(), "querySelector", "" + selector);
 	}
 
+	/**
+	 *   document().querySelector(txt(CSSSelector.onPath("#", lastIntent.activitySrc())))
+	 * @param variable
+	 * @return
+	 */
 	public JSNodeElement querySelector(JSAny variable) {
 		return callTyped(new JSNodeElement(), "querySelector", variable);
 	}
 
+	/**
+	 *   document().querySelector(CssTransition.activity, CssTransition.active)
+	 * @param selector
+	 * @return
+	 */
 	public JSNodeElement querySelector(Object... selector) {
 		if (selector.length == 1 && selector[0] instanceof JSAny)
 			return querySelector((JSAny) selector[0]);

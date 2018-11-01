@@ -16,7 +16,7 @@ public class CssPage {
 	
 	
 	public static final double OVERLAY_OPACITY_MENU = 0.5;
-	public static final double OVERLAY_OPACITY_BACK = 0.7;
+	public static final double OVERLAY_OPACITY_BACK = 0.6;
 
 
 }

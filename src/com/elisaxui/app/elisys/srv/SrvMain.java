@@ -38,7 +38,7 @@ import javax.ws.rs.core.UriInfo;
 import com.elisaxui.ResourceLoader;
 import com.elisaxui.app.elisys.xui.asset.AssetHandler;
 import com.elisaxui.component.page.old.ConfigScene;
-import com.elisaxui.component.widget.menu.JSONMenu;
+import com.elisaxui.component.widget.menu.old.JSONMenu;
 import com.elisaxui.core.notification.ErrorNotificafionMgr;
 import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
 import com.github.benmanes.caffeine.cache.Cache;

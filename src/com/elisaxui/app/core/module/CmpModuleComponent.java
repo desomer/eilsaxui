@@ -31,7 +31,7 @@ public class CmpModuleComponent extends XHTMLPart {
 	@xResource(id=X_COMPONENT_JS)
 	@xImport(idClass=JSActionManager.class)
 	public XMLElement xLoad() {
-		return xModule(JSRippleEffect.class);
+		return xElem(JSRippleEffect.class);
 	}
 	
 	
@@ -40,7 +40,7 @@ public class CmpModuleComponent extends XHTMLPart {
 	@xImport(idClass=JSDataDriven.class)
 	@xImport(idClass=JSDataBinding.class)
 	public XMLElement xFactory() {
-		return xModule(JSMount.class, new MntPage(), new MntInput());
+		return xElem(JSMount.class, new MntPage(), new MntInput());
 	}
 	
 	/********************************************************/

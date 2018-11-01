@@ -3,7 +3,6 @@
  */
 package com.elisaxui.component.toolkit.core;
 
-import static com.elisaxui.component.page.CssPage.OVERLAY_OPACITY_BACK;
 import static com.elisaxui.component.toolkit.transition.ConstTransition.SPEED_SHOW_ACTIVITY;
 import static com.elisaxui.component.toolkit.transition.CssTransition.active;
 import static com.elisaxui.component.toolkit.transition.CssTransition.cFixedElement;
@@ -18,9 +17,9 @@ import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSWindow.w
 
 import com.elisaxui.component.page.CssPage;
 import com.elisaxui.component.toolkit.core.JSAnimationManager.TAnimation;
+import com.elisaxui.component.toolkit.core.JSAnimationManager.TPhase;
 import com.elisaxui.component.toolkit.transition.CssTransition;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
-import com.elisaxui.component.widget.overlay.JSOverlay;
 import com.elisaxui.component.widget.tabbar.ViewTabBar;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xForceInclude;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
@@ -30,6 +29,8 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDomTokenList;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSWindow;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
+import com.elisaxui.core.xui.xhtml.builder.json.JSType;
 import com.elisaxui.core.xui.xhtml.builder.module.annotation.xExport;
 import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
 
@@ -69,27 +70,35 @@ public interface JSActivityStateManager extends JSClass {
 	JSInt scrposition = JSClass.declareType();
 	JSInt posTop = JSClass.declareType();
 	JSNodeElement aElemNode = JSClass.declareType();
-	JSOverlay aOverlay = JSClass.declareType();
 	JSActivityStateManager that = JSClass.declareType();
 	JSAnimationManager anAnimationQueueSrc = JSClass.declareType();
 	JSAnimationManager anAnimationQueueDest = JSClass.declareType();
 	JSNodeElement anOverlay = JSClass.declareType();
 	TAnimation anAnim = JSClass.declareType();
 
+	public interface TAnimConfiguration extends JSType {
+		JSString transitionId();
+
+		JSInt prct();
+
+		JSInt srcTranslation();
+	}
+
 	/*****************************************************************************************/
 
-	default void doOpenActivityFromBottom(JSNodeElement act1, JSNodeElement act2) {
+	default void doOpenActivityFrom(JSNodeElement act1, JSNodeElement act2, TAnimConfiguration aConfig) {
 
 		let(posTop, window().pageYOffset());
-		let(aOverlay, newJS(JSOverlay.class, SPEED_SHOW_ACTIVITY, OVERLAY_OPACITY_BACK));
 		let(that, _this());
 		let(classesAct1, act1.classList());
 		let(classesAct2, act2.classList());
 		let(anOverlay, act1.querySelector(cBlackOverlay));
 
+//		aConfig.srcTranslation().set(30);
+
 		/*****************************************************************/
 		let(anAnimationQueueSrc, newJS(JSAnimationManager.class, txt("reduce scale act1")));
-		anAnimationQueueSrc.addPhase(); 
+		anAnimationQueueSrc.addPhase();
 		let(anAnim, anAnimationQueueSrc.getNewAnimationOn(act1, txt(JSAnimationManager.SCALE_XY)));
 		anAnim.speed().set(SPEED_SHOW_ACTIVITY);
 		anAnim.startIdx().set(1.0);
@@ -102,13 +111,20 @@ public interface JSActivityStateManager extends JSClass {
 			classesAct1.add(cStateBackActivity);
 			JSDocument.document().querySelector("body").classList().add(CssTransition.cStateNoPullToRefresh);
 		}));
-		
-		anAnim.set(anAnimationQueueSrc.getNewAnimationOn(anOverlay,  txt(JSAnimationManager.OPACITY)));
+
+		anAnim.set(anAnimationQueueSrc.getNewAnimationOn(anOverlay, txt(JSAnimationManager.OPACITY)));
 		anAnim.speed().set(SPEED_SHOW_ACTIVITY);
 		anAnim.startIdx().set(0);
 		anAnim.stopIdx().set(CssPage.OVERLAY_OPACITY_BACK);
-		
-		anAnimationQueueSrc.addPhase();  
+
+		_if(aConfig.srcTranslation().notEqualsJS(null)).then(() -> {
+			anAnim.set(anAnimationQueueSrc.getNewAnimationOn(act1, aConfig.transitionId()));
+			anAnim.speed().set(SPEED_SHOW_ACTIVITY);
+			anAnim.startIdx().set(100);
+			anAnim.stopIdx().set(100, "+", aConfig.srcTranslation());
+		});
+		/*-------------------------------------------------------------------*/
+		anAnimationQueueSrc.addPhase();
 		anAnim.set(anAnimationQueueSrc.getNewAnimation());
 		anAnim.beforeStart().set(fct(() -> {
 			// termine l'animation
@@ -116,11 +132,11 @@ public interface JSActivityStateManager extends JSClass {
 			act1.style().attr("transform").set(null);
 			anOverlay.style().attr("display").set(null);
 			anOverlay.style().attr("opacity").set(null);
-		}));		
+		}));
 
 		/*********************************************************/
 		let(anAnimationQueueDest, newJS(JSAnimationManager.class, txt("bottom to fromt act2")));
-		
+
 		anAnimationQueueDest.addPhase();
 		anAnim.set(anAnimationQueueDest.getNewAnimation());
 		anAnim.beforeStart().set(fct(() -> {
@@ -128,22 +144,22 @@ public interface JSActivityStateManager extends JSClass {
 			classesAct2.remove(cStateBackActivity);
 			classesAct2.add(cStateFrontActivity);
 			that.doActivityActive(act2);
-			act2.style().attr("visibility").set(txt("hidden"));  // pour le calcul des position des fixed
+			act2.style().attr("visibility").set(txt("hidden")); // pour le calcul des position des fixed
 		}));
-		
+		/*-------------------------------------------------------------------*/
 		anAnimationQueueDest.addPhase();
-		anAnim.set(anAnimationQueueDest.getNewAnimationOn(act2,  txt(JSAnimationManager.BOTTOM_TO_FRONT)));
+		anAnim.set(anAnimationQueueDest.getNewAnimationOn(act2, aConfig.transitionId()));
 		anAnim.speed().set(SPEED_SHOW_ACTIVITY);
 		anAnim.startIdx().set(0);
 		anAnim.stopIdx().set(100);
 		anAnim.beforeStart().set(fct(() -> {
 			// lance les anim
-			that.doFixedElemToAbsolute(act2);      // fixe les elem fixed en absolute
-			that.doActivityFreeze(act2, MEM_SCROLL); 
+			that.doFixedElemToAbsolute(act2); // fixe les elem fixed en absolute
+			that.doActivityFreeze(act2, MEM_SCROLL);
 			act2.style().attr("visibility").set(null);
 			classesAct2.add(cStateHiddenToBottom);
-			}));
-		
+		}));
+		/*-------------------------------------------------------------------*/
 		anAnimationQueueDest.addPhase();
 		anAnim.set(anAnimationQueueDest.getNewAnimation());
 		anAnim.beforeStart().set(fct(() -> {
@@ -156,31 +172,32 @@ public interface JSActivityStateManager extends JSClass {
 			that.doInitScrollTo(act2);
 			JSDocument.document().querySelector("body").classList().remove(CssTransition.cStateNoPullToRefresh);
 		}));
-		
+
 		/***************************************************************************/
 		anAnimationQueueSrc.start();
 		anAnimationQueueDest.start();
-		
-//		consoleDebug(txt("anim act1"), anAnimationQueueSrc);
-//		consoleDebug(txt("anim act2"), anAnimationQueueDest);
-				
+
+		// consoleDebug(txt("anim act1"), anAnimationQueueSrc);
+		// consoleDebug(txt("anim act2"), anAnimationQueueDest);
+
 	}
 
 	/***************************************************************************************/
-	default void doCloseActivityToBottom(JSNodeElement act1, JSNodeElement act2) {
+	default void doCloseActivityTo(JSNodeElement act1, JSNodeElement act2, TAnimConfiguration aConfig) {
 
 		let(posTop, window().pageYOffset());
-		let(aOverlay, newJS(JSOverlay.class, SPEED_SHOW_ACTIVITY, OVERLAY_OPACITY_BACK));
 		let(that, _this());
 		let(classesAct1, act1.classList());
 		let(classesAct2, act2.classList());
 		let(anOverlay, act1.querySelector(cBlackOverlay));
 
+//		aConfig.srcTranslation().set(30);
+
 		/*****************************************************************/
 		let(anAnimationQueueSrc, newJS(JSAnimationManager.class, txt("bottom to front act2")));
 		anAnimationQueueSrc.touchActionSign().set(-1);
-		anAnimationQueueSrc.addPhase(); 
-		let(anAnim, anAnimationQueueSrc.getNewAnimationOn(act2, txt(JSAnimationManager.BOTTOM_TO_FRONT)));
+		anAnimationQueueSrc.addPhase();
+		let(anAnim, anAnimationQueueSrc.getNewAnimationOn(act2, aConfig.transitionId()));
 		anAnim.speed().set(SPEED_SHOW_ACTIVITY);
 		anAnim.startIdx().set(100);
 		anAnim.stopIdx().set(0);
@@ -189,9 +206,10 @@ public interface JSActivityStateManager extends JSClass {
 			that.doActivityInactive(act2);
 			that.doActivityFreeze(act2, posTop);
 			classesAct2.add(cStateFrontActivity);
+			JSDocument.document().querySelector("body").classList().add(CssTransition.cStateNoPullToRefresh);
 		}));
-		
-		anAnimationQueueSrc.addPhase();   /*******************************************/
+		/*-------------------------------------------------------------------*/
+		anAnimationQueueSrc.addPhase();
 		anAnim.set(anAnimationQueueSrc.getNewAnimation());
 		anAnim.beforeStart().set(fct(() -> {
 			// termine l'animation
@@ -210,18 +228,26 @@ public interface JSActivityStateManager extends JSClass {
 			that.doActivityActive(act1);
 			anOverlay.style().attr("display").set(txt("block"));
 		}));
-		
+		/*-------------------------------------------------------------------*/
 		anAnimationQueueDest.addPhase();
 		anAnim.set(anAnimationQueueDest.getNewAnimationOn(act1, txt(JSAnimationManager.SCALE_XY)));
 		anAnim.speed().set(SPEED_SHOW_ACTIVITY);
 		anAnim.startIdx().set(0.9);
 		anAnim.stopIdx().set(1);
-		
-		anAnim.set(anAnimationQueueDest.getNewAnimationOn(anOverlay,  txt(JSAnimationManager.OPACITY)));
+
+		anAnim.set(anAnimationQueueDest.getNewAnimationOn(anOverlay, txt(JSAnimationManager.OPACITY)));
 		anAnim.speed().set(SPEED_SHOW_ACTIVITY);
 		anAnim.startIdx().set(CssPage.OVERLAY_OPACITY_BACK);
 		anAnim.stopIdx().set(0);
-		
+
+		_if(aConfig.srcTranslation().notEqualsJS(null)).then(() -> {
+			anAnim.set(anAnimationQueueDest.getNewAnimationOn(act1, aConfig.transitionId()));
+			anAnim.speed().set(SPEED_SHOW_ACTIVITY);
+			anAnim.startIdx().set(100, "+", aConfig.srcTranslation());
+			anAnim.stopIdx().set(100);
+		});
+
+		/*-------------------------------------------------------------------*/
 		anAnimationQueueDest.addPhase();
 		anAnim.set(anAnimationQueueDest.getNewAnimation());
 		anAnim.beforeStart().set(fct(() -> {
@@ -233,16 +259,17 @@ public interface JSActivityStateManager extends JSClass {
 			that.doActivityDeFreeze(act1);
 			that.doFixedElemToFixe(act1);
 			that.doInitScrollTo(act1);
+			JSDocument.document().querySelector("body").classList().remove(CssTransition.cStateNoPullToRefresh);
 		}));
-		
-		
+
+		/**********************************************************************/
 		anAnimationQueueSrc.start();
 		anAnimationQueueDest.start();
-		
-//		consoleDebug(txt("anim act1"), anAnimationQueueSrc);
+
+		// consoleDebug(txt("anim act1"), anAnimationQueueSrc);
 		consoleDebug(txt("anim act2"), anAnimationQueueDest);
 	}
-		
+
 	/***************************************************************************************/
 
 	default void doActivityActive(JSNodeElement activity) {
@@ -319,7 +346,7 @@ public interface JSActivityStateManager extends JSClass {
 				let(posTop, aElemNode.getBoundingClientRect().attr("height"));
 				posTop.set(JSWindow.window().innerHeight(), "-", posTop);
 				aElemNode.style().attr(TOP).set(txt(posTop, "px"));
-//				aElemNode.style().attr(BOTTOM).set(txt("0px"));
+				// aElemNode.style().attr(BOTTOM).set(txt("0px"));
 			})._else(() -> {
 				// cas des autres node fixed (ex floatingAction)
 				let(posTop, aElemNode.getBoundingClientRect().attr("y"));

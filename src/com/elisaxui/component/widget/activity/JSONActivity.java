@@ -10,6 +10,7 @@ import com.elisaxui.core.xui.xhtml.builder.json.IJSONBuilder;
  * @author Bureau
  *
  */
+@Deprecated
 public abstract class JSONActivity implements IJSONBuilder
 {
 	

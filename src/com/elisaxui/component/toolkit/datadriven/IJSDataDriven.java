@@ -17,15 +17,7 @@ import com.elisaxui.core.xui.xml.builder.XMLElement;
  */
 public interface IJSDataDriven  {
 	
-	default JSFunction vMountChangeable(JSElement data, JSFunction fct)
-	{
-		JSon domparent =  JSContent.declareType(JSon.class, "domparent");
-		
-		return (JSFunction)  new JSFunction().setComment("vMountChangeable "+data).setParam(new Object[] {domparent})
-				.__("return ", fct)
-				;
-	}
-	
+
 	/******************************************************************************/
 	
 	default JSFunction xDataDriven(JSElement data, JSElement enter )

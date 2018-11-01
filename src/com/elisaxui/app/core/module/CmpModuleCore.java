@@ -7,15 +7,14 @@ import com.elisaxui.component.toolkit.TKPubSub;
 import com.elisaxui.component.toolkit.TKQueue;
 import com.elisaxui.component.toolkit.com.TKCom;
 import com.elisaxui.component.toolkit.core.JSActionManager;
-import com.elisaxui.component.toolkit.core.JSAnimationManager;
 import com.elisaxui.component.toolkit.core.JSActivityHistoryManager;
 import com.elisaxui.component.toolkit.core.JSActivityStateManager;
+import com.elisaxui.component.toolkit.core.JSAnimationManager;
 import com.elisaxui.component.toolkit.core.JSRequestAnimationFrame;
 import com.elisaxui.component.toolkit.core.JSTouchManager;
 import com.elisaxui.component.toolkit.datadriven.JSDataBinding;
 import com.elisaxui.component.toolkit.datadriven.JSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
-import com.elisaxui.component.widget.overlay.JSOverlay;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.JSDomBuilder;
 import com.elisaxui.core.xui.xhtml.builder.module.annotation.xImport;
@@ -43,7 +42,7 @@ public class CmpModuleCore extends XHTMLPart implements IResourceLoader {
 	@xPriority(10)
 	@xResource(id = X_CORE_JS)
 	public XMLElement xCore() {
-		return xModule(
+		return xElem(
 				TKPubSub.class,
 				JSDomBuilder.class);
 	}
@@ -53,8 +52,7 @@ public class CmpModuleCore extends XHTMLPart implements IResourceLoader {
 	@xResource(id = X_STANDARD_JS)
 	@xImport(idClass = TKPubSub.class)
 	public XMLElement xStandard() {
-		return xModule(
-				JSOverlay.class,
+		return xElem(
 				JSActivityStateManager.class,
 				JSAnimationManager.class,
 				JSTouchManager.class,
@@ -69,7 +67,7 @@ public class CmpModuleCore extends XHTMLPart implements IResourceLoader {
 	@xResource(id = X_COM_JS)
 	@xPriority(50)
 	public XMLElement xImportCom() {
-		return xModule(
+		return xElem(
 				xScriptSrc("https://cdn.polyfill.io/v2/polyfill.js?features=default,fetch"),
 				TKCom.class);
 	}
@@ -81,7 +79,7 @@ public class CmpModuleCore extends XHTMLPart implements IResourceLoader {
 	@xImport(idClass = TKPubSub.class)
 	@xImport(idClass = JSActionManager.class)
 	public XMLElement xImportDataDriven() {
-		return xModule(
+		return xElem(
 				xScriptJS(loadResourceFromURL("https://cdnjs.cloudflare.com/ajax/libs/fastdom/1.0.5/fastdom.min.js", false)),
 				JSDataDriven.class,
 				JSDataSet.class);
@@ -91,7 +89,7 @@ public class CmpModuleCore extends XHTMLPart implements IResourceLoader {
 	@xTarget(FILE.class)
 	@xResource(id = X_BINDING_JS)
 	public XMLElement xImportBinding() {
-		return xModule(JSDataBinding.class);
+		return xElem(JSDataBinding.class);
 	}
 
 }

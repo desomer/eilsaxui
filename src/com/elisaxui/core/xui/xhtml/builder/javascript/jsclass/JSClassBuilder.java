@@ -96,7 +96,7 @@ public final class JSClassBuilder extends JSContent {
 						method.invoke(inst, new Object[method.getParameterCount()]);
 						ProxyHandler.doLastSourceLineInsered(false);
 					} catch (Throwable e) {
-						ErrorNotificafionMgr.doError("pb constructor sur " + jsClass.getSimpleName(), e);
+						ErrorNotificafionMgr.doError("pb constructor (ou inline) sur " + jsClass.getSimpleName()+"."+method.getName(), e);
 					}
 
 				}

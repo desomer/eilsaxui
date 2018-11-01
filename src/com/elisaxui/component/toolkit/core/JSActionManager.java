@@ -117,7 +117,7 @@ public interface JSActionManager extends JSClass {
 		
 		anActionListener.onMove().set(fct(actionEvent, () -> {
 			// attends un delta de 10 px avant lancement du swipe
-			_if(aActionEvent.infoEvent().deltaY(), ">10", " && ", isSwipeStarted.equalsJS(false)).then(() -> {
+			_if(aActionEvent.infoEvent().distance(), ">10", " && ", isSwipeStarted.equalsJS(false)).then(() -> {
 				isSwipeStarted.set(true);
 				consoleDebug("'swipeeee'", aActionEvent.infoEvent().deltaY());
 

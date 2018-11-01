@@ -69,7 +69,8 @@ public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 				cStyle()
 						.path(navbar).set("z-index: " + ZINDEX_NAV_BAR + ";"
 								+ "height: 3rem;"
-								+ "width: " + widthScene + "; "
+								//+ "width: " + widthScene + "; "
+								+ "width: inherit; "
 								+ "color:white; "
 								+ "transition: transform " + ConstTransition.SPEED_ANIM_SCROLL + "ms ease-in-out;")
 

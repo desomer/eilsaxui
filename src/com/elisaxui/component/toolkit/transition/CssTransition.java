@@ -68,7 +68,7 @@ public class CssTransition extends XHTMLPart {
 				.path(animated).set("animation-duration:"+SPEED_ANIMATED+"ms")
 				
 				.path(cStateNoPullToRefresh).set("overscroll-behavior-y: contain")
-				.path(activity).set("backface-visibility: hidden; will-change:opacity, display;")
+				.path(activity).set("backface-visibility: hidden; will-change:opacity, display;     width: " + widthScene + ";min-width:"+ widthScene+";")
 				.path(activity)
 						.and(cStyle(cStateFixedForFreeze).set("top:0px; position: fixed; overflow:hidden "))
 						.and(cStyle(cStateFrontActivity).set("z-index:"+ZINDEX_ANIM_FRONT+";"))	

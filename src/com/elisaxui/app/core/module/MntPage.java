@@ -14,6 +14,7 @@ import com.elisaxui.component.widget.layout.ViewPageLayout;
 import com.elisaxui.component.widget.menu.ViewMenuContainer;
 import com.elisaxui.component.widget.navbar.ViewNavBar;
 import com.elisaxui.component.widget.tabbar.ViewTabBar;
+import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xMount;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.XHTMLPartJS;
@@ -111,6 +112,7 @@ public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFacto
 		
 		return xElem(new ViewPageLayout()
 				.vProp(ViewPageLayout.pIsNoVisible, true)
+				.vProp(ViewPageLayout.pClassType, ViewMenuContainer.cPageMenu)
 				.vProp(ViewPageLayout.pWithTabBar, false)
 			//	.vProp(ViewNavBar.pStyle, "b:r")
 				.vProp(ViewPageLayout.pIdPage, aPage.titre())

@@ -86,9 +86,10 @@ public interface JSAnimationManager extends JSClass {
 
 	TPhase lastPhase();
 
-	//TActionEvent lastActionEvent();
+	// TActionEvent lastActionEvent();
 
 	JSInt touchActionSign();
+
 	JSInt touchStartTime();
 
 	TActionEvent touchActionStopped();
@@ -102,10 +103,10 @@ public interface JSAnimationManager extends JSClass {
 		aQueue().idxPhase().set(0);
 		touchActionSign().set(1);
 		withEasing().set(true);
-		touchStartTime().set(1);  // 1 = rien au premier stop click
+		touchStartTime().set(1); // 1 = rien au premier stop click
 		_if(theActionManager.currentActionEvent(), "!=null").then(() -> {
 			_if(theActionManager.currentActionEvent().actionId().equalsJS("SWIPE_DOWN_HEADER")).then(() -> {
-				touchStartTime().set(0);  // conserve le touchDown en tant que demarrage de l'animation
+				touchStartTime().set(0); // conserve le touchDown en tant que demarrage de l'animation
 			});
 		});
 	}
@@ -122,6 +123,7 @@ public interface JSAnimationManager extends JSClass {
 
 	default TAnimation getNewAnimation() {
 		let(aAnim, newJS(TAnimation.class));
+		aAnim.isStarted().set(false);
 		aAnim.speed().set(0);
 		aAnim.startIdx().set(0);
 		aAnim.stopIdx().set(0);
@@ -153,10 +155,10 @@ public interface JSAnimationManager extends JSClass {
 		}).bind(_this()));
 		anActionListener.onStop().set(fct(actionEvent, () -> {
 			_if(touchStartTime(), "<", actionEvent.infoEvent().startTime()).then(() -> {
-				consoleDebug("'init 0 stop touch at '", touchStartTime() , aQueue().id());
-				touchStartTime().set(0);  // attente 1° stop
+				consoleDebug("'init 0 stop touch at '", touchStartTime(), aQueue().id());
+				touchStartTime().set(0); // attente 1° stop
 			});
-			
+
 			touchActionStopped().set(actionEvent);
 		}).bind(_this()));
 
@@ -172,18 +174,18 @@ public interface JSAnimationManager extends JSClass {
 					resolve.invoke(subscriber);
 					_return();
 				});
-				
+
 				/*****************************************************************/
 				let(aPhase, aQueue().listPhase().at(aQueue().idxPhase()));
 				let(nbEndAnimationInPhase, 0);
 				let(nbEndTouchActionStopped, 0);
-												
+
 				let(listSrcAnim, JSObject.newLitteral());
-				
+
 				/** boucle sur les animations de la phases */
 				forIdx(idx, aPhase.listAnimation())._do(() -> {
 					let(aAnim, aPhase.listAnimation().at(idx));
-					
+
 					_if(aAnim.timeStart().equalsJS(null)).then(() -> {
 						// demarrage de l'animation
 						aAnim.timeStart().set(aAnimEvent.time());
@@ -199,22 +201,30 @@ public interface JSAnimationManager extends JSClass {
 					})._elseif(aAnim.timeEnd().equalsJS(null), "&&", aAnim.speed(), ">0").then(() -> {
 						// tick de l'animation
 						
-						let(modeTouchActionInProgress, theActionManager.currentActionEvent(), "!=null && ", touchStartTime(), "!=1");
-								
+						_if("!", aAnim.isStarted(), "&&", aAnim.afterStart().notEqualsJS(null)).then(() -> {
+							aAnim.isStarted().set(true);
+							aAnim.afterStart().call(aAnim);
+						});
+
+						let(modeTouchActionInProgress, theActionManager.currentActionEvent(), "!=null && ",
+								touchStartTime(), "!=1");
+
 						_if(touchStartTime().equalsJS(0), " && ", modeTouchActionInProgress).then(() -> {
 							touchStartTime().set(theActionManager.currentActionEvent().infoEvent().startTime());
 							consoleDebug("'start touch at '", touchStartTime(), aQueue().id());
 						});
-						
+
 						let(modeTouchActionEnd, "!", modeTouchActionInProgress, " && ", touchActionStopped(), "!=null",
 								" && ", touchActionStopped().infoEvent().deltaY(), "!=0");
 
-						_if(modeTouchActionEnd, " && ", touchStartTime().notEqualsJS(touchActionStopped().infoEvent().startTime())).then(() -> {
-							modeTouchActionEnd.set(false);
-							touchActionStopped().set(null);
-							consoleDebug("'no stoptouch with same time start'", touchStartTime(), aQueue().id());
-						});
-						
+						_if(modeTouchActionEnd, " && ",
+								touchStartTime().notEqualsJS(touchActionStopped().infoEvent().startTime())).then(() -> {
+									modeTouchActionEnd.set(false);
+									touchActionStopped().set(null);
+									consoleDebug("'no stoptouch with same time start'", touchStartTime(),
+											aQueue().id());
+								});
+
 						_if(modeTouchActionInProgress).then(() -> {
 							// arret de l'anim si touchaction
 							aAnim.timeStart().set(
@@ -228,20 +238,38 @@ public interface JSAnimationManager extends JSClass {
 							let(prctDeltaTouch, "(", aAnim.currentIdx(), "-", aAnim.startIdxInitial(), ")/(",
 									aAnim.stopIdx(), "-", aAnim.startIdxInitial(), ")");
 							aAnim.speed().set(aAnim.speedInitial(), "*(1-", prctDeltaTouch, ")");
-														
-							nbEndTouchActionStopped.set(nbEndTouchActionStopped.add(1));	
-							consoleDebug("'stop touch at '", touchActionStopped().infoEvent().startTime(), aQueue().id());
+
+							nbEndTouchActionStopped.set(nbEndTouchActionStopped.add(1));
+							consoleDebug("'stop touch at '", touchActionStopped().infoEvent().startTime(),
+									aQueue().id());
 						});
 
 						/** calcul prct animation par rapport au temps ecoule et la vitesse **/
 						let(timeAnim, calc(aAnimEvent.time(), "-", aAnim.timeStart()));
 						let(prctAnim, calc(timeAnim, "/", aAnim.speed()));
-						
+
 						_if(modeTouchActionInProgress).then(() -> {
 							// calcul du delta de touch a ajouter
 							let(prctDeltaTouch, 0);
-							prctDeltaTouch.set(theActionManager.currentActionEvent().infoEvent().deltaY(), "/",
-									JSWindow.window().innerHeight());
+
+							_if(aPhase.touchType().equalsJS(BOTTOM_TO_FRONT)).then(() -> {
+								// from Top
+								prctDeltaTouch.set(theActionManager.currentActionEvent().infoEvent().deltaY(), "/",
+										JSWindow.window().innerHeight());
+							});
+
+							_if(aPhase.touchType().equalsJS(RIGHT_TO_FRONT)).then(() -> {
+								// from right
+								prctDeltaTouch.set(theActionManager.currentActionEvent().infoEvent().deltaX(), "/",
+										JSWindow.window().innerWidth());
+							});
+
+							_if(aPhase.touchType().equalsJS(LEFT_TO_FRONT)).then(() -> {
+								// from left
+								prctDeltaTouch.set("( -", theActionManager.currentActionEvent().infoEvent().deltaX(),
+										")/", JSWindow.window().innerWidth());
+							});
+
 							prctAnim.set(var("easeinout(prctAnim)")); // ease in out
 							prctAnim.set(prctAnim, "-", prctDeltaTouch, "*", touchActionSign());
 						});
@@ -265,26 +293,26 @@ public interface JSAnimationManager extends JSClass {
 								aAnim.startIdx()));
 
 						aAnim.currentIdx().set(valAnim);
-												
+
 						/**************** mode de l'animation ******************/
 						let(aTAnimTransform, listSrcAnim.attrByStr(aAnim.src().attr("id")));
-						_if(aTAnimTransform,"==null").then(() -> {
+						_if(aTAnimTransform, "==null").then(() -> {
 							aTAnimTransform.set(newJS(TAnimTransform.class));
 							aTAnimTransform.target().set(aAnim.src());
 							aTAnimTransform.scale3d().set("");
 							aTAnimTransform.translate3d().set("");
 							listSrcAnim.attrByStr(aAnim.src().attr("id")).set(aTAnimTransform);
 						});
-						
+
 						_if(aAnim.type().equalsJS(SCALE_XY)).then(() -> {
 							valAnim.set(valAnim, ".toFixed(5)");
 							aTAnimTransform.scale3d().set(txt("scale3d(", valAnim, ",", valAnim, ", 1)"));
-														
+
 						})._elseif(aAnim.type().equalsJS(BOTTOM_TO_FRONT)).then(() -> {
 
 							valAnim.set(JSWindow.window().innerHeight(), "- (", JSWindow.window().innerHeight(), "*",
 									valAnim, ")/100");
-							
+
 							valAnim.set(valAnim, ".toFixed(5)");
 							aTAnimTransform.translate3d().set(txt("translate3d(0px, ", valAnim, "px, 0px)"));
 
@@ -292,7 +320,7 @@ public interface JSAnimationManager extends JSClass {
 
 							valAnim.set(JSWindow.window().innerWidth(), "- (", JSWindow.window().innerWidth(), "*",
 									valAnim, ")/100");
-							
+
 							valAnim.set(valAnim, ".toFixed(5)");
 							aTAnimTransform.translate3d().set(txt("translate3d(", valAnim, "px, 0px, 0px)"));
 
@@ -302,40 +330,43 @@ public interface JSAnimationManager extends JSClass {
 									valAnim, ")/100");
 
 							valAnim.set(valAnim, ".toFixed(5)");
-							valAnim.set("-",valAnim);
+							valAnim.set("-", valAnim);
 							aTAnimTransform.translate3d().set(txt("translate3d(", valAnim, "px, 0px, 0px)"));
 
 						})._elseif(aAnim.type().equalsJS(OPACITY)).then(() -> {
-							
+
 							valAnim.set(valAnim, ".toFixed(5)");
-							JSDocument.document().querySelector(ScnPageA.cIdlog).firstNodeValue().set(valAnim, "+' - '+", aAnimEvent.time());
+							JSDocument.document().querySelector(ScnPageA.cIdlog).firstNodeValue().set(valAnim,
+									"+' - '+", aAnimEvent.time());
 							aTAnimTransform.opacity().set(valAnim);
 						});
 
 					})._else(() -> {
 						// fin de l'animation
 						nbEndAnimationInPhase.set(nbEndAnimationInPhase.add(1));
-						
+
 					});
 
 					aAnim.lastTickTime().set(aAnimEvent.time());
 				});
 				/** fin boucle sur les animations de la phases */
-				
+
 				/** affecte les styles si necessaire */
-				_for("var ", key ," in ", listSrcAnim)._do(()->{
+				_for("var ", key, " in ", listSrcAnim)._do(() -> {
 					let(aTAnimTransform, listSrcAnim.attrByStr(key));
-					_if(aTAnimTransform.translate3d().notEqualsJS(""), "|| ", aTAnimTransform.scale3d().notEqualsJS("")).then(() -> {
-						aTAnimTransform.target().style().attr("transform").set(txt(aTAnimTransform.translate3d(), " ", aTAnimTransform.scale3d()) );
-					});	
+					_if(aTAnimTransform.translate3d().notEqualsJS(""), "|| ", aTAnimTransform.scale3d().notEqualsJS(""))
+							.then(() -> {
+								aTAnimTransform.target().style().attr("transform")
+										.set(txt(aTAnimTransform.translate3d(), " ", aTAnimTransform.scale3d()));
+							});
 					_if(aTAnimTransform.opacity().notEqualsJS(null)).then(() -> {
-						aTAnimTransform.target().style().attr("opacity").set(aTAnimTransform.opacity() );
-					});	
+						aTAnimTransform.target().style().attr("opacity").set(aTAnimTransform.opacity());
+					});
 				});
-				
+
 				/****************************************/
 				_if(nbEndTouchActionStopped, "==", aPhase.listAnimation().length()).then(() -> {
-					// fin du stopped sur toute les animation  ==> alors remise a zero
+					// fin du stopped sur toute les animation ==> alors remise a zero
 					touchActionStopped().set(null);
 					touchStartTime().set(0);
 				});
@@ -361,11 +392,14 @@ public interface JSAnimationManager extends JSClass {
 	/********************************************************************/
 	public interface TAnimTransform extends JSType {
 		JSNodeElement target();
+
 		JSString translate3d();
+
 		JSString scale3d();
+
 		JSString opacity();
 	}
-	
+
 	public interface TQueueAnim extends JSType {
 		JSArray<TPhase> listPhase();
 
@@ -378,10 +412,14 @@ public interface JSAnimationManager extends JSClass {
 		// JSCallBack onStart();
 		// JSCallBack isTerminated();
 		JSArray<TAnimation> listAnimation();
+
+		JSString touchType();
 	}
 
 	public interface TAnimation extends JSType {
 		JSCallBack beforeStart();
+		JSCallBack afterStart();
+		JSBool isStarted();
 
 		JSNodeElement src();
 

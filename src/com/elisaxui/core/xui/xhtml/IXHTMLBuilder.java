@@ -104,7 +104,7 @@ public interface IXHTMLBuilder {
 	}
 
 	default XMLElement xMain(Object... inner) {
-		return xNode("cMain", inner);
+		return xNode("main", inner);
 	}
 
 	default XMLElement xSection(Object... inner) {

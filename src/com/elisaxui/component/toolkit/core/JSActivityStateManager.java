@@ -17,7 +17,6 @@ import static com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSWindow.w
 
 import com.elisaxui.component.page.CssPage;
 import com.elisaxui.component.toolkit.core.JSAnimationManager.TAnimation;
-import com.elisaxui.component.toolkit.core.JSAnimationManager.TPhase;
 import com.elisaxui.component.toolkit.transition.CssTransition;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
 import com.elisaxui.component.widget.tabbar.ViewTabBar;
@@ -94,11 +93,10 @@ public interface JSActivityStateManager extends JSClass {
 		let(classesAct2, act2.classList());
 		let(anOverlay, act1.querySelector(cBlackOverlay));
 
-//		aConfig.srcTranslation().set(30);
-
 		/*****************************************************************/
 		let(anAnimationQueueSrc, newJS(JSAnimationManager.class, txt("reduce scale act1")));
 		anAnimationQueueSrc.addPhase();
+		anAnimationQueueSrc.lastPhase().touchType().set(aConfig.transitionId());
 		let(anAnim, anAnimationQueueSrc.getNewAnimationOn(act1, txt(JSAnimationManager.SCALE_XY)));
 		anAnim.speed().set(SPEED_SHOW_ACTIVITY);
 		anAnim.startIdx().set(1.0);
@@ -135,7 +133,7 @@ public interface JSActivityStateManager extends JSClass {
 		}));
 
 		/*********************************************************/
-		let(anAnimationQueueDest, newJS(JSAnimationManager.class, txt("bottom to fromt act2")));
+		let(anAnimationQueueDest, newJS(JSAnimationManager.class, txt("bottom to front act2")));
 
 		anAnimationQueueDest.addPhase();
 		anAnim.set(anAnimationQueueDest.getNewAnimation());
@@ -148,6 +146,7 @@ public interface JSActivityStateManager extends JSClass {
 		}));
 		/*-------------------------------------------------------------------*/
 		anAnimationQueueDest.addPhase();
+		anAnimationQueueDest.lastPhase().touchType().set(aConfig.transitionId());
 		anAnim.set(anAnimationQueueDest.getNewAnimationOn(act2, aConfig.transitionId()));
 		anAnim.speed().set(SPEED_SHOW_ACTIVITY);
 		anAnim.startIdx().set(0);
@@ -191,12 +190,11 @@ public interface JSActivityStateManager extends JSClass {
 		let(classesAct2, act2.classList());
 		let(anOverlay, act1.querySelector(cBlackOverlay));
 
-//		aConfig.srcTranslation().set(30);
-
 		/*****************************************************************/
 		let(anAnimationQueueSrc, newJS(JSAnimationManager.class, txt("bottom to front act2")));
 		anAnimationQueueSrc.touchActionSign().set(-1);
 		anAnimationQueueSrc.addPhase();
+		anAnimationQueueSrc.lastPhase().touchType().set(aConfig.transitionId());
 		let(anAnim, anAnimationQueueSrc.getNewAnimationOn(act2, aConfig.transitionId()));
 		anAnim.speed().set(SPEED_SHOW_ACTIVITY);
 		anAnim.startIdx().set(100);
@@ -217,7 +215,7 @@ public interface JSActivityStateManager extends JSClass {
 			act2.style().attr("transform").set(null);
 			classesAct2.remove(cStateFrontActivity);
 		}));
-		/**********************************************************************/
+		/*****************************************************************************/
 		let(anAnimationQueueDest, newJS(JSAnimationManager.class, txt("augmente scale act1")));
 		anAnimationQueueDest.touchActionSign().set(-1);
 		anAnimationQueueDest.addPhase();
@@ -225,11 +223,11 @@ public interface JSActivityStateManager extends JSClass {
 		anAnim.beforeStart().set(fct(() -> {
 			// prepare l'animation
 			classesAct1.add(cStateBackActivity);
-			that.doActivityActive(act1);
 			anOverlay.style().attr("display").set(txt("block"));
 		}));
 		/*-------------------------------------------------------------------*/
 		anAnimationQueueDest.addPhase();
+		anAnimationQueueDest.lastPhase().touchType().set(aConfig.transitionId());
 		anAnim.set(anAnimationQueueDest.getNewAnimationOn(act1, txt(JSAnimationManager.SCALE_XY)));
 		anAnim.speed().set(SPEED_SHOW_ACTIVITY);
 		anAnim.startIdx().set(0.9);
@@ -239,6 +237,9 @@ public interface JSActivityStateManager extends JSClass {
 		anAnim.speed().set(SPEED_SHOW_ACTIVITY);
 		anAnim.startIdx().set(CssPage.OVERLAY_OPACITY_BACK);
 		anAnim.stopIdx().set(0);
+		anAnim.afterStart().set(fct(() -> {
+			that.doActivityActive(act1);   // rendre visible l'activity
+		}));
 
 		_if(aConfig.srcTranslation().notEqualsJS(null)).then(() -> {
 			anAnim.set(anAnimationQueueDest.getNewAnimationOn(act1, aConfig.transitionId()));
@@ -246,6 +247,7 @@ public interface JSActivityStateManager extends JSClass {
 			anAnim.startIdx().set(100, "+", aConfig.srcTranslation());
 			anAnim.stopIdx().set(100);
 		});
+		
 
 		/*-------------------------------------------------------------------*/
 		anAnimationQueueDest.addPhase();
@@ -267,7 +269,7 @@ public interface JSActivityStateManager extends JSClass {
 		anAnimationQueueDest.start();
 
 		// consoleDebug(txt("anim act1"), anAnimationQueueSrc);
-		consoleDebug(txt("anim act2"), anAnimationQueueDest);
+		//consoleDebug(txt("anim act2"), anAnimationQueueDest);
 	}
 
 	/***************************************************************************************/

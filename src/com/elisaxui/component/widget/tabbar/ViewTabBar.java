@@ -48,7 +48,8 @@ public class ViewTabBar extends XHTMLPart implements ICSSBuilder {
 			sOn(cTabbar, ()-> {
 				css("z-index: "+ZINDEX_NAV_BAR);
 				css(pHeight); 
-				css("width: "+widthScene);
+			//	css("width: "+widthScene);
+				css("width: inherit");
 				css("color:white");
 				css(PERFORM_3D);
 				css("transition: transform "+ConstTransition.SPEED_ANIM_SCROLL+"ms ease-in-out");

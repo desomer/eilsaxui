@@ -127,6 +127,11 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 
 			// recherche un handle de type XMLAttr
 			for (Object inner : listInner) {
+				
+				if (inner instanceof VProperty) { // un handle
+					VProperty h = (VProperty) inner;
+					inner = new XMLHandle(h.getName());
+				}
 						
 				if (inner instanceof XMLHandle) { // un handle
 					XMLHandle h = (XMLHandle) inner;				
@@ -460,7 +465,7 @@ public class XMLElement extends XUIFormatManager implements IXMLBuilder {
 			}
 		}
 
-		if (nameHandle.equals("ViewPageLayout.pWithTabBar"))
+		if (nameHandle.equals("ViewPageLayout.pClassType"))
 		{
 			CoreLogger.getLogger(1).info("**** zzGetProperties "+nameHandle+" =>"+ handledObject);
 		}

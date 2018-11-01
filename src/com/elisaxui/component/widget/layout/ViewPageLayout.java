@@ -37,6 +37,8 @@ public class ViewPageLayout extends XHTMLPart implements ICSSBuilder {
 	public static VProperty pIsNoVisible;
 	public static VProperty pWithTabBar;
 
+	public static VProperty pClassType;
+
 	private static CSSClass cArticle;
 	@xComment("content")
 	private static CSSClass cContent;
@@ -61,34 +63,34 @@ public class ViewPageLayout extends XHTMLPart implements ICSSBuilder {
 	@xTarget(HEADER.class)
 	@xResource
 	public XMLElement xStylePart() {
-		return xStyle(() -> sOn(CssTransition.activity, () -> {
-			sOn(cContent, () -> {
-				css(pStyleContent);
-				sOn(cArticle, () -> {
-					css("overflow:hidden;");
-				});
-			});
-		}));
+		return xStyle(
+				() -> sOn(CssTransition.activity, () -> {
+					sOn(cContent, () -> {
+						css(pStyleContent);
+						sOn(cArticle, () -> {
+							css("overflow:hidden;");
+						});
+					});
+				}));
 	}
 
 	@xTarget(CONTENT.class)
 	public XMLElement xViewPanel() {
 
 		/**********************************************************************************/
-		return xDiv(xId(vProperty(pIdPage)), CssTransition.activity, CssTransition.inactive,
+		return xDiv(xId(vProperty(pIdPage)), pClassType, CssTransition.activity, CssTransition.inactive,
 				vIfExist(pIsNoVisible, CssTransition.cStateNoDisplay),
 
 				xElem(new ViewNavBar().vProp(ViewNavBar.pId, vPropCalc("NavBar", vProperty(pIdPage)))),
 
-				xDiv(cContent, xDiv(cArticle, pArticle, vProperty(vPropCalc("children", vProperty(pIdPage))))
-						,xElem(new ViewOverlay())
-						),
+				xDiv(cContent, xMain(cArticle, pArticle, vProperty(vPropCalc("children", vProperty(pIdPage)))),
+						xElem(new ViewOverlay())),
 
 				vIfExist(pWithTabBar,
 						xElem(new ViewTabBar().vProp(ViewTabBar.pId, vPropCalc("TabBar", vProperty(pIdPage)))))
-				
-//				,xElem(new ViewOverlay())
-				);
+
+		// ,xElem(new ViewOverlay())
+		);
 	}
 
 }

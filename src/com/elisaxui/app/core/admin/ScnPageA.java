@@ -111,7 +111,7 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 		double heighttab = 3.5;
 
 		vProp(ViewPageLayout.pStyleContent,
-				"min-height: 100vh; min-width: 100vw; "
+				"min-height: 100vh; min-width: inherit; "
 				+ "background-color: rgb(245, 243, 237); "
 				+ "padding-top: " + (heightnav + .5) + "rem; "
 				+ "padding-bottom: "+ heighttab + "rem");
@@ -226,6 +226,7 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 				
 				TAnimConfiguration configAnim = newJS(TAnimConfiguration.class);
 				configAnim.transitionId().set(JSAnimationManager.LEFT_TO_FRONT);
+				configAnim.prct().set(70);
 				configAnim.srcTranslation().set(30);
 				aIntent.animConfig().set(configAnim);
 				activityManager.doRouteToActivity(aIntent);

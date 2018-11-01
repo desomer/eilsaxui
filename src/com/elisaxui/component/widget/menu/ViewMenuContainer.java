@@ -30,12 +30,16 @@ public class ViewMenuContainer extends XHTMLPart implements ICSSBuilder {
 	public static VProperty pId;
 		
 	public static CSSClass cMenu;
+	public static CSSClass cPageMenu;
 
 	@xTarget(HEADER.class)
 	@xResource()
 	public XMLElement xStylePart() {
 
 		return xStyle(()-> {
+			sOn(cPageMenu, ()->{
+				css("width: 250px !important;  min-width: 250px !important;");
+			});
 			sOn(cMenu, ()-> {
 				css("z-index: "+ZINDEX_MENU);
 				css("background-color: #ffffff;height: 100vh;float: right;"); 

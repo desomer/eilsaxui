@@ -181,17 +181,20 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 			arrMount.push(aMount);
 			/************************************************/
 
-			aMount.set( newJS(TMain.class));
-			aMount.mount().set(MountInfoBox.class);
-			aMount.data().set(JSString.value("info"));
-			arrMount.push(aMount);
+//			aMount.set( newJS(TMain.class));
+//			aMount.mount().set(MountInfoBox.class);
+//			aMount.data().set(JSString.value("info"));
+//			arrMount.push(aMount);
 			
 			/************************************************/
+			setTimeout(()->{
+				// lance en differer pour etre en dernier . le faire plutot sur le mount
+				aMount.set( newJS(TMain.class));
+				aMount.mount().set(MountMenu.class);
+				aMount.data().set(JSWindow.window().attr("ActPageMenu1"));
+				arrMount.push(aMount);
+			}, 100);
 
-			aMount.set( newJS(TMain.class));
-			aMount.mount().set(MountMenu.class);
-			aMount.data().set(JSWindow.window().attr("ActPageMenu1"));
-			arrMount.push(aMount);
 			
 
 			/************************************************/
@@ -226,8 +229,8 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 				
 				TAnimConfiguration configAnim = newJS(TAnimConfiguration.class);
 				configAnim.transitionId().set(JSAnimationManager.LEFT_TO_FRONT);
-				configAnim.prct().set(70);
-				configAnim.srcTranslation().set(30);
+				configAnim.srcVisible().set(true);
+				configAnim.srcTranslation().set(20);
 				aIntent.animConfig().set(configAnim);
 				activityManager.doRouteToActivity(aIntent);
 			}));
@@ -263,12 +266,18 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 			}));
 			
 			actionManager.addAction(JSString.value("TO_PAGE1"), _this(), fct(() -> {
-				activityManager.doRouteToBackActivity();
+				activityManager.doRouteToPrevActivity();
 			}));
 			
-			actionManager.addAction(JSString.value("SWIPE_DOWN_HEADER"), _this(), fct(() -> {
-				consoleDebug("'Swipe down'");
+			actionManager.addAction(JSString.value("SWIPE_HEADER"), _this(), fct(() -> {
+				activityManager.doRouteToPrevActivity();
 			}));
+			actionManager.currentActionInfo().modeTouch().set("SWIPE");
+			
+			actionManager.addAction(JSString.value("Overlay"), _this(), fct(() -> {
+				activityManager.doRouteToPrevActivity();
+			}));
+			actionManager.currentActionInfo().modeTouch().set("SWIPE");
 					
 		}
 

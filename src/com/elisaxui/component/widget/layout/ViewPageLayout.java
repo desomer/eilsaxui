@@ -83,13 +83,12 @@ public class ViewPageLayout extends XHTMLPart implements ICSSBuilder {
 
 				xElem(new ViewNavBar().vProp(ViewNavBar.pId, vPropCalc("NavBar", vProperty(pIdPage)))),
 
-				xDiv(cContent, xMain(cArticle, pArticle, vProperty(vPropCalc("children", vProperty(pIdPage)))),
+				xMain(cContent, xDiv(cArticle, pArticle, vProperty(vPropCalc("children", vProperty(pIdPage)))),
 						xElem(new ViewOverlay())),
 
 				vIfExist(pWithTabBar,
 						xElem(new ViewTabBar().vProp(ViewTabBar.pId, vPropCalc("TabBar", vProperty(pIdPage)))))
 
-		// ,xElem(new ViewOverlay())
 		);
 	}
 

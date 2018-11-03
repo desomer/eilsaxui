@@ -59,7 +59,7 @@ public interface JSActivityHistoryManager extends JSClass {
 	}
 	
 	@xStatic()
-	default JSNodeElement doRouteToBackActivity() {
+	default JSNodeElement doRouteToPrevActivity() {
 		let(animMgr, newJS(JSActivityStateManager.class));
 		let(activity, getCurrentActivity());
 		let(lastIntent, historyIntent().pop());

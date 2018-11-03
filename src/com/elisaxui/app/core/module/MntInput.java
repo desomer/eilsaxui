@@ -7,6 +7,8 @@ import com.elisaxui.component.toolkit.datadriven.IJSDataBinding;
 import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
 import com.elisaxui.component.widget.input.ViewCheckRadio;
 import com.elisaxui.component.widget.input.ViewInputText;
+import com.elisaxui.component.widget.menu.ViewMenuDivider;
+import com.elisaxui.component.widget.menu.ViewMenuItems;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xMount;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.XHTMLPartJS;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
@@ -41,6 +43,23 @@ public class MntInput extends XHTMLPartJS implements IJSDataDriven, IJSDataBindi
 						.vProp(ViewCheckRadio.pValue, vIfOnce(vBindable(input, input.value()), xAttr("checked"))));
 	}
 
+	public static class MountMenuItem extends MountFactory {
+	}
+	@xMount(MountMenuItem.class)
+	public XMLElement createMountMenuItem(TInput input) {
+		return 	xElem(new ViewMenuItems() // template static ou dynamic
+						.vProp(ViewMenuItems.PROPERTY_NAME, vChangeable(input.label()))
+						.vProp(ViewMenuItems.PROPERTY_ICON, input.iconId())
+						.vProp(ViewMenuItems.PROPERTY_ACTION, input.actionId())
+						);
+	}
+	
+	public static class MountMenuDivider extends MountFactory {
+	}
+	@xMount(MountMenuDivider.class)
+	public XMLElement createMountMenuDivider(TInput input) {
+		return 	xElem(new ViewMenuDivider() );
+	}
 	/********************************************************/
 	// les dto
 	/********************************************************/
@@ -48,6 +67,8 @@ public class MntInput extends XHTMLPartJS implements IJSDataDriven, IJSDataBindi
 		JSString label();
 		JSString implement();
 		JSAny value();
+		JSString iconId();
+		JSString actionId();
 	}
 
 

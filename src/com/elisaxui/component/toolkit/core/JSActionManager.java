@@ -51,18 +51,21 @@ public interface JSActionManager extends JSClass {
 	TKPubSub callBackStop();
 
 	TActionEvent currentActionEvent();
+	TActionInfo currentActionInfo();
 
 	TActionEvent lastActionEvent();
 
 	JSon listAction(); /* liste des actions */
 
 	JSCallBack actionFct = JSClass.declareType();
+	JSActionManager that = JSClass.declareType();
 
 	@xStatic(autoCall = true)
 	default void init() {
 
 		currentActionEvent().set(null);
 		lastActionEvent().set(null);
+		currentActionInfo().set(null);
 
 		callBackStart().set(newJS(TKPubSub.class));
 		callBackMove().set(newJS(TKPubSub.class));
@@ -94,9 +97,14 @@ public interface JSActionManager extends JSClass {
 	default void doAction(JSString idAction, TActionEvent aActionEvent) {
 		JSActionManager that = JSClass.declareTypeClass(JSActionManager.class);
 		let(actionInfo, that.listAction().attrByStr(idAction));
+		
+		_if(currentActionEvent(), "!=null").then(() -> {
+			currentActionEvent().actionInfo().set(actionInfo);
+		});
+				
 		_if(actionInfo, "!=null").then(() -> {
-
-			_if(actionInfo.modeTouch().notEqualsJS(null), "||", idAction.substring(0, 5).equalsJS("SWIPE")).then(() -> {
+			
+			_if(actionInfo.modeTouch().equalsJS("SWIPE")).then(() -> {
 				doSwipe(aActionEvent);
 			})._else(() -> {
 				actionInfo.callback().call(actionInfo.that(), aActionEvent);
@@ -109,28 +117,30 @@ public interface JSActionManager extends JSClass {
 		// gestion du touch swipe down
 		let(anActionListener, newJS(JSObject.class));
 		let(isSwipeStarted, false);
+		
 		JSDocument.document().querySelector("body").classList().add(CssTransition.cStateNoPullToRefresh);
 
 		anActionListener.onStart().set(fct(actionEvent, () -> {
-				// ne fait rien
+				// ne fait rien sur le start
 		}).bind(_this()));
 		
 		anActionListener.onMove().set(fct(actionEvent, () -> {
 			// attends un delta de 10 px avant lancement du swipe
 			_if(aActionEvent.infoEvent().distance(), ">10", " && ", isSwipeStarted.equalsJS(false)).then(() -> {
 				isSwipeStarted.set(true);
-				consoleDebug("'swipeeee'", aActionEvent.infoEvent().deltaY());
+				consoleDebug("'swipe'", aActionEvent.infoEvent().distance());
 
-				activityManager.doRouteToBackActivity();
+				aActionEvent.actionInfo().callback().call(aActionEvent.actionInfo().that(), aActionEvent);
 			});
 
 		}).bind(_this()));
 		
 		anActionListener.onStop().set(fct(actionEvent, () -> {
-			consoleDebug("'swipeeee removed'");
+			consoleDebug("'swipe removed'");
 
+			let(that,_this());
 			setTimeout(fct(() -> {
-				removeListener(anActionListener);
+				that.removeListener(anActionListener);
 			}), 1);
 
 		}).bind(_this()));
@@ -179,6 +189,7 @@ public interface JSActionManager extends JSClass {
 		actionInfo.callback().set(callback);
 
 		listAction().attrByStr(actionId).set(actionInfo);
+		currentActionInfo().set(actionInfo);
 	}
 
 	/****************************
@@ -243,7 +254,9 @@ public interface JSActionManager extends JSClass {
 
 		JSInt scrollY();
 
+		@Deprecated
 		JSString actionId();
+		TActionInfo actionInfo();
 
 		TTouchInfo infoEvent();
 

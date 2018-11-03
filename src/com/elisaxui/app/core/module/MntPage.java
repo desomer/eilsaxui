@@ -65,7 +65,7 @@ public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFacto
 	@xMount(MountMain.class)
 	public XMLElement createMain(JSArray<TMain> arrMount) {
 		return xElem(
-				vFor(arrMount, aMainMount, xDiv(vMount(aMainMount.data(), aMainMount.mount()))));
+				vFor(arrMount, aMainMount, xElem(vMount(aMainMount.data(), aMainMount.mount()))));
 	}
 
 	/***************************************************************************/
@@ -117,7 +117,10 @@ public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFacto
 			//	.vProp(ViewNavBar.pStyle, "b:r")
 				.vProp(ViewPageLayout.pIdPage, aPage.titre())
 				
-				.vProp(ViewPageLayout.pArticle,	xElem(new ViewMenuContainer().vProp(ViewMenuContainer.pId, "MenuPage")))
+				.vProp(ViewPageLayout.pArticle,	xElem(new ViewMenuContainer()
+						.vProp(ViewMenuContainer.pId, "MenuPage")
+						.vProp(ViewMenuContainer.pChildren, vMount(aPage, aPage.mountArticles()))
+						))
 				
 				.vProp(ViewNavBar.pChildren, vMount(aPage, aPage.mountNavNar()))
 				);
@@ -162,13 +165,23 @@ public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFacto
 	}
 
 	/************************************************************************/
+	public static class MountMenuContainer extends MountFactory {
+	}
+
+	@xMount(MountMenuContainer.class)
+	public XMLElement createMenuContainer(TActivity aPage) {
+		return xElem(vFor(aPage.contentArticles(), aArticle, xUl(
+				vFor(aArticle, aInput, xElem(vMount(aInput, aInput.implement()))))));
+	}
+	
+	/************************************************************************/
 	public static class MountArticle extends MountFactory {
 	}
 
 	@xMount(MountArticle.class)
 	public XMLElement createArticle(TActivity aPage) {
 		return xElem(vFor(aPage.contentArticles(), aArticle,
-				xDiv(vFor(aArticle, aBtn, xDiv(xSpan(vChangeable(aBtn.titre())))))));
+				xElem(xId("cntArticle"), vFor(aArticle, aBtn, xDiv(xId("cntSpan"), xSpan(vChangeable(aBtn.titre())))))));
 	}
 
 	public static class MountArticle2 extends MountArticle {

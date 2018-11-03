@@ -81,6 +81,7 @@ public interface JSAnimationManager extends JSClass {
 	JSObject listSrcAnim = JSClass.declareType();
 	TAnimTransform aTAnimTransform = JSClass.declareType();
 	JSon key = JSClass.declareType();
+	JSInt viewPortSize = JSClass.declareType();
 
 	TQueueAnim aQueue();
 
@@ -105,7 +106,7 @@ public interface JSAnimationManager extends JSClass {
 		withEasing().set(true);
 		touchStartTime().set(1); // 1 = rien au premier stop click
 		_if(theActionManager.currentActionEvent(), "!=null").then(() -> {
-			_if(theActionManager.currentActionEvent().actionId().equalsJS("SWIPE_DOWN_HEADER")).then(() -> {
+			_if(theActionManager.currentActionEvent().actionInfo().modeTouch().equalsJS("SWIPE")).then(() -> {
 				touchStartTime().set(0); // conserve le touchDown en tant que demarrage de l'animation
 			});
 		});
@@ -193,14 +194,16 @@ public interface JSAnimationManager extends JSClass {
 						aAnim.startIdxInitial().set(aAnim.startIdx());
 						aAnim.speedInitial().set(aAnim.speed());
 						aAnim.currentIdx().set(aAnim.startIdx());
+						aAnim.IdxMax().set(calc("Math.max(",aAnim.startIdx(),",",aAnim.stopIdx(),")" ));
+						aAnim.IdxMin().set(calc("Math.min(",aAnim.startIdx(),",",aAnim.stopIdx(),")" ));
 
 						_if(aAnim.beforeStart().notEqualsJS(null)).then(() -> {
 							aAnim.beforeStart().call(aAnim);
 						});
-						
+
 					})._elseif(aAnim.timeEnd().equalsJS(null), "&&", aAnim.speed(), ">0").then(() -> {
 						// tick de l'animation
-						
+
 						_if("!", aAnim.isStarted(), "&&", aAnim.afterStart().notEqualsJS(null)).then(() -> {
 							aAnim.isStarted().set(true);
 							aAnim.afterStart().call(aAnim);
@@ -254,20 +257,23 @@ public interface JSAnimationManager extends JSClass {
 
 							_if(aPhase.touchType().equalsJS(BOTTOM_TO_FRONT)).then(() -> {
 								// from Top
+								let(viewPortSize, aAnim.src().getBoundingClientRect().attr("height"));
 								prctDeltaTouch.set(theActionManager.currentActionEvent().infoEvent().deltaY(), "/",
-										JSWindow.window().innerHeight());
+										viewPortSize);
 							});
 
 							_if(aPhase.touchType().equalsJS(RIGHT_TO_FRONT)).then(() -> {
 								// from right
+								let(viewPortSize, aAnim.src().getBoundingClientRect().attr("width"));
 								prctDeltaTouch.set(theActionManager.currentActionEvent().infoEvent().deltaX(), "/",
-										JSWindow.window().innerWidth());
+										viewPortSize);
 							});
 
 							_if(aPhase.touchType().equalsJS(LEFT_TO_FRONT)).then(() -> {
 								// from left
+								let(viewPortSize, aAnim.src().getBoundingClientRect().attr("width"));
 								prctDeltaTouch.set("( -", theActionManager.currentActionEvent().infoEvent().deltaX(),
-										")/", JSWindow.window().innerWidth());
+										")/", viewPortSize);
 							});
 
 							prctAnim.set(var("easeinout(prctAnim)")); // ease in out
@@ -292,6 +298,14 @@ public interface JSAnimationManager extends JSClass {
 						let(valAnim, calc("(", aAnim.stopIdx(), "- ", aAnim.startIdx(), ") *", prctAnim, "+",
 								aAnim.startIdx()));
 
+						_if(valAnim, ">", aAnim.IdxMax()).then(() -> {
+							valAnim.set(aAnim.IdxMax());
+						});
+						
+						_if(valAnim, "<", aAnim.IdxMin()).then(() -> {
+							valAnim.set(aAnim.IdxMin());
+						});
+						
 						aAnim.currentIdx().set(valAnim);
 
 						/**************** mode de l'animation ******************/
@@ -309,35 +323,34 @@ public interface JSAnimationManager extends JSClass {
 							aTAnimTransform.scale3d().set(txt("scale3d(", valAnim, ",", valAnim, ", 1)"));
 
 						})._elseif(aAnim.type().equalsJS(BOTTOM_TO_FRONT)).then(() -> {
-
-							valAnim.set(JSWindow.window().innerHeight(), "- (", JSWindow.window().innerHeight(), "*",
-									valAnim, ")/100");
+							let(viewPortSize, aAnim.src().getBoundingClientRect().attr("height"));
+							valAnim.set(viewPortSize, "- (", viewPortSize, "*", valAnim, ")/100");
 
 							valAnim.set(valAnim, ".toFixed(5)");
 							aTAnimTransform.translate3d().set(txt("translate3d(0px, ", valAnim, "px, 0px)"));
 
 						})._elseif(aAnim.type().equalsJS(RIGHT_TO_FRONT)).then(() -> {
-
-							valAnim.set(JSWindow.window().innerWidth(), "- (", JSWindow.window().innerWidth(), "*",
-									valAnim, ")/100");
+							let(viewPortSize, aAnim.src().getBoundingClientRect().attr("width"));
+							valAnim.set(viewPortSize, "- (", viewPortSize, "*", valAnim, ")/100");
 
 							valAnim.set(valAnim, ".toFixed(5)");
 							aTAnimTransform.translate3d().set(txt("translate3d(", valAnim, "px, 0px, 0px)"));
 
 						})._elseif(aAnim.type().equalsJS(LEFT_TO_FRONT)).then(() -> {
 
-							valAnim.set(JSWindow.window().innerWidth(), "- (", JSWindow.window().innerWidth(), "*",
-									valAnim, ")/100");
+							let(viewPortSize, aAnim.src().getBoundingClientRect().attr("width"));
+							valAnim.set(viewPortSize, "- (", viewPortSize, "*", valAnim, ")/100");
 
 							valAnim.set(valAnim, ".toFixed(5)");
 							valAnim.set("-", valAnim);
+							doLogInfo(valAnim, aAnimEvent);
 							aTAnimTransform.translate3d().set(txt("translate3d(", valAnim, "px, 0px, 0px)"));
 
 						})._elseif(aAnim.type().equalsJS(OPACITY)).then(() -> {
 
 							valAnim.set(valAnim, ".toFixed(5)");
-							JSDocument.document().querySelector(ScnPageA.cIdlog).firstNodeValue().set(valAnim,
-									"+' - '+", aAnimEvent.time());
+							// doLogInfo(valAnim, aAnimEvent);
+
 							aTAnimTransform.opacity().set(valAnim);
 						});
 
@@ -389,6 +402,18 @@ public interface JSAnimationManager extends JSClass {
 
 	}
 
+	JSNodeElement log = JSClass.declareType();
+
+	/**
+	 * 
+	 */
+	default void doLogInfo(JSFloat valAnim, TAnimFrameEvent aAnimEvent) {
+		let(log, JSDocument.document().querySelector(ScnPageA.cIdlog));
+		_if(log.notEqualsJS(null)).then(() -> {
+			log.firstNodeValue().set(valAnim, "+' - '+", aAnimEvent.time());
+		});
+	}
+
 	/********************************************************************/
 	public interface TAnimTransform extends JSType {
 		JSNodeElement target();
@@ -418,7 +443,9 @@ public interface JSAnimationManager extends JSClass {
 
 	public interface TAnimation extends JSType {
 		JSCallBack beforeStart();
+
 		JSCallBack afterStart();
+
 		JSBool isStarted();
 
 		JSNodeElement src();
@@ -442,5 +469,10 @@ public interface JSAnimationManager extends JSClass {
 		JSFloat timeEnd();
 
 		JSFloat currentIdx();
+
+		/*********************************************/
+		JSInt IdxMin();
+
+		JSInt IdxMax();
 	}
 }

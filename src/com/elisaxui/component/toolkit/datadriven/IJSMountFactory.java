@@ -41,7 +41,7 @@ public interface IJSMountFactory extends JSClass {
 
 	@xInLine
 	default JSFunction vMount(JSElement aRow, JSString mountId) {
-		return fct(() -> _return(dataBinding.mount(mountId, aRow))).setComment("vMount " + mountId);
+		return fct(domparent, () -> _return(dataBinding.mount(mountId, aRow))).setComment("vMount " + mountId);
 	}
 
 	/** TODO vFor( control type , ()->{}) */

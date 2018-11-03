@@ -14,6 +14,8 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.module.annotation.xExport;
+import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
+import com.elisaxui.core.xui.xml.annotation.xVersion;
 /**
  * 
  * - gestion par proxy sur json 
@@ -26,6 +28,7 @@ import com.elisaxui.core.xui.xhtml.builder.module.annotation.xExport;
  *
  */
 @xExport
+@xCoreVersion("1")
 public interface JSDataDriven extends JSClass {
 
 	JSDataSet dataSet();
@@ -34,6 +37,7 @@ public interface JSDataDriven extends JSClass {
 	TKPubSub callBackExit();
 	TKPubSub callBackChange();
 	
+	JSNodeElement nodeBinded=JSClass.declareType();
 
 	@xStatic
 	default void doTemplateDataDriven(JSNodeElement parent, JSArray<? extends JSElement> data, JSCallBack fctEnter, JSCallBack fctExit, JSCallBack fctChange )
@@ -52,26 +56,35 @@ public interface JSDataDriven extends JSClass {
 			_if("dom instanceof Function").then(() -> {
 				__("dom = dom.call(parent, parent)");
 			});
+			_if("dom instanceof Function").then(() -> {
+				__("dom = dom.call(parent, parent)");
+			});
 			
-			_if("dom==null || ! dom instanceof Node").then(() -> {
-				consoleDebug(txt("PB JSDataDriven.doTemplateDataDriven"), ctx);
-				_return();
+			_if("dom==null || ! (dom instanceof Node)").then(() -> {
+				// si datadriven sur fct (vFor(a,array, fct()))  => affecte le parent comme dom binder
+				//une fonction en retour = contenu dataDriven dynamique =  sera ajouter par data driven
+				consoleDebug(txt("une fonction en retour = contenu dataDriven dynamique"),dom, ctx);
+				__("dom = parent");
 			});
 			
 			ctx.row().attrByStr(JSDataSet.ATTR_DOM_LINK).set(dom);
 
 			// affecte le domLink sur les sous object (one to one)
-			_for("var ", key ," in ", ctx.row())._do(()->{
-				_if(ctx.row().hasOwnProperty(key)).then(() -> {
-					JSon attr = let("attr", ctx.row().attrByStr(key));
-					_if(attr, " instanceof Object").then(() -> {
-						attr.attrByStr(JSDataSet.ATTR_DOM_LINK).set(dom);
-					});
+			_if("!(" +ctx.row()+ ") instanceof Array").then(() -> {
+				_for("var ", key ," in ", ctx.row())._do(()->{
+					_if(ctx.row().hasOwnProperty(key)).then(() -> {
+						JSon attr = let("attr", ctx.row().attrByStr(key));
+						_if(attr, " instanceof Object").then(() -> {
+							attr.attrByStr(JSDataSet.ATTR_DOM_LINK).set(dom);
+						});
 
+					});
 				});
 			});
 			
-			parent.appendChild( dom );
+			_if(dom, "!=", parent).then(() -> {
+				parent.appendChild( dom );
+			});
 			
 			_if(ctx.row().attrByStr(JSDataSet.ATTR_MOUNT_ACTION).notEqualsJS(null)).then(() -> {
 				JSActionManager action = JSClass.declareTypeClass(JSActionManager.class);
@@ -85,8 +98,16 @@ public interface JSDataDriven extends JSClass {
 			_if(fctExit, "!=null").then(() -> {
 				__(fctExit, ".call(this, ctx.row, ctx.row['"+JSDataSet.ATTR_DOM_LINK+"'], ctx)");
 			})._else(()->{
-				_if(ctx.row().attrByStr(JSDataSet.ATTR_DOM_LINK).notEqualsJS(null)).then(() -> {
-					cast(JSNodeElement.class, ctx.row().attrByStr(JSDataSet.ATTR_DOM_LINK)).remove();
+				
+				let(nodeBinded, ctx.row().attrByStr(JSDataSet.ATTR_DOM_LINK));
+				
+				_if(nodeBinded.notEqualsJS(null)).then(() -> {
+					_if(nodeBinded.equalsJS(parent)).then(() -> {
+						// si datadriven sur fct (vFor(a,array, fct()))  => supprime tout les enfant
+						__("while (",parent,".firstChild) { ",parent,".removeChild(",parent,".firstChild);}");
+					})._else(()->{
+						nodeBinded.remove();
+					});
 				});
 			});
 		}));

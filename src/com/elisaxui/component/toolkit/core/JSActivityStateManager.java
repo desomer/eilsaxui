@@ -27,6 +27,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDocument;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSDomTokenList;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSWindow;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSBool;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSInt;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
@@ -78,8 +79,7 @@ public interface JSActivityStateManager extends JSClass {
 	public interface TAnimConfiguration extends JSType {
 		JSString transitionId();
 
-		JSInt prct();
-
+		JSBool srcVisible();
 		JSInt srcTranslation();
 	}
 
@@ -126,10 +126,13 @@ public interface JSActivityStateManager extends JSClass {
 		anAnim.set(anAnimationQueueSrc.getNewAnimation());
 		anAnim.beforeStart().set(fct(() -> {
 			// termine l'animation
-			that.doActivityNoDisplay(act1);
-			act1.style().attr("transform").set(null);
-			anOverlay.style().attr("display").set(null);
-			anOverlay.style().attr("opacity").set(null);
+			_if(aConfig.srcVisible().notEqualsJS(true)).then(() -> {
+				that.doActivityNoDisplay(act1);
+				act1.style().attr("transform").set(null);
+				anOverlay.style().attr("display").set(null);
+				anOverlay.style().attr("opacity").set(null);
+			});
+
 		}));
 
 		/*********************************************************/

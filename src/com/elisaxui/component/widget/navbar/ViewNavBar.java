@@ -122,7 +122,7 @@ public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 	@xTarget(CONTENT.class)
 	public XMLElement xContenu() {
 		return xHeader(xId(this.vProperty(pId)), navbar, fixedTop, cFixedElement,
-				xDiv(descBar, xIdAction("SWIPE_DOWN_HEADER"), this.getChildren(), pChildren),
+				xDiv(descBar, xIdAction("SWIPE_HEADER"), this.getChildren(), pChildren),
 				xDiv(topBar));
 	}
 

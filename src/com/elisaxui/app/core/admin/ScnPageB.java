@@ -114,13 +114,13 @@ public class ScnPageB extends ScnPage implements ICSSBuilder {
 			page.mountNavNar().set(MountNavBar.class);
 			page.dataNavBar().set(JSArray.newLitteral());
 
-			page.mountArticles().set(MountArticle.class);
-			page.contentArticles().set(JSArray.newLitteral());
+			page.mountContentActivity().set(MountArticle.class);
+			page.dataContentActivity().set(JSArray.newLitteral());
 
 			let(aPage, page);
 
 			JSArray<TBtn> listeArticle = JSArray.newLitteral();
-			aPage.contentArticles().push(listeArticle);
+			aPage.dataContentActivity().push(listeArticle);
 
 			TBtn btn = newJS(TBtn.class);
 			btn = newJS(TBtn.class);
@@ -137,8 +137,8 @@ public class ScnPageB extends ScnPage implements ICSSBuilder {
 			page2.mountNavNar().set(MountNavBar.class);
 			page2.dataNavBar().set(JSArray.newLitteral());
 
-			page2.mountArticles().set(MountArticle.class);
-			page2.contentArticles().set(JSArray.newLitteral());
+			page2.mountContentActivity().set(MountArticle.class);
+			page2.dataContentActivity().set(JSArray.newLitteral());
 			
 			page2.mountTabNar().set(MountTabBar.class);
 			page2.dataTabBar().set(JSArray.newLitteral());

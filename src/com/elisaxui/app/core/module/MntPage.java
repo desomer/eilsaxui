@@ -10,16 +10,18 @@ import com.elisaxui.component.toolkit.datadriven.IJSDataDriven;
 import com.elisaxui.component.toolkit.datadriven.IJSMountFactory;
 import com.elisaxui.component.widget.button.CssRippleEffect;
 import com.elisaxui.component.widget.button.ViewBtnBurger;
+import com.elisaxui.component.widget.container.ViewCard;
 import com.elisaxui.component.widget.layout.ViewPageLayout;
 import com.elisaxui.component.widget.menu.ViewMenuContainer;
 import com.elisaxui.component.widget.navbar.ViewNavBar;
 import com.elisaxui.component.widget.tabbar.ViewTabBar;
-import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xMount;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.XHTMLPartJS;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSon;
+import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSNodeElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.mount.MountFactory;
 import com.elisaxui.core.xui.xhtml.builder.json.JSType;
@@ -39,10 +41,12 @@ public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFacto
 	static TMain aMainMount;
 	static JSArray<TActivity> listPage;
 	static TActivity aPage;
-	static TBtn aBtn;
+	static TContainer aContainer;
 	static JSArray<JSAny> listArticle;
 	static TInput aInput;
-	static JSArray<JSElement> aArticle;
+	static JSArray<JSElement> anListElem;
+	static TBtn aBtn;
+	static JSNodeElement aNode;
 
 	@xTarget(HEADER.class)
 	@xResource()
@@ -79,7 +83,7 @@ public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFacto
 				.vProp(ViewPageLayout.pWithTabBar, true)
 				.vProp(ViewPageLayout.pIdPage, aPage.titre())
 				.vProp(ViewPageLayout.pArticle,
-						vMountChangeable(aPage.mountArticles(), vMount(aPage, aPage.mountArticles())))
+						vMountChangeable(aPage.mountContentActivity(), vMount(aPage, aPage.mountContentActivity())))
 				.vProp(ViewNavBar.pChildren, vMount(aPage, aPage.mountNavNar()))
 				.vProp(ViewTabBar.pChildren, vMount(aPage.dataTabBar(), aPage.mountTabNar())))));
 	}
@@ -103,29 +107,27 @@ public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFacto
 	}
 
 	/***************************************************************************/
-	
+
 	public static class MountMenu extends MountFactory {
 	}
 
 	@xMount(MountMenu.class)
 	public XMLElement createPageMenu(TActivity aPage) {
-		
+
 		return xElem(new ViewPageLayout()
 				.vProp(ViewPageLayout.pIsNoVisible, true)
 				.vProp(ViewPageLayout.pClassType, ViewMenuContainer.cPageMenu)
 				.vProp(ViewPageLayout.pWithTabBar, false)
-			//	.vProp(ViewNavBar.pStyle, "b:r")
+				// .vProp(ViewNavBar.pStyle, "b:r")
 				.vProp(ViewPageLayout.pIdPage, aPage.titre())
-				
-				.vProp(ViewPageLayout.pArticle,	xElem(new ViewMenuContainer()
+
+				.vProp(ViewPageLayout.pArticle, xElem(new ViewMenuContainer()
 						.vProp(ViewMenuContainer.pId, "MenuPage")
-						.vProp(ViewMenuContainer.pChildren, vMount(aPage, aPage.mountArticles()))
-						))
-				
-				.vProp(ViewNavBar.pChildren, vMount(aPage, aPage.mountNavNar()))
-				);
+						.vProp(ViewMenuContainer.pChildren, vMount(aPage, aPage.mountContentActivity()))))
+
+				.vProp(ViewNavBar.pChildren, vMount(aPage, aPage.mountNavNar())));
 	}
-	
+
 	/******************************************************************/
 	public static class MountInfoBox extends MountFactory {
 	}
@@ -134,7 +136,7 @@ public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFacto
 	public XMLElement createInfoBox(JSString aInfo) {
 		return xDiv(ScnPageA.cIdlog, aInfo);
 	}
-	
+
 	/************************************************************************/
 	public static class MountBtn extends MountFactory {
 	}
@@ -155,33 +157,70 @@ public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFacto
 	}
 
 	/************************************************************************/
-	public static class MountCard extends MountFactory {
-	}
-
-	@xMount(MountCard.class)
-	public XMLElement createCard(TActivity aPage) {
-		return xElem(vFor(aPage.contentArticles(), aArticle, xDiv(
-				vFor(aArticle, aInput, xDiv(vMount(aInput, aInput.implement()))))));
-	}
-
-	/************************************************************************/
 	public static class MountMenuContainer extends MountFactory {
 	}
 
 	@xMount(MountMenuContainer.class)
 	public XMLElement createMenuContainer(TActivity aPage) {
-		return xElem(vFor(aPage.contentArticles(), aArticle, xUl(
-				vFor(aArticle, aInput, xElem(vMount(aInput, aInput.implement()))))));
+		return xElem(vFor(aPage.dataContentActivity(), anListElem, xUl(
+				vFor(anListElem, aInput, xElem(vMount(aInput, aInput.implement()))))));
+	}
+	/*******************************************************************/
+	
+	public static class MountInputContainer extends MountFactory {
+	}
+
+	@xMount(MountInputContainer.class)
+	public XMLElement createInputContainer(TActivity aPage) {
+		return xElem(vFor(aPage.dataContentActivity(), anListElem, xDiv(
+				vFor(anListElem, aInput, xDiv(vMount(aInput, aInput.implement()))))));
 	}
 	
+	/******************************************************************/
+	public static class MountContainer extends MountFactory {
+	}
+
+	@xMount(MountContainer.class)
+	public XMLElement createContainer(TActivity aPage) {
+		return xElem(vFor(aPage.dataContentActivity(), anListElem,
+				xDiv(vFor(anListElem, aContainer, xElem(vMount(aContainer, aContainer.implement()))))));
+	}
+
+	public static class MountCardContainer extends MountFactory {
+	}
+
+	@xMount(MountCardContainer.class)
+	public XMLElement createCardContainer(TContainer aCont) {
+		return xElem( vBeforeMount(fct(aNode, ()->{ 
+			consoleDebug("'ok'", aCont, aNode);  }), xElem(new ViewCard())));
+	}
+
+	public static class MountArrayContainer extends MountFactory {
+	}
+
+	@xMount(MountArrayContainer.class)
+	public XMLElement createArrayContainer(TContainer aCont) {
+		return xDiv();
+	}
+
+	public static class MountBorderContainer extends MountFactory {
+	}
+
+	@xMount(MountBorderContainer.class)
+	public XMLElement createBorderContainer(TContainer aCont) {
+		return xDiv();
+	}
+
+
 	/************************************************************************/
 	public static class MountArticle extends MountFactory {
 	}
 
 	@xMount(MountArticle.class)
 	public XMLElement createArticle(TActivity aPage) {
-		return xElem(vFor(aPage.contentArticles(), aArticle,
-				xElem(xId("cntArticle"), vFor(aArticle, aBtn, xDiv(xId("cntSpan"), xSpan(vChangeable(aBtn.titre())))))));
+		return xElem(vFor(aPage.dataContentActivity(), anListElem,
+				xElem(xId("cntArticle"),
+						vFor(anListElem, aBtn, xDiv(xId("cntSpan"), xSpan(vChangeable(aBtn.titre())))))));
 	}
 
 	public static class MountArticle2 extends MountArticle {
@@ -189,8 +228,8 @@ public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFacto
 
 	@xMount(MountArticle2.class)
 	public XMLElement createArticle2(TActivity aPage) {
-		return xElem(vFor(aPage.contentArticles(), aArticle,
-				xDiv(vFor(aArticle, aBtn, xH1(aBtn.titre())))));
+		return xElem(vFor(aPage.dataContentActivity(), anListElem,
+				xDiv(vFor(anListElem, aBtn, xH1(aBtn.titre())))));
 	}
 
 	/********************************************************/
@@ -216,9 +255,33 @@ public class MntPage extends XHTMLPartJS implements IJSDataDriven, IJSMountFacto
 
 		JSArray<TBtn> dataNavBar();
 
-		JSString mountArticles();
+		JSString mountContentActivity();
 
-		JSArray<JSElement> contentArticles();
+		JSArray<JSElement> dataContentActivity();
+	}
+
+	public interface TContainer extends JSType {
+		JSString implement();
+
+		JSString layoutContraint();
+
+		JSAny data();
+	}
+
+	public interface TContainerData extends JSType {
+		TBackgroundInfo background();
+
+		JSString text();
+
+		JSString actionId();
+
+		JSElement data();
+	}
+	
+	public interface TBackgroundInfo extends JSType {
+		JSString mode();
+		JSString opacity();
+		JSString css();
 	}
 
 	public interface TBtn extends JSType {

@@ -7,11 +7,16 @@ import com.elisaxui.app.core.module.MntInput.MountInputCheckBox;
 import com.elisaxui.app.core.module.MntInput.MountInputText;
 import com.elisaxui.app.core.module.MntInput.TInput;
 import com.elisaxui.app.core.module.MntPage.MountBtn;
+import com.elisaxui.app.core.module.MntPage.MountCardContainer;
+import com.elisaxui.app.core.module.MntPage.MountContainer;
 import com.elisaxui.app.core.module.MntPage.MountInputContainer;
 import com.elisaxui.app.core.module.MntPage.MountNavBar;
 import com.elisaxui.app.core.module.MntPage.MountTabBar;
 import com.elisaxui.app.core.module.MntPage.TBtn;
+import com.elisaxui.app.core.module.MntPage.TContainer;
+import com.elisaxui.app.core.module.MntPage.TContainerData;
 import com.elisaxui.app.core.module.MntPage.TActivity;
+import com.elisaxui.app.core.module.MntPage.TBackgroundInfo;
 import com.elisaxui.component.toolkit.datadriven.IJSMountFactory;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
@@ -30,31 +35,21 @@ import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
 
 @xExport
 @xCoreVersion("1")
-public interface ActPageA3 extends JSClass , IJSNodeTemplate, IJSMountFactory {
+public interface ActPageA4 extends JSClass , IJSNodeTemplate, IJSMountFactory {
 	
 	TActivity aPage = JSClass.declareType();
 	
 	@xStatic(autoCall=true)
 	default void initPage() {
 		TActivity page = newJS(TActivity.class);
-		page.titre().set("Page3");
+		page.titre().set("Page4");
 		page.mountNavNar().set(MountNavBar.class);
-		page.mountTabNar().set(MountTabBar.class);
-		page.mountContentActivity().set(MountInputContainer.class);
-		page.mountAction().set("ACTMOUNT3");
-		
-		TBtn btn = null;
+		page.mountTabNar().set(MountTabBar.class);		
 		
 		JSArray<TBtn> dataNabBar = JSArray.newLitteral() ;
-		btn = newJS(TBtn.class);
+		TBtn btn = newJS(TBtn.class);
 		btn.titre().set("arrow_back");
 		btn.action().set("TO_PAGE1");
-		btn.mountBtn().set(MountBtn.class);
-		dataNabBar.push(btn);
-
-		btn = newJS(TBtn.class);
-		btn.titre().set("more_vert");
-		btn.action().set("E");
 		btn.mountBtn().set(MountBtn.class);
 		dataNabBar.push(btn);
 		
@@ -81,34 +76,34 @@ public interface ActPageA3 extends JSClass , IJSNodeTemplate, IJSMountFactory {
 		
 		page.dataTabBar().set(dataTabBar);
 		
-		JSArray<JSElement> listeArticle = JSArray.newLitteral();
-
-		for (int i = 0; i < 3; i++) {
-			TInput testInput = newJS(TInput.class);
-			testInput.label().set("test input"+i);
-			testInput.value().set(JSString.value("AAA"+i));
-			testInput.implement().set(MountInputText.class);
-			listeArticle.push(testInput);
-		}
-
-		JSArray<JSElement> listeArticle2 = JSArray.newLitteral();
-
-		for (int i = 0; i < 1; i++) {
-			TInput testInput = newJS(TInput.class);
-			testInput.label().set("test input B"+i);
-			testInput.value().set(true);
-			testInput.implement().set(MountInputCheckBox.class);
-			listeArticle2.push(testInput);
-		}
-		
+		/**********************************************************************/
+		page.mountContentActivity().set(MountContainer.class);
 		JSArray<JSElement> listeContent = JSArray.newLitteral();
-		listeContent.push(listeArticle);
-		listeContent.push(listeArticle2);
+		
+		TContainer aContainer = newJS(TContainer.class); 		
+		aContainer.implement().set(MountCardContainer.class);
+		aContainer.layoutContraint().set("Flow");
+		
+		
+		TBackgroundInfo aBgInfo = newJS(TBackgroundInfo.class);
+		aBgInfo.opacity().set(0.9);
+		aBgInfo.mode().set("Css");
+		aBgInfo.css().set("url(" +ScnPageA.listPhotos[1] +") center / cover no-repeat");
+		
+		TContainerData aContData = newJS(TContainerData.class);
+		aContData.background().set(aBgInfo);
+		aContainer.data().set(aContData);
+		JSArray<JSElement> listeCard = JSArray.newLitteral();
+		listeCard.push(aContainer);
+		
+		listeContent.push(listeCard);
+		
 		page.dataContentActivity().set(listeContent);
 		
 		
 		let(aPage, page);
-		JSWindow.window().attr("ActPageC").set(aPage);
+		consoleDebug(aPage);
+		JSWindow.window().attr("ActPageD").set(aPage);
 	}
 
 }

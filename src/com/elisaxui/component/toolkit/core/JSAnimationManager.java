@@ -5,6 +5,7 @@ package com.elisaxui.component.toolkit.core;
 
 import com.elisaxui.app.core.admin.ScnPageA;
 import com.elisaxui.component.toolkit.core.JSActionManager.TActionEvent;
+import com.elisaxui.component.toolkit.core.JSActionManager.TActionInfo;
 import com.elisaxui.component.toolkit.core.JSActionManager.TActionListener;
 import com.elisaxui.component.toolkit.core.JSRequestAnimationFrame.TAnimFrameEvent;
 import com.elisaxui.component.toolkit.datadriven.JSDataSet;
@@ -87,8 +88,6 @@ public interface JSAnimationManager extends JSClass {
 
 	TPhase lastPhase();
 
-	// TActionEvent lastActionEvent();
-
 	JSInt touchActionSign();
 
 	JSInt touchStartTime();
@@ -106,7 +105,7 @@ public interface JSAnimationManager extends JSClass {
 		withEasing().set(true);
 		touchStartTime().set(1); // 1 = rien au premier stop click
 		_if(theActionManager.currentActionEvent(), "!=null").then(() -> {
-			_if(theActionManager.currentActionEvent().actionInfo().modeTouch().equalsJS("SWIPE")).then(() -> {
+			_if(theActionManager.currentActionEvent().actionInfo().modeTouch().equalsJS(TActionInfo.MODE_TOUCH_SWIPE)).then(() -> {
 				touchStartTime().set(0); // conserve le touchDown en tant que demarrage de l'animation
 			});
 		});

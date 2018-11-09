@@ -143,6 +143,7 @@ public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 
 		return template.getTemplate();
 	}
+	
 	@Deprecated
 	public static XMLElement getTemplateName(Object name) {
 		IJSDomTemplate template = new IJSDomTemplate() {
@@ -155,6 +156,7 @@ public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 		return template.getTemplate();
 
 	}
+	
 	@Deprecated
 	public static XMLElement getTemplateAction(Object name, Object action) {
 
@@ -170,10 +172,12 @@ public class ViewNavBar extends XHTMLPart implements ICSSBuilder {
 
 		return template.getTemplate();
 	}
+	
 	@Deprecated
 	public static XMLElement getTemplateBgCanvas() {
 		return xNode("canvas", animatedBg); // pour granim
 	}
+	
 	@Deprecated
 	public static XMLElement getTemplateBgDiv() {
 		return xNode("div", animatedBg);

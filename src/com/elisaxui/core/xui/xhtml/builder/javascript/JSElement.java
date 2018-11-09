@@ -9,4 +9,5 @@ package com.elisaxui.core.xui.xhtml.builder.javascript;
  */
 public interface JSElement {
 
+	
 }

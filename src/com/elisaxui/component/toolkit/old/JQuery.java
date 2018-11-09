@@ -12,6 +12,7 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.lang.IJSClassInterface;
  * @author Bureau
  *
  */
+@Deprecated
 public class JQuery extends JSAny  implements IJSClassInterface {
 
 	public static final JQuery $(CSSSelector selector)

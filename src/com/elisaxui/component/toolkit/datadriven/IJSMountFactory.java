@@ -25,16 +25,19 @@ public interface IJSMountFactory extends JSClass {
 	JSDataDriven dataDriven = JSClass.declareTypeClass(JSDataDriven.class);
 	JSNodeElement domparent = JSClass.declareType();
 	JSChangeCtx ctxChange = JSClass.declareType();
+	JSNodeElement dom = JSClass.declareType();
+	JSCallBack fctToCall = JSClass.declareType();
 
 	@xInLine
 	default JSFunction vMountChangeable(JSElement data, JSFunction fct) {
 		String[] attr = data.toString().split("\\.");
-		
+
 		return fct(domparent, () -> {
-			dataBinding.initOnDataChange(domparent, cast(JSon.class, attr[0]), cast(JSon.class, data), JSString.value(attr[1]), fct(ctxChange, ()->{
-				consoleDebug("'vMountChangeable '",data, ctxChange);	
-				consoleDebug("'a faire marcher : vider le dom et rappeler la fct'");
-			}).toCallBack());
+			dataBinding.initOnDataChange(domparent, cast(JSon.class, attr[0]), cast(JSon.class, data),
+					JSString.value(attr[1]), fct(ctxChange, () -> {
+						consoleDebug("'vMountChangeable '", data, ctxChange);
+						consoleDebug("'a faire marcher : vider le dom et rappeler la fct'");
+					}).toCallBack());
 			_return(fct);
 		}).setComment("vMountChangeable " + data);
 	}
@@ -42,6 +45,16 @@ public interface IJSMountFactory extends JSClass {
 	@xInLine
 	default JSFunction vMount(JSElement aRow, JSString mountId) {
 		return fct(domparent, () -> _return(dataBinding.mount(mountId, aRow))).setComment("vMount " + mountId);
+	}
+
+	@xInLine
+	default JSFunction vBeforeMount(JSFunction fct, XMLElement child) {
+		return fct(domparent, () ->{
+				let(dom, child);
+				let(fctToCall, fct);
+				fctToCall.invoke(dom, domparent);
+				_return( dom  );
+		} ) .setComment("vBeforeMount");
 	}
 
 	/** TODO vFor( control type , ()->{}) */
@@ -65,7 +78,8 @@ public interface IJSMountFactory extends JSClass {
 	@xInLine
 	public default JSCallBack onChange(JSElement aRow, Object elem) {
 		return fct(ctxChange, () -> {
-			dataBinding.initChangeHandler(ctxChange, cast(JSNodeElement.class, ctxChange.row().attrByStr(JSDataSet.ATTR_DOM_LINK)));
+			dataBinding.initChangeHandler(ctxChange,
+					cast(JSNodeElement.class, ctxChange.row().attrByStr(JSDataSet.ATTR_DOM_LINK)));
 		}).setComment("onChange " + aRow).toCallBack();
 	}
 

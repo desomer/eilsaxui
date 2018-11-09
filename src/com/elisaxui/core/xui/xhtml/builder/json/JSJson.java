@@ -15,6 +15,13 @@ public class JSJson implements IXMLBuilder {
 
 	String unformattedJsonString;
 
+	/**
+	 * @return the unformattedJsonString
+	 */
+	public final String getUnformattedJsonString() {
+		return unformattedJsonString;
+	}
+
 	@Override
 	public String toString() {
 		return "JSJson [json=" + unformattedJsonString + "]";

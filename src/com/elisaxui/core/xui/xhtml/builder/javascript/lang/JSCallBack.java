@@ -19,6 +19,8 @@ public class JSCallBack extends JSAny {
 		return callMth("apply", classes);
 	}
 	
+	
+	/* voir aussi .invoke() */
 
 	
 }

@@ -3,11 +3,9 @@
  */
 package com.elisaxui.app.core.admin;
 
-import com.elisaxui.app.core.module.MntInput.MountInputText;
 import com.elisaxui.app.core.module.MntInput.MountMenuDivider;
 import com.elisaxui.app.core.module.MntInput.MountMenuItem;
 import com.elisaxui.app.core.module.MntInput.TInput;
-import com.elisaxui.app.core.module.MntPage.MountCard;
 import com.elisaxui.app.core.module.MntPage.MountMenuContainer;
 import com.elisaxui.app.core.module.MntPage.TActivity;
 import com.elisaxui.component.toolkit.datadriven.IJSMountFactory;
@@ -16,7 +14,6 @@ import com.elisaxui.core.xui.xhtml.builder.javascript.annotation.xStatic;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSArray;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.dom.JSWindow;
-import com.elisaxui.core.xui.xhtml.builder.javascript.lang.value.JSString;
 import com.elisaxui.core.xui.xhtml.builder.javascript.template.IJSNodeTemplate;
 import com.elisaxui.core.xui.xhtml.builder.module.annotation.xExport;
 import com.elisaxui.core.xui.xml.annotation.xCoreVersion;
@@ -63,8 +60,8 @@ public interface ActPageMenu1 extends JSClass, IJSNodeTemplate, IJSMountFactory 
 		
 		JSArray<JSElement> listeContent = JSArray.newLitteral();
 		listeContent.push(listeArticle);
-		page.mountArticles().set(MountMenuContainer.class);
-		page.contentArticles().set(listeContent);
+		page.mountContentActivity().set(MountMenuContainer.class);
+		page.dataContentActivity().set(listeContent);
 		
 		let(aPage, page);
 		JSWindow.window().attr("ActPageMenu1").set(aPage);

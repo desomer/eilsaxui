@@ -12,6 +12,7 @@ import javax.json.JsonValue;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ArrayMethod;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ILitteral;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.lang.JSAny;
@@ -47,7 +48,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	public final void setProxy(JSContentInterface proxy) {
 		this.proxy = proxy;
 	}
-	
+
 	/**
 	 * @param jc
 	 * @param args
@@ -55,70 +56,63 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	 */
 	public static final <E> E cast(Class<E> cl, Object args) {
 		Object jc = declareType(cl, null);
-		if (jc instanceof JSAny)
-		{
+		if (jc instanceof JSAny) {
 			JSAny jsa = ((JSAny) jc);
 			jsa._setValue(args)._setName(args);
-		}
-		else
+		} else
 			((JSClass) jc)._setContent(args);
-		return (E)jc;
+		return (E) jc;
 	}
-	
+
 	public static final <E> E callStatic(Class<E> cl) {
 		Object jc = declareType(cl, null);
-		if (jc instanceof JSAny)
-		{
+		if (jc instanceof JSAny) {
 			JSAny jsa = ((JSAny) jc);
 			jsa._setValue(cl.getName())._setName(cl.getSimpleName());
-		}
-		else
+		} else
 			((JSClass) jc)._setContent(cl.getSimpleName());
 		return (E) jc;
 	}
-	
+
 	public static final <E extends JSAny> E declareType(E type, String name) {
 		type._setValue(name)._setName(name);
 		return type;
 	}
-	
+
 	public static final <E> JSArray<E> declareArray(Class<E> type, Object name) {
 		JSArray<?> jc = declareType(JSArray.class, name);
 		jc.setArrayType(type);
 		return (JSArray<E>) jc;
 	}
-	
+
 	/**
 	 * @return
 	 */
 	public static final <E> E declareType(Class<E> type, Object name) {
-		
-		boolean retJSVariable=JSAny.class.isAssignableFrom(type);
-		boolean retJSClass=JSClass.class.isAssignableFrom(type);
-		
-		if (retJSVariable)
-		{
-			JSAny v =null;
+
+		boolean retJSVariable = JSAny.class.isAssignableFrom(type);
+		boolean retJSClass = JSClass.class.isAssignableFrom(type);
+
+		if (retJSVariable) {
+			JSAny v = null;
 			try {
-				v = ((JSAny)type.newInstance());
-				v._setName(name) ;
+				v = ((JSAny) type.newInstance());
+				v._setName(name);
 			} catch (InstantiationException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
-	
-			return (E)v;
+
+			return (E) v;
 		}
-		
-		if (retJSClass)
-		{
-			JSClass prox = ProxyHandler.getProxy( (Class<? extends JSClass>) type);
-			ProxyHandler.setNameOfProxy(null, prox, name);	
-			return (E)prox;
+
+		if (retJSClass) {
+			JSClass prox = ProxyHandler.getProxy((Class<? extends JSClass>) type);
+			ProxyHandler.setNameOfProxy(null, prox, name);
+			return (E) prox;
 		}
-		
-		return (E)name;
+
+		return (E) name;
 	}
-	
 
 	/**************************************************************/
 	// new line
@@ -191,35 +185,30 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 
 			/***************************************************/
 		} else if (object instanceof XMLElement) {
-			boolean forceModeText =  XUIFactoryXHtml.getXMLFile().getCoreVersion().equals("0");
-			if (!forceModeText && !buf.isTemplate())
-			{
-				// gestion d'un xDiv en mode template JS  (e(p(...))) par defaut si coreVersion >0 
+			boolean forceModeText = XUIFactoryXHtml.getXMLFile().getCoreVersion().equals("0");
+			if (!forceModeText && !buf.isTemplate()) {
+				// gestion d'un xDiv en mode template JS (e(p(...))) par defaut si coreVersion
+				// >0
 				buf.setModeTemplate(true);
 				XMLElement elem = ((XMLElement) object);
 				elem.setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine());
 				elem.toXML(buf);
 				JSContent js = buf.getJSContent();
-//				elem.setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine());
+				// elem.setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine());
 				buf.setModeTemplate(false);
 				js.toXML(buf);
-			}
-			else
-			{
-				if (buf.isTemplate())
-				{  // si div dans template JS
+			} else {
+				if (buf.isTemplate()) { // si div dans template JS
 					XMLElement elem = ((XMLElement) object);
 					elem.setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine());
 					elem.toXML(buf);
-//					elem.setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine());
-				}
-				else
+					// elem.setTabForNewLine(ProxyHandler.getFormatManager().getTabForNewLine());
+				} else
 					doXMLElementToJSXHTMLPart(buf, ((XMLElement) object));
 			}
 
 		} else if (object instanceof XMLAttr) {
-			if (buf.isTemplate())
-			{
+			if (buf.isTemplate()) {
 				new XMLElement(null).doChild(buf, -1, object);
 			}
 
@@ -233,12 +222,12 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 
 		} else if (object instanceof JSFunction) {
 			JSFunction fct = (JSFunction) object;
-			
-//			if (buf.isTemplate() && buf.getJSContent()==null)
-//			{
-//				buf.setModeTemplate(true);
-//			}
-			
+
+			// if (buf.isTemplate() && buf.getJSContent()==null)
+			// {
+			// buf.setModeTemplate(true);
+			// }
+
 			if (fct.isFragment()) {
 				fct.toXML(buf);
 			} else {
@@ -250,7 +239,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 				ProxyHandler.getFormatManager().newLine(buf);
 				ProxyHandler.getFormatManager().newTabInternal(buf);
 			}
-			
+
 		} else if (object instanceof JSAny) {
 			Object v = ((JSAny) object)._getValueOrName();
 			if (v instanceof ArrayMethod) {
@@ -260,9 +249,9 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 				}
 			} else
 				buf.addContentOnTarget(((JSAny) object).toString());
-			
+
 		} else if (object instanceof JSJson) {
-			JSJson json =(JSJson)object;
+			JSJson json = (JSJson) object;
 			json.toXML(buf);
 		} else if (object instanceof JSClass) {
 			Object v = ((JSClass) object)._getContent(); // recup de la valeur du proxy
@@ -272,14 +261,14 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 					addXML(buf, object2);
 				}
 			} else if (v != null)
-				//buf.addContentOnTarget(v);
+				// buf.addContentOnTarget(v);
 				addXML(buf, v);
 			else
 				buf.addContentOnTarget(object.toString()); // recup du nom du proxy
-			
+
 		} else if (object instanceof JSContent) {
 			((JSContent) object).toXML(buf);
-			
+
 		} else {
 			if (buf.isModeString())
 				// ajout d'un JS sous forme de text
@@ -295,8 +284,8 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	 * @param buf
 	 * @param elem
 	 */
-	
-	/** TODO a mettre dans le JSXHTMLPart */ 
+
+	/** TODO a mettre dans le JSXHTMLPart */
 	private void doXMLElementToJSXHTMLPart(XMLBuilder buf, XMLElement elem) {
 		StringBuilder txtXML = new StringBuilder(1000);
 		StringBuilder txtXMLAfter = new StringBuilder(1000);
@@ -368,7 +357,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	 */
 	@Override
 	public JSContentInterface __(Object... content) {
-			
+
 		if (content != null) {
 			if (content.length == 1 && content[0] instanceof JSFunction) {
 				JSFunction fct = ((JSFunction) content[0]);
@@ -379,7 +368,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 			} else
 				getListElem().add(JSNewLine.class);
 
-			for (Object object : content) {			
+			for (Object object : content) {
 				addElem(object);
 			}
 			getListElem().add(";");
@@ -395,37 +384,37 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	 */
 	@Override
 	public JSContentInterface _set(Object name, Object... content) {
-		
-		if (name instanceof Proxy)
-		{
-			ProxyHandler proxy = (ProxyHandler) Proxy.getInvocationHandler((Proxy)name);
-			if (proxy.getParentLitteral() instanceof ProxyHandler)
-			{
-				ProxyHandler mh = (ProxyHandler)proxy.getParentLitteral();
-				boolean isLitteral = mh.getJsonBuilder()!=null;
-				
-				if (isLitteral || ProxyHandler.isModeJava()  ) {
-					if (mh.getJsonBuilder()==null)
+
+		if (name instanceof Proxy) {
+			ProxyHandler proxy = (ProxyHandler) Proxy.getInvocationHandler((Proxy) name);
+			if (proxy.getParentLitteral() instanceof ProxyHandler) {
+				ProxyHandler mh = (ProxyHandler) proxy.getParentLitteral();
+				boolean isLitteral = mh.getJsonBuilder() != null;
+
+				if (isLitteral || ProxyHandler.isModeJava()) {
+					if (mh.getJsonBuilder() == null)
 						mh.setJsonBuilder(Json.createObjectBuilder());
-					
-					String attr = ""+name;
-					attr = attr.substring(attr.lastIndexOf('.')+1);
-					
+
+					String attr = "" + name;
+					attr = attr.substring(attr.lastIndexOf('.') + 1);
+
 					if (content[0] instanceof String)
 						content[0] = "\"" + content[0] + "\"";
-					else if (content[0] instanceof JSClass)
-					{
-						JSClass jscl = (JSClass)content[0];
+					else if (content[0] instanceof JSClass) {
+						JSClass jscl = (JSClass) content[0];
 						content[0] = jscl._getContent();
+					} 
+					
+					if (content[0] instanceof JSJson) {
+						content[0] = ((JSJson) content[0]).getUnformattedJsonString();
 					}
-						
+
 					mh.getJsonBuilder().add(attr, new JsonNumberImpl(content[0].toString()));
 					return this;
 				}
 			}
 		}
 
-		
 		getListElem().add(JSNewLine.class);
 		getListElem().add(name);
 		getListElem().add("=");
@@ -455,15 +444,14 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 			addElem(null);
 		} else {
 			for (Object object : content) {
-				if (object instanceof JSArray)
-				{
-					// force en literal si array 
-					JSArray<?> arr = (JSArray<?>)object;
-					if (!arr.isLitteral() && arr._getDirectValue()==null && arr._getName()==null)
+				if (object instanceof JSArray) {
+					// force en literal si array
+					JSArray<?> arr = (JSArray<?>) object;
+					if (!arr.isLitteral() && arr._getDirectValue() == null && arr._getName() == null)
 						arr.asLitteral();
 				}
-					
-				addElem(name, object); 
+
+				addElem(name, object);
 			}
 		}
 		getListElem().add(";");
@@ -509,8 +497,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 
 	/*******************************************************************/
 	@Override
-	public JSContentInterface delete(Object... content)
-	{
+	public JSContentInterface delete(Object... content) {
 		getListElem().add(JSNewLine.class);
 		getListElem().add("delete ");
 		for (Object object : content) {
@@ -519,8 +506,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 		getListElem().add(";");
 		return this;
 	}
-	
-	
+
 	/******************************************************************/
 	@Override
 	public JSContentInterface consoleDebug(Object... content) {
@@ -581,16 +567,13 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	@Override
 	public JSContentInterface _if(Object... content) {
 		getListElem().add(JSNewLine.class);
-		if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableSpaceJS())
-		{
+		if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableSpaceJS()) {
 			getListElem().add("if (");
 			for (Object object : content) {
 				addElem(object);
 			}
 			getListElem().add(") {");
-		}
-		else
-		{
+		} else {
 			getListElem().add("if(");
 			for (Object object : content) {
 				addElem(object);
@@ -605,12 +588,9 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	public JSContentInterface _else() {
 		getListElem().add(JSRemoveTab.class);
 		getListElem().add(JSNewLine.class);
-		if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableSpaceJS())
-		{
+		if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableSpaceJS()) {
 			getListElem().add("} else {");
-		}
-		else
-		{
+		} else {
 			getListElem().add("}else{");
 		}
 		getListElem().add(JSAddTab.class);
@@ -621,21 +601,18 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	public JSContentInterface _elseif_(Object... content) {
 		getListElem().add(JSRemoveTab.class);
 		getListElem().add(JSNewLine.class);
-		if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableSpaceJS())
-		{
+		if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableSpaceJS()) {
 			getListElem().add("} else if(");
 			for (Object object : content) {
 				addElem(object);
 			}
 			getListElem().add(") {");
-		}
-		else
-		{
+		} else {
 			getListElem().add("}elseif(");
 			for (Object object : content) {
 				addElem(object);
 			}
-			getListElem().add("){");	
+			getListElem().add("){");
 		}
 		getListElem().add(JSAddTab.class);
 		return this;
@@ -643,21 +620,18 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 
 	@Override
 	public JSContentInterface _elseif(Object... content) {
-		if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableSpaceJS())
-		{
+		if (XUIFactoryXHtml.getXMLFile().getConfigMgr().isEnableSpaceJS()) {
 			getListElem().add(" else if(");
 			for (Object object : content) {
 				addElem(object);
 			}
 			getListElem().add(") {");
-		}
-		else
-		{
+		} else {
 			getListElem().add("else if(");
 			for (Object object : content) {
 				addElem(object);
 			}
-			getListElem().add("){");	
+			getListElem().add("){");
 		}
 		getListElem().add(JSAddTab.class);
 		return this;
@@ -711,11 +685,9 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 
 		if (ret instanceof JSAny)
 			((JSAny) ret)._setValue(textNew);
-		else
-		{
+		else {
 			((JSClass) ret)._setContent(textNew);
-			if ( ret instanceof JSType )
-			{
+			if (ret instanceof JSType) {
 				((JSClass) ret).asLitteral();
 			}
 		}
@@ -767,31 +739,31 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 
 	@Override
 	public JSFunction fct(JSElement param, JSLambda call) {
-		JSFunction ret = new JSFunction().setParam(new Object[] {param});
+		JSFunction ret = new JSFunction().setParam(new Object[] { param });
 		ret.proxy = (JSContentInterface) ProxyHandler.ThreadLocalMethodDesc.get().getProxy();
 		ret.__(call);
 		return ret;
 	}
-	
+
 	@Override
 	public JSFunction fct(JSElement param1, JSElement param2, JSLambda call) {
-		JSFunction ret = new JSFunction().setParam(new Object[] {param1 , param2});
+		JSFunction ret = new JSFunction().setParam(new Object[] { param1, param2 });
 		ret.proxy = (JSContentInterface) ProxyHandler.ThreadLocalMethodDesc.get().getProxy();
 		ret.__(call);
 		return ret;
 	}
-	
+
 	@Override
 	public JSFunction fct(JSElement param1, JSElement param2, JSElement param3, JSLambda call) {
-		JSFunction ret = new JSFunction().setParam(new Object[] {param1 , param2, param3});
+		JSFunction ret = new JSFunction().setParam(new Object[] { param1, param2, param3 });
 		ret.proxy = (JSContentInterface) ProxyHandler.ThreadLocalMethodDesc.get().getProxy();
 		ret.__(call);
 		return ret;
 	}
-	
+
 	@Override
 	public JSFunction fct(JSElement param1, JSElement param2, JSElement param3, JSElement param4, JSLambda call) {
-		JSFunction ret = new JSFunction().setParam(new Object[] {param1 , param2, param3, param4});
+		JSFunction ret = new JSFunction().setParam(new Object[] { param1, param2, param3, param4 });
 		ret.proxy = (JSContentInterface) ProxyHandler.ThreadLocalMethodDesc.get().getProxy();
 		ret.__(call);
 		return ret;
@@ -822,10 +794,9 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 		getListElem().add(";");
 		return this;
 	}
-	
+
 	@Override
-	public JSContentInterface _continue()
-	{
+	public JSContentInterface _continue() {
 		getListElem().add(JSNewLine.class);
 		getListElem().add("continue;");
 		return this;
@@ -859,7 +830,6 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 		return null;
 	}
 
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -867,10 +837,12 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	 */
 	@Override
 	public JSAny _this() {
-		return var("this");   // TODO ajouter le cast de type
+		return var("this"); // TODO ajouter le cast de type
 	}
-	
-	/***************************  CREATION DES SOUS CONTENU POUR LES FCT ANONYM *************/
+
+	/***************************
+	 * CREATION DES SOUS CONTENU POUR LES FCT ANONYM
+	 *************/
 	@Override
 	public Object $$subContent() {
 		List<Object> ret = getListElem();
@@ -895,7 +867,7 @@ public class JSContent implements IXMLBuilder, JSContentInterface {
 	@Override
 	public <E> E let(String name, E content) {
 		Class<?> t = JSAny.class;
-		if (content!=null)
+		if (content != null)
 			t = content.getClass();
 		if (content instanceof Proxy) {
 			ProxyHandler mh = (ProxyHandler) Proxy.getInvocationHandler(content);

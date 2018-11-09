@@ -74,10 +74,10 @@ public interface JSActionManager extends JSClass {
 
 		// ajoute PAR DEFAUT un listener sur le click d'un element avec DATA_X_ACTION
 		onStart(fct(actionEvent, () -> {
-			_if(actionEvent.actionId().notEqualsJS(null)).then(() -> {
+			_if(actionEvent.zoneActionId().notEqualsJS(null)).then(() -> {
 				JSActionManager that = JSClass.declareTypeClass(JSActionManager.class);
 				/***************************************************/
-				that.doAction(actionEvent.actionId(), actionEvent);
+				that.doAction(actionEvent.zoneActionId(), actionEvent);
 				/***************************************************/
 			});
 		}));
@@ -206,7 +206,7 @@ public interface JSActionManager extends JSClass {
 		_if(targetAction.notEqualsJS(null)).then(() -> {
 			activity.set(targetAction.closest(CssTransition.activity));
 			let(actionId, targetAction.dataset().attrByStr(ATTR_X_ACTION));
-			actionEvent.actionId().set(actionId);
+			actionEvent.zoneActionId().set(actionId);
 		});
 
 		actionEvent.scrollY().set(scrollY);
@@ -254,8 +254,7 @@ public interface JSActionManager extends JSClass {
 
 		JSInt scrollY();
 
-		@Deprecated
-		JSString actionId();
+		JSString zoneActionId();
 		TActionInfo actionInfo();
 
 		TTouchInfo infoEvent();
@@ -264,6 +263,9 @@ public interface JSActionManager extends JSClass {
 	}
 
 	interface TActionInfo extends JSType {
+		
+		public static final String MODE_TOUCH_SWIPE = "MODE_TOUCH_SWIPE";
+		
 		JSString actionId();
 
 		JSString modeTouch();

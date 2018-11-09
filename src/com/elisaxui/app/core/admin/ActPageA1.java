@@ -36,7 +36,7 @@ public interface ActPageA1 extends JSClass , IJSNodeTemplate, IJSMountFactory {
 		page.titre().set("Page1");
 		page.mountNavNar().set(MountNavBar.class);
 		page.mountTabNar().set(MountTabBar.class);
-		page.mountArticles().set(MountArticle.class);
+		page.mountContentActivity().set(MountArticle.class);
 		page.mountAction().set("ACTMOUNT1");
 		
 		TBtn btn = null;
@@ -86,7 +86,7 @@ public interface ActPageA1 extends JSClass , IJSNodeTemplate, IJSMountFactory {
 		}
 		JSArray<JSElement> listeContent = JSArray.newLitteral();
 		listeContent.push(listeArticle);
-		page.contentArticles().set(listeContent);
+		page.dataContentActivity().set(listeContent);
 		
 		
 		let(aPage, page);

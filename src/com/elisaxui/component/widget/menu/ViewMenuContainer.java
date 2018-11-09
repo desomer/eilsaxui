@@ -65,30 +65,13 @@ public class ViewMenuContainer extends XHTMLPart implements ICSSBuilder {
 				});
 			});
 
-			/*
-			 * .on(".menu ul", "padding-left: 0;  list-style-type: none; margin:0px;")
-			 * 
-			 * .on(".menu li",
-			 * "list-style-type: none;clear: both;  color: rgba(0,0,0,0.87);   " +
-			 * "cursor: pointer;   min-height: 50px; line-height: 21px; " +
-			 * "width: 100%;   text-align: left;   text-transform: none;" + PERFORM_3D +
-			 * "animation-duration:" + SPEED_SHOW_MENU_ITEMS + "ms;" )
-			 * 
-			 * .on(".menu li>a",
-			 * "font-size: 1rem;  line-height: 26px;  padding: 14px 16px;  float: left;")
-			 * .on(".menu li>a>i", "margin: 0 16px 0 0; float: left;")
-			 * .on(".menu li.cDivider",
-			 * "min-height: 0;height: 1px; background-color: #e0e0e0;") // overflow: //
-			 * hidden;
-			 */
-
 		});
 
 	}
 
 	@xTarget(CONTENT.class)
 	public XMLElement xContenu() {
-		return xNav(xId(this.vProperty(pId)), cMenu, this.getChildren(), pChildren);
+		return xNav(xId(this.vProperty(pId)), xIdAction("NavMenu"), cMenu, this.getChildren(), pChildren);
 	}
 
 }

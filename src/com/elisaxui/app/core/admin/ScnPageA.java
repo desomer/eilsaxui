@@ -17,6 +17,7 @@ import com.elisaxui.app.core.module.MntPage.TMain;
 import com.elisaxui.component.page.ScnPage;
 import com.elisaxui.component.toolkit.core.JSActionManager;
 import com.elisaxui.component.toolkit.core.JSActionManager.TActionEvent;
+import com.elisaxui.component.toolkit.core.JSActionManager.TActionInfo;
 import com.elisaxui.component.toolkit.core.JSActivityHistoryManager;
 import com.elisaxui.component.toolkit.core.JSActivityHistoryManager.TIntent;
 import com.elisaxui.component.toolkit.core.JSActivityStateManager.TAnimConfiguration;
@@ -59,15 +60,23 @@ import com.elisaxui.core.xui.xml.target.FILE;
 @xComment("Scene Page A")
 public class ScnPageA extends ScnPage implements ICSSBuilder {
 
+	
+	public static final String[] listPhotos= new String[] {
+			"https://images.pexels.com/photos/316465/pexels-photo-316465.jpeg?h=350&auto=compress&cs=tinysrgb",
+			"https://images.pexels.com/photos/6337/light-coffee-pen-working.jpg?h=350&auto=compress&cs=tinysrgb",
+			"https://images.pexels.com/photos/117729/pexels-photo-117729.jpeg?h=350&auto=compress&cs=tinysrgb",
+			"https://images.pexels.com/photos/211122/pexels-photo-211122.jpeg?h=350&auto=compress&cs=tinysrgb",
+			"https://images.pexels.com/photos/210745/pexels-photo-210745.jpeg?h=350&auto=compress&cs=tinysrgb",
+			"https://images.pexels.com/photos/164482/pexels-photo-164482.jpeg?h=350&auto=compress&cs=tinysrgb",
+			"https://images.pexels.com/photos/256417/pexels-photo-256417.jpeg?h=350&auto=compress&cs=tinysrgb",
+			"https://images.pexels.com/photos/207665/pexels-photo-207665.jpeg?h=350&auto=compress&cs=tinysrgb",
+			"https://images.pexels.com/photos/272228/pexels-photo-272228.jpeg?h=350&auto=compress&cs=tinysrgb",
+			"https://images.pexels.com/photos/287336/pexels-photo-287336.jpeg?h=350&auto=compress&cs=tinysrgb"
+	}; 
+	
 	public static CSSClass cIdlog;
 	
 	
-	@xTarget(FILE.class)
-	@xResource(id = "xListPage.mjs") // insert un <Script type module> dans le body
-	public XMLElement xListPage() {
-		return xElem(ActPageA1.class, ActPageA2.class, ActPageA3.class, ActPageMenu1.class);
-	}
-
 	@xTarget(AFTER_BODY.class)
 	@xResource(id = "xControlerPageA.mjs", async = false) // insert un <Script type module> dans le body
 	@xImport(idClass = JSMount.class)
@@ -79,11 +88,17 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 	@xImport(idClass = ActPageA1.class)  
 	@xImport(idClass = ActPageA2.class)
 	@xImport(idClass = ActPageA3.class)
+	@xImport(idClass = ActPageA4.class)
 	@xImport(idClass = ActPageMenu1.class)
 	public XMLElement xControlerPage() {
 		return xElem(JSController.class);
 	}
 
+	@xTarget(FILE.class)
+	@xResource(id = "xListPage.mjs") // insert un <Script type module> dans le body
+	public XMLElement xListPage() {
+		return xElem(ActPageA1.class, ActPageA2.class, ActPageA3.class, ActPageA4.class, ActPageMenu1.class);
+	}
 	
 	@xTarget(HEADER.class)
 	@xResource
@@ -160,10 +175,9 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 			__("window.datadrivensync=true");
 
 			let(arrMount, JSArray.newLitteral());
-
+			
 			JSNodeElement querySelector = document().querySelector(getcMain());
 			querySelector.appendChild(xElem(vMount(arrMount, JSString.value(MountMain.class))));
-			
 			/*************************************************/
 			
 			let(aMount, newJS(TMain.class));
@@ -177,8 +191,11 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 			arrPage.push(aPage);
 			aPage.set(JSWindow.window().attr("ActPageC"));
 			arrPage.push(aPage);
+			aPage.set(JSWindow.window().attr("ActPageD"));
+			arrPage.push(aPage);
 			
 			arrMount.push(aMount);
+		
 			/************************************************/
 
 //			aMount.set( newJS(TMain.class));
@@ -188,7 +205,7 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 			
 			/************************************************/
 			setTimeout(()->{
-				// lance en differer pour etre en dernier . le faire plutot sur le mount
+				// lance en differer pour etre en dernier . le faire plutot sur l action mount de la Page1
 				aMount.set( newJS(TMain.class));
 				aMount.mount().set(MountMenu.class);
 				aMount.data().set(JSWindow.window().attr("ActPageMenu1"));
@@ -199,7 +216,7 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 
 			/************************************************/
 			consoleDebug(txt("arrMount ="), arrMount);
-			
+						
 			/**************************************************************************************/
 			let(animMgr, newJS(JSActivityStateManager.class));
 
@@ -265,6 +282,17 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 				activityManager.doRouteToActivity(aIntent);
 			}));
 			
+			
+			actionManager.addAction(JSString.value("MORE_INFO"), _this(), fct(() -> {
+				let(aIntent, newJS(TIntent.class));
+				aIntent.activityDest().set("Page4");
+				TAnimConfiguration configAnim = newJS(TAnimConfiguration.class);
+				configAnim.transitionId().set(JSAnimationManager.RIGHT_TO_FRONT);
+				configAnim.srcTranslation().set(0);
+				aIntent.animConfig().set(configAnim);
+				activityManager.doRouteToActivity(aIntent);
+			}));
+			
 			actionManager.addAction(JSString.value("TO_PAGE1"), _this(), fct(() -> {
 				activityManager.doRouteToPrevActivity();
 			}));
@@ -272,12 +300,12 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 			actionManager.addAction(JSString.value("SWIPE_HEADER"), _this(), fct(() -> {
 				activityManager.doRouteToPrevActivity();
 			}));
-			actionManager.currentActionInfo().modeTouch().set("SWIPE");
+			actionManager.currentActionInfo().modeTouch().set(TActionInfo.MODE_TOUCH_SWIPE);
 			
 			actionManager.addAction(JSString.value("Overlay"), _this(), fct(() -> {
 				activityManager.doRouteToPrevActivity();
 			}));
-			actionManager.currentActionInfo().modeTouch().set("SWIPE");
+			actionManager.currentActionInfo().modeTouch().set(TActionInfo.MODE_TOUCH_SWIPE);
 					
 		}
 
@@ -285,15 +313,15 @@ public class ScnPageA extends ScnPage implements ICSSBuilder {
 		@xStatic()
 		default void doChangeContent(JSArray<TActivity> arrPage) {
 			arrPage.setArrayType(TActivity.class);
-			consoleDebug(txt("change article"), arrPage.at(0).mountArticles());
+			consoleDebug(txt("change article"), arrPage.at(0).mountContentActivity());
 			
-			arrPage.at(0).contentArticles().pop(); // suppresion de l'article
+			arrPage.at(0).dataContentActivity().pop(); // suppresion de l'article
 
 		//	setTimeout(()->{
-				arrPage.at(0).mountArticles().set(MountArticle2.class); // change le template	
-				arrPage.at(0).contentArticles().push(JSArray.newLitteral()); // nouvelle article
+				arrPage.at(0).mountContentActivity().set(MountArticle2.class); // change le template	
+				arrPage.at(0).dataContentActivity().push(JSArray.newLitteral()); // nouvelle article
 
-				let(list, arrPage.at(0).contentArticles().at(0));
+				let(list, arrPage.at(0).dataContentActivity().at(0));
 
 				forIdx(idx, 0, 10)._do(() -> {
 					TBtn ligne1 = newJS(TBtn.class);

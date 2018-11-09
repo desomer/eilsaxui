@@ -26,11 +26,7 @@ public class ViewMenuItems extends XHTMLPart {
 	public static CSSClass cMaterialIcons;
 	
 	@xTarget(CONTENT.class)
-	public XMLElement xContenu() {
-		//
-		
-		//"<i class=\"material-icons\">", this.vProperty(PROPERTY_ICON) ,"</i>"
-		
+	public XMLElement xContenu() {	
 		return xLi(cRippleEffect, cRippleEffectColorBack, xIdAction(this.vProperty(PROPERTY_ACTION)), xA(xI(cMaterialIcons, this.vProperty(PROPERTY_ICON)), this.vProperty(PROPERTY_NAME) ));
 	}
 }

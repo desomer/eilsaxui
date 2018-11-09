@@ -11,6 +11,7 @@ import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSElement;
 import com.elisaxui.core.xui.xhtml.builder.javascript.JSFunction;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ArrayMethod;
+import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ILitteral;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.JSClass;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyHandler;
 import com.elisaxui.core.xui.xhtml.builder.javascript.jsclass.ProxyMethodDesc;
@@ -130,7 +131,12 @@ public class JSAny implements JSElement {
 				if (objs[0] instanceof String && this instanceof JSValue)
 					objs[0] = "\"" + objs[0] + "\"";
 				
-				mh.getJsonBuilder().add(attr, new JsonNumberImpl(objs[0].toString()));
+				if (objs[0] instanceof ILitteral)
+				{
+					mh.getJsonBuilder().add(attr, new JsonNumberImpl(((ILitteral)objs[0]).getStringJSON()));
+				}
+				else
+					mh.getJsonBuilder().add(attr, new JsonNumberImpl(objs[0].toString()));
 			}
 		}
 		else if (this.parentLitteral instanceof JSObject)

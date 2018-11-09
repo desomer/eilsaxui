@@ -3,10 +3,11 @@
  */
 package com.elisaxui.component.widget.overlay;
 
-import static com.elisaxui.component.toolkit.transition.ConstTransition.*;
+import static com.elisaxui.component.toolkit.transition.ConstTransition.PERFORM_CHANGE_OPACITY;
+import static com.elisaxui.component.toolkit.transition.ConstTransition.SPEED_ACTIVITY_TRANSITION_EFFECT;
+import static com.elisaxui.component.toolkit.transition.ConstTransition.ZINDEX_OVERLAY;
 
 import com.elisaxui.component.page.old.XUIScene;
-import com.elisaxui.component.toolkit.transition.CssTransition;
 import com.elisaxui.core.xui.XUIFactoryXHtml;
 import com.elisaxui.core.xui.xhtml.XHTMLPart;
 import com.elisaxui.core.xui.xhtml.builder.html.CSSClass;
@@ -55,6 +56,7 @@ public class ViewOverlayRipple extends XHTMLPart {
 		return xDiv(ripple_overlay, this.getChildren());
 	}
 	
+	@Deprecated
 	public static XMLElement xTemplate() {
 			return xListNodeStatic( vPart( new ViewOverlayRipple()  ));	
 	}
